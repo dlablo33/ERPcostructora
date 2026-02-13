@@ -37,19 +37,78 @@ Route::prefix('bi')->group(function () {
         return view('bi.dashboard.finanzas');
     })->name('bi.finanzas');
     
-    // Más rutas...
+    Route::get('/papeline', function () {
+        return view('bi.ventas.papeline');
+    })->name('ventas.papeline');
+
+    Route::get('/propuestas', function () {
+        return view('bi.ventas.propuestas');
+    })->name('ventas.propuestas');
+
+    Route::get('/analisis', function () {
+        return view('bi.ventas.analisis');
+    })->name('ventas.analisis');
+
+    Route::get('/seguimientofacturacion', function () {
+        return view('bi.facturacion.seguimiento');
+    })->name('facturacion.seguimiento');
+
+    Route::get('/pendientefacturacion', function () {
+        return view('bi.facturacion.pendiente');
+    })->name('facturacion.pendiente');
+
+    Route::get('/facturacion', function () {
+        return view('bi.facturacion.facturacion');
+    })->name('facturacion.facturacion');
+
+    Route::get('/historial', function () {
+        return view('bi.cobranza.historial');
+    })->name('cobranza.historial');
+
+       Route::get('/proyecciones', function () {
+        return view('bi.cobranza.proyecciones');
+    })->name('cobranza.proyecciones');
+
+
+
 });
 
 // Grupo para Administración
 Route::prefix('admin')->group(function () {
+
     Route::get('/facturacion', function () {
         return view('admin.facturacion.index');
     })->name('admin.facturacion');
     
-    // Más rutas...
+    Route::get('/cuentasporcobrar', function () {
+        return view('administracion.cuentascobrar.saldos');
+    })->name('admin.saldos');
+
+    Route::get('/cuentasporpagar', function () {
+        return view('administracion.cuentaspago.pagos');
+    })->name('admin.pagos');
+
+    Route::get('/facturacion', function () {
+        return view('administracion.facturacion.cfdi');
+    })->name('admin.cfdi');
+
+    Route::get('/notadecredito', function () {
+        return view('administracion.facturacion.nota');
+    })->name('admin.nota');
+    
 });
 
+Route::prefix('config')->group(function () {
 
+    Route::get('/config', function () {
+        return view('config.index');
+    })->name('config.index');
+
+    Route::get('/personalizacion', function () {
+        return view('config.topmenu.menuconfi');
+    })->name('config.menuconfig');
+
+});
 
 
 require __DIR__.'/auth.php';

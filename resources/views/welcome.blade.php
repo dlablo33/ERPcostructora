@@ -1,18 +1,10 @@
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-800 to-gray-900 relative overflow-hidden">
-        <!-- Fondo animado con partículas sutiles -->
-        <div class="absolute inset-0 z-0">
-            <div class="absolute top-10 left-10 w-4 h-4 bg-amber-500/20 rounded-full animate-pulse"></div>
-            <div class="absolute top-1/4 right-20 w-6 h-6 bg-blue-500/20 rounded-full animate-pulse delay-300"></div>
-            <div class="absolute bottom-20 left-1/3 w-8 h-8 bg-gray-500/20 rounded-full animate-pulse delay-700"></div>
-            <div class="absolute bottom-10 right-10 w-5 h-5 bg-amber-500/20 rounded-full animate-pulse delay-500"></div>
-        </div>
-
+    <div class="min-h-screen flex items-center justify-center relative overflow-hidden" style="background-color: #083CAE !important;">
         <!-- Contenedor principal -->
-        <div class="w-full max-w-6xl mx-4 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50 transform transition-all duration-500 hover:shadow-3xl z-10">
+        <div class="w-full max-w-6xl mx-4 bg-white backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50 transform transition-all duration-500 hover:shadow-3xl z-10">
             <div class="flex flex-col md:flex-row">
                 <!-- Panel izquierdo - Banner -->
-                <div class="w-full md:w-1/2 bg-gradient-to-br from-gray-900 to-blue-900 relative overflow-hidden">
+                <div class="w-full md:w-1/2 bg-gradient-to-br from-blue-900 to-blue-900 relative overflow-hidden">
                     <!-- Imagen de construcción -->
                     <div class="absolute inset-0 opacity-90">
                         <img 
@@ -28,29 +20,11 @@
                     <!-- Logo en el banner (versión móvil) -->
                     <div class="relative z-20 p-6 md:hidden">
                         <img 
-                            src="../img/login/logo.png" 
+                            src="../img/login/logophoto.png" 
                             alt="Logo Empresa" 
                             class="h-16 mx-auto object-contain"
                             onerror="this.src='https://via.placeholder.com/200x60?text=LOGO+CONSTRUCCIÓN'"
                         />
-                    </div>
-
-                    <!-- Texto sobre imagen -->
-                    <div class="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
-                        <div class="bg-black/40 backdrop-blur-sm rounded-xl p-4 md:p-6 transform transition-transform duration-500 hover:translate-x-2">
-                            <h3 class="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">
-                                Construyendo el Futuro
-                            </h3>
-                            <p class="text-gray-200 text-sm md:text-base">
-                                Gestión profesional de proyectos de construcción con las más altas normas de seguridad y calidad.
-                            </p>
-                            <div class="flex items-center mt-3 md:mt-4 text-amber-400">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <span class="text-xs md:text-sm font-semibold">Certificación ISO 9001:2015</span>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Elementos decorativos flotantes -->
@@ -61,20 +35,18 @@
                 <!-- Panel derecho - Formulario -->
                 <div class="w-full md:w-1/2 p-6 md:p-8 lg:p-12">
                     <!-- Logo principal centrado (solo desktop) -->
-                    <div class="mb-4 md:mb-6 transform transition-transform duration-300 hover:scale-105 hidden md:block">
+                    <div class="mb-4 md:mb-6 hidden md:flex items-center justify-center">
                         <img 
-                            src="../img/login/logo.png" 
+                            src="../img/login/logophoto.png" 
                             alt="Logo Empresa" 
-                            class="h-20 md:h-24 lg:h-28 mx-auto object-contain"
-                            onerror="this.src='https://via.placeholder.com/250x80?text=LOGO+CONSTRUCCIÓN'"
+                            class="h-20 object-contain"
+                            style="max-width: 180px;"
+                            onerror="this.src='https://via.placeholder.com/180x60?text=LOGO'"
                         />
                     </div>
 
-                    <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2 animate-fade-in">
-                        Acceso Seguro
-                    </h2>
-                    <p class="text-gray-600 text-center text-sm md:text-base mb-6 md:mb-8">
-                        Sistema de Gestión de Construcción
+                    <p class="text-blue-900 text-center text-sm md:text-base mb-6 md:mb-8">
+                        Lider en Rentabilidad de Costrucccion
                     </p>
 
                     <!-- Session Status -->
@@ -156,27 +128,27 @@
                     <!-- Footer adicional -->
                     <div class="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-200 text-center">
                         <p class="text-xs md:text-sm text-gray-500">
-                            © 2026 Empresa de Construcción. Todos los derechos reservados.
-                        </p>
-                        <p class="text-xs text-gray-400 mt-1">
-                            Sistema seguro certificado
+                            © 2026 MejoraSoft. Todos los derechos reservados.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Notificación flotante -->
-        <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-2 md:p-3 shadow-lg transform transition-transform duration-300 hover:-translate-y-1 hidden md:block">
-            <div class="flex items-center">
-                <div class="w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full mr-1 md:mr-2 animate-pulse"></div>
-                <span class="text-xs md:text-sm text-gray-700">Sistema en línea</span>
-            </div>
-        </div>
     </div>
 
-    <!-- Agregar estas animaciones personalizadas al final -->
+    <!-- Agregar estilos adicionales para forzar el color de fondo -->
     <style>
+        /* Forzar el color de fondo en el contenedor principal */
+        .min-h-screen.flex.items-center.justify-center.relative.overflow-hidden {
+            background-color: #083CAE !important;
+        }
+        
+        /* También forzar en el body si es necesario */
+        body {
+            background-color: #083CAE !important;
+        }
+        
         @keyframes fade-in {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -201,19 +173,26 @@
             box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.3);
         }
         
-        /* Estilo específico para el logo */
+        /* Estilo específico para el logo - Reducido */
         img[alt="Logo Empresa"] {
             filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-            max-width: 250px;
+            max-width: 180px !important;
             width: auto;
+        }
+        
+        /* Estilo para el contenedor del logo */
+        .hidden.md\\:flex.items-center.justify-center {
+            margin-top: 0 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
+        /* Reducir espacio alrededor del logo */
+        .p-6.md\\:p-8.lg\\:p-12 {
+            padding-top: 1.5rem !important;
         }
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .bg-gradient-to-br {
-                min-height: 200px;
-            }
-            
             .relative.z-10 {
                 padding: 1rem;
             }

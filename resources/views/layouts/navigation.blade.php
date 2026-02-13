@@ -25,485 +25,611 @@
             }
         }
     </script>
+
     <style>
-        /* Estilos para los modales de menú */
-        .modal-overlay {
-            position: fixed;
-            top: 64px;
+        /* ========== VARIABLES DE COLOR ========== */
+        :root {
+            --color-primary: #083CAE;
+            --color-secondary: #2CBF1F;
+            --color-accent: #ffff00;
+            --navbar-height: 64px;
+            --tabbar-height: 45px;
+            --total-header-height: calc(var(--navbar-height) + var(--tabbar-height));
+            --sidebar-width: 260px;
+        }
+
+        /* ========== RESET ========== */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        /* ========== NAVBAR SUPERIOR ========== */
+        nav.bg-construction-dark {
+            z-index: 1050 !important;
+            position: fixed !important;
+            top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(3px);
+            height: var(--navbar-height);
+            background-color: #083CAE !important;
         }
-        
-        .modal-overlay.active {
+
+        /* ========== BARRA DE PESTAÑAS ========== */
+        .tab-navigation-bar {
+            background-color: var(--color-secondary) !important;
+            height: var(--tabbar-height);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: var(--navbar-height);
+            left: 0;
+            right: 0;
+            z-index: 900;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
             opacity: 1;
             visibility: visible;
         }
-        
-        .modal-container {
+
+        .tab-navigation-bar.sidebar-open {
+            left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* ========== BARRA LATERAL DE SECCIÓN ========== */
+        .section-sidebar {
             position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-20px);
-            width: 95%;
-            max-width: 1400px;
-            max-height: 85vh;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            z-index: 1001;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            overflow: hidden;
+            top: var(--navbar-height);
+            left: -380px;
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--navbar-height));
+            background: #083CAE;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
+            border-radius: 0 12px 12px 0;
         }
-        
-        .modal-container.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
+
+        .section-sidebar.open {
+            left: 0;
         }
-        
-        .modal-header {
-            padding: 1.5rem;
+
+        .section-sidebar-header {
+            background: #083CAE;
+            padding: 1.25rem 1.5rem;
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e5e7eb;
-            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .modal-content {
-            padding: 0;
-            overflow-y: auto;
-            max-height: calc(85vh - 80px);
-            display: flex;
-            flex: 1;
-        }
-        
-        .modal-left-panel {
-            width: 280px;
-            border-right: 1px solid #e5e7eb;
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex-shrink: 0;
-        }
-        
-        .modal-right-panel {
-            flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
-        
-        .menu-title-item {
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-left: 4px solid transparent;
-        }
-        
-        .menu-title-item:hover {
-            background-color: #f9fafb;
-        }
-        
-        .menu-title-item.active {
-            background-color: #f0f9ff;
-            border-left-color: #3b82f6;
-        }
-        
-        .content-card {
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
-            background-color: white;
+
+        .section-sidebar-title {
             display: flex;
             align-items: center;
+            gap: 12px;
         }
-        
-        .content-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            border-color: #d1d5db;
+
+        .section-sidebar-title i {
+            font-size: 1.5rem;
+            color: #ffff00;
         }
-        
-        .card-icon {
-            width: 48px;
-            height: 48px;
+
+        .section-sidebar-title h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            color: white;
+        }
+
+        .section-sidebar-close {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-        
-        .card-content {
-            flex: 1;
-        }
-        
-        .card-title {
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 0.25rem;
-        }
-        
-        .card-description {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
-        
-        .card-action {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .btn-favorite {
-            padding: 0.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #6b7280;
-        }
-        
-        .btn-favorite:hover {
-            background-color: #f3f4f6;
-            color: #f59e0b;
-        }
-        
-        .btn-favorite.active {
-            color: #f59e0b;
-        }
-        
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1rem;
-        }
-        
-        .modal-close {
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
-        .modal-close:hover {
+
+        .section-sidebar-close:hover {
+            background: rgba(255,255,255,0.25);
             transform: rotate(90deg);
         }
-        
-        /* Animación para las notificaciones */
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(-10px); }
-            10% { opacity: 1; transform: translateY(0); }
-            90% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-10px); }
+
+        .section-sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem;
+            background: #083CAE;
         }
-        
-        /* Estilos para la barra lateral de favoritos */
+
+        .sidebar-menu-group {
+            margin-bottom: 0.0rem;
+        }
+
+        .sidebar-menu-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 1rem;
+            background: transparent ;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: transparent;
+        }
+
+        .sidebar-menu-title span i {
+            color: #ffff00;
+            margin-right: 8px;
+            width: 10px;
+        }
+
+        .sidebar-menu-title i:last-child {
+            color: #ffff00;
+            transition: transform 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .sidebar-menu-title.expanded i:last-child {
+            transform: rotate(90deg);
+        }
+
+        .sidebar-menu-title:hover {
+            background: rgba(255,255,255,0.18);
+        }
+
+        .sidebar-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            margin-left: 0.5rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar-submenu.expanded {
+            max-height: 800px;
+        }
+
+        .sidebar-submenu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1.25rem;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 2px 0;
+            font-size: 0.9rem;
+            background: transparent;
+        }
+
+        .sidebar-submenu-item i:first-child {
+            width: 20px;
+            margin-right: 12px;
+            color: #ffff00;
+            font-size: 0.9rem;
+        }
+
+        .favorite-star {
+            color: rgba(255,255,255,0.5);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .favorite-star.active {
+            color: #ffff00;
+            text-shadow: 0 0 5px rgba(255,255,0,0.5);
+        }
+
+        .favorite-star:hover {
+            color: #ffff00;
+            transform: scale(1.2);
+        }
+
+        .sidebar-submenu-item:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        .sidebar-submenu-item:hover .favorite-star {
+            color: #ffff00;
+        }
+
+        /* ========== BARRA LATERAL DE FAVORITOS ========== */
         .quick-sidebar {
             position: fixed;
-            top: 64px;
-            right: -350px;
-            width: 350px;
-            height: calc(100vh - 64px);
-            background: white;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-            z-index: 999;
+            top: var(--navbar-height);
+            right: -380px;
+            width: 280px;
+            height: calc(100vh - var(--navbar-height));
+            background: #083CAE;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+            z-index: 1001;
             transition: right 0.3s ease-in-out;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            border-radius: 8px 0 0 8px;
         }
-        
+
         .quick-sidebar.open {
             right: 0;
         }
-        
-        .sidebar-overlay {
+
+        .quick-sidebar .bg-construction-dark {
+            background: #083CAE !important;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quick-sidebar h3 {
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .quick-sidebar h3 i {
+            color: #ffff00;
+        }
+
+        .favorite-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            border-left: 4px solid #ffff00;
+            cursor: pointer;
+        }
+
+        .favorite-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-5px);
+        }
+
+        .favorite-item i {
+            color: #ffff00;
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+
+        .favorite-item-content {
+            flex: 1;
+        }
+
+        .favorite-item-title {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .favorite-item-path {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.7rem;
+        }
+
+        .favorite-item-remove {
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .favorite-item-remove:hover {
+            color: #ef4444;
+            background: rgba(239,68,68,0.2);
+        }
+
+        /* BOTÓN FLOTANTE */
+        .sidebar-toggle-btn {
             position: fixed;
-            top: 64px;
+            bottom: 25px;
+            right: 25px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #083CAE;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(8, 60, 174, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1002;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar-toggle-btn i {
+            color: #ffff00;
+            font-size: 1.4rem;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: #0a4ad0;
+            transform: scale(1.05);
+        }
+
+        #favorite-count {
+            background: #f59e0b !important;
+            border: 2px solid white;
+        }
+
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .main-content-container {
+            margin-top: var(--total-header-height);
+            min-height: calc(100vh - var(--total-header-height));
+            transition: margin-left 0.3s ease, width 0.3s ease;
+            padding: 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .main-content-container.sidebar-open {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* ========== MENÚ HAMBURGUESA MÓVIL ========== */
+        .mobile-menu-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100vh;
+            background: #083CAE;
+            z-index: 1100;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding-top: var(--navbar-height);
+        }
+
+        .mobile-menu-sidebar.open {
+            left: 0;
+        }
+
+        .mobile-menu-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-menu-header h3 {
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .mobile-menu-header i {
+            color: #ffff00;
+        }
+
+        .mobile-menu-items {
+            padding: 1rem;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .mobile-menu-item i {
+            width: 24px;
+            margin-right: 15px;
+            color: #ffff00;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-item span {
+            font-weight: 500;
+        }
+
+        .mobile-menu-item:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .mobile-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 998;
+            background: rgba(0,0,0,0.6);
+            z-index: 1050;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
         }
-        
-        .sidebar-overlay.active {
+
+        .mobile-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-        
-        .sidebar-toggle-btn {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            z-index: 997;
-            transition: all 0.3s ease;
-        }
-        
-        .sidebar-toggle-btn.moved {
-            right: 370px;
-        }
-        
-        /* Estilos para el editor de menú */
-        .menu-editor {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .menu-item {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            margin-bottom: 8px;
+
+        /* ========== NOTIFICACIONES ========== */
+        .notifications-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            width: 400px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 1100;
+            margin-top: 10px;
             overflow: hidden;
+            border: 1px solid rgba(8,60,174,0.1);
         }
-        
-        .menu-item-header {
-            padding: 12px;
-            background-color: #f9fafb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
+
+        .notifications-header {
+            background: #083CAE;
+            padding: 1rem 1.25rem;
+            color: white;
         }
-        
-        .menu-item-header:hover {
-            background-color: #f3f4f6;
+
+        .notifications-header h3 i {
+            color: #ffff00;
         }
-        
-        .menu-item-content {
-            padding: 12px;
-            background-color: white;
-            border-top: 1px solid #e5e7eb;
+
+        /* ========== SCROLLBARS ========== */
+        .section-sidebar::-webkit-scrollbar,
+        .quick-sidebar::-webkit-scrollbar,
+        .mobile-menu-sidebar::-webkit-scrollbar {
+            width: 5px;
         }
-        
-        .submenu-list {
-            margin-left: 20px;
-            border-left: 2px dashed #d1d5db;
-            padding-left: 20px;
+
+        .section-sidebar::-webkit-scrollbar-track,
+        .quick-sidebar::-webkit-scrollbar-track,
+        .mobile-menu-sidebar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
         }
-        
-        /* Estilos para las notificaciones */
-        @keyframes slide-in-right {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+
+        .section-sidebar::-webkit-scrollbar-thumb,
+        .quick-sidebar::-webkit-scrollbar-thumb,
+        .mobile-menu-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
         }
-        
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
+
+        .section-sidebar::-webkit-scrollbar-thumb:hover,
+        .quick-sidebar::-webkit-scrollbar-thumb:hover,
+        .mobile-menu-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #ffff00;
         }
-        
-        .animate-slide-in-right {
-            animation: slide-in-right 0.3s ease-out;
-        }
-        
-        .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        /* Estilos para la lista de notificaciones */
-        .notification-enter {
-            transform: translateY(-10px);
-            opacity: 0;
-        }
-        
-        .notification-enter-active {
-            transform: translateY(0);
-            opacity: 1;
-            transition: all 0.3s ease;
-        }
-        
-        .notification-leave {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .notification-leave-active {
-            transform: translateY(-10px);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        /* Responsive */
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 992px) {
-            .modal-content {
-                flex-direction: column;
+            :root {
+                --sidebar-width: 100%;
             }
-            
-            .modal-left-panel {
+
+            .section-sidebar {
                 width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #e5e7eb;
-                max-height: 200px;
+                left: -100%;
+                border-radius: 0;
             }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            
+
             .quick-sidebar {
                 width: 100%;
                 right: -100%;
+                border-radius: 0;
             }
-            
-            .sidebar-toggle-btn.moved {
-                right: 20px;
+
+            .main-content-container.sidebar-open,
+            .tab-navigation-bar.sidebar-open {
+                margin-left: 0;
+                width: 100%;
+                left: 0;
+            }
+
+            .desktop-menu {
+                display: none !important;
             }
         }
-        
-        /* Asegurar que el body sea scrollable cuando el modal está abierto */
-        body.modal-open {
-            overflow: hidden;
-        }
-        
-        /* Estilos para los elementos arrastrables */
-        .draggable-item {
-            cursor: move;
-            user-select: none;
-        }
-        
-        .draggable-item.dragging {
-            opacity: 0.5;
-        }
-        
-        /* Estilos para el modal de confirmación */
-        .confirmation-modal {
-            animation: modalFadeIn 0.3s ease-out;
-        }
-        
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+        @media (min-width: 993px) {
+            .mobile-menu-sidebar,
+            .mobile-overlay {
+                display: none !important;
             }
         }
     </style>
+    
 </head>
+
 <body class="bg-gray-50">
-    <!-- Top Navigation Bar -->
+    <!-- TOP NAVIGATION BAR -->
     <nav x-data="{ mobileMenuOpen: false }" class="bg-construction-dark text-white shadow-lg fixed top-0 left-0 right-0 z-50">
         <div class="max-w-8xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <!-- Left side: Logo and Hamburger -->
                 <div class="flex items-center space-x-4">
                     <!-- Hamburger button for mobile -->
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-md hover:bg-blue-800">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-md hover:bg-blue-800">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     
-                    <!-- Logo -->
-                    <!-- Logo -->
-<div class="flex items-center space-x-3">
-    <a href="{{ route('home') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-        <img 
-            src="../img/login/logo-canva.png" 
-            alt="Logo Empresa" 
-            class="h-10 w-auto"
-            onerror="this.src='https://via.placeholder.com/150x40/083CAE/FFFFFF?text=LOGO+CONSTRUCCIÓN'"
-        >
-    </a>
-</div>
-</div>
-
-                <!-- Center: Top Menu Bar -->
-                <div class="hidden md:flex items-center space-x-1">
-                    <!-- BI -->
-                    <div class="relative">
-                        <button onclick="openModal('bi')" 
-                                class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-chart-line"></i>
-                            <span>BI</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                    </div>
-
-                    <!-- Administración -->
-                    <div class="relative">
-                        <button onclick="openModal('administracion')" 
-                                class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <span>Administración</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                    </div>
-
-                    <!-- Contabilidad -->
-                    <div class="relative">
-                        <button onclick="openModal('contabilidad')" 
-                                class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-calculator"></i>
-                            <span>Contabilidad</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
+                    <div class="flex items-center space-x-3">
+                        <a href="{{ route('home') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                            <img src="../img/login/logoblanco.png" alt="Logo" class="h-[180px] w-[180px]" onerror="this.src='https://via.placeholder.com/150x40/083CAE/FFFFFF?text=LOGO'">
+                        </a>
                     </div>
                     
-                    <!-- Proyectos -->
-                    <div class="relative">
-                        <button onclick="openModal('proyectos')" 
-                                class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-project-diagram"></i>
-                            <span>Proyectos</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                    </div>
+                </div>
 
-                    <!-- Recursos Humanos -->
-                    <div class="relative">
-                        <button onclick="openModal('rrhh')" 
-                                class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-users"></i>
-                            <span>Recursos Humanos</span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                    </div>
-
-                    <!-- Botón para abrir barra lateral -->
-                    <button onclick="toggleSidebar()" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition relative" title="Accesos rápidos">
-                        <i class="fas fa-star"></i>
-                        <span id="notification-dot" class="absolute top-1 right-1 w-2 h-2 bg-yellow-500 rounded-full" style="display: none;"></span>
+                <!-- Center: Desktop Menu Buttons -->
+                <div class="desktop-menu hidden md:flex items-center space-x-1">
+                    <button onclick="toggleSectionSidebar('bi')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                        <i class="fas fa-chart-line"></i>
+                        <span>BI</span>
                     </button>
 
-                    <!-- Sistema de Notificaciones -->
+                    <button onclick="toggleSectionSidebar('administracion')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Administración</span>
+                    </button>
+
+                    <button onclick="toggleSectionSidebar('contabilidad')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                        <i class="fas fa-calculator"></i>
+                        <span>Contabilidad</span>
+                    </button>
+                    
+                    <button onclick="toggleSectionSidebar('proyectos')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Proyectos</span>
+                    </button>
+
+                    <button onclick="toggleSectionSidebar('rrhh')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                        <i class="fas fa-users"></i>
+                        <span>RRHH</span>
+                    </button>
+
+                    <button onclick="toggleQuickSidebar()" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition relative">
+                        <i class="fas fa-star" style="color: #ffff00;"></i>
+                        <span id="notification-dot" class="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full" style="display: none;"></span>
+                    </button>
+
+                    <!-- NOTIFICACIONES -->
                     <div x-data="notifications()" x-init="initNotifications()" class="relative">
                         <button @click="toggleNotifications()" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition relative">
                             <i class="fas fa-bell"></i>
                             <span x-show="unreadCount > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                            <span x-show="unreadCount > 0" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-xs rounded-full flex items-center justify-center" 
-                                  x-text="unreadCount > 9 ? '9+' : unreadCount" style="display: none;"></span>
+                            <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
                         </button>
                         
-                        <!-- Menú de notificaciones -->
                         <div x-show="isOpen" @click.away="isOpen = false" 
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
@@ -511,109 +637,48 @@
                              x-transition:leave="transition ease-in duration-150"
                              x-transition:leave-start="opacity-100 transform scale-100"
                              x-transition:leave-end="opacity-0 transform scale-95"
-                             class="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl z-50 border border-gray-200 overflow-hidden">
+                             class="notifications-menu">
                             
-                            <!-- Encabezado -->
-                            <div class="bg-construction-dark text-white p-4">
+                            <div class="notifications-header">
                                 <div class="flex justify-between items-center">
                                     <div>
-                                        <h3 class="font-bold text-lg">
-                                            <i class="fas fa-bell mr-2"></i>Notificaciones
-                                            <span x-show="unreadCount > 0" class="ml-2 bg-red-500 text-xs px-2 py-1 rounded-full" 
-                                                  x-text="unreadCount"></span>
-                                        </h3>
-                                        <p class="text-blue-100 text-sm mt-1">Tus alertas y mensajes importantes</p>
+                                        <h3 class="font-bold text-lg"><i class="fas fa-bell"></i> Notificaciones</h3>
+                                        <p class="text-blue-100 text-xs mt-1">Tus alertas y mensajes</p>
                                     </div>
                                     <div class="flex space-x-2">
-                                        <button @click="markAllAsRead()" class="p-2 rounded-lg hover:bg-blue-800 transition" title="Marcar todo como leído">
-                                            <i class="fas fa-check-double"></i>
+                                        <button @click="markAllAsRead()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
+                                            <i class="fas fa-check-double text-white"></i>
                                         </button>
-                                        <button @click="clearAll()" class="p-2 rounded-lg hover:bg-blue-800 transition" title="Limpiar todo">
-                                            <i class="fas fa-trash-alt"></i>
+                                        <button @click="clearAll()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
+                                            <i class="fas fa-trash-alt text-white"></i>
                                         </button>
                                     </div>
-                                </div>
-                                
-                                <!-- Filtros -->
-                                <div class="flex space-x-2 mt-3">
-                                    <button @click="filter = 'all'" :class="filter === 'all' ? 'bg-blue-500' : 'bg-blue-800/50'"
-                                            class="px-3 py-1 rounded-lg text-sm transition">Todas</button>
-                                    <button @click="filter = 'unread'" :class="filter === 'unread' ? 'bg-blue-500' : 'bg-blue-800/50'"
-                                            class="px-3 py-1 rounded-lg text-sm transition">No leídas</button>
-                                    <button @click="filter = 'important'" :class="filter === 'important' ? 'bg-blue-500' : 'bg-blue-800/50'"
-                                            class="px-3 py-1 rounded-lg text-sm transition">Importantes</button>
                                 </div>
                             </div>
                             
-                            <!-- Lista de notificaciones -->
                             <div class="max-h-96 overflow-y-auto">
-                                <div x-show="filteredNotifications.length === 0" class="text-center py-8 text-gray-500">
-                                    <i class="fas fa-bell-slash text-3xl mb-3 opacity-30"></i>
+                                <div x-show="filteredNotifications.length === 0" class="text-center py-10 text-gray-500">
+                                    <i class="fas fa-bell-slash text-4xl mb-3 opacity-30"></i>
                                     <p class="font-medium">No hay notificaciones</p>
-                                    <p class="text-sm mt-2">Todo está al día</p>
                                 </div>
                                 
-                                <template x-for="(notification, index) in filteredNotifications" :key="notification.id">
-                                    <div :class="notification.read ? 'bg-white' : 'bg-blue-50'"
-                                         class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
-                                        <div class="p-4 flex items-start space-x-3 cursor-pointer"
-                                             @click="markAsRead(notification.id)">
-                                            
-                                            <!-- Icono de tipo -->
-                                            <div :class="getTypeClass(notification.type)"
-                                                 class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink=0">
+                                <template x-for="notification in filteredNotifications" :key="notification.id">
+                                    <div :class="notification.read ? 'bg-white' : 'bg-blue-50'" class="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer" @click="markAsRead(notification.id)">
+                                        <div class="flex items-start space-x-3">
+                                            <div :class="notification.type" class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0">
                                                 <i :class="getTypeIcon(notification.type)"></i>
                                             </div>
-                                            
-                                            <!-- Contenido -->
-                                            <div class="flex-1 min-w-0">
-                                                <div class="flex justify-between items-start">
-                                                    <h4 class="font-semibold text-gray-800" x-text="notification.title"></h4>
-                                                    <span class="text-xs text-gray-500 ml-2 whitespace-nowrap" 
-                                                          x-text="formatTime(notification.timestamp)"></span>
+                                            <div class="flex-1">
+                                                <div class="flex justify-between">
+                                                    <h4 class="font-semibold text-gray-800 text-sm" x-text="notification.title"></h4>
+                                                    <span class="text-xs text-gray-500" x-text="formatTime(notification.timestamp)"></span>
                                                 </div>
-                                                <p class="text-sm text-gray-600 mt-1" x-text="notification.message"></p>
-                                                
-                                                <!-- Acciones -->
-                                                <div class="flex justify-between items-center mt-3">
-                                                    <div class="flex items-center space-x-3">
-                                                        <template x-if="notification.category">
-                                                            <span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600"
-                                                                  x-text="notification.category"></span>
-                                                        </template>
-                                                        <template x-if="notification.priority === 'high'">
-                                                            <span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-600">
-                                                                <i class="fas fa-exclamation-circle mr-1"></i>Urgente
-                                                            </span>
-                                                        </template>
-                                                    </div>
-                                                    
-                                                    <div class="flex items-center space-x-2">
-                                                        <button @click.stop="deleteNotification(notification.id)"
-                                                                class="text-gray-400 hover:text-red-500 p-1 rounded transition">
-                                                            <i class="fas fa-times text-sm"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <p class="text-xs text-gray-600 mt-1" x-text="notification.message"></p>
                                             </div>
-                                            
-                                            <!-- Indicador de no leído -->
-                                            <div x-show="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
+                                            <div x-show="!notification.read" class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
                                         </div>
                                     </div>
                                 </template>
-                            </div>
-                            
-                            <!-- Pie -->
-                            <div class="bg-gray-50 p-3 border-t border-gray-200">
-                                <div class="flex justify-between items-center">
-                                    <a href="#" @click="viewAll()" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                        Ver todas las notificaciones
-                                    </a>
-                                    <button @click="loadMore()" x-show="hasMore" class="text-gray-600 hover:text-gray-800 text-sm">
-                                        Cargar más
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -623,56 +688,32 @@
                     </button>
                 </div>
 
-                <!-- Right side: User menu -->
+                <!-- User menu -->
                 <div class="flex items-center space-x-4">
-                    <!-- User info -->
                     <div class="hidden md:block text-right">
-                        <div class="font-semibold" id="user-display-name">{{ Auth::user()->name ?? 'Usuario' }}</div>
-                        <div class="text-sm text-blue-100" id="user-email">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
+                        <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
+                        <div class="text-xs text-blue-100">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
                     </div>
                     
-                    <!-- User dropdown -->
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-800">
-                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-blue-600"></i>
+                            <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-blue-600 text-sm"></i>
                             </div>
-                            <i class="fas fa-chevron-down"></i>
+                            <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         
-                        <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" 
-                             x-transition:enter-start="transform opacity-0 scale-95" 
-                             x-transition:enter-end="transform opacity-100 scale-100" 
-                             x-transition:leave="transition ease-in duration-75" 
-                             x-transition:leave-start="transform opacity-100 scale-100" 
-                             x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-xl z-50 py-2 border border-gray-200">
-                            <div class="px-4 py-3 border-b border-gray-100">
-                                <div class="font-semibold" id="dropdown-user-name">{{ Auth::user()->name ?? 'Usuario' }}</div>
-                                <div class="text-sm text-gray-500 truncate" id="dropdown-user-email">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-50 py-2">
+                            <div class="px-4 py-2 border-b border-gray-100">
+                                <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
+                                <div class="text-xs text-gray-500 truncate">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
                             </div>
-                            
-                            <a href="#" class="block px-4 py-3 hover:bg-blue-50 transition-colors">
-                                <i class="fas fa-user mr-3 text-blue-600 w-5 text-center"></i> 
-                                <span>Mi Perfil</span>
-                            </a>
-                            
-                            <a href="#" class="block px-4 py-3 hover:bg-blue-50 transition-colors">
-                                <i class="fas fa-cog mr-3 text-blue-600 w-5 text-center"></i> 
-                                <span>Configuración</span>
-                            </a>
-                            
-                            <a href="{{ route('tareas.index') }}" class="block px-4 py-3 hover:bg-blue-50 transition-colors">
-                                <i class="fas fa-book mr-3 text-blue-600 w-5 text-center"></i> 
-                                <span>Tareas</span>
-                            </a>
-                            
-                            <hr class="my-2 border-gray-200">
-                            
-                            <button onclick="confirmLogout()" 
-                                    class="w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 transition-colors">
-                                <i class="fas fa-sign-out-alt mr-3 w-5 text-center"></i> 
-                                <span>Cerrar Sesión</span>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil</a>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración</a>
+                            <a href="{{ route('tareas.index') }}" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-book mr-3 text-blue-600 w-4 text-center"></i> Tareas</a>
+                            <hr class="my-1 border-gray-200">
+                            <button onclick="confirmLogout()" class="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600">
+                                <i class="fas fa-sign-out-alt mr-3 w-4 text-center"></i> Cerrar Sesión
                             </button>
                         </div>
                     </div>
@@ -681,4539 +722,2060 @@
         </div>
     </nav>
     
-    <!-- MODALES DE MENÚS -->
-    
-    <!-- Modal de BI -->
-    <div id="modal-bi" class="modal-container">
-        <div class="modal-header bg-blue-600 text-white">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-chart-line text-2xl"></i>
-                <div>
-                    <h2 class="text-2xl font-bold">Business Intelligence</h2>
-                    <p class="text-blue-100">Dashboards y análisis de negocio</p>
-                </div>
-            </div>
-            <button onclick="closeModal('bi')" class="modal-close text-white hover:text-gray-200 p-2">
-                <i class="fas fa-times text-2xl"></i>
+    <!-- BARRA DE PESTAÑAS -->
+    <div class="tab-navigation-bar" id="tabNavigationBar">
+        <button class="close-all-tabs-btn bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded text-white text-xs flex items-center">
+            <i class="fas fa-times-circle mr-1"></i> Cerrar Todo
+        </button>
+        <div class="tabs-container-nav" id="tabsNavContainer"></div>
+        <button class="new-tab-btn bg-green-600 hover:bg-green-700 text-white rounded-full w-7 h-7 flex items-center justify-center ml-2">
+            <i class="fas fa-plus text-xs"></i>
+        </button>
+    </div>
+
+    <!-- ==================== MENÚ HAMBURGUESA MÓVIL ==================== -->
+    <div class="mobile-menu-sidebar" id="mobileMenuSidebar">
+        <div class="mobile-menu-header">
+            <h3><i class="fas fa-star mr-2"></i> MejoraSoft</h3>
+            <button onclick="toggleMobileMenu()" class="text-white p-1">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <div class="modal-content">
-            <!-- Panel izquierdo - Títulos principales -->
-            <div class="modal-left-panel">
-                <h3 class="font-bold text-lg text-gray-800 mb-4">Secciones</h3>
-                <div class="space-y-2">
-                    <div class="menu-title-item active" onclick="selectTitle('bi', 'dashboard')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-tachometer-alt text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Dashboard</div>
-                            </div>
+        <div class="mobile-menu-items">
+            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('bi')">
+                <i class="fas fa-chart-line"></i>
+                <span>Business Intelligence</span>
+            </div>
+            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('administracion')">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Administración</span>
+            </div>
+            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('contabilidad')">
+                <i class="fas fa-calculator"></i>
+                <span>Contabilidad</span>
+            </div>
+            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('proyectos')">
+                <i class="fas fa-project-diagram"></i>
+                <span>Proyectos</span>
+            </div>
+            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('rrhh')">
+                <i class="fas fa-users"></i>
+                <span>Recursos Humanos</span>
+            </div>
+            <div class="mobile-menu-item" onclick="toggleQuickSidebar()">
+                <i class="fas fa-star"></i>
+                <span>Accesos Rápidos</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para móvil -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- ==================== SIDEBAR DE BI ==================== -->
+    <div id="sidebar-bi" class="section-sidebar">
+        <div class="section-sidebar-header">
+            <div class="section-sidebar-title">
+                <i class="fas fa-chart-line"></i>
+                <h2>Business Intelligence</h2>
+            </div>
+            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="section-sidebar-content">
+            <!-- Dashboard -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-dashboard')">
+                    <span><i class="fas fa-tachometer-alt"></i> Dashboard</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="bi-dashboard" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('bi.dashboard') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Directivo</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Directivo', 'bi', 'fa-user-tie', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('bi', 'ventas')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-chart-bar text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Ventas</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('bi.finanzas') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Finanzas</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finanzas', 'bi', 'fa-chart-pie', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('bi', 'facturacion')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-invoice-dollar text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Facturación</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('bi.licitaciones') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-gavel"></i>
+                            <span>Licitaciones</span>
                         </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('bi', 'cobranza')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-hand-holding-usd text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Cobranza</div>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones', 'bi', 'fa-gavel', this)"></i>
                     </div>
                 </div>
             </div>
-            
-            <!-- Panel derecho - Contenido del título seleccionado -->
-            <div class="modal-right-panel">
-                <div id="bi-content">
-                    <!-- Contenido para Dashboard -->
-                    <div id="bi-dashboard-content" class="cards-grid">
-                        <div class="content-card" onclick="window.location.href='{{ route('bi.dashboard') }}'">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-user-tie text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Directivo</div>
-                                <div class="card-description">Dashboard ejecutivo de alto nivel</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Directivo', 'fas fa-user-tie', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+
+            <!-- Ventas -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-ventas')">
+                    <span><i class="fas fa-chart-bar"></i> Ventas</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="bi-ventas" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('ventas.papeline') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-filter"></i>
+                            <span>Pipeline de Proyectos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="window.location.href='{{ route('bi.finanzas') }}'">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-pie text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Finanzas</div>
-                                <div class="card-description">Métricas financieras clave</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Finanzas', 'fas fa-chart-pie', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="window.location.href='{{ route('bi.licitaciones') }}'">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-gavel text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Licitaciones</div>
-                                <div class="card-description">Seguimiento de procesos licitatorios</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Licitaciones', 'fas fa-gavel', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pipeline de Proyectos', 'bi', 'fa-filter', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Ventas (oculto inicialmente) -->
-                    <div id="bi-ventas-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Pipeline de Proyectos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-filter text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Pipeline de Proyectos</div>
-                                <div class="card-description">Seguimiento de oportunidades de venta</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Pipeline de Proyectos', 'fas fa-filter', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('ventas.propuestas') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Propuestas y Cotizaciones</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Propuestas y Cotizaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-contract text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Propuestas y Cotizaciones</div>
-                                <div class="card-description">Gestión de propuestas comerciales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'fas fa-file-contract', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Órdenes de Compra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-receipt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Órdenes de Compra</div>
-                                <div class="card-description">Gestión de órdenes de compra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'fas fa-receipt', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Análisis de Ventas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Análisis de Ventas</div>
-                                <div class="card-description">Reportes y análisis de ventas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Análisis de Ventas', 'fas fa-chart-line', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'bi', 'fa-file-contract', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Facturación (oculto inicialmente) -->
-                    <div id="bi-facturacion-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Seguimiento de Facturación')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-search-dollar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Seguimiento de Facturación</div>
-                                <div class="card-description">Monitoreo de facturación</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Seguimiento de Facturación', 'fas fa-search-dollar', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('ventas.analisis') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Análisis de Ventas</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Pendiente de Facturación')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-clock text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Pendiente de Facturación</div>
-                                <div class="card-description">Documentos pendientes por facturar</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Pendiente de Facturación', 'fas fa-clock', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Facturado')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-check-circle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Facturado</div>
-                                <div class="card-description">Historial de facturación</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Facturado', 'fas fa-check-circle', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Ventas', 'bi', 'fa-chart-line', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Cobranza (oculto inicialmente) -->
-                    <div id="bi-cobranza-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Cuentas por Cobrar')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-check-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cuentas por Cobrar</div>
-                                <div class="card-description">Gestión de cuentas por cobrar</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Cobrar', 'fas fa-money-check-alt', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Facturación -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-facturacion')">
+                    <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="bi-facturacion" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('facturacion.seguimiento') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-search-dollar"></i>
+                            <span>Seguimiento de Facturación</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Antigüedad de Saldos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Antigüedad de Saldos</div>
-                                <div class="card-description">Análisis de antigüedad de saldos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Antigüedad de Saldos', 'fas fa-calendar-alt', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Seguimiento de Facturación', 'bi', 'fa-search-dollar', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('facturacion.pendiente') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-clock"></i>
+                            <span>Pendiente de Facturación</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Proyecciones de Flujo')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Proyecciones de Flujo</div>
-                                <div class="card-description">Proyecciones de flujo de efectivo</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Proyecciones de Flujo', 'fas fa-chart-line', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pendiente de Facturación', 'bi', 'fa-clock', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('facturacion.facturacion') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Facturado</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Historial de Pagos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-history text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Historial de Pagos</div>
-                                <div class="card-description">Registro histórico de pagos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Historial de Pagos', 'fas fa-history', 'BI')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturado', 'bi', 'fa-check-circle', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cobranza -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-cobranza')">
+                    <span><i class="fas fa-hand-holding-usd"></i> Cobranza</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="bi-cobranza" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('cobranza.proyecciones') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Proyecciones de Flujo</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proyecciones de Flujo', 'bi', 'fa-chart-line', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('cobranza.historial') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-history"></i>
+                            <span>Historial de Pagos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial de Pagos', 'bi', 'fa-history', this)"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Administración -->
-    <div id="modal-administracion" class="modal-container">
-        <div class="modal-header bg-blue-600 text-white">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-money-bill-wave text-2xl"></i>
-                <div>
-                    <h2 class="text-2xl font-bold">Administración</h2>
-                    <p class="text-blue-100">Gestión administrativa y financiera</p>
-                </div>
+    <!-- ==================== SIDEBAR DE ADMINISTRACIÓN ==================== -->
+    <div id="sidebar-administracion" class="section-sidebar">
+        <div class="section-sidebar-header">
+            <div class="section-sidebar-title">
+                <i class="fas fa-money-bill-wave"></i>
+                <h2>Administración</h2>
             </div>
-            <button onclick="closeModal('administracion')" class="modal-close text-white hover:text-gray-200 p-2">
-                <i class="fas fa-times text-2xl"></i>
+            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <div class="modal-content">
-            <!-- Panel izquierdo - Títulos principales -->
-            <div class="modal-left-panel">
-                <h3 class="font-bold text-lg text-gray-800 mb-4">Secciones</h3>
-                <div class="space-y-2">
-                    <div class="menu-title-item active" onclick="selectTitle('administracion', 'facturacion')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-invoice-dollar text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Facturación</div>
-                            </div>
+        <div class="section-sidebar-content">
+            <!-- Facturación -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-facturacion')">
+                    <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-facturacion" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('admin.cfdi') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Facturación (CFDI)</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación (CFDI)', 'administracion', 'fa-file-invoice', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('administracion', 'cuentas-cobrar')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-hand-holding-usd text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Cuentas por Cobrar</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('admin.nota') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-undo-alt"></i>
+                            <span>Notas de Crédito</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'administracion', 'fa-undo-alt', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('administracion', 'cuentas-pagar')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-credit-card text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Cuentas por Pagar</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-sticky-note"></i>
+                            <span>Notas de Ventas</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'administracion', 'fa-sticky-note', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('administracion', 'tesoreria')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-university text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Tesorería</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-receipt"></i>
+                            <span>Contrarecibos</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'administracion', 'fa-receipt', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('administracion', 'presupuestos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-chart-pie text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Presupuestos</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-handshake"></i>
+                            <span>Factoraje</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('administracion', 'operaciones')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-exchange-alt text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Operaciones</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-book"></i>
+                            <span>Bitácora</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'administracion', 'fa-book', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('administracion', 'cuentas-avanzadas')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-cogs text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Cuentas Avanzadas</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-percentage"></i>
+                            <span>Comisiones</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comisiones', 'administracion', 'fa-percentage', this)"></i>
                     </div>
                 </div>
             </div>
-            
-            <!-- Panel derecho - Contenido del título seleccionado -->
-            <div class="modal-right-panel">
-                <div id="administracion-content">
-                    <!-- Contenido para Facturación -->
-                    <div id="administracion-facturacion-content" class="cards-grid">
-                        <div class="content-card" onclick="navigateTo('Facturación (CFDI)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-invoice text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Facturación (CFDI)</div>
-                                <div class="card-description">Emisión de facturas electrónicas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Facturación (CFDI)', 'fas fa-file-invoice', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+
+            <!-- Cuentas por Cobrar -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxc')">
+                    <span><i class="fas fa-hand-holding-usd"></i> Cuentas por Cobrar</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-cxc" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('admin.saldos') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-table"></i>
+                            <span>Vista con tabla de antigüedad</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Notas de Crédito')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-undo-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Notas de Crédito</div>
-                                <div class="card-description">Gestión de notas de crédito</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'fas fa-undo-alt', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Notas de Ventas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-sticky-note text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Notas de Ventas</div>
-                                <div class="card-description">Notas de venta y complementarias</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'fas fa-sticky-note', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Contrarecibos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-receipt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Contrarecibos</div>
-                                <div class="card-description">Gestión de contrarecibos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'fas fa-receipt', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Factoraje')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-handshake text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Factoraje</div>
-                                <div class="card-description">Operaciones de factoraje financiero</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'fas fa-handshake', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Bitácora')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-book text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Bitácora</div>
-                                <div class="card-description">Registro de operaciones de facturación</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'fas fa-book', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Comisiones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-percentage text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Comisiones</div>
-                                <div class="card-description">Cálculo y pago de comisiones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Comisiones', 'fas fa-percentage', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Antigüedad de Saldos', 'administracion', 'fa-table', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Cuentas por Cobrar (oculto inicialmente) -->
-                    <div id="administracion-cuentas-cobrar-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Vista con tabla de antigüedad')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-table text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Vista con tabla de antigüedad</div>
-                                <div class="card-description">Análisis de antigüedad de saldos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Vista con tabla de antigüedad', 'fas fa-table', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Cuentas por Pagar -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxp')">
+                    <span><i class="fas fa-credit-card"></i> Cuentas por Pagar</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-cxp" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="window.location.href='{{ route('admin.pagos') }}'">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-truck"></i>
+                            <span>Facturación de Proveedores</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación de Proveedores', 'administracion', 'fa-truck', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Cuentas por Pagar (oculto inicialmente) -->
-                    <div id="administracion-cuentas-pagar-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Facturación de Proveedores')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-truck text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Facturación de Proveedores</div>
-                                <div class="card-description">Gestión de facturas de proveedores</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Facturación de Proveedores', 'fas fa-truck', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Tesorería -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-tesoreria')">
+                    <span><i class="fas fa-university"></i> Tesorería</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-tesoreria" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-check-alt"></i>
+                            <span>Depósitos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Autorización Orden de Compras')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-check-circle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Autorización Orden de Compras</div>
-                                <div class="card-description">Aprobación de órdenes de compra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Autorización Orden de Compras', 'fas fa-check-circle', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'administracion', 'fa-money-check-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Tesorería (oculto inicialmente) -->
-                    <div id="administracion-tesoreria-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Depósitos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-check-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Depósitos</div>
-                                <div class="card-description">Registro y control de depósitos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'fas fa-money-check-alt', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Transacciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Transacciones</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Transacciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exchange-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Transacciones</div>
-                                <div class="card-description">Registro de transacciones bancarias</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Transacciones', 'fas fa-exchange-alt', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Estados de Cuenta Bancarios')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Estados de Cuenta Bancarios</div>
-                                <div class="card-description">Consulta de estados de cuenta</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'fas fa-file-alt', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Conciliación Bancaria')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-balance-scale text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Conciliación Bancaria</div>
-                                <div class="card-description">Conciliación de cuentas bancarias</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'fas fa-balance-scale', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Flujo de Dinero')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-wave-square text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Flujo de Dinero</div>
-                                <div class="card-description">Seguimiento de flujo de efectivo</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'fas fa-wave-square', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Flujo Mensual')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Flujo Mensual</div>
-                                <div class="card-description">Proyecciones de flujo mensual</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'fas fa-calendar-alt', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Programación de Pagos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-check text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Programación de Pagos</div>
-                                <div class="card-description">Calendario de pagos programados</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'fas fa-calendar-check', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Transacciones', 'administracion', 'fa-exchange-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Presupuestos (Administración) (oculto inicialmente) -->
-                    <div id="administracion-presupuestos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Presupuestos Generales')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-pie text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Presupuestos Generales</div>
-                                <div class="card-description">Presupuestos generales de la empresa</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Presupuestos Generales', 'fas fa-chart-pie', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Estados de Cuenta Bancarios</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Presupuesto Mensual')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Presupuesto Mensual</div>
-                                <div class="card-description">Presupuestos por mes</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'fas fa-calendar', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Reasignación de Gastos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-random text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Reasignación de Gastos</div>
-                                <div class="card-description">Reasignación de partidas presupuestales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'fas fa-random', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Gastos Fijos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-home text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Gastos Fijos</div>
-                                <div class="card-description">Control de gastos fijos mensuales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Gastos Fijos', 'fas fa-home', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'administracion', 'fa-file-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Operaciones (oculto inicialmente) -->
-                    <div id="administracion-operaciones-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Prepago')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-forward text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Prepago</div>
-                                <div class="card-description">Gestión de prepagos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'fas fa-forward', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>Conciliación Bancaria</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Anticipos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-hand-holding-usd text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Anticipos</div>
-                                <div class="card-description">Control de anticipos a proveedores</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'fas fa-hand-holding-usd', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Crédito')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-credit-card text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Crédito</div>
-                                <div class="card-description">Gestión de líneas de crédito</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Crédito', 'fas fa-credit-card', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'administracion', 'fa-balance-scale', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Cuentas Avanzadas (oculto inicialmente) -->
-                    <div id="administracion-cuentas-avanzadas-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Cuentas Avanzadas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-cogs text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cuentas Avanzadas</div>
-                                <div class="card-description">Configuración avanzada de cuentas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cuentas Avanzadas', 'fas fa-cogs', 'Administración')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-wave-square"></i>
+                            <span>Flujo de Dinero</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'administracion', 'fa-wave-square', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Flujo Mensual</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'administracion', 'fa-calendar-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Programación de Pagos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'administracion', 'fa-calendar-check', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Presupuestos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-presupuestos')">
+                    <span><i class="fas fa-chart-pie"></i> Presupuestos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-presupuestos" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuestos Generales')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Presupuestos Generales</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuestos Generales', 'administracion', 'fa-chart-pie', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar"></i>
+                            <span>Presupuesto Mensual</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'administracion', 'fa-calendar', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-random"></i>
+                            <span>Reasignación de Gastos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'administracion', 'fa-random', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-home"></i>
+                            <span>Gastos Fijos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Fijos', 'administracion', 'fa-home', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operaciones -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-operaciones')">
+                    <span><i class="fas fa-exchange-alt"></i> Operaciones</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-operaciones" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Prepago')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-forward"></i>
+                            <span>Prepago</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'administracion', 'fa-forward', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Anticipos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'administracion', 'fa-hand-holding-usd', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Crédito')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Crédito</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Crédito', 'administracion', 'fa-credit-card', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cuentas Avanzadas -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cuentas-avanzadas')">
+                    <span><i class="fas fa-cogs"></i> Cuentas Avanzadas</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="admin-cuentas-avanzadas" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-cogs"></i>
+                            <span>Cuentas Avanzadas</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Avanzadas', 'administracion', 'fa-cogs', this)"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Contabilidad -->
-    <div id="modal-contabilidad" class="modal-container">
-        <div class="modal-header bg-blue-600 text-white">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-calculator text-2xl"></i>
-                <div>
-                    <h2 class="text-2xl font-bold">Contabilidad</h2>
-                    <p class="text-blue-100">Contabilidad y estados financieros</p>
-                </div>
+    <!-- ==================== SIDEBAR DE CONTABILIDAD ==================== -->
+    <div id="sidebar-contabilidad" class="section-sidebar">
+        <div class="section-sidebar-header">
+            <div class="section-sidebar-title">
+                <i class="fas fa-calculator"></i>
+                <h2>Contabilidad</h2>
             </div>
-            <button onclick="closeModal('contabilidad')" class="modal-close text-white hover:text-gray-200 p-2">
-                <i class="fas fa-times text-2xl"></i>
+            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <div class="modal-content">
-            <!-- Panel izquierdo - Títulos principales -->
-            <div class="modal-left-panel">
-                <h3 class="font-bold text-lg text-gray-800 mb-4">Secciones</h3>
-                <div class="space-y-2">
-                    <div class="menu-title-item active" onclick="selectTitle('contabilidad', 'estados-financieros')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Estados Financieros</div>
-                            </div>
+        <div class="section-sidebar-content">
+            <!-- Estados Financieros -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-estados')">
+                    <span><i class="fas fa-chart-line"></i> Estados Financieros</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-estados" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Estado de Resultados</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'contabilidad', 'fa-chart-pie', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('contabilidad', 'registro-contable')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-book text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Registro Contable</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance General')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>Balance General</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'contabilidad', 'fa-balance-scale', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('contabilidad', 'catalogo-contable')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-list-alt text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Catálogo Contable</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-check-double"></i>
+                            <span>Balance de Comprobación</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'contabilidad', 'fa-check-double', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('contabilidad', 'contabilidad-proyecto')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-project-diagram text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Contabilidad por Proyecto</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Estado de Flujo de Efectivo</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'contabilidad', 'fa-money-bill-wave', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('contabilidad', 'fiscal')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-contract text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Fiscal</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Cambios en el Capital')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Estado de Cambios en el Capital</span>
                         </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('contabilidad', 'analisis-reportes')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-chart-bar text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Análisis y Reportes</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('contabilidad', 'cierre-contable')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-lock text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Cierre Contable</div>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Cambios en el Capital', 'contabilidad', 'fa-exchange-alt', this)"></i>
                     </div>
                 </div>
             </div>
-            
-            <!-- Panel derecho - Contenido del título seleccionado -->
-            <div class="modal-right-panel">
-                <div id="contabilidad-content">
-                    <!-- Contenido para Estados Financieros -->
-                    <div id="contabilidad-estados-financieros-content" class="cards-grid">
-                        <div class="content-card" onclick="navigateTo('Estado de Resultados')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-pie text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Estado de Resultados</div>
-                                <div class="card-description">Estado de pérdidas y ganancias</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'fas fa-chart-pie', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+
+            <!-- Registro Contable -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-registro')">
+                    <span><i class="fas fa-book"></i> Registro Contable</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-registro" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Pólizas Contables</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Balance General')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-balance-scale text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Balance General</div>
-                                <div class="card-description">Balance de situación patrimonial</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'fas fa-balance-scale', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Balance de Comprobación')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-check-double text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Balance de Comprobación</div>
-                                <div class="card-description">Balance de sumas y saldos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'fas fa-check-double', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Estado de Flujo de Efectivo')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-bill-wave text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Estado de Flujo de Efectivo</div>
-                                <div class="card-description">Flujo de efectivo de operaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'fas fa-money-bill-wave', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Estado de Cambios en el Capital')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exchange-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Estado de Cambios en el Capital</div>
-                                <div class="card-description">Variaciones del capital contable</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Estado de Cambios en el Capital', 'fas fa-exchange-alt', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'contabilidad', 'fa-file-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Registro Contable (oculto inicialmente) -->
-                    <div id="contabilidad-registro-contable-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Pólizas Contables')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Pólizas Contables</div>
-                                <div class="card-description">Registro de pólizas contables</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'fas fa-file-alt', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Diario General')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-book"></i>
+                            <span>Diario General</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Diario General')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-book text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Diario General</div>
-                                <div class="card-description">Libro diario de contabilidad</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'fas fa-book', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Libro Mayor')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-book-open text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Libro Mayor</div>
-                                <div class="card-description">Libro mayor de cuentas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Libro Mayor', 'fas fa-book-open', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Auxiliares Contables')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-columns text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Auxiliares Contables</div>
-                                <div class="card-description">Saldos auxiliares por cuenta</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Auxiliares Contables', 'fas fa-columns', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Ajustes y Reclasificaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-adjust text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Ajustes y Reclasificaciones</div>
-                                <div class="card-description">Ajustes contables y reclasificaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Ajustes y Reclasificaciones', 'fas fa-adjust', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'contabilidad', 'fa-book', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Catálogo Contable (oculto inicialmente) -->
-                    <div id="contabilidad-catalogo-contable-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Cuentas Contables')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-list text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cuentas Contables</div>
-                                <div class="card-description">Catálogo de cuentas contables</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'fas fa-list', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Libro Mayor')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-book-open"></i>
+                            <span>Libro Mayor</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Auxiliar de Cuentas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-indent text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Auxiliar de Cuentas</div>
-                                <div class="card-description">Detalle por cuenta contable</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'fas fa-indent', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Centros de Costos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-sitemap text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Centros de Costos</div>
-                                <div class="card-description">Administración de centros de costo</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'fas fa-sitemap', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Configuración Contable')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-cogs text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Configuración Contable</div>
-                                <div class="card-description">Configuración del sistema contable</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Configuración Contable', 'fas fa-cogs', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Libro Mayor', 'contabilidad', 'fa-book-open', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Contabilidad por Proyecto (oculto inicialmente) -->
-                    <div id="contabilidad-contabilidad-proyecto-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Costos por Obra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-hard-hat text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Costos por Obra</div>
-                                <div class="card-description">Costos directos por proyecto</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'fas fa-hard-hat', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliares Contables')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-columns"></i>
+                            <span>Auxiliares Contables</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Gastos Indirectos de Obra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-tools text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Gastos Indirectos de Obra</div>
-                                <div class="card-description">Gastos indirectos de proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'fas fa-tools', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Asignación de Gastos por Proyecto')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-project-diagram text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asignación de Gastos por Proyecto</div>
-                                <div class="card-description">Distribución de gastos a proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'fas fa-project-diagram', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Rentabilidad por Obra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Rentabilidad por Obra</div>
-                                <div class="card-description">Análisis de rentabilidad por proyecto</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Rentabilidad por Obra', 'fas fa-chart-line', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Cierre de Proyectos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-lock text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cierre de Proyectos</div>
-                                <div class="card-description">Proceso de cierre contable de proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cierre de Proyectos', 'fas fa-lock', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliares Contables', 'contabilidad', 'fa-columns', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Fiscal (oculto inicialmente) -->
-                    <div id="contabilidad-fiscal-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('DIOT')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-export text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">DIOT</div>
-                                <div class="card-description">Declaración Informativa de Operaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'fas fa-file-export', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Ajustes y Reclasificaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-adjust"></i>
+                            <span>Ajustes y Reclasificaciones</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Declaraciones Mensuales/Anuales')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Declaraciones Mensuales/Anuales</div>
-                                <div class="card-description">Declaraciones fiscales periódicas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales/Anuales', 'fas fa-calendar-alt', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Retenciones (ISR, IVA)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-percentage text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Retenciones (ISR, IVA)</div>
-                                <div class="card-description">Cálculo y control de retenciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'fas fa-percentage', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Complemento de Pagos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-check-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Complemento de Pagos</div>
-                                <div class="card-description">Complemento de pago CFDI</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'fas fa-money-check-alt', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Contabilidad Electrónica (XML)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-code text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Contabilidad Electrónica (XML)</div>
-                                <div class="card-description">Generación de contabilidad electrónica</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Contabilidad Electrónica (XML)', 'fas fa-code', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Ajustes y Reclasificaciones', 'contabilidad', 'fa-adjust', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Análisis y Reportes (oculto inicialmente) -->
-                    <div id="contabilidad-analisis-reportes-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Razones Financieras')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-bar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Razones Financieras</div>
-                                <div class="card-description">Análisis de razones financieras</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Razones Financieras', 'fas fa-chart-bar', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Catálogo Contable -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-catalogo')">
+                    <span><i class="fas fa-list-alt"></i> Catálogo Contable</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-catalogo" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-list"></i>
+                            <span>Cuentas Contables</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Comparativos Periódicos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Comparativos Periódicos</div>
-                                <div class="card-description">Comparación de periodos contables</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Comparativos Periódicos', 'fas fa-chart-line', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Análisis de Variaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-area text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Análisis de Variaciones</div>
-                                <div class="card-description">Análisis de variaciones presupuestales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Análisis de Variaciones', 'fas fa-chart-area', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Reportes Personalizados')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-edit text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Reportes Personalizados</div>
-                                <div class="card-description">Creación de reportes personalizados</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Reportes Personalizados', 'fas fa-edit', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'contabilidad', 'fa-list', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Cierre Contable (oculto inicialmente) -->
-                    <div id="contabilidad-cierre-contable-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Cierre Mensual')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-check text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cierre Mensual</div>
-                                <div class="card-description">Proceso de cierre contable mensual</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cierre Mensual', 'fas fa-calendar-check', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-indent"></i>
+                            <span>Auxiliar de Cuentas</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Cierre Anual')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cierre Anual</div>
-                                <div class="card-description">Proceso de cierre contable anual</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cierre Anual', 'fas fa-calendar', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-sitemap"></i>
+                            <span>Centros de Costos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Depreciaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Depreciaciones</div>
-                                <div class="card-description">Cálculo de depreciaciones de activos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Depreciaciones', 'fas fa-chart-line', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-cogs"></i>
+                            <span>Configuración Contable</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Amortizaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calculator text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Amortizaciones</div>
-                                <div class="card-description">Cálculo de amortizaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Amortizaciones', 'fas fa-calculator', 'Contabilidad')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Configuración Contable', 'contabilidad', 'fa-cogs', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contabilidad por Proyecto -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-proyecto')">
+                    <span><i class="fas fa-project-diagram"></i> Contabilidad por Proyecto</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-proyecto" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-hard-hat"></i>
+                            <span>Costos por Obra</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'contabilidad', 'fa-hard-hat', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-tools"></i>
+                            <span>Gastos Indirectos de Obra</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'contabilidad', 'fa-tools', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Asignación de Gastos por Proyecto</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Rentabilidad por Obra')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Rentabilidad por Obra</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Rentabilidad por Obra', 'contabilidad', 'fa-chart-line', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-lock"></i>
+                            <span>Cierre de Proyectos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre de Proyectos', 'contabilidad', 'fa-lock', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fiscal -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-fiscal')">
+                    <span><i class="fas fa-file-contract"></i> Fiscal</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-fiscal" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('DIOT')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-export"></i>
+                            <span>DIOT</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales/Anuales')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Declaraciones Mensuales/Anuales</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales/Anuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-percentage"></i>
+                            <span>Retenciones (ISR, IVA)</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-check-alt"></i>
+                            <span>Complemento de Pagos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'contabilidad', 'fa-money-check-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Contabilidad Electrónica (XML)')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-code"></i>
+                            <span>Contabilidad Electrónica (XML)</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contabilidad Electrónica (XML)', 'contabilidad', 'fa-code', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Análisis y Reportes -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-analisis')">
+                    <span><i class="fas fa-chart-bar"></i> Análisis y Reportes</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-analisis" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Razones Financieras')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Razones Financieras</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Razones Financieras', 'contabilidad', 'fa-chart-bar', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Comparativos Periódicos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Comparativos Periódicos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comparativos Periódicos', 'contabilidad', 'fa-chart-line', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Variaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-area"></i>
+                            <span>Análisis de Variaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Variaciones', 'contabilidad', 'fa-chart-area', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reportes Personalizados')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-edit"></i>
+                            <span>Reportes Personalizados</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reportes Personalizados', 'contabilidad', 'fa-edit', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cierre Contable -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-cierre')">
+                    <span><i class="fas fa-lock"></i> Cierre Contable</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="contabilidad-cierre" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cierre Mensual')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Cierre Mensual</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre Mensual', 'contabilidad', 'fa-calendar-check', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cierre Anual')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar"></i>
+                            <span>Cierre Anual</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre Anual', 'contabilidad', 'fa-calendar', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Depreciaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Depreciaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depreciaciones', 'contabilidad', 'fa-chart-line', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Amortizaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calculator"></i>
+                            <span>Amortizaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Amortizaciones', 'contabilidad', 'fa-calculator', this)"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Proyectos -->
-    <div id="modal-proyectos" class="modal-container">
-        <div class="modal-header bg-blue-600 text-white">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-project-diagram text-2xl"></i>
-                <div>
-                    <h2 class="text-2xl font-bold">Proyectos</h2>
-                    <p class="text-blue-100">Gestión integral de proyectos</p>
-                </div>
+    <!-- ==================== SIDEBAR DE PROYECTOS ==================== -->
+    <div id="sidebar-proyectos" class="section-sidebar">
+        <div class="section-sidebar-header">
+            <div class="section-sidebar-title">
+                <i class="fas fa-project-diagram"></i>
+                <h2>Proyectos</h2>
             </div>
-            <button onclick="closeModal('proyectos')" class="modal-close text-white hover:text-gray-200 p-2">
-                <i class="fas fa-times text-2xl"></i>
+            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <div class="modal-content">
-            <!-- Panel izquierdo - Títulos principales -->
-            <div class="modal-left-panel">
-                <h3 class="font-bold text-lg text-gray-800 mb-4">Secciones</h3>
-                <div class="space-y-2">
-                    <div class="menu-title-item active" onclick="selectTitle('proyectos', 'gestion-proyectos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-tasks text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Gestión de Proyectos</div>
-                            </div>
+        <div class="section-sidebar-content">
+            <!-- Gestión de Proyectos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-gestion')">
+                    <span><i class="fas fa-tasks"></i> Gestión de Proyectos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-gestion" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Cartera de Proyectos</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'proyectos', 'fa-briefcase', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'licitaciones')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-gavel text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Licitaciones</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Alta de Proyecto</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'proyectos', 'fa-plus-circle', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'presupuestos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-invoice-dollar text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Presupuestos</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Cronograma y Hitos</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'proyectos', 'fa-calendar-alt', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'costos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-money-bill-wave text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Costos</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-book"></i>
+                            <span>Bitácora de Obra</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'proyectos', 'fa-book', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'avances-obra')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-hard-hat text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Avances de Obra</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estatus y Dashboard')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Estatus y Dashboard</span>
                         </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'personal')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-users text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Personal</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'maquinaria-equipo')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-tractor text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Maquinaria y Equipo</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'inventarios')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-boxes text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Inventarios</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'compras-subcontratos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-shopping-cart text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Compras y Subcontratos</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'control-riesgos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-exclamation-triangle text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Control de Riesgos</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('proyectos', 'documentacion')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-folder text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Documentación</div>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estatus y Dashboard', 'proyectos', 'fa-tachometer-alt', this)"></i>
                     </div>
                 </div>
             </div>
-            
-            <!-- Panel derecho - Contenido del título seleccionado -->
-            <div class="modal-right-panel">
-                <div id="proyectos-content">
-                    <!-- Contenido para Gestión de Proyectos -->
-                    <div id="proyectos-gestion-proyectos-content" class="cards-grid">
-                        <div class="content-card" onclick="navigateTo('Cartera de Proyectos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-briefcase text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cartera de Proyectos</div>
-                                <div class="card-description">Gestión de cartera de proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'fas fa-briefcase', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+
+            <!-- Licitaciones -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-licitaciones')">
+                    <span><i class="fas fa-gavel"></i> Licitaciones</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-licitaciones" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-gavel"></i>
+                            <span>Licitaciones Activas</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Alta de Proyecto')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-plus-circle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Alta de Proyecto</div>
-                                <div class="card-description">Registro de nuevos proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'fas fa-plus-circle', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Cronograma y Hitos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cronograma y Hitos</div>
-                                <div class="card-description">Planificación de cronogramas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'fas fa-calendar-alt', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Bitácora de Obra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-book text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Bitácora de Obra</div>
-                                <div class="card-description">Registro diario de actividades</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'fas fa-book', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Estatus y Dashboard')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-tachometer-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Estatus y Dashboard</div>
-                                <div class="card-description">Dashboard de seguimiento de proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Estatus y Dashboard', 'fas fa-tachometer-alt', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Licitaciones (oculto inicialmente) -->
-                    <div id="proyectos-licitaciones-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Licitaciones Activas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-gavel text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Licitaciones Activas</div>
-                                <div class="card-description">Seguimiento de licitaciones en curso</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'fas fa-gavel', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Propuestas y Cotizaciones</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Propuestas y Cotizaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-contract text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Propuestas y Cotizaciones</div>
-                                <div class="card-description">Elaboración de propuestas técnicas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'fas fa-file-contract', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Análisis de Precios Unitarios')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calculator text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Análisis de Precios Unitarios</div>
-                                <div class="card-description">Análisis de precios unitarios (APU)</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'fas fa-calculator', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Histórico')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-history text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Histórico</div>
-                                <div class="card-description">Historial de licitaciones participadas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Histórico', 'fas fa-history', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'proyectos', 'fa-file-contract', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Presupuestos (Proyectos) (oculto inicialmente) -->
-                    <div id="proyectos-presupuestos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Presupuesto por Proyecto')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-invoice-dollar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Presupuesto por Proyecto</div>
-                                <div class="card-description">Presupuesto detallado por proyecto</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Proyecto', 'fas fa-file-invoice-dollar', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calculator"></i>
+                            <span>Análisis de Precios Unitarios</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Presupuesto por Partidas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-list-ol text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Presupuesto por Partidas</div>
-                                <div class="card-description">Desglose presupuestal por partidas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Partidas', 'fas fa-list-ol', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Control de Cambios')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exchange-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Control de Cambios</div>
-                                <div class="card-description">Control de cambios presupuestales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Control de Cambios', 'fas fa-exchange-alt', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Comparativo Presupuesto vs Real')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-balance-scale text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Comparativo Presupuesto vs Real</div>
-                                <div class="card-description">Comparación presupuesto vs ejecución</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Comparativo Presupuesto vs Real', 'fas fa-balance-scale', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Costos (oculto inicialmente) -->
-                    <div id="proyectos-costos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Costos Directos (Mano de Obra, Materiales, Subcontratos)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-bill-wave text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Costos Directos</div>
-                                <div class="card-description">Costos directos de mano de obra, materiales y subcontratos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'fas fa-money-bill-wave', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Histórico')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-history"></i>
+                            <span>Histórico</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Costos Indirectos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-tools text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Costos Indirectos</div>
-                                <div class="card-description">Costos indirectos de obra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'fas fa-tools', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Análisis de Rentabilidad')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Análisis de Rentabilidad</div>
-                                <div class="card-description">Análisis de rentabilidad por proyecto</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Análisis de Rentabilidad', 'fas fa-chart-line', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Histórico de Licitaciones', 'proyectos', 'fa-history', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Avances de Obra (oculto inicialmente) -->
-                    <div id="proyectos-avances-obra-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Avance Físico y Financiero')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-bar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Avance Físico y Financiero</div>
-                                <div class="card-description">Seguimiento de avance físico y financiero</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Avance Físico y Financiero', 'fas fa-chart-bar', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Presupuestos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-presupuestos')">
+                    <span><i class="fas fa-file-invoice-dollar"></i> Presupuestos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-presupuestos" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Proyecto')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Presupuesto por Proyecto</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Estimaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calculator text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Estimaciones</div>
-                                <div class="card-description">Generación de estimaciones de obra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'fas fa-calculator', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Reporte Fotográfico')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-camera text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Reporte Fotográfico</div>
-                                <div class="card-description">Reporte fotográfico de avances</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Reporte Fotográfico', 'fas fa-camera', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Proyecto', 'proyectos', 'fa-file-invoice-dollar', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Personal (oculto inicialmente) -->
-                    <div id="proyectos-personal-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Asignación a Proyectos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-user-check text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asignación a Proyectos</div>
-                                <div class="card-description">Asignación de personal a proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'fas fa-user-check', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Partidas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-list-ol"></i>
+                            <span>Presupuesto por Partidas</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Asistencia y Cuadrillas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-users text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asistencia y Cuadrillas</div>
-                                <div class="card-description">Control de asistencia y cuadrillas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'fas fa-users', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Rendimientos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Rendimientos</div>
-                                <div class="card-description">Análisis de rendimientos de personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Rendimientos', 'fas fa-chart-line', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Partidas', 'proyectos', 'fa-list-ol', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Maquinaria y Equipo (oculto inicialmente) -->
-                    <div id="proyectos-maquinaria-equipo-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Asignación de Equipo')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-tractor text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asignación de Equipo</div>
-                                <div class="card-description">Asignación de maquinaria a proyectos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'fas fa-tractor', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Cambios')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Control de Cambios</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Control de Maquinaria')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-cogs text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Control de Maquinaria</div>
-                                <div class="card-description">Control y seguimiento de maquinaria</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Control de Maquinaria', 'fas fa-cogs', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Mantenimiento de Equipo')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-tools text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Mantenimiento de Equipo</div>
-                                <div class="card-description">Programa de mantenimiento de equipo</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'fas fa-tools', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Bitácora de Uso')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-book text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Bitácora de Uso</div>
-                                <div class="card-description">Registro de uso de maquinaria</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'fas fa-book', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Costos de Operación')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-bill-wave text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Costos de Operación</div>
-                                <div class="card-description">Costos de operación de maquinaria</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Costos de Operación', 'fas fa-money-bill-wave', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Cambios', 'proyectos', 'fa-exchange-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Inventarios (oculto inicialmente) -->
-                    <div id="proyectos-inventarios-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Catálogo de Almacenes')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-warehouse text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Catálogo de Almacenes</div>
-                                <div class="card-description">Gestión de almacenes y bodegas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'fas fa-warehouse', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Comparativo Presupuesto vs Real')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-balance-scale"></i>
+                            <span>Comparativo Presupuesto vs Real</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Catálogo de Materiales')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-box text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Catálogo de Materiales</div>
-                                <div class="card-description">Catálogo de materiales y suministros</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'fas fa-box', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Existencias por Almacén')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-clipboard-list text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Existencias por Almacén</div>
-                                <div class="card-description">Consulta de existencias por almacén</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'fas fa-clipboard-list', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Entradas y Salidas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exchange-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Entradas y Salidas</div>
-                                <div class="card-description">Control de entradas y salidas de almacén</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'fas fa-exchange-alt', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Traspasos entre Almacenes')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-truck-moving text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Traspasos entre Almacenes</div>
-                                <div class="card-description">Traspasos de materiales entre almacenes</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'fas fa-truck-moving', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Ajustes de Inventario')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-adjust text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Ajustes de Inventario</div>
-                                <div class="card-description">Ajustes de inventario físico</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Ajustes de Inventario', 'fas fa-adjust', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Kardex')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-stream text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Kardex</div>
-                                <div class="card-description">Sistema de kardex de materiales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Kardex', 'fas fa-stream', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comparativo Presupuesto vs Real', 'proyectos', 'fa-balance-scale', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Compras y Subcontratos (oculto inicialmente) -->
-                    <div id="proyectos-compras-subcontratos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Requisiciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-clipboard-check text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Requisiciones</div>
-                                <div class="card-description">Gestión de requisiciones de materiales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'fas fa-clipboard-check', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Costos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-costos')">
+                    <span><i class="fas fa-money-bill-wave"></i> Costos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-costos" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Costos Directos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Órdenes de Compra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-shopping-cart text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Órdenes de Compra</div>
-                                <div class="card-description">Gestión de órdenes de compra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'fas fa-shopping-cart', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Gestión de Subcontratistas')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-handshake text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Gestión de Subcontratistas</div>
-                                <div class="card-description">Administración de subcontratistas</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Gestión de Subcontratistas', 'fas fa-handshake', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Almacén por Obra')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-warehouse text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Almacén por Obra</div>
-                                <div class="card-description">Gestión de almacenes por obra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Almacén por Obra', 'fas fa-warehouse', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'proyectos', 'fa-money-bill-wave', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Control de Riesgos (oculto inicialmente) -->
-                    <div id="proyectos-control-riesgos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Desviaciones (Costo y Tiempo)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exclamation-triangle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Desviaciones (Costo y Tiempo)</div>
-                                <div class="card-description">Control de desviaciones de costo y tiempo</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'fas fa-exclamation-triangle', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-tools"></i>
+                            <span>Costos Indirectos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Alertas e Incidencias')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-bell text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Alertas e Incidencias</div>
-                                <div class="card-description">Sistema de alertas e incidencias</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Alertas e Incidencias', 'fas fa-bell', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Control de Calidad')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-clipboard-check text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Control de Calidad</div>
-                                <div class="card-description">Control de calidad en obra</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Control de Calidad', 'fas fa-clipboard-check', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'proyectos', 'fa-tools', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Documentación (oculto inicialmente) -->
-                    <div id="proyectos-documentacion-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Contratos y Planos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-contract text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Contratos y Planos</div>
-                                <div class="card-description">Gestión de contratos y planos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'fas fa-file-contract', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Rentabilidad')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Análisis de Rentabilidad</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Permisos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Permisos</div>
-                                <div class="card-description">Gestión de permisos y autorizaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'fas fa-file-alt', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Rentabilidad', 'proyectos', 'fa-chart-line', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Avances de Obra -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-avances')">
+                    <span><i class="fas fa-hard-hat"></i> Avances de Obra</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-avances" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Avance Físico y Financiero')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Avance Físico y Financiero</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Evidencias (Fotos, Actas)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-camera text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Evidencias (Fotos, Actas)</div>
-                                <div class="card-description">Gestión de evidencias documentales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'fas fa-camera', 'Proyectos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Avance Físico y Financiero', 'proyectos', 'fa-chart-bar', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calculator"></i>
+                            <span>Estimaciones</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'proyectos', 'fa-calculator', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-camera"></i>
+                            <span>Reporte Fotográfico</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reporte Fotográfico', 'proyectos', 'fa-camera', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-personal')">
+                    <span><i class="fas fa-users"></i> Personal</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-personal" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-user-check"></i>
+                            <span>Asignación a Proyectos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'proyectos', 'fa-user-check', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-users"></i>
+                            <span>Asistencia y Cuadrillas</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Rendimientos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Rendimientos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Rendimientos', 'proyectos', 'fa-chart-line', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maquinaria y Equipo -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-maquinaria')">
+                    <span><i class="fas fa-tractor"></i> Maquinaria y Equipo</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-maquinaria" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-tractor"></i>
+                            <span>Asignación de Equipo</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'proyectos', 'fa-tractor', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Maquinaria')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-cogs"></i>
+                            <span>Control de Maquinaria</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Maquinaria', 'proyectos', 'fa-cogs', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-tools"></i>
+                            <span>Mantenimiento de Equipo</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-book"></i>
+                            <span>Bitácora de Uso</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'proyectos', 'fa-book', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Operación')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Costos de Operación</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Operación', 'proyectos', 'fa-money-bill-wave', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventarios -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-inventarios')">
+                    <span><i class="fas fa-boxes"></i> Inventarios</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-inventarios" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-warehouse"></i>
+                            <span>Catálogo de Almacenes</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'proyectos', 'fa-warehouse', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-box"></i>
+                            <span>Catálogo de Materiales</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'proyectos', 'fa-box', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Existencias por Almacén</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'proyectos', 'fa-clipboard-list', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Entradas y Salidas</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'proyectos', 'fa-exchange-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-truck-moving"></i>
+                            <span>Traspasos entre Almacenes</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'proyectos', 'fa-truck-moving', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Ajustes de Inventario')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-adjust"></i>
+                            <span>Ajustes de Inventario</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Ajustes de Inventario', 'proyectos', 'fa-adjust', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Kardex')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-stream"></i>
+                            <span>Kardex</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Kardex', 'proyectos', 'fa-stream', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compras y Subcontratos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-compras')">
+                    <span><i class="fas fa-shopping-cart"></i> Compras y Subcontratos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-compras" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span>Requisiciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'proyectos', 'fa-clipboard-check', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Órdenes de Compra</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'proyectos', 'fa-shopping-cart', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Gestión de Subcontratistas')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-handshake"></i>
+                            <span>Gestión de Subcontratistas</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gestión de Subcontratistas', 'proyectos', 'fa-handshake', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Almacén por Obra')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-warehouse"></i>
+                            <span>Almacén por Obra</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Almacén por Obra', 'proyectos', 'fa-warehouse', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Control de Riesgos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-riesgos')">
+                    <span><i class="fas fa-exclamation-triangle"></i> Control de Riesgos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-riesgos" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Desviaciones (Costo y Tiempo)</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'proyectos', 'fa-exclamation-triangle', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Alertas e Incidencias')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-bell"></i>
+                            <span>Alertas e Incidencias</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alertas e Incidencias', 'proyectos', 'fa-bell', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span>Control de Calidad</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Calidad', 'proyectos', 'fa-clipboard-check', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documentación -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-documentacion')">
+                    <span><i class="fas fa-folder"></i> Documentación</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="proyectos-documentacion" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Contratos y Planos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Permisos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Permisos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'proyectos', 'fa-file-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-camera"></i>
+                            <span>Evidencias (Fotos, Actas)</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'proyectos', 'fa-camera', this)"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Recursos Humanos -->
-    <div id="modal-rrhh" class="modal-container">
-        <div class="modal-header bg-blue-600 text-white">
-            <div class="flex items-center space-x-3">
-                <i class="fas fa-users text-2xl"></i>
-                <div>
-                    <h2 class="text-2xl font-bold">Recursos Humanos</h2>
-                    <p class="text-blue-100">Gestión de personal y nómina</p>
-                </div>
+    <!-- ==================== SIDEBAR DE RECURSOS HUMANOS ==================== -->
+    <div id="sidebar-rrhh" class="section-sidebar">
+        <div class="section-sidebar-header">
+            <div class="section-sidebar-title">
+                <i class="fas fa-users"></i>
+                <h2>Recursos Humanos</h2>
             </div>
-            <button onclick="closeModal('rrhh')" class="modal-close text-white hover:text-gray-200 p-2">
-                <i class="fas fa-times text-2xl"></i>
+            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <div class="modal-content">
-            <!-- Panel izquierdo - Títulos principales -->
-            <div class="modal-left-panel">
-                <h3 class="font-bold text-lg text-gray-800 mb-4">Secciones</h3>
-                <div class="space-y-2">
-                    <div class="menu-title-item active" onclick="selectTitle('rrhh', 'gestion-personal')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-user-tie text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Gestión de Personal</div>
-                            </div>
+        <div class="section-sidebar-content">
+            <!-- Gestión de Personal -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-personal')">
+                    <span><i class="fas fa-user-tie"></i> Gestión de Personal</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-personal" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-users"></i>
+                            <span>Plantilla de Empleados</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'rrhh', 'fa-users', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'asistencia-control')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-user-clock text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Asistencia y Control</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Alta y Baja de Personal')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Alta y Baja de Personal</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta y Baja de Personal', 'rrhh', 'fa-user-plus', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'nomina')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-money-check-alt text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Nómina</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-folder"></i>
+                            <span>Expediente Digital</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'prestaciones-descuentos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-hand-holding-usd text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Prestaciones y Descuentos</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-traffic-light"></i>
+                            <span>Semáforo de Documentos</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos', 'rrhh', 'fa-traffic-light', this)"></i>
                     </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'unidades-flotilla')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-car text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Unidades y Flotilla</div>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Historial Laboral')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-history"></i>
+                            <span>Historial Laboral</span>
                         </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'catalogos')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-list text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Catálogos</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'evaluacion-desarrollo')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Evaluación y Desarrollo</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="menu-title-item" onclick="selectTitle('rrhh', 'reportes')">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-chart-bar text-blue-600"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-gray-800">Reportes</div>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial Laboral', 'rrhh', 'fa-history', this)"></i>
                     </div>
                 </div>
             </div>
-            
-            <!-- Panel derecho - Contenido del título seleccionado -->
-            <div class="modal-right-panel">
-                <div id="rrhh-content">
-                    <!-- Contenido para Gestión de Personal -->
-                    <div id="rrhh-gestion-personal-content" class="cards-grid">
-                        <div class="content-card" onclick="navigateTo('Plantilla de Empleados')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-users text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Plantilla de Empleados</div>
-                                <div class="card-description">Directorio completo de empleados</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'fas fa-users', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+
+            <!-- Asistencia y Control -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-asistencia')">
+                    <span><i class="fas fa-user-clock"></i> Asistencia y Control</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-asistencia" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-user-clock"></i>
+                            <span>Asistencia</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Alta y Baja de Personal')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-user-plus text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Alta y Baja de Personal</div>
-                                <div class="card-description">Registro de altas y bajas de personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Alta y Baja de Personal', 'fas fa-user-plus', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Expediente Digital')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-folder text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Expediente Digital</div>
-                                <div class="card-description">Expediente digital del empleado</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'fas fa-folder', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Semáforo de Documentos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-traffic-light text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Semáforo de Documentos</div>
-                                <div class="card-description">Control de documentación del personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos', 'fas fa-traffic-light', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Historial Laboral')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-history text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Historial Laboral</div>
-                                <div class="card-description">Historial completo del empleado</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Historial Laboral', 'fas fa-history', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'rrhh', 'fa-user-clock', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Asistencia y Control (oculto inicialmente) -->
-                    <div id="rrhh-asistencia-control-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Asistencia')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-user-clock text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asistencia</div>
-                                <div class="card-description">Control de asistencia del personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'fas fa-user-clock', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-list"></i>
+                            <span>Lista de Asistencia</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Lista de Asistencia')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-list text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Lista de Asistencia</div>
-                                <div class="card-description">Listas de asistencia por periodo</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'fas fa-list', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Registro de Incidencias')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exclamation-circle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Registro de Incidencias</div>
-                                <div class="card-description">Registro de incidencias de asistencia</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Registro de Incidencias', 'fas fa-exclamation-circle', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Justificantes y Permisos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Justificantes y Permisos</div>
-                                <div class="card-description">Gestión de justificantes y permisos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'fas fa-file-alt', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Control de Horarios')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-clock text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Control de Horarios</div>
-                                <div class="card-description">Control de horarios y turnos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Control de Horarios', 'fas fa-clock', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'rrhh', 'fa-list', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Nómina (oculto inicialmente) -->
-                    <div id="rrhh-nomina-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Cálculo de Nómina')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calculator text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Cálculo de Nómina</div>
-                                <div class="card-description">Cálculo de nómina quincenal/mensual</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'fas fa-calculator', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Incidencias')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Registro de Incidencias</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Pagos de Nómina')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-check-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Pagos de Nómina</div>
-                                <div class="card-description">Proceso de pago de nómina</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'fas fa-money-check-alt', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Tabla de Sueldos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-table text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Tabla de Sueldos</div>
-                                <div class="card-description">Tabla de sueldos y salarios</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Tabla de Sueldos', 'fas fa-table', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Recibos de Nómina (Timbrado)')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-invoice-dollar text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Recibos de Nómina (Timbrado)</div>
-                                <div class="card-description">Generación de recibos de nómina</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'fas fa-file-invoice-dollar', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Histórico de Pagos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-history text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Histórico de Pagos</div>
-                                <div class="card-description">Historial de pagos de nómina</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Histórico de Pagos', 'fas fa-history', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Incidencias', 'rrhh', 'fa-exclamation-circle', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Prestaciones y Descuentos (oculto inicialmente) -->
-                    <div id="rrhh-prestaciones-descuentos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Préstamos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-hand-holding-usd text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Préstamos</div>
-                                <div class="card-description">Gestión de préstamos al personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'fas fa-hand-holding-usd', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Justificantes y Permisos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Descuentos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-percentage text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Descuentos</div>
-                                <div class="card-description">Gestión de descuentos al personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Descuentos', 'fas fa-percentage', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Vacaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-umbrella-beach text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Vacaciones</div>
-                                <div class="card-description">Control de vacaciones del personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'fas fa-umbrella-beach', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Asignación de Vacaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-calendar-check text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asignación de Vacaciones</div>
-                                <div class="card-description">Asignación y programación de vacaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asignación de Vacaciones', 'fas fa-calendar-check', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Aguinaldo y PTU')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-gift text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Aguinaldo y PTU</div>
-                                <div class="card-description">Cálculo de aguinaldo y PTU</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Aguinaldo y PTU', 'fas fa-gift', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Finiquitos y Liquidaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-contract text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Finiquitos y Liquidaciones</div>
-                                <div class="card-description">Cálculo de finiquitos y liquidaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Finiquitos y Liquidaciones', 'fas fa-file-contract', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'rrhh', 'fa-file-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Unidades y Flotilla (oculto inicialmente) -->
-                    <div id="rrhh-unidades-flotilla-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Semáforo de Documentos de Unidades')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-traffic-light text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Semáforo de Documentos de Unidades</div>
-                                <div class="card-description">Control de documentación vehicular</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos de Unidades', 'fas fa-traffic-light', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-clock"></i>
+                            <span>Control de Horarios</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Asignación de Flotilla')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-car text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Asignación de Flotilla</div>
-                                <div class="card-description">Asignación de vehículos a personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Asignación de Flotilla', 'fas fa-car', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Control de Vehículos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-tachometer-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Control de Vehículos</div>
-                                <div class="card-description">Control y seguimiento de vehículos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Control de Vehículos', 'fas fa-tachometer-alt', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Bitácora de Uso')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-book text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Bitácora de Uso</div>
-                                <div class="card-description">Registro de uso de vehículos</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'fas fa-book', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Verificaciones y Seguros')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-shield-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Verificaciones y Seguros</div>
-                                <div class="card-description">Control de verificaciones y seguros</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Verificaciones y Seguros', 'fas fa-shield-alt', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Horarios', 'rrhh', 'fa-clock', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Catálogos (oculto inicialmente) -->
-                    <div id="rrhh-catalogos-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('IMSS')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-hospital text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">IMSS</div>
-                                <div class="card-description">Catálogo de datos IMSS</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('IMSS', 'fas fa-hospital', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                </div>
+            </div>
+
+            <!-- Nómina -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-nomina')">
+                    <span><i class="fas fa-money-check-alt"></i> Nómina</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-nomina" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calculator"></i>
+                            <span>Cálculo de Nómina</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Deducciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-minus-circle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Deducciones</div>
-                                <div class="card-description">Catálogo de deducciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Deducciones', 'fas fa-minus-circle', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Percepciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-plus-circle text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Percepciones</div>
-                                <div class="card-description">Catálogo de percepciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Percepciones', 'fas fa-plus-circle', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Roles y Puestos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-user-tag text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Roles y Puestos</div>
-                                <div class="card-description">Catálogo de puestos y responsabilidades</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'fas fa-user-tag', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Áreas y Departamentos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-sitemap text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Áreas y Departamentos</div>
-                                <div class="card-description">Estructura organizacional</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'fas fa-sitemap', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Turnos')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-clock text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Turnos</div>
-                                <div class="card-description">Catálogo de turnos laborales</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Turnos', 'fas fa-clock', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'rrhh', 'fa-calculator', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Evaluación y Desarrollo (oculto inicialmente) -->
-                    <div id="rrhh-evaluacion-desarrollo-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Evaluación de Desempeño')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-chart-line text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Evaluación de Desempeño</div>
-                                <div class="card-description">Sistema de evaluación de desempeño</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Evaluación de Desempeño', 'fas fa-chart-line', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-check-alt"></i>
+                            <span>Pagos de Nómina</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Capacitaciones')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-graduation-cap text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Capacitaciones</div>
-                                <div class="card-description">Gestión de capacitaciones</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Capacitaciones', 'fas fa-graduation-cap', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Competencias')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-award text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Competencias</div>
-                                <div class="card-description">Gestión por competencias</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Competencias', 'fas fa-award', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Plan de Carrera')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-briefcase text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Plan de Carrera</div>
-                                <div class="card-description">Planes de desarrollo y carrera</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Plan de Carrera', 'fas fa-briefcase', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
-                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'rrhh', 'fa-money-check-alt', this)"></i>
                     </div>
-                    
-                    <!-- Contenido para Reportes (oculto inicialmente) -->
-                    <div id="rrhh-reportes-content" class="cards-grid" style="display: none;">
-                        <div class="content-card" onclick="navigateTo('Reportes IMSS')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-export text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Reportes IMSS</div>
-                                <div class="card-description">Generación de reportes para IMSS</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Reportes IMSS', 'fas fa-file-export', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Tabla de Sueldos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-table"></i>
+                            <span>Tabla de Sueldos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Reportes SAT')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-file-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Reportes SAT</div>
-                                <div class="card-description">Reportes para declaraciones SAT</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Reportes SAT', 'fas fa-file-alt', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Tabla de Sueldos', 'rrhh', 'fa-table', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Recibos de Nómina (Timbrado)</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Rotación de Personal')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-exchange-alt text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Rotación de Personal</div>
-                                <div class="card-description">Reportes de rotación de personal</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Rotación de Personal', 'fas fa-exchange-alt', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'rrhh', 'fa-file-invoice-dollar', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Histórico de Pagos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-history"></i>
+                            <span>Histórico de Pagos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Ausentismo')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-user-times text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Ausentismo</div>
-                                <div class="card-description">Reportes de ausentismo laboral</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Ausentismo', 'fas fa-user-times', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Histórico de Pagos', 'rrhh', 'fa-history', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prestaciones y Descuentos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-prestaciones')">
+                    <span><i class="fas fa-hand-holding-usd"></i> Prestaciones y Descuentos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-prestaciones" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Préstamos</span>
                         </div>
-                        
-                        <div class="content-card" onclick="navigateTo('Costos de Nómina por Proyecto')">
-                            <div class="card-icon bg-blue-100">
-                                <i class="fas fa-money-bill-wave text-blue-600"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-title">Costos de Nómina por Proyecto</div>
-                                <div class="card-description">Distribución de nómina por proyecto</div>
-                            </div>
-                            <div class="card-action">
-                                <button class="btn-favorite" onclick="event.stopPropagation(); toggleFavorite('Costos de Nómina por Proyecto', 'fas fa-money-bill-wave', 'Recursos Humanos')">
-                                    <i class="fas fa-star"></i>
-                                </button>
-                                <i class="fas fa-arrow-right text-gray-400"></i>
-                            </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'rrhh', 'fa-hand-holding-usd', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Descuentos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-percentage"></i>
+                            <span>Descuentos</span>
                         </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Descuentos', 'rrhh', 'fa-percentage', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>Vacaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'rrhh', 'fa-umbrella-beach', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Vacaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Asignación de Vacaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Vacaciones', 'rrhh', 'fa-calendar-check', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Aguinaldo y PTU')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-gift"></i>
+                            <span>Aguinaldo y PTU</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Aguinaldo y PTU', 'rrhh', 'fa-gift', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Finiquitos y Liquidaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finiquitos y Liquidaciones', 'rrhh', 'fa-file-contract', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unidades y Flotilla -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-unidades')">
+                    <span><i class="fas fa-car"></i> Unidades y Flotilla</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-unidades" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos de Unidades')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-traffic-light"></i>
+                            <span>Semáforo de Documentos de Unidades</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos de Unidades', 'rrhh', 'fa-traffic-light', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Flotilla')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-car"></i>
+                            <span>Asignación de Flotilla</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Flotilla', 'rrhh', 'fa-car', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Vehículos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Control de Vehículos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Vehículos', 'rrhh', 'fa-tachometer-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-book"></i>
+                            <span>Bitácora de Uso</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'rrhh', 'fa-book', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Verificaciones y Seguros')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Verificaciones y Seguros</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Verificaciones y Seguros', 'rrhh', 'fa-shield-alt', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Catálogos -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-catalogos')">
+                    <span><i class="fas fa-list"></i> Catálogos</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-catalogos" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('IMSS')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-hospital"></i>
+                            <span>IMSS</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('IMSS', 'rrhh', 'fa-hospital', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Deducciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-minus-circle"></i>
+                            <span>Deducciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Deducciones', 'rrhh', 'fa-minus-circle', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Percepciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Percepciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Percepciones', 'rrhh', 'fa-plus-circle', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-user-tag"></i>
+                            <span>Roles y Puestos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'rrhh', 'fa-user-tag', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-sitemap"></i>
+                            <span>Áreas y Departamentos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'rrhh', 'fa-sitemap', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Turnos')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-clock"></i>
+                            <span>Turnos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Turnos', 'rrhh', 'fa-clock', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evaluación y Desarrollo -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-evaluacion')">
+                    <span><i class="fas fa-chart-line"></i> Evaluación y Desarrollo</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-evaluacion" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Evaluación de Desempeño')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Evaluación de Desempeño</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evaluación de Desempeño', 'rrhh', 'fa-chart-line', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Capacitaciones')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Capacitaciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Capacitaciones', 'rrhh', 'fa-graduation-cap', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Competencias')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-award"></i>
+                            <span>Competencias</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Competencias', 'rrhh', 'fa-award', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Plan de Carrera')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Plan de Carrera</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plan de Carrera', 'rrhh', 'fa-briefcase', this)"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reportes -->
+            <div class="sidebar-menu-group">
+                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-reportes')">
+                    <span><i class="fas fa-chart-bar"></i> Reportes</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div id="rrhh-reportes" class="sidebar-submenu">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reportes IMSS')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-export"></i>
+                            <span>Reportes IMSS</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reportes IMSS', 'rrhh', 'fa-file-export', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reportes SAT')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Reportes SAT</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reportes SAT', 'rrhh', 'fa-file-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Rotación de Personal')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Rotación de Personal</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Rotación de Personal', 'rrhh', 'fa-exchange-alt', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Ausentismo')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-user-times"></i>
+                            <span>Ausentismo</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Ausentismo', 'rrhh', 'fa-user-times', this)"></i>
+                    </div>
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto')">
+                        <div class="flex items-center flex-1">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Costos de Nómina por Proyecto</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Nómina por Proyecto', 'rrhh', 'fa-money-bill-wave', this)"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Overlay para los modales -->
-    <div id="modal-overlay" class="modal-overlay" onclick="closeAllModals()"></div>
-
-    <!-- Barra lateral de favoritos -->
+    <!-- ==================== BARRA LATERAL DE FAVORITOS ==================== -->
     <div class="quick-sidebar" id="quick-sidebar">
-        <div class="bg-construction-dark text-white p-4">
+        <div class="bg-construction-dark text-white p-5">
             <div class="flex justify-between items-center">
                 <div>
                     <h3 class="font-bold text-lg">
-                        <i class="fas fa-star mr-2"></i>Accesos Rápidos
+                        <i class="fas fa-star mr-2" style="color: #ffff00;"></i> Accesos Rápidos
                     </h3>
-                    <p class="text-blue-100 text-sm mt-1">Tus herramientas favoritas</p>
+                    <p class="text-xs text-blue-100 mt-1">Tus módulos favoritos</p>
                 </div>
-                <div class="flex space-x-2">
-                    <button onclick="openQuickAccessSettings()" class="p-2 rounded-lg hover:bg-blue-800 transition" title="Configurar accesos">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-blue-800 transition">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+                <button onclick="toggleQuickSidebar()" class="p-1.5 rounded-lg hover:bg-blue-800 transition">
+                    <i class="fas fa-times text-white"></i>
+                </button>
             </div>
         </div>
         
-        <div class="p-4 flex-1 overflow-y-auto">
-            <div id="empty-favorites" class="text-center py-8 text-gray-500">
-                <i class="fas fa-star text-4xl mb-4 opacity-20"></i>
-                <p class="font-medium">No tienes accesos rápidos configurados</p>
-                <p class="text-sm mt-2">Haz clic en cualquier opción del menú y usa el botón <i class="fas fa-star text-yellow-500"></i> para agregarla a favoritos</p>
+        <div class="p-4 flex-1 overflow-y-auto" id="favorites-container">
+            <div id="empty-favorites" class="text-center py-10 text-white opacity-80">
+                <i class="fas fa-star text-4xl mb-3 opacity-30" style="color: #ffff00;"></i>
+                <p class="font-medium">No tienes accesos rápidos</p>
+                <p class="text-xs mt-2 opacity-70">Haz clic en la estrella ⭐ de cualquier menú para agregarlo</p>
             </div>
-            
             <div id="favorites-list" style="display: none;"></div>
         </div>
-        
-        <div class="p-4 border-t border-gray-200 bg-gray-50">
-            <div class="flex justify-between items-center">
-                <div class="text-sm text-gray-600">
-                    <p id="favorites-count">0 acceso(s)</p>
-                </div>
-                <div>
-                    <button onclick="clearFavorites()" class="text-red-600 hover:text-red-800 text-sm flex items-center">
-                        <i class="fas fa-trash-alt mr-1"></i>Limpiar
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Overlay para la barra lateral -->
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <!-- Botón flotante para barra lateral -->
-    <button onclick="toggleSidebar()" class="sidebar-toggle-btn bg-construction-dark text-white p-3 rounded-full shadow-lg hover:bg-blue-800 transition-all duration-300" id="sidebar-toggle-btn">
-        <i class="fas fa-star text-xl"></i>
-        <span id="favorite-count" class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 text-xs rounded-full flex items-center justify-center" style="display: none;"></span>
+    <!-- BOTÓN FLOTANTE -->
+    <button onclick="toggleQuickSidebar()" class="sidebar-toggle-btn" id="sidebar-toggle-btn">
+        <i class="fas fa-star"></i>
+        <span id="favorite-count" class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 text-xs rounded-full flex items-center justify-center font-bold" style="display: none;">0</span>
     </button>
 
-    <!-- Modal de configuración de accesos rápidos -->
-    <div id="quickaccess-settings-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[1002] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-            <div class="bg-construction-dark text-white p-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="font-bold text-lg">
-                        <i class="fas fa-cog mr-2"></i>Configurar Accesos Rápidos
-                    </h3>
-                    <button onclick="closeQuickAccessSettings()" class="p-2 rounded-lg hover:bg-blue-800 transition">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
-                <div class="flex space-x-6">
-                    <!-- Panel izquierdo: Accesos disponibles -->
-                    <div class="w-1/2 border-r pr-6">
-                        <h4 class="font-bold text-lg mb-4 text-construction-dark">Accesos Disponibles</h4>
-                        <p class="text-sm text-gray-600 mb-4">Selecciona los accesos que deseas tener en tu barra lateral</p>
-                        
-                        <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                            <!-- BI -->
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                <div class="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                                    <h5 class="font-bold text-blue-700 flex items-center">
-                                        <i class="fas fa-chart-line mr-2"></i> Business Intelligence
-                                    </h5>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-user-tie text-blue-600"></i>
-                                            </div>
-                                            <span>Directivo</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Directivo', 'fas fa-user-tie', 'BI')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-chart-pie text-blue-600"></i>
-                                            </div>
-                                            <span>Finanzas (BI)</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Finanzas (BI)', 'fas fa-chart-pie', 'BI')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-gavel text-blue-600"></i>
-                                            </div>
-                                            <span>Licitaciones</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Licitaciones', 'fas fa-gavel', 'BI')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Administración -->
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                <div class="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                                    <h5 class="font-bold text-blue-700 flex items-center">
-                                        <i class="fas fa-money-bill-wave mr-2"></i> Administración
-                                    </h5>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-file-invoice text-blue-600"></i>
-                                            </div>
-                                            <span>Facturación (CFDI)</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Facturación (CFDI)', 'fas fa-file-invoice', 'Administración')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-hand-holding-usd text-blue-600"></i>
-                                            </div>
-                                            <span>Cuentas por Cobrar</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Cuentas por Cobrar', 'fas fa-hand-holding-usd', 'Administración')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-calendar-alt text-blue-600"></i>
-                                            </div>
-                                            <span>Flujo Mensual</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Flujo Mensual', 'fas fa-calendar-alt', 'Administración')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Contabilidad -->
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                <div class="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                                    <h5 class="font-bold text-blue-700 flex items-center">
-                                        <i class="fas fa-calculator mr-2"></i> Contabilidad
-                                    </h5>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-chart-pie text-blue-600"></i>
-                                            </div>
-                                            <span>Estado de Resultados</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Estado de Resultados', 'fas fa-chart-pie', 'Contabilidad')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-balance-scale text-blue-600"></i>
-                                            </div>
-                                            <span>Balance General</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Balance General', 'fas fa-balance-scale', 'Contabilidad')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Proyectos -->
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                <div class="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                                    <h5 class="font-bold text-blue-700 flex items-center">
-                                        <i class="fas fa-project-diagram mr-2"></i> Proyectos
-                                    </h5>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-tasks text-blue-600"></i>
-                                            </div>
-                                            <span>Cartera de Proyectos</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Cartera de Proyectos', 'fas fa-tasks', 'Proyectos')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-hard-hat text-blue-600"></i>
-                                            </div>
-                                            <span>Avance Físico y Financiero</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Avance Físico y Financiero', 'fas fa-hard-hat', 'Proyectos')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Recursos Humanos -->
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
-                                <div class="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                                    <h5 class="font-bold text-blue-700 flex items-center">
-                                        <i class="fas fa-users mr-2"></i> Recursos Humanos
-                                    </h5>
-                                </div>
-                                <div class="p-3 space-y-2">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-users text-blue-600"></i>
-                                            </div>
-                                            <span>Plantilla de Empleados</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Plantilla de Empleados', 'fas fa-users', 'Recursos Humanos')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-3">
-                                                <i class="fas fa-money-check-alt text-blue-600"></i>
-                                            </div>
-                                            <span>Cálculo de Nómina</span>
-                                        </div>
-                                        <button onclick="addQuickAccess('Cálculo de Nómina', 'fas fa-money-check-alt', 'Recursos Humanos')" 
-                                                class="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                                            Agregar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Panel derecho: Mis accesos rápidos -->
-                    <div class="w-1/2">
-                        <h4 class="font-bold text-lg mb-4 text-construction-dark">Mis Accesos Rápidos</h4>
-                        <div class="mb-4">
-                            <div class="flex justify-between items-center mb-4">
-                                <div>
-                                    <p class="text-sm text-gray-600">Arrastra para reorganizar tus accesos rápidos</p>
-                                </div>
-                            </div>
-                            
-                            <div id="quickaccess-preview" class="space-y-3 p-4 border border-gray-300 rounded-lg min-h-[400px]">
-                                <div id="empty-quickaccess" class="text-center py-12 text-gray-500">
-                                    <i class="fas fa-star text-4xl mb-4 opacity-20"></i>
-                                    <p class="font-medium">No tienes accesos rápidos configurados</p>
-                                    <p class="text-sm mt-2">Agrega accesos desde el panel izquierdo</p>
-                                </div>
-                                <div id="quickaccess-items" style="display: none;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de confirmación de cierre de sesión -->
-    <div id="logout-confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[1100] hidden items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden confirmation-modal">
-            <div class="p-6">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
-                        <i class="fas fa-sign-out-alt text-red-600 text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg text-gray-800">Cerrar Sesión</h3>
-                        <p class="text-gray-600">¿Estás seguro de que deseas salir del sistema?</p>
-                    </div>
-                </div>
-                
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button onclick="closeLogoutConfirm()" 
-                            class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancelar
-                    </button>
-<form method="POST" action="{{ route('logout') }}">
-    @csrf
-    <button type="submit"
-        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-        Sí, Cerrar Sesión
-    </button>
-</form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ESPACIO PARA EL CONTENIDO DE LA PÁGINA -->
-    <div style="margin-top: 64px; min-height: calc(100vh - 64px);">
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="mainContent" class="main-content-container">
         @yield('content')
     </div>
 
-<script>
-    // Variables globales
-    let sidebarOpen = false;
-    let currentModal = null;
-    let draggedItem = null;
-    let quickAccess = [];
-    let isModalTransitioning = false;
-
-    // ==================== SISTEMA DE NOTIFICACIONES ====================
-    function notifications() {
-        return {
-            isOpen: false,
-            notifications: [],
-            filter: 'all',
-            page: 1,
-            pageSize: 10,
-            hasMore: true,
-            
-            sampleNotifications: [
-                {
-                    id: 1,
-                    title: "Proyecto Aprobado",
-                    message: "El proyecto 'Torre Norte' ha sido aprobado para construcción",
-                    type: "success",
-                    category: "Construcción",
-                    priority: "medium",
-                    read: false,
-                    timestamp: new Date(Date.now() - 5 * 60 * 1000)
-                },
-                {
-                    id: 2,
-                    title: "Documento Pendiente",
-                    message: "Firma requerida para el contrato #CT-2024-001",
-                    type: "warning",
-                    category: "Administración",
-                    priority: "high",
-                    read: false,
-                    timestamp: new Date(Date.now() - 30 * 60 * 1000)
-                },
-                {
-                    id: 3,
-                    title: "Reunión Programada",
-                    message: "Revisión de avances programada para mañana a las 10:00 AM",
-                    type: "info",
-                    category: "Dirección",
-                    priority: "medium",
-                    read: true,
-                    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
-                },
-                {
-                    id: 4,
-                    title: "Actualización del Sistema",
-                    message: "Nueva versión del sistema disponible. Actualiza cuando puedas.",
-                    type: "system",
-                    category: "Sistema",
-                    priority: "low",
-                    read: true,
-                    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000)
-                },
-                {
-                    id: 5,
-                    title: "Presupuesto Excedido",
-                    message: "El presupuesto del proyecto 'Residencial Verde' ha excedido en un 15%",
-                    type: "danger",
-                    category: "Finanzas",
-                    priority: "high",
-                    read: false,
-                    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
-                },
-                {
-                    id: 6,
-                    title: "Tarea Completada",
-                    message: "La tarea 'Análisis de costos' ha sido completada por Juan Pérez",
-                    type: "success",
-                    category: "Proyectos",
-                    priority: "low",
-                    read: true,
-                    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-                }
-            ],
-            
-            initNotifications() {
-                this.loadNotifications();
-                this.simulateRealTimeNotifications();
-                
-                setInterval(() => {
-                    this.updateUnreadCount();
-                }, 60000);
-            },
-            
-            loadNotifications() {
-                const saved = localStorage.getItem('user_notifications');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    this.notifications = parsed.map(n => ({
-                        ...n,
-                        timestamp: new Date(n.timestamp)
-                    }));
-                } else {
-                    this.notifications = this.sampleNotifications;
-                    this.saveNotifications();
-                }
-                this.updateUnreadCount();
-            },
-            
-            saveNotifications() {
-                localStorage.setItem('user_notifications', JSON.stringify(this.notifications));
-            },
-            
-            toggleNotifications() {
-                this.isOpen = !this.isOpen;
-                if (this.isOpen) {
-                    this.markAllAsRead();
-                }
-            },
-            
-            get unreadCount() {
-                return this.notifications.filter(n => !n.read).length;
-            },
-            
-            get filteredNotifications() {
-                let filtered = this.notifications;
-                
-                if (this.filter === 'unread') {
-                    filtered = filtered.filter(n => !n.read);
-                } else if (this.filter === 'important') {
-                    filtered = filtered.filter(n => n.priority === 'high');
-                }
-                
-                filtered.sort((a, b) => b.timestamp - a.timestamp);
-                
-                return filtered.slice(0, this.page * this.pageSize);
-            },
-            
-            getTypeClass(type) {
-                const classes = {
-                    'success': 'bg-blue-100 text-blue-600',
-                    'warning': 'bg-blue-100 text-blue-600',
-                    'danger': 'bg-blue-100 text-blue-600',
-                    'info': 'bg-blue-100 text-blue-600',
-                    'system': 'bg-blue-100 text-blue-600'
-                };
-                return classes[type] || 'bg-blue-100 text-blue-600';
-            },
-            
-            getTypeIcon(type) {
-                const icons = {
-                    'success': 'fas fa-check-circle',
-                    'warning': 'fas fa-exclamation-triangle',
-                    'danger': 'fas fa-times-circle',
-                    'info': 'fas fa-info-circle',
-                    'system': 'fas fa-cogs'
-                };
-                return icons[type] || 'fas fa-bell';
-            },
-            
-            formatTime(timestamp) {
-                const now = new Date();
-                const date = new Date(timestamp);
-                const diffMs = now - date;
-                const diffMins = Math.floor(diffMs / 60000);
-                const diffHours = Math.floor(diffMs / 3600000);
-                const diffDays = Math.floor(diffMs / 86400000);
-                
-                if (diffMins < 1) return 'Ahora';
-                if (diffMins < 60) return `Hace ${diffMins} min`;
-                if (diffHours < 24) return `Hace ${diffHours} h`;
-                if (diffDays < 7) return `Hace ${diffDays} d`;
-                
-                return date.toLocaleDateString();
-            },
-            
-            markAsRead(id) {
-                const notification = this.notifications.find(n => n.id === id);
-                if (notification) {
-                    notification.read = true;
-                    this.saveNotifications();
-                    this.updateUnreadCount();
-                    
-                    if (notification.action) {
-                        window.location.href = notification.action;
-                    }
-                }
-            },
-            
-            markAllAsRead() {
-                this.notifications.forEach(n => n.read = true);
-                this.saveNotifications();
-                this.updateUnreadCount();
-            },
-            
-            deleteNotification(id) {
-                this.notifications = this.notifications.filter(n => n.id !== id);
-                this.saveNotifications();
-                this.updateUnreadCount();
-                this.showNotification('Notificación eliminada');
-            },
-            
-            clearAll() {
-                if (confirm('¿Estás seguro de que deseas eliminar todas las notificaciones?')) {
-                    this.notifications = [];
-                    this.saveNotifications();
-                    this.updateUnreadCount();
-                    this.showNotification('Todas las notificaciones han sido eliminadas');
-                }
-            },
-            
-            loadMore() {
-                this.page++;
-                if (this.filteredNotifications.length >= this.notifications.length) {
-                    this.hasMore = false;
-                }
-            },
-            
-            viewAll() {
-                window.location.href = '/notificaciones';
-            },
-            
-            updateUnreadCount() {
-                const badge = document.querySelector('#notification-dot');
-                const countBadge = document.querySelector('#notification-count');
-                
-                const count = this.unreadCount;
-                if (badge) badge.style.display = count > 0 ? 'block' : 'none';
-                
-                const notificationButton = document.querySelector('[x-data="notifications()"] button');
-                if (notificationButton) {
-                    const existingBadge = notificationButton.querySelector('.absolute.-top-1.-right-1');
-                    if (existingBadge) {
-                        if (count > 0) {
-                            existingBadge.textContent = count > 9 ? '9+' : count;
-                            existingBadge.style.display = 'flex';
-                        } else {
-                            existingBadge.style.display = 'none';
-                        }
-                    }
-                }
-            },
-            
-            simulateRealTimeNotifications() {
-                setInterval(() => {
-                    if (Math.random() > 0.7) {
-                        const types = ['success', 'warning', 'info', 'danger'];
-                        const categories = ['Construcción', 'Administración', 'Dirección', 'Finanzas', 'Proyectos'];
-                        
-                        const newNotification = {
-                            id: Date.now(),
-                            title: this.getRandomTitle(),
-                            message: this.getRandomMessage(),
-                            type: types[Math.floor(Math.random() * types.length)],
-                            category: categories[Math.floor(Math.random() * categories.length)],
-                            priority: Math.random() > 0.7 ? 'high' : 'medium',
-                            read: false,
-                            timestamp: new Date()
-                        };
-                        
-                        this.notifications.unshift(newNotification);
-                        this.saveNotifications();
-                        this.updateUnreadCount();
-                        
-                        if (!this.isOpen) {
-                            this.showToastNotification(newNotification);
-                        }
-                    }
-                }, 120000);
-            },
-            
-            getRandomTitle() {
-                const titles = [
-                    "Nuevo Comentario",
-                    "Tarea Asignada",
-                    "Documento Actualizado",
-                    "Recordatorio Importante",
-                    "Cambio de Estado",
-                    "Nuevo Mensaje",
-                    "Actualización de Proyecto",
-                    "Alerta de Sistema"
-                ];
-                return titles[Math.floor(Math.random() * titles.length)];
-            },
-            
-            getRandomMessage() {
-                const messages = [
-                    "Se ha agregado un nuevo comentario a tu proyecto",
-                    "Tienes una nueva tarea asignada para revisar",
-                    "El documento ha sido actualizado con nueva información",
-                    "Recordatorio: Reunión programada para mañana",
-                    "El estado del proyecto ha cambiado a 'En revisión'",
-                    "Tienes un nuevo mensaje del equipo de dirección",
-                    "El proyecto ha avanzado un 15% esta semana",
-                    "El sistema ha detectado una actividad inusual"
-                ];
-                return messages[Math.floor(Math.random() * messages.length)];
-            },
-            
-            showToastNotification(notification) {
-                const toast = document.createElement('div');
-                toast.className = 'fixed top-20 right-4 w-80 bg-white rounded-lg shadow-xl z-50 border border-gray-200 overflow-hidden animate-slide-in-right';
-                toast.innerHTML = `
-                    <div class="p-4">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-3">
-                                <div class="${this.getTypeClass(notification.type)} w-8 h-8 rounded-lg flex items-center justify-center">
-                                    <i class="${this.getTypeIcon(notification.type)}"></i>
-                                </div>
-                                <div>
-                                    <h5 class="font-semibold text-gray-800">${notification.title}</h5>
-                                    <p class="text-sm text-gray-600 mt-1">${notification.message}</p>
-                                </div>
-                            </div>
-                            <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                
-                setTimeout(() => {
-                    toast.remove();
-                }, 5000);
-            },
-            
-            showNotification(message) {
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification(message);
-                } else {
-                    console.log(message);
-                }
-            }
-        };
-    }
-
-    // Inicializar al cargar la página
-    document.addEventListener('DOMContentLoaded', function() {
-        loadQuickAccess();
+    <script>
+        // ========== VARIABLES GLOBALES ==========
+        let currentSection = null;
+        let mobileMenuOpen = false;
         
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeAllModals();
-                closeQuickAccessSettings();
-                closeLogoutConfirm();
-            }
-        });
-        
-        const overlay = document.getElementById('modal-overlay');
-        if (overlay) {
-            overlay.addEventListener('click', function(e) {
-                if (isModalTransitioning) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    return false;
-                }
-                closeAllModals();
-            });
-        }
-        
-        // Inicializar todos los modales al cargar
-        initAllModals();
-    });
+        // Sistema de Accesos Rápidos (Favoritos)
+        let quickAccess = JSON.parse(localStorage.getItem('quickAccess')) || [];
 
-    // ==================== INICIALIZACIÓN DE MODALES ====================
-    function initAllModals() {
-        const modals = ['bi', 'administracion', 'contabilidad', 'proyectos', 'rrhh'];
-        modals.forEach(modalId => {
-            const modal = document.getElementById('modal-' + modalId);
-            if (modal) {
-                // Asegurar que todos los modales estén ocultos inicialmente
-                modal.style.display = 'none';
-                modal.style.opacity = '0';
-                modal.style.visibility = 'hidden';
-                modal.style.transform = 'translateX(-50%) translateY(-20px)';
-                
-                // Preparar el contenido de cada modal
-                prepareModalContent(modalId);
-            }
-        });
-    }
-
-    function prepareModalContent(modalId) {
-        const modal = document.getElementById('modal-' + modalId);
-        if (!modal) return;
-        
-        const modalContent = document.getElementById(modalId + '-content');
-        if (!modalContent) return;
-        
-        // Ocultar todos los contenidos excepto el primero
-        const allContents = modalContent.querySelectorAll('div[id*="-content"]');
-        if (allContents.length > 0) {
-            allContents.forEach((content, index) => {
-                if (content.id.startsWith(modalId + '-') && index === 0) {
-                    content.style.display = 'grid';
-                } else {
-                    content.style.display = 'none';
-                }
-            });
-        }
-        
-        // Activar el primer título
-        const firstTitle = modal.querySelector('.menu-title-item');
-        const allTitles = modal.querySelectorAll('.menu-title-item');
-        allTitles.forEach(title => title.classList.remove('active'));
-        if (firstTitle) {
-            firstTitle.classList.add('active');
-        }
-    }
-
-    // ==================== ACCESOS RÁPIDOS ====================
-    function loadQuickAccess() {
-        const userId = {{ Auth::id() ?? 'null' }};
-        const storageKey = `quickAccess_${userId}`;
-        
-        const savedQuickAccess = localStorage.getItem(storageKey);
-        if (savedQuickAccess) {
-            quickAccess = JSON.parse(savedQuickAccess);
-        } else {
-            quickAccess = getDefaultQuickAccess();
-            saveQuickAccess();
-        }
-        
-        updateFavoritesDisplay();
-        updateFavoriteButtons();
-    }
-
-    function getDefaultQuickAccess() {
-        const userRole = '{{ Auth::user()->role ?? "user" }}';
-        
-        const defaults = {
-            'admin': [
-                { name: 'Directivo', icon: 'fas fa-user-tie', category: 'BI', id: 'directivo' },
-                { name: 'Facturación (CFDI)', icon: 'fas fa-file-invoice', category: 'Administración', id: 'facturacion-cfdi' },
-                { name: 'Cartera de Proyectos', icon: 'fas fa-briefcase', category: 'Proyectos', id: 'cartera-proyectos' },
-                { name: 'Plantilla de Empleados', icon: 'fas fa-users', category: 'Recursos Humanos', id: 'plantilla-empleados' }
-            ],
-            'director': [
-                { name: 'Directivo', icon: 'fas fa-user-tie', category: 'BI', id: 'directivo' },
-                { name: 'Estado de Resultados', icon: 'fas fa-chart-pie', category: 'Contabilidad', id: 'estado-resultados' },
-                { name: 'Balance General', icon: 'fas fa-balance-scale', category: 'Contabilidad', id: 'balance-general' }
-            ],
-            'user': [
-                { name: 'Avance Físico y Financiero', icon: 'fas fa-hard-hat', category: 'Proyectos', id: 'avance-fisico-financiero' },
-                { name: 'Cálculo de Nómina', icon: 'fas fa-calculator', category: 'Recursos Humanos', id: 'calculo-nomina' }
-            ]
-        };
-        
-        return defaults[userRole] || defaults['user'];
-    }
-
-    function saveQuickAccess() {
-        const userId = {{ Auth::id() ?? 'null' }};
-        const storageKey = `quickAccess_${userId}`;
-        localStorage.setItem(storageKey, JSON.stringify(quickAccess));
-        updateFavoritesDisplay();
-    }
-
-    function addQuickAccess(name, icon, category) {
-        const id = name.toLowerCase().replace(/\s+/g, '-');
-        
-        const exists = quickAccess.some(item => item.id === id);
-        if (!exists) {
-            quickAccess.push({
-                name: name,
-                icon: icon,
-                category: category,
-                id: id,
-                userId: {{ Auth::id() ?? 'null' }}
-            });
+        // ========== FUNCIONES DE SIDEBAR ==========
+        function toggleSectionSidebar(section) {
+            const sidebar = document.getElementById(`sidebar-${section}`);
+            const mainContent = document.getElementById('mainContent');
+            const tabBar = document.querySelector('.tab-navigation-bar');
             
-            showNotification(`${name} agregado a accesos rápidos`);
-            renderQuickAccess();
-            saveQuickAccess();
-        } else {
-            showNotification(`${name} ya está en tus accesos rápidos`);
-        }
-    }
-
-    function removeQuickAccess(index) {
-        const removed = quickAccess.splice(index, 1)[0];
-        showNotification(`${removed.name} eliminado de accesos rápidos`);
-        renderQuickAccess();
-        saveQuickAccess();
-    }
-
-    function renderQuickAccess() {
-        const container = document.getElementById('quickaccess-items');
-        const emptyMessage = document.getElementById('empty-quickaccess');
-        
-        if (!quickAccess || quickAccess.length === 0) {
-            if (container) container.style.display = 'none';
-            if (emptyMessage) emptyMessage.style.display = 'block';
-            return;
-        }
-        
-        if (container) {
-            container.style.display = 'block';
-            if (emptyMessage) emptyMessage.style.display = 'none';
+            if (!sidebar) return;
             
-            let html = '';
-            quickAccess.forEach((item, index) => {
-                const colorClasses = {
-                    'BI': 'bg-blue-100 text-blue-600',
-                    'Administración': 'bg-green-100 text-green-600',
-                    'Contabilidad': 'bg-purple-100 text-purple-600',
-                    'Proyectos': 'bg-orange-100 text-orange-600',
-                    'Recursos Humanos': 'bg-red-100 text-red-600'
-                };
-                
-                const bgColor = colorClasses[item.category] || 'bg-gray-100 text-gray-600';
-                
-                html += `
-                    <div class="draggable-item flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 mb-2"
-                         draggable="true" data-index="${index}">
-                        <div class="flex items-center">
-                            <i class="fas fa-grip-vertical text-gray-400 mr-3 cursor-move" title="Arrastrar para reordenar"></i>
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${bgColor}">
-                                <i class="${item.icon}"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium">${item.name}</div>
-                                    <div class="text-xs text-gray-500">${item.category}</div>
-                            </div>
-                        </div>
-                        <button onclick="removeQuickAccess(${index})" class="text-red-600 hover:text-red-800 p-1">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-            initDragAndDrop();
-        }
-    }
-
-    function saveQuickAccessChanges() {
-        saveQuickAccess();
-        showNotification('Accesos rápidos guardados correctamente');
-        closeQuickAccessSettings();
-    }
-
-    function openQuickAccessSettings() {
-        renderQuickAccess();
-        document.getElementById('quickaccess-settings-modal').classList.remove('hidden');
-        document.getElementById('quickaccess-settings-modal').classList.add('flex');
-    }
-
-    function closeQuickAccessSettings() {
-        document.getElementById('quickaccess-settings-modal').classList.add('hidden');
-        document.getElementById('quickaccess-settings-modal').classList.remove('flex');
-    }
-
-    // ==================== ARRASTRAR Y SOLTAR ====================
-    function initDragAndDrop() {
-        const container = document.getElementById('quickaccess-items');
-        if (!container) return;
-        
-        const draggableItems = container.querySelectorAll('.draggable-item');
-        draggableItems.forEach(item => {
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', handleDragOver);
-            item.addEventListener('dragenter', handleDragEnter);
-            item.addEventListener('dragleave', handleDragLeave);
-            item.addEventListener('drop', handleDrop);
-            item.addEventListener('dragend', handleDragEnd);
-        });
-    }
-
-    function handleDragStart(e) {
-        draggedItem = this;
-        this.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', this.innerHTML);
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault();
-        return false;
-    }
-
-    function handleDragEnter(e) {
-        this.classList.add('over');
-    }
-
-    function handleDragLeave(e) {
-        this.classList.remove('over');
-    }
-
-    function handleDrop(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        
-        if (draggedItem !== this) {
-            const items = Array.from(document.querySelectorAll('.draggable-item'));
-            const draggedIndex = parseInt(draggedItem.getAttribute('data-index'));
-            const dropIndex = parseInt(this.getAttribute('data-index'));
-            
-            if (!isNaN(draggedIndex) && !isNaN(dropIndex)) {
-                const [removed] = quickAccess.splice(draggedIndex, 1);
-                quickAccess.splice(dropIndex, 0, removed);
-                
-                renderQuickAccess();
-            }
-        }
-        
-        return false;
-    }
-
-    function handleDragEnd(e) {
-        const items = document.querySelectorAll('.draggable-item');
-        items.forEach(item => {
-            item.classList.remove('over');
-            item.classList.remove('dragging');
-        });
-        draggedItem = null;
-    }
-
-    // ==================== FUNCIONES PARA FAVORITOS ====================
-    function updateFavoritesDisplay() {
-        const favoritesList = document.getElementById('favorites-list');
-        const emptyFavorites = document.getElementById('empty-favorites');
-        const favoritesCount = document.getElementById('favorites-count');
-        const notificationDot = document.getElementById('notification-dot');
-        const favoriteCountBadge = document.getElementById('favorite-count');
-        
-        const count = quickAccess ? quickAccess.length : 0;
-        
-        if (favoritesCount) favoritesCount.textContent = `${count} acceso(s)`;
-        
-        if (count > 0) {
-            if (notificationDot) notificationDot.style.display = 'block';
-            if (favoriteCountBadge) {
-                favoriteCountBadge.textContent = count;
-                favoriteCountBadge.style.display = 'flex';
+            if (currentSection === section && sidebar.classList.contains('open')) {
+                closeSectionSidebar();
+                return;
             }
             
-            if (favoritesList) {
-                favoritesList.style.display = 'block';
-                if (emptyFavorites) emptyFavorites.style.display = 'none';
-                
-                let html = '<div class="space-y-3">';
-                quickAccess.forEach((item, index) => {
-                    const colorClasses = {
-                        'BI': 'bg-blue-100 text-blue-600',
-                        'Administración': 'bg-green-100 text-green-600',
-                        'Contabilidad': 'bg-purple-100 text-purple-600',
-                        'Proyectos': 'bg-orange-100 text-orange-600',
-                        'Recursos Humanos': 'bg-red-100 text-red-600'
-                    };
-                    
-                    const bgColor = colorClasses[item.category] || 'bg-gray-100 text-gray-600';
-                    
-                    html += `
-                        <div class="favorite-item bg-white border border-gray-200 rounded-lg p-3 flex items-center justify-between group hover:shadow-md transition-shadow">
-                            <div class="flex-1">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 ${bgColor}">
-                                        <i class="${item.icon}"></i>
-                                    </div>
-                                    <div>
-                                        <div class="font-medium">${item.name}</div>
-                                        <div class="text-xs text-gray-500">${item.category}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <button onclick="navigateFromFavorite('${item.name}')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition" title="Abrir">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                favoritesList.innerHTML = html;
-            }
-        } else {
-            if (notificationDot) notificationDot.style.display = 'none';
-            if (favoriteCountBadge) favoriteCountBadge.style.display = 'none';
-            if (favoritesList) favoritesList.style.display = 'none';
-            if (emptyFavorites) emptyFavorites.style.display = 'block';
-        }
-    }
-
-    function updateFavoriteButtons() {
-        const activeModal = currentModal ? document.getElementById('modal-' + currentModal) : null;
-        
-        if (activeModal) {
-            const cards = activeModal.querySelectorAll('.content-card');
-            cards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent;
-                const btn = card.querySelector('.btn-favorite');
-                
-                if (btn) {
-                    const isFavorite = quickAccess && quickAccess.some(item => item.name === title);
-                    
-                    if (isFavorite) {
-                        btn.classList.add('active');
-                        btn.innerHTML = '<i class="fas fa-star"></i>';
-                    } else {
-                        btn.classList.remove('active');
-                        btn.innerHTML = '<i class="fas fa-star"></i>';
-                    }
-                }
-            });
-        }
-    }
-
-    function toggleFavorite(name, icon, category) {
-        const id = name.toLowerCase().replace(/\s+/g, '-');
-        const existingIndex = quickAccess.findIndex(item => item.id === id);
-        
-        if (existingIndex !== -1) {
-            quickAccess.splice(existingIndex, 1);
-            showNotification(`${name} eliminado de accesos rápidos`);
-        } else {
-            quickAccess.push({
-                name: name,
-                icon: icon,
-                category: category,
-                id: id,
-                userId: {{ Auth::id() ?? 'null' }}
-            });
-            showNotification(`${name} agregado a accesos rápidos`);
-        }
-        
-        saveQuickAccess();
-        updateFavoriteButtons();
-    }
-
-    function clearFavorites() {
-        if (quickAccess && quickAccess.length > 0) {
-            if (confirm('¿Estás seguro de que deseas eliminar todos los accesos rápidos?')) {
-                quickAccess = [];
-                saveQuickAccess();
-                showNotification('Todos los accesos rápidos han sido eliminados');
-            }
-        } else {
-            showNotification('No hay accesos rápidos para eliminar');
-        }
-    }
-
-    // ==================== FUNCIONES DE NAVEGACIÓN ====================
-    function navigateTo(pageName) {
-        closeAllModals();
-        showNotification(`Navegando a: ${pageName}`);
-    }
-
-    function navigateFromFavorite(pageName) {
-        showNotification(`Abriendo: ${pageName}`);
-        toggleSidebar();
-    }
-
-    // ==================== FUNCIONES DE CERRAR SESIÓN ====================
-    function confirmLogout() {
-        document.getElementById('logout-confirm-modal').classList.remove('hidden');
-        document.getElementById('logout-confirm-modal').classList.add('flex');
-    }
-
-    function closeLogoutConfirm() {
-        document.getElementById('logout-confirm-modal').classList.add('hidden');
-        document.getElementById('logout-confirm-modal').classList.remove('flex');
-    }
-
-    // ==================== FUNCIONES DE MODALES ====================
-    function openModal(modalId) {
-        if (isModalTransitioning) return;
-        
-        isModalTransitioning = true;
-        
-        // Cerrar cualquier modal abierto actualmente
-        if (currentModal && currentModal !== modalId) {
-            closeCurrentModal();
-        }
-        
-        setTimeout(() => {
-            currentModal = modalId;
-            const overlay = document.getElementById('modal-overlay');
-            const modal = document.getElementById('modal-' + modalId);
+            closeAllSectionSidebars();
             
-            if (overlay && modal) {
-                overlay.classList.add('active');
-                overlay.style.display = 'block';
-                
-                modal.classList.add('active');
-                modal.style.display = 'flex';
-                document.body.classList.add('modal-open');
-                
-                setTimeout(() => {
-                    overlay.style.opacity = '1';
-                    overlay.style.visibility = 'visible';
-                    
-                    modal.style.opacity = '1';
-                    modal.style.visibility = 'visible';
-                    modal.style.transform = 'translateX(-50%) translateY(0)';
-                    
-                    resetModalContent(modalId);
-                    
-                    setTimeout(updateFavoriteButtons, 100);
-                    
-                    isModalTransitioning = false;
-                }, 20);
-            } else {
-                isModalTransitioning = false;
-            }
-        }, 50);
-    }
-
-    function closeCurrentModal() {
-        if (currentModal) {
-            const modal = document.getElementById('modal-' + currentModal);
-            const overlay = document.getElementById('modal-overlay');
-            
-            if (modal) {
-                modal.classList.remove('active');
-                setTimeout(() => {
-                    modal.style.opacity = '0';
-                    modal.style.visibility = 'hidden';
-                    modal.style.transform = 'translateX(-50%) translateY(-20px)';
-                    setTimeout(() => {
-                        modal.style.display = 'none';
-                    }, 300);
-                }, 10);
-            }
-            
-            if (overlay) {
-                overlay.classList.remove('active');
-                setTimeout(() => {
-                    overlay.style.opacity = '0';
-                    overlay.style.visibility = 'hidden';
-                    setTimeout(() => {
-                        overlay.style.display = 'none';
-                        document.body.classList.remove('modal-open');
-                    }, 300);
-                }, 10);
-            }
-            
-            currentModal = null;
-        }
-    }
-
-    function selectTitle(modalId, titleId) {
-        const modal = document.getElementById('modal-' + modalId);
-        if (!modal) return;
-        
-        // Actualizar clases activas en los títulos
-        const allTitles = modal.querySelectorAll('.menu-title-item');
-        allTitles.forEach(title => title.classList.remove('active'));
-        
-        // Buscar el título específico dentro de este modal
-        const titleElements = modal.querySelectorAll('.menu-title-item');
-        let selectedTitle = null;
-        
-        titleElements.forEach(title => {
-            const onclickAttr = title.getAttribute('onclick');
-            if (onclickAttr && onclickAttr.includes(`selectTitle('${modalId}', '${titleId}')`)) {
-                selectedTitle = title;
-            }
-        });
-        
-        if (selectedTitle) {
-            selectedTitle.classList.add('active');
-        }
-        
-        // Obtener el contenedor de contenido específico de este modal
-        const modalContentContainer = document.getElementById(modalId + '-content');
-        if (!modalContentContainer) return;
-        
-        // IMPORTANTE: Buscar contenido dentro del contexto específico de este modal
-        // Primero ocultar todos los contenidos dentro de este modal
-        const allContents = modalContentContainer.querySelectorAll('div[id*="-content"]');
-        allContents.forEach(content => {
-            // Solo ocultar si es un contenido de sección (no el contenedor principal)
-            if (content.id !== modalId + '-content') {
-                content.style.display = 'none';
-            }
-        });
-        
-        // Ahora mostrar el contenido específico para esta sección en ESTE modal
-        const targetContentId = modalId + '-' + titleId + '-content';
-        const targetContent = document.getElementById(targetContentId);
-        
-        if (targetContent) {
-            targetContent.style.display = 'grid';
-        }
-        
-        setTimeout(updateFavoriteButtons, 100);
-    }
-
-    function resetModalContent(modalId) {
-        const modal = document.getElementById('modal-' + modalId);
-        if (!modal) return;
-        
-        // Reiniciar títulos activos al primer elemento
-        const allTitles = modal.querySelectorAll('.menu-title-item');
-        allTitles.forEach(title => title.classList.remove('active'));
-        
-        if (allTitles.length > 0) {
-            allTitles[0].classList.add('active');
-        }
-        
-        // Ocultar todo el contenido y mostrar solo el primero
-        const modalContent = document.getElementById(modalId + '-content');
-        if (modalContent) {
-            const allContents = modalContent.querySelectorAll('div[id*="-content"]');
-            let firstContentFound = false;
-            
-            allContents.forEach((content, index) => {
-                if (content.id !== modalId + '-content') {
-                    if (!firstContentFound && content.id.startsWith(modalId + '-')) {
-                        content.style.display = 'grid';
-                        firstContentFound = true;
-                    } else {
-                        content.style.display = 'none';
-                    }
-                }
-            });
-        }
-    }
-
-    function closeModal(modalId) {
-        if (isModalTransitioning) return;
-        
-        isModalTransitioning = true;
-        
-        const overlay = document.getElementById('modal-overlay');
-        const modal = document.getElementById('modal-' + modalId);
-        
-        if (overlay) {
-            overlay.classList.remove('active');
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                overlay.style.visibility = 'hidden';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 300);
-            }, 10);
-        }
-        
-        if (modal) {
-            modal.classList.remove('active');
-            setTimeout(() => {
-                modal.style.opacity = '0';
-                modal.style.visibility = 'hidden';
-                modal.style.transform = 'translateX(-50%) translateY(-20px)';
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.body.classList.remove('modal-open');
-                    currentModal = null;
-                    isModalTransitioning = false;
-                }, 300);
-            }, 10);
-        } else {
-            document.body.classList.remove('modal-open');
-            currentModal = null;
-            isModalTransitioning = false;
-        }
-    }
-
-    function closeAllModals() {
-        if (isModalTransitioning) return;
-        
-        isModalTransitioning = true;
-        
-        const modals = ['bi', 'administracion', 'contabilidad', 'proyectos', 'rrhh'];
-        const overlay = document.getElementById('modal-overlay');
-        
-        if (overlay) {
-            overlay.classList.remove('active');
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                overlay.style.visibility = 'hidden';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 300);
-            }, 10);
-        }
-        
-        modals.forEach(modalId => {
-            const modal = document.getElementById('modal-' + modalId);
-            if (modal) {
-                modal.classList.remove('active');
-                setTimeout(() => {
-                    modal.style.opacity = '0';
-                    modal.style.visibility = 'hidden';
-                    modal.style.transform = 'translateX(-50%) translateY(-20px)';
-                    setTimeout(() => {
-                        modal.style.display = 'none';
-                    }, 300);
-                }, 10);
-            }
-        });
-        
-        setTimeout(() => {
-            document.body.classList.remove('modal-open');
-            currentModal = null;
-            isModalTransitioning = false;
-        }, 350);
-    }
-
-    // ==================== FUNCIONES DE BARRA LATERAL ====================
-    function toggleSidebar() {
-        sidebarOpen = !sidebarOpen;
-        const sidebar = document.getElementById('quick-sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const toggleBtn = document.getElementById('sidebar-toggle-btn');
-        
-        if (sidebarOpen) {
             sidebar.classList.add('open');
-            overlay.classList.add('active');
-            toggleBtn.classList.add('moved');
-        } else {
+            mainContent.classList.add('sidebar-open');
+            tabBar.classList.add('sidebar-open');
+            
+            currentSection = section;
+            
+            // Cerrar menú móvil si está abierto
+            if (window.innerWidth <= 992) {
+                closeMobileMenu();
+            }
+        }
+
+        function closeSectionSidebar() {
+            const sidebars = document.querySelectorAll('.section-sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const tabBar = document.querySelector('.tab-navigation-bar');
+            
+            sidebars.forEach(sidebar => sidebar.classList.remove('open'));
+            mainContent.classList.remove('sidebar-open');
+            tabBar.classList.remove('sidebar-open');
+            
+            currentSection = null;
+        }
+
+        function closeAllSectionSidebars() {
+            document.querySelectorAll('.section-sidebar').forEach(s => s.classList.remove('open'));
+        }
+
+        function closeAllSidebars() {
+            closeSectionSidebar();
+            closeQuickSidebar();
+        }
+
+        // ========== FUNCIONES DE MENÚ MÓVIL ==========
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('mobileMenuSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            mobileMenuOpen = !mobileMenuOpen;
+            
+            if (mobileMenuOpen) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('mobileMenuSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            mobileMenuOpen = false;
             sidebar.classList.remove('open');
             overlay.classList.remove('active');
-            toggleBtn.classList.remove('moved');
+            document.body.style.overflow = 'auto';
         }
-    }
 
-    // ==================== FUNCIÓN DE NOTIFICACIONES ====================
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.className = 'fixed top-20 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-        notification.textContent = message;
-        notification.style.animation = 'fadeInOut 3s ease-in-out forwards';
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
-</script>
+        function toggleMobileSectionSidebar(section) {
+            closeMobileMenu();
+            toggleSectionSidebar(section);
+        }
+
+        // ========== FUNCIONES DE SUBMENÚ ==========
+        function toggleSubmenu(submenuId) {
+            const submenu = document.getElementById(submenuId);
+            const title = submenu?.previousElementSibling;
+            
+            if (submenu) {
+                submenu.classList.toggle('expanded');
+                title?.classList.toggle('expanded');
+            }
+        }
+
+        // ========== FUNCIONES DE FAVORITOS ==========
+        function toggleQuickSidebar() {
+            const sidebar = document.getElementById('quick-sidebar');
+            sidebar.classList.toggle('open');
+            
+            // Cerrar menú móvil si está abierto
+            if (window.innerWidth <= 992) {
+                closeMobileMenu();
+            }
+        }
+
+        function closeQuickSidebar() {
+            document.getElementById('quick-sidebar').classList.remove('open');
+        }
+
+        function toggleFavorite(title, module, icon, element) {
+            const favorite = {
+                id: `${module}-${title}`.replace(/\s+/g, '-').toLowerCase(),
+                title: title,
+                module: module,
+                icon: icon,
+                path: `${module} > ${title}`,
+                timestamp: new Date().toISOString()
+            };
+
+            const existingIndex = quickAccess.findIndex(f => f.id === favorite.id);
+
+            if (existingIndex === -1) {
+                // Agregar a favoritos
+                quickAccess.push(favorite);
+                element.classList.add('active');
+                showNotification(`⭐ "${title}" agregado a accesos rápidos`, 'success');
+            } else {
+                // Quitar de favoritos
+                quickAccess.splice(existingIndex, 1);
+                element.classList.remove('active');
+                showNotification(`❌ "${title}" eliminado de accesos rápidos`, 'info');
+            }
+
+            // Guardar en localStorage
+            localStorage.setItem('quickAccess', JSON.stringify(quickAccess));
+            
+            // Actualizar UI
+            updateFavoritesUI();
+            updateFavoriteStars();
+        }
+
+        function updateFavoritesUI() {
+            const favoritesList = document.getElementById('favorites-list');
+            const emptyFavorites = document.getElementById('empty-favorites');
+            const favoriteCount = document.getElementById('favorite-count');
+            const notificationDot = document.getElementById('notification-dot');
+            
+            if (quickAccess.length === 0) {
+                if (favoritesList) favoritesList.style.display = 'none';
+                if (emptyFavorites) emptyFavorites.style.display = 'block';
+                if (favoriteCount) favoriteCount.style.display = 'none';
+                if (notificationDot) notificationDot.style.display = 'none';
+                return;
+            }
+
+            // Ordenar por fecha (más recientes primero)
+            const sortedFavorites = [...quickAccess].sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+
+            let html = '';
+            sortedFavorites.forEach(fav => {
+                html += `
+                    <div class="favorite-item" onclick="executeFavorite('${fav.id}')">
+                        <i class="fas ${fav.icon}"></i>
+                        <div class="favorite-item-content">
+                            <div class="favorite-item-title">${fav.title}</div>
+                            <div class="favorite-item-path">${fav.module}</div>
+                        </div>
+                        <div class="favorite-item-remove" onclick="event.stopPropagation(); removeFavorite('${fav.id}')">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (favoritesList) {
+                favoritesList.innerHTML = html;
+                favoritesList.style.display = 'block';
+            }
+            if (emptyFavorites) emptyFavorites.style.display = 'none';
+            
+            // Actualizar contador
+            if (favoriteCount) {
+                favoriteCount.textContent = quickAccess.length;
+                favoriteCount.style.display = 'flex';
+            }
+            
+            // Mostrar punto de notificación si hay favoritos
+            if (notificationDot) notificationDot.style.display = quickAccess.length > 0 ? 'block' : 'none';
+        }
+
+        function removeFavorite(favoriteId) {
+            const index = quickAccess.findIndex(f => f.id === favoriteId);
+            if (index !== -1) {
+                const removedTitle = quickAccess[index].title;
+                quickAccess.splice(index, 1);
+                localStorage.setItem('quickAccess', JSON.stringify(quickAccess));
+                updateFavoritesUI();
+                updateFavoriteStars();
+                showNotification(`❌ "${removedTitle}" eliminado de accesos rápidos`, 'info');
+            }
+        }
+
+        function executeFavorite(favoriteId) {
+            const favorite = quickAccess.find(f => f.id === favoriteId);
+            if (favorite) {
+                // Aquí ejecutamos la navegación según el módulo y título
+                navigateTo(favorite.title, favorite.module);
+                closeQuickSidebar();
+            }
+        }
+
+        function updateFavoriteStars() {
+            // Actualizar todas las estrellas en los menús
+            const stars = document.querySelectorAll('.favorite-star');
+            stars.forEach(star => {
+                star.classList.remove('active');
+                // Buscar el favorito correspondiente
+                const menuItem = star.closest('.sidebar-submenu-item');
+                if (menuItem) {
+                    const title = menuItem.querySelector('span:not(.favorite-star)')?.textContent?.trim() || '';
+                    const module = menuItem.closest('.section-sidebar')?.id?.replace('sidebar-', '') || '';
+                    const favoriteId = `${module}-${title}`.replace(/\s+/g, '-').toLowerCase();
+                    
+                    if (quickAccess.some(f => f.id === favoriteId)) {
+                        star.classList.add('active');
+                    }
+                }
+            });
+        }
+
+        // ========== NAVEGACIÓN ==========
+        function navigateTo(pageName, module = '', route = '') {
+            console.log(`Navegando a: ${pageName} [${module}]`);
+            document.title = `${pageName} - MejoraSoft`;
+            closeSectionSidebar();
+            
+            // MANTENIENDO TUS RUTAS ORIGINALES
+            // Mapeo de rutas según el módulo y página
+            const routeMap = {
+                // BI
+                'Directivo': '{{ route('bi.dashboard') }}',
+                'Finanzas': '{{ route('bi.finanzas') }}',
+                'Licitaciones': '{{ route('bi.licitaciones') }}',
+                'Pipeline de Proyectos': '{{ route('ventas.papeline') }}',
+                'Propuestas y Cotizaciones': '{{ route('ventas.propuestas') }}',
+                'Análisis de Ventas': '{{ route('ventas.analisis') }}',
+                'Seguimiento de Facturación': '{{ route('facturacion.seguimiento') }}',
+                'Pendiente de Facturación': '{{ route('facturacion.pendiente') }}',
+                'Facturado': '{{ route('facturacion.facturacion') }}',
+                'Proyecciones de Flujo': '{{ route('cobranza.proyecciones') }}',
+                'Historial de Pagos': '{{ route('cobranza.historial') }}',
+                
+                // Administración
+                'Antigüedad de Saldos': '{{ route('admin.saldos') }}',
+                'Facturación de Proveedores': '{{ route('admin.pagos') }}',
+                
+                // ... puedes seguir agregando más mapeos según tus rutas
+            };
+
+            // Si existe una ruta mapeada, redirigir
+            if (routeMap[pageName]) {
+                window.location.href = routeMap[pageName];
+            } else {
+                showNotification(`✓ Abriendo: ${pageName}`, 'success');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-green-600' : 
+                          type === 'error' ? 'bg-red-600' : 'bg-blue-600';
+            
+            notification.className = `fixed top-20 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-[1100] text-sm flex items-center`;
+            notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} mr-2"></i>${message}`;
+            notification.style.animation = 'fadeIn 0.3s ease';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // ========== CIERRE DE SESIÓN ==========
+        function confirmLogout() {
+            const modal = document.getElementById('logout-confirm-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                    document.querySelector('form[action*="logout"]')?.submit();
+                }
+            }
+        }
+
+        // ========== NOTIFICACIONES ==========
+        function notifications() {
+            return {
+                isOpen: false,
+                unreadCount: 0,
+                filter: 'all',
+                notifications: [],
+                
+                initNotifications() {
+                    this.notifications = [
+                        {
+                            id: 1,
+                            title: 'Bienvenido al sistema',
+                            message: 'Has iniciado sesión correctamente',
+                            type: 'info',
+                            priority: 'low',
+                            read: false,
+                            timestamp: new Date().toISOString(),
+                            category: 'Sistema'
+                        },
+                        {
+                            id: 2,
+                            title: 'Nuevo proyecto asignado',
+                            message: 'Se te ha asignado el proyecto "Edificio Corporativo"',
+                            type: 'success',
+                            priority: 'high',
+                            read: false,
+                            timestamp: new Date(Date.now() - 3600000).toISOString(),
+                            category: 'Proyectos'
+                        }
+                    ];
+                    this.updateUnreadCount();
+                },
+                
+                toggleNotifications() {
+                    this.isOpen = !this.isOpen;
+                },
+                
+                get filteredNotifications() {
+                    if (this.filter === 'unread') {
+                        return this.notifications.filter(n => !n.read);
+                    } else if (this.filter === 'important') {
+                        return this.notifications.filter(n => n.priority === 'high');
+                    }
+                    return this.notifications;
+                },
+                
+                markAsRead(id) {
+                    const notification = this.notifications.find(n => n.id === id);
+                    if (notification) {
+                        notification.read = true;
+                        this.updateUnreadCount();
+                    }
+                },
+                
+                markAllAsRead() {
+                    this.notifications.forEach(n => n.read = true);
+                    this.updateUnreadCount();
+                },
+                
+                clearAll() {
+                    this.notifications = [];
+                    this.updateUnreadCount();
+                },
+                
+                updateUnreadCount() {
+                    this.unreadCount = this.notifications.filter(n => !n.read).length;
+                },
+                
+                getTypeIcon(type) {
+                    const icons = {
+                        success: 'fas fa-check-circle',
+                        error: 'fas fa-exclamation-circle',
+                        warning: 'fas fa-exclamation-triangle',
+                        info: 'fas fa-info-circle'
+                    };
+                    return icons[type] || 'fas fa-bell';
+                },
+                
+                formatTime(timestamp) {
+                    const date = new Date(timestamp);
+                    const now = new Date();
+                    const diff = Math.floor((now - date) / 60000);
+                    if (diff < 1) return 'Ahora';
+                    if (diff < 60) return `Hace ${diff} min`;
+                    if (diff < 1440) return `Hace ${Math.floor(diff / 60)} h`;
+                    return date.toLocaleDateString();
+                }
+            };
+        }
+
+        // ========== INICIALIZACIÓN ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar animación
+            const style = document.createElement('style');
+            style.textContent = `@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }`;
+            document.head.appendChild(style);
+            
+            // Inicializar favoritos
+            updateFavoritesUI();
+            updateFavoriteStars();
+            
+            // Cerrar menús al redimensionar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Cerrar modales con Escape
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('logout-confirm-modal');
+                    if (modal && modal.classList.contains('flex')) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
+                    closeSectionSidebar();
+                    closeQuickSidebar();
+                    closeMobileMenu();
+                }
+            });
+        });
+    </script>
+    
+    <!-- Modal de confirmación de cierre de sesión -->
+    <div id="logout-confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[1100] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
+            <div class="p-5">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-sign-out-alt text-red-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">Cerrar Sesión</h3>
+                        <p class="text-sm text-gray-600">¿Estás seguro de que deseas salir?</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-end space-x-2">
+                    <button onclick="document.getElementById('logout-confirm-modal').classList.add('hidden'); document.getElementById('logout-confirm-modal').classList.remove('flex');" 
+                            class="px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">
+                            Sí, Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
