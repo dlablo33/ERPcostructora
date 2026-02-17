@@ -1,233 +1,919 @@
 <x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-gray-800 to-gray-900 relative overflow-hidden">
-        <!-- Fondo animado con partículas sutiles -->
-        <div class="absolute inset-0 z-0">
-            <div class="absolute top-10 left-10 w-4 h-4 bg-amber-500/20 rounded-full animate-pulse"></div>
-            <div class="absolute top-1/4 right-20 w-6 h-6 bg-blue-500/20 rounded-full animate-pulse delay-300"></div>
-            <div class="absolute bottom-20 left-1/3 w-8 h-8 bg-gray-500/20 rounded-full animate-pulse delay-700"></div>
-            <div class="absolute bottom-10 right-10 w-5 h-5 bg-amber-500/20 rounded-full animate-pulse delay-500"></div>
-        </div>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            background-color: #083CAE;
+            font-family: 'Nunito', sans-serif;
+            color: black;
+        }
+        hr {
+            color: black;
+            border-color: black;
+        }
+        .div_recuadro_login {
+            margin: 0 auto;
+            width: 60vw;
+            height: 550px;
+            box-shadow: -1px 1px 20px #999;
+            overflow: hidden;
+            border-style: solid;
+            border-color: #083CAE;
+            background-color: white;
+        }
+        .divImgLogo {
+            float: left;
+            padding: 12px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .img_logo {
+            width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+        .img_logo2 {
+            width: 140px;
+            padding-left: 40px;
+            padding-top: 30px;
+        }
+        .div_col1 {
+            float: right; /* Cambiado de left a right */
+            width: 55%;
+            height: 100%;
+            overflow: hidden;
+            padding-top: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 20px;
+        }
+        .div_logo {
+            text-align: center;
+            padding-bottom: 40px;
+            padding-left: 5px;
+            padding-right: 5px;
+            overflow: hidden;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .color_negro {
+            background-color: white;
+        }
+        .input_datos {
+            height: 50px;
+            border-style: none;
+            border-color: darkgray;
+            border-width: 1px;
+            padding: 12px;
+            color: black;
+            font-size: 16px;
+            width: 100%;
+        }
+        .div_boton_loginA {
+            width: 100%;
+            padding: 14px;
+            border-width: 0px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+        }
+        .color_fondo {
+            background-color: #083CAE;
+        }
+        .color_boton {
+            background-color: #083CAE;
+        }
+        .div_cerrar_b {
+            width: 50px;
+            float: right;
+            text-align: right;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .div_input {
+            width: 300px;
+            text-align: left;
+            border-style: solid;
+            border-width: 1px;
+            border-color: darkgrey;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+        .img_fondo_log {
+            overflow: hidden;
+            padding-top: 50px;
+            width: 100%;
+            height: 100vh;
+        }
+        .logo {
+            width: 70px;
+        }
+        .logo2 {
+            width: 100px;
+            padding-top: 15px;
+        }
+        .vert_align {
+            vertical-align: middle;
+        }
+        .float_l {
+            float: left;
+        }
+        .float_r {
+            float: right;
+        }
+        .div_logo_menu {
+            height: 70px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .ban1 {
+            z-index: 2;
+            position: fixed;
+            background-color: white;
+            overflow: hidden;
+            padding-left: 20px;
+            padding-right: 20px;
+            width: 100%;
+        }
+        .ban2 {
+            z-index: 2;
+            position: fixed;
+            top: 70px;
+            background-color: #083CAE;
+            overflow: hidden;
+            padding-left: 20px;
+            padding-right: 20px;
+            color: white;
+            width: 100%;
+        }
+        .titulo1 {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .titulo_group1 {
+            font-size: 15px;
+            font-weight: bold;
+            width: 100%;
+            float: left;
+            overflow: hidden;
+            padding-top: 10px;
+            padding-left: 10px;
+            color: black;
+        }
+        .menu1 {
+            float: left;
+            padding: 14px;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .div_opcion {
+            cursor: pointer;
+            color: blue;
+            overflow: hidden;
+            padding: 2px;
+            font-size: 14px;
+            line-height: 12px;
+            padding-top: 10px;
+            padding-bottom: 4px;
+        }
+        .div_mod1 {
+            z-index: 1;
+            position: absolute;
+            top: 130px;
+            left: 0px;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px;
+        }
+        .div_mod2 {
+            margin: 0 auto;
+            width: 87vw;
+            overflow: hidden;
+            background-color: white;
+            padding: 10px;
+            box-shadow: -3px 3px 16px #333333;
+        }
+        .color_azul {
+            background-color: #083CAE;
+            color: white;
+        }
+        .div_fondo_pantalla {
+            background-color: white;
+            padding: 14px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .div_fondo_pantalla2 {
+            height: 56vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 5px;
+        }
+        .div_titulo_2 {
+            width: 100%;
+            font-size: 20px;
+            font-weight: bold;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .div_titulo_3 {
+            float: left;
+            font-size: 20px;
+            font-weight: bold;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .div_opciones {
+            float: left;
+            background-color: red;
+            padding: 5px;
+            margin-right: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            min-width: 80px;
+            text-align: center;
+            color: white;
+            font-size: 13px;
+        }
+        .div_opciones_2 {
+            float: left;
+            background-color: red;
+            padding: 5px;
+            margin-right: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            color: white;
+            font-size: 11px;
+        }
+        .toggle_div {
+            display: none;
+            overflow: hidden;
+            width: 100%;
+        }
+        .div_opciones_cerrar {
+            float: right;
+            background-color: red;
+            padding: 5px;
+            margin-right: 10px;
+            overflow: hidden;
+            font-weight: bold;
+            cursor: pointer;
+            width: 80px;
+            text-align: center;
+            color: white;
+        }
+        .div_hr {
+            width: 100%;
+            overflow: hidden;
+        }
+        .float_left {
+            float: left;
+        }
+        .contenedor2 {
+            min-height: 100px;
+            overflow: hidden;
+            margin-right: 12px;
+        }
+        .margin_right {
+            margin-right: 20px;
+        }
+        .lightgrey {
+            background-color: lightgray;
+        }
+        select {
+            width: 150px;
+        }
+        .padding1 {
+            padding: 6px;
+        }
+        .txtsize11 {
+            font-size: 11px;
+        }
+        .pantalla {
+            z-index: 1;
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .pantalla_menu_glob {
+            position: fixed;
+            top: 120px;
+            max-width: 1000px;
+        }
+        .ad2 {
+            overflow: hidden;
+            float: left;
+            width: 100%;
+        }
+        .d2 {
+            overflow: hidden;
+            float: left;
+            width: 160px;
+            height: 170px;
+            padding: 10px;
+        }
+        .d2_b {
+            overflow: hidden;
+            float: left;
+            width: 160px;
+            height: 50px;
+            padding: 10px;
+        }
+        .pantalla_menu {
+            float: left;
+            width: 200px;
+            max-height: 430px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+        .menu2 {
+            cursor: pointer;
+            padding: 10px;
+            font-size: 18px;
+            border-top-right-radius: 20px;
+            border-bottom-left-radius: 20px;
+            background-color: white;
+            margin-bottom: 5px;
+        }
+        .pantalla_menu2 {
+            float: left;
+            position: fixed;
+            z-index: 4;
+            top: 120px;
+            background-color: white;
+            font-size: 12px;
+            display: none;
+            width: 500px;
+            max-height: 450px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 10px;
+            border-left-style: solid;
+            border-left-color: red;
+            border-bottom-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .espacio_r {
+            padding-bottom: 10px;
+        }
+        .fondo_blanco1 {
+            background-color: white;
+        }
+        .menu3 {
+            cursor: pointer;
+            padding: 10px;
+        }
+        .pantalla_menu3 {
+            float: left;
+            background-color: white;
+            overflow: hidden;
+            font-size: 12px;
+            display: none;
+            width: 500px;
+        }
+        .titulo_d2 {
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 14px;
+            margin-top: 16px;
+        }
+        .scroll {
+            overflow: auto;
+        }
+        input {
+            font-size: 11px;
+        }
+        select {
+            font-size: 11px;
+        }
+        .div_plus {
+            float: left;
+            background-color: red;
+            padding: 5px;
+            margin-right: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            width: 30px;
+            height: 30px;
+        }
+        .msgctre {
+            float: left;
+            font-weight: bold;
+            width: 200px;
+        }
+        .no_hay_reg {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .tabla1 {
+            width: 100%;
+            border-spacing: 0px;
+            border-color: lightgrey;
+            font-size: 12px;
+            border-left-style: none;
+            border-right-style: none;
+        }
+        td {
+            padding: 6px;
+            border-left-style: none;
+            border-right-style: none;
+        }
+        th {
+            background-color: #083CAE;
+            color: white;
+            border-style: none;
+            text-align: center;
+        }
+        .t_td {
+            padding: 4px;
+            margin: 4px;
+            overflow: hidden;
+            font-size: 12px;
+            font-weight: bold;
+            width: 32%;
+            text-align: right;
+            color: #083CAE;
+            background-color: lightgray;
+        }
 
-        <!-- Contenedor principal -->
-        <div class="w-full max-w-6xl mx-4 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50 transform transition-all duration-500 hover:shadow-3xl z-10">
-            <div class="flex flex-col md:flex-row">
-                <!-- Panel izquierdo - Banner -->
-                <div class="w-full md:w-1/2 bg-gradient-to-br from-gray-900 to-blue-900 relative overflow-hidden">
-                    <!-- Imagen de construcción -->
-                    <div class="absolute inset-0 opacity-90">
-                        <img 
-                            src="../img/login/banner-costruccion.jpg" 
-                            alt="Proyecto de Construcción" 
-                            class="w-full h-full object-cover transform transition-transform duration-700 hover:scale-105"
-                            onerror="this.src='https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'"
-                        />
-                        <!-- Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/70 via-transparent to-transparent"></div>
-                    </div>
+        /* Clases adicionales para el login */
+        .login_container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #083CAE;
+            padding: 20px;
+        }
 
-                    <!-- Logo en el banner (versión móvil) -->
-                    <div class="relative z-20 p-6 md:hidden">
-                        <img 
-                            src="../img/login/logo.png" 
-                            alt="Logo Empresa" 
-                            class="h-16 mx-auto object-contain"
-                            onerror="this.src='https://via.placeholder.com/200x60?text=LOGO+CONSTRUCCIÓN'"
-                        />
-                    </div>
+        .login_img {
+            float: left; /* Cambiado a left para que esté a la izquierda */
+            width: 45%;
+            height: 100%;
+            background-image: url('../img/login/banner-costruccion.jpg');
+            background-size: cover;
+            background-position: center center;
+        }
 
-                    <!-- Texto sobre imagen -->
-                    <div class="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
-                        <div class="bg-black/40 backdrop-blur-sm rounded-xl p-4 md:p-6 transform transition-transform duration-500 hover:translate-x-2">
-                            <h3 class="text-xl md:text-2xl font-bold text-white mb-2 md:mb-3">
-                                Construyendo el Futuro
-                            </h3>
-                            <p class="text-gray-200 text-sm md:text-base">
-                                Gestión profesional de proyectos de construcción con las más altas normas de seguridad y calidad.
-                            </p>
-                            <div class="flex items-center mt-3 md:mt-4 text-amber-400">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                <span class="text-xs md:text-sm font-semibold">Certificación ISO 9001:2015</span>
-                            </div>
-                        </div>
-                    </div>
+        .login_overlay {
+            background: rgba(8, 60, 174, 0.3);
+            height: 100%;
+            width: 100%;
+        }
 
-                    <!-- Elementos decorativos flotantes -->
-                    <div class="absolute top-4 right-4 w-12 h-12 md:w-16 md:h-16 bg-amber-500/10 rounded-full animate-bounce-slow"></div>
-                    <div class="absolute bottom-4 left-4 w-10 h-10 md:w-12 md:h-12 bg-blue-500/10 rounded-full animate-bounce-slow delay-300"></div>
+        .login_footer {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+            color: white;
+            font-size: 12px;
+        }
+
+        .login_label {
+            display: block;
+            margin-bottom: 5px;
+            color: #083CAE;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .login_checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .login_checkbox input {
+            margin-right: 5px;
+            width: auto;
+        }
+
+        .login_checkbox span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .login_forgot {
+            color: #083CAE;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login_forgot:hover {
+            text-decoration: underline;
+        }
+
+        .login_error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .login_subtitle {
+            text-align: center;
+            color: #083CAE;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .login_button {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .img_fondo_log {
+                position: relative;
+            }
+        }
+
+        @media only screen and (max-width: 920px) {
+            .t_td {
+                font-size: 12px;
+                width: 48%;
+            }
+        }
+
+        @media only screen and (max-width: 700px) {
+            .menu1 {
+                padding: 12px;
+                font-size: 12px;
+                width: 50%;
+                min-width: 150px;
+            }
+            .cont {
+                padding-top: 200px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .pantalla_menu_glob {
+                top: 190px;
+            }
+            .pantalla_menu {
+                width: 150px;
+                font-size: 14px;
+            }
+            .pantalla_menu2 {
+                top: 190px;
+                font-size: 12px;
+                width: 190px;
+                height: 350px;
+                overflow-y: auto;
+            }
+            .div_mod1 {
+                top: 200px;
+                width: 100%;
+                padding: 0px;
+            }
+            .div_mod2 {
+                width: 85vw;
+                background-color: white;
+                padding: 10px;
+            }
+            .t_td {
+                font-size: 12px;
+                width: 100%;
+            }
+            input {
+                width: 270px;
+            }
+            
+            .div_recuadro_login > div {
+                flex-direction: column !important;
+            }
+            
+            .div_col1, .login_img {
+                width: 100% !important;
+            }
+            
+            .login_img {
+                min-height: 200px !important;
+                order: 0; /* Cambiado para que la imagen quede arriba en móvil */
+            }
+
+            .div_col1 {
+                float: none !important;
+                order: 1;
+            }
+            
+            .div_recuadro_login {
+                height: auto !important;
+                min-height: 600px;
+            }
+        }
+
+        @media only screen and (max-width: 560px) {
+            .rt1 {
+                text-align: left !important;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .div_col1 {
+                padding: 20px !important;
+            }
+            
+            .input_datos {
+                font-size: 14px !important;
+            }
+            
+            .div_boton_loginA {
+                padding: 12px !important;
+            }
+        }
+
+        @media only screen and (max-width: 290px) {
+            .div_recuadro_login {
+                width: 270px;
+            }
+            .div_col1 {
+                width: 230px;
+                padding: 12px;
+            }
+            .div_cerrar_b {
+                width: 30px;
+            }
+            .input_datos {
+                width: 170px;
+            }
+        }
+
+        .d_pestañas.accordion-header {
+            background-color: rgb(211, 211, 211) !important;
+            color: #fff !important;
+            font-size: 16px !important;
+        }
+
+        .d_pestañas.accordion-header button {
+            color: #000000;
+        }
+
+        .collapsed {
+            color: #000 !important;
+        }
+
+        .rt1 {
+            text-align: right;
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        input.campos-formularios {
+            width: 100%;
+            border-radius: 0px;
+            font-size: 12px !important;
+            height: 25px !important;
+            font-family: Arial,Helvetica,sans-serif;
+            padding: .375rem .75rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-clip: padding-box;
+            border: 1px solid #979898;
+            margin-bottom: 3px !important;
+        }
+
+        label.formularios-texto {
+            font-family: Arial,Helvetica,sans-serif !important;
+            color: #000;
+            font: bold;
+            font-size: small;
+            margin-bottom: 3px !important;
+        }
+
+        select.campos-formularios {
+            width: 100%;
+            border-radius: 0px;
+            font-size: 12px !important;
+            height: 25px !important;
+            font-family: Arial,Helvetica,sans-serif;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-clip: padding-box;
+            border: 1px solid #979898;
+            margin-bottom: 3px !important;
+        }
+
+        div.encabezados-form {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            margin-bottom: 5px !important;
+        }
+
+        @media only screen and (min-width: 560px) {
+            .inputs-combinados-1 {
+                padding-right: 0px !important;
+            }
+
+            .inputs-combinados-2 {
+                padding-left: 0px !important;
+            }
+        }
+
+        input:disabled {
+            cursor: default;
+            background-color: #e8e8e8 !important;
+        }
+
+        select:disabled {
+            cursor: default;
+            background-color: #e8e8e8 !important;
+        }
+
+        textarea.campos-formularios {
+            width: 100%;
+            height: 66px;
+            padding: .375rem .75rem;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #979898;
+            border-radius: 0px;
+        }
+
+        .table td, .table th {
+            padding: 0px !important;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+            font-family: Arial,Helvetica,sans-serif !important;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        div.table-procesos-c {
+            min-height: 150px;
+            max-height: 250px;
+        }
+
+        button.boton-icon-tabla {
+            height: 27px !important;
+            padding-top: 1px !important;
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+        }
+
+        .div_fecha_hora {
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
+            bottom: 0px;
+            z-index: 5;
+            background-color: #083CAE;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 4px;
+            padding-right: 20px;
+            text-align: right;
+        }
+
+        .menu2_oculto {
+            display: none;
+        }
+
+        .posicion_gerencial {
+            left: 20px;
+        }
+        .posicion2_gerencial {
+            left: 220px;
+        }
+
+        .img_logo_a {
+            background-image: url('/images/logo_local.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .img_logo_b {
+            background-image: url('/images/logo_cliente.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .div_boton_loginA {
+            padding: 0.5vh;
+        }
+        .form-control {
+            border-radius: 0px !important;
+        }
+        #login {
+            background-color: #083CAE;
+            border-color: initial;
+            border-radius: 0px;
+        }
+    </style>
+
+    <div class="login_container">
+        <!-- Contenedor principal del login -->
+        <div class="div_recuadro_login">
+            <div style="height: 100%;">
+                <!-- Panel izquierdo - Imagen de fondo -->
+                <div class="login_img">
+                    <div class="login_overlay"></div>
                 </div>
 
                 <!-- Panel derecho - Formulario -->
-                <div class="w-full md:w-1/2 p-6 md:p-8 lg:p-12">
-                <!-- Logo principal centrado (solo desktop) -->
-                <div class="mb-4 md:mb-6 hidden md:flex items-center justify-center gap-6 
-                    transform transition-transform duration-300 hover:scale-105">
-
-    <img 
-        src="../img/login/costructorablanco.png" 
-        alt="Logo Empresa" 
-        class="h-[80px] md:h-[80px] lg:h-[80px] object-contain"
-        onerror="this.src='https://via.placeholder.com/250x80?text=LOGO+CONSTRUCCIÓN'"
-    />
-
-    <img 
-        src="../img/login/logofun.png" 
-        alt="Logo Empresa" 
-        class="h-[150px] md:h-[150px] lg:h-[150px] object-contain"
-        onerror="this.src='https://via.placeholder.com/250x80?text=LOGO+CONSTRUCCIÓN'"
-    />
-
-</div>
+                <div class="div_col1">
+                    <div class="div_logo">
+                        <img src="../img/login/logophoto.png" class="img_logo" alt="Logo Empresa">
+                    </div>
+    <p class="login_subtitle" style="color: #083CAE; font-size: 16px; margin-top: 0;">
+    Líder en Rentabilidad de Construcción
+</p>                
+<p class="login_subtitle" style="color: #FF0000; font-size: 24px; font-weight: bold; margin-bottom: 5px;">
+    Bienvenidos
+</p>
 
 
-                    <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2 animate-fade-in">
-                        Acceso Seguro
-                    </h2>
-                    <p class="text-gray-600 text-center text-sm md:text-base mb-6 md:mb-8">
-                        Sistema de Gestión de Construcción
-                    </p>
+                    
 
                     <!-- Session Status -->
                     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                    <form method="POST" action="{{ route('login') }}" class="space-y-4 md:space-y-6">
+                    <form method="POST" action="{{ route('login') }}">
                         @csrf
 
                         <!-- Email -->
-                        <div class="group">
-                            <x-input-label for="email" value="Correo Electrónico" class="text-gray-700 font-medium" />
-                            <div class="relative mt-1 md:mt-2">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-4 w-4 md:h-5 md:w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                                    </svg>
-                                </div>
-                                <x-text-input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    :value="old('email')"
-                                    required
-                                    autofocus
-                                    class="mt-1 block w-full pl-10 md:pl-10 rounded-lg md:rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm md:text-base"
-                                />
-                            </div>
-                            <x-input-error :messages="$errors->get('email')" class="mt-1 md:mt-2 text-xs md:text-sm" />
+                        <div style="margin-bottom: 15px;">
+                            <label class="login_label" for="email">Correo Electrónico</label>
+                            <input 
+                                id="email"
+                                type="email" 
+                                name="email" 
+                                value="{{ old('email') }}"
+                                required 
+                                autofocus
+                                class="input_datos"
+                                placeholder="ejemplo@correo.com"
+                            >
+                            <x-input-error :messages="$errors->get('email')" class="login_error" />
                         </div>
 
                         <!-- Password -->
-                        <div class="group">
-                            <x-input-label for="password" value="Contraseña" class="text-gray-700 font-medium" />
-                            <div class="relative mt-1 md:mt-2">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-4 w-4 md:h-5 md:w-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                    </svg>
-                                </div>
-                                <x-text-input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                    class="mt-1 block w-full pl-10 md:pl-10 rounded-lg md:rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm md:text-base"
-                                />
-                            </div>
-                            <x-input-error :messages="$errors->get('password')" class="mt-1 md:mt-2 text-xs md:text-sm" />
+                        <div style="margin-bottom: 20px;">
+                            <label class="login_label" for="password">Contraseña</label>
+                            <input 
+                                id="password"
+                                type="password" 
+                                name="password" 
+                                required
+                                class="input_datos"
+                                placeholder="Ingrese su contraseña"
+                            >
+                            <x-input-error :messages="$errors->get('password')" class="login_error" />
                         </div>
 
                         <!-- Remember & Forgot -->
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center text-xs md:text-sm text-gray-600 group cursor-pointer">
-                                <input type="checkbox" name="remember" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 transition h-4 w-4">
-                                <span class="ml-2 group-hover:text-blue-700 transition-colors">Recordar sesión</span>
-                            </label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+
 
                             @if (Route::has('password.request'))
-                                <a class="text-xs md:text-sm text-blue-600 hover:text-blue-800 hover:underline transition-all" href="{{ route('password.request') }}">
-                                    ¿Contraseña olvidada?
+                                <a href="{{ route('password.request') }}" class="login_forgot">
+                                    ¿Olvidaste tu contraseña?
                                 </a>
                             @endif
                         </div>
 
                         <!-- Button -->
-                        <button
-                            type="submit"
-                            class="w-full py-2.5 md:py-3 rounded-lg md:rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold hover:from-blue-700 hover:to-blue-900 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl active:transform active:translate-y-0 text-sm md:text-base"
-                        >
-                            <span class="flex items-center justify-center">
-                                <svg class="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                </svg>
+                        <div class="div_boton_loginA color_boton" style="width: 100%;">
+                            <button type="submit" class="login_button">
                                 Iniciar Sesión
-                            </span>
-                        </button>
+                            </button>
+                        </div>
                     </form>
-
-                    <!-- Footer adicional -->
-                    <div class="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-200 text-center">
-                        <p class="text-xs md:text-sm text-gray-500">
-                            © 2026 Empresa de Construcción. Todos los derechos reservados.
-                        </p>
-                        <p class="text-xs text-gray-400 mt-1">
-                            Sistema seguro certificado
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Notificación flotante -->
-        <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-2 md:p-3 shadow-lg transform transition-transform duration-300 hover:-translate-y-1 hidden md:block">
-            <div class="flex items-center">
-                <div class="w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full mr-1 md:mr-2 animate-pulse"></div>
-                <span class="text-xs md:text-sm text-gray-700">Sistema en línea</span>
-            </div>
+        <!-- Footer -->
+        <div class="login_footer">
+            <p>© 2026 MejoraSoft. Todos los derechos reservados.</p>
         </div>
     </div>
-
-    <!-- Agregar estas animaciones personalizadas al final -->
-    <style>
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        
-        .animate-fade-in {
-            animation: fade-in 0.8s ease-out;
-        }
-        
-        .animate-bounce-slow {
-            animation: bounce-slow 3s infinite ease-in-out;
-        }
-        
-        /* Animación de entrada para el formulario */
-        .group input:focus {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.3);
-        }
-        
-        /* Estilo específico para el logo */
-        img[alt="Logo Empresa"] {
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-            max-width: 250px;
-            width: auto;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .bg-gradient-to-br {
-                min-height: 200px;
-            }
-            
-            .relative.z-10 {
-                padding: 1rem;
-            }
-        }
-    </style>
 </x-guest-layout>

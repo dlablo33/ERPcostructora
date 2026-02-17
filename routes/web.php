@@ -88,13 +88,17 @@ Route::prefix('admin')->group(function () {
         return view('administracion.cuentaspago.pagos');
     })->name('admin.pagos');
 
-    Route::get('/facturacion', function () {
+    Route::get('/cfdi', function () {
         return view('administracion.facturacion.cfdi');
     })->name('admin.cfdi');
 
     Route::get('/notadecredito', function () {
         return view('administracion.facturacion.nota');
     })->name('admin.nota');
+
+    Route::get('/facturacion', function () {
+        return view('administracion.facturacion.facturacion');
+    })->name('admin.facturacion');
     
 });
 

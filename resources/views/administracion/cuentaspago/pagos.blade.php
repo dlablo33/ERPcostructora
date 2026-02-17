@@ -1,1308 +1,803 @@
 @extends('layouts.navigation')
 
 @section('content')
+<div class="min-h-screen bg-gray-50 text-gray-800">
+    <section class="content container-fluid py-3">
+        <!-- Antiguedad de Cuentas Por Pagar -->
+        <div class="semaforo card mt-2">
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
+                <h2 style="color: #083CAE; font-weight: bold; margin: 0 0 15px 0; font-size: 24px;">
+                    Antiguedad de Cuentas Por Pagar
+                </h2>
+                
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <label for="proveedor_id" style="color: #083CAE; font-weight: 500; margin-right: 10px;">Proveedor:</label>
+                        <select class="form-control form-control-sm" id="proveedor_id" style="width: auto; display: inline-block; border: 1px solid #083CAE; border-radius: 4px; padding: 5px 10px;">
+                            <option value="0" selected>TODOS</option>
+                            <option value="1">Transportes Demo Mexico</option>
+                            <option value="2">Tracto Refacciones Demo</option>
+                            <option value="3">Llantera Demo</option>
+                            <option value="4">Proveedor Diesel Demo</option>
+                            <option value="5">Proveedor Refacciones Demo</option>
+                            <option value="6">GERARDO SILVA</option>
+                            <option value="7">UNION DE CREDITO ALLENDE</option>
+                            <option value="8">PERMISIONARIO LOGISTICA DEL GOLFO</option>
+                            <option value="9">VEHICULOS COMERCIALES CATAY</option>
+                            <option value="10">MARIA DE LA CRUZ MELENDEZ NAVA</option>
+                            <option value="11">ARELI CITLALLI BAUTISTA FLORES</option>
+                            <option value="12">SISTEMAS COMPUTACIONALES DEL NORTE</option>
+                            <option value="13">TURBO SYSTEM PRODUCTS</option>
+                            <option value="14">DHL EXPRESS MEXICO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5"></div>
+                    <div class="col-md-4 text-right">
+                        <button type="button" class="btn btn-sm" id="buttonExcel" style="background-color: #28a745; color: white; border: none; padding: 5px 15px; border-radius: 4px; margin-right: 5px;">
+                            <i class="fas fa-file-excel mr-1"></i> Descarga Excel
+                        </button>
+                        <button type="button" class="btn btn-sm" id="buttonVerPDF" style="background-color: #28a745; color: white; border: none; padding: 5px 15px; border-radius: 4px; margin-right: 5px;">
+                            <i class="fas fa-file-pdf mr-1"></i> Descarga PDF
+                        </button>
+                        <button type="button" class="btn btn-sm" id="buttonRecargar" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px;">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                <!-- PRIMERA FILA: 4 CUADROS -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                    <!-- Cuadro 1: Total CXP -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #28a745; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-search-dollar" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Total CXP</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">1,118,884.08</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 2: Corriente -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #28a745; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-search-dollar" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Corriente</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 3: De 1 a 30 Días -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #dc3545; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-hand-holding-usd" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">De 1 a 30 Días</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">$31,575.20</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 4: 31 a 60 Días -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #dc3545; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-hand-holding-usd" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">31 a 60 Días</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">$14,732.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEGUNDA FILA: 4 CUADROS -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+                    <!-- Cuadro 5: 61 a 90 Días -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #dc3545; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-hand-holding-usd" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">61 a 90 Días</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 6: 91 a 120 Días -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #dc3545; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-hand-holding-usd" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">91 a 120 Días</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">$28,094.85</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 7: Mas de 120 Días -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #dc3545; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-hand-holding-usd" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Mas de 120 Días</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">$1,044,482.03</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 8: Pendiente de Revisión (oculto por defecto) -->
+                    <div style="flex: 1 1 calc(12.5% - 15px); min-width: 130px; display: none;" id="pendiente_revision">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px; display: flex; align-items: center; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%;">
+                            <div style="background-color: #ffc107; width: 50px; height: 50px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0;">
+                                <i class="fas fa-exclamation-circle" style="color: white; font-size: 24px;"></i>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="color: #6c757d; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pendiente Revisión</div>
+                                <div style="color: #083CAE; font-size: 16px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="monto_pendiente">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de antigüedad de cuentas por pagar -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 500px; overflow-y: auto;">
+                    <table class="table table-bordered table-striped" id="semaforoCXP" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; z-index: 10;">
+                            <!-- Fila vacía -->
+                            <tr style="background-color: #e9ecef; height: 5px;"></tr>
+                            
+                            <!-- Segunda fila de encabezado - títulos principales -->
+                            <tr style="background-color: #e9ecef;">
+                                <th style="width: 30px; text-align: center; border: 1px solid #dee2e6; padding: 8px 5px; background-color: #6B8ACE !important; color: white;"></th>
+                                <th style="border: 1px solid #dee2e6; padding: 8px 5px; min-width: 200px; background-color: #6B8ACE !important; color: white;">Proveedor</th>
+                                <th style="border: 1px solid #dee2e6; padding: 8px 5px; min-width: 80px; background-color: #6B8ACE !important; color: white;"></th>
+                                <th style="border: 1px solid #dee2e6; padding: 8px 5px; min-width: 80px; background-color: #6B8ACE !important; color: white;"></th>
+                                <th style="width: 100px; background-color: #ff0000 !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;">De 1 a 30</th>
+                                <th style="width: 100px; background-color: #ff0000 !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;">De 31 a 60</th>
+                                <th style="width: 100px; background-color: #ff0000 !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;">De 61 a 90</th>
+                                <th style="width: 100px; background-color: #ff0000 !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;">De 91 a 120</th>
+                                <th style="width: 100px; background-color: #ff0000 !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;">+ 120</th>
+                                <th style="width: 120px; background-color: #6B8ACE !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;">Total</th>
+                            </tr>
+                            
+                            <!-- Tercera fila de encabezado - subtítulos -->
+                            <tr style="background-color: #e9ecef;">
+                                <th style="width: 30px; border: 1px solid #dee2e6; padding: 8px 5px; background-color: #6B8ACE !important; color: white;"></th>
+                                <th style="border: 1px solid #dee2e6; padding: 8px 5px; background-color: #6B8ACE !important; color: white;"></th>
+                                
+                                <th style="border: 1px solid #dee2e6; padding: 8px 5px; text-align: center; background-color: #6B8ACE !important; color: white;">Fecha Vencimiento</th>
+                                <th style="background-color: #32cd32 !important; color: #000; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;" colspan="1">Días por Vencer</th>
+                                <th style="background-color: #ff0000 !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;" colspan="5">Días de Vencido</th>
+                                <th style="background-color: #6B8ACE !important; color: white; border: 1px solid #dee2e6; padding: 8px 5px; text-align: center;"></th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+ 
+
+                            <!-- Tracto Refacciones Demo -->
+                            <tr class="parent-row" data-proveedor="2" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">Tracto Refacciones Demo</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">55,138.28</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">55,138.28</td>
+                            </tr>
+                            <tr class="child-row" data-parent="2" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">54983</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-02-26</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">11,124.40</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">11,124.40</td>
+                            </tr>
+                            <tr class="child-row" data-parent="2" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">84987</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-03-03</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">19,352.28</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">19,352.28</td>
+                            </tr>
+                            <tr class="child-row" data-parent="2" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">51065</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-03-15</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">3,503.20</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">3,503.20</td>
+                            </tr>
+                            <tr class="child-row" data-parent="2" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">544</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-03-10</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">12,671.84</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">12,671.84</td>
+                            </tr>
+                            <tr class="child-row" data-parent="2" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">35453</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-01-09</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">1,951.12</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">1,951.12</td>
+                            </tr>
+                            <tr class="child-row" data-parent="2" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">174</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-02-04</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">6,535.44</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">6,535.44</td>
+                            </tr>
+
+                            <!-- Llantera Demo -->
+                            <tr class="parent-row" data-proveedor="3" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">Llantera Demo</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">70,179.60</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">70,179.60</td>
+                            </tr>
+                            <tr class="child-row" data-parent="3" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">84651</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-02-27</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">19,503.84</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">19,503.84</td>
+                            </tr>
+                            <tr class="child-row" data-parent="3" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">878</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-02-28</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">10,687.08</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">10,687.08</td>
+                            </tr>
+                            <tr class="child-row" data-parent="3" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">62</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-03-15</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">23,030.64</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">23,030.64</td>
+                            </tr>
+                            <tr class="child-row" data-parent="3" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">545</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2023-03-14</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">16,958.04</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">16,958.04</td>
+                            </tr>
+
+                            <!-- Proveedor Diesel Demo -->
+                            <tr class="parent-row" data-proveedor="4" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">Proveedor Diesel Demo</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">5,829.75</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">5,829.75</td>
+                            </tr>
+                            <tr class="child-row" data-parent="4" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">23450</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2025-02-21</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">0.00</td>
+                            </tr>
+                            <tr class="child-row" data-parent="4" style="background-color: #ffffff; display: none;">
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;"><span style="text-decoration: underline; color: #0000ee; cursor: pointer;">23450</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">2025-02-08</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">5,829.75</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">5,829.75</td>
+                            </tr>
+
+                            <!-- Proveedor Refacciones Demo -->
+                            <tr class="parent-row" data-proveedor="5" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">Proveedor Refacciones Demo</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">57,973.32</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">57,973.32</td>
+                            </tr>
+
+                            <!-- GERARDO SILVA -->
+                            <tr class="parent-row" data-proveedor="6" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">GERARDO SILVA</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">3,027.60</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">232.00</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">3,259.60</td>
+                            </tr>
+
+                            <!-- UNION DE CREDITO ALLENDE -->
+                            <tr class="parent-row" data-proveedor="7" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">UNION DE CREDITO ALLENDE</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">694,297.02</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">694,297.02</td>
+                            </tr>
+
+                            <!-- PERMISIONARIO LOGISTICA DEL GOLFO -->
+                            <tr class="parent-row" data-proveedor="8" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">PERMISIONARIO LOGISTICA DEL GOLFO</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">72,109.99</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">72,109.99</td>
+                            </tr>
+
+                            <!-- VEHICULOS COMERCIALES CATAY -->
+                            <tr class="parent-row" data-proveedor="9" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">VEHICULOS COMERCIALES CATAY</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">3,306.00</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">3,306.00</td>
+                            </tr>
+
+                            <!-- MARIA DE LA CRUZ MELENDEZ NAVA -->
+                            <tr class="parent-row" data-proveedor="10" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">MARIA DE LA CRUZ MELENDEZ NAVA</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">1,287.60</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">1,287.60</td>
+                            </tr>
+
+                            <!-- ARELI CITLALLI BAUTISTA FLORES -->
+                            <tr class="parent-row" data-proveedor="11" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">ARELI CITLALLI BAUTISTA FLORES</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">4,872.00</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">4,872.00</td>
+                            </tr>
+
+                            <!-- SISTEMAS COMPUTACIONALES DEL NORTE -->
+                            <tr class="parent-row" data-proveedor="12" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">SISTEMAS COMPUTACIONALES DEL NORTE</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">14,500.00</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">17,400.00</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">31,900.00</td>
+                            </tr>
+
+                            <!-- TURBO SYSTEM PRODUCTS -->
+                            <tr class="parent-row" data-proveedor="13" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">TURBO SYSTEM PRODUCTS</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">9,628.00</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">9,628.00</td>
+                            </tr>
+
+                            <!-- DHL EXPRESS MEXICO -->
+                            <tr class="parent-row" data-proveedor="14" style="background-color: #f8f9fa; font-weight: 500; cursor: pointer;">
+                                <td style="text-align: center; border: 1px solid #dee2e6; padding: 6px 4px;">
+                                    <i class="fas fa-chevron-right toggle-icon" style="color: #083CAE;"></i>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">DHL EXPRESS MEXICO</td>
+                                <td style="border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px;">-</td>
+                                <td style="text-align: right; border: 1px solid #dee2e6; padding: 6px 4px; font-weight: bold;">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
 <style>
-    :root {
-        --primary-green: #2e7d32;
-        --primary-green-light: #4caf50;
-        --primary-green-dark: #1b5e20;
-        --primary-red: #c62828;
-        --primary-blue: #1565c0;
-        --primary-purple: #6a1b9a;
-        --primary-cyan: #00838f;
-        --secondary-blue: #0277bd;
-        --accent-teal: #00695c;
-        --accent-amber: #ff8f00;
-        --dark-bg: #1a237e;
-        --light-bg: #f5f7fa;
-        --card-bg: #ffffff;
-        --text-dark: #263238;
-        --text-medium: #546e7a;
-        --text-light: #78909c;
-        --border-light: #e0e0e0;
-        --border-medium: #bdbdbd;
-        --success: #4caf50;
-        --warning: #ff9800;
-        --error: #f44336;
-        --info: #2196f3;
+    .semaforo .card-header {
+        background-color: #f4f6f9;
+        border-bottom: 2px solid #083CAE;
     }
     
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', 'Roboto', sans-serif;
+    .custom-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
     }
     
-    body {
-        background-color: var(--light-bg);
-        color: var(--text-dark);
+    .custom-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
+        border-color: #083CAE !important;
     }
     
-    /* Contenido principal */
-    .main-content {
-        padding: 2rem;
-        max-width: 1800px;
-        margin: 0 auto;
-    }
-    
-    /* Header con título y acciones */
-    .page-header {
-        background: linear-gradient(135deg, #ffffff, #f8f9fa);
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        border: 1px solid var(--border-light);
-    }
-    
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-    }
-    
-    .title-section {
-        flex: 1;
-    }
-    
-    .page-title {
-        font-size: 2.2rem;
-        color: var(--dark-bg);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .title-icon {
-        font-size: 2rem;
-        color: var(--primary-red);
-    }
-    
-    .client-selector {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-top: 1rem;
-    }
-    
-    .client-label {
-        font-size: 1rem;
-        color: var(--text-medium);
-        font-weight: 600;
-    }
-    
-    .client-select {
-        padding: 0.75rem 1.25rem;
-        border: 2px solid var(--border-light);
-        border-radius: 8px;
-        font-size: 1rem;
-        color: var(--text-dark);
+    #proveedor_id {
+        border: 1px solid #083CAE;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 14px;
+        color: #083CAE;
         background-color: white;
-        min-width: 300px;
-        cursor: pointer;
-        transition: all 0.3s ease;
     }
     
-    .client-select:focus {
+    #proveedor_id:focus {
         outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+        box-shadow: 0 0 0 3px rgba(8, 60, 174, 0.1);
     }
     
-    .header-actions {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
+    .btn-sm {
+        font-size: 13px;
+        padding: 5px 12px;
+        transition: opacity 0.2s;
     }
     
-    .btn {
-        padding: 0.85rem 1.75rem;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        transition: all 0.3s ease;
-        font-size: 0.95rem;
+    .btn-sm:hover {
+        opacity: 0.9;
     }
     
-    .btn-excel {
-        background: linear-gradient(135deg, #217346, #2d9558);
-        color: white;
-        box-shadow: 0 4px 12px rgba(33, 115, 70, 0.3);
-    }
-    
-    .btn-excel:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(33, 115, 70, 0.4);
-    }
-    
-    .btn-pdf {
-        background: linear-gradient(135deg, #c62828, #e53935);
-        color: white;
-        box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
-    }
-    
-    .btn-pdf:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(198, 40, 40, 0.4);
-    }
-    
-    .btn-refresh {
-        background: linear-gradient(135deg, var(--primary-blue), #1976d2);
-        color: white;
-        padding: 0.85rem 1.25rem;
-        box-shadow: 0 4px 12px rgba(21, 101, 192, 0.3);
-    }
-    
-    .btn-refresh:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(21, 101, 192, 0.4);
-    }
-    
-    .btn-pay {
-        background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
-        color: white;
-        padding: 0.85rem 1.5rem;
-        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
-    }
-    
-    .btn-pay:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
-    }
-    
-    /* ===== KPI CARDS - NÚMEROS ASEGURADOS ===== */
-    .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 2.5rem;
-    }
-    
-    .kpi-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.25rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border: 2px solid;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        min-width: 0; /* IMPORTANTE: Permite que el contenido se encoja */
-    }
-    
-    .kpi-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-    }
-    
-    .kpi-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
-    
-    /* Estilos específicos para cada tipo de KPI */
-    .kpi-card.total-cxp {
-        border-color: var(--primary-purple);
-        background: linear-gradient(135deg, #f3e5f5 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.total-cxp::before {
-        background: linear-gradient(90deg, var(--primary-purple), #ab47bc);
-    }
-    
-    .kpi-card.corriente {
-        border-color: var(--success);
-        background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.corriente::before {
-        background: linear-gradient(90deg, var(--success), #66bb6a);
-    }
-    
-    .kpi-card.rango1-30 {
-        border-color: #ff9800;
-        background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.rango1-30::before {
-        background: linear-gradient(90deg, #ff9800, #ffb74d);
-    }
-    
-    .kpi-card.rango31-60 {
-        border-color: #fb8c00;
-        background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.rango31-60::before {
-        background: linear-gradient(90deg, #fb8c00, #ffa726);
-    }
-    
-    .kpi-card.rango61-90 {
-        border-color: #f4511e;
-        background: linear-gradient(135deg, #fbe9e7 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.rango61-90::before {
-        background: linear-gradient(90deg, #f4511e, #ff7043);
-    }
-    
-    .kpi-card.rango91-120 {
-        border-color: #e53935;
-        background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.rango91-120::before {
-        background: linear-gradient(90deg, #e53935, #ef5350);
-    }
-    
-    .kpi-card.mas120 {
-        border-color: #b71c1c;
-        background: linear-gradient(135deg, #ffcdd2 0%, #ffffff 100%);
-    }
-    
-    .kpi-card.mas120::before {
-        background: linear-gradient(90deg, #b71c1c, #e53935);
-    }
-    
-    .kpi-icon-box {
-        width: 55px;
-        height: 55px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        color: white;
-        flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .kpi-icon-box.purple {
-        background: linear-gradient(135deg, var(--primary-purple), #ab47bc);
-    }
-    
-    .kpi-icon-box.green {
-        background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
-    }
-    
-    .kpi-icon-box.orange {
-        background: linear-gradient(135deg, #fb8c00, #ffa726);
-    }
-    
-    .kpi-icon-box.red {
-        background: linear-gradient(135deg, #c62828, #e53935);
-    }
-    
-    .kpi-icon-box.dark-red {
-        background: linear-gradient(135deg, #b71c1c, #c62828);
-    }
-    
-    .kpi-info {
-        flex: 1;
-        min-width: 0; /* IMPORTANTE: Permite que el texto se encoja */
-    }
-    
-    .kpi-label {
-        font-size: 0.75rem;
-        color: var(--text-medium);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.2rem;
-        white-space: nowrap;
-    }
-    
-    .kpi-value {
-        font-size: 1.35rem; /* Reducido para que quepa SIEMPRE */
-        font-weight: 700;
-        color: var(--text-dark);
-        font-family: 'Roboto Mono', monospace;
-        line-height: 1.1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-        width: 100%;
-    }
-    
-    /* Responsivo para el número más grande */
-    .kpi-card.total-cxp .kpi-value {
-        font-size: 1.25rem; /* Aún más pequeño para el número más grande */
-    }
-    
-    .kpi-card.mas120 .kpi-value {
-        font-size: 1.25rem; /* También reducir el de 1,030,093.70 */
-    }
-    
-    .kpi-subtext {
-        font-size: 0.7rem;
-        color: var(--text-light);
-        margin-top: 0.15rem;
-        white-space: nowrap;
-    }
-    
-    /* Tabla de Datos */
-    .table-section {
-        background: white;
-        border-radius: 12px;
-        padding: 0;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        margin-bottom: 2.5rem;
-    }
-    
-    .data-table {
-        width: 100%;
+    .table {
         border-collapse: collapse;
     }
     
-    /* Encabezado principal de la tabla */
-    .data-table thead tr:first-child th {
-        background: linear-gradient(135deg, #5e35b1, #7e57c2);
-        color: white;
-        padding: 1.25rem 1rem;
+    .table th {
         font-weight: 600;
-        text-align: center;
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
-        font-size: 0.95rem;
-        letter-spacing: 0.5px;
+        font-size: 13px;
+        padding: 10px 8px;
+        border: 1px solid #dee2e6;
     }
     
-    .data-table thead tr:first-child th:last-child {
-        border-right: none;
-    }
-    
-    /* Sub-encabezados */
-    .data-table thead tr:nth-child(2) th {
-        padding: 1rem;
-        font-weight: 600;
-        text-align: center;
-        font-size: 0.85rem;
-        border-right: 1px solid var(--border-light);
-        border-bottom: 2px solid var(--border-medium);
-    }
-    
-    .header-corriente {
-        background: linear-gradient(135deg, #4caf50, #66bb6a);
-        color: white;
-    }
-    
-    .header-vencido {
-        background: linear-gradient(135deg, #ef5350, #f44336);
-        color: white;
-    }
-    
-    .header-days {
-        background: linear-gradient(135deg, #ff9800, #fb8c00);
-        color: white;
-    }
-    
-    .sub-header-light {
-        background-color: #e8eaf6;
-        color: var(--text-dark);
-        font-weight: 600;
-    }
-    
-    .sub-header-orange {
-        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-        color: #e65100;
-    }
-    
-    .sub-header-red {
-        background: linear-gradient(135deg, #ffebee, #ffcdd2);
-        color: #b71c1c;
-    }
-    
-    /* Cuerpo de la tabla */
-    .data-table tbody td {
-        padding: 1rem 0.75rem;
-        text-align: center;
-        border-right: 1px solid var(--border-light);
-        border-bottom: 1px solid var(--border-light);
-        font-size: 0.9rem;
+    .table td {
+        padding: 8px;
+        border: 1px solid #dee2e6;
         vertical-align: middle;
     }
     
-    .data-table tbody td:first-child {
-        text-align: left;
-        font-weight: 600;
-        color: var(--text-dark);
-        background-color: #fafafa;
-        position: sticky;
-        left: 0;
-        z-index: 1;
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0,0,0,.02);
     }
     
-    .data-table tbody td:nth-child(2),
-    .data-table tbody td:nth-child(3) {
-        font-size: 0.85rem;
-        color: var(--text-medium);
+    .table-striped tbody tr:hover {
+        background-color: rgba(8, 60, 174, 0.05);
     }
     
-    .data-table tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
+    .parent-row {
+        cursor: pointer;
+        transition: background-color 0.2s;
     }
     
-    .data-table tbody tr:hover td:first-child {
-        background-color: #f0f0f0;
+    .parent-row:hover {
+        background-color: #e9ecef !important;
     }
     
-    /* Montos */
-    .amount {
-        font-family: 'Roboto Mono', monospace;
-        font-weight: 600;
-    }
-    
-    .amount.positive {
-        color: var(--success);
-    }
-    
-    .amount.warning {
-        color: #ef6c00;
-    }
-    
-    .amount.danger {
-        color: #c62828;
-    }
-    
-    .amount.critical {
-        color: #b71c1c;
-        font-weight: 700;
-    }
-    
-    .empty-cell {
-        color: var(--text-light);
-    }
-    
-    /* Proveedor con detalles */
-    .supplier-info {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .supplier-name {
-        font-weight: 600;
-        color: var(--text-dark);
-    }
-    
-    .supplier-detail {
-        font-size: 0.75rem;
-        color: var(--text-light);
-        margin-top: 0.2rem;
-    }
-    
-    /* Pie de tabla */
-    .data-table tfoot td {
-        padding: 1.25rem 1rem;
-        text-align: center;
-        border-right: 1px solid var(--border-medium);
-        border-top: 3px solid #5e35b1;
-        background: linear-gradient(135deg, #f5f5f5, #fafafa);
-        font-weight: 700;
-        font-family: 'Roboto Mono', monospace;
-        font-size: 1rem;
-    }
-    
-    .data-table tfoot td:first-child {
-        text-align: left;
-        background: linear-gradient(135deg, #e0e0e0, #eeeeee);
-    }
-    
-    /* Contenedor con scroll horizontal */
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Columnas específicas */
-    .col-proveedor {
-        min-width: 280px;
-    }
-    
-    .col-fecha {
-        min-width: 120px;
-    }
-    
-    .col-monto {
-        min-width: 130px;
-    }
-    
-    .col-vencido {
-        min-width: 100px;
-    }
-    
-    /* Badges */
-    .badge {
+    .toggle-icon {
+        transition: transform 0.3s ease;
         display: inline-block;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 600;
     }
     
-    .badge-warning {
-        background-color: #fff3e0;
-        color: #e65100;
+    .toggle-icon.rotated {
+        transform: rotate(90deg);
     }
     
-    .badge-danger {
-        background-color: #ffebee;
-        color: #b71c1c;
+    /* Animación para las filas hijo */
+    .child-row {
+        transition: all 0.3s ease-out;
     }
     
-    .badge-success {
-        background-color: #e8f5e9;
-        color: #2e7d32;
+    .child-row.hiding {
+        opacity: 0;
+        transform: translateY(-10px);
     }
     
-    /* Resumen de proveedor */
-    .supplier-summary {
-        background: linear-gradient(135deg, #ede7f6, #f5f5f5);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-top: 2rem;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        border: 1px solid #d1c4e9;
+    .child-row.showing {
+        animation: slideDown 0.3s ease-out forwards;
     }
     
-    .summary-item {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .summary-label {
-        font-size: 0.8rem;
-        color: var(--text-medium);
-        margin-bottom: 0.25rem;
-    }
-    
-    .summary-value {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--dark-bg);
-        font-family: 'Roboto Mono', monospace;
-    }
-    
-    .summary-supplier {
-        font-weight: 600;
-        color: var(--primary-purple);
-        font-size: 1.1rem;
-    }
-    
-    /* Responsive */
-    @media (max-width: 1400px) {
-        .kpi-grid {
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    @keyframes slideDown {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
         }
-        
-        .kpi-value {
-            font-size: 1.25rem;
-        }
-        
-        .kpi-card.total-cxp .kpi-value,
-        .kpi-card.mas120 .kpi-value {
-            font-size: 1.15rem;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .main-content {
-            padding: 1rem;
-        }
-        
-        .page-header {
-            padding: 1.5rem;
-        }
-        
-        .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .header-actions {
-            width: 100%;
-            flex-direction: column;
-        }
-        
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .client-select {
-            width: 100%;
-            min-width: auto;
-        }
-        
-        .kpi-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .kpi-card {
-            padding: 1rem;
-        }
-        
-        .kpi-icon-box {
-            width: 50px;
-            height: 50px;
-            font-size: 1.4rem;
-        }
-        
-        .kpi-value {
-            font-size: 1.2rem;
-        }
-        
-        .kpi-card.total-cxp .kpi-value,
-        .kpi-card.mas120 .kpi-value {
-            font-size: 1.1rem;
-        }
-        
-        .data-table tbody td:first-child {
-            position: static;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .page-title {
-            font-size: 1.75rem;
-        }
-        
-        .kpi-value {
-            font-size: 1.15rem;
-        }
-        
-        .kpi-card.total-cxp .kpi-value,
-        .kpi-card.mas120 .kpi-value {
-            font-size: 1.05rem;
-        }
-        
-        .data-table {
-            font-size: 0.85rem;
-        }
-        
-        .data-table thead tr:first-child th,
-        .data-table thead tr:nth-child(2) th,
-        .data-table tbody td,
-        .data-table tfoot td {
-            padding: 0.75rem 0.5rem;
+        100% {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>
 
-<div class="main-content">
-    <!-- Header -->
-    <div class="page-header">
-        <div class="header-content">
-            <div class="title-section">
-                <h1 class="page-title">
-                    <i class="fas fa-file-invoice-dollar title-icon"></i>
-                    Antigüedad de Cuentas Por Pagar
-                </h1>
-                <div class="client-selector">
-                    <label class="client-label">Proveedor:</label>
-                    <select class="client-select" id="supplier-filter">
-                        <option value="todos">TODOS LOS PROVEEDORES</option>
-                        <option value="transportes">Transportes Demo Mexico</option>
-                        <option value="tracto">Tracto Refacciones Demo</option>
-                        <option value="llantera">Llantera Demo</option>
-                        <option value="diesel">Proveedor Diesel Demo</option>
-                        <option value="refacciones">Proveedor Refacciones Demo</option>
-                        <option value="silva">GERARDO SILVA</option>
-                        <option value="allende">UNION DE CREDITO ALLENDE</option>
-                        <option value="logistica">PERMISIONARIO LOGISTICA DEL GOLFO</option>
-                        <option value="catay">VEHICULOS COMERCIALES CATAY</option>
-                        <option value="melendez">MARIA DE LA CRUZ MELENDEZ NAVA</option>
-                        <option value="flores">ARELI CITLALLI BAUTISTA FLORES</option>
-                        <option value="sistemas">SISTEMAS COMPUTACIONALES DEL NORTE</option>
-                        <option value="turbo">TURBO SYSTEM PRODUCTS</option>
-                        <option value="dhl">DHL EXPRESS MEXICO</option>
-                        <option value="imtor">IMPULSORA DE TORNILLOS IMTOR</option>
-                        <option value="viornery">VIORNERY CUAUTITLAN</option>
-                        <option value="freightmex">3R FREIGHTMEX</option>
-                    </select>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-pay" id="pay-batch">
-                    <i class="fas fa-credit-card"></i>
-                    Pago Múltiple
-                </button>
-                <button class="btn btn-excel" id="export-excel">
-                    <i class="fas fa-file-excel"></i>
-                    Descarga Excel
-                </button>
-                <button class="btn btn-pdf" id="export-pdf">
-                    <i class="fas fa-file-pdf"></i>
-                    Descarga PDF
-                </button>
-                <button class="btn btn-refresh" id="refresh-data">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- KPIs Grid - Con datos reales y números que SIEMPRE caben -->
-    <div class="kpi-grid">
-        <div class="kpi-card total-cxp">
-            <div class="kpi-icon-box purple">
-                <i class="fas fa-search-dollar"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Total CXP</div>
-                <div class="kpi-value">$1,118,884</div>
-                <div class="kpi-subtext">Total obligaciones</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card corriente">
-            <div class="kpi-icon-box green">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Corriente</div>
-                <div class="kpi-value">$0</div>
-                <div class="kpi-subtext">Sin vencimiento</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card rango1-30">
-            <div class="kpi-icon-box orange">
-                <i class="fas fa-hourglass-start"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">1-30 Días</div>
-                <div class="kpi-value">$31,575</div>
-                <div class="kpi-subtext">Vencimiento próximo</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card rango31-60">
-            <div class="kpi-icon-box orange">
-                <i class="fas fa-hourglass-half"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">31-60 Días</div>
-                <div class="kpi-value">$14,732</div>
-                <div class="kpi-subtext">Atención requerida</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card rango61-90">
-            <div class="kpi-icon-box orange">
-                <i class="fas fa-hourglass-end"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">61-90 Días</div>
-                <div class="kpi-value">$0</div>
-                <div class="kpi-subtext">Sin adeudos</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card rango91-120">
-            <div class="kpi-icon-box red">
-                <i class="fas fa-exclamation-circle"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">91-120 Días</div>
-                <div class="kpi-value">$42,483</div>
-                <div class="kpi-subtext">Crédito vencido</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card mas120">
-            <div class="kpi-icon-box dark-red">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">+120 Días</div>
-                <div class="kpi-value">$1,030,094</div>
-                <div class="kpi-subtext">Crédito castigado</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tabla de Antigüedad de Saldos -->
-    <div class="table-section">
-        <div class="table-responsive">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th rowspan="2" class="col-proveedor">Proveedor</th>
-                        <th colspan="2" class="header-days">Días de Crédito</th>
-                        <th colspan="1" class="header-corriente">Corriente</th>
-                        <th colspan="5" class="header-vencido">Días de Vencido</th>
-                        <th rowspan="2" class="col-monto">Total</th>
-                    </tr>
-                    <tr>
-                        <th class="sub-header-light">Fecha Venc.</th>
-                        <th class="sub-header-light">Días x Vencer</th>
-                        <th class="sub-header-orange">Días x Vencer</th>
-                        <th class="sub-header-orange">1-30</th>
-                        <th class="sub-header-orange">31-60</th>
-                        <th class="sub-header-red">61-90</th>
-                        <th class="sub-header-red">91-120</th>
-                        <th class="sub-header-red">+120</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">Transportes Demo Mexico</span>
-                                <span class="supplier-detail">TDM850101 • 30d</span>
-                            </div>
-                        </td>
-                        <td>15/03/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount warning">27,260</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">48,760</td>
-                        <td class="amount">76,020</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">Tracto Refacciones Demo</span>
-                                <span class="supplier-detail">TRD920505 • 45d</span>
-                            </div>
-                        </td>
-                        <td>10/01/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount critical">55,138</td>
-                        <td class="amount">55,138</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">Llantera Demo</span>
-                                <span class="supplier-detail">LLD780912 • 30d</span>
-                            </div>
-                        </td>
-                        <td>05/12/25</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount critical">70,180</td>
-                        <td class="amount">70,180</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">Proveedor Diesel Demo</span>
-                                <span class="supplier-detail">PDD830225 • 15d</span>
-                            </div>
-                        </td>
-                        <td>20/01/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">5,830</td>
-                        <td class="amount">5,830</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">Proveedor Refacciones Demo</span>
-                                <span class="supplier-detail">PRD880718 • 30d</span>
-                            </div>
-                        </td>
-                        <td>28/01/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount critical">57,973</td>
-                        <td class="amount">57,973</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">GERARDO SILVA</span>
-                                <span class="supplier-detail">SIGG780101 • 30d</span>
-                            </div>
-                        </td>
-                        <td>25/02/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount warning">3,028</td>
-                        <td class="amount warning">232</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount">3,260</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">UNION DE CREDITO ALLENDE</span>
-                                <span class="supplier-detail">UCA850101 • 60d</span>
-                            </div>
-                        </td>
-                        <td>15/11/25</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount critical">694,297</td>
-                        <td class="amount">694,297</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">LOGISTICA DEL GOLFO</span>
-                                <span class="supplier-detail">PLG900520 • 90d</span>
-                            </div>
-                        </td>
-                        <td>10/12/25</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">14,388</td>
-                        <td class="amount danger">57,722</td>
-                        <td class="amount">72,110</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">VEHICULOS CATAY</span>
-                                <span class="supplier-detail">VCC950813 • 30d</span>
-                            </div>
-                        </td>
-                        <td>18/02/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">3,306</td>
-                        <td class="amount">3,306</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">MARIA MELENDEZ NAVA</span>
-                                <span class="supplier-detail">MENM751215 • 15d</span>
-                            </div>
-                        </td>
-                        <td>10/03/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount warning">1,288</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount">1,288</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">ARELI BAUTISTA FLORES</span>
-                                <span class="supplier-detail">BAFA880305 • 30d</span>
-                            </div>
-                        </td>
-                        <td>05/02/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">4,872</td>
-                        <td class="amount">4,872</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">SISTEMAS DEL NORTE</span>
-                                <span class="supplier-detail">SCN910101 • 60d</span>
-                            </div>
-                        </td>
-                        <td>20/01/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount warning">14,500</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">17,400</td>
-                        <td class="amount">31,900</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">TURBO SYSTEM</span>
-                                <span class="supplier-detail">TSP930618 • 30d</span>
-                            </div>
-                        </td>
-                        <td>12/01/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">9,628</td>
-                        <td class="amount">9,628</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">DHL EXPRESS</span>
-                                <span class="supplier-detail">DHL820101 • 15d</span>
-                            </div>
-                        </td>
-                        <td>28/02/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">47</td>
-                        <td class="amount">47</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">IMPULSORA IMTOR</span>
-                                <span class="supplier-detail">ITI890405 • 30d</span>
-                            </div>
-                        </td>
-                        <td>22/01/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">3,317</td>
-                        <td class="amount">3,317</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">VIORNERY</span>
-                                <span class="supplier-detail">VIC921230 • 30d</span>
-                            </div>
-                        </td>
-                        <td>08/02/26</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">1,624</td>
-                        <td class="amount">1,624</td>
-                    </tr>
-                    <tr>
-                        <td class="col-proveedor">
-                            <div class="supplier-info">
-                                <span class="supplier-name">3R FREIGHTMEX</span>
-                                <span class="supplier-detail">FRM950101 • 90d</span>
-                            </div>
-                        </td>
-                        <td>15/11/25</td>
-                        <td>-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount danger">28,095</td>
-                        <td class="empty-cell">-</td>
-                        <td class="amount">28,095</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3"><strong>TOTAL</strong></td>
-                        <td><strong>$0</strong></td>
-                        <td><strong>$31,575</strong></td>
-                        <td><strong>$14,732</strong></td>
-                        <td><strong>$0</strong></td>
-                        <td><strong>$42,483</strong></td>
-                        <td><strong>$1,030,094</strong></td>
-                        <td><strong>$1,118,884</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-
-    <!-- Resumen de Proveedores Destacados -->
-    <div class="supplier-summary">
-        <div class="summary-item">
-            <span class="summary-label">Mayor adeudo</span>
-            <span class="summary-supplier">UNION DE CREDITO ALLENDE</span>
-            <span class="summary-value">$694,297</span>
-        </div>
-        <div class="summary-item">
-            <span class="summary-label">Más atrasado</span>
-            <span class="summary-supplier">UNION DE CREDITO ALLENDE</span>
-            <span class="summary-value">+150 días</span>
-        </div>
-        <div class="summary-item">
-            <span class="summary-label">Proveedores</span>
-            <span class="summary-value">17</span>
-            <span class="summary-label" style="margin-top: 0.2rem; font-size: 0.7rem;">Vencido: 14</span>
-        </div>
-        <div class="summary-item">
-            <span class="summary-label">% Vencido</span>
-            <span class="summary-value" style="color: #b71c1c;">92.1%</span>
-            <span class="summary-label" style="font-size: 0.7rem;">$1,030,094 de $1,118,884</span>
-        </div>
-    </div>
-</div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    // Asegurarnos que el DOM está completamente cargado
     document.addEventListener('DOMContentLoaded', function() {
-        // Filtro de proveedores
-        const supplierFilter = document.getElementById('supplier-filter');
-        if (supplierFilter) {
-            supplierFilter.addEventListener('change', function() {
-                const selectedSupplier = this.value;
-                if (selectedSupplier === 'todos') {
-                    showNotification('Mostrando todos los proveedores', 'info');
-                } else {
-                    const supplierName = this.options[this.selectedIndex].text;
-                    showNotification(`Filtrando: ${supplierName}`, 'info');
+        console.log('DOM completamente cargado - Cuentas por Pagar');
+        
+        // Función para expandir/colapsar
+        function toggleProveedor(element) {
+            // Obtener el ID del proveedor
+            var proveedorId = element.getAttribute('data-proveedor');
+            if (!proveedorId) {
+                // Si el clic fue en el icono, buscar el padre
+                var parentRow = element.closest('.parent-row');
+                if (parentRow) {
+                    proveedorId = parentRow.getAttribute('data-proveedor');
                 }
-            });
-        }
-        
-        // Pago Múltiple
-        const payBatch = document.getElementById('pay-batch');
-        if (payBatch) {
-            payBatch.addEventListener('click', function() {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    showNotification('✅ Módulo de pago múltiple abierto', 'success');
-                    this.innerHTML = originalHTML;
-                    this.disabled = false;
-                }, 800);
-            });
-        }
-        
-        // Exportar a Excel
-        const exportExcel = document.getElementById('export-excel');
-        if (exportExcel) {
-            exportExcel.addEventListener('click', function() {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    showNotification('✅ Excel generado', 'success');
-                    this.innerHTML = originalHTML;
-                    this.disabled = false;
-                }, 1000);
-            });
-        }
-        
-        // Exportar a PDF
-        const exportPdf = document.getElementById('export-pdf');
-        if (exportPdf) {
-            exportPdf.addEventListener('click', function() {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    showNotification('✅ PDF generado', 'success');
-                    this.innerHTML = originalHTML;
-                    this.disabled = false;
-                }, 1000);
-            });
-        }
-        
-        // Refrescar datos
-        const refreshBtn = document.getElementById('refresh-data');
-        if (refreshBtn) {
-            refreshBtn.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                icon.classList.add('fa-spin');
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    icon.classList.remove('fa-spin');
-                    this.disabled = false;
-                    showNotification('✅ Datos actualizados', 'success');
-                }, 600);
-            });
-        }
-        
-        // Función de notificaciones
-        function showNotification(message, type = 'success') {
-            if (typeof Alpine !== 'undefined' && Alpine.$data) {
-                const event = new CustomEvent('new-notification', {
-                    detail: {
-                        title: type === 'success' ? 'Éxito' : type === 'error' ? 'Error' : 'Información',
-                        message: message,
-                        type: type
-                    }
+            }
+            
+            if (!proveedorId) {
+                console.log('No se encontró ID de proveedor');
+                return;
+            }
+            
+            console.log('Toggle proveedor:', proveedorId);
+            
+            // Buscar todas las filas hijo de este proveedor
+            var childRows = document.querySelectorAll('.child-row[data-parent="' + proveedorId + '"]');
+            console.log('Filas hijo encontradas:', childRows.length);
+            
+            // Buscar el icono en la fila padre
+            var parentRow = document.querySelector('.parent-row[data-proveedor="' + proveedorId + '"]');
+            var icon = parentRow ? parentRow.querySelector('.toggle-icon') : null;
+            
+            if (childRows.length === 0) {
+                console.log('No hay filas hijo');
+                return;
+            }
+            
+            // Verificar si la primera fila hijo está visible
+            var firstChild = childRows[0];
+            var isVisible = window.getComputedStyle(firstChild).display !== 'none';
+            
+            if (isVisible) {
+                console.log('Ocultando filas');
+                // Ocultar con animación
+                Array.from(childRows).forEach(function(row, index) {
+                    setTimeout(function() {
+                        row.classList.add('hiding');
+                        setTimeout(function() {
+                            row.style.display = 'none';
+                            row.classList.remove('hiding');
+                        }, 200);
+                    }, index * 50);
                 });
-                window.dispatchEvent(event);
+                
+                // Rotar icono
+                if (icon) {
+                    icon.classList.remove('rotated');
+                }
             } else {
-                console.log(`🔔 ${message}`);
+                console.log('Mostrando filas');
+                // Mostrar con animación
+                Array.from(childRows).forEach(function(row) {
+                    row.style.display = 'table-row';
+                    row.classList.add('showing');
+                    
+                    setTimeout(function() {
+                        row.classList.remove('showing');
+                    }, 300);
+                });
+                
+                // Rotar icono
+                if (icon) {
+                    icon.classList.add('rotated');
+                }
             }
         }
         
-        // Tooltip para celdas con montos
-        const amountCells = document.querySelectorAll('.amount');
-        amountCells.forEach(cell => {
-            cell.addEventListener('mouseenter', function() {
-                if (this.textContent !== '0' && this.textContent !== '$0' && this.textContent !== '-') {
-                    this.style.cursor = 'pointer';
-                    this.style.transform = 'scale(1.05)';
-                    this.style.transition = 'transform 0.2s ease';
+        // Agregar eventos click a todas las filas padre
+        var parentRows = document.querySelectorAll('.parent-row');
+        console.log('Filas padre encontradas:', parentRows.length);
+        
+        parentRows.forEach(function(row) {
+            row.addEventListener('click', function(e) {
+                // Prevenir si el clic fue en un enlace
+                if (e.target.tagName === 'A' || e.target.tagName === 'SPAN') {
+                    return;
+                }
+                toggleProveedor(this);
+            });
+        });
+        
+        // Agregar eventos click a los iconos
+        var icons = document.querySelectorAll('.toggle-icon');
+        console.log('Iconos encontrados:', icons.length);
+        
+        icons.forEach(function(icon) {
+            icon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var parentRow = this.closest('.parent-row');
+                if (parentRow) {
+                    toggleProveedor(parentRow);
                 }
             });
-            cell.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
-            });
+        });
+        
+        // Botones de acción
+        document.getElementById('buttonRecargar')?.addEventListener('click', function() {
+            location.reload();
+        });
+        
+        document.getElementById('buttonExcel')?.addEventListener('click', function() {
+            exportTableToExcel('semaforoCXP', 'CuentasPorPagar');
+        });
+        
+        document.getElementById('buttonVerPDF')?.addEventListener('click', function() {
+            alert('Funcionalidad de PDF - En desarrollo');
+        });
+        
+        // Función para exportar a Excel
+        function exportTableToExcel(tableId, filename = '') {
+            var table = document.getElementById(tableId);
+            if (!table) return;
+            
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = filename + '.xls';
+            link.click();
+        }
+        
+        // Select cambio de proveedor
+        document.getElementById('proveedor_id')?.addEventListener('change', function() {
+            console.log('Proveedor seleccionado:', this.value);
         });
     });
 </script>
