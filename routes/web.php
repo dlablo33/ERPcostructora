@@ -99,6 +99,26 @@ Route::prefix('admin')->group(function () {
     Route::get('/facturacion', function () {
         return view('administracion.facturacion.facturacion');
     })->name('admin.facturacion');
+
+    Route::get('/bitacora', function () {
+        return view('administracion.facturacion.bitacora');
+    })->name('admin.bitacora');
+
+        Route::get('/comiciones', function () {
+        return view('administracion.facturacion.comiciones');
+    })->name('admin.comiciones');
+
+        Route::get('/contrarecibo', function () {
+        return view('administracion.facturacion.contrarecibo');
+    })->name('admin.contrarecibo');
+
+        Route::get('/factoraje', function () {
+        return view('administracion.facturacion.factoraje');
+    })->name('admin.factoraje');
+
+        Route::get('/notadeventas', function () {
+        return view('administracion.facturacion.ventas');
+    })->name('admin.ventas');
     
 });
 

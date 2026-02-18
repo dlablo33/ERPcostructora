@@ -1133,28 +1133,28 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'administracion', 'fa-undo-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas', 'administracion', '#', 'fa-sticky-note')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas', 'administracion', '{{ route('admin.ventas') }}', 'fa-sticky-note')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-sticky-note"></i>
                             <span>Notas de Ventas</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'administracion', 'fa-sticky-note', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos', 'administracion', '#', 'fa-receipt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos', 'administracion', '{{ route('admin.contrarecibo') }}', 'fa-receipt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-receipt"></i>
                             <span>Contrarecibos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'administracion', 'fa-receipt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje', 'administracion', '#', 'fa-handshake')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje', 'administracion', '{{ route('admin.factoraje') }}', 'fa-handshake')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-handshake"></i>
                             <span>Factoraje</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '#', 'fa-book')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '{{ route('admin.bitacora') }}', 'fa-book')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-book"></i>
                             <span>Bitácora</span>

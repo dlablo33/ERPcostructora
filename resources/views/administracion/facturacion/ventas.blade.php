@@ -3,51 +3,16 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- CFDI -->
+        <!-- Notas de Venta -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    CFDI
+                    Notas de Venta
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- 4 CUADROS DE CFDI CENTRADOS -->
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <!-- Cuadro 1: Facturas -->
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Facturas</div>
-                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;">0</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Cuadro 2: Activas -->
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Activas</div>
-                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;">0</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Cuadro 3: Pagadas -->
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Pagadas</div>
-                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;">0</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Cuadro 4: Timbrado -->
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Timbrado</div>
-                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Barra de herramientas con botón Crear filtro -->
+                <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     
                     <!-- Date Inicio -->
@@ -93,38 +58,20 @@
                 </div>
 
                 <!-- Mensaje "Sin datos" centrado -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0;" id="sinDatosMensaje">
+                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
                     <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
 
-                <!-- Tabla de CFDI -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: none;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaCFDI" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                <!-- Tabla de Notas de Venta -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaNotasVenta" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #083CAE; color: white;">
                             <tr>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Serie</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>CFDI</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Receptor</span>
+                                        <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -136,13 +83,73 @@
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>UUID</span>
+                                        <span>Fecha</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Cliente</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>RFC</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Comprobante Total</span>
+                                        <span>Subtotal</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>IVA</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Retención</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Descuento</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Total</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Observaciones</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Tipo NV</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>U. Negocio</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Estado Resultados</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -157,11 +164,24 @@
                         <tbody id="tablaBody">
                             <!-- Las filas se insertarán dinámicamente -->
                         </tbody>
+                        <!-- Fila de totales (summary) -->
+                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
+                            <tr>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef;" colspan="3">Totales:</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="2"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumSubtotal">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumIva">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumRiva">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumDescuento">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumTotal">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="5"></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 
                 <!-- Paginación -->
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px; display: none;" id="paginacionContainer">
+                <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;" id="paginacionContainer">
                     <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
                     <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Página anterior"><i class="fas fa-angle-left"></i></button>
                     <span style="padding: 5px 10px; background-color: #083CAE; color: white; border-radius: 4px;">1</span>
@@ -169,7 +189,7 @@
                     <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;">3</button>
                     <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
                     <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Última página"><i class="fas fa-angle-double-right"></i></button>
-                    <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 0-0 de 0 registros</span>
+                    <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 1-0 de 0 registros</span>
                 </div>
             </div>
         </div>
@@ -180,17 +200,6 @@
     .semaforo .card-header {
         background-color: #f4f6f9;
         border-bottom: 2px solid #083CAE;
-    }
-    
-    .custom-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-    }
-    
-    .custom-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
-        border-color: #083CAE !important;
     }
     
     /* Estilos de tabla */
@@ -277,9 +286,21 @@
         color: white;
     }
     
+    .badge-pendiente {
+        background-color: #fd7e14;
+        color: white;
+    }
+    
     /* Números alineados a la derecha */
     .text-right {
         text-align: right;
+    }
+    
+    /* Estilo para el pie de tabla (totales) */
+    tfoot td {
+        font-weight: bold;
+        background-color: #e9ecef !important;
+        border-top: 2px solid #083CAE;
     }
     
     /* Responsive */
@@ -312,54 +333,73 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - CFDI');
+        console.log('DOM completamente cargado - Notas de Venta');
         
-        // Datos de ejemplo basados en el array proporcionado
-        const datosCFDI = [
+        // Datos de ejemplo para Notas de Venta
+        const datosNotasVenta = [
             {
-                comprobanteSerie: 'A',
-                comprobanteFolio: '1001',
-                comprobanteFecha: '2026-01-15',
-                receptorNombre: 'Maquiladora Industrial',
+                nota_venta_id: 1001,
                 estatus_txt: 'Activa',
-                timbrefiscaldigitalUUID: 'ABC123DEF456GHI789',
-                comprobanteTotal: 11600.00
+                fecha: '2026-01-15',
+                contacto_razon_social: 'Maquiladora Industrial',
+                rfc: 'MII880101ABC',
+                subtotal: 10000.00,
+                iva: 1600.00,
+                riva: 0.00,
+                descuento: 0.00,
+                total: 11600.00,
+                observaciones: 'Nota de venta regular',
+                tipo_nv: 'VENTA',
+                tipo_un: 'UN001',
+                aplica_e_resultados: 'SÍ'
             },
             {
-                comprobanteSerie: 'B',
-                comprobanteFolio: '1002',
-                comprobanteFecha: '2026-01-14',
-                receptorNombre: 'Cartones del Norte',
+                nota_venta_id: 1002,
                 estatus_txt: 'Pagada',
-                timbrefiscaldigitalUUID: 'DEF456GHI789JKL012',
-                comprobanteTotal: 9860.00
+                fecha: '2026-01-14',
+                contacto_razon_social: 'Cartones del Norte',
+                rfc: 'CND890202XYZ',
+                subtotal: 8500.00,
+                iva: 1360.00,
+                riva: 0.00,
+                descuento: 0.00,
+                total: 9860.00,
+                observaciones: 'Pago recibido',
+                tipo_nv: 'VENTA',
+                tipo_un: 'UN002',
+                aplica_e_resultados: 'SÍ'
             },
             {
-                comprobanteSerie: 'A',
-                comprobanteFolio: '1003',
-                comprobanteFecha: '2026-01-13',
-                receptorNombre: 'Transportes del Bajío',
+                nota_venta_id: 1003,
                 estatus_txt: 'Cancelada',
-                timbrefiscaldigitalUUID: 'GHI789JKL012MNO345',
-                comprobanteTotal: 6032.00
+                fecha: '2026-01-13',
+                contacto_razon_social: 'Transportes del Bajío',
+                rfc: 'TBA890123XYZ',
+                subtotal: 5200.00,
+                iva: 832.00,
+                riva: 0.00,
+                descuento: 0.00,
+                total: 6032.00,
+                observaciones: 'Cancelada por el cliente',
+                tipo_nv: 'VENTA',
+                tipo_un: 'UN001',
+                aplica_e_resultados: 'NO'
             },
             {
-                comprobanteSerie: 'B',
-                comprobanteFolio: '1004',
-                comprobanteFecha: '2026-01-12',
-                receptorNombre: 'Logística Monterrey',
-                estatus_txt: 'Activa',
-                timbrefiscaldigitalUUID: 'JKL012MNO345PQR678',
-                comprobanteTotal: 17248.00
-            },
-            {
-                comprobanteSerie: 'A',
-                comprobanteFolio: '1005',
-                comprobanteFecha: '2026-01-11',
-                receptorNombre: 'Comercializadora del Sur',
-                estatus_txt: 'Pagada',
-                timbrefiscaldigitalUUID: 'MNO345PQR678STU901',
-                comprobanteTotal: 580.00
+                nota_venta_id: 1004,
+                estatus_txt: 'Pendiente',
+                fecha: '2026-01-12',
+                contacto_razon_social: 'Logística Monterrey',
+                rfc: 'LMN890456ABC',
+                subtotal: 15300.00,
+                iva: 2448.00,
+                riva: 500.00,
+                descuento: 500.00,
+                total: 16748.00,
+                observaciones: 'Pendiente de aprobación',
+                tipo_nv: 'COTIZACIÓN',
+                tipo_un: 'UN003',
+                aplica_e_resultados: 'SÍ'
             }
         ];
         
@@ -368,13 +408,47 @@
             return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
         
+        // Función para formatear fecha
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-MX');
+        }
+        
+        // Función para calcular totales (summary)
+        function calcularTotales(datos) {
+            let totalSubtotal = 0;
+            let totalIva = 0;
+            let totalRiva = 0;
+            let totalDescuento = 0;
+            let totalTotal = 0;
+            
+            datos.forEach(item => {
+                totalSubtotal += item.subtotal || 0;
+                totalIva += item.iva || 0;
+                totalRiva += item.riva || 0;
+                totalDescuento += item.descuento || 0;
+                totalTotal += item.total || 0;
+            });
+            
+            document.getElementById('sumSubtotal').textContent = formatCurrency(totalSubtotal);
+            document.getElementById('sumIva').textContent = formatCurrency(totalIva);
+            document.getElementById('sumRiva').textContent = formatCurrency(totalRiva);
+            document.getElementById('sumDescuento').textContent = formatCurrency(totalDescuento);
+            document.getElementById('sumTotal').textContent = formatCurrency(totalTotal);
+            
+            // Actualizar información de paginación con el total de registros
+            const paginacionInfo = document.getElementById('paginacionInfo');
+            if (paginacionInfo) {
+                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
+            }
+        }
+        
         // Función para cargar datos en la tabla
         function cargarTabla(datos) {
             const tablaBody = document.getElementById('tablaBody');
-            const tablaContainer = document.getElementById('tablaContainer');
-            const paginacionContainer = document.getElementById('paginacionContainer');
             const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-            const paginacionInfo = document.getElementById('paginacionInfo');
+            const tablaContainer = document.getElementById('tablaContainer');
             
             if (!tablaBody) return;
             
@@ -385,32 +459,24 @@
                 // Mostrar mensaje sin datos y ocultar tabla
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
-                paginacionContainer.style.display = 'none';
                 
-                // Actualizar contadores a 0
-                document.querySelectorAll('.custom-card div:last-child').forEach((el, index) => {
-                    if (index < 4) el.textContent = '0';
-                });
+                // Resetear totales
+                document.getElementById('sumSubtotal').textContent = '$0.00';
+                document.getElementById('sumIva').textContent = '$0.00';
+                document.getElementById('sumRiva').textContent = '$0.00';
+                document.getElementById('sumDescuento').textContent = '$0.00';
+                document.getElementById('sumTotal').textContent = '$0.00';
+                
+                const paginacionInfo = document.getElementById('paginacionInfo');
+                if (paginacionInfo) {
+                    paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
+                }
                 return;
             }
             
             // Ocultar mensaje sin datos y mostrar tabla
             sinDatosMensaje.style.display = 'none';
             tablaContainer.style.display = 'block';
-            paginacionContainer.style.display = 'flex';
-            
-            // Actualizar contadores
-            const totalFacturas = datos.length;
-            const activas = datos.filter(d => d.estatus_txt === 'Activa').length;
-            const pagadas = datos.filter(d => d.estatus_txt === 'Pagada').length;
-            const timbradas = datos.filter(d => d.estatus_txt === 'Activa' || d.estatus_txt === 'Pagada').length;
-            
-            document.querySelectorAll('.custom-card div:last-child').forEach((el, index) => {
-                if (index === 0) el.textContent = totalFacturas;
-                else if (index === 1) el.textContent = activas;
-                else if (index === 2) el.textContent = pagadas;
-                else if (index === 3) el.textContent = timbradas;
-            });
             
             // Generar filas de la tabla
             datos.forEach(item => {
@@ -420,23 +486,31 @@
                 let badgeClass = 'badge-activa';
                 if (item.estatus_txt === 'Pagada') badgeClass = 'badge-pagada';
                 else if (item.estatus_txt === 'Cancelada') badgeClass = 'badge-cancelada';
+                else if (item.estatus_txt === 'Pendiente') badgeClass = 'badge-pendiente';
                 
                 row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.comprobanteSerie || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.comprobanteFolio || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.comprobanteFecha || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.receptorNombre || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.nota_venta_id || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
                         <span class="badge ${badgeClass}">${item.estatus_txt || '-'}</span>
                     </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; font-size: 10px;">${item.timbrefiscaldigitalUUID || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.comprobanteTotal ? formatCurrency(item.comprobanteTotal) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.contacto_razon_social || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.rfc || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.subtotal ? formatCurrency(item.subtotal) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.iva ? formatCurrency(item.iva) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.riva ? formatCurrency(item.riva) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.descuento ? formatCurrency(item.descuento) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.total ? formatCurrency(item.total) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.observaciones || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_nv || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_un || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.aplica_e_resultados || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
                             <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
                             <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
                             <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                            <i class="fas fa-file-code" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="XML"></i>
+                            <i class="fas fa-file-invoice" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver Nota"></i>
                         </div>
                     </td>
                 `;
@@ -444,15 +518,12 @@
                 tablaBody.appendChild(row);
             });
             
-            // Actualizar texto de paginación
-            if (paginacionInfo) {
-                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
-            }
+            // Calcular y mostrar totales
+            calcularTotales(datos);
         }
         
         // Cargar datos iniciales
-        cargarTabla(datosCFDI); // Para mostrar datos
-        // cargarTabla([]); // Para probar sin datos
+        cargarTabla(datosNotasVenta);
         
         // Event Listeners
         document.getElementById('fechaInicio')?.addEventListener('change', function() {
@@ -468,11 +539,11 @@
         });
         
         document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar CFDI - Funcionalidad en desarrollo');
+            alert('Agregar Nota de Venta - Funcionalidad en desarrollo');
         });
         
         document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaCFDI', 'CFDI');
+            exportTableToExcel('tablaNotasVenta', 'NotasVenta');
         });
         
         document.getElementById('btnColumnas')?.addEventListener('click', function() {
@@ -482,12 +553,12 @@
         document.getElementById('buscador')?.addEventListener('input', function(e) {
             console.log('Buscando:', e.target.value);
             const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosCFDI.filter(item => 
-                item.comprobanteSerie?.toLowerCase().includes(busqueda) ||
-                item.comprobanteFolio?.toLowerCase().includes(busqueda) ||
-                item.receptorNombre?.toLowerCase().includes(busqueda) ||
+            const datosFiltrados = datosNotasVenta.filter(item => 
+                item.contacto_razon_social?.toLowerCase().includes(busqueda) ||
+                item.rfc?.toLowerCase().includes(busqueda) ||
                 item.estatus_txt?.toLowerCase().includes(busqueda) ||
-                item.timbrefiscaldigitalUUID?.toLowerCase().includes(busqueda)
+                item.observaciones?.toLowerCase().includes(busqueda) ||
+                item.tipo_nv?.toLowerCase().includes(busqueda)
             );
             cargarTabla(datosFiltrados);
         });
@@ -502,15 +573,15 @@
         // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
-                alert('Editar CFDI - Funcionalidad en desarrollo');
+                alert('Editar Nota de Venta - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar este CFDI?')) {
-                    alert('Eliminar CFDI - Funcionalidad en desarrollo');
+                if (confirm('¿Está seguro de eliminar esta nota de venta?')) {
+                    alert('Eliminar Nota de Venta - Funcionalidad en desarrollo');
                 }
             } else if (e.target.classList.contains('fa-file-pdf')) {
                 alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-file-code')) {
-                alert('Descargar XML - Funcionalidad en desarrollo');
+            } else if (e.target.classList.contains('fa-file-invoice')) {
+                alert('Ver Nota de Venta - Funcionalidad en desarrollo');
             }
         });
         
