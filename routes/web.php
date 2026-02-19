@@ -104,21 +104,63 @@ Route::prefix('admin')->group(function () {
         return view('administracion.facturacion.bitacora');
     })->name('admin.bitacora');
 
-        Route::get('/comiciones', function () {
+    Route::get('/comiciones', function () {
         return view('administracion.facturacion.comiciones');
     })->name('admin.comiciones');
 
-        Route::get('/contrarecibo', function () {
+    Route::get('/contrarecibo', function () {
         return view('administracion.facturacion.contrarecibo');
     })->name('admin.contrarecibo');
 
-        Route::get('/factoraje', function () {
+    Route::get('/factoraje', function () {
         return view('administracion.facturacion.factoraje');
     })->name('admin.factoraje');
 
-        Route::get('/notadeventas', function () {
+    Route::get('/notadeventas', function () {
         return view('administracion.facturacion.ventas');
     })->name('admin.ventas');
+
+    Route::get('/notadeventas', function () {
+        return view('administracion.facturacion.ventas');
+    })->name('admin.ventas');
+
+    Route::get('/conciliacion', function () {
+        return view('administracion.tesoreria.conciliacion');
+    })->name('tesoreria.conciliacion');
+
+    Route::get('/depositos', function () {
+        return view('administracion.tesoreria.depositos');
+    })->name('tesoreria.depositos');
+
+    Route::get('/estadosdecuenta', function () {
+        return view('administracion.tesoreria.estadosdecuenta');
+    })->name('tesoreria.estadosdecuenta');
+
+    Route::get('/flujomensual', function () {
+        return view('administracion.tesoreria.flujomensual');
+    })->name('tesoreria.flujomensual');
+
+    Route::get('/flujos', function () {
+        return view('administracion.tesoreria.flujos');
+    })->name('tesoreria.flujos');
+
+    Route::get('/programacion', function () {
+        return view('administracion.tesoreria.programacion');
+    })->name('tesoreria.programacion');
+
+    Route::get('/traspasos', function () {
+        return view('administracion.tesoreria.transacciones');
+    })->name('tesoreria.transacciones');
+
+    Route::get('/trasferencia', function () {
+        return view('administracion.tesoreria.trasferencias');
+    })->name('tesoreria.trasferencia');
+
+    Route::get('/pagos', function () {
+        return view('administracion.tesoreria.pagos');
+    })->name('tesoreria.pagos');
+
+
     
 });
 

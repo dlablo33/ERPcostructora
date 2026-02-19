@@ -785,18 +785,19 @@
 
                 <!-- Iconos de estrella, campana y búsqueda -->
                 <div class="flex items-center space-x-2 ml-auto">
-                    <button onclick="toggleQuickSidebar()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+                    <!-- <button onclick="toggleQuickSidebar()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
                         <i class="fas fa-star" style="color: #eaf512;"></i>
                         <span id="notification-dot" class="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full" style="display: none;"></span>
-                    </button>
+                    </button> -->
 
                     <!-- NOTIFICACIONES -->
                     <div x-data="notifications()" x-init="initNotifications()" class="relative">
-                        <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+                     <!--   <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
                             <i class="fas fa-bell" style="color: #eaf512;"></i>
                             <span x-show="unreadCount > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                             <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
                         </button>
+                        -->
                         
                         <div x-show="isOpen" @click.away="isOpen = false" 
                              x-transition:enter="transition ease-out duration-200"
@@ -851,9 +852,9 @@
                         </div>
                     </div>
 
-                    <button class="px-3 py-2 rounded-lg hover:bg-blue-800 transition">
+                    <!-- <button class="px-3 py-2 rounded-lg hover:bg-blue-800 transition">
                         <i class="fas fa-search" style="color: #eaf512;"></i>
-                    </button>
+                    </button> -->
                 </div>
 
                 <!-- User menu -->
@@ -1161,7 +1162,7 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'administracion', 'fa-book', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '#', 'fa-percentage')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '{{ route('admin.comiciones') }}', 'fa-percentage')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-percentage"></i>
                             <span>Comisiones</span>
@@ -1212,55 +1213,77 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="admin-tesoreria" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos', 'administracion', '#', 'fa-money-check-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos', 'administracion', '{{ route('tesoreria.depositos') }}', 'fa-money-check-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-check-alt"></i>
                             <span>Depósitos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'administracion', 'fa-money-check-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Transacciones', 'administracion', '#', 'fa-exchange-alt')">
+                    <!-- NUEVO ITEM: RETIROS -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Trasferencia', 'administracion', '{{ route('tesoreria.trasferencia') }}', 'fa-money-bill-trend-up')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-money-bill-trend-up"></i>
+                            <span>Trasferencia</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Trasferencia', 'administracion', 'fa-money-bill-trend-up', this)"></i>
+                    </div>
+
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Pagos', 'administracion', '{{ route('tesoreria.pagos') }}', 'fa-file-invoice-dollar')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                            <span>Pagos</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos', 'administracion', 'fa-file-invoice-dollar', this)"></i>
+                    </div>
+
+                    <!-- NUEVO ITEM: TRANSACCIONES -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos', 'administracion', '{{ route('tesoreria.transacciones') }}', 'fa-exchange-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exchange-alt"></i>
-                            <span>Transacciones</span>
+                            <span>Traspasos</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Transacciones', 'administracion', 'fa-exchange-alt', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos', 'administracion', 'fa-exchange-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios', 'administracion', '#', 'fa-file-alt')">
+                    <!-- NUEVO ITEM: ESTADOS DE CUENTA -->
+
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios', 'administracion', '{{ route('tesoreria.estadosdecuenta') }}', 'fa-file-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-alt"></i>
                             <span>Estados de Cuenta Bancarios</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'administracion', 'fa-file-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria', 'administracion', '#', 'fa-balance-scale')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria', 'administracion', '{{ route('tesoreria.conciliacion') }}', 'fa-balance-scale')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-balance-scale"></i>
                             <span>Conciliación Bancaria</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'administracion', 'fa-balance-scale', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero', 'administracion', '#', 'fa-wave-square')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero', 'administracion', '{{ route('tesoreria.flujos') }}', 'fa-wave-square')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-wave-square"></i>
                             <span>Flujo de Dinero</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'administracion', 'fa-wave-square', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual', 'administracion', '#', 'fa-calendar-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual', 'administracion', '{{ route('tesoreria.flujomensual') }}', 'fa-calendar-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Flujo Mensual</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'administracion', 'fa-calendar-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos', 'administracion', '#', 'fa-calendar-check')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos', 'administracion', '{{ route('tesoreria.programacion') }}', 'fa-calendar-check')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calendar-check"></i>
                             <span>Programación de Pagos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'administracion', 'fa-calendar-check', this)"></i>
                     </div>
+
+
                 </div>
             </div>
 

@@ -3,15 +3,45 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Notas de Venta -->
+        <!-- Cheques Transferencias -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Notas de Venta
+                    Cheques Transferencias
                 </h2>
             </div>
 
             <div class="card-body p-4">
+                <!-- 4 CUADROS DE CHEQUES TRANSFERENCIAS CENTRADOS -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
+                    <!-- Cuadro 1: Transferencias -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Transferencias</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalTransferencias">8</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 2: Activos -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Activos</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalActivos">8</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 3: Cancelados -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Cancelados</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalCancelados">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 4: Total Monto -->
+
+                </div>
+
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     
@@ -24,6 +54,9 @@
                     <div>
                         <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                     </div>
+
+                    <!-- Botón Crear filtro -->
+
 
                     <!-- Botón Agregar (+) -->
                     <div>
@@ -64,11 +97,17 @@
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
 
-                <!-- Tabla de Notas de Venta -->
+                <!-- Tabla de Cheques Transferencias -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaNotasVenta" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                    <table class="table table-bordered" id="tablaChequesTransferencias" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
                             <tr>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Estatus</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Folio</span>
@@ -77,7 +116,19 @@
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
+                                        <span>Proveedor</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Forma de Pago</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Cuentas Bancarias</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -89,67 +140,49 @@
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cliente</span>
+                                        <span>Referencia</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>RFC</span>
+                                        <span>Referencia Bancaria</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Subtotal</span>
+                                        <span>Monto Pesos</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>IVA</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Retención</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Descuento</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total</span>
+                                        <span>Monto Restante</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Observaciones</span>
+                                        <span>Moneda</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Tipo NV</span>
+                                        <span>Tipo de Cambio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>U. Negocio</span>
+                                        <span>Descripción</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estado Resultados</span>
+                                        <span>Póliza</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -166,16 +199,7 @@
                         </tbody>
                         <!-- Fila de totales (summary) -->
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
-                            <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef;" colspan="3">Totales:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="2"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumSubtotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumIva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumRiva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumDescuento">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="5"></td>
-                            </tr>
+
                         </tfoot>
                     </table>
                 </div>
@@ -200,6 +224,17 @@
     .semaforo .card-header {
         background-color: #f4f6f9;
         border-bottom: 2px solid #083CAE;
+    }
+    
+    .custom-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+    }
+    
+    .custom-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
+        border-color: #083CAE !important;
     }
     
     /* Estilos de tabla */
@@ -271,17 +306,12 @@
         border-radius: 3px;
     }
     
-    .badge-activa {
+    .badge-activo {
         background-color: #28a745;
         color: white;
     }
     
-    .badge-pagada {
-        background-color: #ffc107;
-        color: black;
-    }
-    
-    .badge-cancelada {
+    .badge-cancelado {
         background-color: #dc3545;
         color: white;
     }
@@ -291,9 +321,9 @@
         color: white;
     }
     
-    /* Números alineados a la derecha */
-    .text-right {
-        text-align: right;
+    .badge-completado {
+        background-color: #28a745;
+        color: white;
     }
     
     /* Estilo para el pie de tabla (totales) */
@@ -333,73 +363,137 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Notas de Venta');
+        console.log('DOM completamente cargado - Cheques Transferencias');
         
-        // Datos de ejemplo para Notas de Venta
-        const datosNotasVenta = [
+        // Datos de ejemplo para Cheques Transferencias
+        const datosChequesTransferencias = [
             {
-                nota_venta_id: 1001,
-                estatus_txt: 'Activa',
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-001',
+                contacto: 'Transportes del Bajío',
+                forma_pago: 'Transferencia',
+                cuenta_bancaria: '1234-5678-9012-3456',
                 fecha: '2026-01-15',
-                contacto_razon_social: 'Maquiladora Industrial',
-                rfc: 'MII880101ABC',
-                subtotal: 10000.00,
-                iva: 1600.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 11600.00,
-                observaciones: 'Nota de venta regular',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN001',
-                aplica_e_resultados: 'SÍ'
+                referencia: 'REF-001',
+                referencia_bancaria: 'BAN-001',
+                monto: 50000.00,
+                monto_restante: 0.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago de servicios de transporte',
+                polizas_contables_id: 'POL-001'
             },
             {
-                nota_venta_id: 1002,
-                estatus_txt: 'Pagada',
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-002',
+                contacto: 'Logística Monterrey',
+                forma_pago: 'Cheque',
+                cuenta_bancaria: '9876-5432-1098-7654',
                 fecha: '2026-01-14',
-                contacto_razon_social: 'Cartones del Norte',
-                rfc: 'CND890202XYZ',
-                subtotal: 8500.00,
-                iva: 1360.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 9860.00,
-                observaciones: 'Pago recibido',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN002',
-                aplica_e_resultados: 'SÍ'
+                referencia: 'REF-002',
+                referencia_bancaria: 'CHE-002',
+                monto: 75000.00,
+                monto_restante: 15000.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago de facturas',
+                polizas_contables_id: 'POL-002'
             },
             {
-                nota_venta_id: 1003,
-                estatus_txt: 'Cancelada',
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-003',
+                contacto: 'Autotransportes Mexicanos',
+                forma_pago: 'Transferencia',
+                cuenta_bancaria: '5678-1234-5678-1234',
                 fecha: '2026-01-13',
-                contacto_razon_social: 'Transportes del Bajío',
-                rfc: 'TBA890123XYZ',
-                subtotal: 5200.00,
-                iva: 832.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 6032.00,
-                observaciones: 'Cancelada por el cliente',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN001',
-                aplica_e_resultados: 'NO'
+                referencia: 'REF-003',
+                referencia_bancaria: 'BAN-003',
+                monto: 32000.00,
+                monto_restante: 0.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago de servicios',
+                polizas_contables_id: 'POL-003'
             },
             {
-                nota_venta_id: 1004,
-                estatus_txt: 'Pendiente',
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-004',
+                contacto: 'Ferrocarriles Nacionales',
+                forma_pago: 'Cheque',
+                cuenta_bancaria: '4321-8765-4321-8765',
                 fecha: '2026-01-12',
-                contacto_razon_social: 'Logística Monterrey',
-                rfc: 'LMN890456ABC',
-                subtotal: 15300.00,
-                iva: 2448.00,
-                riva: 500.00,
-                descuento: 500.00,
-                total: 16748.00,
-                observaciones: 'Pendiente de aprobación',
-                tipo_nv: 'COTIZACIÓN',
-                tipo_un: 'UN003',
-                aplica_e_resultados: 'SÍ'
+                referencia: 'REF-004',
+                referencia_bancaria: 'CHE-004',
+                monto: 68000.00,
+                monto_restante: 8000.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago de fletes',
+                polizas_contables_id: 'POL-004'
+            },
+            {
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-005',
+                contacto: 'Cervecería del Centro',
+                forma_pago: 'Transferencia',
+                cuenta_bancaria: '2468-1357-2468-1357',
+                fecha: '2026-01-11',
+                referencia: 'REF-005',
+                referencia_bancaria: 'BAN-005',
+                monto: 45000.00,
+                monto_restante: 0.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago de servicios',
+                polizas_contables_id: 'POL-005'
+            },
+            {
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-006',
+                contacto: 'Papelera del Pacífico',
+                forma_pago: 'Cheque',
+                cuenta_bancaria: '1357-2468-1357-2468',
+                fecha: '2026-01-10',
+                referencia: 'REF-006',
+                referencia_bancaria: 'CHE-006',
+                monto: 89000.00,
+                monto_restante: 12000.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago de materiales',
+                polizas_contables_id: 'POL-006'
+            },
+            {
+                estatus_txt: 'Activo',
+                cheque_transferencia_id: 'CT-007',
+                contacto: 'Minería del Norte',
+                forma_pago: 'Transferencia',
+                cuenta_bancaria: '7890-1234-7890-1234',
+                fecha: '2026-01-09',
+                referencia: 'REF-007',
+                referencia_bancaria: 'BAN-007',
+                monto: 120000.00,
+                monto_restante: 20000.00,
+                moneda: 'USD',
+                tipo_cambio: 20.50,
+                descripcion: 'Pago en USD',
+                polizas_contables_id: 'POL-007'
+            },
+            {
+                estatus_txt: 'Cancelado',
+                cheque_transferencia_id: 'CT-008',
+                contacto: 'Comercializadora del Sur',
+                forma_pago: 'Cheque',
+                cuenta_bancaria: '4567-8901-4567-8901',
+                fecha: '2026-01-08',
+                referencia: 'REF-008',
+                referencia_bancaria: 'CHE-008',
+                monto: 25000.00,
+                monto_restante: 25000.00,
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                descripcion: 'Pago cancelado',
+                polizas_contables_id: null
             }
         ];
         
@@ -415,33 +509,30 @@
             return date.toLocaleDateString('es-MX');
         }
         
-        // Función para calcular totales (summary)
+        // Función para calcular totales (summary) y actualizar recuadros
         function calcularTotales(datos) {
-            let totalSubtotal = 0;
-            let totalIva = 0;
-            let totalRiva = 0;
-            let totalDescuento = 0;
-            let totalTotal = 0;
+            let totalMonto = 0;
+            let totalMontoRestante = 0;
+            let activos = 0;
+            let cancelados = 0;
             
             datos.forEach(item => {
-                totalSubtotal += item.subtotal || 0;
-                totalIva += item.iva || 0;
-                totalRiva += item.riva || 0;
-                totalDescuento += item.descuento || 0;
-                totalTotal += item.total || 0;
+                totalMonto += item.monto || 0;
+                totalMontoRestante += item.monto_restante || 0;
+                
+                if (item.estatus_txt === 'Activo') activos++;
+                if (item.estatus_txt === 'Cancelado') cancelados++;
             });
             
-            document.getElementById('sumSubtotal').textContent = formatCurrency(totalSubtotal);
-            document.getElementById('sumIva').textContent = formatCurrency(totalIva);
-            document.getElementById('sumRiva').textContent = formatCurrency(totalRiva);
-            document.getElementById('sumDescuento').textContent = formatCurrency(totalDescuento);
-            document.getElementById('sumTotal').textContent = formatCurrency(totalTotal);
+            document.getElementById('sumMonto').textContent = formatCurrency(totalMonto);
+            document.getElementById('sumMontoRestante').textContent = formatCurrency(totalMontoRestante);
+            document.getElementById('totalRegistros').textContent = datos.length;
             
-            // Actualizar información de paginación con el total de registros
-            const paginacionInfo = document.getElementById('paginacionInfo');
-            if (paginacionInfo) {
-                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
-            }
+            // Actualizar recuadros
+            document.getElementById('totalTransferencias').textContent = datos.length;
+            document.getElementById('totalActivos').textContent = activos;
+            document.getElementById('totalCancelados').textContent = cancelados;
+            document.getElementById('totalMonto').textContent = formatCurrency(totalMonto);
         }
         
         // Función para cargar datos en la tabla
@@ -460,12 +551,14 @@
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
                 
-                // Resetear totales
-                document.getElementById('sumSubtotal').textContent = '$0.00';
-                document.getElementById('sumIva').textContent = '$0.00';
-                document.getElementById('sumRiva').textContent = '$0.00';
-                document.getElementById('sumDescuento').textContent = '$0.00';
-                document.getElementById('sumTotal').textContent = '$0.00';
+                // Resetear totales y recuadros
+                document.getElementById('sumMonto').textContent = '$0.00';
+                document.getElementById('sumMontoRestante').textContent = '$0.00';
+                document.getElementById('totalRegistros').textContent = '0';
+                document.getElementById('totalTransferencias').textContent = '0';
+                document.getElementById('totalActivos').textContent = '0';
+                document.getElementById('totalCancelados').textContent = '0';
+                document.getElementById('totalMonto').textContent = '$0.00';
                 
                 const paginacionInfo = document.getElementById('paginacionInfo');
                 if (paginacionInfo) {
@@ -483,34 +576,34 @@
                 const row = document.createElement('tr');
                 
                 // Determinar clase del badge según estatus
-                let badgeClass = 'badge-activa';
-                if (item.estatus_txt === 'Pagada') badgeClass = 'badge-pagada';
-                else if (item.estatus_txt === 'Cancelada') badgeClass = 'badge-cancelada';
+                let badgeClass = 'badge-activo';
+                if (item.estatus_txt === 'Cancelado') badgeClass = 'badge-cancelado';
                 else if (item.estatus_txt === 'Pendiente') badgeClass = 'badge-pendiente';
+                else if (item.estatus_txt === 'Completado') badgeClass = 'badge-completado';
                 
                 row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.nota_venta_id || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
                         <span class="badge ${badgeClass}">${item.estatus_txt || '-'}</span>
                     </td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.cheque_transferencia_id || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.contacto || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.forma_pago || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.cuenta_bancaria || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.contacto_razon_social || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.rfc || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.subtotal ? formatCurrency(item.subtotal) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.iva ? formatCurrency(item.iva) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.riva ? formatCurrency(item.riva) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.descuento ? formatCurrency(item.descuento) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.observaciones || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_nv || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_un || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.aplica_e_resultados || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.referencia || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.referencia_bancaria || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.monto_restante ? formatCurrency(item.monto_restante) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.moneda || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.tipo_cambio ? item.tipo_cambio.toFixed(2) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.descripcion || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.polizas_contables_id || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
                             <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
                             <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles"></i>
                             <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                            <i class="fas fa-file-invoice" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver Nota"></i>
                         </div>
                     </td>
                 `;
@@ -518,12 +611,18 @@
                 tablaBody.appendChild(row);
             });
             
-            // Calcular y mostrar totales
+            // Calcular y mostrar totales y actualizar recuadros
             calcularTotales(datos);
+            
+            // Actualizar información de paginación
+            const paginacionInfo = document.getElementById('paginacionInfo');
+            if (paginacionInfo) {
+                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
+            }
         }
         
         // Cargar datos iniciales
-        cargarTabla(datosNotasVenta);
+        cargarTabla(datosChequesTransferencias);
         
         // Event Listeners
         document.getElementById('fechaInicio')?.addEventListener('change', function() {
@@ -539,11 +638,11 @@
         });
         
         document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar Nota de Venta - Funcionalidad en desarrollo');
+            alert('Agregar Cheque/Transferencia - Funcionalidad en desarrollo');
         });
         
         document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaNotasVenta', 'NotasVenta');
+            exportTableToExcel('tablaChequesTransferencias', 'ChequesTransferencias');
         });
         
         document.getElementById('btnColumnas')?.addEventListener('click', function() {
@@ -553,12 +652,13 @@
         document.getElementById('buscador')?.addEventListener('input', function(e) {
             console.log('Buscando:', e.target.value);
             const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosNotasVenta.filter(item => 
-                item.contacto_razon_social?.toLowerCase().includes(busqueda) ||
-                item.rfc?.toLowerCase().includes(busqueda) ||
+            const datosFiltrados = datosChequesTransferencias.filter(item => 
+                item.contacto?.toLowerCase().includes(busqueda) ||
+                item.referencia?.toLowerCase().includes(busqueda) ||
+                item.referencia_bancaria?.toLowerCase().includes(busqueda) ||
+                item.descripcion?.toLowerCase().includes(busqueda) ||
                 item.estatus_txt?.toLowerCase().includes(busqueda) ||
-                item.observaciones?.toLowerCase().includes(busqueda) ||
-                item.tipo_nv?.toLowerCase().includes(busqueda)
+                item.cheque_transferencia_id?.toLowerCase().includes(busqueda)
             );
             cargarTabla(datosFiltrados);
         });
@@ -573,15 +673,15 @@
         // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
-                alert('Editar Nota de Venta - Funcionalidad en desarrollo');
+                alert('Editar Cheque/Transferencia - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar esta nota de venta?')) {
-                    alert('Eliminar Nota de Venta - Funcionalidad en desarrollo');
+                if (confirm('¿Está seguro de eliminar este cheque/transferencia?')) {
+                    alert('Eliminar Cheque/Transferencia - Funcionalidad en desarrollo');
                 }
+            } else if (e.target.classList.contains('fa-eye')) {
+                alert('Ver detalles - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-file-pdf')) {
                 alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-file-invoice')) {
-                alert('Ver Nota de Venta - Funcionalidad en desarrollo');
             }
         });
         

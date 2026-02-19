@@ -3,11 +3,11 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Notas de Venta -->
+        <!-- Traspasos -->
         <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
-                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Notas de Venta
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #6B8ACE; padding: 15px 20px;">
+                <h2 style="color: #6B8ACE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                    Traspasos
                 </h2>
             </div>
 
@@ -25,35 +25,38 @@
                         <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                     </div>
 
+                    <!-- Botón Crear filtro -->
+
+
                     <!-- Botón Agregar (+) -->
                     <div>
-                        <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar">
-                            <i class="fas fa-plus" style="color: #083CAE;"></i>
+                        <button id="btnAgregar" style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6B8ACE; font-size: 16px;" title="Agregar">
+                            <i class="fas fa-plus" style="color: #6B8ACE;"></i>
                         </button>
                     </div>
 
                     <!-- Botón Exportar Excel -->
                     <div>
                         <button id="btnExcel" 
-                                style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
                                 title="Exportar todo">
-                            <i class="fas fa-file-excel" style="color: #083CAE;"></i>
+                            <i class="fas fa-file-excel" style="color: #6B8ACE;"></i>
                         </button>
                     </div>
 
                     <!-- Botón Seleccionar Columnas -->
                     <div>
                         <button id="btnColumnas" 
-                                style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
                                 title="Seleccionar columnas">
-                            <i class="fas fa-columns" style="color: #083CAE;"></i>
+                            <i class="fas fa-columns" style="color: #6B8ACE;"></i>
                         </button>
                     </div>
 
                     <!-- Buscador -->
                     <div style="position: relative;">
-                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                        <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #6B8ACE;"></i>
+                        <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 200px;">
                     </div>
                 </div>
 
@@ -64,20 +67,20 @@
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
 
-                <!-- Tabla de Notas de Venta -->
+                <!-- Tabla de Traspasos -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaNotasVenta" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                    <table class="table table-bordered" id="tablaTraspasos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
                             <tr>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Folio</span>
+                                        <span>Estatus</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
+                                        <span>Traspaso</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -89,67 +92,43 @@
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cliente</span>
+                                        <span>Cuenta Origen</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>RFC</span>
+                                        <span>Cuenta Destino</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Subtotal</span>
+                                        <span>Monto</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>IVA</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Retención</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Descuento</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total</span>
+                                        <span>Tipo de Cambio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Observaciones</span>
+                                        <span>Póliza</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Tipo NV</span>
+                                        <span>Referencia</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>U. Negocio</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estado Resultados</span>
+                                        <span>Referencia Bancaria</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -167,14 +146,8 @@
                         <!-- Fila de totales (summary) -->
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef;" colspan="3">Totales:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="2"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumSubtotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumIva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumRiva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumDescuento">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="5"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef;" colspan="4">Registros: <span id="totalRegistros">0</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef;" colspan="7"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -199,7 +172,7 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #083CAE;
+        border-bottom: 2px solid #6B8ACE;
     }
     
     /* Estilos de tabla */
@@ -210,6 +183,11 @@
         color: white;
         font-weight: 600;
         padding: 10px 4px;
+    }
+    
+    /* Todas las columnas usan el mismo color #6B8ACE */
+    .table th:last-child {
+        background-color: #6B8ACE !important;
     }
     
     .table td {
@@ -231,7 +209,7 @@
         background-color: #e0e0e0;
     }
     
-    /* Estilo para los iconos de acción */
+    /* Estilo para los iconos de acción - SOLO ESTO MANTIENE EL AZUL ORIGINAL */
     #tablaBody td i {
         transition: transform 0.2s;
         font-size: 14px;
@@ -271,17 +249,12 @@
         border-radius: 3px;
     }
     
-    .badge-activa {
+    .badge-activo {
         background-color: #28a745;
         color: white;
     }
     
-    .badge-pagada {
-        background-color: #ffc107;
-        color: black;
-    }
-    
-    .badge-cancelada {
+    .badge-cancelado {
         background-color: #dc3545;
         color: white;
     }
@@ -291,16 +264,16 @@
         color: white;
     }
     
-    /* Números alineados a la derecha */
-    .text-right {
-        text-align: right;
+    .badge-completado {
+        background-color: #28a745;
+        color: white;
     }
     
     /* Estilo para el pie de tabla (totales) */
     tfoot td {
         font-weight: bold;
         background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
+        border-top: 2px solid #6B8ACE;
     }
     
     /* Responsive */
@@ -333,73 +306,69 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Notas de Venta');
+        console.log('DOM completamente cargado - Traspasos');
         
-        // Datos de ejemplo para Notas de Venta
-        const datosNotasVenta = [
+        // Datos de ejemplo para Traspasos
+        const datosTraspasos = [
             {
-                nota_venta_id: 1001,
-                estatus_txt: 'Activa',
+                estatus_txt: 'Activo',
+                traspaso_id: 'TRAS-001',
                 fecha: '2026-01-15',
-                contacto_razon_social: 'Maquiladora Industrial',
-                rfc: 'MII880101ABC',
-                subtotal: 10000.00,
-                iva: 1600.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 11600.00,
-                observaciones: 'Nota de venta regular',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN001',
-                aplica_e_resultados: 'SÍ'
+                cuenta_bancaria_origen: '1234-5678-9012-3456',
+                cuenta_bancaria_destino: '9876-5432-1098-7654',
+                monto: 50000.00,
+                tipo_cambio: 1.00,
+                polizas_contables_id: 'POL-001',
+                referencia: 'REF-001',
+                referencia_bancaria: 'BAN-001'
             },
             {
-                nota_venta_id: 1002,
-                estatus_txt: 'Pagada',
+                estatus_txt: 'Completado',
+                traspaso_id: 'TRAS-002',
                 fecha: '2026-01-14',
-                contacto_razon_social: 'Cartones del Norte',
-                rfc: 'CND890202XYZ',
-                subtotal: 8500.00,
-                iva: 1360.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 9860.00,
-                observaciones: 'Pago recibido',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN002',
-                aplica_e_resultados: 'SÍ'
+                cuenta_bancaria_origen: '5678-1234-5678-1234',
+                cuenta_bancaria_destino: '4321-8765-4321-8765',
+                monto: 75000.00,
+                tipo_cambio: 1.00,
+                polizas_contables_id: 'POL-002',
+                referencia: 'REF-002',
+                referencia_bancaria: 'BAN-002'
             },
             {
-                nota_venta_id: 1003,
-                estatus_txt: 'Cancelada',
-                fecha: '2026-01-13',
-                contacto_razon_social: 'Transportes del Bajío',
-                rfc: 'TBA890123XYZ',
-                subtotal: 5200.00,
-                iva: 832.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 6032.00,
-                observaciones: 'Cancelada por el cliente',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN001',
-                aplica_e_resultados: 'NO'
-            },
-            {
-                nota_venta_id: 1004,
                 estatus_txt: 'Pendiente',
+                traspaso_id: 'TRAS-003',
+                fecha: '2026-01-13',
+                cuenta_bancaria_origen: '2468-1357-2468-1357',
+                cuenta_bancaria_destino: '1357-2468-1357-2468',
+                monto: 32000.00,
+                tipo_cambio: 1.00,
+                polizas_contables_id: 'POL-003',
+                referencia: 'REF-003',
+                referencia_bancaria: 'BAN-003'
+            },
+            {
+                estatus_txt: 'Activo',
+                traspaso_id: 'TRAS-004',
                 fecha: '2026-01-12',
-                contacto_razon_social: 'Logística Monterrey',
-                rfc: 'LMN890456ABC',
-                subtotal: 15300.00,
-                iva: 2448.00,
-                riva: 500.00,
-                descuento: 500.00,
-                total: 16748.00,
-                observaciones: 'Pendiente de aprobación',
-                tipo_nv: 'COTIZACIÓN',
-                tipo_un: 'UN003',
-                aplica_e_resultados: 'SÍ'
+                cuenta_bancaria_origen: '7890-1234-7890-1234',
+                cuenta_bancaria_destino: '4567-8901-4567-8901',
+                monto: 68000.00,
+                tipo_cambio: 1.00,
+                polizas_contables_id: 'POL-004',
+                referencia: 'REF-004',
+                referencia_bancaria: 'BAN-004'
+            },
+            {
+                estatus_txt: 'Cancelado',
+                traspaso_id: 'TRAS-005',
+                fecha: '2026-01-11',
+                cuenta_bancaria_origen: '1122-3344-5566-7788',
+                cuenta_bancaria_destino: '9988-7766-5544-3322',
+                monto: 45000.00,
+                tipo_cambio: 1.00,
+                polizas_contables_id: null,
+                referencia: 'REF-005',
+                referencia_bancaria: 'BAN-005'
             }
         ];
         
@@ -413,35 +382,6 @@
             if (!dateString) return '-';
             const date = new Date(dateString);
             return date.toLocaleDateString('es-MX');
-        }
-        
-        // Función para calcular totales (summary)
-        function calcularTotales(datos) {
-            let totalSubtotal = 0;
-            let totalIva = 0;
-            let totalRiva = 0;
-            let totalDescuento = 0;
-            let totalTotal = 0;
-            
-            datos.forEach(item => {
-                totalSubtotal += item.subtotal || 0;
-                totalIva += item.iva || 0;
-                totalRiva += item.riva || 0;
-                totalDescuento += item.descuento || 0;
-                totalTotal += item.total || 0;
-            });
-            
-            document.getElementById('sumSubtotal').textContent = formatCurrency(totalSubtotal);
-            document.getElementById('sumIva').textContent = formatCurrency(totalIva);
-            document.getElementById('sumRiva').textContent = formatCurrency(totalRiva);
-            document.getElementById('sumDescuento').textContent = formatCurrency(totalDescuento);
-            document.getElementById('sumTotal').textContent = formatCurrency(totalTotal);
-            
-            // Actualizar información de paginación con el total de registros
-            const paginacionInfo = document.getElementById('paginacionInfo');
-            if (paginacionInfo) {
-                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
-            }
         }
         
         // Función para cargar datos en la tabla
@@ -461,11 +401,7 @@
                 tablaContainer.style.display = 'none';
                 
                 // Resetear totales
-                document.getElementById('sumSubtotal').textContent = '$0.00';
-                document.getElementById('sumIva').textContent = '$0.00';
-                document.getElementById('sumRiva').textContent = '$0.00';
-                document.getElementById('sumDescuento').textContent = '$0.00';
-                document.getElementById('sumTotal').textContent = '$0.00';
+                document.getElementById('totalRegistros').textContent = '0';
                 
                 const paginacionInfo = document.getElementById('paginacionInfo');
                 if (paginacionInfo) {
@@ -478,39 +414,38 @@
             sinDatosMensaje.style.display = 'none';
             tablaContainer.style.display = 'block';
             
+            // Actualizar total de registros
+            document.getElementById('totalRegistros').textContent = datos.length;
+            
             // Generar filas de la tabla
             datos.forEach(item => {
                 const row = document.createElement('tr');
                 
                 // Determinar clase del badge según estatus
-                let badgeClass = 'badge-activa';
-                if (item.estatus_txt === 'Pagada') badgeClass = 'badge-pagada';
-                else if (item.estatus_txt === 'Cancelada') badgeClass = 'badge-cancelada';
+                let badgeClass = 'badge-activo';
+                if (item.estatus_txt === 'Cancelado') badgeClass = 'badge-cancelado';
                 else if (item.estatus_txt === 'Pendiente') badgeClass = 'badge-pendiente';
+                else if (item.estatus_txt === 'Completado') badgeClass = 'badge-completado';
                 
                 row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.nota_venta_id || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
                         <span class="badge ${badgeClass}">${item.estatus_txt || '-'}</span>
                     </td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.traspaso_id || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.contacto_razon_social || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.rfc || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.subtotal ? formatCurrency(item.subtotal) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.iva ? formatCurrency(item.iva) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.riva ? formatCurrency(item.riva) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.descuento ? formatCurrency(item.descuento) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.observaciones || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_nv || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_un || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.aplica_e_resultados || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.cuenta_bancaria_origen || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.cuenta_bancaria_destino || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.tipo_cambio ? item.tipo_cambio.toFixed(4) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.polizas_contables_id || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.referencia || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.referencia_bancaria || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
                             <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
                             <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles"></i>
                             <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                            <i class="fas fa-file-invoice" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver Nota"></i>
                         </div>
                     </td>
                 `;
@@ -518,12 +453,15 @@
                 tablaBody.appendChild(row);
             });
             
-            // Calcular y mostrar totales
-            calcularTotales(datos);
+            // Actualizar información de paginación
+            const paginacionInfo = document.getElementById('paginacionInfo');
+            if (paginacionInfo) {
+                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
+            }
         }
         
         // Cargar datos iniciales
-        cargarTabla(datosNotasVenta);
+        cargarTabla(datosTraspasos);
         
         // Event Listeners
         document.getElementById('fechaInicio')?.addEventListener('change', function() {
@@ -539,11 +477,11 @@
         });
         
         document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar Nota de Venta - Funcionalidad en desarrollo');
+            alert('Agregar Traspaso - Funcionalidad en desarrollo');
         });
         
         document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaNotasVenta', 'NotasVenta');
+            exportTableToExcel('tablaTraspasos', 'Traspasos');
         });
         
         document.getElementById('btnColumnas')?.addEventListener('click', function() {
@@ -553,12 +491,13 @@
         document.getElementById('buscador')?.addEventListener('input', function(e) {
             console.log('Buscando:', e.target.value);
             const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosNotasVenta.filter(item => 
-                item.contacto_razon_social?.toLowerCase().includes(busqueda) ||
-                item.rfc?.toLowerCase().includes(busqueda) ||
-                item.estatus_txt?.toLowerCase().includes(busqueda) ||
-                item.observaciones?.toLowerCase().includes(busqueda) ||
-                item.tipo_nv?.toLowerCase().includes(busqueda)
+            const datosFiltrados = datosTraspasos.filter(item => 
+                item.traspaso_id?.toLowerCase().includes(busqueda) ||
+                item.cuenta_bancaria_origen?.toLowerCase().includes(busqueda) ||
+                item.cuenta_bancaria_destino?.toLowerCase().includes(busqueda) ||
+                item.referencia?.toLowerCase().includes(busqueda) ||
+                item.referencia_bancaria?.toLowerCase().includes(busqueda) ||
+                item.estatus_txt?.toLowerCase().includes(busqueda)
             );
             cargarTabla(datosFiltrados);
         });
@@ -573,15 +512,15 @@
         // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
-                alert('Editar Nota de Venta - Funcionalidad en desarrollo');
+                alert('Editar Traspaso - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar esta nota de venta?')) {
-                    alert('Eliminar Nota de Venta - Funcionalidad en desarrollo');
+                if (confirm('¿Está seguro de eliminar este traspaso?')) {
+                    alert('Eliminar Traspaso - Funcionalidad en desarrollo');
                 }
+            } else if (e.target.classList.contains('fa-eye')) {
+                alert('Ver detalles de Traspaso - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-file-pdf')) {
                 alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-file-invoice')) {
-                alert('Ver Nota de Venta - Funcionalidad en desarrollo');
             }
         });
         

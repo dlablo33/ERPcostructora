@@ -466,7 +466,7 @@
             float: left; /* Cambiado a left para que esté a la izquierda */
             width: 45%;
             height: 100%;
-            background-image: url('../img/login/banner-costruccion.jpg');
+            background-image: url('../img/login/banner-costruccion.webp');
             background-size: cover;
             background-position: center center;
         }

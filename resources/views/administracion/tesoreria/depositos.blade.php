@@ -3,15 +3,50 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Notas de Venta -->
+        <!-- Depósitos -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Notas de Venta
+                    Depósitos
                 </h2>
             </div>
 
             <div class="card-body p-4">
+                <!-- 4 CUADROS DE DEPÓSITOS CENTRADOS -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
+                    <!-- Cuadro 1: Depósitos -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Depósitos</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalDepositos">2</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 2: Activos -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Activos</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalActivos">2</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 3: Timbrados -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Timbrados</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalTimbrados">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 4: Cancelados -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Cancelados</div>
+                            <div style="color: #083CAE; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalCancelados">0</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     
@@ -24,6 +59,8 @@
                     <div>
                         <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                     </div>
+
+                    <!-- Botón Crear filtro -->
 
                     <!-- Botón Agregar (+) -->
                     <div>
@@ -64,17 +101,11 @@
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
 
-                <!-- Tabla de Notas de Venta -->
+                <!-- Tabla de Depósitos -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaNotasVenta" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                    <table class="table table-bordered" id="tablaDepositos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Folio</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Estatus</span>
@@ -83,7 +114,13 @@
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha</span>
+                                        <span>Serie</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -99,57 +136,81 @@
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Subtotal</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>IVA</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Retención</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Descuento</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total</span>
+                                        <span>Forma de Pago</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Observaciones</span>
+                                        <span>Cuentas Bancarias</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Tipo NV</span>
+                                        <span>Fecha Creación</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>U. Negocio</span>
+                                        <span>Fecha Timbrado</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estado Resultados</span>
+                                        <span>Referencia</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Moneda</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Tipo de Cambio</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Monto Original</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Monto Pesos</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Monto Restante</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Descripción</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Póliza</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>UUID</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -167,14 +228,11 @@
                         <!-- Fila de totales (summary) -->
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef;" colspan="3">Totales:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="2"></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumSubtotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumIva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumRiva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumDescuento">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="5"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef;" colspan="12">Totales:</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumMontoOriginal">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumMonto">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumMontoRestante">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="4"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -200,6 +258,17 @@
     .semaforo .card-header {
         background-color: #f4f6f9;
         border-bottom: 2px solid #083CAE;
+    }
+    
+    .custom-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+    }
+    
+    .custom-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
+        border-color: #083CAE !important;
     }
     
     /* Estilos de tabla */
@@ -271,29 +340,29 @@
         border-radius: 3px;
     }
     
-    .badge-activa {
+    .badge-activo {
         background-color: #28a745;
         color: white;
     }
     
-    .badge-pagada {
-        background-color: #ffc107;
-        color: black;
+    .badge-inactivo {
+        background-color: #6c757d;
+        color: white;
     }
     
-    .badge-cancelada {
+    .badge-cancelado {
         background-color: #dc3545;
+        color: white;
+    }
+    
+    .badge-timbrado {
+        background-color: #17a2b8;
         color: white;
     }
     
     .badge-pendiente {
         background-color: #fd7e14;
         color: white;
-    }
-    
-    /* Números alineados a la derecha */
-    .text-right {
-        text-align: right;
     }
     
     /* Estilo para el pie de tabla (totales) */
@@ -333,73 +402,69 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Notas de Venta');
+        console.log('DOM completamente cargado - Depósitos');
         
-        // Datos de ejemplo para Notas de Venta
-        const datosNotasVenta = [
+        // Datos de ejemplo para Depósitos
+        const datosDepositos = [
             {
-                nota_venta_id: 1001,
-                estatus_txt: 'Activa',
-                fecha: '2026-01-15',
-                contacto_razon_social: 'Maquiladora Industrial',
+                estatus_txt: 'Activo',
+                serie: 'D',
+                folio: 1001,
+                contacto: 'Maquiladora Industrial',
                 rfc: 'MII880101ABC',
-                subtotal: 10000.00,
-                iva: 1600.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 11600.00,
-                observaciones: 'Nota de venta regular',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN001',
-                aplica_e_resultados: 'SÍ'
+                forma_pago: 'Transferencia',
+                cuenta_bancaria: '1234-5678-9012-3456',
+                fecha: '2026-01-15',
+                comprobanteFecha: '2026-01-15',
+                referencia: 'REF-001',
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                monto_original: 50000.00,
+                monto: 50000.00,
+                monto_restante: 0.00,
+                descripcion: 'Depósito de cliente',
+                polizas_contables_id: 'POL-001',
+                timbrefiscaldigitalUUID: 'ABC123DEF456GHI789'
             },
             {
-                nota_venta_id: 1002,
-                estatus_txt: 'Pagada',
-                fecha: '2026-01-14',
-                contacto_razon_social: 'Cartones del Norte',
+                estatus_txt: 'Activo',
+                serie: 'D',
+                folio: 1002,
+                contacto: 'Cartones del Norte',
                 rfc: 'CND890202XYZ',
-                subtotal: 8500.00,
-                iva: 1360.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 9860.00,
-                observaciones: 'Pago recibido',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN002',
-                aplica_e_resultados: 'SÍ'
+                forma_pago: 'Cheque',
+                cuenta_bancaria: '9876-5432-1098-7654',
+                fecha: '2026-01-14',
+                comprobanteFecha: '2026-01-14',
+                referencia: 'REF-002',
+                moneda: 'USD',
+                tipo_cambio: 20.50,
+                monto_original: 2500.00,
+                monto: 51250.00,
+                monto_restante: 1250.00,
+                descripcion: 'Depósito en USD',
+                polizas_contables_id: 'POL-002',
+                timbrefiscaldigitalUUID: 'DEF456GHI789JKL012'
             },
             {
-                nota_venta_id: 1003,
-                estatus_txt: 'Cancelada',
-                fecha: '2026-01-13',
-                contacto_razon_social: 'Transportes del Bajío',
+                estatus_txt: 'Cancelado',
+                serie: 'D',
+                folio: 1003,
+                contacto: 'Transportes del Bajío',
                 rfc: 'TBA890123XYZ',
-                subtotal: 5200.00,
-                iva: 832.00,
-                riva: 0.00,
-                descuento: 0.00,
-                total: 6032.00,
-                observaciones: 'Cancelada por el cliente',
-                tipo_nv: 'VENTA',
-                tipo_un: 'UN001',
-                aplica_e_resultados: 'NO'
-            },
-            {
-                nota_venta_id: 1004,
-                estatus_txt: 'Pendiente',
-                fecha: '2026-01-12',
-                contacto_razon_social: 'Logística Monterrey',
-                rfc: 'LMN890456ABC',
-                subtotal: 15300.00,
-                iva: 2448.00,
-                riva: 500.00,
-                descuento: 500.00,
-                total: 16748.00,
-                observaciones: 'Pendiente de aprobación',
-                tipo_nv: 'COTIZACIÓN',
-                tipo_un: 'UN003',
-                aplica_e_resultados: 'SÍ'
+                forma_pago: 'Efectivo',
+                cuenta_bancaria: '5678-1234-5678-1234',
+                fecha: '2026-01-13',
+                comprobanteFecha: null,
+                referencia: 'REF-003',
+                moneda: 'MXN',
+                tipo_cambio: 1.00,
+                monto_original: 15000.00,
+                monto: 15000.00,
+                monto_restante: 15000.00,
+                descripcion: 'Depósito cancelado',
+                polizas_contables_id: null,
+                timbrefiscaldigitalUUID: null
             }
         ];
         
@@ -415,33 +480,35 @@
             return date.toLocaleDateString('es-MX');
         }
         
-        // Función para calcular totales (summary)
+        // Función para calcular totales (summary) y actualizar recuadros
         function calcularTotales(datos) {
-            let totalSubtotal = 0;
-            let totalIva = 0;
-            let totalRiva = 0;
-            let totalDescuento = 0;
-            let totalTotal = 0;
+            let totalMontoOriginal = 0;
+            let totalMonto = 0;
+            let totalMontoRestante = 0;
+            let activos = 0;
+            let timbrados = 0;
+            let cancelados = 0;
             
             datos.forEach(item => {
-                totalSubtotal += item.subtotal || 0;
-                totalIva += item.iva || 0;
-                totalRiva += item.riva || 0;
-                totalDescuento += item.descuento || 0;
-                totalTotal += item.total || 0;
+                totalMontoOriginal += item.monto_original || 0;
+                totalMonto += item.monto || 0;
+                totalMontoRestante += item.monto_restante || 0;
+                
+                if (item.estatus_txt === 'Activo') activos++;
+                if (item.estatus_txt === 'Cancelado') cancelados++;
+                if (item.comprobanteFecha) timbrados++;
             });
             
-            document.getElementById('sumSubtotal').textContent = formatCurrency(totalSubtotal);
-            document.getElementById('sumIva').textContent = formatCurrency(totalIva);
-            document.getElementById('sumRiva').textContent = formatCurrency(totalRiva);
-            document.getElementById('sumDescuento').textContent = formatCurrency(totalDescuento);
-            document.getElementById('sumTotal').textContent = formatCurrency(totalTotal);
+            document.getElementById('sumMontoOriginal').textContent = formatCurrency(totalMontoOriginal);
+            document.getElementById('sumMonto').textContent = formatCurrency(totalMonto);
+            document.getElementById('sumMontoRestante').textContent = formatCurrency(totalMontoRestante);
+            document.getElementById('totalRegistros').textContent = datos.length;
             
-            // Actualizar información de paginación con el total de registros
-            const paginacionInfo = document.getElementById('paginacionInfo');
-            if (paginacionInfo) {
-                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
-            }
+            // Actualizar recuadros
+            document.getElementById('totalDepositos').textContent = datos.length;
+            document.getElementById('totalActivos').textContent = activos;
+            document.getElementById('totalTimbrados').textContent = timbrados;
+            document.getElementById('totalCancelados').textContent = cancelados;
         }
         
         // Función para cargar datos en la tabla
@@ -460,12 +527,15 @@
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
                 
-                // Resetear totales
-                document.getElementById('sumSubtotal').textContent = '$0.00';
-                document.getElementById('sumIva').textContent = '$0.00';
-                document.getElementById('sumRiva').textContent = '$0.00';
-                document.getElementById('sumDescuento').textContent = '$0.00';
-                document.getElementById('sumTotal').textContent = '$0.00';
+                // Resetear totales y recuadros
+                document.getElementById('sumMontoOriginal').textContent = '$0.00';
+                document.getElementById('sumMonto').textContent = '$0.00';
+                document.getElementById('sumMontoRestante').textContent = '$0.00';
+                document.getElementById('totalRegistros').textContent = '0';
+                document.getElementById('totalDepositos').textContent = '0';
+                document.getElementById('totalActivos').textContent = '0';
+                document.getElementById('totalTimbrados').textContent = '0';
+                document.getElementById('totalCancelados').textContent = '0';
                 
                 const paginacionInfo = document.getElementById('paginacionInfo');
                 if (paginacionInfo) {
@@ -483,34 +553,38 @@
                 const row = document.createElement('tr');
                 
                 // Determinar clase del badge según estatus
-                let badgeClass = 'badge-activa';
-                if (item.estatus_txt === 'Pagada') badgeClass = 'badge-pagada';
-                else if (item.estatus_txt === 'Cancelada') badgeClass = 'badge-cancelada';
+                let badgeClass = 'badge-activo';
+                if (item.estatus_txt === 'Cancelado') badgeClass = 'badge-cancelado';
+                else if (item.estatus_txt === 'Inactivo') badgeClass = 'badge-inactivo';
                 else if (item.estatus_txt === 'Pendiente') badgeClass = 'badge-pendiente';
                 
                 row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.nota_venta_id || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
                         <span class="badge ${badgeClass}">${item.estatus_txt || '-'}</span>
                     </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.contacto_razon_social || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.serie || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.folio || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.contacto || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.rfc || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.subtotal ? formatCurrency(item.subtotal) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.iva ? formatCurrency(item.iva) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.riva ? formatCurrency(item.riva) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.descuento ? formatCurrency(item.descuento) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.observaciones || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_nv || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.tipo_un || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.aplica_e_resultados || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.forma_pago || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.cuenta_bancaria || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.comprobanteFecha ? formatDate(item.comprobanteFecha) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.referencia || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.moneda || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.tipo_cambio ? item.tipo_cambio.toFixed(2) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.monto_original ? formatCurrency(item.monto_original) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.monto_restante ? formatCurrency(item.monto_restante) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.descripcion || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.polizas_contables_id || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; font-size: 10px;">${item.timbrefiscaldigitalUUID || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
                             <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
                             <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles"></i>
                             <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                            <i class="fas fa-file-invoice" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver Nota"></i>
                         </div>
                     </td>
                 `;
@@ -518,12 +592,18 @@
                 tablaBody.appendChild(row);
             });
             
-            // Calcular y mostrar totales
+            // Calcular y mostrar totales y actualizar recuadros
             calcularTotales(datos);
+            
+            // Actualizar información de paginación
+            const paginacionInfo = document.getElementById('paginacionInfo');
+            if (paginacionInfo) {
+                paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
+            }
         }
         
         // Cargar datos iniciales
-        cargarTabla(datosNotasVenta);
+        cargarTabla(datosDepositos);
         
         // Event Listeners
         document.getElementById('fechaInicio')?.addEventListener('change', function() {
@@ -539,11 +619,11 @@
         });
         
         document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar Nota de Venta - Funcionalidad en desarrollo');
+            alert('Agregar Depósito - Funcionalidad en desarrollo');
         });
         
         document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaNotasVenta', 'NotasVenta');
+            exportTableToExcel('tablaDepositos', 'Depositos');
         });
         
         document.getElementById('btnColumnas')?.addEventListener('click', function() {
@@ -553,12 +633,13 @@
         document.getElementById('buscador')?.addEventListener('input', function(e) {
             console.log('Buscando:', e.target.value);
             const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosNotasVenta.filter(item => 
-                item.contacto_razon_social?.toLowerCase().includes(busqueda) ||
+            const datosFiltrados = datosDepositos.filter(item => 
+                item.contacto?.toLowerCase().includes(busqueda) ||
                 item.rfc?.toLowerCase().includes(busqueda) ||
+                item.referencia?.toLowerCase().includes(busqueda) ||
+                item.descripcion?.toLowerCase().includes(busqueda) ||
                 item.estatus_txt?.toLowerCase().includes(busqueda) ||
-                item.observaciones?.toLowerCase().includes(busqueda) ||
-                item.tipo_nv?.toLowerCase().includes(busqueda)
+                item.serie?.toLowerCase().includes(busqueda)
             );
             cargarTabla(datosFiltrados);
         });
@@ -573,15 +654,15 @@
         // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
-                alert('Editar Nota de Venta - Funcionalidad en desarrollo');
+                alert('Editar Depósito - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar esta nota de venta?')) {
-                    alert('Eliminar Nota de Venta - Funcionalidad en desarrollo');
+                if (confirm('¿Está seguro de eliminar este depósito?')) {
+                    alert('Eliminar Depósito - Funcionalidad en desarrollo');
                 }
+            } else if (e.target.classList.contains('fa-eye')) {
+                alert('Ver detalles de Depósito - Funcionalidad en desarrollo');
             } else if (e.target.classList.contains('fa-file-pdf')) {
                 alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-file-invoice')) {
-                alert('Ver Nota de Venta - Funcionalidad en desarrollo');
             }
         });
         

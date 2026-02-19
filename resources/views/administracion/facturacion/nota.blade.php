@@ -103,123 +103,123 @@
                 <!-- Tabla de Notas de Crédito -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
                     <table class="table table-bordered" id="tablaNotasCredito" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #083CAE; color: white;">
+                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Estatus</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Fecha Creación</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Serie</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Cliente</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>RFC</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Moneda</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Subtotal</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>IVA</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>R.IVA</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>R.ISR</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Total</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Fecha Timbrado</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Uso CFDI</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Forma de Pago</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Método de Pago</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>UUID</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Emisor</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Descripción</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #083CAE; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Acciones</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
@@ -235,13 +235,13 @@
                 
                 <!-- Paginación -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;" id="paginacionContainer">
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Página anterior"><i class="fas fa-angle-left"></i></button>
-                    <span style="padding: 5px 10px; background-color: #083CAE; color: white; border-radius: 4px;">1</span>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;">2</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;">3</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #083CAE;" title="Última página"><i class="fas fa-angle-double-right"></i></button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página anterior"><i class="fas fa-angle-left"></i></button>
+                    <span style="padding: 5px 10px; background-color: #6B8ACE; color: white; border-radius: 4px;">1</span>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">2</button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">3</button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Última página"><i class="fas fa-angle-double-right"></i></button>
                     <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 1-1 de 1 registros</span>
                 </div>
             </div>
@@ -270,7 +270,7 @@
     .table th {
         white-space: nowrap;
         font-size: 12px;
-        background-color: #083CAE !important;
+        background-color: #6B8ACE !important;
         color: white;
         font-weight: 600;
         padding: 10px 4px;
