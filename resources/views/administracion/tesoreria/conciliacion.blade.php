@@ -5,197 +5,106 @@
     <section class="content container-fluid py-3">
         <!-- Conciliación Bancaria -->
         <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #6B8ACE; padding: 15px 20px;">
-                <h2 style="color: #6B8ACE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
+                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
                     Conciliación Bancaria
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas con filtros -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                    
-                    <!-- Filtros izquierda -->
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <label for="cuentaBancaria" style="font-weight: 600; color: #6B8ACE;">Cuenta:</label>
-                        <select id="cuentaBancaria" style="padding: 8px 12px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; min-width: 250px; background-color: white;">
-                            <option value="0">Todas las cuentas</option>
-                            <option value="1" selected>Principal (1234-5678-9012-3456) - Banamex</option>
-                            <option value="2">Secundaria (9876-5432-1098-7654) - BBVA</option>
-                            <option value="3">Ahorros (5678-1234-5678-1234) - Santander</option>
-                            <option value="4">Nóminas (4321-8765-4321-8765) - HSBC</option>
-                        </select>
-
-                        <label for="mesConciliacion" style="font-weight: 600; color: #6B8ACE; margin-left: 10px;">Mes:</label>
-                        <select id="mesConciliacion" style="padding: 8px 12px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 120px; background-color: white;">
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12" selected>Diciembre</option>
-                        </select>
-
-                        <label for="anioConciliacion" style="font-weight: 600; color: #6B8ACE;">Año:</label>
-                        <select id="anioConciliacion" style="padding: 8px 12px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 100px; background-color: white;">
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026" selected>2026</option>
-                        </select>
+                <!-- Barra de herramientas con agrupación y botones -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
+                    <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
+                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
+                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
+                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
+                            <!-- Aquí se mostrarán las columnas agrupadas -->
+                        </div>
                     </div>
-
-                    <!-- Botones derecha -->
+                    
+                    <!-- Grupo de botones derecho -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Botón Consultar -->
+                        <!-- Date Inicio -->
                         <div>
-                            <button id="btnConsultar" style="background-color: #6B8ACE; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: white;">
-                                <i class="fas fa-search"></i> Consultar
-                            </button>
+                            <input type="date" id="fechaInicio" value="2026-01-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
-                        <!-- Botón Nueva Conciliación -->
+                        <!-- Date Fin -->
                         <div>
-                            <button id="btnNuevo" style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;">
-                                <i class="fas fa-plus"></i> Nueva
+                            <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                        </div>
+
+                        <!-- Botón Agregar (+) -->
+                        <div>
+                            <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar">
+                                <i class="fas fa-plus" style="color: #083CAE;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
-                                    title="Exportar a Excel">
-                                <i class="fas fa-file-excel" style="color: #6B8ACE;"></i>
+                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    title="Exportar todo">
+                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
                             </button>
                         </div>
 
-                        <!-- Botón Columnas -->
+                        <!-- Botón Seleccionar Columnas -->
                         <div>
                             <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
+                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
                                     title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #6B8ACE;"></i>
+                                <i class="fas fa-columns" style="color: #083CAE;"></i>
                             </button>
                         </div>
 
                         <!-- Buscador -->
                         <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #6B8ACE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 200px;">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumen de Conciliación -->
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Total Sistema</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalSistema">$1,245,750.00</div>
-                        </div>
-                    </div>
-                    
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Total Banco</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalBanco">$1,245,750.00</div>
-                        </div>
-                    </div>
-                    
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Conciliado</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalConciliado">$1,245,750.00</div>
-                        </div>
-                    </div>
-                    
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Pendiente</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalPendiente">$0.00</div>
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
                         </div>
                     </div>
                 </div>
 
                 <!-- Mensaje "Sin datos" centrado -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
+                    <i class="fas fa-university" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay conciliaciones para los filtros seleccionados</p>
+                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
 
-                <!-- Tabla de Conciliaciones -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaConciliaciones" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
+                <!-- Tabla de Conciliación Bancaria -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaConciliacion" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0; width: 50px;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="folio">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>ID</span>
+                                        <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cuenta</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Mes</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Año</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total Sistema</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total Banco</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Conciliado</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Pendiente</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Estatus</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Fecha</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="observaciones">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Observaciones</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Acciones</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
@@ -206,30 +115,34 @@
                         <tbody id="tablaBody">
                             <!-- Las filas se insertarán dinámicamente -->
                         </tbody>
-                        <!-- Fila de totales -->
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
-                            <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef;" colspan="5">Registros: <span id="totalRegistros">0</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumTotalSistema">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumTotalBanco">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumConciliado">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumPendiente">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="2"></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 
-                <!-- Paginación -->
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;" id="paginacionContainer">
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página anterior"><i class="fas fa-angle-left"></i></button>
-                    <span style="padding: 5px 10px; background-color: #6B8ACE; color: white; border-radius: 4px;">1</span>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">2</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">3</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Última página"><i class="fas fa-angle-double-right"></i></button>
-                    <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 1-6 de 12 registros</span>
+                <!-- Paginación y botón Crear filtro -->
+                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
+                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
+                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
+                        <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
+                        <span style="color: #2378e1;">Crear filtro</span>
+                    </button>
+                    
+                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
+                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
+                            <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
+                        </button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
+                            <i class="fas fa-angle-left" style="color: #2378e1;"></i>
+                        </button>
+                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
+                            <i class="fas fa-angle-right" style="color: #2378e1;"></i>
+                        </button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
+                            <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
+                        </button>
+                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-2 de 2 registros</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -239,39 +152,28 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #6B8ACE;
+        border-bottom: 2px solid #083CAE;
     }
     
-    .custom-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-    }
-    
-    .custom-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(107, 138, 206, 0.15) !important;
-        border-color: #6B8ACE !important;
+    .semaforo .card-header h2 {
+        color: #083CAE !important;
     }
     
     /* Estilos de tabla */
     .table th {
         white-space: nowrap;
         font-size: 12px;
-        background-color: #6B8ACE !important;
+        background-color: #2378e1 !important;
         color: white;
         font-weight: 600;
         padding: 10px 4px;
-    }
-    
-    /* Todas las columnas usan el mismo color #6B8ACE */
-    .table th:last-child {
-        background-color: #6B8ACE !important;
     }
     
     .table td {
         white-space: nowrap;
         font-size: 12px;
         padding: 10px 4px;
+        color: #000000 !important;
     }
     
     /* Estilo para las filas alternadas */
@@ -287,12 +189,11 @@
         background-color: #e0e0e0;
     }
     
-    /* Estilo para los iconos de acción - SOLO ESTO MANTIENE EL AZUL ORIGINAL */
+    /* Estilo para los iconos de acción */
     #tablaBody td i {
         transition: transform 0.2s;
         font-size: 14px;
         color: #083CAE;
-        cursor: pointer;
     }
     
     #tablaBody td i:hover {
@@ -343,32 +244,161 @@
         color: white;
     }
     
-    .badge-proceso {
+    .badge-revisado {
         background-color: #17a2b8;
         color: white;
     }
     
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
+    /* Números alineados a la derecha */
+    .text-right {
+        text-align: right;
+    }
+    
+    /* Estilos para agrupación de columnas */
+    [draggable="true"] {
+        cursor: grab;
+    }
+    
+    [draggable="true"]:active {
+        cursor: grabbing;
+        opacity: 0.7;
+    }
+    
+    #grupoAgrupacion {
+        position: relative;
+    }
+    
+    #grupoColumnas {
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .columna-agrupada {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        background-color: #f0f4ff;
+        border-radius: 16px;
+        color: #2378e1;
+        font-size: 12px;
+        margin: 2px;
+        border: 1px solid #2378e1;
+    }
+    
+    .columna-agrupada .remover {
+        margin-left: 6px;
+        cursor: pointer;
+        font-size: 14px;
         font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #6B8ACE;
+        color: #2378e1;
+    }
+    
+    .columna-agrupada .remover:hover {
+        opacity: 0.7;
+    }
+    
+    /* Estilo para filas de grupo */
+    .fila-grupo {
+        background-color: #f0f7ff !important;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    
+    .fila-grupo:hover {
+        background-color: #e1f0ff !important;
+    }
+    
+    .fila-grupo td:first-child i {
+        transition: transform 0.2s;
+        margin-right: 8px;
+    }
+    
+    .fila-grupo:not(.expandido) td:first-child i {
+        transform: rotate(-90deg);
+    }
+    
+    .fila-detalle {
+        background-color: #ffffff;
+    }
+    
+    .fila-detalle td {
+        border-top: none !important;
+    }
+    
+    .fila-detalle td:first-child {
+        padding-left: 30px !important;
+    }
+    
+    /* Estilo cuando se está arrastrando sobre el área de grupo */
+    .drag-over #grupoColumnas {
+        background-color: rgba(35, 120, 225, 0.1);
+        border-radius: 4px;
+    }
+    
+    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
+    #paginacionContainer {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Todos los elementos dentro del contenedor también sin fondo */
+    #paginacionContainer * {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    /* Excepción para los spans que deben tener fondo azul */
+    #paginacionContainer span[style*="background-color"] {
+        background-color: #2378e1 !important;
+    }
+    
+    /* Estilos para los botones de paginación */
+    #paginacionContainer button {
+        background: transparent !important;
+        border: none !important;
+        color: #2378e1 !important;
+        cursor: pointer;
+    }
+    
+    #paginacionContainer button:hover {
+        opacity: 0.7;
+    }
+    
+    #paginacionContainer button i {
+        color: #2378e1 !important;
+    }
+    
+    /* Estilo específico para btnCrearFiltro */
+    #btnCrearFiltro,
+    #btnCrearFiltro:hover,
+    #btnCrearFiltro:focus,
+    #btnCrearFiltro:active {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    
+    #btnCrearFiltro i,
+    #btnCrearFiltro span {
+        color: #2378e1 !important;
+    }
+    
+    #paginacionInfo {
+        color: #2378e1 !important;
     }
     
     /* Responsive */
     @media (max-width: 768px) {
-        div[style*="justify-content: space-between"] {
-            flex-direction: column;
-            align-items: flex-start !important;
-        }
-        
         div[style*="justify-content: flex-end"] {
             justify-content: center !important;
         }
         
-        input[type="date"], select {
+        input[type="date"] {
             width: 100% !important;
-            min-width: 100% !important;
         }
         
         button {
@@ -379,8 +409,13 @@
             width: 100%;
         }
         
-        .custom-card {
-            min-width: 100% !important;
+        input#buscador {
+            width: 100% !important;
+        }
+        
+        #paginacionContainer {
+            flex-direction: column;
+            align-items: flex-start;
         }
     }
 </style>
@@ -393,433 +428,449 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM completamente cargado - Conciliación Bancaria');
         
-        // Datos ficticios para Conciliación Bancaria
-        const datosConciliaciones = [
+        // Variables para agrupación
+        let columnasAgrupadas = [];
+        let expandedGroups = new Set();
+        let datosOriginales = [];
+        let currentPage = 1;
+        let rowsPerPage = 10;
+        
+        // Datos de ejemplo para Conciliación Bancaria (2 filas)
+        const datosConciliacion = [
             {
-                id: 1,
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                fecha: '2026-12-01',
-                mes: 'Diciembre',
-                mes_num: 12,
-                anio: 2026,
-                total_sistema: 245750.00,
-                total_banco: 245750.00,
-                total_conciliado: 245750.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
+                folio: 'CB-001',
+                estatus: 'Conciliado',
+                fecha: '2026-01-15',
+                observaciones: 'Conciliación bancaria del mes de enero - Banco Azteca'
             },
             {
-                id: 2,
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                fecha: '2026-11-01',
-                mes: 'Noviembre',
-                mes_num: 11,
-                anio: 2026,
-                total_sistema: 238500.00,
-                total_banco: 238500.00,
-                total_conciliado: 238500.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 3,
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                fecha: '2026-12-01',
-                mes: 'Diciembre',
-                mes_num: 12,
-                anio: 2026,
-                total_sistema: 187250.00,
-                total_banco: 187250.00,
-                total_conciliado: 187250.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 4,
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                fecha: '2026-11-01',
-                mes: 'Noviembre',
-                mes_num: 11,
-                anio: 2026,
-                total_sistema: 175800.00,
-                total_banco: 175800.00,
-                total_conciliado: 175800.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 5,
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                fecha: '2026-12-01',
-                mes: 'Diciembre',
-                mes_num: 12,
-                anio: 2026,
-                total_sistema: 125400.00,
-                total_banco: 125400.00,
-                total_conciliado: 125400.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 6,
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                fecha: '2026-11-01',
-                mes: 'Noviembre',
-                mes_num: 11,
-                anio: 2026,
-                total_sistema: 118900.00,
-                total_banco: 118900.00,
-                total_conciliado: 118900.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 7,
-                cuenta_id: 4,
-                cuenta_nombre: 'Nóminas',
-                fecha: '2026-12-01',
-                mes: 'Diciembre',
-                mes_num: 12,
-                anio: 2026,
-                total_sistema: 312600.00,
-                total_banco: 312600.00,
-                total_conciliado: 312600.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 8,
-                cuenta_id: 4,
-                cuenta_nombre: 'Nóminas',
-                fecha: '2026-11-01',
-                mes: 'Noviembre',
-                mes_num: 11,
-                anio: 2026,
-                total_sistema: 298400.00,
-                total_banco: 298400.00,
-                total_conciliado: 298400.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 9,
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                fecha: '2026-10-01',
-                mes: 'Octubre',
-                mes_num: 10,
-                anio: 2026,
-                total_sistema: 232100.00,
-                total_banco: 232100.00,
-                total_conciliado: 232100.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 10,
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                fecha: '2026-10-01',
-                mes: 'Octubre',
-                mes_num: 10,
-                anio: 2026,
-                total_sistema: 168500.00,
-                total_banco: 168500.00,
-                total_conciliado: 168500.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 11,
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                fecha: '2026-10-01',
-                mes: 'Octubre',
-                mes_num: 10,
-                anio: 2026,
-                total_sistema: 112300.00,
-                total_banco: 112300.00,
-                total_conciliado: 112300.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
-            },
-            {
-                id: 12,
-                cuenta_id: 4,
-                cuenta_nombre: 'Nóminas',
-                fecha: '2026-10-01',
-                mes: 'Octubre',
-                mes_num: 10,
-                anio: 2026,
-                total_sistema: 285600.00,
-                total_banco: 285600.00,
-                total_conciliado: 285600.00,
-                total_pendiente: 0.00,
-                estatus: 'Conciliado'
+                folio: 'CB-002',
+                estatus: 'Pendiente',
+                fecha: '2026-02-01',
+                observaciones: 'Pendiente de conciliar movimientos de nómina - BBVA'
             }
         ];
         
-        // Variables globales
-        let movimientosOriginales = [...datosConciliaciones];
-        let movimientosFiltrados = [...datosConciliaciones];
-        let paginaActual = 1;
-        const registrosPorPagina = 10;
-        
-        // Elementos del DOM
-        const selectCuenta = document.getElementById('cuentaBancaria');
-        const selectMes = document.getElementById('mesConciliacion');
-        const selectAnio = document.getElementById('anioConciliacion');
-        const btnConsultar = document.getElementById('btnConsultar');
-        const btnNuevo = document.getElementById('btnNuevo');
-        const btnExcel = document.getElementById('btnExcel');
-        const btnColumnas = document.getElementById('btnColumnas');
-        const buscador = document.getElementById('buscador');
-        const tablaBody = document.getElementById('tablaBody');
-        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const totalRegistros = document.getElementById('totalRegistros');
-        const sumTotalSistema = document.getElementById('sumTotalSistema');
-        const sumTotalBanco = document.getElementById('sumTotalBanco');
-        const sumConciliado = document.getElementById('sumConciliado');
-        const sumPendiente = document.getElementById('sumPendiente');
-        const totalSistema = document.getElementById('totalSistema');
-        const totalBanco = document.getElementById('totalBanco');
-        const totalConciliado = document.getElementById('totalConciliado');
-        const totalPendiente = document.getElementById('totalPendiente');
-        const paginacionInfo = document.getElementById('paginacionInfo');
-        const paginacionContainer = document.getElementById('paginacionContainer');
-        
-        // Función para formatear números como moneda
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
+        datosOriginales = [...datosConciliacion];
         
         // Función para formatear fecha
         function formatDate(dateString) {
             if (!dateString) return '-';
             const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return date.toLocaleDateString('es-MX');
         }
         
-        // Función para obtener la clase del badge según estatus
-        function getBadgeClass(estatus) {
-            if (estatus === 'Conciliado') return 'badge-conciliado';
-            if (estatus === 'Pendiente') return 'badge-pendiente';
-            if (estatus === 'Diferencia') return 'badge-diferencia';
-            if (estatus === 'En Proceso') return 'badge-proceso';
-            return 'badge-pendiente';
+        // Función para generar un ID único para el grupo
+        function generarGrupoId(item, columnas) {
+            return columnas.map(col => {
+                switch(col) {
+                    case 'folio': return item.folio || 'Sin folio';
+                    case 'estatus': return item.estatus || 'Sin estatus';
+                    case 'fecha': return item.fecha || 'Sin fecha';
+                    case 'observaciones': return item.observaciones || 'Sin observaciones';
+                    default: return '';
+                }
+            }).join('||');
         }
         
-        // Función para filtrar datos
-        function filtrarDatos() {
-            const cuentaId = parseInt(selectCuenta.value);
-            const mes = parseInt(selectMes.value);
-            const anio = parseInt(selectAnio.value);
-            const termino = buscador.value.toLowerCase().trim();
+        // Función para agrupar datos por columnas seleccionadas
+        function agruparDatos(datos, columnas) {
+            if (columnas.length === 0) return { grupos: [], items: datos };
             
-            // Aplicar filtros
-            let datosFiltrados = datosConciliaciones.filter(item => {
-                // Filtro por cuenta
-                if (cuentaId !== 0 && item.cuenta_id !== cuentaId) return false;
-                
-                // Filtro por mes
-                if (item.mes_num !== mes) return false;
-                
-                // Filtro por año
-                if (item.anio !== anio) return false;
-                
-                return true;
-            });
-            
-            // Aplicar búsqueda si hay término
-            if (termino !== '') {
-                datosFiltrados = datosFiltrados.filter(item => 
-                    item.cuenta_nombre?.toLowerCase().includes(termino) ||
-                    item.mes?.toLowerCase().includes(termino) ||
-                    item.estatus?.toLowerCase().includes(termino)
-                );
-            }
-            
-            movimientosOriginales = [...datosFiltrados];
-            movimientosFiltrados = [...datosFiltrados];
-            paginaActual = 1;
-            
-            // Actualizar totales
-            actualizarTotalesResumen(datosFiltrados);
-            aplicarPaginacionYMostrar();
-        }
-        
-        // Función para actualizar los totales del resumen
-        function actualizarTotalesResumen(datos) {
-            let sumaSistema = 0;
-            let sumaBanco = 0;
-            let sumaConciliado = 0;
-            let sumaPendiente = 0;
+            const gruposMap = new Map();
             
             datos.forEach(item => {
-                sumaSistema += item.total_sistema || 0;
-                sumaBanco += item.total_banco || 0;
-                sumaConciliado += item.total_conciliado || 0;
-                sumaPendiente += item.total_pendiente || 0;
+                const grupoId = generarGrupoId(item, columnas);
+                
+                if (!gruposMap.has(grupoId)) {
+                    // Crear un nuevo grupo
+                    const valorGrupo = columnas.map(col => {
+                        switch(col) {
+                            case 'folio': return item.folio || 'Sin folio';
+                            case 'estatus': return item.estatus || 'Sin estatus';
+                            case 'fecha': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
+                            case 'observaciones': return item.observaciones || 'Sin observaciones';
+                            default: return '';
+                        }
+                    }).join(' - ');
+                    
+                    gruposMap.set(grupoId, {
+                        id: grupoId,
+                        valor: valorGrupo,
+                        items: [item]
+                    });
+                } else {
+                    const grupo = gruposMap.get(grupoId);
+                    grupo.items.push(item);
+                }
             });
             
-            totalSistema.textContent = formatCurrency(sumaSistema);
-            totalBanco.textContent = formatCurrency(sumaBanco);
-            totalConciliado.textContent = formatCurrency(sumaConciliado);
-            totalPendiente.textContent = formatCurrency(sumaPendiente);
+            return {
+                grupos: Array.from(gruposMap.values()),
+                items: []
+            };
         }
         
-        // Función para aplicar paginación
-        function aplicarPaginacionYMostrar() {
-            const inicio = (paginaActual - 1) * registrosPorPagina;
-            const fin = inicio + registrosPorPagina;
-            const movimientosPagina = movimientosFiltrados.slice(inicio, fin);
-            
-            mostrarTabla(movimientosPagina);
-            actualizarPaginacion();
+        // Función para obtener datos de la página actual
+        function getCurrentPageData(datos) {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            return datos.slice(start, end);
         }
         
-        // Función para cambiar de página
-        function cambiarPagina(nuevaPagina) {
-            const totalPaginas = Math.ceil(movimientosFiltrados.length / registrosPorPagina);
-            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
-                paginaActual = nuevaPagina;
-                aplicarPaginacionYMostrar();
-            }
-        }
-        
-        // Función para actualizar los controles de paginación
-        function actualizarPaginacion() {
-            const totalPaginas = Math.ceil(movimientosFiltrados.length / registrosPorPagina);
-            const inicio = (paginaActual - 1) * registrosPorPagina + 1;
-            const fin = Math.min(paginaActual * registrosPorPagina, movimientosFiltrados.length);
+        // Función para actualizar la paginación
+        function actualizarPaginacion(total) {
+            const totalPages = Math.ceil(total / rowsPerPage);
+            document.getElementById('paginaActual').textContent = currentPage;
             
-            paginacionInfo.textContent = `Mostrando ${movimientosFiltrados.length > 0 ? inicio : 0}-${fin} de ${movimientosFiltrados.length} registros`;
-            
-            // Actualizar botones de paginación
-            while (paginacionContainer.children.length > 7) {
-                paginacionContainer.removeChild(paginacionContainer.children[2]);
+            // Mostrar/ocultar botones de página según sea necesario
+            if (totalPages <= 1) {
+                document.getElementById('btnSiguiente').style.display = 'none';
+                document.getElementById('btnUltima').style.display = 'none';
+            } else {
+                document.getElementById('btnSiguiente').style.display = 'inline-block';
+                document.getElementById('btnUltima').style.display = 'inline-block';
             }
             
-            const spanPagina = paginacionContainer.querySelector('span');
-            
-            for (let i = 1; i <= Math.min(5, totalPaginas); i++) {
-                if (i === 1) {
-                    spanPagina.textContent = i;
-                    spanPagina.style.backgroundColor = i === paginaActual ? '#6B8ACE' : 'transparent';
-                    spanPagina.style.color = i === paginaActual ? 'white' : '#6B8ACE';
-                } else {
-                    const btn = document.createElement('button');
-                    btn.textContent = i;
-                    btn.style.padding = '5px 10px';
-                    btn.style.border = '1px solid #dee2e6';
-                    btn.style.backgroundColor = i === paginaActual ? '#6B8ACE' : 'white';
-                    btn.style.borderRadius = '4px';
-                    btn.style.cursor = 'pointer';
-                    btn.style.color = i === paginaActual ? 'white' : '#6B8ACE';
-                    btn.addEventListener('click', () => cambiarPagina(i));
-                    paginacionContainer.insertBefore(btn, paginacionContainer.children[paginacionContainer.children.length - 2]);
-                }
-            }
+            document.getElementById('paginacionInfo').textContent = `Mostrando ${Math.min((currentPage - 1) * rowsPerPage + 1, total)}-${Math.min(currentPage * rowsPerPage, total)} de ${total} registros`;
         }
         
-        // Función para mostrar la tabla
-        function mostrarTabla(movimientos) {
+        // Función para cargar datos en la tabla
+        function cargarTabla(datos) {
+            const tablaBody = document.getElementById('tablaBody');
+            const sinDatosMensaje = document.getElementById('sinDatosMensaje');
+            const tablaContainer = document.getElementById('tablaContainer');
+            const textoAgrupar = document.getElementById('textoAgrupar');
+            
             if (!tablaBody) return;
             
+            // Ocultar texto de agrupar si hay columnas agrupadas
+            if (textoAgrupar) {
+                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
+            }
+            
+            // Aplicar agrupación si hay columnas seleccionadas
+            const { grupos } = agruparDatos(datos, columnasAgrupadas);
+            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
+            
+            // Limpiar tabla
             tablaBody.innerHTML = '';
             
-            if (movimientos.length === 0) {
+            if (datos.length === 0) {
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
                 
-                totalRegistros.textContent = '0';
-                sumTotalSistema.textContent = formatCurrency(0);
-                sumTotalBanco.textContent = formatCurrency(0);
-                sumConciliado.textContent = formatCurrency(0);
-                sumPendiente.textContent = formatCurrency(0);
-                
+                if (paginacionInfo) {
+                    paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
+                }
                 return;
             }
             
             sinDatosMensaje.style.display = 'none';
             tablaContainer.style.display = 'block';
             
-            // Calcular totales de la página actual
-            let sumaSistema = 0;
-            let sumaBanco = 0;
-            let sumaConciliado = 0;
-            let sumaPendiente = 0;
+            if (hayGrupos) {
+                // Mostrar grupos
+                grupos.forEach(grupo => {
+                    const grupoRow = document.createElement('tr');
+                    grupoRow.className = 'fila-grupo';
+                    grupoRow.dataset.grupoId = grupo.id;
+                    
+                    if (expandedGroups.has(grupo.id)) {
+                        grupoRow.classList.add('expandido');
+                    }
+                    
+                    // Determinar el estatus predominante en el grupo
+                    const estatusCounts = {};
+                    grupo.items.forEach(item => {
+                        estatusCounts[item.estatus] = (estatusCounts[item.estatus] || 0) + 1;
+                    });
+                    
+                    let estatusPredominante = 'Pendiente';
+                    let maxCount = 0;
+                    for (const [estatus, count] of Object.entries(estatusCounts)) {
+                        if (count > maxCount) {
+                            maxCount = count;
+                            estatusPredominante = estatus;
+                        }
+                    }
+                    
+                    let badgeClass = 'badge-pendiente';
+                    if (estatusPredominante === 'Conciliado') badgeClass = 'badge-conciliado';
+                    else if (estatusPredominante === 'Revisado') badgeClass = 'badge-revisado';
+                    else if (estatusPredominante === 'Diferencia') badgeClass = 'badge-diferencia';
+                    
+                    grupoRow.innerHTML = `
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="5">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
+                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
+                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
+                                        (${grupo.items.length} registros)
+                                    </span>
+                                </div>
+                                <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tablaBody.appendChild(grupoRow);
+                    
+                    // Mostrar items del grupo si está expandido
+                    if (expandedGroups.has(grupo.id)) {
+                        grupo.items.forEach(item => {
+                            const detalleRow = document.createElement('tr');
+                            detalleRow.className = 'fila-detalle';
+                            
+                            // Badge para cada item
+                            let itemBadgeClass = 'badge-pendiente';
+                            if (item.estatus === 'Conciliado') itemBadgeClass = 'badge-conciliado';
+                            else if (item.estatus === 'Revisado') itemBadgeClass = 'badge-revisado';
+                            else if (item.estatus === 'Diferencia') itemBadgeClass = 'badge-diferencia';
+                            
+                            detalleRow.innerHTML = `
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.folio || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
+                                    <span class="badge ${itemBadgeClass}">${item.estatus || '-'}</span>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.observaciones || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                                    <div style="display: flex; gap: 8px; justify-content: center;">
+                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
+                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
+                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
+                                        <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir"></i>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            tablaBody.appendChild(detalleRow);
+                        });
+                    }
+                });
+                
+                if (paginacionInfo) {
+                    const totalRegistros = datos.length;
+                    const mostrando = grupos.length;
+                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
+                }
+            } else {
+                // Mostrar todos los items sin agrupar (con paginación)
+                const pageData = getCurrentPageData(datos);
+                
+                pageData.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    let badgeClass = 'badge-pendiente';
+                    if (item.estatus === 'Conciliado') badgeClass = 'badge-conciliado';
+                    else if (item.estatus === 'Revisado') badgeClass = 'badge-revisado';
+                    else if (item.estatus === 'Diferencia') badgeClass = 'badge-diferencia';
+                    
+                    row.innerHTML = `
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
+                            <span class="badge ${badgeClass}">${item.estatus || '-'}</span>
+                        </td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.observaciones || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                            <div style="display: flex; gap: 8px; justify-content: center;">
+                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
+                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
+                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
+                                <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir"></i>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tablaBody.appendChild(row);
+                });
+                
+                actualizarPaginacion(datos.length);
+            }
+        }
+        
+        // Función para actualizar la visualización de columnas agrupadas
+        function actualizarGrupoColumnas() {
+            const grupoContainer = document.getElementById('grupoColumnas');
+            const textoAgrupar = document.getElementById('textoAgrupar');
             
-            movimientos.forEach(item => {
-                sumaSistema += item.total_sistema || 0;
-                sumaBanco += item.total_banco || 0;
-                sumaConciliado += item.total_conciliado || 0;
-                sumaPendiente += item.total_pendiente || 0;
+            if (!grupoContainer) return;
+            
+            grupoContainer.innerHTML = '';
+            
+            if (columnasAgrupadas.length === 0) {
+                if (textoAgrupar) textoAgrupar.style.display = 'inline';
+            } else {
+                if (textoAgrupar) textoAgrupar.style.display = 'none';
+                
+                columnasAgrupadas.forEach(col => {
+                    const nombreColumna = {
+                        'folio': 'Folio',
+                        'estatus': 'Estatus',
+                        'fecha': 'Fecha',
+                        'observaciones': 'Observaciones'
+                    }[col] || col;
+                    
+                    const chip = document.createElement('span');
+                    chip.className = 'columna-agrupada';
+                    chip.innerHTML = `
+                        ${nombreColumna}
+                        <span class="remover" data-columna="${col}">&times;</span>
+                    `;
+                    grupoContainer.appendChild(chip);
+                });
+            }
+            
+            // Limpiar grupos expandidos al cambiar agrupación
+            expandedGroups.clear();
+            
+            // Recargar tabla con nueva agrupación
+            cargarTabla(datosOriginales);
+        }
+        
+        // Configurar drag and drop
+        function setupDragAndDrop() {
+            const encabezados = document.querySelectorAll('th[draggable="true"]');
+            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
+            
+            encabezados.forEach(th => {
+                th.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', th.dataset.columna);
+                    e.dataTransfer.effectAllowed = 'copy';
+                    th.style.opacity = '0.5';
+                });
+                
+                th.addEventListener('dragend', (e) => {
+                    th.style.opacity = '1';
+                });
             });
             
-            totalRegistros.textContent = movimientos.length;
-            sumTotalSistema.textContent = formatCurrency(sumaSistema);
-            sumTotalBanco.textContent = formatCurrency(sumaBanco);
-            sumConciliado.textContent = formatCurrency(sumaConciliado);
-            sumPendiente.textContent = formatCurrency(sumaPendiente);
+            grupoAgrupacion.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                grupoAgrupacion.classList.add('drag-over');
+            });
             
-            // Generar filas
-            movimientos.forEach((item, index) => {
-                const row = document.createElement('tr');
-                const badgeClass = getBadgeClass(item.estatus);
+            grupoAgrupacion.addEventListener('dragleave', () => {
+                grupoAgrupacion.classList.remove('drag-over');
+            });
+            
+            grupoAgrupacion.addEventListener('drop', (e) => {
+                e.preventDefault();
+                grupoAgrupacion.classList.remove('drag-over');
                 
-                row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${(paginaActual - 1) * registrosPorPagina + index + 1}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">
-                        <span style="background-color: #6B8ACE; color: white; padding: 3px 6px; border-radius: 3px; font-size: 11px;">${item.cuenta_nombre}</span>
-                    </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${formatDate(item.fecha)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${item.mes}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${item.anio}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.total_sistema)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.total_banco)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.total_conciliado)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.total_pendiente)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
-                        <span class="badge ${badgeClass}">${item.estatus}</span>
-                    </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                        <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.id}"></i>
-                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.id}"></i>
-                            <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Descargar PDF" data-id="${item.id}"></i>
-                            <i class="fas fa-check-circle" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Conciliar" data-id="${item.id}"></i>
-                        </div>
-                    </td>
-                `;
+                const columna = e.dataTransfer.getData('text/plain');
                 
-                tablaBody.appendChild(row);
+                if (columna && !columnasAgrupadas.includes(columna)) {
+                    columnasAgrupadas.push(columna);
+                    actualizarGrupoColumnas();
+                }
+            });
+            
+            // Event listener para remover columnas (usando delegación)
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remover')) {
+                    const columna = e.target.dataset.columna;
+                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+                    actualizarGrupoColumnas();
+                }
             });
         }
         
+        // Event listener para expandir/colapsar grupos
+        document.addEventListener('click', function(e) {
+            const filaGrupo = e.target.closest('.fila-grupo');
+            if (filaGrupo) {
+                const grupoId = filaGrupo.dataset.grupoId;
+                const icono = filaGrupo.querySelector('i');
+                
+                if (expandedGroups.has(grupoId)) {
+                    expandedGroups.delete(grupoId);
+                    filaGrupo.classList.remove('expandido');
+                    if (icono) icono.className = 'fas fa-caret-right';
+                } else {
+                    expandedGroups.add(grupoId);
+                    filaGrupo.classList.add('expandido');
+                    if (icono) icono.className = 'fas fa-caret-down';
+                }
+                
+                // Recargar tabla para mostrar/ocultar detalles
+                cargarTabla(datosOriginales);
+            }
+        });
+        
+        // Cargar datos iniciales
+        cargarTabla(datosConciliacion);
+        
+        // Configurar drag and drop
+        setupDragAndDrop();
+        
         // Event Listeners
-        btnConsultar.addEventListener('click', filtrarDatos);
-        
-        btnNuevo.addEventListener('click', function() {
-            alert('Nueva Conciliación - Funcionalidad en desarrollo');
+        document.getElementById('fechaInicio')?.addEventListener('change', function() {
+            console.log('Fecha inicio:', this.value);
         });
         
-        btnExcel.addEventListener('click', function() {
-            alert('Exportar a Excel - Funcionalidad en desarrollo');
+        document.getElementById('fechaFin')?.addEventListener('change', function() {
+            console.log('Fecha fin:', this.value);
         });
         
-        btnColumnas.addEventListener('click', function() {
+        document.getElementById('btnCrearFiltro')?.addEventListener('click', function() {
+            alert('Crear filtro - Funcionalidad en desarrollo');
+        });
+        
+        document.getElementById('btnAgregar')?.addEventListener('click', function() {
+            alert('Agregar Conciliación - Funcionalidad en desarrollo');
+        });
+        
+        document.getElementById('btnExcel')?.addEventListener('click', function() {
+            exportTableToExcel('tablaConciliacion', 'ConciliacionBancaria');
+        });
+        
+        document.getElementById('btnColumnas')?.addEventListener('click', function() {
             alert('Selector de Columnas - Funcionalidad en desarrollo');
         });
         
-        buscador.addEventListener('input', filtrarDatos);
+        document.getElementById('buscador')?.addEventListener('input', function(e) {
+            const busqueda = e.target.value.toLowerCase();
+            const datosFiltrados = datosConciliacion.filter(item => 
+                item.folio?.toLowerCase().includes(busqueda) ||
+                item.estatus?.toLowerCase().includes(busqueda) ||
+                item.observaciones?.toLowerCase().includes(busqueda)
+            );
+            datosOriginales = datosFiltrados;
+            currentPage = 1;
+            cargarTabla(datosOriginales);
+        });
+        
+        // Paginación
+        document.getElementById('btnPrimera')?.addEventListener('click', function() {
+            currentPage = 1;
+            cargarTabla(datosOriginales);
+        });
+        
+        document.getElementById('btnAnterior')?.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                cargarTabla(datosOriginales);
+            }
+        });
+        
+        document.getElementById('btnSiguiente')?.addEventListener('click', function() {
+            const totalPages = Math.ceil(datosOriginales.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                cargarTabla(datosOriginales);
+            }
+        });
+        
+        document.getElementById('btnUltima')?.addEventListener('click', function() {
+            const totalPages = Math.ceil(datosOriginales.length / rowsPerPage);
+            currentPage = totalPages;
+            cargarTabla(datosOriginales);
+        });
         
         // Iconos de filtro en encabezados
         document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
@@ -828,36 +879,34 @@
             });
         });
         
-        // Delegación de eventos para acciones
+        // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fa-eye')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Ver detalles de conciliación ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-edit')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Editar conciliación ID: ${id} - Funcionalidad en desarrollo`);
+            if (e.target.classList.contains('fa-edit')) {
+                alert('Editar Conciliación - Funcionalidad en desarrollo');
+            } else if (e.target.classList.contains('fa-trash-alt')) {
+                if (confirm('¿Está seguro de eliminar esta conciliación?')) {
+                    alert('Eliminar Conciliación - Funcionalidad en desarrollo');
+                }
             } else if (e.target.classList.contains('fa-file-pdf')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Descargar PDF - Conciliación ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-check-circle')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Procesar conciliación ID: ${id} - Funcionalidad en desarrollo`);
+                alert('Descargar PDF - Funcionalidad en desarrollo');
+            } else if (e.target.classList.contains('fa-print')) {
+                alert('Imprimir Conciliación - Funcionalidad en desarrollo');
             }
         });
         
-        // Paginación
-        const btnPrimera = paginacionContainer.querySelector('button[title="Primera página"]');
-        const btnAnterior = paginacionContainer.querySelector('button[title="Página anterior"]');
-        const btnSiguiente = paginacionContainer.querySelector('button[title="Página siguiente"]');
-        const btnUltima = paginacionContainer.querySelector('button[title="Última página"]');
-        
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(movimientosFiltrados.length / registrosPorPagina)));
-        
-        // Cargar datos iniciales
-        filtrarDatos();
+        // Función para exportar a Excel
+        function exportTableToExcel(tableId, filename = '') {
+            var table = document.getElementById(tableId);
+            if (!table) return;
+            
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = filename + '.xls';
+            link.click();
+        }
     });
 </script>
 @endsection

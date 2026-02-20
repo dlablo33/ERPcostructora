@@ -5,79 +5,132 @@
     <section class="content container-fluid py-3">
         <!-- Flujo de Dinero Mensual -->
         <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #6B8ACE; padding: 15px 20px;">
-                <h2 style="color: #6B8ACE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
+                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
                     Flujo de Dinero Mensual
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas con filtro de mes y año -->
+                <!-- Barra de herramientas con filtro de rango de meses (solo 2 selects) -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                     
                     <!-- Filtros a la derecha -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <label for="mes" style="font-weight: 600; color: #6B8ACE;">Mes:</label>
-                        <select id="mes" style="padding: 8px 12px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 120px; background-color: white;">
-                            <option value="1">Enero</option>
-                            <option value="2" selected>Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
+                        <label for="periodoInicio" style="font-weight: 600; color: #2378e1;">Desde:</label>
+                        <select id="periodoInicio" style="padding: 8px 12px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 140px; background-color: white;">
+                            <option value="2024-1">Ene 2024</option>
+                            <option value="2024-2">Feb 2024</option>
+                            <option value="2024-3">Mar 2024</option>
+                            <option value="2024-4">Abr 2024</option>
+                            <option value="2024-5">May 2024</option>
+                            <option value="2024-6">Jun 2024</option>
+                            <option value="2024-7">Jul 2024</option>
+                            <option value="2024-8">Ago 2024</option>
+                            <option value="2024-9">Sep 2024</option>
+                            <option value="2024-10">Oct 2024</option>
+                            <option value="2024-11">Nov 2024</option>
+                            <option value="2024-12">Dic 2024</option>
+                            <option value="2025-1">Ene 2025</option>
+                            <option value="2025-2">Feb 2025</option>
+                            <option value="2025-3">Mar 2025</option>
+                            <option value="2025-4">Abr 2025</option>
+                            <option value="2025-5">May 2025</option>
+                            <option value="2025-6">Jun 2025</option>
+                            <option value="2025-7">Jul 2025</option>
+                            <option value="2025-8">Ago 2025</option>
+                            <option value="2025-9">Sep 2025</option>
+                            <option value="2025-10">Oct 2025</option>
+                            <option value="2025-11">Nov 2025</option>
+                            <option value="2025-12">Dic 2025</option>
+                            <option value="2026-1">Ene 2026</option>
+                            <option value="2026-2" selected>Feb 2026</option>
+                            <option value="2026-3">Mar 2026</option>
+                            <option value="2026-4">Abr 2026</option>
+                            <option value="2026-5">May 2026</option>
+                            <option value="2026-6">Jun 2026</option>
+                            <option value="2026-7">Jul 2026</option>
+                            <option value="2026-8">Ago 2026</option>
+                            <option value="2026-9">Sep 2026</option>
+                            <option value="2026-10">Oct 2026</option>
+                            <option value="2026-11">Nov 2026</option>
+                            <option value="2026-12">Dic 2026</option>
                         </select>
 
-                        <label for="anio" style="font-weight: 600; color: #6B8ACE;">Año:</label>
-                        <select id="anio" style="padding: 8px 12px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 100px; background-color: white;">
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026" selected>2026</option>
+                        <label for="periodoFin" style="font-weight: 600; color: #2378e1;">Hasta:</label>
+                        <select id="periodoFin" style="padding: 8px 12px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 140px; background-color: white;">
+                            <option value="2024-1">Ene 2024</option>
+                            <option value="2024-2">Feb 2024</option>
+                            <option value="2024-3">Mar 2024</option>
+                            <option value="2024-4">Abr 2024</option>
+                            <option value="2024-5">May 2024</option>
+                            <option value="2024-6">Jun 2024</option>
+                            <option value="2024-7">Jul 2024</option>
+                            <option value="2024-8">Ago 2024</option>
+                            <option value="2024-9">Sep 2024</option>
+                            <option value="2024-10">Oct 2024</option>
+                            <option value="2024-11">Nov 2024</option>
+                            <option value="2024-12">Dic 2024</option>
+                            <option value="2025-1">Ene 2025</option>
+                            <option value="2025-2">Feb 2025</option>
+                            <option value="2025-3">Mar 2025</option>
+                            <option value="2025-4">Abr 2025</option>
+                            <option value="2025-5">May 2025</option>
+                            <option value="2025-6">Jun 2025</option>
+                            <option value="2025-7">Jul 2025</option>
+                            <option value="2025-8">Ago 2025</option>
+                            <option value="2025-9">Sep 2025</option>
+                            <option value="2025-10">Oct 2025</option>
+                            <option value="2025-11">Nov 2025</option>
+                            <option value="2025-12">Dic 2025</option>
+                            <option value="2026-1">Ene 2026</option>
+                            <option value="2026-2">Feb 2026</option>
+                            <option value="2026-3" selected>Mar 2026</option>
+                            <option value="2026-4">Abr 2026</option>
+                            <option value="2026-5">May 2026</option>
+                            <option value="2026-6">Jun 2026</option>
+                            <option value="2026-7">Jul 2026</option>
+                            <option value="2026-8">Ago 2026</option>
+                            <option value="2026-9">Sep 2026</option>
+                            <option value="2026-10">Oct 2026</option>
+                            <option value="2026-11">Nov 2026</option>
+                            <option value="2026-12">Dic 2026</option>
                         </select>
 
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Exportar a Excel">
-                                <i class="fas fa-file-excel" style="color: #6B8ACE;"></i>
+                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Columnas -->
-
+                        <div>
+                            <button id="btnColumnas" 
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
+                                    title="Seleccionar columnas">
+                                <i class="fas fa-columns" style="color: #2378e1;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Tabla de Flujo de Dinero Mensual -->
                 <div class="table-responsive" style="margin-top: 10px; border: 1px solid #dee2e6; border-radius: 8px; overflow: auto;" id="tablaContainer">
                     <table class="table table-bordered" id="tablaFlujoDineroMensual" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
-                            <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: left; background-color: #6B8ACE; color: white; min-width: 300px;">
-                                    <span>Cuentas</span>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #6B8ACE; color: white; min-width: 150px;">
-                                    <span id="mesActual">Febrero</span>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #6B8ACE; color: white; min-width: 150px;">
-                                    <span>Acumulado</span>
-                                </th>
+                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
+                            <tr id="encabezadosDinamicos">
+                                <!-- Los encabezados se generan dinámicamente -->
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
                             <!-- Las filas se generan dinámicamente -->
                         </tbody>
                         <tfoot style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
-                            <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: left; background-color: #e9ecef; font-weight: bold;">TOTALES</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef; font-weight: bold;" id="totalMes">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef; font-weight: bold;" id="totalAcumulado">$0.00</td>
+                            <tr id="totalesDinamicos">
+                                <!-- Los totales se generan dinámicamente -->
                             </tr>
                         </tfoot>
                     </table>
@@ -87,7 +140,7 @@
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
                     <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay información para el mes seleccionado</p>
+                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay información para el período seleccionado</p>
                 </div>
             </div>
         </div>
@@ -97,7 +150,7 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #6B8ACE;
+        border-bottom: 2px solid #2378e1;
     }
     
     .custom-card {
@@ -107,15 +160,15 @@
     
     .custom-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(107, 138, 206, 0.15) !important;
-        border-color: #6B8ACE !important;
+        box-shadow: 0 8px 16px rgba(35, 120, 225, 0.15) !important;
+        border-color: #2378e1 !important;
     }
     
     /* Estilos de tabla */
     .table th {
         white-space: nowrap;
         font-size: 12px;
-        background-color: #6B8ACE !important;
+        background-color: #2378e1 !important;
         color: white;
         font-weight: 600;
         padding: 12px 8px;
@@ -125,6 +178,7 @@
         white-space: nowrap;
         font-size: 12px;
         padding: 10px 8px;
+        color: #000000 !important;
     }
     
     /* Estilo para las filas de cuentas principales */
@@ -140,7 +194,7 @@
     
     .cuenta-principal i {
         transition: transform 0.2s;
-        color: #6B8ACE;
+        color: #2378e1;
         margin-right: 8px;
     }
     
@@ -163,7 +217,13 @@
     tfoot td {
         font-weight: bold;
         background-color: #e9ecef !important;
-        border-top: 2px solid #6B8ACE;
+        border-top: 2px solid #2378e1;
+        color: #000000 !important;
+    }
+    
+    /* Números alineados a la derecha */
+    .text-right {
+        text-align: right;
     }
     
     /* Responsive */
@@ -172,8 +232,9 @@
             justify-content: center !important;
         }
         
-        select {
+        select, input[type="date"] {
             width: 100% !important;
+            margin-bottom: 10px;
         }
         
         button {
@@ -199,6 +260,7 @@
             '2026-1': { // Enero 2026
                 mes: 'Enero',
                 anio: 2026,
+                mesAbr: 'Ene',
                 cuentas: [
                     {
                         id: 1,
@@ -232,6 +294,7 @@
             '2026-2': { // Febrero 2026
                 mes: 'Febrero',
                 anio: 2026,
+                mesAbr: 'Feb',
                 cuentas: [
                     {
                         id: 1,
@@ -265,6 +328,7 @@
             '2026-3': { // Marzo 2026
                 mes: 'Marzo',
                 anio: 2026,
+                mesAbr: 'Mar',
                 cuentas: [
                     {
                         id: 1,
@@ -294,46 +358,105 @@
                         ]
                     }
                 ]
+            },
+            '2026-4': { // Abril 2026
+                mes: 'Abril',
+                anio: 2026,
+                mesAbr: 'Abr',
+                cuentas: [
+                    {
+                        id: 1,
+                        codigo: '100-00',
+                        nombre: 'Ingresos',
+                        esPrincipal: true,
+                        subcuentas: [
+                            { id: 101, codigo: '101-00', nombre: 'Cobranza', total: 198000.00 },
+                            { id: 102, codigo: '102-00', nombre: 'Otros Ingresos', total: 29800.00 },
+                            { id: 103, codigo: '103-00', nombre: 'Traspasos Entre Ctas. Entradas', total: 50300.00 }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        codigo: '200-00',
+                        nombre: 'Egresos',
+                        esPrincipal: true,
+                        subcuentas: [
+                            { id: 201, codigo: '201-00', nombre: 'Costos Operativos', total: 73200.00 },
+                            { id: 202, codigo: '202-00', nombre: 'Costos Indirectos Operación', total: 36700.00 },
+                            { id: 203, codigo: '203-00', nombre: 'Costos Indirectos Mantenimiento', total: 20900.00 },
+                            { id: 204, codigo: '204-00', nombre: 'Gastos Administrativos', total: 47200.00 },
+                            { id: 205, codigo: '205-00', nombre: 'Arrendamientos', total: 40000.00 },
+                            { id: 206, codigo: '206-00', nombre: 'Impuestos', total: 17500.00 },
+                            { id: 207, codigo: '207-00', nombre: 'Traspasos Entre Ctas. Salidas', total: 44600.00 },
+                            { id: 299, codigo: '299-00', nombre: 'Gastos 50 Flujo', total: 5434.00 }
+                        ]
+                    }
+                ]
+            },
+            '2026-5': { // Mayo 2026
+                mes: 'Mayo',
+                anio: 2026,
+                mesAbr: 'May',
+                cuentas: [
+                    {
+                        id: 1,
+                        codigo: '100-00',
+                        nombre: 'Ingresos',
+                        esPrincipal: true,
+                        subcuentas: [
+                            { id: 101, codigo: '101-00', nombre: 'Cobranza', total: 215000.00 },
+                            { id: 102, codigo: '102-00', nombre: 'Otros Ingresos', total: 32400.00 },
+                            { id: 103, codigo: '103-00', nombre: 'Traspasos Entre Ctas. Entradas', total: 53400.00 }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        codigo: '200-00',
+                        nombre: 'Egresos',
+                        esPrincipal: true,
+                        subcuentas: [
+                            { id: 201, codigo: '201-00', nombre: 'Costos Operativos', total: 78300.00 },
+                            { id: 202, codigo: '202-00', nombre: 'Costos Indirectos Operación', total: 38900.00 },
+                            { id: 203, codigo: '203-00', nombre: 'Costos Indirectos Mantenimiento', total: 22400.00 },
+                            { id: 204, codigo: '204-00', nombre: 'Gastos Administrativos', total: 49500.00 },
+                            { id: 205, codigo: '205-00', nombre: 'Arrendamientos', total: 40000.00 },
+                            { id: 206, codigo: '206-00', nombre: 'Impuestos', total: 18900.00 },
+                            { id: 207, codigo: '207-00', nombre: 'Traspasos Entre Ctas. Salidas', total: 48700.00 },
+                            { id: 299, codigo: '299-00', nombre: 'Gastos 50 Flujo', total: 5434.00 }
+                        ]
+                    }
+                ]
             }
         };
 
-        // Datos acumulados anuales
+        // Datos acumulados anuales (hasta mayo)
         const datosAcumulados = {
-            '101-00': 587000.00, // Cobranza
-            '102-00': 95200.00,  // Otros Ingresos
-            '103-00': 151700.00, // Traspasos Entradas
-            '201-00': 215100.00, // Costos Operativos
-            '202-00': 105800.00, // Costos Indirectos Operación
-            '203-00': 60700.00,  // Costos Indirectos Mantenimiento
-            '204-00': 136800.00, // Gastos Administrativos
-            '205-00': 120000.00, // Arrendamientos
-            '206-00': 50600.00,  // Impuestos
-            '207-00': 127300.00, // Traspasos Salidas
-            '299-00': 16302.00   // Gastos 50 Flujo
+            '101-00': 1000000.00, // Cobranza
+            '102-00': 157400.00,  // Otros Ingresos
+            '103-00': 255400.00, // Traspasos Entradas
+            '201-00': 366600.00, // Costos Operativos
+            '202-00': 181400.00, // Costos Indirectos Operación
+            '203-00': 104000.00,  // Costos Indirectos Mantenimiento
+            '204-00': 232500.00, // Gastos Administrativos
+            '205-00': 200000.00, // Arrendamientos
+            '206-00': 87900.00,  // Impuestos
+            '207-00': 216600.00, // Traspasos Salidas
+            '299-00': 27170.00   // Gastos 50 Flujo
         };
 
         // Variables globales
-        let mesActual = 2; // Febrero
-        let anioActual = 2026;
+        let periodoInicio = '2026-2'; // Febrero 2026
+        let periodoFin = '2026-3'; // Marzo 2026
         
         // Elementos del DOM
-        const selectMes = document.getElementById('mes');
-        const selectAnio = document.getElementById('anio');
-        const mesActualSpan = document.getElementById('mesActual');
+        const selectPeriodoInicio = document.getElementById('periodoInicio');
+        const selectPeriodoFin = document.getElementById('periodoFin');
         const btnExcel = document.getElementById('btnExcel');
         const btnColumnas = document.getElementById('btnColumnas');
         const tablaBody = document.getElementById('tablaBody');
         const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        
-        // Elementos de totales
-        const totalMes = document.getElementById('totalMes');
-        const totalAcumulado = document.getElementById('totalAcumulado');
-
-        // Nombres de meses
-        const nombresMeses = [
-            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-        ];
+        const encabezadosDinamicos = document.getElementById('encabezadosDinamicos');
+        const totalesDinamicos = document.getElementById('totalesDinamicos');
 
         // Función para formatear moneda
         function formatCurrency(amount) {
@@ -352,12 +475,127 @@
             cargarTabla();
         }
 
+        // Función para obtener los meses en el rango
+        function obtenerMesesEnRango() {
+            const [anioInicio, mesInicio] = periodoInicio.split('-').map(Number);
+            const [anioFin, mesFin] = periodoFin.split('-').map(Number);
+            
+            const meses = [];
+            
+            // Crear fechas para inicio y fin
+            const fechaInicio = new Date(anioInicio, mesInicio - 1, 1);
+            const fechaFin = new Date(anioFin, mesFin - 1, 1);
+            
+            // Si la fecha fin es menor que la fecha inicio, intercambiar
+            if (fechaFin < fechaInicio) {
+                // Intercambiar valores
+                [periodoInicio, periodoFin] = [periodoFin, periodoInicio];
+                selectPeriodoInicio.value = periodoInicio;
+                selectPeriodoFin.value = periodoFin;
+                
+                const [nuevoAnioInicio, nuevoMesInicio] = periodoInicio.split('-').map(Number);
+                const [nuevoAnioFin, nuevoMesFin] = periodoFin.split('-').map(Number);
+                
+                fechaInicio.setFullYear(nuevoAnioInicio, nuevoMesInicio - 1, 1);
+                fechaFin.setFullYear(nuevoAnioFin, nuevoMesFin - 1, 1);
+            }
+            
+            // Iterar desde la fecha inicio hasta la fecha fin
+            let fechaActual = new Date(fechaInicio);
+            
+            while (fechaActual <= fechaFin) {
+                const mes = fechaActual.getMonth() + 1;
+                const anio = fechaActual.getFullYear();
+                meses.push({ mes, anio, clave: `${anio}-${mes}` });
+                
+                // Avanzar al siguiente mes
+                fechaActual.setMonth(fechaActual.getMonth() + 1);
+            }
+            
+            return meses;
+        }
+
+        // Función para generar encabezados dinámicos
+        function generarEncabezados(meses) {
+            let html = '<th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: left; background-color: #2378e1; color: white; min-width: 300px;">Cuentas</th>';
+            
+            meses.forEach(mes => {
+                const mesData = datosFlujoPorMes[mes.clave];
+                const nombreMes = mesData ? mesData.mesAbr : 'N/A';
+                html += `<th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 120px;">${nombreMes} ${mes.anio}</th>`;
+            });
+            
+            html += '<th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 150px;">Acumulado</th>';
+            
+            encabezadosDinamicos.innerHTML = html;
+        }
+
+        // Función para generar totales dinámicos
+        function generarTotales(meses, totalesPorMes, totalAcumuladoValor) {
+            let html = '<td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: left; background-color: #e9ecef; font-weight: bold; color: #000000;">TOTALES</td>';
+            
+            meses.forEach(mes => {
+                const total = totalesPorMes[mes.clave] || 0;
+                html += `<td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef; font-weight: bold; color: #000000;">${formatCurrency(total)}</td>`;
+            });
+            
+            html += `<td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef; font-weight: bold; color: #000000;">${formatCurrency(totalAcumuladoValor)}</td>`;
+            
+            totalesDinamicos.innerHTML = html;
+        }
+
         // Función para cargar la tabla
         function cargarTabla() {
-            const clave = `${anioActual}-${mesActual}`;
-            const mesData = datosFlujoPorMes[clave];
+            const mesesEnRango = obtenerMesesEnRango();
             
-            if (!mesData || !mesData.cuentas || mesData.cuentas.length === 0) {
+            if (mesesEnRango.length === 0) {
+                sinDatosMensaje.style.display = 'block';
+                tablaBody.innerHTML = '';
+                encabezadosDinamicos.innerHTML = '';
+                totalesDinamicos.innerHTML = '';
+                return;
+            }
+
+            // Generar encabezados dinámicos
+            generarEncabezados(mesesEnRango);
+
+            // Recopilar datos de todos los meses en el rango
+            const datosCombinados = {};
+            const totalesPorMes = {};
+            let hayDatos = false;
+            
+            mesesEnRango.forEach(({ mes, anio, clave }) => {
+                const mesData = datosFlujoPorMes[clave];
+                totalesPorMes[clave] = 0;
+                
+                if (mesData && mesData.cuentas) {
+                    hayDatos = true;
+                    mesData.cuentas.forEach(cuenta => {
+                        if (!datosCombinados[cuenta.id]) {
+                            datosCombinados[cuenta.id] = {
+                                id: cuenta.id,
+                                codigo: cuenta.codigo,
+                                nombre: cuenta.nombre,
+                                subcuentas: {}
+                            };
+                        }
+                        
+                        cuenta.subcuentas.forEach(sub => {
+                            if (!datosCombinados[cuenta.id].subcuentas[sub.codigo]) {
+                                datosCombinados[cuenta.id].subcuentas[sub.codigo] = {
+                                    codigo: sub.codigo,
+                                    nombre: sub.nombre,
+                                    meses: {}
+                                };
+                            }
+                            datosCombinados[cuenta.id].subcuentas[sub.codigo].meses[clave] = sub.total || 0;
+                            totalesPorMes[clave] += sub.total || 0;
+                        });
+                    });
+                }
+            });
+
+            if (!hayDatos) {
                 sinDatosMensaje.style.display = 'block';
                 tablaBody.innerHTML = '';
                 return;
@@ -366,19 +604,26 @@
             sinDatosMensaje.style.display = 'none';
             tablaBody.innerHTML = '';
 
-            // Actualizar el nombre del mes en el encabezado
-            mesActualSpan.textContent = nombresMeses[mesActual - 1];
-
-            let totalMesValor = 0;
             let totalAcumuladoValor = 0;
 
-            mesData.cuentas.forEach(cuenta => {
-                // Calcular total de la cuenta principal para el mes
-                let totalCuentaMes = 0;
+            // Convertir el objeto combinado a un array y ordenar por ID
+            const cuentasCombinadas = Object.values(datosCombinados).sort((a, b) => a.id - b.id);
+
+            cuentasCombinadas.forEach(cuenta => {
+                // Calcular total de la cuenta principal para cada mes y acumulado
+                const totalesCuenta = {};
                 let totalCuentaAcumulado = 0;
 
-                cuenta.subcuentas.forEach(sub => {
-                    totalCuentaMes += sub.total || 0;
+                const subcuentasArray = Object.values(cuenta.subcuentas);
+                
+                mesesEnRango.forEach(({ clave }) => {
+                    totalesCuenta[clave] = 0;
+                });
+                
+                subcuentasArray.forEach(sub => {
+                    mesesEnRango.forEach(({ clave }) => {
+                        totalesCuenta[clave] += sub.meses[clave] || 0;
+                    });
                     totalCuentaAcumulado += datosAcumulados[sub.codigo] || 0;
                 });
 
@@ -389,14 +634,18 @@
                 
                 const icono = datosExpandidos[cuenta.id] ? 'fa-chevron-down' : 'fa-chevron-right';
                 
-                rowPrincipal.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 12px 8px; font-weight: bold;">
-                        <i class="fas ${icono}" style="margin-right: 8px; color: #6B8ACE;"></i>
-                        ${cuenta.codigo} - ${cuenta.nombre}
-                    </td>
-                    <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right;">${formatCurrency(totalCuentaMes)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; font-weight: bold;">${formatCurrency(totalCuentaAcumulado)}</td>
-                `;
+                let celdasHTML = `<td style="border: 1px solid #dee2e6; padding: 12px 8px; font-weight: bold; color: #000000;">
+                                    <i class="fas ${icono}" style="margin-right: 8px; color: #2378e1;"></i>
+                                    ${cuenta.codigo} - ${cuenta.nombre}
+                                </td>`;
+                
+                mesesEnRango.forEach(({ clave }) => {
+                    celdasHTML += `<td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; color: #000000;">${formatCurrency(totalesCuenta[clave])}</td>`;
+                });
+                
+                celdasHTML += `<td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; font-weight: bold; color: #000000;">${formatCurrency(totalCuentaAcumulado)}</td>`;
+                
+                rowPrincipal.innerHTML = celdasHTML;
                 
                 rowPrincipal.addEventListener('click', (e) => {
                     // Evitar que el click en el icono dispare dos veces
@@ -411,48 +660,63 @@
 
                 // Agregar subcuentas si está expandido
                 if (datosExpandidos[cuenta.id]) {
-                    cuenta.subcuentas.forEach(sub => {
+                    subcuentasArray.sort((a, b) => a.codigo.localeCompare(b.codigo)).forEach(sub => {
                         const subAcumulado = datosAcumulados[sub.codigo] || 0;
+                        
+                        let subCeldasHTML = `<td style="border: 1px solid #dee2e6; padding: 10px 8px; padding-left: 35px; color: #000000;">${sub.codigo} - ${sub.nombre}</td>`;
+                        
+                        mesesEnRango.forEach(({ clave }) => {
+                            subCeldasHTML += `<td style="border: 1px solid #dee2e6; padding: 10px 8px; text-align: right; color: #000000;">${formatCurrency(sub.meses[clave] || 0)}</td>`;
+                        });
+                        
+                        subCeldasHTML += `<td style="border: 1px solid #dee2e6; padding: 10px 8px; text-align: right; color: #000000;">${formatCurrency(subAcumulado)}</td>`;
                         
                         const rowSub = document.createElement('tr');
                         rowSub.className = 'subcuenta';
-                        rowSub.innerHTML = `
-                            <td style="border: 1px solid #dee2e6; padding: 10px 8px; padding-left: 35px;">${sub.codigo} - ${sub.nombre}</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px 8px; text-align: right;">${formatCurrency(sub.total || 0)}</td>
-                            <td style="border: 1px solid #dee2e6; padding: 10px 8px; text-align: right;">${formatCurrency(subAcumulado)}</td>
-                        `;
+                        rowSub.innerHTML = subCeldasHTML;
                         tablaBody.appendChild(rowSub);
                     });
                 }
 
                 // Acumular totales generales
-                totalMesValor += totalCuentaMes;
                 totalAcumuladoValor += totalCuentaAcumulado;
             });
 
-            // Actualizar totales en el pie de tabla
-            totalMes.textContent = formatCurrency(totalMesValor);
-            totalAcumulado.textContent = formatCurrency(totalAcumuladoValor);
+            // Generar totales dinámicos
+            generarTotales(mesesEnRango, totalesPorMes, totalAcumuladoValor);
         }
 
         // Event Listeners
-        selectMes.addEventListener('change', function() {
-            mesActual = parseInt(selectMes.value);
+        function aplicarFiltros() {
+            periodoInicio = selectPeriodoInicio.value;
+            periodoFin = selectPeriodoFin.value;
             cargarTabla();
-        });
+        }
 
-        selectAnio.addEventListener('change', function() {
-            anioActual = parseInt(selectAnio.value);
-            cargarTabla();
-        });
+        selectPeriodoInicio.addEventListener('change', aplicarFiltros);
+        selectPeriodoFin.addEventListener('change', aplicarFiltros);
 
         btnExcel.addEventListener('click', function() {
-            alert('Exportar a Excel - Funcionalidad en desarrollo');
+            exportTableToExcel('tablaFlujoDineroMensual', 'FlujoDineroMensual');
         });
 
         btnColumnas.addEventListener('click', function() {
             alert('Selector de Columnas - Funcionalidad en desarrollo');
         });
+
+        // Función para exportar a Excel
+        function exportTableToExcel(tableId, filename = '') {
+            var table = document.getElementById(tableId);
+            if (!table) return;
+            
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = filename + '.xls';
+            link.click();
+        }
 
         // Cargar datos iniciales
         cargarTabla();

@@ -3,42 +3,15 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Cheques Transferencias -->
+        <!-- Reasignación de Gastos -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
-                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Cheques Transferencias
+                <h2 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                    Reasignación de Gastos
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- 3 CUADROS DE CHEQUES TRANSFERENCIAS CENTRADOS CON TEXTO EN NEGRO -->
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <!-- Cuadro 1: Transferencias -->
-                    <div style="flex: 0 1 calc(33.333% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Transferencias</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalTransferencias">8</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Cuadro 2: Activos -->
-                    <div style="flex: 0 1 calc(33.333% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Activos</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalActivos">8</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Cuadro 3: Cancelados -->
-                    <div style="flex: 0 1 calc(33.333% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Cancelados</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalCancelados">0</div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Barra de herramientas con agrupación y botones -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <!-- Grupo de agrupación discreto en la esquina izquierda -->
@@ -54,128 +27,98 @@
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <!-- Date Inicio -->
                         <div>
-                            <input type="date" id="fechaInicio" value="2026-01-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Date Fin -->
                         <div>
-                            <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Botón Agregar (+) -->
                         <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #083CAE;"></i>
+                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
+                                <i class="fas fa-plus" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
+                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Seleccionar Columnas -->
                         <div>
                             <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #083CAE;"></i>
+                                <i class="fas fa-columns" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Buscador -->
                         <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
                         </div>
                     </div>
                 </div>
 
                 <!-- Mensaje "Sin datos" centrado -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
+                    <i class="fas fa-exchange-alt" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
+                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay gastos para reasignar</p>
                 </div>
 
-                <!-- Tabla de Cheques Transferencias -->
+                <!-- Tabla de Reasignación de Gastos -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaChequesTransferencias" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                    <table class="table table-bordered" id="tablaReasignacionGastos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="folio">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="proveedor">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Proveedor</span>
+                                        <span>Estatus</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="forma_pago">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_movimiento">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Forma de Pago</span>
+                                        <span>Fecha Movimiento</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="cuenta">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="operador">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cuentas Bancarias</span>
+                                        <span>Operador</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="empresa">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha</span>
+                                        <span>Empresa</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="referencia">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="tipo_gasto">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Referencia</span>
+                                        <span>Tipo Gasto</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="ref_bancaria">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="gasto">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Referencia Bancaria</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="monto_pesos">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Monto Pesos</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="monto_restante">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Monto Restante</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="moneda">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Moneda</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="tipo_cambio">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Tipo de Cambio</span>
+                                        <span>Gasto</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -185,9 +128,69 @@
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="poliza">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="carta_porte">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Póliza</span>
+                                        <span>Carta Porte</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="unidad">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Unidad</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="viaje">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Viaje</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="moneda">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Moneda</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="total">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Total</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="total_mxn">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Total MXN</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="layout">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Layout</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="transferencia">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Transferencia</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="prestamo_id">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Préstamo ID</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="no_cuenta">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>No. Cuenta</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="creado_por">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Creado por</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -205,10 +208,10 @@
                         <!-- Fila de totales -->
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="8">Registros: <span id="totalRegistros">0</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumMontoPesos">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumMontoRestante">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="5"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="12">Registros: <span id="totalRegistros">0</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumTotal">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumTotalMXN">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="7"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -232,13 +235,14 @@
                         </button>
                         <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
                         <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
                         <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
                             <i class="fas fa-angle-right" style="color: #2378e1;"></i>
                         </button>
                         <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
                             <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
                         </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 8 registros</span>
+                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 12 registros</span>
                     </div>
                 </div>
             </div>
@@ -249,22 +253,11 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #083CAE;
+        border-bottom: 2px solid #2378e1;
     }
     
     .semaforo .card-header h2 {
-        color: #083CAE !important;
-    }
-    
-    .custom-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-    }
-    
-    .custom-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
-        border-color: #083CAE !important;
+        color: #2378e1 !important;
     }
     
     /* Estilos de tabla */
@@ -338,23 +331,28 @@
         border-radius: 3px;
     }
     
-    .badge-activo {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-cancelado {
-        background-color: #dc3545;
-        color: white;
-    }
-    
     .badge-pendiente {
         background-color: #fd7e14;
         color: white;
     }
     
-    .badge-completado {
+    .badge-aprobado {
         background-color: #28a745;
+        color: white;
+    }
+    
+    .badge-rechazado {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .badge-procesado {
+        background-color: #17a2b8;
+        color: white;
+    }
+    
+    .badge-cancelado {
+        background-color: #6c757d;
         color: white;
     }
     
@@ -362,7 +360,7 @@
     tfoot td {
         font-weight: bold;
         background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
+        border-top: 2px solid #2378e1;
         color: #000000 !important;
     }
     
@@ -538,7 +536,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Cheques Transferencias');
+        console.log('DOM completamente cargado - Reasignación de Gastos');
         
         // Variables para agrupación
         let columnasAgrupadas = [];
@@ -547,140 +545,264 @@
         let paginaActual = 1;
         const registrosPorPagina = 8;
         
-        // Datos de ejemplo para Cheques Transferencias
-        const datosChequesTransferencias = [
+        // Datos de ejemplo para Reasignación de Gastos (sin cliente y usuario)
+        const datosReasignacionGastos = [
             {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-001',
-                contacto: 'Transportes del Bajío',
-                forma_pago: 'Transferencia',
-                cuenta_bancaria: '1234-5678-9012-3456',
-                fecha: '2026-01-15',
-                referencia: 'REF-001',
-                referencia_bancaria: 'BAN-001',
-                monto: 50000.00,
-                monto_restante: 0.00,
+                anticipo_concepto_id: 1001,
+                estatus_txt: 'Pendiente',
+                fecha: '2026-02-01',
+                plantilla: 'Juan Pérez',
+                plantilla_empresa: 'Transportes del Bajío',
+                tipo_gasto: 'Combustible',
+                descripcion: 'Gasto de combustible',
+                descripcion_anticipo: 'Anticipo para combustible',
+                carta_porte_id: 'CP-001',
+                numero_unidad: 'U-001',
+                viaje_id: 'VIA-001',
                 moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago de servicios de transporte',
-                polizas_contables_id: 'POL-001'
+                suma_concepto_conver: 2500.00,
+                suma_concepto: 2500.00,
+                pago_layout_id: 'LAY-001',
+                folio_transferencia: 'TRF-001',
+                prestamo_descuento_id: null,
+                cuenta_banco: '1234-5678-9012-3456',
+                created_by: 'Sistema'
             },
             {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-002',
-                contacto: 'Logística Monterrey',
-                forma_pago: 'Cheque',
-                cuenta_bancaria: '9876-5432-1098-7654',
-                fecha: '2026-01-14',
-                referencia: 'REF-002',
-                referencia_bancaria: 'CHE-002',
-                monto: 75000.00,
-                monto_restante: 15000.00,
+                anticipo_concepto_id: 1002,
+                estatus_txt: 'Aprobado',
+                fecha: '2026-02-02',
+                plantilla: 'María López',
+                plantilla_empresa: 'Logística Monterrey',
+                tipo_gasto: 'Caseta',
+                descripcion: 'Pago de casetas',
+                descripcion_anticipo: 'Anticipo para casetas',
+                carta_porte_id: 'CP-002',
+                numero_unidad: 'U-002',
+                viaje_id: 'VIA-002',
                 moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago de facturas',
-                polizas_contables_id: 'POL-002'
+                suma_concepto_conver: 850.00,
+                suma_concepto: 850.00,
+                pago_layout_id: 'LAY-002',
+                folio_transferencia: 'TRF-002',
+                prestamo_descuento_id: null,
+                cuenta_banco: '5678-1234-5678-1234',
+                created_by: 'Sistema'
             },
             {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-003',
-                contacto: 'Autotransportes Mexicanos',
-                forma_pago: 'Transferencia',
-                cuenta_bancaria: '5678-1234-5678-1234',
-                fecha: '2026-01-13',
-                referencia: 'REF-003',
-                referencia_bancaria: 'BAN-003',
-                monto: 32000.00,
-                monto_restante: 0.00,
+                anticipo_concepto_id: 1003,
+                estatus_txt: 'Procesado',
+                fecha: '2026-02-03',
+                plantilla: 'Carlos Rodríguez',
+                plantilla_empresa: 'Autotransportes Mexicanos',
+                tipo_gasto: 'Mantenimiento',
+                descripcion: 'Mantenimiento preventivo',
+                descripcion_anticipo: 'Anticipo para mantenimiento',
+                carta_porte_id: 'CP-003',
+                numero_unidad: 'U-003',
+                viaje_id: 'VIA-003',
                 moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago de servicios',
-                polizas_contables_id: 'POL-003'
+                suma_concepto_conver: 3200.00,
+                suma_concepto: 3200.00,
+                pago_layout_id: 'LAY-003',
+                folio_transferencia: 'TRF-003',
+                prestamo_descuento_id: null,
+                cuenta_banco: '4321-8765-4321-8765',
+                created_by: 'Sistema'
             },
             {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-004',
-                contacto: 'Ferrocarriles Nacionales',
-                forma_pago: 'Cheque',
-                cuenta_bancaria: '4321-8765-4321-8765',
-                fecha: '2026-01-12',
-                referencia: 'REF-004',
-                referencia_bancaria: 'CHE-004',
-                monto: 68000.00,
-                monto_restante: 8000.00,
+                anticipo_concepto_id: 1004,
+                estatus_txt: 'Pendiente',
+                fecha: '2026-02-04',
+                plantilla: 'Ana Martínez',
+                plantilla_empresa: 'Ferrocarriles Nacionales',
+                tipo_gasto: 'Viáticos',
+                descripcion: 'Viáticos para operador',
+                descripcion_anticipo: 'Anticipo para viáticos',
+                carta_porte_id: 'CP-004',
+                numero_unidad: 'U-004',
+                viaje_id: 'VIA-004',
                 moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago de fletes',
-                polizas_contables_id: 'POL-004'
+                suma_concepto_conver: 1800.00,
+                suma_concepto: 1800.00,
+                pago_layout_id: 'LAY-004',
+                folio_transferencia: 'TRF-004',
+                prestamo_descuento_id: null,
+                cuenta_banco: '2468-1357-2468-1357',
+                created_by: 'Sistema'
             },
             {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-005',
-                contacto: 'Cervecería del Centro',
-                forma_pago: 'Transferencia',
-                cuenta_bancaria: '2468-1357-2468-1357',
-                fecha: '2026-01-11',
-                referencia: 'REF-005',
-                referencia_bancaria: 'BAN-005',
-                monto: 45000.00,
-                monto_restante: 0.00,
-                moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago de servicios',
-                polizas_contables_id: 'POL-005'
-            },
-            {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-006',
-                contacto: 'Papelera del Pacífico',
-                forma_pago: 'Cheque',
-                cuenta_bancaria: '1357-2468-1357-2468',
-                fecha: '2026-01-10',
-                referencia: 'REF-006',
-                referencia_bancaria: 'CHE-006',
-                monto: 89000.00,
-                monto_restante: 12000.00,
-                moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago de materiales',
-                polizas_contables_id: 'POL-006'
-            },
-            {
-                estatus_txt: 'Activo',
-                cheque_transferencia_id: 'CT-007',
-                contacto: 'Minería del Norte',
-                forma_pago: 'Transferencia',
-                cuenta_bancaria: '7890-1234-7890-1234',
-                fecha: '2026-01-09',
-                referencia: 'REF-007',
-                referencia_bancaria: 'BAN-007',
-                monto: 120000.00,
-                monto_restante: 20000.00,
+                anticipo_concepto_id: 1005,
+                estatus_txt: 'Rechazado',
+                fecha: '2026-02-05',
+                plantilla: 'Roberto Sánchez',
+                plantilla_empresa: 'Cervecería del Centro',
+                tipo_gasto: 'Refacciones',
+                descripcion: 'Compra de refacciones',
+                descripcion_anticipo: 'Anticipo para refacciones',
+                carta_porte_id: 'CP-005',
+                numero_unidad: 'U-005',
+                viaje_id: 'VIA-005',
                 moneda: 'USD',
-                tipo_cambio: 20.50,
-                descripcion: 'Pago en USD',
-                polizas_contables_id: 'POL-007'
+                suma_concepto_conver: 450.00,
+                suma_concepto: 9000.00,
+                pago_layout_id: 'LAY-005',
+                folio_transferencia: 'TRF-005',
+                prestamo_descuento_id: null,
+                cuenta_banco: '1357-2468-1357-2468',
+                created_by: 'Sistema'
             },
             {
-                estatus_txt: 'Cancelado',
-                cheque_transferencia_id: 'CT-008',
-                contacto: 'Comercializadora del Sur',
-                forma_pago: 'Cheque',
-                cuenta_bancaria: '4567-8901-4567-8901',
-                fecha: '2026-01-08',
-                referencia: 'REF-008',
-                referencia_bancaria: 'CHE-008',
-                monto: 25000.00,
-                monto_restante: 25000.00,
+                anticipo_concepto_id: 1006,
+                estatus_txt: 'Aprobado',
+                fecha: '2026-02-06',
+                plantilla: 'Laura Gómez',
+                plantilla_empresa: 'Papelera del Pacífico',
+                tipo_gasto: 'Llantas',
+                descripcion: 'Compra de llantas',
+                descripcion_anticipo: 'Anticipo para llantas',
+                carta_porte_id: 'CP-006',
+                numero_unidad: 'U-006',
+                viaje_id: 'VIA-006',
                 moneda: 'MXN',
-                tipo_cambio: 1.00,
-                descripcion: 'Pago cancelado',
-                polizas_contables_id: null
+                suma_concepto_conver: 5600.00,
+                suma_concepto: 5600.00,
+                pago_layout_id: 'LAY-006',
+                folio_transferencia: 'TRF-006',
+                prestamo_descuento_id: null,
+                cuenta_banco: '7890-1234-7890-1234',
+                created_by: 'Sistema'
+            },
+            {
+                anticipo_concepto_id: 1007,
+                estatus_txt: 'Cancelado',
+                fecha: '2026-02-07',
+                plantilla: 'Pedro Hernández',
+                plantilla_empresa: 'Minería del Norte',
+                tipo_gasto: 'Otros',
+                descripcion: 'Gastos varios',
+                descripcion_anticipo: 'Anticipo para gastos varios',
+                carta_porte_id: 'CP-007',
+                numero_unidad: 'U-007',
+                viaje_id: 'VIA-007',
+                moneda: 'MXN',
+                suma_concepto_conver: 2300.00,
+                suma_concepto: 2300.00,
+                pago_layout_id: 'LAY-007',
+                folio_transferencia: 'TRF-007',
+                prestamo_descuento_id: null,
+                cuenta_banco: '4567-8901-4567-8901',
+                created_by: 'Sistema'
+            },
+            {
+                anticipo_concepto_id: 1008,
+                estatus_txt: 'Procesado',
+                fecha: '2026-02-08',
+                plantilla: 'Javier Ruiz',
+                plantilla_empresa: 'Comercializadora del Sur',
+                tipo_gasto: 'Combustible',
+                descripcion: 'Gasto de combustible',
+                descripcion_anticipo: 'Anticipo para combustible',
+                carta_porte_id: 'CP-008',
+                numero_unidad: 'U-008',
+                viaje_id: 'VIA-008',
+                moneda: 'MXN',
+                suma_concepto_conver: 3450.00,
+                suma_concepto: 3450.00,
+                pago_layout_id: 'LAY-008',
+                folio_transferencia: 'TRF-008',
+                prestamo_descuento_id: null,
+                cuenta_banco: '1122-3344-5566-7788',
+                created_by: 'Sistema'
+            },
+            {
+                anticipo_concepto_id: 1009,
+                estatus_txt: 'Pendiente',
+                fecha: '2026-02-09',
+                plantilla: 'Sofía Castro',
+                plantilla_empresa: 'Transportes Unidos',
+                tipo_gasto: 'Caseta',
+                descripcion: 'Pago de casetas',
+                descripcion_anticipo: 'Anticipo para casetas',
+                carta_porte_id: 'CP-009',
+                numero_unidad: 'U-009',
+                viaje_id: 'VIA-009',
+                moneda: 'MXN',
+                suma_concepto_conver: 920.00,
+                suma_concepto: 920.00,
+                pago_layout_id: 'LAY-009',
+                folio_transferencia: 'TRF-009',
+                prestamo_descuento_id: null,
+                cuenta_banco: '9988-7766-5544-3322',
+                created_by: 'Sistema'
+            },
+            {
+                anticipo_concepto_id: 1010,
+                estatus_txt: 'Aprobado',
+                fecha: '2026-02-10',
+                plantilla: 'Miguel Torres',
+                plantilla_empresa: 'Distribuidora de Papel',
+                tipo_gasto: 'Mantenimiento',
+                descripcion: 'Mantenimiento correctivo',
+                descripcion_anticipo: 'Anticipo para mantenimiento',
+                carta_porte_id: 'CP-010',
+                numero_unidad: 'U-010',
+                viaje_id: 'VIA-010',
+                moneda: 'MXN',
+                suma_concepto_conver: 4300.00,
+                suma_concepto: 4300.00,
+                pago_layout_id: 'LAY-010',
+                folio_transferencia: 'TRF-010',
+                prestamo_descuento_id: null,
+                cuenta_banco: '1472-5836-9258-1472',
+                created_by: 'Sistema'
+            },
+            {
+                anticipo_concepto_id: 1011,
+                estatus_txt: 'Pendiente',
+                fecha: '2026-02-11',
+                plantilla: 'Diana Flores',
+                plantilla_empresa: 'Servicios Logísticos Integrales',
+                tipo_gasto: 'Viáticos',
+                descripcion: 'Viáticos para operador',
+                descripcion_anticipo: 'Anticipo para viáticos',
+                carta_porte_id: 'CP-011',
+                numero_unidad: 'U-011',
+                viaje_id: 'VIA-011',
+                moneda: 'MXN',
+                suma_concepto_conver: 2100.00,
+                suma_concepto: 2100.00,
+                pago_layout_id: 'LAY-011',
+                folio_transferencia: 'TRF-011',
+                prestamo_descuento_id: null,
+                cuenta_banco: '3698-5214-7896-3214',
+                created_by: 'Sistema'
+            },
+            {
+                anticipo_concepto_id: 1012,
+                estatus_txt: 'Procesado',
+                fecha: '2026-02-12',
+                plantilla: 'Luis Ramírez',
+                plantilla_empresa: 'Transportes Express',
+                tipo_gasto: 'Refacciones',
+                descripcion: 'Compra de refacciones',
+                descripcion_anticipo: 'Anticipo para refacciones',
+                carta_porte_id: 'CP-012',
+                numero_unidad: 'U-012',
+                viaje_id: 'VIA-012',
+                moneda: 'MXN',
+                suma_concepto_conver: 1800.00,
+                suma_concepto: 1800.00,
+                pago_layout_id: 'LAY-012',
+                folio_transferencia: 'TRF-012',
+                prestamo_descuento_id: null,
+                cuenta_banco: '7531-9513-7531-9513',
+                created_by: 'Sistema'
             }
         ];
 
-        datosOriginales = [...datosChequesTransferencias];
-        let datosFiltrados = [...datosChequesTransferencias];
+        datosOriginales = [...datosReasignacionGastos];
+        let datosFiltrados = [...datosReasignacionGastos];
         
         // Elementos del DOM
         const fechaInicio = document.getElementById('fechaInicio');
@@ -695,15 +817,10 @@
         const tablaContainer = document.getElementById('tablaContainer');
         const tablaFoot = document.getElementById('tablaFoot');
         const totalRegistros = document.getElementById('totalRegistros');
-        const sumMontoPesos = document.getElementById('sumMontoPesos');
-        const sumMontoRestante = document.getElementById('sumMontoRestante');
+        const sumTotal = document.getElementById('sumTotal');
+        const sumTotalMXN = document.getElementById('sumTotalMXN');
         const paginacionInfo = document.getElementById('paginacionInfo');
         const textoAgrupar = document.getElementById('textoAgrupar');
-        
-        // Elementos de cuadros (solo 3)
-        const totalTransferencias = document.getElementById('totalTransferencias');
-        const totalActivos = document.getElementById('totalActivos');
-        const totalCancelados = document.getElementById('totalCancelados');
         
         // Elementos de paginación
         const btnPrimera = document.getElementById('btnPrimera');
@@ -726,42 +843,37 @@
         
         // Función para obtener la clase del badge según estatus
         function getBadgeClass(estatus) {
-            if (estatus === 'Activo') return 'badge-activo';
-            if (estatus === 'Cancelado') return 'badge-cancelado';
             if (estatus === 'Pendiente') return 'badge-pendiente';
-            if (estatus === 'Completado') return 'badge-completado';
+            if (estatus === 'Aprobado') return 'badge-aprobado';
+            if (estatus === 'Rechazado') return 'badge-rechazado';
+            if (estatus === 'Procesado') return 'badge-procesado';
+            if (estatus === 'Cancelado') return 'badge-cancelado';
             return 'badge-pendiente';
-        }
-        
-        // Función para actualizar cuadros de resumen (solo 3)
-        function actualizarResumen(datos) {
-            const total = datos.length;
-            const activos = datos.filter(d => d.estatus_txt === 'Activo').length;
-            const cancelados = datos.filter(d => d.estatus_txt === 'Cancelado').length;
-            
-            totalTransferencias.textContent = total;
-            totalActivos.textContent = activos;
-            totalCancelados.textContent = cancelados;
         }
         
         // Función para generar un ID único para el grupo
         function generarGrupoId(item, columnas) {
             return columnas.map(col => {
                 switch(col) {
+                    case 'folio': return item.anticipo_concepto_id ? item.anticipo_concepto_id.toString() : 'Sin folio';
                     case 'estatus': return item.estatus_txt || 'Sin estatus';
-                    case 'folio': return item.cheque_transferencia_id || 'Sin folio';
-                    case 'proveedor': return item.contacto || 'Sin proveedor';
-                    case 'forma_pago': return item.forma_pago || 'Sin forma';
-                    case 'cuenta': return item.cuenta_bancaria || 'Sin cuenta';
-                    case 'fecha': return item.fecha || 'Sin fecha';
-                    case 'referencia': return item.referencia || 'Sin referencia';
-                    case 'ref_bancaria': return item.referencia_bancaria || 'Sin referencia';
-                    case 'monto_pesos': return item.monto ? item.monto.toString() : '0';
-                    case 'monto_restante': return item.monto_restante ? item.monto_restante.toString() : '0';
+                    case 'fecha_movimiento': return item.fecha || 'Sin fecha';
+                    case 'operador': return item.plantilla || 'Sin operador';
+                    case 'empresa': return item.plantilla_empresa || 'Sin empresa';
+                    case 'tipo_gasto': return item.tipo_gasto || 'Sin tipo';
+                    case 'gasto': return item.descripcion || 'Sin gasto';
+                    case 'descripcion': return item.descripcion_anticipo || 'Sin descripción';
+                    case 'carta_porte': return item.carta_porte_id || 'Sin CP';
+                    case 'unidad': return item.numero_unidad || 'Sin unidad';
+                    case 'viaje': return item.viaje_id || 'Sin viaje';
                     case 'moneda': return item.moneda || 'Sin moneda';
-                    case 'tipo_cambio': return item.tipo_cambio ? item.tipo_cambio.toString() : '0';
-                    case 'descripcion': return item.descripcion || 'Sin descripción';
-                    case 'poliza': return item.polizas_contables_id || 'Sin póliza';
+                    case 'total': return item.suma_concepto_conver ? item.suma_concepto_conver.toString() : '0';
+                    case 'total_mxn': return item.suma_concepto ? item.suma_concepto.toString() : '0';
+                    case 'layout': return item.pago_layout_id || 'Sin layout';
+                    case 'transferencia': return item.folio_transferencia || 'Sin transferencia';
+                    case 'prestamo_id': return item.prestamo_descuento_id ? item.prestamo_descuento_id.toString() : 'Sin préstamo';
+                    case 'no_cuenta': return item.cuenta_banco || 'Sin cuenta';
+                    case 'creado_por': return item.created_by || 'Sin creador';
                     default: return '';
                 }
             }).join('||');
@@ -780,20 +892,25 @@
                     // Crear un nuevo grupo
                     const valorGrupo = columnas.map(col => {
                         switch(col) {
+                            case 'folio': return item.anticipo_concepto_id || 'Sin folio';
                             case 'estatus': return item.estatus_txt || 'Sin estatus';
-                            case 'folio': return item.cheque_transferencia_id || 'Sin folio';
-                            case 'proveedor': return item.contacto || 'Sin proveedor';
-                            case 'forma_pago': return item.forma_pago || 'Sin forma';
-                            case 'cuenta': return item.cuenta_bancaria || 'Sin cuenta';
-                            case 'fecha': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
-                            case 'referencia': return item.referencia || 'Sin referencia';
-                            case 'ref_bancaria': return item.referencia_bancaria || 'Sin referencia';
-                            case 'monto_pesos': return item.monto || 0;
-                            case 'monto_restante': return item.monto_restante || 0;
+                            case 'fecha_movimiento': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
+                            case 'operador': return item.plantilla || 'Sin operador';
+                            case 'empresa': return item.plantilla_empresa || 'Sin empresa';
+                            case 'tipo_gasto': return item.tipo_gasto || 'Sin tipo';
+                            case 'gasto': return item.descripcion || 'Sin gasto';
+                            case 'descripcion': return item.descripcion_anticipo || 'Sin descripción';
+                            case 'carta_porte': return item.carta_porte_id || 'Sin CP';
+                            case 'unidad': return item.numero_unidad || 'Sin unidad';
+                            case 'viaje': return item.viaje_id || 'Sin viaje';
                             case 'moneda': return item.moneda || 'Sin moneda';
-                            case 'tipo_cambio': return item.tipo_cambio || 0;
-                            case 'descripcion': return item.descripcion || 'Sin descripción';
-                            case 'poliza': return item.polizas_contables_id || 'Sin póliza';
+                            case 'total': return item.suma_concepto_conver || 0;
+                            case 'total_mxn': return item.suma_concepto || 0;
+                            case 'layout': return item.pago_layout_id || 'Sin layout';
+                            case 'transferencia': return item.folio_transferencia || 'Sin transferencia';
+                            case 'prestamo_id': return item.prestamo_descuento_id || 'Sin préstamo';
+                            case 'no_cuenta': return item.cuenta_banco || 'Sin cuenta';
+                            case 'creado_por': return item.created_by || 'Sin creador';
                             default: return '';
                         }
                     }).join(' - ');
@@ -802,14 +919,14 @@
                         id: grupoId,
                         valor: valorGrupo,
                         items: [item],
-                        totalMontoPesos: item.monto || 0,
-                        totalMontoRestante: item.monto_restante || 0
+                        totalSuma: item.suma_concepto_conver || 0,
+                        totalMXN: item.suma_concepto || 0
                     });
                 } else {
                     const grupo = gruposMap.get(grupoId);
                     grupo.items.push(item);
-                    grupo.totalMontoPesos += item.monto || 0;
-                    grupo.totalMontoRestante += item.monto_restante || 0;
+                    grupo.totalSuma += item.suma_concepto_conver || 0;
+                    grupo.totalMXN += item.suma_concepto || 0;
                 }
             });
             
@@ -848,25 +965,22 @@
         
         // Función para calcular totales
         function calcularTotales(datos) {
-            let sumaMontoPesos = 0;
-            let sumaMontoRestante = 0;
+            let sumaTotal = 0;
+            let sumaTotalMXN = 0;
             
             datos.forEach(item => {
-                sumaMontoPesos += item.monto || 0;
-                sumaMontoRestante += item.monto_restante || 0;
+                sumaTotal += item.suma_concepto_conver || 0;
+                sumaTotalMXN += item.suma_concepto || 0;
             });
             
             totalRegistros.textContent = datos.length;
-            sumMontoPesos.textContent = formatCurrency(sumaMontoPesos);
-            sumMontoRestante.textContent = formatCurrency(sumaMontoRestante);
+            sumTotal.textContent = formatCurrency(sumaTotal);
+            sumTotalMXN.textContent = formatCurrency(sumaTotalMXN);
         }
         
         // Función para cargar datos en la tabla
         function cargarTabla(datos) {
             if (!tablaBody) return;
-            
-            // Actualizar cuadros de resumen (solo 3)
-            actualizarResumen(datos);
             
             // Ocultar texto de agrupar si hay columnas agrupadas
             if (textoAgrupar) {
@@ -886,8 +1000,8 @@
                 if (tablaFoot) tablaFoot.style.display = 'none';
                 
                 totalRegistros.textContent = '0';
-                sumMontoPesos.textContent = formatCurrency(0);
-                sumMontoRestante.textContent = formatCurrency(0);
+                sumTotal.textContent = formatCurrency(0);
+                sumTotalMXN.textContent = formatCurrency(0);
                 
                 paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
                 return;
@@ -926,18 +1040,19 @@
                     }
                     
                     let badgeClass = 'badge-pendiente';
-                    if (estatusPredominante === 'Activo') badgeClass = 'badge-activo';
+                    if (estatusPredominante === 'Aprobado') badgeClass = 'badge-aprobado';
+                    else if (estatusPredominante === 'Rechazado') badgeClass = 'badge-rechazado';
+                    else if (estatusPredominante === 'Procesado') badgeClass = 'badge-procesado';
                     else if (estatusPredominante === 'Cancelado') badgeClass = 'badge-cancelado';
-                    else if (estatusPredominante === 'Completado') badgeClass = 'badge-completado';
                     
                     grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="15">
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="20">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div>
                                     <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
                                     <strong style="color: #2378e1;">${grupo.valor}</strong>
                                     <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Monto: ${formatCurrency(grupo.totalMontoPesos)})
+                                        (${grupo.items.length} registros - Total: ${formatCurrency(grupo.totalSuma)} - Total MXN: ${formatCurrency(grupo.totalMXN)})
                                     </span>
                                 </div>
                                 <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
@@ -955,33 +1070,40 @@
                             
                             // Badge para cada item
                             let itemBadgeClass = 'badge-pendiente';
-                            if (item.estatus_txt === 'Activo') itemBadgeClass = 'badge-activo';
+                            if (item.estatus_txt === 'Aprobado') itemBadgeClass = 'badge-aprobado';
+                            else if (item.estatus_txt === 'Rechazado') itemBadgeClass = 'badge-rechazado';
+                            else if (item.estatus_txt === 'Procesado') itemBadgeClass = 'badge-procesado';
                             else if (item.estatus_txt === 'Cancelado') itemBadgeClass = 'badge-cancelado';
-                            else if (item.estatus_txt === 'Completado') itemBadgeClass = 'badge-completado';
                             
                             detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.anticipo_concepto_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
                                     <span class="badge ${itemBadgeClass}">${item.estatus_txt || '-'}</span>
                                 </td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cheque_transferencia_id || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.contacto || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.forma_pago || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_bancaria || '-'}</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia_bancaria || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto_restante ? formatCurrency(item.monto_restante) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.tipo_cambio ? item.tipo_cambio.toFixed(2) : '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.plantilla || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.plantilla_empresa || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.tipo_gasto || '-'}</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.polizas_contables_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion_anticipo || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.carta_porte_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.numero_unidad || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.viaje_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.suma_concepto_conver ? formatCurrency(item.suma_concepto_conver) : '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.suma_concepto ? formatCurrency(item.suma_concepto) : '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.pago_layout_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio_transferencia || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.prestamo_descuento_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_banco || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.created_by || '-'}</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.cheque_transferencia_id}"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.cheque_transferencia_id}"></i>
-                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.cheque_transferencia_id}"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.cheque_transferencia_id}"></i>
+                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.anticipo_concepto_id}"></i>
+                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.anticipo_concepto_id}"></i>
+                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.anticipo_concepto_id}"></i>
+                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.anticipo_concepto_id}"></i>
+                                        <i class="fas fa-exchange-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Reasignar" data-id="${item.anticipo_concepto_id}"></i>
                                     </div>
                                 </td>
                             `;
@@ -1004,33 +1126,40 @@
                     const row = document.createElement('tr');
                     
                     let badgeClass = 'badge-pendiente';
-                    if (item.estatus_txt === 'Activo') badgeClass = 'badge-activo';
+                    if (item.estatus_txt === 'Aprobado') badgeClass = 'badge-aprobado';
+                    else if (item.estatus_txt === 'Rechazado') badgeClass = 'badge-rechazado';
+                    else if (item.estatus_txt === 'Procesado') badgeClass = 'badge-procesado';
                     else if (item.estatus_txt === 'Cancelado') badgeClass = 'badge-cancelado';
-                    else if (item.estatus_txt === 'Completado') badgeClass = 'badge-completado';
                     
                     row.innerHTML = `
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.anticipo_concepto_id || '-'}</td>
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
                             <span class="badge ${badgeClass}">${item.estatus_txt || '-'}</span>
                         </td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cheque_transferencia_id || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.contacto || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.forma_pago || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_bancaria || '-'}</td>
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia_bancaria || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto_restante ? formatCurrency(item.monto_restante) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.tipo_cambio ? item.tipo_cambio.toFixed(2) : '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.plantilla || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.plantilla_empresa || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.tipo_gasto || '-'}</td>
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.polizas_contables_id || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion_anticipo || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.carta_porte_id || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.numero_unidad || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.viaje_id || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.suma_concepto_conver ? formatCurrency(item.suma_concepto_conver) : '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.suma_concepto ? formatCurrency(item.suma_concepto) : '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.pago_layout_id || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio_transferencia || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.prestamo_descuento_id || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_banco || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.created_by || '-'}</td>
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                             <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.cheque_transferencia_id}"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.cheque_transferencia_id}"></i>
-                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.cheque_transferencia_id}"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.cheque_transferencia_id}"></i>
+                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.anticipo_concepto_id}"></i>
+                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.anticipo_concepto_id}"></i>
+                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.anticipo_concepto_id}"></i>
+                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.anticipo_concepto_id}"></i>
+                                <i class="fas fa-exchange-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Reasignar" data-id="${item.anticipo_concepto_id}"></i>
                             </div>
                         </td>
                     `;
@@ -1062,20 +1191,25 @@
                 
                 columnasAgrupadas.forEach(col => {
                     const nombreColumna = {
-                        'estatus': 'Estatus',
                         'folio': 'Folio',
-                        'proveedor': 'Proveedor',
-                        'forma_pago': 'Forma de Pago',
-                        'cuenta': 'Cuentas Bancarias',
-                        'fecha': 'Fecha',
-                        'referencia': 'Referencia',
-                        'ref_bancaria': 'Referencia Bancaria',
-                        'monto_pesos': 'Monto Pesos',
-                        'monto_restante': 'Monto Restante',
-                        'moneda': 'Moneda',
-                        'tipo_cambio': 'Tipo de Cambio',
+                        'estatus': 'Estatus',
+                        'fecha_movimiento': 'Fecha Movimiento',
+                        'operador': 'Operador',
+                        'empresa': 'Empresa',
+                        'tipo_gasto': 'Tipo Gasto',
+                        'gasto': 'Gasto',
                         'descripcion': 'Descripción',
-                        'poliza': 'Póliza'
+                        'carta_porte': 'Carta Porte',
+                        'unidad': 'Unidad',
+                        'viaje': 'Viaje',
+                        'moneda': 'Moneda',
+                        'total': 'Total',
+                        'total_mxn': 'Total MXN',
+                        'layout': 'Layout',
+                        'transferencia': 'Transferencia',
+                        'prestamo_id': 'Préstamo ID',
+                        'no_cuenta': 'No. Cuenta',
+                        'creado_por': 'Creado por'
                     }[col] || col;
                     
                     const chip = document.createElement('span');
@@ -1174,12 +1308,12 @@
                 datosFiltrados = [...datosOriginales];
             } else {
                 datosFiltrados = datosOriginales.filter(item => 
-                    item.contacto?.toLowerCase().includes(termino) ||
-                    item.referencia?.toLowerCase().includes(termino) ||
-                    item.referencia_bancaria?.toLowerCase().includes(termino) ||
+                    item.anticipo_concepto_id?.toString().includes(termino) ||
+                    item.plantilla?.toLowerCase().includes(termino) ||
+                    item.plantilla_empresa?.toLowerCase().includes(termino) ||
                     item.descripcion?.toLowerCase().includes(termino) ||
-                    item.estatus_txt?.toLowerCase().includes(termino) ||
-                    item.cheque_transferencia_id?.toLowerCase().includes(termino)
+                    item.descripcion_anticipo?.toLowerCase().includes(termino) ||
+                    item.estatus_txt?.toLowerCase().includes(termino)
                 );
             }
             
@@ -1208,11 +1342,11 @@
         });
         
         btnAgregar.addEventListener('click', function() {
-            alert('Agregar Cheque/Transferencia - Funcionalidad en desarrollo');
+            alert('Agregar Gasto - Funcionalidad en desarrollo');
         });
         
         btnExcel.addEventListener('click', function() {
-            exportTableToExcel('tablaChequesTransferencias', 'ChequesTransferencias');
+            exportTableToExcel('tablaReasignacionGastos', 'ReasignacionGastos');
         });
         
         btnColumnas.addEventListener('click', function() {
@@ -1244,18 +1378,21 @@
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
                 const id = e.target.getAttribute('data-id');
-                alert(`Editar Cheque/Transferencia ${id} - Funcionalidad en desarrollo`);
+                alert(`Editar Gasto ID: ${id} - Funcionalidad en desarrollo`);
             } else if (e.target.classList.contains('fa-trash-alt')) {
                 const id = e.target.getAttribute('data-id');
-                if (confirm(`¿Está seguro de eliminar el cheque/transferencia ${id}?`)) {
-                    alert(`Eliminar Cheque/Transferencia ${id} - Funcionalidad en desarrollo`);
+                if (confirm(`¿Está seguro de eliminar el gasto ID: ${id}?`)) {
+                    alert(`Eliminar Gasto ID: ${id} - Funcionalidad en desarrollo`);
                 }
             } else if (e.target.classList.contains('fa-eye')) {
                 const id = e.target.getAttribute('data-id');
-                alert(`Ver detalles de Cheque/Transferencia ${id} - Funcionalidad en desarrollo`);
+                alert(`Ver detalles de Gasto ID: ${id} - Funcionalidad en desarrollo`);
             } else if (e.target.classList.contains('fa-file-pdf')) {
                 const id = e.target.getAttribute('data-id');
-                alert(`Descargar PDF - Cheque/Transferencia ${id} - Funcionalidad en desarrollo`);
+                alert(`Descargar PDF - Gasto ID: ${id} - Funcionalidad en desarrollo`);
+            } else if (e.target.classList.contains('fa-exchange-alt')) {
+                const id = e.target.getAttribute('data-id');
+                alert(`Reasignar Gasto ID: ${id} - Funcionalidad en desarrollo`);
             }
         });
         

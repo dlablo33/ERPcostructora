@@ -1,4 +1,7 @@
 <x-guest-layout>
+    <!-- Agregar Bootstrap si no lo tienes -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -31,18 +34,8 @@
             overflow: hidden;
             text-align: center;
         }
-        .img_logo {
-            width: 400px;
-            margin: 0 auto;
-            display: block;
-        }
-        .img_logo2 {
-            width: 140px;
-            padding-left: 40px;
-            padding-top: 30px;
-        }
         .div_col1 {
-            float: right; /* Cambiado de left a right */
+            float: right;
             width: 55%;
             height: 100%;
             overflow: hidden;
@@ -51,16 +44,40 @@
             padding-right: 40px;
             padding-bottom: 20px;
         }
-        .div_logo {
-            text-align: center;
-            padding-bottom: 40px;
-            padding-left: 5px;
-            padding-right: 5px;
-            overflow: hidden;
-            height: 130px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Estilos para los logos - AMPLIADOS 5 VECES */
+
+                .img_logo_a {
+            background-image: url('../img/login/logo_local.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 800px; /* Aumentado de 100px a 800px (8 veces) */
+            width: 100%;
+            margin-top: -350px; /* Compensa el aumento: (800-100)/2 = 350px */
+            margin-bottom: -350px; /* Compensa el aumento */
+        }
+        .img_logo_b {
+            background-image: url('../img/login/logo_local.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            height: 800px; /* Aumentado de 100px a 800px (8 veces) */
+            width: 100%;
+            margin-top: -350px; /* Compensa el aumento */
+            margin-bottom: -350px; /* Compensa el aumento */
+        }
+        /* Clase para la fila de logos - ajustamos altura */
+        .row-logos {
+            margin-bottom: 20px;
+            height: auto;
+            min-height: 100px; /* Se mantiene igual */
+            overflow: visible; /* Permite que las imágenes sobresalgan */
+            position: relative;
+            z-index: 5;
+        }
+        /* Ajustamos las columnas para que no recorten */
+        .row-logos .col-6 {
+            overflow: visible;
         }
         .color_negro {
             background-color: white;
@@ -74,6 +91,7 @@
             color: black;
             font-size: 16px;
             width: 100%;
+            border: 1px solid #ddd;
         }
         .div_boton_loginA {
             width: 100%;
@@ -460,10 +478,11 @@
             justify-content: center;
             background-color: #083CAE;
             padding: 20px;
+            position: relative;
         }
 
         .login_img {
-            float: left; /* Cambiado a left para que esté a la izquierda */
+            float: left;
             width: 45%;
             height: 100%;
             background-image: url('../img/login/banner-costruccion.webp');
@@ -610,7 +629,7 @@
             
             .login_img {
                 min-height: 200px !important;
-                order: 0; /* Cambiado para que la imagen quede arriba en móvil */
+                order: 0;
             }
 
             .div_col1 {
@@ -621,6 +640,13 @@
             .div_recuadro_login {
                 height: auto !important;
                 min-height: 600px;
+            }
+            
+            /* Ajustes responsive para las imágenes ampliadas 5 veces */
+            .img_logo_a, .img_logo_b {
+                height: 300px !important;
+                margin-top: -100px !important;
+                margin-bottom: -100px !important;
             }
         }
 
@@ -641,6 +667,12 @@
             
             .div_boton_loginA {
                 padding: 12px !important;
+            }
+            
+            .img_logo_a, .img_logo_b {
+                height: 200px !important;
+                margin-top: -50px !important;
+                margin-bottom: -50px !important;
             }
         }
 
@@ -804,18 +836,11 @@
             left: 220px;
         }
 
-        .img_logo_a {
-            background-image: url('/images/logo_local.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
+        /* Mantener las clases originales */
+        .img_logo_a, .img_logo_b {
+            display: block;
         }
-        .img_logo_b {
-            background-image: url('/images/logo_cliente.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
-        }
+        
         .div_boton_loginA {
             padding: 0.5vh;
         }
@@ -840,18 +865,23 @@
 
                 <!-- Panel derecho - Formulario -->
                 <div class="div_col1">
-                    <div class="div_logo">
-                        <img src="../img/login/logophoto.png" class="img_logo" alt="Logo Empresa">
+                    <!-- LOGOS EN FILA CON BOOTSTRAP - AMPLIADOS 5 VECES -->
+                    <div class="row h-25 row-logos">
+                        <div class="col-6">
+                            <div class="img_logo_a"></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="img_logo_b"></div>
+                        </div>
                     </div>
-    <p class="login_subtitle" style="color: #083CAE; font-size: 16px; margin-top: 0;">
-    Líder en Rentabilidad de Construcción
-</p>                
-<p class="login_subtitle" style="color: #FF0000; font-size: 24px; font-weight: bold; margin-bottom: 5px;">
-    Bienvenidos
-</p>
-
-
                     
+                    <p class="login_subtitle" style="color: #083CAE; font-size: 16px; margin-top: 10px;">
+                        Líder en Rentabilidad de Construcción
+                    </p>                
+                    
+                    <p class="login_subtitle" style="color: #FF0000; font-size: 24px; font-weight: bold; margin-bottom: 5px;">
+                        Bienvenidos
+                    </p>
 
                     <!-- Session Status -->
                     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -889,10 +919,8 @@
                             <x-input-error :messages="$errors->get('password')" class="login_error" />
                         </div>
 
-                        <!-- Remember & Forgot -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-
-
+                        <!-- Forgot Password -->
+                        <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px;">
                             @if (Route::has('password.request'))
                                 <a href="{{ route('password.request') }}" class="login_forgot">
                                     ¿Olvidaste tu contraseña?

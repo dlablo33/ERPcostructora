@@ -3,11 +3,11 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Contrarecibos -->
+        <!-- Presupuesto Mensual -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
-                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Contrarecibos
+                <h2 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                    Presupuesto Mensual
                 </h2>
             </div>
 
@@ -27,104 +27,86 @@
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <!-- Date Inicio -->
                         <div>
-                            <input type="date" id="fechaInicio" value="2026-01-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Date Fin -->
                         <div>
-                            <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Botón Agregar (+) -->
                         <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #083CAE;"></i>
+                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
+                                <i class="fas fa-plus" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
+                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Seleccionar Columnas -->
                         <div>
                             <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #083CAE;"></i>
+                                <i class="fas fa-columns" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Buscador -->
                         <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
                         </div>
                     </div>
                 </div>
 
                 <!-- Mensaje "Sin datos" centrado -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0;" id="sinDatosMensaje">
-                    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
+                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
+                    <i class="fas fa-chart-line" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
+                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay presupuestos mensuales para mostrar</p>
                 </div>
 
-                <!-- Tabla de Contrarecibos -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: none;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaContrarecibos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                <!-- Tabla de Presupuesto Mensual -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaPresupuestoMensual" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="folio">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="cliente">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="mes">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cliente</span>
+                                        <span>Mes</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="unidad">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="anio">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Unidad</span>
+                                        <span>Año</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="descripcion">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="monto">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Descripción</span>
+                                        <span>Monto</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="total">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="observaciones">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="empresa">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Empresa</span>
+                                        <span>Observaciones</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -142,9 +124,9 @@
                         <!-- Fila de totales -->
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef; color: #000000;" colspan="6">Totales:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="2"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="4">Registros: <span id="totalRegistros">0</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumMonto">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -160,22 +142,22 @@
                     
                     <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
                     <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
                             <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
                             <i class="fas fa-angle-left" style="color: #2378e1;"></i>
                         </button>
-                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;">1</span>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;">2</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente">
+                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
                             <i class="fas fa-angle-right" style="color: #2378e1;"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
                             <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
                         </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 0-0 de 0 registros</span>
+                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 12 registros</span>
                     </div>
                 </div>
             </div>
@@ -186,11 +168,11 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #083CAE;
+        border-bottom: 2px solid #2378e1;
     }
     
     .semaforo .card-header h2 {
-        color: #083CAE !important;
+        color: #2378e1 !important;
     }
     
     /* Estilos de tabla */
@@ -228,6 +210,7 @@
         transition: transform 0.2s;
         font-size: 14px;
         color: #083CAE;
+        cursor: pointer;
     }
     
     #tablaBody td i:hover {
@@ -254,43 +237,12 @@
         z-index: 15;
     }
     
-    /* Estilo para badges de estatus */
-    .badge {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 8px;
-        display: inline-block;
-        border-radius: 3px;
-    }
-    
-    .badge-pendiente {
-        background-color: #fd7e14;
-        color: white;
-    }
-    
-    .badge-aprobado {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-cancelado {
-        background-color: #dc3545;
-        color: white;
-    }
-    
-    .badge-pagado {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-revisado {
-        background-color: #17a2b8;
-        color: white;
-    }
-    
-    /* Números alineados a la derecha */
-    .text-right {
-        text-align: right;
+    /* Estilo para el pie de tabla (totales) */
+    tfoot td {
+        font-weight: bold;
+        background-color: #e9ecef !important;
+        border-top: 2px solid #2378e1;
+        color: #000000 !important;
     }
     
     /* Estilos para agrupación de columnas */
@@ -374,14 +326,6 @@
         border-radius: 4px;
     }
     
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
-        color: #000000 !important;
-    }
-    
     /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
     #paginacionContainer {
         background: transparent !important;
@@ -444,7 +388,7 @@
             justify-content: center !important;
         }
         
-        input[type="date"] {
+        input[type="date"], select {
             width: 100% !important;
         }
         
@@ -473,93 +417,144 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Contrarecibos');
+        console.log('DOM completamente cargado - Presupuesto Mensual');
         
         // Variables para agrupación
         let columnasAgrupadas = [];
         let expandedGroups = new Set();
         let datosOriginales = [];
+        let paginaActual = 1;
+        const registrosPorPagina = 8;
         
-        // Datos de ejemplo para Contrarecibos
-        const datosContrarecibos = [
+        // Datos de ejemplo para Presupuesto Mensual (12 meses)
+        const datosPresupuestoMensual = [
             {
-                estatus: 'Pendiente',
-                fecha: '2026-01-15',
-                folio: 'CR-001',
-                cliente: 'Maquiladora Industrial',
-                unidad: 'U-001',
-                descripcion: 'Contrarecibo por servicios de transporte',
-                total: 12500.00,
-                empresa: 'EMPRESA SA DE CV'
+                presupuesto_mensual_id: 1,
+                meses: 'Enero',
+                anio: 2026,
+                monto: 250000.00,
+                observaciones: 'Presupuesto inicial del año'
             },
             {
-                estatus: 'Aprobado',
-                fecha: '2026-01-14',
-                folio: 'CR-002',
-                cliente: 'Cartones del Norte',
-                unidad: 'U-002',
-                descripcion: 'Contrarecibo por flete',
-                total: 8750.00,
-                empresa: 'EMPRESA SA DE CV'
+                presupuesto_mensual_id: 2,
+                meses: 'Febrero',
+                anio: 2026,
+                monto: 245000.00,
+                observaciones: 'Ajuste por estacionalidad'
             },
             {
-                estatus: 'Pagado',
-                fecha: '2026-01-13',
-                folio: 'CR-003',
-                cliente: 'Transportes del Bajío',
-                unidad: 'U-003',
-                descripcion: 'Contrarecibo por maniobras',
-                total: 5600.00,
-                empresa: 'EMPRESA SA DE CV'
+                presupuesto_mensual_id: 3,
+                meses: 'Marzo',
+                anio: 2026,
+                monto: 260000.00,
+                observaciones: 'Incremento por campaña'
             },
             {
-                estatus: 'Revisado',
-                fecha: '2026-01-12',
-                folio: 'CR-004',
-                cliente: 'Logística Monterrey',
-                unidad: 'U-004',
-                descripcion: 'Contrarecibo por servicios integrales',
-                total: 15200.00,
-                empresa: 'EMPRESA SA DE CV'
+                presupuesto_mensual_id: 4,
+                meses: 'Abril',
+                anio: 2026,
+                monto: 255000.00,
+                observaciones: 'Presupuesto regular'
             },
             {
-                estatus: 'Cancelado',
-                fecha: '2026-01-11',
-                folio: 'CR-005',
-                cliente: 'Comercializadora del Sur',
-                unidad: 'U-005',
-                descripcion: 'Contrarecibo cancelado por el cliente',
-                total: 0.00,
-                empresa: 'EMPRESA SA DE CV'
+                presupuesto_mensual_id: 5,
+                meses: 'Mayo',
+                anio: 2026,
+                monto: 270000.00,
+                observaciones: 'Gastos de mantenimiento'
+            },
+            {
+                presupuesto_mensual_id: 6,
+                meses: 'Junio',
+                anio: 2026,
+                monto: 265000.00,
+                observaciones: 'Presupuesto semestral'
+            },
+            {
+                presupuesto_mensual_id: 7,
+                meses: 'Julio',
+                anio: 2026,
+                monto: 280000.00,
+                observaciones: 'Temporada alta'
+            },
+            {
+                presupuesto_mensual_id: 8,
+                meses: 'Agosto',
+                anio: 2026,
+                monto: 275000.00,
+                observaciones: 'Mantenimiento programado'
+            },
+            {
+                presupuesto_mensual_id: 9,
+                meses: 'Septiembre',
+                anio: 2026,
+                monto: 260000.00,
+                observaciones: 'Regreso a clases'
+            },
+            {
+                presupuesto_mensual_id: 10,
+                meses: 'Octubre',
+                anio: 2026,
+                monto: 255000.00,
+                observaciones: 'Preparación fin de año'
+            },
+            {
+                presupuesto_mensual_id: 11,
+                meses: 'Noviembre',
+                anio: 2026,
+                monto: 265000.00,
+                observaciones: 'Campaña de ventas'
+            },
+            {
+                presupuesto_mensual_id: 12,
+                meses: 'Diciembre',
+                anio: 2026,
+                monto: 290000.00,
+                observaciones: 'Cierre de año'
             }
         ];
+
+        datosOriginales = [...datosPresupuestoMensual];
+        let datosFiltrados = [...datosPresupuestoMensual];
         
-        datosOriginales = [...datosContrarecibos];
+        // Elementos del DOM
+        const fechaInicio = document.getElementById('fechaInicio');
+        const fechaFin = document.getElementById('fechaFin');
+        const btnCrearFiltro = document.getElementById('btnCrearFiltro');
+        const btnAgregar = document.getElementById('btnAgregar');
+        const btnExcel = document.getElementById('btnExcel');
+        const btnColumnas = document.getElementById('btnColumnas');
+        const buscador = document.getElementById('buscador');
+        const tablaBody = document.getElementById('tablaBody');
+        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
+        const tablaContainer = document.getElementById('tablaContainer');
+        const tablaFoot = document.getElementById('tablaFoot');
+        const totalRegistros = document.getElementById('totalRegistros');
+        const sumMonto = document.getElementById('sumMonto');
+        const paginacionInfo = document.getElementById('paginacionInfo');
+        const textoAgrupar = document.getElementById('textoAgrupar');
         
-        // Función para formatear números como moneda
+        // Elementos de paginación
+        const btnPrimera = document.getElementById('btnPrimera');
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnSiguiente = document.getElementById('btnSiguiente');
+        const btnUltima = document.getElementById('btnUltima');
+        const paginaActualSpan = document.getElementById('paginaActual');
+        
+        // Función para formatear moneda
         function formatCurrency(amount) {
             return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-        
-        // Función para formatear fecha
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX');
         }
         
         // Función para generar un ID único para el grupo
         function generarGrupoId(item, columnas) {
             return columnas.map(col => {
                 switch(col) {
-                    case 'estatus': return item.estatus || 'Sin estatus';
-                    case 'fecha': return item.fecha || 'Sin fecha';
-                    case 'folio': return item.folio || 'Sin folio';
-                    case 'cliente': return item.cliente || 'Sin cliente';
-                    case 'unidad': return item.unidad || 'Sin unidad';
-                    case 'descripcion': return item.descripcion || 'Sin descripción';
-                    case 'total': return item.total ? item.total.toString() : '0';
-                    case 'empresa': return item.empresa || 'Sin empresa';
+                    case 'folio': return item.presupuesto_mensual_id ? item.presupuesto_mensual_id.toString() : 'Sin folio';
+                    case 'mes': return item.meses || 'Sin mes';
+                    case 'anio': return item.anio ? item.anio.toString() : 'Sin año';
+                    case 'monto': return item.monto ? item.monto.toString() : '0';
+                    case 'observaciones': return item.observaciones || 'Sin observaciones';
                     default: return '';
                 }
             }).join('||');
@@ -578,14 +573,11 @@
                     // Crear un nuevo grupo
                     const valorGrupo = columnas.map(col => {
                         switch(col) {
-                            case 'estatus': return item.estatus || 'Sin estatus';
-                            case 'fecha': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
-                            case 'folio': return item.folio || 'Sin folio';
-                            case 'cliente': return item.cliente || 'Sin cliente';
-                            case 'unidad': return item.unidad || 'Sin unidad';
-                            case 'descripcion': return item.descripcion || 'Sin descripción';
-                            case 'total': return item.total || 0;
-                            case 'empresa': return item.empresa || 'Sin empresa';
+                            case 'folio': return item.presupuesto_mensual_id || 'Sin folio';
+                            case 'mes': return item.meses || 'Sin mes';
+                            case 'anio': return item.anio || 'Sin año';
+                            case 'monto': return item.monto || 0;
+                            case 'observaciones': return item.observaciones || 'Sin observaciones';
                             default: return '';
                         }
                     }).join(' - ');
@@ -594,12 +586,12 @@
                         id: grupoId,
                         valor: valorGrupo,
                         items: [item],
-                        total: item.total || 0
+                        totalMonto: item.monto || 0
                     });
                 } else {
                     const grupo = gruposMap.get(grupoId);
                     grupo.items.push(item);
-                    grupo.total += item.total || 0;
+                    grupo.totalMonto += item.monto || 0;
                 }
             });
             
@@ -609,26 +601,47 @@
             };
         }
         
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            let totalGeneral = 0;
+        // Función para obtener datos de la página actual
+        function getCurrentPageData(datos) {
+            const start = (paginaActual - 1) * registrosPorPagina;
+            const end = start + registrosPorPagina;
+            return datos.slice(start, end);
+        }
+        
+        // Función para actualizar la paginación
+        function actualizarPaginacion(total) {
+            const totalPaginas = Math.ceil(total / registrosPorPagina);
+            paginaActualSpan.textContent = paginaActual;
             
-            datos.forEach(item => {
-                totalGeneral += item.total || 0;
+            // Mostrar/ocultar botones de página según sea necesario
+            document.querySelectorAll('.pagina-btn').forEach(btn => {
+                const pagina = parseInt(btn.dataset.pagina);
+                if (pagina <= totalPaginas) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                }
             });
             
-            document.getElementById('sumTotal').textContent = formatCurrency(totalGeneral);
+            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
+            const fin = Math.min(paginaActual * registrosPorPagina, total);
+            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
+        }
+        
+        // Función para calcular totales
+        function calcularTotales(datos) {
+            let sumaMonto = 0;
+            
+            datos.forEach(item => {
+                sumaMonto += item.monto || 0;
+            });
+            
+            totalRegistros.textContent = datos.length;
+            sumMonto.textContent = formatCurrency(sumaMonto);
         }
         
         // Función para cargar datos en la tabla
         function cargarTabla(datos) {
-            const tablaBody = document.getElementById('tablaBody');
-            const tablaContainer = document.getElementById('tablaContainer');
-            const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-            const paginacionInfo = document.getElementById('paginacionInfo');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            const tablaFoot = document.getElementById('tablaFoot');
-            
             if (!tablaBody) return;
             
             // Ocultar texto de agrupar si hay columnas agrupadas
@@ -646,13 +659,12 @@
             if (datos.length === 0) {
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
+                if (tablaFoot) tablaFoot.style.display = 'none';
                 
-                // Resetear totales
-                document.getElementById('sumTotal').textContent = '$0.00';
+                totalRegistros.textContent = '0';
+                sumMonto.textContent = formatCurrency(0);
                 
-                if (paginacionInfo) {
-                    paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                }
+                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
                 return;
             }
             
@@ -673,38 +685,32 @@
                         grupoRow.classList.add('expandido');
                     }
                     
-                    // Determinar el estatus predominante en el grupo
-                    const estatusCounts = {};
+                    // Determinar el mes predominante en el grupo (para el badge)
+                    const mesCounts = {};
                     grupo.items.forEach(item => {
-                        estatusCounts[item.estatus] = (estatusCounts[item.estatus] || 0) + 1;
+                        mesCounts[item.meses] = (mesCounts[item.meses] || 0) + 1;
                     });
                     
-                    let estatusPredominante = 'Pendiente';
+                    let mesPredominante = 'Enero';
                     let maxCount = 0;
-                    for (const [estatus, count] of Object.entries(estatusCounts)) {
+                    for (const [mes, count] of Object.entries(mesCounts)) {
                         if (count > maxCount) {
                             maxCount = count;
-                            estatusPredominante = estatus;
+                            mesPredominante = mes;
                         }
                     }
                     
-                    let badgeClass = 'badge-pendiente';
-                    if (estatusPredominante === 'Aprobado') badgeClass = 'badge-aprobado';
-                    else if (estatusPredominante === 'Pagado') badgeClass = 'badge-pagado';
-                    else if (estatusPredominante === 'Revisado') badgeClass = 'badge-revisado';
-                    else if (estatusPredominante === 'Cancelado') badgeClass = 'badge-cancelado';
-                    
                     grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="9">
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="6">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div>
                                     <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
                                     <strong style="color: #2378e1;">${grupo.valor}</strong>
                                     <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Total: ${formatCurrency(grupo.total)})
+                                        (${grupo.items.length} registros - Total: ${formatCurrency(grupo.totalMonto)})
                                     </span>
                                 </div>
-                                <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
+                                <span class="badge" style="background-color: #2378e1; color: white; margin-right: 10px;">${mesPredominante}</span>
                             </div>
                         </td>
                     `;
@@ -717,30 +723,18 @@
                             const detalleRow = document.createElement('tr');
                             detalleRow.className = 'fila-detalle';
                             
-                            // Badge para cada item
-                            let itemBadgeClass = 'badge-pendiente';
-                            if (item.estatus === 'Aprobado') itemBadgeClass = 'badge-aprobado';
-                            else if (item.estatus === 'Pagado') itemBadgeClass = 'badge-pagado';
-                            else if (item.estatus === 'Revisado') itemBadgeClass = 'badge-revisado';
-                            else if (item.estatus === 'Cancelado') itemBadgeClass = 'badge-cancelado';
-                            
                             detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">
-                                    <span class="badge ${itemBadgeClass}">${item.estatus || '-'}</span>
-                                </td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cliente || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.unidad || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.empresa || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.presupuesto_mensual_id || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.meses || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.anio || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.observaciones || '-'}</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                                        <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir"></i>
+                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.presupuesto_mensual_id}"></i>
+                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.presupuesto_mensual_id}"></i>
+                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.presupuesto_mensual_id}"></i>
+                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.presupuesto_mensual_id}"></i>
                                     </div>
                                 </td>
                             `;
@@ -756,33 +750,24 @@
                     paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
                 }
             } else {
-                // Mostrar todos los items sin agrupar
-                datos.forEach(item => {
+                // Mostrar todos los items sin agrupar (con paginación)
+                const pageData = getCurrentPageData(datos);
+                
+                pageData.forEach((item, index) => {
                     const row = document.createElement('tr');
                     
-                    let badgeClass = 'badge-pendiente';
-                    if (item.estatus === 'Aprobado') badgeClass = 'badge-aprobado';
-                    else if (item.estatus === 'Pagado') badgeClass = 'badge-pagado';
-                    else if (item.estatus === 'Revisado') badgeClass = 'badge-revisado';
-                    else if (item.estatus === 'Cancelado') badgeClass = 'badge-cancelado';
-                    
                     row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
-                            <span class="badge ${badgeClass}">${item.estatus || '-'}</span>
-                        </td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cliente || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.unidad || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.empresa || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.presupuesto_mensual_id || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.meses || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.anio || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.observaciones || '-'}</td>
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                             <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                                <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir"></i>
+                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.presupuesto_mensual_id}"></i>
+                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.presupuesto_mensual_id}"></i>
+                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.presupuesto_mensual_id}"></i>
+                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.presupuesto_mensual_id}"></i>
                             </div>
                         </td>
                     `;
@@ -794,9 +779,7 @@
                 if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
                 calcularTotales(datos);
                 
-                if (paginacionInfo) {
-                    paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
-                }
+                actualizarPaginacion(datos.length);
             }
         }
         
@@ -816,14 +799,11 @@
                 
                 columnasAgrupadas.forEach(col => {
                     const nombreColumna = {
-                        'estatus': 'Estatus',
-                        'fecha': 'Fecha',
                         'folio': 'Folio',
-                        'cliente': 'Cliente',
-                        'unidad': 'Unidad',
-                        'descripcion': 'Descripción',
-                        'total': 'Total',
-                        'empresa': 'Empresa'
+                        'mes': 'Mes',
+                        'anio': 'Año',
+                        'monto': 'Monto',
+                        'observaciones': 'Observaciones'
                     }[col] || col;
                     
                     const chip = document.createElement('span');
@@ -840,7 +820,7 @@
             expandedGroups.clear();
             
             // Recargar tabla con nueva agrupación
-            cargarTabla(datosOriginales);
+            cargarTabla(datosFiltrados);
         }
         
         // Configurar drag and drop
@@ -910,54 +890,73 @@
                 }
                 
                 // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosOriginales);
+                cargarTabla(datosFiltrados);
             }
         });
         
+        // Función para filtrar por búsqueda
+        function filtrarPorBusqueda() {
+            const termino = buscador.value.toLowerCase().trim();
+            
+            if (termino === '') {
+                datosFiltrados = [...datosOriginales];
+            } else {
+                datosFiltrados = datosOriginales.filter(item => 
+                    item.meses?.toLowerCase().includes(termino) ||
+                    item.observaciones?.toLowerCase().includes(termino) ||
+                    item.presupuesto_mensual_id?.toString().includes(termino)
+                );
+            }
+            
+            paginaActual = 1;
+            cargarTabla(datosFiltrados);
+        }
+        
+        // Función para cambiar de página
+        function cambiarPagina(nuevaPagina) {
+            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
+            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+                paginaActual = nuevaPagina;
+                cargarTabla(datosFiltrados);
+            }
+        }
+        
         // Cargar datos iniciales
-        cargarTabla(datosContrarecibos);
+        cargarTabla(datosOriginales);
         
         // Configurar drag and drop
         setupDragAndDrop();
         
         // Event Listeners
-        document.getElementById('fechaInicio')?.addEventListener('change', function() {
-            console.log('Fecha inicio:', this.value);
-        });
-        
-        document.getElementById('fechaFin')?.addEventListener('change', function() {
-            console.log('Fecha fin:', this.value);
-        });
-        
-        document.getElementById('btnCrearFiltro')?.addEventListener('click', function() {
+        btnCrearFiltro.addEventListener('click', function() {
             alert('Crear filtro - Funcionalidad en desarrollo');
         });
         
-        document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar Contrarecibo - Funcionalidad en desarrollo');
+        btnAgregar.addEventListener('click', function() {
+            alert('Agregar Presupuesto Mensual - Funcionalidad en desarrollo');
         });
         
-        document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaContrarecibos', 'Contrarecibos');
+        btnExcel.addEventListener('click', function() {
+            exportTableToExcel('tablaPresupuestoMensual', 'PresupuestoMensual');
         });
         
-        document.getElementById('btnColumnas')?.addEventListener('click', function() {
+        btnColumnas.addEventListener('click', function() {
             alert('Selector de Columnas - Funcionalidad en desarrollo');
         });
         
-        document.getElementById('buscador')?.addEventListener('input', function(e) {
-            const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosContrarecibos.filter(item => 
-                item.cliente?.toLowerCase().includes(busqueda) ||
-                item.folio?.toLowerCase().includes(busqueda) ||
-                item.unidad?.toLowerCase().includes(busqueda) ||
-                item.descripcion?.toLowerCase().includes(busqueda) ||
-                item.empresa?.toLowerCase().includes(busqueda) ||
-                item.estatus?.toLowerCase().includes(busqueda)
-            );
-            datosOriginales = datosFiltrados;
-            cargarTabla(datosOriginales);
+        buscador.addEventListener('input', filtrarPorBusqueda);
+        
+        // Eventos de paginación
+        document.querySelectorAll('.pagina-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                cambiarPagina(parseInt(this.dataset.pagina));
+            });
         });
+        
+        btnPrimera.addEventListener('click', () => cambiarPagina(1));
+        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
+        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
+        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
         
         // Iconos de filtro en encabezados
         document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
@@ -969,25 +968,20 @@
         // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
-                alert('Editar Contrarecibo - Funcionalidad en desarrollo');
+                const id = e.target.getAttribute('data-id');
+                alert(`Editar Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
             } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar este contrarecibo?')) {
-                    alert('Eliminar Contrarecibo - Funcionalidad en desarrollo');
+                const id = e.target.getAttribute('data-id');
+                if (confirm(`¿Está seguro de eliminar el presupuesto ID: ${id}?`)) {
+                    alert(`Eliminar Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
                 }
+            } else if (e.target.classList.contains('fa-eye')) {
+                const id = e.target.getAttribute('data-id');
+                alert(`Ver detalles de Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
             } else if (e.target.classList.contains('fa-file-pdf')) {
-                alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-print')) {
-                alert('Imprimir Contrarecibo - Funcionalidad en desarrollo');
+                const id = e.target.getAttribute('data-id');
+                alert(`Descargar PDF - Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
             }
-        });
-        
-        // Paginación (simulada)
-        document.querySelectorAll('#paginacionContainer button:not(#btnCrearFiltro)').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!this.classList.contains('active') && !this.closest('span')) {
-                    alert('Cambiar de página - Funcionalidad en desarrollo');
-                }
-            });
         });
         
         // Función para exportar a Excel

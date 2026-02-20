@@ -3,169 +3,172 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Estados de Cuenta Bancarios -->
+        <!-- Movimientos Bancarios -->
         <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #6B8ACE; padding: 15px 20px;">
-                <h2 style="color: #6B8ACE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Estados de Cuenta Bancarios
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
+                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                    Movimientos Bancarios
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas con selector de cuenta y fechas -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-                    
-                    <!-- Selector de Cuenta Bancaria (lado izquierdo) -->
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <label for="cuentaBancaria" style="font-weight: 600; color: #6B8ACE;">Cuenta Bancaria:</label>
-                        <select id="cuentaBancaria" style="padding: 8px 12px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; min-width: 300px; background-color: white;">
-                            <option value="0" selected>Todas las cuentas</option>
-                            <option value="1">Principal (1234-5678-9012-3456) - Banamex</option>
-                            <option value="2">Secundaria (9876-5432-1098-7654) - BBVA</option>
-                            <option value="3">Ahorros (5678-1234-5678-1234) - Santander</option>
-                            <option value="4">Nóminas (4321-8765-4321-8765) - HSBC</option>
+                <!-- Fila con selector de bancos, fechas, buscar y botón Excel verde -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <!-- Selector de Cuentas Bancarias -->
+                    <div style="display: flex; align-items: center; gap: 10px; flex: 2; min-width: 300px;">
+                        <div style="font-weight: 600; color: #083CAE; white-space: nowrap;">Filtrar por Banco:</div>
+                        <select id="selectCuenta" style="padding: 8px 12px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 100%; background-color: white;">
+                            <option value="0">Todas las cuentas</option>
+                            <option value="1">BBVA - 1234 5678 9012 3456</option>
+                            <option value="2">Santander - 5678 9012 3456 7890</option>
+                            <option value="3">Banamex - 9012 3456 7890 1234</option>
+                            <option value="4">HSBC - 3456 7890 1234 5678</option>
                         </select>
                     </div>
 
-                    <!-- Filtros de fecha y botones (lado derecho) -->
+                    <!-- Fechas -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Date Inicio -->
-                        <div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #083CAE;">Desde:</span>
                             <input type="date" id="fechaInicio" value="2026-01-01" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
-                        <!-- Date Fin -->
-                        <div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #083CAE;">Hasta:</span>
                             <input type="date" id="fechaFin" value="2026-01-31" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
+                        
+                        <!-- Botón para aplicar filtros -->
+                        <button id="btnFiltrar" style="background-color: #2378e1; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: white; font-weight: 500;">
+                            <i class="fas fa-filter"></i>
+                            <span>Buscar</span>
+                        </button>
+                    </div>
 
-                        <!-- Botón Consultar -->
-                        <div>
-                            <button id="btnConsultar" style="background-color: #6B8ACE; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: white;">
-                                <i class="fas fa-search"></i> Consultar
-                            </button>
-                        </div>
-
-                        <!-- Botón Exportar Excel -->
-                        <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
-                                    title="Exportar a Excel">
-                                <i class="fas fa-file-excel" style="color: #6B8ACE;"></i>
-                            </button>
-                        </div>
-
-                        <!-- Botón Columnas -->
-                        <div>
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
-                                    title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #6B8ACE;"></i>
-                            </button>
-                        </div>
-
+                    <!-- Buscador y botón Excel verde -->
+                    <div style="display: flex; align-items: center; gap: 10px;">
                         <!-- Buscador -->
                         <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #6B8ACE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar en movimientos..." style="padding: 8px 8px 8px 35px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 220px;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar movimiento..." style="padding: 8px 8px 8px 35px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 200px;">
+                        </div>
+
+                        <!-- Botón Exportar Excel (verde) -->
+                        <div>
+                            <button id="btnExcel" 
+                                    style="background-color: #28a745; border: 1px solid #28a745; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: white; font-weight: 500;"
+                                    title="Exportar a Excel">
+                                <i class="fas fa-file-excel" style="color: white;"></i>
+                                <span>Excel</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- CUADROS DE SALDOS (mismo estilo que los recuadros de estadísticas) -->
+                <!-- 4 CUADROS DE RESUMEN CENTRADOS (Saldo Inicial, Cargos, Abonos, Saldo Final) -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
                     <!-- Cuadro 1: Saldo Inicial -->
-                    <div style="flex: 0 1 calc(50% - 15px); min-width: 200px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 200px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Saldo Inicial</div>
-                            <div style="color: #6B8ACE; font-size: 28px; font-weight: bold; line-height: 1.2;" id="saldoInicial">$408,250.00</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="saldoInicial">$115,695.54</div>
                         </div>
                     </div>
                     
-                    <!-- Cuadro 2: Saldo Final -->
-                    <div style="flex: 0 1 calc(50% - 15px); min-width: 200px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <!-- Cuadro 2: Cargos -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 200px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Cargos</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalCargos">$24,640.00</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 3: Abonos -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 200px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Abonos</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalAbonos">$6,700.00</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 4: Saldo Final -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 200px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Saldo Final</div>
-                            <div style="color: #6B8ACE; font-size: 28px; font-weight: bold; line-height: 1.2;" id="saldoFinal">$529,250.00</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="saldoFinal">$133,635.54</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Mensaje "Sin datos" centrado -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
+                    <i class="fas fa-exchange-alt" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay movimientos para el período seleccionado</p>
+                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
 
-                <!-- Tabla de Estados de Cuenta -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaEstadoCuenta" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
+                <!-- Tabla de Movimientos Bancarios -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaMovimientos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0; width: 50px;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>ID</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0; width: 80px;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Fecha</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cuenta</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Tipo</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Folio</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Referencia</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Ref. Bancaria</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <span>Origen</span>
+                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                    </div>
+                                </th>
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Descripción</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Depósitos</span>
+                                        <span>Cargos</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Retiros</span>
+                                        <span>Abonos</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Saldo</span>
+                                        <span>Saldo Final</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Acciones</span>
+                                        <span>Detalles</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -175,28 +178,35 @@
                             <!-- Las filas se insertarán dinámicamente -->
                         </tbody>
                         <!-- Fila de totales -->
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
+                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef;" colspan="7">Registros: <span id="totalRegistros">0</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="totalDepositos">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="totalRetiros">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="totalSaldo">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="1"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef; color: #000000;" colspan="6">Totales:</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumCargos">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumAbonos">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumSaldoFinal">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;"></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 
-                <!-- Paginación -->
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;" id="paginacionContainer">
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página anterior"><i class="fas fa-angle-left"></i></button>
-                    <span style="padding: 5px 10px; background-color: #6B8ACE; color: white; border-radius: 4px;">1</span>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">2</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">3</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Última página"><i class="fas fa-angle-double-right"></i></button>
-                    <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 1-10 de 25 registros</span>
+                <!-- Paginación simple -->
+                <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;">
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #2378e1;" title="Primera página" id="btnPrimera">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #2378e1;" title="Página anterior" id="btnAnterior">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px;" id="paginaActual">1</span>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #2378e1;" class="pagina-btn" data-pagina="2">2</button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #2378e1;" title="Página siguiente" id="btnSiguiente">
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #2378e1;" title="Última página" id="btnUltima">
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                    <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 1-10 de 20 registros</span>
                 </div>
             </div>
         </div>
@@ -206,7 +216,11 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #6B8ACE;
+        border-bottom: 2px solid #083CAE;
+    }
+    
+    .semaforo .card-header h2 {
+        color: #083CAE !important;
     }
     
     .custom-card {
@@ -216,29 +230,25 @@
     
     .custom-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(107, 138, 206, 0.15) !important;
-        border-color: #6B8ACE !important;
+        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
+        border-color: #083CAE !important;
     }
     
     /* Estilos de tabla */
     .table th {
         white-space: nowrap;
         font-size: 12px;
-        background-color: #6B8ACE !important;
+        background-color: #2378e1 !important;
         color: white;
         font-weight: 600;
         padding: 10px 4px;
-    }
-    
-    /* Todas las columnas usan el mismo color #6B8ACE */
-    .table th:last-child {
-        background-color: #6B8ACE !important;
     }
     
     .table td {
         white-space: nowrap;
         font-size: 12px;
         padding: 10px 4px;
+        color: #000000 !important;
     }
     
     /* Estilo para las filas alternadas */
@@ -254,12 +264,11 @@
         background-color: #e0e0e0;
     }
     
-    /* Estilo para los iconos de acción - SOLO ESTO MANTIENE EL AZUL ORIGINAL */
+    /* Estilo para los iconos de acción */
     #tablaBody td i {
         transition: transform 0.2s;
         font-size: 14px;
         color: #083CAE;
-        cursor: pointer;
     }
     
     #tablaBody td i:hover {
@@ -286,56 +295,27 @@
         z-index: 15;
     }
     
-    /* Estilo para badges de estatus o tipo */
-    .badge {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 8px;
-        display: inline-block;
-        border-radius: 3px;
-    }
-    
-    .badge-deposito {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-retiro {
-        background-color: #dc3545;
-        color: white;
-    }
-    
-    .badge-traspaso {
-        background-color: #fd7e14;
-        color: white;
-    }
-    
-    .badge-transferencia {
-        background-color: #17a2b8;
-        color: white;
+    /* Números alineados a la derecha */
+    .text-right {
+        text-align: right;
     }
     
     /* Estilo para el pie de tabla (totales) */
     tfoot td {
         font-weight: bold;
         background-color: #e9ecef !important;
-        border-top: 2px solid #6B8ACE;
+        border-top: 2px solid #083CAE;
+        color: #000000 !important;
     }
     
     /* Responsive */
     @media (max-width: 768px) {
-        div[style*="justify-content: space-between"] {
-            flex-direction: column;
-            align-items: flex-start !important;
-        }
-        
         div[style*="justify-content: flex-end"] {
             justify-content: center !important;
         }
         
-        input[type="date"], select {
+        input[type="date"] {
             width: 100% !important;
-            min-width: 100% !important;
         }
         
         button {
@@ -346,8 +326,8 @@
             width: 100%;
         }
         
-        .custom-card {
-            min-width: 100% !important;
+        input#buscador {
+            width: 100% !important;
         }
     }
 </style>
@@ -358,302 +338,285 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Estados de Cuenta Bancarios');
+        console.log('DOM completamente cargado - Movimientos Bancarios');
         
-        // Datos ficticios completos para Estados de Cuenta Bancarios con cuenta asignada
-        const datosEstadoCuenta = [
+        // Variables
+        let datosOriginales = [];
+        let datosFiltrados = [];
+        let currentPage = 1;
+        let rowsPerPage = 10;
+        
+        // Datos de ejemplo para Movimientos Bancarios (20 filas)
+        const datosMovimientos = [
+            // BBVA - Enero 2026
             {
-                id: 1,
                 fecha: '2026-01-02',
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                tipo: 'Depósito',
-                folio: 'DEP-001',
+                folio: 'MOV-001',
                 referencia: 'REF-001',
-                descripcion: 'Pago de factura FAC-001 - Cliente: Maquiladora Industrial',
-                depositos: 25000.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1001
+                ref_bancaria: 'TRX-001',
+                origen: 'Depósito',
+                descripcion: 'Pago factura F-001',
+                cargos: 0.00,
+                abonos: 15000.00,
+                saldo_final: 60750.00,
+                banco_id: 1,
+                banco: 'BBVA'
             },
             {
-                id: 2,
-                fecha: '2026-01-03',
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                tipo: 'Retiro',
-                folio: 'RET-001',
-                referencia: 'REF-002',
-                descripcion: 'Pago a proveedor Transportes del Bajío',
-                depositos: 0,
-                retiros: 8500.00,
-                saldo: 0,
-                origen_id: 4,
-                origen_folio: 2001
-            },
-            {
-                id: 3,
                 fecha: '2026-01-05',
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                tipo: 'Transferencia',
-                folio: 'TRAS-001',
-                referencia: 'REF-003',
-                descripcion: 'Transferencia a cuenta secundaria',
-                depositos: 0,
-                retiros: 15000.00,
-                saldo: 0,
-                origen_id: 2,
-                origen_folio: 3001
+                folio: 'MOV-002',
+                referencia: 'REF-002',
+                ref_bancaria: 'CHQ-001',
+                origen: 'Cheque',
+                descripcion: 'Pago a proveedor',
+                cargos: 8750.00,
+                abonos: 0.00,
+                saldo_final: 52000.00,
+                banco_id: 1,
+                banco: 'BBVA'
             },
             {
-                id: 4,
-                fecha: '2026-01-07',
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                tipo: 'Depósito',
-                folio: 'DEP-002',
-                referencia: 'REF-004',
-                descripcion: 'Pago de factura FAC-002 - Cliente: Cartones del Norte',
-                depositos: 18750.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1002
-            },
-            {
-                id: 5,
                 fecha: '2026-01-08',
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                tipo: 'Traspaso',
-                folio: 'TRASP-001',
-                referencia: 'REF-005',
-                descripcion: 'Traspaso entre cuentas propias',
-                depositos: 0,
-                retiros: 12000.00,
-                saldo: 0,
-                origen_id: 2,
-                origen_folio: 4001
+                folio: 'MOV-003',
+                referencia: 'REF-003',
+                ref_bancaria: 'TRX-002',
+                origen: 'Transferencia',
+                descripcion: 'Pago factura F-002',
+                cargos: 0.00,
+                abonos: 8750.00,
+                saldo_final: 60750.00,
+                banco_id: 1,
+                banco: 'BBVA'
             },
             {
-                id: 6,
-                fecha: '2026-01-10',
-                cuenta_id: 4,
-                cuenta_nombre: 'Nóminas',
-                tipo: 'Depósito',
-                folio: 'DEP-003',
-                referencia: 'REF-006',
-                descripcion: 'Pago de factura FAC-003 - Cliente: Logística Monterrey',
-                depositos: 32200.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1003
-            },
-            {
-                id: 7,
                 fecha: '2026-01-12',
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                tipo: 'Retiro',
-                folio: 'RET-002',
-                referencia: 'REF-007',
-                descripcion: 'Pago de nómina quincenal',
-                depositos: 0,
-                retiros: 45000.00,
-                saldo: 0,
-                origen_id: 4,
-                origen_folio: 2002
+                folio: 'MOV-004',
+                referencia: 'REF-004',
+                ref_bancaria: 'TRX-003',
+                origen: 'Depósito',
+                descripcion: 'Pago factura F-003',
+                cargos: 0.00,
+                abonos: 5600.00,
+                saldo_final: 66350.00,
+                banco_id: 1,
+                banco: 'BBVA'
             },
             {
-                id: 8,
                 fecha: '2026-01-15',
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                tipo: 'Depósito',
-                folio: 'DEP-004',
+                folio: 'MOV-005',
+                referencia: 'REF-005',
+                ref_bancaria: 'CHQ-002',
+                origen: 'Cheque',
+                descripcion: 'Pago de nómina',
+                cargos: 25000.00,
+                abonos: 0.00,
+                saldo_final: 41350.00,
+                banco_id: 1,
+                banco: 'BBVA'
+            },
+            // Santander - Enero 2026
+            {
+                fecha: '2026-01-03',
+                folio: 'MOV-006',
+                referencia: 'REF-006',
+                ref_bancaria: 'TRX-004',
+                origen: 'Depósito',
+                descripcion: 'Pago factura F-004',
+                cargos: 0.00,
+                abonos: 22400.00,
+                saldo_final: 22400.00,
+                banco_id: 2,
+                banco: 'Santander'
+            },
+            {
+                fecha: '2026-01-07',
+                folio: 'MOV-007',
+                referencia: 'REF-007',
+                ref_bancaria: 'CHQ-003',
+                origen: 'Cheque',
+                descripcion: 'Pago renta',
+                cargos: 15000.00,
+                abonos: 0.00,
+                saldo_final: 7400.00,
+                banco_id: 2,
+                banco: 'Santander'
+            },
+            {
+                fecha: '2026-01-14',
+                folio: 'MOV-008',
                 referencia: 'REF-008',
-                descripcion: 'Pago de factura FAC-004 - Cliente: Comercializadora del Sur',
-                depositos: 15600.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1004
+                ref_bancaria: 'TRX-005',
+                origen: 'Transferencia',
+                descripcion: 'Pago factura F-005',
+                cargos: 0.00,
+                abonos: 8900.00,
+                saldo_final: 16300.00,
+                banco_id: 2,
+                banco: 'Santander'
             },
             {
-                id: 9,
-                fecha: '2026-01-16',
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                tipo: 'Transferencia',
-                folio: 'TRAS-002',
+                fecha: '2026-01-21',
+                folio: 'MOV-009',
                 referencia: 'REF-009',
-                descripcion: 'Transferencia a proveedor Papelera del Pacífico',
-                depositos: 0,
-                retiros: 22300.00,
-                saldo: 0,
-                origen_id: 4,
-                origen_folio: 3002
+                ref_bancaria: 'COM-002',
+                origen: 'Comisión',
+                descripcion: 'Comisión bancaria',
+                cargos: 450.00,
+                abonos: 0.00,
+                saldo_final: 15850.00,
+                banco_id: 2,
+                banco: 'Santander'
             },
+            // Banamex - Enero 2026
             {
-                id: 10,
-                fecha: '2026-01-18',
-                cuenta_id: 4,
-                cuenta_nombre: 'Nóminas',
-                tipo: 'Depósito',
-                folio: 'DEP-005',
+                fecha: '2026-01-04',
+                folio: 'MOV-010',
                 referencia: 'REF-010',
-                descripcion: 'Pago de factura FAC-005 - Cliente: Ferrocarriles Nacionales',
-                depositos: 42500.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1005
+                ref_bancaria: 'TRX-006',
+                origen: 'Depósito',
+                descripcion: 'Pago factura F-006',
+                cargos: 0.00,
+                abonos: 32000.00,
+                saldo_final: 32000.00,
+                banco_id: 3,
+                banco: 'Banamex'
             },
             {
-                id: 11,
-                fecha: '2026-01-20',
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                tipo: 'Retiro',
-                folio: 'RET-003',
+                fecha: '2026-01-11',
+                folio: 'MOV-011',
                 referencia: 'REF-011',
-                descripcion: 'Pago de servicios (luz, agua, internet)',
-                depositos: 0,
-                retiros: 12500.00,
-                saldo: 0,
-                origen_id: 4,
-                origen_folio: 2003
+                ref_bancaria: 'CHQ-004',
+                origen: 'Cheque',
+                descripcion: 'Pago servicios',
+                cargos: 8500.00,
+                abonos: 0.00,
+                saldo_final: 23500.00,
+                banco_id: 3,
+                banco: 'Banamex'
             },
             {
-                id: 12,
-                fecha: '2026-01-22',
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                tipo: 'Traspaso',
-                folio: 'TRASP-002',
+                fecha: '2026-01-18',
+                folio: 'MOV-012',
                 referencia: 'REF-012',
-                descripcion: 'Traspaso a cuenta de ahorros',
-                depositos: 0,
-                retiros: 30000.00,
-                saldo: 0,
-                origen_id: 2,
-                origen_folio: 4002
+                ref_bancaria: 'TRX-007',
+                origen: 'Transferencia',
+                descripcion: 'Pago factura F-007',
+                cargos: 0.00,
+                abonos: 12500.00,
+                saldo_final: 36000.00,
+                banco_id: 3,
+                banco: 'Banamex'
             },
             {
-                id: 13,
                 fecha: '2026-01-25',
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                tipo: 'Depósito',
-                folio: 'DEP-006',
+                folio: 'MOV-013',
                 referencia: 'REF-013',
-                descripcion: 'Pago de factura FAC-006 - Cliente: Cervecería del Centro',
-                depositos: 28900.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1006
+                ref_bancaria: 'COM-003',
+                origen: 'Comisión',
+                descripcion: 'Comisión bancaria',
+                cargos: 380.00,
+                abonos: 0.00,
+                saldo_final: 35620.00,
+                banco_id: 3,
+                banco: 'Banamex'
             },
+            // HSBC - Enero 2026
             {
-                id: 14,
-                fecha: '2026-01-27',
-                cuenta_id: 4,
-                cuenta_nombre: 'Nóminas',
-                tipo: 'Retiro',
-                folio: 'RET-004',
+                fecha: '2026-01-06',
+                folio: 'MOV-014',
                 referencia: 'REF-014',
-                descripcion: 'Pago de impuestos (IVA, ISR)',
-                depositos: 0,
-                retiros: 18500.00,
-                saldo: 0,
-                origen_id: 4,
-                origen_folio: 2004
+                ref_bancaria: 'TRX-008',
+                origen: 'Depósito',
+                descripcion: 'Pago factura F-008',
+                cargos: 0.00,
+                abonos: 18900.00,
+                saldo_final: 18900.00,
+                banco_id: 4,
+                banco: 'HSBC'
             },
             {
-                id: 15,
-                fecha: '2026-01-29',
-                cuenta_id: 1,
-                cuenta_nombre: 'Principal',
-                tipo: 'Depósito',
-                folio: 'DEP-007',
+                fecha: '2026-01-13',
+                folio: 'MOV-015',
                 referencia: 'REF-015',
-                descripcion: 'Pago de factura FAC-007 - Cliente: Autotransportes Mexicanos',
-                depositos: 31200.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1007
+                ref_bancaria: 'CHQ-005',
+                origen: 'Cheque',
+                descripcion: 'Pago proveedor',
+                cargos: 6700.00,
+                abonos: 0.00,
+                saldo_final: 12200.00,
+                banco_id: 4,
+                banco: 'HSBC'
             },
             {
-                id: 16,
-                fecha: '2026-01-30',
-                cuenta_id: 3,
-                cuenta_nombre: 'Ahorros',
-                tipo: 'Transferencia',
-                folio: 'TRAS-003',
+                fecha: '2026-01-20',
+                folio: 'MOV-016',
                 referencia: 'REF-016',
-                descripcion: 'Transferencia a cuenta de nóminas',
-                depositos: 0,
-                retiros: 25000.00,
-                saldo: 0,
-                origen_id: 2,
-                origen_folio: 3003
+                ref_bancaria: 'TRX-009',
+                origen: 'Transferencia',
+                descripcion: 'Pago factura F-009',
+                cargos: 0.00,
+                abonos: 15200.00,
+                saldo_final: 27400.00,
+                banco_id: 4,
+                banco: 'HSBC'
             },
             {
-                id: 17,
-                fecha: '2026-01-31',
-                cuenta_id: 2,
-                cuenta_nombre: 'Secundaria',
-                tipo: 'Depósito',
-                folio: 'DEP-008',
+                fecha: '2026-01-27',
+                folio: 'MOV-017',
                 referencia: 'REF-017',
-                descripcion: 'Pago de factura FAC-008 - Cliente: Minería del Norte',
-                depositos: 35750.00,
-                retiros: 0,
-                saldo: 0,
-                origen_id: 3,
-                origen_folio: 1008
+                ref_bancaria: 'COM-004',
+                origen: 'Comisión',
+                descripcion: 'Comisión bancaria',
+                cargos: 290.00,
+                abonos: 0.00,
+                saldo_final: 27110.00,
+                banco_id: 4,
+                banco: 'HSBC'
+            },
+            // Más movimientos para BBVA - Febrero 2026
+            {
+                fecha: '2026-02-03',
+                folio: 'MOV-018',
+                referencia: 'REF-018',
+                ref_bancaria: 'TRX-010',
+                origen: 'Depósito',
+                descripcion: 'Pago factura F-010',
+                cargos: 0.00,
+                abonos: 22300.00,
+                saldo_final: 22300.00,
+                banco_id: 1,
+                banco: 'BBVA'
+            },
+            {
+                fecha: '2026-02-10',
+                folio: 'MOV-019',
+                referencia: 'REF-019',
+                ref_bancaria: 'CHQ-006',
+                origen: 'Cheque',
+                descripcion: 'Pago servicios',
+                cargos: 9800.00,
+                abonos: 0.00,
+                saldo_final: 12500.00,
+                banco_id: 1,
+                banco: 'BBVA'
+            },
+            {
+                fecha: '2026-02-17',
+                folio: 'MOV-020',
+                referencia: 'REF-020',
+                ref_bancaria: 'TRX-011',
+                origen: 'Transferencia',
+                descripcion: 'Pago factura F-011',
+                cargos: 0.00,
+                abonos: 15600.00,
+                saldo_final: 28100.00,
+                banco_id: 1,
+                banco: 'BBVA'
             }
         ];
         
-        // Saldo inicial por cuenta (ficticio)
-        const saldosIniciales = {
-            0: 408250.00, // Todas las cuentas (suma de todas)
-            1: 125750.00, // Principal
-            2: 87500.00,  // Secundaria
-            3: 45000.00,  // Ahorros
-            4: 150000.00  // Nóminas
-        };
-        
-        // Variables globales
-        let movimientosOriginales = [...datosEstadoCuenta];
-        let movimientosFiltrados = [...datosEstadoCuenta];
-        let saldoInicialValor = 408250.00;
-        let paginaActual = 1;
-        const registrosPorPagina = 10;
-        
-        // Elementos del DOM
-        const selectCuenta = document.getElementById('cuentaBancaria');
-        const fechaInicio = document.getElementById('fechaInicio');
-        const fechaFin = document.getElementById('fechaFin');
-        const btnConsultar = document.getElementById('btnConsultar');
-        const btnExcel = document.getElementById('btnExcel');
-        const btnColumnas = document.getElementById('btnColumnas');
-        const buscador = document.getElementById('buscador');
-        const tablaBody = document.getElementById('tablaBody');
-        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const totalRegistros = document.getElementById('totalRegistros');
-        const totalDepositos = document.getElementById('totalDepositos');
-        const totalRetiros = document.getElementById('totalRetiros');
-        const totalSaldo = document.getElementById('totalSaldo');
-        const saldoInicialSpan = document.getElementById('saldoInicial');
-        const saldoFinalSpan = document.getElementById('saldoFinal');
-        const paginacionInfo = document.getElementById('paginacionInfo');
-        const paginacionContainer = document.getElementById('paginacionContainer');
+        datosOriginales = [...datosMovimientos];
+        datosFiltrados = [...datosOriginales];
         
         // Función para formatear números como moneda
         function formatCurrency(amount) {
@@ -664,233 +627,251 @@
         function formatDate(dateString) {
             if (!dateString) return '-';
             const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return date.toLocaleDateString('es-MX');
         }
         
-        // Función para determinar la clase del badge según el tipo
-        function getBadgeClass(tipo) {
-            tipo = tipo?.toLowerCase() || '';
-            if (tipo.includes('depósito') || tipo.includes('deposito')) return 'badge-deposito';
-            if (tipo.includes('retiro')) return 'badge-retiro';
-            if (tipo.includes('traspaso')) return 'badge-traspaso';
-            if (tipo.includes('transferencia')) return 'badge-transferencia';
-            return 'badge-deposito';
-        }
-        
-        // Función para filtrar por búsqueda
-        function filtrarPorBusqueda() {
-            const termino = buscador.value.toLowerCase().trim();
+        // Función para actualizar los cuadros de resumen
+        function actualizarResumen(datos) {
+            // Calcular saldo inicial (primer movimiento del período)
+            let saldoInicial = 45678.90; // Valor base
             
-            if (termino === '') {
-                movimientosFiltrados = [...movimientosOriginales];
-            } else {
-                movimientosFiltrados = movimientosOriginales.filter(item => 
-                    item.tipo?.toLowerCase().includes(termino) ||
-                    item.folio?.toLowerCase().includes(termino) ||
-                    item.referencia?.toLowerCase().includes(termino) ||
-                    item.descripcion?.toLowerCase().includes(termino) ||
-                    item.fecha?.includes(termino) ||
-                    item.cuenta_nombre?.toLowerCase().includes(termino)
-                );
-            }
+            // Calcular total de cargos y abonos
+            let totalCargos = 0;
+            let totalAbonos = 0;
             
-            paginaActual = 1;
-            aplicarPaginacionYMostrar();
-        }
-        
-        // Función para filtrar por fechas
-        function filtrarPorFechas() {
-            const inicio = new Date(fechaInicio.value);
-            const fin = new Date(fechaFin.value);
-            
-            if (!inicio || !fin) return;
-            
-            movimientosFiltrados = movimientosOriginales.filter(item => {
-                const fechaItem = new Date(item.fecha);
-                return fechaItem >= inicio && fechaItem <= fin;
+            datos.forEach(item => {
+                totalCargos += item.cargos || 0;
+                totalAbonos += item.abonos || 0;
             });
             
-            paginaActual = 1;
-            aplicarPaginacionYMostrar();
-        }
-        
-        // Función para cambiar de cuenta
-        function cambiarCuenta() {
-            const cuentaId = parseInt(selectCuenta.value);
+            // Calcular saldo final (saldo inicial + abonos - cargos)
+            let saldoFinal = saldoInicial + totalAbonos - totalCargos;
             
-            if (cuentaId === 0) {
-                // Todas las cuentas
-                movimientosOriginales = [...datosEstadoCuenta];
-                saldoInicialValor = saldosIniciales[0];
-            } else {
-                // Filtrar por cuenta específica
-                movimientosOriginales = datosEstadoCuenta.filter(item => item.cuenta_id === cuentaId);
-                saldoInicialValor = saldosIniciales[cuentaId];
+            // Si hay datos, podemos usar el último saldo_final
+            if (datos.length > 0) {
+                saldoFinal = datos[datos.length - 1].saldo_final;
             }
             
-            // Aplicar filtro de fechas actual
-            filtrarPorFechas();
+            document.getElementById('saldoInicial').textContent = formatCurrency(saldoInicial);
+            document.getElementById('totalCargos').textContent = formatCurrency(totalCargos);
+            document.getElementById('totalAbonos').textContent = formatCurrency(totalAbonos);
+            document.getElementById('saldoFinal').textContent = formatCurrency(saldoFinal);
         }
         
-        // Función para aplicar paginación
-        function aplicarPaginacionYMostrar() {
-            const inicio = (paginaActual - 1) * registrosPorPagina;
-            const fin = inicio + registrosPorPagina;
-            const movimientosPagina = movimientosFiltrados.slice(inicio, fin);
+        // Función para calcular totales de la tabla
+        function calcularTotales(datos) {
+            let totalCargos = 0;
+            let totalAbonos = 0;
+            let totalSaldoFinal = 0;
             
-            mostrarTabla(movimientosPagina);
-            actualizarPaginacion();
-        }
-        
-        // Función para cambiar de página
-        function cambiarPagina(nuevaPagina) {
-            const totalPaginas = Math.ceil(movimientosFiltrados.length / registrosPorPagina);
-            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
-                paginaActual = nuevaPagina;
-                aplicarPaginacionYMostrar();
-            }
-        }
-        
-        // Función para actualizar los controles de paginación
-        function actualizarPaginacion() {
-            const totalPaginas = Math.ceil(movimientosFiltrados.length / registrosPorPagina);
-            const inicio = (paginaActual - 1) * registrosPorPagina + 1;
-            const fin = Math.min(paginaActual * registrosPorPagina, movimientosFiltrados.length);
+            datos.forEach(item => {
+                totalCargos += item.cargos || 0;
+                totalAbonos += item.abonos || 0;
+            });
             
-            paginacionInfo.textContent = `Mostrando ${movimientosFiltrados.length > 0 ? inicio : 0}-${fin} de ${movimientosFiltrados.length} registros`;
-            
-            // Actualizar botones de paginación
-            const botones = paginacionContainer.querySelectorAll('button');
-            const spanPagina = paginacionContainer.querySelector('span');
-            
-            // Limpiar botones existentes excepto los de navegación
-            while (paginacionContainer.children.length > 7) {
-                paginacionContainer.removeChild(paginacionContainer.children[2]);
+            // El saldo final total es el del último movimiento
+            if (datos.length > 0) {
+                totalSaldoFinal = datos[datos.length - 1].saldo_final;
             }
             
-            // Agregar botones de páginas
-            for (let i = 1; i <= Math.min(5, totalPaginas); i++) {
-                if (i === 1) {
-                    spanPagina.textContent = i;
-                    spanPagina.style.backgroundColor = i === paginaActual ? '#6B8ACE' : 'transparent';
-                    spanPagina.style.color = i === paginaActual ? 'white' : '#6B8ACE';
-                } else {
-                    const btn = document.createElement('button');
-                    btn.textContent = i;
-                    btn.style.padding = '5px 10px';
-                    btn.style.border = '1px solid #dee2e6';
-                    btn.style.backgroundColor = i === paginaActual ? '#6B8ACE' : 'white';
-                    btn.style.borderRadius = '4px';
-                    btn.style.cursor = 'pointer';
-                    btn.style.color = i === paginaActual ? 'white' : '#6B8ACE';
-                    btn.addEventListener('click', () => cambiarPagina(i));
-                    paginacionContainer.insertBefore(btn, paginacionContainer.children[paginacionContainer.children.length - 2]);
+            document.getElementById('sumCargos').textContent = formatCurrency(totalCargos);
+            document.getElementById('sumAbonos').textContent = formatCurrency(totalAbonos);
+            document.getElementById('sumSaldoFinal').textContent = formatCurrency(totalSaldoFinal);
+        }
+        
+        // Función para aplicar filtros
+        function aplicarFiltros() {
+            const bancoId = document.getElementById('selectCuenta').value;
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+            const busqueda = document.getElementById('buscador').value.toLowerCase();
+            
+            datosFiltrados = datosOriginales.filter(item => {
+                // Filtro por banco
+                if (bancoId !== '0' && item.banco_id !== parseInt(bancoId)) {
+                    return false;
                 }
-            }
+                
+                // Filtro por fecha
+                if (fechaInicio && item.fecha < fechaInicio) {
+                    return false;
+                }
+                if (fechaFin && item.fecha > fechaFin) {
+                    return false;
+                }
+                
+                // Filtro por búsqueda
+                if (busqueda) {
+                    return item.folio?.toLowerCase().includes(busqueda) ||
+                           item.referencia?.toLowerCase().includes(busqueda) ||
+                           item.origen?.toLowerCase().includes(busqueda) ||
+                           item.descripcion?.toLowerCase().includes(busqueda) ||
+                           item.banco?.toLowerCase().includes(busqueda);
+                }
+                
+                return true;
+            });
+            
+            currentPage = 1;
+            cargarTabla(datosFiltrados);
         }
         
-        // Función para mostrar la tabla
-        function mostrarTabla(movimientos) {
+        // Función para obtener datos de la página actual
+        function getCurrentPageData(datos) {
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            return datos.slice(start, end);
+        }
+        
+        // Función para actualizar la paginación
+        function actualizarPaginacion(total) {
+            const totalPages = Math.ceil(total / rowsPerPage);
+            document.getElementById('paginaActual').textContent = currentPage;
+            
+            // Mostrar/ocultar botones de página según sea necesario
+            document.querySelectorAll('.pagina-btn').forEach(btn => {
+                const pagina = parseInt(btn.dataset.pagina);
+                if (pagina <= totalPages) {
+                    btn.style.display = 'inline-block';
+                    btn.dataset.pagina = pagina;
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+            
+            // Actualizar texto de paginación
+            const start = total > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0;
+            const end = Math.min(currentPage * rowsPerPage, total);
+            document.getElementById('paginacionInfo').textContent = `Mostrando ${start}-${end} de ${total} registros`;
+        }
+        
+        // Función para cargar datos en la tabla
+        function cargarTabla(datos) {
+            const tablaBody = document.getElementById('tablaBody');
+            const sinDatosMensaje = document.getElementById('sinDatosMensaje');
+            const tablaContainer = document.getElementById('tablaContainer');
+            
             if (!tablaBody) return;
             
+            // Actualizar cuadros de resumen
+            actualizarResumen(datos);
+            
+            // Limpiar tabla
             tablaBody.innerHTML = '';
             
-            if (movimientos.length === 0) {
+            if (datos.length === 0) {
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
                 
-                totalRegistros.textContent = '0';
-                totalDepositos.textContent = formatCurrency(0);
-                totalRetiros.textContent = formatCurrency(0);
-                totalSaldo.textContent = formatCurrency(0);
-                saldoFinalSpan.textContent = formatCurrency(saldoInicialValor);
-                saldoInicialSpan.textContent = formatCurrency(saldoInicialValor);
+                // Resetear totales
+                document.getElementById('sumCargos').textContent = '$0.00';
+                document.getElementById('sumAbonos').textContent = '$0.00';
+                document.getElementById('sumSaldoFinal').textContent = '$0.00';
                 
+                document.getElementById('paginacionInfo').textContent = 'Mostrando 0-0 de 0 registros';
                 return;
             }
             
             sinDatosMensaje.style.display = 'none';
             tablaContainer.style.display = 'block';
             
-            // Calcular saldo acumulado
-            let saldoAcumulado = saldoInicialValor;
-            const movimientosConSaldo = movimientos.map(mov => {
-                saldoAcumulado = saldoAcumulado + (mov.depositos || 0) - (mov.retiros || 0);
-                return { ...mov, saldo: saldoAcumulado };
-            });
+            // Mostrar todos los items con paginación
+            const pageData = getCurrentPageData(datos);
             
-            // Calcular totales
-            let sumaDepositos = 0;
-            let sumaRetiros = 0;
-            
-            movimientosConSaldo.forEach(item => {
-                sumaDepositos += item.depositos || 0;
-                sumaRetiros += item.retiros || 0;
-            });
-            
-            const ultimoSaldo = movimientosConSaldo.length > 0 ? movimientosConSaldo[movimientosConSaldo.length - 1].saldo : saldoInicialValor;
-            
-            totalRegistros.textContent = movimientos.length;
-            totalDepositos.textContent = formatCurrency(sumaDepositos);
-            totalRetiros.textContent = formatCurrency(sumaRetiros);
-            totalSaldo.textContent = formatCurrency(ultimoSaldo);
-            saldoFinalSpan.textContent = formatCurrency(ultimoSaldo);
-            saldoInicialSpan.textContent = formatCurrency(saldoInicialValor);
-            
-            // Generar filas de la tabla
-            movimientosConSaldo.forEach((item, index) => {
+            pageData.forEach(item => {
                 const row = document.createElement('tr');
                 
-                const badgeClass = getBadgeClass(item.tipo);
-                
                 row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${(paginaActual - 1) * registrosPorPagina + index + 1}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${formatDate(item.fecha)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">
-                        <span style="background-color: #6B8ACE; color: white; padding: 3px 6px; border-radius: 3px; font-size: 11px;">${item.cuenta_nombre || '-'}</span>
-                    </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
-                        <span class="badge ${badgeClass}">${item.tipo || '-'}</span>
-                    </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.folio || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.referencia || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.descripcion || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.depositos ? formatCurrency(item.depositos) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${item.retiros ? formatCurrency(item.retiros) : '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; font-weight: bold;">${formatCurrency(item.saldo)}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.ref_bancaria || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.origen || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.cargos ? formatCurrency(item.cargos) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.abonos ? formatCurrency(item.abonos) : '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.saldo_final ? formatCurrency(item.saldo_final) : '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" data-origen-id="${item.origen_id || 0}" data-id="${item.origen_folio || 0}" data-descripcion="${item.descripcion}"></i>
-                            <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Descargar PDF" data-folio="${item.folio}"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-folio="${item.folio}"></i>
+                            <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-folio="${item.folio}"></i>
                         </div>
                     </td>
                 `;
                 
                 tablaBody.appendChild(row);
             });
+            
+            // Mostrar pie de tabla con totales
+            calcularTotales(datos);
+            
+            actualizarPaginacion(datos.length);
         }
         
-        // Función para ver detalle del movimiento
-        function verDetalleMovimiento(origenId, id, descripcion) {
-            alert(`Detalle del movimiento:\nOrigen: ${origenId === '3' ? 'Depósito' : origenId === '4' ? 'Retiro/Transferencia' : 'Traspaso'}\nID: ${id}\nDescripción: ${descripcion}\n\n(Funcionalidad en desarrollo)`);
-        }
+        // Cargar datos iniciales
+        cargarTabla(datosMovimientos);
         
         // Event Listeners
-        btnConsultar.addEventListener('click', function() {
-            filtrarPorFechas();
+        document.getElementById('btnFiltrar')?.addEventListener('click', function() {
+            aplicarFiltros();
         });
         
-        btnExcel.addEventListener('click', function() {
-            alert('Exportar a Excel - Funcionalidad en desarrollo');
+        document.getElementById('selectCuenta')?.addEventListener('change', function() {
+            // Auto-aplicar filtros al cambiar banco
+            aplicarFiltros();
         });
         
-        btnColumnas.addEventListener('click', function() {
-            alert('Selector de Columnas - Funcionalidad en desarrollo');
+        document.getElementById('fechaInicio')?.addEventListener('change', function() {
+            // Auto-aplicar filtros al cambiar fecha
+            aplicarFiltros();
         });
         
-        buscador.addEventListener('input', filtrarPorBusqueda);
+        document.getElementById('fechaFin')?.addEventListener('change', function() {
+            // Auto-aplicar filtros al cambiar fecha
+            aplicarFiltros();
+        });
         
-        selectCuenta.addEventListener('change', cambiarCuenta);
+        document.getElementById('btnExcel')?.addEventListener('click', function() {
+            exportTableToExcel('tablaMovimientos', 'MovimientosBancarios');
+        });
+        
+        document.getElementById('buscador')?.addEventListener('input', function(e) {
+            aplicarFiltros();
+        });
+        
+        // Paginación
+        document.querySelectorAll('.pagina-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentPage = parseInt(this.dataset.pagina);
+                cargarTabla(datosFiltrados);
+            });
+        });
+        
+        document.getElementById('btnPrimera')?.addEventListener('click', function() {
+            currentPage = 1;
+            cargarTabla(datosFiltrados);
+        });
+        
+        document.getElementById('btnAnterior')?.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                cargarTabla(datosFiltrados);
+            }
+        });
+        
+        document.getElementById('btnSiguiente')?.addEventListener('click', function() {
+            const totalPages = Math.ceil(datosFiltrados.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                cargarTabla(datosFiltrados);
+            }
+        });
+        
+        document.getElementById('btnUltima')?.addEventListener('click', function() {
+            const totalPages = Math.ceil(datosFiltrados.length / rowsPerPage);
+            currentPage = totalPages;
+            cargarTabla(datosFiltrados);
+        });
         
         // Iconos de filtro en encabezados
         document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
@@ -899,32 +880,30 @@
             });
         });
         
-        // Delegación de eventos para los iconos de acción
+        // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-eye')) {
-                const origenId = e.target.getAttribute('data-origen-id');
-                const id = e.target.getAttribute('data-id');
-                const descripcion = e.target.getAttribute('data-descripcion');
-                verDetalleMovimiento(origenId, id, descripcion);
+                const folio = e.target.dataset.folio;
+                alert(`Ver detalles del movimiento ${folio}`);
             } else if (e.target.classList.contains('fa-file-pdf')) {
-                const folio = e.target.getAttribute('data-folio');
-                alert(`Descargar PDF - Folio: ${folio} (Funcionalidad en desarrollo)`);
+                const folio = e.target.dataset.folio;
+                alert(`Descargar PDF del movimiento ${folio}`);
             }
         });
         
-        // Paginación
-        const btnPrimera = paginacionContainer.querySelector('button[title="Primera página"]');
-        const btnAnterior = paginacionContainer.querySelector('button[title="Página anterior"]');
-        const btnSiguiente = paginacionContainer.querySelector('button[title="Página siguiente"]');
-        const btnUltima = paginacionContainer.querySelector('button[title="Última página"]');
-        
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(movimientosFiltrados.length / registrosPorPagina)));
-        
-        // Cargar datos iniciales (Todas las cuentas)
-        cambiarCuenta();
+        // Función para exportar a Excel
+        function exportTableToExcel(tableId, filename = '') {
+            var table = document.getElementById(tableId);
+            if (!table) return;
+            
+            var html = table.outerHTML;
+            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+            
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = filename + '.xls';
+            link.click();
+        }
     });
 </script>
 @endsection

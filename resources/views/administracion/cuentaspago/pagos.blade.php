@@ -6,9 +6,10 @@
         <!-- Antiguedad de Cuentas Por Pagar -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
-                <h2 style="color: #083CAE; font-weight: bold; margin: 0 0 15px 0; font-size: 24px;">
-                    Antiguedad de Cuentas Por Pagar
-                </h2>
+<h2 style="color: #083CAE; font-weight: bold; margin: 0 0 15px 0; font-size: 24px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;">
+    Antiguedad de Cuentas Por Pagar
+    <i class="fa-solid fa-arrow-trend-down" style="color: #dc2626; font-size: 26px;"></i>
+</h2>
                 
                 <div class="row align-items-center">
                     <div class="col-md-3">

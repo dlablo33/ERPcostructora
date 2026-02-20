@@ -26,701 +26,759 @@
         }
     </script>
 
-    <style>
-        /* ========== VARIABLES DE COLOR ========== */
+<style>
+    /* ========== VARIABLES DE COLOR ========== */
+    :root {
+        --color-primary: #083CAE;
+        --color-secondary: #2CBF1F;
+        --color-accent: #eaf512;
+        --color-red: #FF0000;
+        --navbar-height: 64px;
+        --tabbar-height: 40px;
+        --total-header-height: calc(var(--navbar-height) + var(--tabbar-height));
+        --sidebar-width: 260px;
+    }
+
+    /* ========== RESET ========== */
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+
+    /* ========== NAVBAR SUPERIOR ========== */
+    nav.bg-construction-dark {
+        z-index: 1050 !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--navbar-height);
+        background-color: #083CAE !important;
+    }
+
+    /* Iconos del menú en color eaf512 */
+    nav.bg-construction-dark .desktop-menu button i {
+        color: #eaf512 !important;
+        transition: all 0.3s ease;
+    }
+
+    nav.bg-construction-dark .desktop-menu button:hover i {
+        color: white !important;
+    }
+
+    /* Texto de las secciones se vuelve negro al pasar el mouse */
+    nav.bg-construction-dark .desktop-menu button:hover span {
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
+
+    nav.bg-construction-dark .desktop-menu button {
+        transition: all 0.3s ease;
+    }
+
+    nav.bg-construction-dark .desktop-menu button:hover {
+        background-color: transparent !important;
+    }
+
+    nav.bg-construction-dark .desktop-menu button:hover i {
+        color: #000000 !important;
+    }
+
+    /* Estrella del menú */
+    .desktop-menu button i.fa-star {
+        color: #eaf512 !important;
+        font-size: 1.2rem;
+    }
+
+    /* ========== BARRA DE PESTAÑAS CON SUPERPOSICIÓN ========== */
+    .tab-navigation-bar {
+        background-color: var(--color-secondary) !important;
+        height: var(--tabbar-height);
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        right: 0;
+        z-index: 10000 !important; /* Z-index máximo para toda la barra */
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        border-bottom: 2px solid #FF0000 !important;
+        pointer-events: auto !important;
+        isolation: isolate; /* Crea un contexto de apilamiento */
+    }
+
+    .tab-navigation-bar.sidebar-open {
+        left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+    }
+
+    /* Contenedor del botón Cerrar Todo - Fondo rojo completo */
+    .close-all-tabs-container {
+        background-color: #FF0000 !important;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        margin-left: -15px;
+        border-right: 2px solid #cc0000;
+        position: relative !important;
+        z-index: 10001 !important; /* Máximo z-index */
+        pointer-events: auto !important;
+    }
+
+    .close-all-tabs-btn {
+        background-color: transparent !important;
+        border: none !important;
+        color: white !important;
+        font-weight: bold !important;
+        padding: 6px 0 !important;
+        transition: all 0.3s ease !important;
+        text-transform: uppercase !important;
+        font-size: 12px !important;
+        letter-spacing: 0.5px !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative !important;
+        z-index: 10002 !important; /* Máximo z-index */
+        cursor: pointer !important;
+        pointer-events: auto !important;
+    }
+
+    .close-all-tabs-btn:hover {
+        transform: translateY(-2px);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .close-all-tabs-btn i {
+        color: white !important;
+        font-size: 14px;
+    }
+
+    /* Contenedor de pestañas */
+    .tabs-container-nav {
+        display: flex;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex: 1;
+        height: 100%;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.1);
+        padding-left: 10px;
+        position: relative !important;
+        z-index: 10001 !important;
+        pointer-events: auto !important;
+    }
+
+    #tabsNavContainer {
+        display: flex;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex: 1;
+        height: 100%;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.1);
+        padding-left: 10px;
+    }
+
+    #tabsNavContainer::-webkit-scrollbar {
+        height: 3px;
+    }
+
+    #tabsNavContainer::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.1);
+    }
+
+    #tabsNavContainer::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.3);
+        border-radius: 3px;
+    }
+
+    #tabsNavContainer::-webkit-scrollbar-thumb:hover {
+        background: rgba(255,255,255,0.5);
+    }
+
+    /* ========== ESTILOS DE PESTAÑAS MINIMALISTAS ========== */
+    .tab-item {
+        cursor: pointer;
+        max-width: 200px;
+        position: relative !important;
+        user-select: none;
+        transition: color 0.15s ease;
+        z-index: 10001 !important;
+        pointer-events: auto !important;
+    }
+
+    .tab-item .close-tab {
+        transition: opacity 0.15s ease;
+        z-index: 10002 !important;
+        pointer-events: auto !important;
+    }
+
+    .tab-item:hover .close-tab {
+        opacity: 1 !important;
+    }
+
+    .close-tab:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .tab-context-menu {
+        animation: fadeIn 0.15s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        z-index: 10003 !important;
+    }
+
+    .context-menu-item {
+        transition: background-color 0.15s ease;
+    }
+
+    .context-menu-item:hover {
+        background-color: #f3f4f6;
+    }
+
+    .new-tab-btn {
+        flex-shrink: 0;
+        transition: all 0.15s ease;
+        position: relative !important;
+        z-index: 10001 !important;
+        pointer-events: auto !important;
+    }
+
+    .new-tab-btn:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes fadeIn { 
+        from { opacity: 0; transform: translateY(-5px); } 
+        to { opacity: 1; transform: translateY(0); } 
+    }
+
+    /* ========== SOLUCIÓN: LOGO NO BLOQUEA ========== */
+    nav.bg-construction-dark .flex.items-center.space-x-3 {
+        pointer-events: none; /* El contenedor no recibe clicks */
+        position: relative;
+        z-index: 1 !important; /* Z-index muy bajo */
+    }
+
+    nav.bg-construction-dark .flex.items-center.space-x-3 a {
+        pointer-events: auto; /* El enlace sigue siendo clickeable */
+        position: relative;
+        z-index: 2 !important; /* Bajo, pero funcional */
+    }
+
+    nav.bg-construction-dark .flex.items-center.space-x-3 img {
+        pointer-events: none !important; /* La imagen no recibe clicks */
+        max-height: 180px !important; /* Mantiene el tamaño original */
+        width: auto !important;
+    }
+
+    /* ========== BARRA LATERAL DE SECCIÓN ========== */
+    .section-sidebar {
+        position: fixed;
+        top: var(--navbar-height);
+        left: -380px;
+        width: var(--sidebar-width);
+        height: calc(100vh - var(--navbar-height));
+        background: #083CAE;
+        box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+        z-index: 9000; /* Por debajo de la barra de pestañas */
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        border-radius: 0 12px 12px 0;
+    }
+
+    .section-sidebar.open {
+        left: 0;
+    }
+
+    .section-sidebar-header {
+        background: #083CAE;
+        padding: 1.25rem 1.5rem;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .section-sidebar-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-sidebar-title i {
+        font-size: 1.5rem;
+        color: #ffff00;
+    }
+
+    .section-sidebar-title h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+        color: white;
+    }
+
+    .section-sidebar-close {
+        background: rgba(255,255,255,0.15);
+        border: none;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .section-sidebar-close:hover {
+        background: rgba(255,255,255,0.25);
+        transform: rotate(90deg);
+    }
+
+    .section-sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.25rem;
+        background: #083CAE;
+    }
+
+    .sidebar-menu-group {
+        margin-bottom: 0.0rem;
+    }
+
+    .sidebar-menu-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        background: transparent ;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-left: transparent;
+    }
+
+    .sidebar-menu-title span i {
+        color: #ffff00;
+        margin-right: 8px;
+        width: 10px;
+    }
+
+    .sidebar-menu-title i:last-child {
+        color: #ffff00;
+        transition: transform 0.3s ease;
+        font-size: 0.85rem;
+    }
+
+    .sidebar-menu-title.expanded i:last-child {
+        transform: rotate(90deg);
+    }
+
+    .sidebar-menu-title:hover {
+        background: rgba(255,255,255,0.18);
+    }
+
+    .sidebar-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        margin-left: 0.5rem;
+        padding-left: 0.5rem;
+        border-left: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .sidebar-submenu.expanded {
+        max-height: 800px;
+    }
+
+    .sidebar-submenu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.7rem 1.25rem;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin: 2px 0;
+        font-size: 0.9rem;
+        background: transparent;
+    }
+
+    .sidebar-submenu-item i:first-child {
+        width: 20px;
+        margin-right: 12px;
+        color: #ffff00;
+        font-size: 0.9rem;
+    }
+
+    .favorite-star {
+        color: rgba(255,255,255,0.5);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .favorite-star.active {
+        color: #ffff00;
+        text-shadow: 0 0 5px rgba(255,255,0,0.5);
+    }
+
+    .favorite-star:hover {
+        color: #ffff00;
+        transform: scale(1.2);
+    }
+
+    .sidebar-submenu-item:hover {
+        background: rgba(255,255,255,0.15);
+        color: white;
+    }
+
+    .sidebar-submenu-item:hover .favorite-star {
+        color: #ffff00;
+    }
+
+    /* ========== BARRA LATERAL DE FAVORITOS ========== */
+    .quick-sidebar {
+        position: fixed;
+        top: var(--navbar-height);
+        right: -380px;
+        width: 280px;
+        height: calc(100vh - var(--navbar-height));
+        background: #083CAE;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+        z-index: 9001; /* Por debajo de la barra de pestañas */
+        transition: right 0.3s ease-in-out;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .quick-sidebar.open {
+        right: 0;
+    }
+
+    .quick-sidebar .bg-construction-dark {
+        background: #083CAE !important;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .quick-sidebar h3 {
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .quick-sidebar h3 i {
+        color: #ffff00;
+    }
+
+    .favorite-item {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+        border-left: 4px solid #ffff00;
+        cursor: pointer;
+    }
+
+    .favorite-item:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateX(-5px);
+    }
+
+    .favorite-item i {
+        color: #eaf512;
+        margin-right: 12px;
+        font-size: 1rem;
+    }
+
+    .favorite-item-content {
+        flex: 1;
+    }
+
+    .favorite-item-title {
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+
+    .favorite-item-path {
+        color: rgba(255,255,255,0.6);
+        font-size: 0.7rem;
+    }
+
+    .favorite-item-remove {
+        color: rgba(255,255,255,0.5);
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        transition: all 0.2s ease;
+    }
+
+    .favorite-item-remove:hover {
+        color: #ef4444;
+        background: rgba(239,68,68,0.2);
+    }
+
+    /* BOTÓN FLOTANTE */
+    .sidebar-toggle-btn {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #083CAE;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(8, 60, 174, 0.4);
+        transition: all 0.3s ease;
+        z-index: 1002;
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .sidebar-toggle-btn i {
+        color: #ffff00;
+        font-size: 1.4rem;
+    }
+
+    .sidebar-toggle-btn:hover {
+        background: #0a4ad0;
+        transform: scale(1.05);
+    }
+
+    #favorite-count {
+        background: #f59e0b !important;
+        border: 2px solid white;
+    }
+
+    /* ========== CONTENIDO PRINCIPAL ========== */
+    .main-content-container {
+        margin-top: var(--total-header-height);
+        min-height: calc(100vh - var(--total-header-height));
+        transition: margin-left 0.3s ease, width 0.3s ease;
+        padding: 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .main-content-container.sidebar-open {
+        margin-left: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+    }
+
+    /* ========== MENÚ HAMBURGUESA MÓVIL ========== */
+    .mobile-menu-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        background: #083CAE;
+        z-index: 1100;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+        padding-top: var(--navbar-height);
+    }
+
+    .mobile-menu-sidebar.open {
+        left: 0;
+    }
+
+    .mobile-menu-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .mobile-menu-header h3 {
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .mobile-menu-header i {
+        color: #ffff00;
+    }
+
+    .mobile-menu-items {
+        padding: 1rem;
+    }
+
+    .mobile-menu-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        color: white;
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+        transition: all 0.2s ease;
+        background: rgba(255,255,255,0.08);
+    }
+
+    .mobile-menu-item i {
+        width: 24px;
+        margin-right: 15px;
+        color: #ffff00;
+        font-size: 1.1rem;
+    }
+
+    .mobile-menu-item span {
+        font-weight: 500;
+    }
+
+    .mobile-menu-item:hover {
+        background: rgba(255,255,255,0.15);
+    }
+
+    .mobile-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* ========== NOTIFICACIONES ========== */
+    .notifications-menu {
+        position: absolute;
+        right: 0;
+        top: 100%;
+        width: 400px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        z-index: 10002; /* Por encima de todo */
+        margin-top: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(8,60,174,0.1);
+    }
+
+    .notifications-header {
+        background: #083CAE;
+        padding: 1rem 1.25rem;
+        color: white;
+    }
+
+    .notifications-header h3 i {
+        color: #ffff00;
+    }
+
+    /* ========== SCROLLBARS ========== */
+    .section-sidebar::-webkit-scrollbar,
+    .quick-sidebar::-webkit-scrollbar,
+    .mobile-menu-sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .section-sidebar::-webkit-scrollbar-track,
+    .quick-sidebar::-webkit-scrollbar-track,
+    .mobile-menu-sidebar::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .section-sidebar::-webkit-scrollbar-thumb,
+    .quick-sidebar::-webkit-scrollbar-thumb,
+    .mobile-menu-sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.2);
+        border-radius: 3px;
+    }
+
+    .section-sidebar::-webkit-scrollbar-thumb:hover,
+    .quick-sidebar::-webkit-scrollbar-thumb:hover,
+    .mobile-menu-sidebar::-webkit-scrollbar-thumb:hover {
+        background: #ffff00;
+    }
+
+    /* Punto de notificación */
+    #notification-dot {
+        background-color: #eaf512 !important;
+        box-shadow: 0 0 5px #eaf512;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 992px) {
         :root {
-            --color-primary: #083CAE;
-            --color-secondary: #2CBF1F;
-            --color-accent: #eaf512;
-            --color-red: #FF0000;
-            --navbar-height: 64px;
-            --tabbar-height: 40px;
-            --total-header-height: calc(var(--navbar-height) + var(--tabbar-height));
-            --sidebar-width: 260px;
+            --sidebar-width: 100%;
         }
 
-        /* ========== RESET ========== */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-
-        /* ========== NAVBAR SUPERIOR ========== */
-        nav.bg-construction-dark {
-            z-index: 1050 !important;
-            position: fixed !important;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--navbar-height);
-            background-color: #083CAE !important;
-        }
-
-        /* Iconos del menú en color eaf512 */
-        nav.bg-construction-dark .desktop-menu button i {
-            color: #eaf512 !important;
-            transition: all 0.3s ease;
-        }
-
-        nav.bg-construction-dark .desktop-menu button:hover i {
-            color: white !important;
-        }
-
-        /* Texto de las secciones se vuelve negro al pasar el mouse */
-        nav.bg-construction-dark .desktop-menu button:hover span {
-            color: #000000 !important;
-            font-weight: bold !important;
-        }
-
-        nav.bg-construction-dark .desktop-menu button {
-            transition: all 0.3s ease;
-        }
-
-        nav.bg-construction-dark .desktop-menu button:hover {
-            background-color: transparent !important;
-        }
-
-        nav.bg-construction-dark .desktop-menu button:hover i {
-            color: #000000 !important;
-        }
-
-        /* Estrella del menú */
-        .desktop-menu button i.fa-star {
-            color: #eaf512 !important;
-            font-size: 1.2rem;
-        }
-
-        /* ========== BARRA DE PESTAÑAS ========== */
-        .tab-navigation-bar {
-            background-color: var(--color-secondary) !important;
-            height: var(--tabbar-height);
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: fixed;
-            top: var(--navbar-height);
-            left: 0;
-            right: 0;
-            z-index: 900;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateY(0);
-            opacity: 1;
-            visibility: visible;
-            border-bottom: 2px solid #FF0000 !important;
-        }
-
-        .tab-navigation-bar.sidebar-open {
-            left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
-        }
-
-        /* Contenedor del botón Cerrar Todo - Fondo rojo completo */
-        .close-all-tabs-container {
-            background-color: #FF0000 !important;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            margin-left: -15px;
-            border-right: 2px solid #cc0000;
-        }
-
-        .close-all-tabs-btn {
-            background-color: transparent !important;
-            border: none !important;
-            color: white !important;
-            font-weight: bold !important;
-            padding: 6px 0 !important;
-            transition: all 0.3s ease !important;
-            text-transform: uppercase !important;
-            font-size: 12px !important;
-            letter-spacing: 0.5px !important;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .close-all-tabs-btn:hover {
-            transform: translateY(-2px);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .close-all-tabs-btn i {
-            color: white !important;
-            font-size: 14px;
-        }
-
-        //* ========== ESTILOS DE PESTAÑAS MINIMALISTAS ========== */
-.tab-item {
-    cursor: pointer;
-    max-width: 200px;
-    position: relative;
-    user-select: none;
-    transition: color 0.15s ease;
-}
-
-.tab-item .close-tab {
-    transition: opacity 0.15s ease;
-}
-
-.tab-item:hover .close-tab {
-    opacity: 1 !important;
-}
-
-.close-tab:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-.tab-context-menu {
-    animation: fadeIn 0.15s ease;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-.context-menu-item {
-    transition: background-color 0.15s ease;
-}
-
-.context-menu-item:hover {
-    background-color: #f3f4f6;
-}
-
-#tabsNavContainer {
-    display: flex;
-    align-items: center;
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex: 1;
-    height: 100%;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.1);
-    padding-left: 10px;
-}
-
-#tabsNavContainer::-webkit-scrollbar {
-    height: 3px;
-}
-
-#tabsNavContainer::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-}
-
-#tabsNavContainer::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
-    border-radius: 3px;
-}
-
-#tabsNavContainer::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.5);
-}
-
-.new-tab-btn {
-    flex-shrink: 0;
-    transition: all 0.15s ease;
-}
-
-.new-tab-btn:hover {
-    transform: scale(1.05);
-}
-
-@keyframes fadeIn { 
-    from { opacity: 0; transform: translateY(-5px); } 
-    to { opacity: 1; transform: translateY(0); } 
-}
-        /* ========== BARRA LATERAL DE SECCIÓN ========== */
         .section-sidebar {
-            position: fixed;
-            top: var(--navbar-height);
-            left: -380px;
-            width: var(--sidebar-width);
-            height: calc(100vh - var(--navbar-height));
-            background: #083CAE;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.15);
-            z-index: 1000;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            border-radius: 0 12px 12px 0;
-        }
-
-        .section-sidebar.open {
-            left: 0;
-        }
-
-        .section-sidebar-header {
-            background: #083CAE;
-            padding: 1.25rem 1.5rem;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .section-sidebar-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .section-sidebar-title i {
-            font-size: 1.5rem;
-            color: #ffff00;
-        }
-
-        .section-sidebar-title h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin: 0;
-            color: white;
-        }
-
-        .section-sidebar-close {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .section-sidebar-close:hover {
-            background: rgba(255,255,255,0.25);
-            transform: rotate(90deg);
-        }
-
-        .section-sidebar-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.25rem;
-            background: #083CAE;
-        }
-
-        .sidebar-menu-group {
-            margin-bottom: 0.0rem;
-        }
-
-        .sidebar-menu-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 1rem;
-            background: transparent ;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-left: transparent;
-        }
-
-        .sidebar-menu-title span i {
-            color: #ffff00;
-            margin-right: 8px;
-            width: 10px;
-        }
-
-        .sidebar-menu-title i:last-child {
-            color: #ffff00;
-            transition: transform 0.3s ease;
-            font-size: 0.85rem;
-        }
-
-        .sidebar-menu-title.expanded i:last-child {
-            transform: rotate(90deg);
-        }
-
-        .sidebar-menu-title:hover {
-            background: rgba(255,255,255,0.18);
-        }
-
-        .sidebar-submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            margin-left: 0.5rem;
-            padding-left: 0.5rem;
-            border-left: 2px solid rgba(255,255,255,0.2);
-        }
-
-        .sidebar-submenu.expanded {
-            max-height: 800px;
-        }
-
-        .sidebar-submenu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.7rem 1.25rem;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin: 2px 0;
-            font-size: 0.9rem;
-            background: transparent;
-        }
-
-        .sidebar-submenu-item i:first-child {
-            width: 20px;
-            margin-right: 12px;
-            color: #ffff00;
-            font-size: 0.9rem;
-        }
-
-        .favorite-star {
-            color: rgba(255,255,255,0.5);
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .favorite-star.active {
-            color: #ffff00;
-            text-shadow: 0 0 5px rgba(255,255,0,0.5);
-        }
-
-        .favorite-star:hover {
-            color: #ffff00;
-            transform: scale(1.2);
-        }
-
-        .sidebar-submenu-item:hover {
-            background: rgba(255,255,255,0.15);
-            color: white;
-        }
-
-        .sidebar-submenu-item:hover .favorite-star {
-            color: #ffff00;
-        }
-
-        /* ========== BARRA LATERAL DE FAVORITOS ========== */
-        .quick-sidebar {
-            position: fixed;
-            top: var(--navbar-height);
-            right: -380px;
-            width: 280px;
-            height: calc(100vh - var(--navbar-height));
-            background: #083CAE;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.15);
-            z-index: 1001;
-            transition: right 0.3s ease-in-out;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            border-radius: 8px 0 0 8px;
-        }
-
-        .quick-sidebar.open {
-            right: 0;
-        }
-
-        .quick-sidebar .bg-construction-dark {
-            background: #083CAE !important;
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .quick-sidebar h3 {
-            color: white;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .quick-sidebar h3 i {
-            color: #ffff00;
-        }
-
-        .favorite-item {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-            border-left: 4px solid #ffff00;
-            cursor: pointer;
-        }
-
-        .favorite-item:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateX(-5px);
-        }
-
-        .favorite-item i {
-            color: #eaf512;
-            margin-right: 12px;
-            font-size: 1rem;
-        }
-
-        .favorite-item-content {
-            flex: 1;
-        }
-
-        .favorite-item-title {
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 2px;
-        }
-
-        .favorite-item-path {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.7rem;
-        }
-
-        .favorite-item-remove {
-            color: rgba(255,255,255,0.5);
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: all 0.2s ease;
-        }
-
-        .favorite-item-remove:hover {
-            color: #ef4444;
-            background: rgba(239,68,68,0.2);
-        }
-
-        /* BOTÓN FLOTANTE */
-        .sidebar-toggle-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #083CAE;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(8, 60, 174, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1002;
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-
-        .sidebar-toggle-btn i {
-            color: #ffff00;
-            font-size: 1.4rem;
-        }
-
-        .sidebar-toggle-btn:hover {
-            background: #0a4ad0;
-            transform: scale(1.05);
-        }
-
-        #favorite-count {
-            background: #f59e0b !important;
-            border: 2px solid white;
-        }
-
-        /* ========== CONTENIDO PRINCIPAL ========== */
-        .main-content-container {
-            margin-top: var(--total-header-height);
-            min-height: calc(100vh - var(--total-header-height));
-            transition: margin-left 0.3s ease, width 0.3s ease;
-            padding: 1.5rem;
             width: 100%;
-            box-sizing: border-box;
-        }
-
-        .main-content-container.sidebar-open {
-            margin-left: var(--sidebar-width);
-            width: calc(100% - var(--sidebar-width));
-        }
-
-        /* ========== MENÚ HAMBURGUESA MÓVIL ========== */
-        .mobile-menu-sidebar {
-            position: fixed;
-            top: 0;
             left: -100%;
-            width: 85%;
-            max-width: 320px;
-            height: 100vh;
-            background: #083CAE;
-            z-index: 1100;
-            transition: left 0.3s ease;
-            overflow-y: auto;
-            padding-top: var(--navbar-height);
+            border-radius: 0;
         }
 
-        .mobile-menu-sidebar.open {
+        .quick-sidebar {
+            width: 100%;
+            right: -100%;
+            border-radius: 0;
+        }
+
+        .main-content-container.sidebar-open,
+        .tab-navigation-bar.sidebar-open {
+            margin-left: 0;
+            width: 100%;
             left: 0;
         }
 
-        .mobile-menu-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .desktop-menu {
+            display: none !important;
         }
+    }
 
-        .mobile-menu-header h3 {
-            color: white;
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .mobile-menu-header i {
-            color: #ffff00;
-        }
-
-        .mobile-menu-items {
-            padding: 1rem;
-        }
-
-        .mobile-menu-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem 1.25rem;
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s ease;
-            background: rgba(255,255,255,0.08);
-        }
-
-        .mobile-menu-item i {
-            width: 24px;
-            margin-right: 15px;
-            color: #ffff00;
-            font-size: 1.1rem;
-        }
-
-        .mobile-menu-item span {
-            font-weight: 500;
-        }
-
-        .mobile-menu-item:hover {
-            background: rgba(255,255,255,0.15);
-        }
-
+    @media (min-width: 993px) {
+        .mobile-menu-sidebar,
         .mobile-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1050;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            display: none !important;
         }
+    }
 
-        .mobile-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ========== NOTIFICACIONES ========== */
-        .notifications-menu {
-            position: absolute;
-            right: 0;
-            top: 100%;
-            width: 400px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            z-index: 1100;
-            margin-top: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(8,60,174,0.1);
-        }
-
-        .notifications-header {
-            background: #083CAE;
-            padding: 1rem 1.25rem;
-            color: white;
-        }
-
-        .notifications-header h3 i {
-            color: #ffff00;
-        }
-
-        /* ========== SCROLLBARS ========== */
-        .section-sidebar::-webkit-scrollbar,
-        .quick-sidebar::-webkit-scrollbar,
-        .mobile-menu-sidebar::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .section-sidebar::-webkit-scrollbar-track,
-        .quick-sidebar::-webkit-scrollbar-track,
-        .mobile-menu-sidebar::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-        }
-
-        .section-sidebar::-webkit-scrollbar-thumb,
-        .quick-sidebar::-webkit-scrollbar-thumb,
-        .mobile-menu-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.2);
-            border-radius: 3px;
-        }
-
-        .section-sidebar::-webkit-scrollbar-thumb:hover,
-        .quick-sidebar::-webkit-scrollbar-thumb:hover,
-        .mobile-menu-sidebar::-webkit-scrollbar-thumb:hover {
-            background: #ffff00;
-        }
-
-        /* Punto de notificación */
-        #notification-dot {
-            background-color: #eaf512 !important;
-            box-shadow: 0 0 5px #eaf512;
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 992px) {
-            :root {
-                --sidebar-width: 100%;
-            }
-
-            .section-sidebar {
-                width: 100%;
-                left: -100%;
-                border-radius: 0;
-            }
-
-            .quick-sidebar {
-                width: 100%;
-                right: -100%;
-                border-radius: 0;
-            }
-
-            .main-content-container.sidebar-open,
-            .tab-navigation-bar.sidebar-open {
-                margin-left: 0;
-                width: 100%;
-                left: 0;
-            }
-
-            .desktop-menu {
-                display: none !important;
-            }
-        }
-
-        @media (min-width: 993px) {
-            .mobile-menu-sidebar,
-            .mobile-overlay {
-                display: none !important;
-            }
-        }
-    </style>
+    /* ========== DEBUG (opcional - quitar en producción) ========== */
+    .debug-mode .close-all-tabs-btn {
+        outline: 2px solid yellow;
+    }
+</style>
     
 </head>
 
@@ -1119,12 +1177,12 @@
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación', 'administracion', 'fa-file-invoice', this)"></i>
                     </div>
 
-                    <div class="sidebar-submenu-item" onclick="navigateTo('CFDI', 'administracion', '{{ route('admin.cfdi') }}', 'fa-solid fa-file-contract')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('C F D I', 'administracion', '{{ route('admin.cfdi') }}', 'fa-solid fa-file-contract')">
                         <div class="flex items-center flex-1">
                             <i class="fa-solid fa-file-contract"></i>
                             <span>CFDI</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('CFDI', 'administracion', 'fa-solid fa-file-contract', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('C F D I', 'administracion', 'fa-solid fa-file-contract', this)"></i>
                     </div>
 
                     <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Crédito', 'administracion', '{{ route('admin.nota') }}', 'fa-undo-alt')">
@@ -1179,12 +1237,12 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="admin-cxc" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Antigüedad de Saldos', 'administracion', '{{ route('admin.saldos') }}', 'fa-table')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas por Cobrar', 'administracion', '{{ route('admin.saldos') }}', 'fa-solid fa-money-bill-trend-up')">
                         <div class="flex items-center flex-1">
-                            <i class="fas fa-table"></i>
-                            <span>Vista con tabla de antigüedad</span>
+                            <i class="fa-solid fa-money-bill-trend-up"></i>
+                            <span>Cuentas por Cobrar</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Antigüedad de Saldos', 'administracion', 'fa-table', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Cobrar', 'administracion', 'fa-solid fa-money-bill-trend-up', this)"></i>
                     </div>
                 </div>
             </div>
@@ -1192,16 +1250,16 @@
             <!-- Cuentas por Pagar -->
             <div class="sidebar-menu-group">
                 <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxp')">
-                    <span><i class="fas fa-credit-card"></i> Cuentas por Pagar</span>
+                    <span><i class="fa-solid fa-money-check-dollar"></i> Cuentas por Pagar</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="admin-cxp" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Facturación de Proveedores', 'administracion', '{{ route('admin.pagos') }}', 'fa-truck')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas por Pagar', 'administracion', '{{ route('admin.pagos') }}', 'fa-solid fa-file-invoice-dollar')">
                         <div class="flex items-center flex-1">
-                            <i class="fas fa-truck"></i>
-                            <span>Facturación de Proveedores</span>
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                            <span>Cuentas por Pagar</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación de Proveedores', 'administracion', 'fa-truck', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Pagar', 'administracion', 'fa-solid fa-file-invoice-dollar', this)"></i>
                     </div>
                 </div>
             </div>
@@ -1294,28 +1352,28 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="admin-presupuestos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuestos Generales', 'administracion', '#', 'fa-chart-pie')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Facturacion Proveedores', 'administracion', '{{ route('presupuestos.facturacion') }}', 'fa-chart-pie')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-pie"></i>
-                            <span>Presupuestos Generales</span>
+                            <span>Facturacion Proveedores</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuestos Generales', 'administracion', 'fa-chart-pie', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturacion Proveedores', 'administracion', 'fa-chart-pie', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual', 'administracion', '#', 'fa-calendar')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual', 'administracion', '{{ route('presupuestos.mensual') }}', 'fa-calendar')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calendar"></i>
                             <span>Presupuesto Mensual</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'administracion', 'fa-calendar', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos', 'administracion', '#', 'fa-random')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos', 'administracion', '{{ route('presupuestos.reasignacion') }}', 'fa-random')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-random"></i>
                             <span>Reasignación de Gastos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'administracion', 'fa-random', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos', 'administracion', '#', 'fa-home')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos', 'administracion', '{{ route('presupuestos.gastos') }}', 'fa-home')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-home"></i>
                             <span>Gastos Fijos</span>
@@ -1332,21 +1390,21 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="admin-operaciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Prepago', 'administracion', '#', 'fa-forward')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Prepago', 'administracion', '{{ route('operaciones.prepago') }}', 'fa-forward')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-forward"></i>
                             <span>Prepago</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'administracion', 'fa-forward', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos', 'administracion', '#', 'fa-hand-holding-usd')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos', 'administracion', '{{ route('operaciones.anticipo') }}', 'fa-hand-holding-usd')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-hand-holding-usd"></i>
                             <span>Anticipos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'administracion', 'fa-hand-holding-usd', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Crédito', 'administracion', '#', 'fa-credit-card')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Crédito', 'administracion', '{{ route('operaciones.credito') }}', 'fa-credit-card')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-credit-card"></i>
                             <span>Crédito</span>
@@ -1363,7 +1421,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="admin-cuentas-avanzadas" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas', 'administracion', '#', 'fa-cogs')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas', 'administracion', '{{ route('cuentasavanzadas.cuentasavanzadas') }}', 'fa-cogs')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-cogs"></i>
                             <span>Cuentas Avanzadas</span>
@@ -1432,6 +1490,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Registro Contable -->
             <div class="sidebar-menu-group">
@@ -2742,67 +2801,178 @@ class TabManager {
         this.render();
     }
 
-    closeTab(tabId) {
-        const tabIndex = this.tabs.findIndex(t => t.id === tabId);
-        if (tabIndex === -1) return;
-
-        this.tabs.splice(tabIndex, 1);
-
-        if (this.tabs.length > 0) {
-            if (tabId === this.activeTabId) {
-                const newActiveIndex = Math.max(0, tabIndex - 1);
-                const newActiveTab = this.tabs[newActiveIndex];
-                this.activateTab(newActiveTab.id);
-                
-                if (newActiveTab.url && newActiveTab.url !== '#' && newActiveTab.url !== '{{ route('home') }}' && !this.isNavigating) {
-                    const currentUrl = window.location.href;
-                    const tabPath = newActiveTab.url.split('?')[0].split('#')[0];
-                    const currentPath = currentUrl.split('?')[0].split('#')[0];
-                    
-                    if (tabPath !== currentPath) {
-                        this.navigateToUrl(newActiveTab.url);
-                    }
-                }
-            }
-        } else {
-            this.activeTabId = null;
-            localStorage.setItem('activeTabId', '');
-            
-            const homeUrl = '{{ route('home') }}';
-            const currentPath = window.location.href.split('?')[0].split('#')[0];
-            const homePath = homeUrl.split('?')[0].split('#')[0];
-            
-            if (currentPath !== homePath && !this.isNavigating) {
-                this.navigateToUrl(homeUrl);
-            }
+closeTab(tabId) {
+    try {
+        console.log('Cerrando pestaña:', tabId);
+        
+        if (!tabId) {
+            console.error('ID de pestaña inválido');
+            return false;
         }
-
-        this.saveTabs();
-        this.render();
-    }
-
-    closeAllTabs() {
-        if (this.tabs.length === 0) return;
-
-        if (confirm('¿Estás seguro de que deseas cerrar todas las pestañas?')) {
-            this.tabs = [];
+        
+        // Buscar la pestaña
+        const tabIndex = this.tabs.findIndex(t => t && t.id === tabId);
+        
+        if (tabIndex === -1) {
+            console.warn('Pestaña no encontrada, limpiando estado...');
+            // Si no encuentra la pestaña, forzar limpieza
+            this.forceCleanTabs();
+            return false;
+        }
+        
+        // Guardar referencia de la pestaña a cerrar
+        const closedTab = this.tabs[tabIndex];
+        
+        // Eliminar la pestaña
+        this.tabs.splice(tabIndex, 1);
+        
+        // Si no quedan pestañas
+        if (this.tabs.length === 0) {
             this.activeTabId = null;
-            localStorage.removeItem('appTabs');
             localStorage.removeItem('activeTabId');
+            localStorage.setItem('appTabs', '[]');
+            
+            // Redirigir a home
+            const homeUrl = '{{ route('home') }}';
+            if (window.location.href !== homeUrl) {
+                window.location.href = homeUrl;
+            }
             
             this.render();
-            
-            const homeUrl = '{{ route('home') }}';
-            const currentPath = window.location.href.split('?')[0].split('#')[0];
-            const homePath = homeUrl.split('?')[0].split('#')[0];
-            
-            if (currentPath !== homePath && !this.isNavigating) {
-                this.navigateToUrl(homeUrl);
-            }
-            
-            this.showNotification('Todas las pestañas han sido cerradas', 'info');
+            return true;
         }
+        
+        // Si había una pestaña activa y era la que cerramos
+        if (this.activeTabId === tabId) {
+            // Activar la pestaña anterior o la primera disponible
+            const newActiveIndex = Math.min(tabIndex, this.tabs.length - 1);
+            const newActiveTab = this.tabs[newActiveIndex];
+            this.activeTabId = newActiveTab.id;
+            
+            // Navegar a la URL de la nueva pestaña activa
+            if (newActiveTab.url && newActiveTab.url !== '#' && newActiveTab.url !== '{{ route('home') }}') {
+                window.location.href = newActiveTab.url;
+            }
+        }
+        
+        // Guardar cambios
+        this.saveTabs();
+        this.render();
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error al cerrar pestaña:', error);
+        // En caso de error, forzar limpieza
+        this.forceCleanTabs();
+        return false;
     }
+}
+
+// Nuevo método para forzar limpieza
+forceCleanTabs() {
+    console.log('Forzando limpieza de pestañas...');
+    
+    // Limpiar el array de tabs
+    this.tabs = [];
+    this.activeTabId = null;
+    
+    // Limpiar localStorage
+    localStorage.removeItem('appTabs');
+    localStorage.removeItem('activeTabId');
+    
+    // Limpiar el DOM
+    const container = document.getElementById('tabsNavContainer');
+    if (container) {
+        container.innerHTML = '<div class="text-white text-sm px-3 opacity-70">No hay pestañas abiertas</div>';
+    }
+    
+    // Redirigir a home si no estamos allí
+    const homeUrl = '{{ route('home') }}';
+    if (window.location.pathname !== '/home' && !window.location.href.includes('home')) {
+        window.location.href = homeUrl;
+    }
+}
+
+createNewTab(title, section, icon, url = null) {
+    try {
+        // Validar parámetros
+        if (!title) title = 'Sin título';
+        if (!section) section = 'general';
+        if (!icon) icon = 'fa-file';
+        
+        // Validar límite
+        if (this.tabs.length >= this.maxTabs) {
+            this.showNotification(`No puedes tener más de ${this.maxTabs} pestañas abiertas`, 'warning');
+            return;
+        }
+        
+        // Si la URL es válida, verificar si ya existe
+        if (url && url !== '#' && url !== '{{ route('home') }}') {
+            const existingTab = this.tabs.find(t => t.url === url);
+            if (existingTab) {
+                this.activateTab(existingTab.id);
+                if (window.location.href !== url) {
+                    window.location.href = url;
+                }
+                return;
+            }
+        }
+        
+        // Crear nueva pestaña con ID más robusto
+        const tab = {
+            id: 'tab_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15),
+            title: String(title).trim(),
+            section: String(section),
+            icon: icon,
+            url: url || null,
+            timestamp: new Date().toISOString(),
+            favicon: this.getFaviconForSection(section, icon)
+        };
+        
+        this.tabs.push(tab);
+        this.activateTab(tab.id);
+        this.saveTabs();
+        this.render();
+        
+        // Navegar si hay URL válida
+        if (url && url !== '#' && url !== '{{ route('home') }}') {
+            window.location.href = url;
+        }
+        
+    } catch (error) {
+        console.error('Error al crear pestaña:', error);
+    }
+}
+
+closeAllTabs() {
+    if (this.tabs.length === 0) return;
+
+    if (confirm('¿Estás seguro de que deseas cerrar todas las pestañas?')) {
+        // Limpiar todas las pestañas
+        this.tabs = [];
+        this.activeTabId = null;
+        
+        // Limpiar localStorage
+        localStorage.removeItem('appTabs');
+        localStorage.removeItem('activeTabId');
+        
+        // Renderizar la vista vacía
+        this.render();
+        
+        // REDIRIGIR A HOME - SOLUCIÓN
+        const homeUrl = '{{ route('home') }}';
+        
+        // Forzar la redirección a home
+        window.location.href = homeUrl;
+        
+        // Mostrar notificación
+        this.showNotification('Todas las pestañas han sido cerradas', 'info');
+        
+        return true;
+    }
+    return false;
+}
 
     closeOtherTabs(tabId) {
         const tabToKeep = this.tabs.find(t => t.id === tabId);
@@ -2872,29 +3042,42 @@ class TabManager {
         localStorage.setItem('appTabs', JSON.stringify(this.tabs));
     }
 
-    render() {
+render() {
+    try {
         const container = document.getElementById('tabsNavContainer');
         if (!container) return;
-
+        
+        // Asegurar que tabs es un array
+        if (!Array.isArray(this.tabs)) {
+            this.tabs = [];
+        }
+        
+        // Filtrar tabs inválidas
+        this.tabs = this.tabs.filter(tab => tab && tab.id && tab.title);
+        
         if (this.tabs.length === 0) {
             container.innerHTML = '<div class="text-white text-sm px-3 opacity-70">No hay pestañas abiertas</div>';
             return;
         }
-
+        
         let html = '';
         this.tabs.forEach((tab, index) => {
+            if (!tab || !tab.id) return;
+            
             const isActive = tab.id === this.activeTabId;
+            const icon = tab.favicon || tab.icon || 'fa-file';
+            const title = tab.title || 'Sin título';
             
             html += `
                 <div class="tab-item group relative inline-flex items-center px-3 py-1 mr-2 text-sm cursor-pointer transition-colors duration-150 ${isActive ? 'text-gray-900 font-medium' : 'text-white hover:text-gray-200'}" 
                      data-tab-id="${tab.id}" 
                      data-tab-index="${index}"
-                     onclick="tabManager.handleTabClick('${tab.id}', '${tab.url}')"
+                     onclick="tabManager.handleTabClick('${tab.id}', '${tab.url || ''}')"
                      oncontextmenu="tabManager.showTabContextMenu(event, '${tab.id}')">
                     
-                    <i class="fas ${tab.favicon} mr-2 ${isActive ? 'text-gray-900' : 'text-white'}"></i>
+                    <i class="fas ${icon} mr-2 ${isActive ? 'text-gray-900' : 'text-white'}"></i>
                     
-                    <span class="max-w-xs truncate">${tab.title}</span>
+                    <span class="max-w-xs truncate">${this.escapeHtml(title)}</span>
                     
                     <button class="close-tab ml-2 p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors opacity-0 group-hover:opacity-100" 
                             onclick="event.stopPropagation(); tabManager.closeTab('${tab.id}')"
@@ -2904,9 +3087,21 @@ class TabManager {
                 </div>
             `;
         });
-
+        
         container.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error al renderizar pestañas:', error);
     }
+}
+
+// Helper para escapar HTML
+escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
     handleTabClick(tabId, url) {
         this.activateTab(tabId);

@@ -160,6 +160,40 @@ Route::prefix('admin')->group(function () {
         return view('administracion.tesoreria.pagos');
     })->name('tesoreria.pagos');
 
+    Route::get('/facturacionproveedores', function () {
+        return view('administracion.presupuestos.facturacion');
+    })->name('presupuestos.facturacion');
+
+    Route::get('/gastosfijos', function () {
+        return view('administracion.presupuestos.gastos');
+    })->name('presupuestos.gastos');
+
+    Route::get('/presupuestomensual', function () {
+        return view('administracion.presupuestos.mensual');
+    })->name('presupuestos.mensual');
+
+    Route::get('/reasignacion', function () {
+        return view('administracion.presupuestos.reasignacion');
+    })->name('presupuestos.reasignacion');
+
+    Route::get('/anticipo', function () {
+        return view('administracion.operaciones.anticipo');
+    })->name('operaciones.anticipo');
+
+    Route::get('/credito', function () {
+        return view('administracion.operaciones.credito');
+    })->name('operaciones.credito');
+
+    Route::get('/prepago', function () {
+        return view('administracion.operaciones.prepago');
+    })->name('operaciones.prepago');
+
+    Route::get('/cuentasavanzadas', function () {
+        return view('administracion.cuentasavanzadas.cuentasavanzadas');
+    })->name('cuentasavanzadas.cuentasavanzadas');
+
+
+
 
     
 });

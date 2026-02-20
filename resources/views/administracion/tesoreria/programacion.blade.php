@@ -5,92 +5,65 @@
     <section class="content container-fluid py-3">
         <!-- Programación de Pagos -->
         <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #6B8ACE; padding: 15px 20px;">
-                <h2 style="color: #6B8ACE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
+                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
                     Programación de Pagos
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas -->
-                <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    
-                    <!-- Date Inicio -->
-                    <div>
-                        <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                    </div>
-
-                    <!-- Date Fin -->
-                    <div>
-                        <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                    </div>
-
-                    <!-- Botón Crear filtro -->
-                    <div>
-                        <button id="btnCrearFiltro" style="background-color: #6B8ACE; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: white;">
-                            <i class="fas fa-filter"></i> Crear filtro
-                        </button>
-                    </div>
-
-                    <!-- Botón Agregar (+) -->
-                    <div>
-                        <button id="btnAgregar" style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6B8ACE; font-size: 16px;" title="Agregar">
-                            <i class="fas fa-plus" style="color: #6B8ACE;"></i>
-                        </button>
-                    </div>
-
-                    <!-- Botón Exportar Excel -->
-                    <div>
-                        <button id="btnExcel" 
-                                style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
-                                title="Exportar todo">
-                            <i class="fas fa-file-excel" style="color: #6B8ACE;"></i>
-                        </button>
-                    </div>
-
-                    <!-- Botón Seleccionar Columnas -->
-                    <div>
-                        <button id="btnColumnas" 
-                                style="background-color: white; border: 1px solid #6B8ACE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #6B8ACE;"
-                                title="Seleccionar columnas">
-                            <i class="fas fa-columns" style="color: #6B8ACE;"></i>
-                        </button>
-                    </div>
-
-                    <!-- Buscador -->
-                    <div style="position: relative;">
-                        <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #6B8ACE;"></i>
-                        <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #6B8ACE; border-radius: 4px; font-size: 14px; width: 200px;">
-                    </div>
-                </div>
-
-                <!-- Cuadros de resumen -->
-                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Total Programado</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalProgramado">$1,245,750.00</div>
+                <!-- Barra de herramientas con agrupación y botones -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
+                    <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
+                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
+                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
+                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
+                            <!-- Aquí se mostrarán las columnas agrupadas -->
                         </div>
                     </div>
                     
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Pendientes</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalPendiente">$845,320.00</div>
+                    <!-- Grupo de botones derecho -->
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <!-- Date Inicio -->
+                        <div>
+                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
-                    </div>
-                    
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Pagados</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalPagado">$400,430.00</div>
+
+                        <!-- Date Fin -->
+                        <div>
+                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
-                    </div>
-                    
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #6B8ACE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Programaciones</div>
-                            <div style="color: #6B8ACE; font-size: 24px; font-weight: bold; line-height: 1.2;" id="totalProgramaciones">24</div>
+
+                        <!-- Botón Agregar (+) -->
+                        <div>
+                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
+                                <i class="fas fa-plus" style="color: #2378e1;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Botón Exportar Excel -->
+                        <div>
+                            <button id="btnExcel" 
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
+                                    title="Exportar todo">
+                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Botón Seleccionar Columnas -->
+                        <div>
+                            <button id="btnColumnas" 
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
+                                    title="Seleccionar columnas">
+                                <i class="fas fa-columns" style="color: #2378e1;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Buscador -->
+                        <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
                         </div>
                     </div>
                 </div>
@@ -103,59 +76,59 @@
                 </div>
 
                 <!-- Tabla de Programación de Pagos -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
                     <table class="table table-bordered" id="tablaProgramacionPagos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #6B8ACE; color: white;">
+                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="id">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>ID</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Estatus</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Fecha</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="proveedor">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Proveedor</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="descripcion">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Descripción</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="monto">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Monto</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="saldo">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Saldo</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; top: 0;">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_estimada">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Fecha Est. Pago</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #6B8ACE; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Acciones</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
@@ -167,27 +140,44 @@
                             <!-- Las filas se insertarán dinámicamente -->
                         </tbody>
                         <!-- Fila de totales -->
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
+                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef;" colspan="5">Registros: <span id="totalRegistros">0</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumMonto">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef;" id="sumSaldo">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef;" colspan="2"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="5">Registros: <span id="totalRegistros">0</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumMonto">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumSaldo">$0.00</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="2"></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 
-                <!-- Paginación -->
-                <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;" id="paginacionContainer">
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página anterior"><i class="fas fa-angle-left"></i></button>
-                    <span style="padding: 5px 10px; background-color: #6B8ACE; color: white; border-radius: 4px;">1</span>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">2</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;">3</button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
-                    <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; color: #6B8ACE;" title="Última página"><i class="fas fa-angle-double-right"></i></button>
-                    <span style="margin-left: 10px; color: #6c757d;" id="paginacionInfo">Mostrando 1-8 de 24 registros</span>
+                <!-- Paginación y botón Crear filtro -->
+                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
+                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
+                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
+                        <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
+                        <span style="color: #2378e1;">Crear filtro</span>
+                    </button>
+                    
+                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
+                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
+                            <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
+                        </button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
+                            <i class="fas fa-angle-left" style="color: #2378e1;"></i>
+                        </button>
+                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
+                            <i class="fas fa-angle-right" style="color: #2378e1;"></i>
+                        </button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
+                            <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
+                        </button>
+                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 24 registros</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -197,39 +187,28 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #6B8ACE;
+        border-bottom: 2px solid #2378e1;
     }
     
-    .custom-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-    }
-    
-    .custom-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(107, 138, 206, 0.15) !important;
-        border-color: #6B8ACE !important;
+    .semaforo .card-header h2 {
+        color: #2378e1 !important;
     }
     
     /* Estilos de tabla */
     .table th {
         white-space: nowrap;
         font-size: 12px;
-        background-color: #6B8ACE !important;
+        background-color: #2378e1 !important;
         color: white;
         font-weight: 600;
         padding: 10px 4px;
-    }
-    
-    /* Todas las columnas usan el mismo color #6B8ACE */
-    .table th:last-child {
-        background-color: #6B8ACE !important;
     }
     
     .table td {
         white-space: nowrap;
         font-size: 12px;
         padding: 10px 4px;
+        color: #000000 !important;
     }
     
     /* Estilo para las filas alternadas */
@@ -245,7 +224,7 @@
         background-color: #e0e0e0;
     }
     
-    /* Estilo para los iconos de acción - SOLO ESTO MANTIENE EL AZUL ORIGINAL */
+    /* Estilo para los iconos de acción */
     #tablaBody td i {
         transition: transform 0.2s;
         font-size: 14px;
@@ -292,7 +271,7 @@
     }
     
     .badge-programado {
-        background-color: #6B8ACE;
+        background-color: #2378e1;
         color: white;
     }
     
@@ -315,7 +294,145 @@
     tfoot td {
         font-weight: bold;
         background-color: #e9ecef !important;
-        border-top: 2px solid #6B8ACE;
+        border-top: 2px solid #2378e1;
+        color: #000000 !important;
+    }
+    
+    /* Estilos para agrupación de columnas */
+    [draggable="true"] {
+        cursor: grab;
+    }
+    
+    [draggable="true"]:active {
+        cursor: grabbing;
+        opacity: 0.7;
+    }
+    
+    #grupoAgrupacion {
+        position: relative;
+    }
+    
+    #grupoColumnas {
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .columna-agrupada {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        background-color: #f0f4ff;
+        border-radius: 16px;
+        color: #2378e1;
+        font-size: 12px;
+        margin: 2px;
+        border: 1px solid #2378e1;
+    }
+    
+    .columna-agrupada .remover {
+        margin-left: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        color: #2378e1;
+    }
+    
+    .columna-agrupada .remover:hover {
+        opacity: 0.7;
+    }
+    
+    /* Estilo para filas de grupo */
+    .fila-grupo {
+        background-color: #f0f7ff !important;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    
+    .fila-grupo:hover {
+        background-color: #e1f0ff !important;
+    }
+    
+    .fila-grupo td:first-child i {
+        transition: transform 0.2s;
+        margin-right: 8px;
+    }
+    
+    .fila-grupo:not(.expandido) td:first-child i {
+        transform: rotate(-90deg);
+    }
+    
+    .fila-detalle {
+        background-color: #ffffff;
+    }
+    
+    .fila-detalle td {
+        border-top: none !important;
+    }
+    
+    .fila-detalle td:first-child {
+        padding-left: 30px !important;
+    }
+    
+    /* Estilo cuando se está arrastrando sobre el área de grupo */
+    .drag-over #grupoColumnas {
+        background-color: rgba(35, 120, 225, 0.1);
+        border-radius: 4px;
+    }
+    
+    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
+    #paginacionContainer {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Todos los elementos dentro del contenedor también sin fondo */
+    #paginacionContainer * {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    
+    /* Excepción para los spans que deben tener fondo azul */
+    #paginacionContainer span[style*="background-color"] {
+        background-color: #2378e1 !important;
+    }
+    
+    /* Estilos para los botones de paginación */
+    #paginacionContainer button {
+        background: transparent !important;
+        border: none !important;
+        color: #2378e1 !important;
+        cursor: pointer;
+    }
+    
+    #paginacionContainer button:hover {
+        opacity: 0.7;
+    }
+    
+    #paginacionContainer button i {
+        color: #2378e1 !important;
+    }
+    
+    /* Estilo específico para btnCrearFiltro */
+    #btnCrearFiltro,
+    #btnCrearFiltro:hover,
+    #btnCrearFiltro:focus,
+    #btnCrearFiltro:active {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    
+    #btnCrearFiltro i,
+    #btnCrearFiltro span {
+        color: #2378e1 !important;
+    }
+    
+    #paginacionInfo {
+        color: #2378e1 !important;
     }
     
     /* Responsive */
@@ -336,8 +453,9 @@
             width: 100%;
         }
         
-        .custom-card {
-            min-width: 100% !important;
+        #paginacionContainer {
+            flex-direction: column;
+            align-items: flex-start;
         }
     }
 </style>
@@ -349,6 +467,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM completamente cargado - Programación de Pagos');
+        
+        // Variables para agrupación
+        let columnasAgrupadas = [];
+        let expandedGroups = new Set();
+        let datosOriginales = [];
+        let paginaActual = 1;
+        const registrosPorPagina = 8;
         
         // Datos de ejemplo para Programación de Pagos
         const datosProgramacionPagos = [
@@ -471,14 +596,131 @@
                 monto: 34200.00,
                 saldo: 0.00,
                 fecha_estimada: '2026-02-08'
+            },
+            {
+                id: 13,
+                estatus: 'Programado',
+                fecha: '2026-02-13',
+                proveedor: 'Servicios Logísticos Integrales',
+                descripcion: 'Pago de servicios de almacenaje',
+                monto: 98700.00,
+                saldo: 98700.00,
+                fecha_estimada: '2026-02-25'
+            },
+            {
+                id: 14,
+                estatus: 'Pendiente',
+                fecha: '2026-02-14',
+                proveedor: 'Transportes Express',
+                descripcion: 'Pago de fletes urgentes',
+                monto: 54300.00,
+                saldo: 54300.00,
+                fecha_estimada: '2026-02-21'
+            },
+            {
+                id: 15,
+                estatus: 'Pagado',
+                fecha: '2026-02-15',
+                proveedor: 'Distribuidora de Insumos',
+                descripcion: 'Pago de materiales de oficina',
+                monto: 23400.00,
+                saldo: 0.00,
+                fecha_estimada: '2026-02-09'
+            },
+            {
+                id: 16,
+                estatus: 'Programado',
+                fecha: '2026-02-16',
+                proveedor: 'Servicios Corporativos',
+                descripcion: 'Pago de servicios administrativos',
+                monto: 78900.00,
+                saldo: 78900.00,
+                fecha_estimada: '2026-02-28'
+            },
+            {
+                id: 17,
+                estatus: 'Parcial',
+                fecha: '2026-02-17',
+                proveedor: 'Tecnología Empresarial',
+                descripcion: 'Pago de licencias de software',
+                monto: 123400.00,
+                saldo: 43400.00,
+                fecha_estimada: '2026-02-23'
+            },
+            {
+                id: 18,
+                estatus: 'Cancelado',
+                fecha: '2026-02-18',
+                proveedor: 'Proveedor de Servicios Múltiples',
+                descripcion: 'Cancelado por duplicidad',
+                monto: 32100.00,
+                saldo: 32100.00,
+                fecha_estimada: '2026-02-11'
+            },
+            {
+                id: 19,
+                estatus: 'Programado',
+                fecha: '2026-02-19',
+                proveedor: 'Transportes del Norte',
+                descripcion: 'Pago de servicios de transporte',
+                monto: 145600.00,
+                saldo: 145600.00,
+                fecha_estimada: '2026-02-27'
+            },
+            {
+                id: 20,
+                estatus: 'Pendiente',
+                fecha: '2026-02-20',
+                proveedor: 'Logística y Distribución',
+                descripcion: 'Programación mensual de pagos',
+                monto: 211200.00,
+                saldo: 211200.00,
+                fecha_estimada: '2026-02-29'
+            },
+            {
+                id: 21,
+                estatus: 'Pagado',
+                fecha: '2026-02-21',
+                proveedor: 'Servicios de Mantenimiento',
+                descripcion: 'Pago de mantenimiento preventivo',
+                monto: 18700.00,
+                saldo: 0.00,
+                fecha_estimada: '2026-02-13'
+            },
+            {
+                id: 22,
+                estatus: 'Programado',
+                fecha: '2026-02-22',
+                proveedor: 'Proveedor de Insumos',
+                descripcion: 'Pago de insumos de oficina',
+                monto: 45600.00,
+                saldo: 45600.00,
+                fecha_estimada: '2026-03-01'
+            },
+            {
+                id: 23,
+                estatus: 'Parcial',
+                fecha: '2026-02-23',
+                proveedor: 'Consultoría Empresarial',
+                descripcion: 'Pago de servicios de consultoría',
+                monto: 67800.00,
+                saldo: 17800.00,
+                fecha_estimada: '2026-02-24'
+            },
+            {
+                id: 24,
+                estatus: 'Programado',
+                fecha: '2026-02-24',
+                proveedor: 'Servicios Financieros',
+                descripcion: 'Pago de servicios contables',
+                monto: 56700.00,
+                saldo: 56700.00,
+                fecha_estimada: '2026-02-26'
             }
         ];
 
-        // Variables globales
-        let datosOriginales = [...datosProgramacionPagos];
+        datosOriginales = [...datosProgramacionPagos];
         let datosFiltrados = [...datosProgramacionPagos];
-        let paginaActual = 1;
-        const registrosPorPagina = 10;
         
         // Elementos del DOM
         const fechaInicio = document.getElementById('fechaInicio');
@@ -491,17 +733,19 @@
         const tablaBody = document.getElementById('tablaBody');
         const sinDatosMensaje = document.getElementById('sinDatosMensaje');
         const tablaContainer = document.getElementById('tablaContainer');
+        const tablaFoot = document.getElementById('tablaFoot');
         const totalRegistros = document.getElementById('totalRegistros');
         const sumMonto = document.getElementById('sumMonto');
         const sumSaldo = document.getElementById('sumSaldo');
         const paginacionInfo = document.getElementById('paginacionInfo');
-        const paginacionContainer = document.getElementById('paginacionContainer');
+        const textoAgrupar = document.getElementById('textoAgrupar');
         
-        // Elementos de cuadros de resumen
-        const totalProgramado = document.getElementById('totalProgramado');
-        const totalPendiente = document.getElementById('totalPendiente');
-        const totalPagado = document.getElementById('totalPagado');
-        const totalProgramaciones = document.getElementById('totalProgramaciones');
+        // Elementos de paginación
+        const btnPrimera = document.getElementById('btnPrimera');
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnSiguiente = document.getElementById('btnSiguiente');
+        const btnUltima = document.getElementById('btnUltima');
+        const paginaActualSpan = document.getElementById('paginaActual');
         
         // Función para formatear moneda
         function formatCurrency(amount) {
@@ -525,31 +769,399 @@
             return 'badge-pendiente';
         }
         
-        // Función para actualizar cuadros de resumen
-        function actualizarResumen(datos) {
-            let totalProgramadoValor = 0;
-            let totalPendienteValor = 0;
-            let totalPagadoValor = 0;
+        // Función para generar un ID único para el grupo
+        function generarGrupoId(item, columnas) {
+            return columnas.map(col => {
+                switch(col) {
+                    case 'id': return item.id ? item.id.toString() : 'Sin ID';
+                    case 'estatus': return item.estatus || 'Sin estatus';
+                    case 'fecha': return item.fecha || 'Sin fecha';
+                    case 'proveedor': return item.proveedor || 'Sin proveedor';
+                    case 'descripcion': return item.descripcion || 'Sin descripción';
+                    case 'monto': return item.monto ? item.monto.toString() : '0';
+                    case 'saldo': return item.saldo ? item.saldo.toString() : '0';
+                    case 'fecha_estimada': return item.fecha_estimada || 'Sin fecha';
+                    default: return '';
+                }
+            }).join('||');
+        }
+        
+        // Función para agrupar datos por columnas seleccionadas
+        function agruparDatos(datos, columnas) {
+            if (columnas.length === 0) return { grupos: [], items: datos };
+            
+            const gruposMap = new Map();
             
             datos.forEach(item => {
-                if (item.estatus === 'Programado' || item.estatus === 'Pendiente' || item.estatus === 'Parcial') {
-                    totalProgramadoValor += item.monto;
-                }
+                const grupoId = generarGrupoId(item, columnas);
                 
-                if (item.estatus === 'Pendiente' || item.estatus === 'Parcial') {
-                    totalPendienteValor += item.saldo;
-                }
-                
-                if (item.estatus === 'Pagado') {
-                    totalPagadoValor += item.monto;
+                if (!gruposMap.has(grupoId)) {
+                    // Crear un nuevo grupo
+                    const valorGrupo = columnas.map(col => {
+                        switch(col) {
+                            case 'id': return item.id || 'Sin ID';
+                            case 'estatus': return item.estatus || 'Sin estatus';
+                            case 'fecha': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
+                            case 'proveedor': return item.proveedor || 'Sin proveedor';
+                            case 'descripcion': return item.descripcion || 'Sin descripción';
+                            case 'monto': return item.monto || 0;
+                            case 'saldo': return item.saldo || 0;
+                            case 'fecha_estimada': return item.fecha_estimada ? formatDate(item.fecha_estimada) : 'Sin fecha';
+                            default: return '';
+                        }
+                    }).join(' - ');
+                    
+                    gruposMap.set(grupoId, {
+                        id: grupoId,
+                        valor: valorGrupo,
+                        items: [item],
+                        totalMonto: item.monto || 0,
+                        totalSaldo: item.saldo || 0
+                    });
+                } else {
+                    const grupo = gruposMap.get(grupoId);
+                    grupo.items.push(item);
+                    grupo.totalMonto += item.monto || 0;
+                    grupo.totalSaldo += item.saldo || 0;
                 }
             });
             
-            totalProgramado.textContent = formatCurrency(totalProgramadoValor);
-            totalPendiente.textContent = formatCurrency(totalPendienteValor);
-            totalPagado.textContent = formatCurrency(totalPagadoValor);
-            totalProgramaciones.textContent = datos.length;
+            return {
+                grupos: Array.from(gruposMap.values()),
+                items: []
+            };
         }
+        
+        // Función para obtener datos de la página actual
+        function getCurrentPageData(datos) {
+            const start = (paginaActual - 1) * registrosPorPagina;
+            const end = start + registrosPorPagina;
+            return datos.slice(start, end);
+        }
+        
+        // Función para actualizar la paginación
+        function actualizarPaginacion(total) {
+            const totalPaginas = Math.ceil(total / registrosPorPagina);
+            paginaActualSpan.textContent = paginaActual;
+            
+            // Mostrar/ocultar botones de página según sea necesario
+            document.querySelectorAll('.pagina-btn').forEach(btn => {
+                const pagina = parseInt(btn.dataset.pagina);
+                if (pagina <= totalPaginas) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+            
+            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
+            const fin = Math.min(paginaActual * registrosPorPagina, total);
+            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
+        }
+        
+        // Función para calcular totales
+        function calcularTotales(datos) {
+            let sumaMonto = 0;
+            let sumaSaldo = 0;
+            
+            datos.forEach(item => {
+                sumaMonto += item.monto || 0;
+                sumaSaldo += item.saldo || 0;
+            });
+            
+            totalRegistros.textContent = datos.length;
+            sumMonto.textContent = formatCurrency(sumaMonto);
+            sumSaldo.textContent = formatCurrency(sumaSaldo);
+        }
+        
+        // Función para cargar datos en la tabla
+        function cargarTabla(datos) {
+            if (!tablaBody) return;
+            
+            // Ocultar texto de agrupar si hay columnas agrupadas
+            if (textoAgrupar) {
+                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
+            }
+            
+            // Aplicar agrupación si hay columnas seleccionadas
+            const { grupos } = agruparDatos(datos, columnasAgrupadas);
+            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
+            
+            // Limpiar tabla
+            tablaBody.innerHTML = '';
+            
+            if (datos.length === 0) {
+                sinDatosMensaje.style.display = 'block';
+                tablaContainer.style.display = 'none';
+                if (tablaFoot) tablaFoot.style.display = 'none';
+                
+                totalRegistros.textContent = '0';
+                sumMonto.textContent = formatCurrency(0);
+                sumSaldo.textContent = formatCurrency(0);
+                
+                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
+                return;
+            }
+            
+            sinDatosMensaje.style.display = 'none';
+            tablaContainer.style.display = 'block';
+            
+            if (hayGrupos) {
+                // Ocultar pie de tabla cuando hay grupos
+                if (tablaFoot) tablaFoot.style.display = 'none';
+                
+                // Mostrar grupos
+                grupos.forEach(grupo => {
+                    const grupoRow = document.createElement('tr');
+                    grupoRow.className = 'fila-grupo';
+                    grupoRow.dataset.grupoId = grupo.id;
+                    
+                    if (expandedGroups.has(grupo.id)) {
+                        grupoRow.classList.add('expandido');
+                    }
+                    
+                    // Determinar el estatus predominante en el grupo
+                    const estatusCounts = {};
+                    grupo.items.forEach(item => {
+                        estatusCounts[item.estatus] = (estatusCounts[item.estatus] || 0) + 1;
+                    });
+                    
+                    let estatusPredominante = 'Pendiente';
+                    let maxCount = 0;
+                    for (const [estatus, count] of Object.entries(estatusCounts)) {
+                        if (count > maxCount) {
+                            maxCount = count;
+                            estatusPredominante = estatus;
+                        }
+                    }
+                    
+                    let badgeClass = 'badge-pendiente';
+                    if (estatusPredominante === 'Programado') badgeClass = 'badge-programado';
+                    else if (estatusPredominante === 'Pagado') badgeClass = 'badge-pagado';
+                    else if (estatusPredominante === 'Cancelado') badgeClass = 'badge-cancelado';
+                    else if (estatusPredominante === 'Parcial') badgeClass = 'badge-parcial';
+                    
+                    grupoRow.innerHTML = `
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="9">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
+                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
+                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
+                                        (${grupo.items.length} registros - Monto: ${formatCurrency(grupo.totalMonto)} - Saldo: ${formatCurrency(grupo.totalSaldo)})
+                                    </span>
+                                </div>
+                                <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tablaBody.appendChild(grupoRow);
+                    
+                    // Mostrar items del grupo si está expandido
+                    if (expandedGroups.has(grupo.id)) {
+                        grupo.items.forEach(item => {
+                            const detalleRow = document.createElement('tr');
+                            detalleRow.className = 'fila-detalle';
+                            
+                            // Badge para cada item
+                            let itemBadgeClass = 'badge-pendiente';
+                            if (item.estatus === 'Programado') itemBadgeClass = 'badge-programado';
+                            else if (item.estatus === 'Pagado') itemBadgeClass = 'badge-pagado';
+                            else if (item.estatus === 'Cancelado') itemBadgeClass = 'badge-cancelado';
+                            else if (item.estatus === 'Parcial') itemBadgeClass = 'badge-parcial';
+                            
+                            detalleRow.innerHTML = `
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${(paginaActual - 1) * registrosPorPagina + grupo.items.indexOf(item) + 1}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
+                                    <span class="badge ${itemBadgeClass}">${item.estatus}</span>
+                                </td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${formatDate(item.fecha)}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.proveedor}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${formatCurrency(item.monto)}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${formatCurrency(item.saldo)}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${formatDate(item.fecha_estimada)}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                                    <div style="display: flex; gap: 8px; justify-content: center;">
+                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.id}"></i>
+                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.id}"></i>
+                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.id}"></i>
+                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.id}"></i>
+                                        <i class="fas fa-credit-card" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Procesar pago" data-id="${item.id}"></i>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            tablaBody.appendChild(detalleRow);
+                        });
+                    }
+                });
+                
+                if (paginacionInfo) {
+                    const totalRegistros = datos.length;
+                    const mostrando = grupos.length;
+                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
+                }
+            } else {
+                // Mostrar todos los items sin agrupar (con paginación)
+                const pageData = getCurrentPageData(datos);
+                
+                pageData.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    
+                    let badgeClass = 'badge-pendiente';
+                    if (item.estatus === 'Programado') badgeClass = 'badge-programado';
+                    else if (item.estatus === 'Pagado') badgeClass = 'badge-pagado';
+                    else if (item.estatus === 'Cancelado') badgeClass = 'badge-cancelado';
+                    else if (item.estatus === 'Parcial') badgeClass = 'badge-parcial';
+                    
+                    row.innerHTML = `
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${(paginaActual - 1) * registrosPorPagina + index + 1}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
+                            <span class="badge ${badgeClass}">${item.estatus}</span>
+                        </td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${formatDate(item.fecha)}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.proveedor}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${formatCurrency(item.monto)}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${formatCurrency(item.saldo)}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${formatDate(item.fecha_estimada)}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                            <div style="display: flex; gap: 8px; justify-content: center;">
+                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.id}"></i>
+                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.id}"></i>
+                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.id}"></i>
+                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.id}"></i>
+                                <i class="fas fa-credit-card" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Procesar pago" data-id="${item.id}"></i>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tablaBody.appendChild(row);
+                });
+                
+                // Mostrar pie de tabla con totales
+                if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
+                calcularTotales(datos);
+                
+                actualizarPaginacion(datos.length);
+            }
+        }
+        
+        // Función para actualizar la visualización de columnas agrupadas
+        function actualizarGrupoColumnas() {
+            const grupoContainer = document.getElementById('grupoColumnas');
+            const textoAgrupar = document.getElementById('textoAgrupar');
+            
+            if (!grupoContainer) return;
+            
+            grupoContainer.innerHTML = '';
+            
+            if (columnasAgrupadas.length === 0) {
+                if (textoAgrupar) textoAgrupar.style.display = 'inline';
+            } else {
+                if (textoAgrupar) textoAgrupar.style.display = 'none';
+                
+                columnasAgrupadas.forEach(col => {
+                    const nombreColumna = {
+                        'id': 'ID',
+                        'estatus': 'Estatus',
+                        'fecha': 'Fecha',
+                        'proveedor': 'Proveedor',
+                        'descripcion': 'Descripción',
+                        'monto': 'Monto',
+                        'saldo': 'Saldo',
+                        'fecha_estimada': 'Fecha Est. Pago'
+                    }[col] || col;
+                    
+                    const chip = document.createElement('span');
+                    chip.className = 'columna-agrupada';
+                    chip.innerHTML = `
+                        ${nombreColumna}
+                        <span class="remover" data-columna="${col}">&times;</span>
+                    `;
+                    grupoContainer.appendChild(chip);
+                });
+            }
+            
+            // Limpiar grupos expandidos al cambiar agrupación
+            expandedGroups.clear();
+            
+            // Recargar tabla con nueva agrupación
+            cargarTabla(datosFiltrados);
+        }
+        
+        // Configurar drag and drop
+        function setupDragAndDrop() {
+            const encabezados = document.querySelectorAll('th[draggable="true"]');
+            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
+            
+            encabezados.forEach(th => {
+                th.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', th.dataset.columna);
+                    e.dataTransfer.effectAllowed = 'copy';
+                    th.style.opacity = '0.5';
+                });
+                
+                th.addEventListener('dragend', (e) => {
+                    th.style.opacity = '1';
+                });
+            });
+            
+            grupoAgrupacion.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+                grupoAgrupacion.classList.add('drag-over');
+            });
+            
+            grupoAgrupacion.addEventListener('dragleave', () => {
+                grupoAgrupacion.classList.remove('drag-over');
+            });
+            
+            grupoAgrupacion.addEventListener('drop', (e) => {
+                e.preventDefault();
+                grupoAgrupacion.classList.remove('drag-over');
+                
+                const columna = e.dataTransfer.getData('text/plain');
+                
+                if (columna && !columnasAgrupadas.includes(columna)) {
+                    columnasAgrupadas.push(columna);
+                    actualizarGrupoColumnas();
+                }
+            });
+            
+            // Event listener para remover columnas (usando delegación)
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remover')) {
+                    const columna = e.target.dataset.columna;
+                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+                    actualizarGrupoColumnas();
+                }
+            });
+        }
+        
+        // Event listener para expandir/colapsar grupos
+        document.addEventListener('click', function(e) {
+            const filaGrupo = e.target.closest('.fila-grupo');
+            if (filaGrupo) {
+                const grupoId = filaGrupo.dataset.grupoId;
+                const icono = filaGrupo.querySelector('i');
+                
+                if (expandedGroups.has(grupoId)) {
+                    expandedGroups.delete(grupoId);
+                    filaGrupo.classList.remove('expandido');
+                    if (icono) icono.className = 'fas fa-caret-right';
+                } else {
+                    expandedGroups.add(grupoId);
+                    filaGrupo.classList.add('expandido');
+                    if (icono) icono.className = 'fas fa-caret-down';
+                }
+                
+                // Recargar tabla para mostrar/ocultar detalles
+                cargarTabla(datosFiltrados);
+            }
+        });
         
         // Función para filtrar por búsqueda
         function filtrarPorBusqueda() {
@@ -566,18 +1178,7 @@
             }
             
             paginaActual = 1;
-            actualizarResumen(datosFiltrados);
-            aplicarPaginacionYMostrar();
-        }
-        
-        // Función para aplicar paginación
-        function aplicarPaginacionYMostrar() {
-            const inicio = (paginaActual - 1) * registrosPorPagina;
-            const fin = inicio + registrosPorPagina;
-            const datosPagina = datosFiltrados.slice(inicio, fin);
-            
-            mostrarTabla(datosPagina);
-            actualizarPaginacion();
+            cargarTabla(datosFiltrados);
         }
         
         // Función para cambiar de página
@@ -585,108 +1186,15 @@
             const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
             if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
                 paginaActual = nuevaPagina;
-                aplicarPaginacionYMostrar();
+                cargarTabla(datosFiltrados);
             }
         }
         
-        // Función para actualizar los controles de paginación
-        function actualizarPaginacion() {
-            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-            const inicio = (paginaActual - 1) * registrosPorPagina + 1;
-            const fin = Math.min(paginaActual * registrosPorPagina, datosFiltrados.length);
-            
-            paginacionInfo.textContent = `Mostrando ${datosFiltrados.length > 0 ? inicio : 0}-${fin} de ${datosFiltrados.length} registros`;
-            
-            // Actualizar botones de paginación
-            while (paginacionContainer.children.length > 7) {
-                paginacionContainer.removeChild(paginacionContainer.children[2]);
-            }
-            
-            const spanPagina = paginacionContainer.querySelector('span');
-            
-            for (let i = 1; i <= Math.min(5, totalPaginas); i++) {
-                if (i === 1) {
-                    spanPagina.textContent = i;
-                    spanPagina.style.backgroundColor = i === paginaActual ? '#6B8ACE' : 'transparent';
-                    spanPagina.style.color = i === paginaActual ? 'white' : '#6B8ACE';
-                } else {
-                    const btn = document.createElement('button');
-                    btn.textContent = i;
-                    btn.style.padding = '5px 10px';
-                    btn.style.border = '1px solid #dee2e6';
-                    btn.style.backgroundColor = i === paginaActual ? '#6B8ACE' : 'white';
-                    btn.style.borderRadius = '4px';
-                    btn.style.cursor = 'pointer';
-                    btn.style.color = i === paginaActual ? 'white' : '#6B8ACE';
-                    btn.addEventListener('click', () => cambiarPagina(i));
-                    paginacionContainer.insertBefore(btn, paginacionContainer.children[paginacionContainer.children.length - 2]);
-                }
-            }
-        }
+        // Cargar datos iniciales
+        cargarTabla(datosOriginales);
         
-        // Función para mostrar la tabla
-        function mostrarTabla(datos) {
-            if (!tablaBody) return;
-            
-            tablaBody.innerHTML = '';
-            
-            if (datos.length === 0) {
-                sinDatosMensaje.style.display = 'block';
-                tablaContainer.style.display = 'none';
-                
-                totalRegistros.textContent = '0';
-                sumMonto.textContent = formatCurrency(0);
-                sumSaldo.textContent = formatCurrency(0);
-                
-                return;
-            }
-            
-            sinDatosMensaje.style.display = 'none';
-            tablaContainer.style.display = 'block';
-            
-            // Calcular totales de la página actual
-            let sumaMonto = 0;
-            let sumaSaldo = 0;
-            
-            datos.forEach(item => {
-                sumaMonto += item.monto || 0;
-                sumaSaldo += item.saldo || 0;
-            });
-            
-            totalRegistros.textContent = datos.length;
-            sumMonto.textContent = formatCurrency(sumaMonto);
-            sumSaldo.textContent = formatCurrency(sumaSaldo);
-            
-            // Generar filas
-            datos.forEach((item, index) => {
-                const row = document.createElement('tr');
-                const badgeClass = getBadgeClass(item.estatus);
-                
-                row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${(paginaActual - 1) * registrosPorPagina + index + 1}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
-                        <span class="badge ${badgeClass}">${item.estatus}</span>
-                    </td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${formatDate(item.fecha)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proveedor}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.descripcion}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.monto)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.saldo)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${formatDate(item.fecha_estimada)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                        <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.id}"></i>
-                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.id}"></i>
-                            <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.id}"></i>
-                            <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.id}"></i>
-                            <i class="fas fa-credit-card" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Procesar pago" data-id="${item.id}"></i>
-                        </div>
-                    </td>
-                `;
-                
-                tablaBody.appendChild(row);
-            });
-        }
+        // Configurar drag and drop
+        setupDragAndDrop();
         
         // Event Listeners
         btnCrearFiltro.addEventListener('click', function() {
@@ -706,6 +1214,18 @@
         });
         
         buscador.addEventListener('input', filtrarPorBusqueda);
+        
+        // Eventos de paginación
+        document.querySelectorAll('.pagina-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                cambiarPagina(parseInt(this.dataset.pagina));
+            });
+        });
+        
+        btnPrimera.addEventListener('click', () => cambiarPagina(1));
+        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
+        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
+        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
         
         // Iconos de filtro en encabezados
         document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
@@ -735,21 +1255,6 @@
                 alert(`Procesar pago - Programación ID: ${id} - Funcionalidad en desarrollo`);
             }
         });
-        
-        // Paginación
-        const btnPrimera = paginacionContainer.querySelector('button[title="Primera página"]');
-        const btnAnterior = paginacionContainer.querySelector('button[title="Página anterior"]');
-        const btnSiguiente = paginacionContainer.querySelector('button[title="Página siguiente"]');
-        const btnUltima = paginacionContainer.querySelector('button[title="Última página"]');
-        
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
-        
-        // Cargar datos iniciales
-        actualizarResumen(datosOriginales);
-        mostrarTabla(datosOriginales.slice(0, registrosPorPagina));
     });
 </script>
 @endsection

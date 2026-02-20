@@ -3,11 +3,11 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Contrarecibos -->
+        <!-- Cuentas Avanzadas -->
         <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
-                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Contrarecibos
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
+                <h2 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                    Cuentas Avanzadas
                 </h2>
             </div>
 
@@ -27,104 +27,104 @@
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <!-- Date Inicio -->
                         <div>
-                            <input type="date" id="fechaInicio" value="2026-01-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Date Fin -->
                         <div>
-                            <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Botón Agregar (+) -->
                         <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #083CAE;"></i>
+                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
+                                <i class="fas fa-plus" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
+                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Botón Seleccionar Columnas -->
                         <div>
                             <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #083CAE;"></i>
+                                <i class="fas fa-columns" style="color: #2378e1;"></i>
                             </button>
                         </div>
 
                         <!-- Buscador -->
                         <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
                         </div>
                     </div>
                 </div>
 
                 <!-- Mensaje "Sin datos" centrado -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0;" id="sinDatosMensaje">
-                    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
+                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
+                    <i class="fas fa-university" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
+                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay cuentas avanzadas para mostrar</p>
                 </div>
 
-                <!-- Tabla de Contrarecibos -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: none;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaContrarecibos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
+                <!-- Tabla de Cuentas Avanzadas -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaCuentasAvanzadas" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="alias">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
+                                        <span>Alias</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="banco">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha</span>
+                                        <span>Banco</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="folio">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="tipo_cuenta">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Folio</span>
+                                        <span>Tipo de Cuenta</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="cliente">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="numero_cuenta">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cliente</span>
+                                        <span>Número de Cuenta</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="unidad">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="clabe">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Unidad</span>
+                                        <span>CLABE</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="descripcion">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="moneda">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Descripción</span>
+                                        <span>Moneda</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="total">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="origen">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total</span>
+                                        <span>Origen de Cuenta</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="empresa">
+                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="cuenta_contable">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Empresa</span>
+                                        <span>Cuenta Contable</span>
                                         <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
@@ -142,9 +142,8 @@
                         <!-- Fila de totales -->
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef; color: #000000;" colspan="6">Totales:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="2"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="8">Registros: <span id="totalRegistros">0</span></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -160,22 +159,22 @@
                     
                     <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
                     <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
                             <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
                             <i class="fas fa-angle-left" style="color: #2378e1;"></i>
                         </button>
-                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;">1</span>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;">2</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente">
+                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
                             <i class="fas fa-angle-right" style="color: #2378e1;"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página">
+                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
                             <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
                         </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 0-0 de 0 registros</span>
+                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 12 registros</span>
                     </div>
                 </div>
             </div>
@@ -186,11 +185,11 @@
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
-        border-bottom: 2px solid #083CAE;
+        border-bottom: 2px solid #2378e1;
     }
     
     .semaforo .card-header h2 {
-        color: #083CAE !important;
+        color: #2378e1 !important;
     }
     
     /* Estilos de tabla */
@@ -228,6 +227,7 @@
         transition: transform 0.2s;
         font-size: 14px;
         color: #083CAE;
+        cursor: pointer;
     }
     
     #tablaBody td i:hover {
@@ -254,43 +254,12 @@
         z-index: 15;
     }
     
-    /* Estilo para badges de estatus */
-    .badge {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 8px;
-        display: inline-block;
-        border-radius: 3px;
-    }
-    
-    .badge-pendiente {
-        background-color: #fd7e14;
-        color: white;
-    }
-    
-    .badge-aprobado {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-cancelado {
-        background-color: #dc3545;
-        color: white;
-    }
-    
-    .badge-pagado {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-revisado {
-        background-color: #17a2b8;
-        color: white;
-    }
-    
-    /* Números alineados a la derecha */
-    .text-right {
-        text-align: right;
+    /* Estilo para el pie de tabla (totales) */
+    tfoot td {
+        font-weight: bold;
+        background-color: #e9ecef !important;
+        border-top: 2px solid #2378e1;
+        color: #000000 !important;
     }
     
     /* Estilos para agrupación de columnas */
@@ -374,14 +343,6 @@
         border-radius: 4px;
     }
     
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
-        color: #000000 !important;
-    }
-    
     /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
     #paginacionContainer {
         background: transparent !important;
@@ -444,7 +405,7 @@
             justify-content: center !important;
         }
         
-        input[type="date"] {
+        input[type="date"], select {
             width: 100% !important;
         }
         
@@ -473,93 +434,194 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Contrarecibos');
+        console.log('DOM completamente cargado - Cuentas Avanzadas');
         
         // Variables para agrupación
         let columnasAgrupadas = [];
         let expandedGroups = new Set();
         let datosOriginales = [];
+        let paginaActual = 1;
+        const registrosPorPagina = 8;
         
-        // Datos de ejemplo para Contrarecibos
-        const datosContrarecibos = [
+        // Datos de ejemplo para Cuentas Avanzadas
+        const datosCuentasAvanzadas = [
             {
-                estatus: 'Pendiente',
-                fecha: '2026-01-15',
-                folio: 'CR-001',
-                cliente: 'Maquiladora Industrial',
-                unidad: 'U-001',
-                descripcion: 'Contrarecibo por servicios de transporte',
-                total: 12500.00,
-                empresa: 'EMPRESA SA DE CV'
+                cuenta_id: 1,
+                alias: 'Cuenta Principal BBVA',
+                banco: 'BBVA',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '1234-5678-9012-3456',
+                clabe: '012345678901234567',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-001'
             },
             {
-                estatus: 'Aprobado',
-                fecha: '2026-01-14',
-                folio: 'CR-002',
-                cliente: 'Cartones del Norte',
-                unidad: 'U-002',
-                descripcion: 'Contrarecibo por flete',
-                total: 8750.00,
-                empresa: 'EMPRESA SA DE CV'
+                cuenta_id: 2,
+                alias: 'Cuenta Santander',
+                banco: 'Santander',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '5678-1234-5678-1234',
+                clabe: '014567890123456789',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-002'
             },
             {
-                estatus: 'Pagado',
-                fecha: '2026-01-13',
-                folio: 'CR-003',
-                cliente: 'Transportes del Bajío',
-                unidad: 'U-003',
-                descripcion: 'Contrarecibo por maniobras',
-                total: 5600.00,
-                empresa: 'EMPRESA SA DE CV'
+                cuenta_id: 3,
+                alias: 'Cuenta Banamex',
+                banco: 'Banamex',
+                tipo_cuenta: 'Ahorros',
+                numero_cuenta: '4321-8765-4321-8765',
+                clabe: '002345678901234567',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-003'
             },
             {
-                estatus: 'Revisado',
-                fecha: '2026-01-12',
-                folio: 'CR-004',
-                cliente: 'Logística Monterrey',
-                unidad: 'U-004',
-                descripcion: 'Contrarecibo por servicios integrales',
-                total: 15200.00,
-                empresa: 'EMPRESA SA DE CV'
+                cuenta_id: 4,
+                alias: 'Cuenta HSBC',
+                banco: 'HSBC',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '2468-1357-2468-1357',
+                clabe: '021234567890123456',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-004'
             },
             {
-                estatus: 'Cancelado',
-                fecha: '2026-01-11',
-                folio: 'CR-005',
-                cliente: 'Comercializadora del Sur',
-                unidad: 'U-005',
-                descripcion: 'Contrarecibo cancelado por el cliente',
-                total: 0.00,
-                empresa: 'EMPRESA SA DE CV'
+                cuenta_id: 5,
+                alias: 'Cuenta Dólares BBVA',
+                banco: 'BBVA',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '7890-1234-7890-1234',
+                clabe: '012345678901234568',
+                moneda: 'USD',
+                origen: 'Internacional',
+                cuenta_contable: '100-005'
+            },
+            {
+                cuenta_id: 6,
+                alias: 'Cuenta Banorte',
+                banco: 'Banorte',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '1357-2468-1357-2468',
+                clabe: '012345678901234569',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-006'
+            },
+            {
+                cuenta_id: 7,
+                alias: 'Cuenta Scotiabank',
+                banco: 'Scotiabank',
+                tipo_cuenta: 'Ahorros',
+                numero_cuenta: '4567-8901-4567-8901',
+                clabe: '044567890123456789',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-007'
+            },
+            {
+                cuenta_id: 8,
+                alias: 'Cuenta Inversión BBVA',
+                banco: 'BBVA',
+                tipo_cuenta: 'Inversión',
+                numero_cuenta: '1122-3344-5566-7788',
+                clabe: '012345678901234570',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-008'
+            },
+            {
+                cuenta_id: 9,
+                alias: 'Cuenta Dólares Santander',
+                banco: 'Santander',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '9988-7766-5544-3322',
+                clabe: '014567890123456790',
+                moneda: 'USD',
+                origen: 'Internacional',
+                cuenta_contable: '100-009'
+            },
+            {
+                cuenta_id: 10,
+                alias: 'Cuenta Banamex Dólares',
+                banco: 'Banamex',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '1472-5836-9258-1472',
+                clabe: '002345678901234568',
+                moneda: 'USD',
+                origen: 'Internacional',
+                cuenta_contable: '100-010'
+            },
+            {
+                cuenta_id: 11,
+                alias: 'Cuenta HSBC Ahorros',
+                banco: 'HSBC',
+                tipo_cuenta: 'Ahorros',
+                numero_cuenta: '3698-5214-7896-3214',
+                clabe: '021234567890123457',
+                moneda: 'MXN',
+                origen: 'Nacional',
+                cuenta_contable: '100-011'
+            },
+            {
+                cuenta_id: 12,
+                alias: 'Cuenta Banorte Dólares',
+                banco: 'Banorte',
+                tipo_cuenta: 'Cheques',
+                numero_cuenta: '7531-9513-7531-9513',
+                clabe: '012345678901234571',
+                moneda: 'USD',
+                origen: 'Internacional',
+                cuenta_contable: '100-012'
             }
         ];
+
+        datosOriginales = [...datosCuentasAvanzadas];
+        let datosFiltrados = [...datosCuentasAvanzadas];
         
-        datosOriginales = [...datosContrarecibos];
+        // Elementos del DOM
+        const fechaInicio = document.getElementById('fechaInicio');
+        const fechaFin = document.getElementById('fechaFin');
+        const btnCrearFiltro = document.getElementById('btnCrearFiltro');
+        const btnAgregar = document.getElementById('btnAgregar');
+        const btnExcel = document.getElementById('btnExcel');
+        const btnColumnas = document.getElementById('btnColumnas');
+        const buscador = document.getElementById('buscador');
+        const tablaBody = document.getElementById('tablaBody');
+        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
+        const tablaContainer = document.getElementById('tablaContainer');
+        const tablaFoot = document.getElementById('tablaFoot');
+        const totalRegistros = document.getElementById('totalRegistros');
+        const paginacionInfo = document.getElementById('paginacionInfo');
+        const textoAgrupar = document.getElementById('textoAgrupar');
         
-        // Función para formatear números como moneda
+        // Elementos de paginación
+        const btnPrimera = document.getElementById('btnPrimera');
+        const btnAnterior = document.getElementById('btnAnterior');
+        const btnSiguiente = document.getElementById('btnSiguiente');
+        const btnUltima = document.getElementById('btnUltima');
+        const paginaActualSpan = document.getElementById('paginaActual');
+        
+        // Función para formatear moneda (aunque no hay montos, lo dejamos por si acaso)
         function formatCurrency(amount) {
             return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-        
-        // Función para formatear fecha
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX');
         }
         
         // Función para generar un ID único para el grupo
         function generarGrupoId(item, columnas) {
             return columnas.map(col => {
                 switch(col) {
-                    case 'estatus': return item.estatus || 'Sin estatus';
-                    case 'fecha': return item.fecha || 'Sin fecha';
-                    case 'folio': return item.folio || 'Sin folio';
-                    case 'cliente': return item.cliente || 'Sin cliente';
-                    case 'unidad': return item.unidad || 'Sin unidad';
-                    case 'descripcion': return item.descripcion || 'Sin descripción';
-                    case 'total': return item.total ? item.total.toString() : '0';
-                    case 'empresa': return item.empresa || 'Sin empresa';
+                    case 'alias': return item.alias || 'Sin alias';
+                    case 'banco': return item.banco || 'Sin banco';
+                    case 'tipo_cuenta': return item.tipo_cuenta || 'Sin tipo';
+                    case 'numero_cuenta': return item.numero_cuenta || 'Sin número';
+                    case 'clabe': return item.clabe || 'Sin CLABE';
+                    case 'moneda': return item.moneda || 'Sin moneda';
+                    case 'origen': return item.origen || 'Sin origen';
+                    case 'cuenta_contable': return item.cuenta_contable || 'Sin cuenta';
                     default: return '';
                 }
             }).join('||');
@@ -578,14 +640,14 @@
                     // Crear un nuevo grupo
                     const valorGrupo = columnas.map(col => {
                         switch(col) {
-                            case 'estatus': return item.estatus || 'Sin estatus';
-                            case 'fecha': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
-                            case 'folio': return item.folio || 'Sin folio';
-                            case 'cliente': return item.cliente || 'Sin cliente';
-                            case 'unidad': return item.unidad || 'Sin unidad';
-                            case 'descripcion': return item.descripcion || 'Sin descripción';
-                            case 'total': return item.total || 0;
-                            case 'empresa': return item.empresa || 'Sin empresa';
+                            case 'alias': return item.alias || 'Sin alias';
+                            case 'banco': return item.banco || 'Sin banco';
+                            case 'tipo_cuenta': return item.tipo_cuenta || 'Sin tipo';
+                            case 'numero_cuenta': return item.numero_cuenta || 'Sin número';
+                            case 'clabe': return item.clabe || 'Sin CLABE';
+                            case 'moneda': return item.moneda || 'Sin moneda';
+                            case 'origen': return item.origen || 'Sin origen';
+                            case 'cuenta_contable': return item.cuenta_contable || 'Sin cuenta';
                             default: return '';
                         }
                     }).join(' - ');
@@ -593,13 +655,11 @@
                     gruposMap.set(grupoId, {
                         id: grupoId,
                         valor: valorGrupo,
-                        items: [item],
-                        total: item.total || 0
+                        items: [item]
                     });
                 } else {
                     const grupo = gruposMap.get(grupoId);
                     grupo.items.push(item);
-                    grupo.total += item.total || 0;
                 }
             });
             
@@ -609,26 +669,40 @@
             };
         }
         
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            let totalGeneral = 0;
+        // Función para obtener datos de la página actual
+        function getCurrentPageData(datos) {
+            const start = (paginaActual - 1) * registrosPorPagina;
+            const end = start + registrosPorPagina;
+            return datos.slice(start, end);
+        }
+        
+        // Función para actualizar la paginación
+        function actualizarPaginacion(total) {
+            const totalPaginas = Math.ceil(total / registrosPorPagina);
+            paginaActualSpan.textContent = paginaActual;
             
-            datos.forEach(item => {
-                totalGeneral += item.total || 0;
+            // Mostrar/ocultar botones de página según sea necesario
+            document.querySelectorAll('.pagina-btn').forEach(btn => {
+                const pagina = parseInt(btn.dataset.pagina);
+                if (pagina <= totalPaginas) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                }
             });
             
-            document.getElementById('sumTotal').textContent = formatCurrency(totalGeneral);
+            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
+            const fin = Math.min(paginaActual * registrosPorPagina, total);
+            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
+        }
+        
+        // Función para calcular totales
+        function calcularTotales(datos) {
+            totalRegistros.textContent = datos.length;
         }
         
         // Función para cargar datos en la tabla
         function cargarTabla(datos) {
-            const tablaBody = document.getElementById('tablaBody');
-            const tablaContainer = document.getElementById('tablaContainer');
-            const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-            const paginacionInfo = document.getElementById('paginacionInfo');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            const tablaFoot = document.getElementById('tablaFoot');
-            
             if (!tablaBody) return;
             
             // Ocultar texto de agrupar si hay columnas agrupadas
@@ -646,13 +720,11 @@
             if (datos.length === 0) {
                 sinDatosMensaje.style.display = 'block';
                 tablaContainer.style.display = 'none';
+                if (tablaFoot) tablaFoot.style.display = 'none';
                 
-                // Resetear totales
-                document.getElementById('sumTotal').textContent = '$0.00';
+                totalRegistros.textContent = '0';
                 
-                if (paginacionInfo) {
-                    paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                }
+                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
                 return;
             }
             
@@ -673,26 +745,20 @@
                         grupoRow.classList.add('expandido');
                     }
                     
-                    // Determinar el estatus predominante en el grupo
-                    const estatusCounts = {};
+                    // Determinar el banco predominante en el grupo
+                    const bancoCounts = {};
                     grupo.items.forEach(item => {
-                        estatusCounts[item.estatus] = (estatusCounts[item.estatus] || 0) + 1;
+                        bancoCounts[item.banco] = (bancoCounts[item.banco] || 0) + 1;
                     });
                     
-                    let estatusPredominante = 'Pendiente';
+                    let bancoPredominante = 'Banco';
                     let maxCount = 0;
-                    for (const [estatus, count] of Object.entries(estatusCounts)) {
+                    for (const [banco, count] of Object.entries(bancoCounts)) {
                         if (count > maxCount) {
                             maxCount = count;
-                            estatusPredominante = estatus;
+                            bancoPredominante = banco;
                         }
                     }
-                    
-                    let badgeClass = 'badge-pendiente';
-                    if (estatusPredominante === 'Aprobado') badgeClass = 'badge-aprobado';
-                    else if (estatusPredominante === 'Pagado') badgeClass = 'badge-pagado';
-                    else if (estatusPredominante === 'Revisado') badgeClass = 'badge-revisado';
-                    else if (estatusPredominante === 'Cancelado') badgeClass = 'badge-cancelado';
                     
                     grupoRow.innerHTML = `
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="9">
@@ -701,10 +767,10 @@
                                     <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
                                     <strong style="color: #2378e1;">${grupo.valor}</strong>
                                     <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Total: ${formatCurrency(grupo.total)})
+                                        (${grupo.items.length} registros)
                                     </span>
                                 </div>
-                                <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
+                                <span class="badge" style="background-color: #2378e1; color: white; margin-right: 10px;">${bancoPredominante}</span>
                             </div>
                         </td>
                     `;
@@ -717,30 +783,21 @@
                             const detalleRow = document.createElement('tr');
                             detalleRow.className = 'fila-detalle';
                             
-                            // Badge para cada item
-                            let itemBadgeClass = 'badge-pendiente';
-                            if (item.estatus === 'Aprobado') itemBadgeClass = 'badge-aprobado';
-                            else if (item.estatus === 'Pagado') itemBadgeClass = 'badge-pagado';
-                            else if (item.estatus === 'Revisado') itemBadgeClass = 'badge-revisado';
-                            else if (item.estatus === 'Cancelado') itemBadgeClass = 'badge-cancelado';
-                            
                             detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">
-                                    <span class="badge ${itemBadgeClass}">${item.estatus || '-'}</span>
-                                </td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cliente || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.unidad || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.empresa || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.alias || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.banco || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.tipo_cuenta || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.numero_cuenta || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.clabe || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.origen || '-'}</td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_contable || '-'}</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                                        <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir"></i>
+                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.cuenta_id}"></i>
+                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.cuenta_id}"></i>
+                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.cuenta_id}"></i>
+                                        <i class="fas fa-history" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Movimientos" data-id="${item.cuenta_id}"></i>
                                     </div>
                                 </td>
                             `;
@@ -756,33 +813,27 @@
                     paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
                 }
             } else {
-                // Mostrar todos los items sin agrupar
-                datos.forEach(item => {
+                // Mostrar todos los items sin agrupar (con paginación)
+                const pageData = getCurrentPageData(datos);
+                
+                pageData.forEach((item, index) => {
                     const row = document.createElement('tr');
                     
-                    let badgeClass = 'badge-pendiente';
-                    if (item.estatus === 'Aprobado') badgeClass = 'badge-aprobado';
-                    else if (item.estatus === 'Pagado') badgeClass = 'badge-pagado';
-                    else if (item.estatus === 'Revisado') badgeClass = 'badge-revisado';
-                    else if (item.estatus === 'Cancelado') badgeClass = 'badge-cancelado';
-                    
                     row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
-                            <span class="badge ${badgeClass}">${item.estatus || '-'}</span>
-                        </td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.folio || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cliente || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.unidad || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.descripcion || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.empresa || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.alias || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.banco || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.tipo_cuenta || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.numero_cuenta || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.clabe || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.origen || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_contable || '-'}</td>
                         <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                             <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                                <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir"></i>
+                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.cuenta_id}"></i>
+                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.cuenta_id}"></i>
+                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.cuenta_id}"></i>
+                                <i class="fas fa-history" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Movimientos" data-id="${item.cuenta_id}"></i>
                             </div>
                         </td>
                     `;
@@ -794,9 +845,7 @@
                 if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
                 calcularTotales(datos);
                 
-                if (paginacionInfo) {
-                    paginacionInfo.textContent = `Mostrando 1-${datos.length} de ${datos.length} registros`;
-                }
+                actualizarPaginacion(datos.length);
             }
         }
         
@@ -816,14 +865,14 @@
                 
                 columnasAgrupadas.forEach(col => {
                     const nombreColumna = {
-                        'estatus': 'Estatus',
-                        'fecha': 'Fecha',
-                        'folio': 'Folio',
-                        'cliente': 'Cliente',
-                        'unidad': 'Unidad',
-                        'descripcion': 'Descripción',
-                        'total': 'Total',
-                        'empresa': 'Empresa'
+                        'alias': 'Alias',
+                        'banco': 'Banco',
+                        'tipo_cuenta': 'Tipo de Cuenta',
+                        'numero_cuenta': 'Número de Cuenta',
+                        'clabe': 'CLABE',
+                        'moneda': 'Moneda',
+                        'origen': 'Origen de Cuenta',
+                        'cuenta_contable': 'Cuenta Contable'
                     }[col] || col;
                     
                     const chip = document.createElement('span');
@@ -840,7 +889,7 @@
             expandedGroups.clear();
             
             // Recargar tabla con nueva agrupación
-            cargarTabla(datosOriginales);
+            cargarTabla(datosFiltrados);
         }
         
         // Configurar drag and drop
@@ -910,54 +959,78 @@
                 }
                 
                 // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosOriginales);
+                cargarTabla(datosFiltrados);
             }
         });
         
+        // Función para filtrar por búsqueda
+        function filtrarPorBusqueda() {
+            const termino = buscador.value.toLowerCase().trim();
+            
+            if (termino === '') {
+                datosFiltrados = [...datosOriginales];
+            } else {
+                datosFiltrados = datosOriginales.filter(item => 
+                    item.alias?.toLowerCase().includes(termino) ||
+                    item.banco?.toLowerCase().includes(termino) ||
+                    item.tipo_cuenta?.toLowerCase().includes(termino) ||
+                    item.numero_cuenta?.includes(termino) ||
+                    item.clabe?.includes(termino) ||
+                    item.moneda?.toLowerCase().includes(termino) ||
+                    item.origen?.toLowerCase().includes(termino) ||
+                    item.cuenta_contable?.toLowerCase().includes(termino)
+                );
+            }
+            
+            paginaActual = 1;
+            cargarTabla(datosFiltrados);
+        }
+        
+        // Función para cambiar de página
+        function cambiarPagina(nuevaPagina) {
+            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
+            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+                paginaActual = nuevaPagina;
+                cargarTabla(datosFiltrados);
+            }
+        }
+        
         // Cargar datos iniciales
-        cargarTabla(datosContrarecibos);
+        cargarTabla(datosOriginales);
         
         // Configurar drag and drop
         setupDragAndDrop();
         
         // Event Listeners
-        document.getElementById('fechaInicio')?.addEventListener('change', function() {
-            console.log('Fecha inicio:', this.value);
-        });
-        
-        document.getElementById('fechaFin')?.addEventListener('change', function() {
-            console.log('Fecha fin:', this.value);
-        });
-        
-        document.getElementById('btnCrearFiltro')?.addEventListener('click', function() {
+        btnCrearFiltro.addEventListener('click', function() {
             alert('Crear filtro - Funcionalidad en desarrollo');
         });
         
-        document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar Contrarecibo - Funcionalidad en desarrollo');
+        btnAgregar.addEventListener('click', function() {
+            alert('Agregar Cuenta - Funcionalidad en desarrollo');
         });
         
-        document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaContrarecibos', 'Contrarecibos');
+        btnExcel.addEventListener('click', function() {
+            exportTableToExcel('tablaCuentasAvanzadas', 'CuentasAvanzadas');
         });
         
-        document.getElementById('btnColumnas')?.addEventListener('click', function() {
+        btnColumnas.addEventListener('click', function() {
             alert('Selector de Columnas - Funcionalidad en desarrollo');
         });
         
-        document.getElementById('buscador')?.addEventListener('input', function(e) {
-            const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosContrarecibos.filter(item => 
-                item.cliente?.toLowerCase().includes(busqueda) ||
-                item.folio?.toLowerCase().includes(busqueda) ||
-                item.unidad?.toLowerCase().includes(busqueda) ||
-                item.descripcion?.toLowerCase().includes(busqueda) ||
-                item.empresa?.toLowerCase().includes(busqueda) ||
-                item.estatus?.toLowerCase().includes(busqueda)
-            );
-            datosOriginales = datosFiltrados;
-            cargarTabla(datosOriginales);
+        buscador.addEventListener('input', filtrarPorBusqueda);
+        
+        // Eventos de paginación
+        document.querySelectorAll('.pagina-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                cambiarPagina(parseInt(this.dataset.pagina));
+            });
         });
+        
+        btnPrimera.addEventListener('click', () => cambiarPagina(1));
+        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
+        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
+        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
         
         // Iconos de filtro en encabezados
         document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
@@ -969,25 +1042,20 @@
         // Acciones de los iconos (delegación de eventos)
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('fa-edit')) {
-                alert('Editar Contrarecibo - Funcionalidad en desarrollo');
+                const id = e.target.getAttribute('data-id');
+                alert(`Editar Cuenta ID: ${id} - Funcionalidad en desarrollo`);
             } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar este contrarecibo?')) {
-                    alert('Eliminar Contrarecibo - Funcionalidad en desarrollo');
+                const id = e.target.getAttribute('data-id');
+                if (confirm(`¿Está seguro de eliminar la cuenta ID: ${id}?`)) {
+                    alert(`Eliminar Cuenta ID: ${id} - Funcionalidad en desarrollo`);
                 }
-            } else if (e.target.classList.contains('fa-file-pdf')) {
-                alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-print')) {
-                alert('Imprimir Contrarecibo - Funcionalidad en desarrollo');
+            } else if (e.target.classList.contains('fa-eye')) {
+                const id = e.target.getAttribute('data-id');
+                alert(`Ver detalles de Cuenta ID: ${id} - Funcionalidad en desarrollo`);
+            } else if (e.target.classList.contains('fa-history')) {
+                const id = e.target.getAttribute('data-id');
+                alert(`Ver movimientos de Cuenta ID: ${id} - Funcionalidad en desarrollo`);
             }
-        });
-        
-        // Paginación (simulada)
-        document.querySelectorAll('#paginacionContainer button:not(#btnCrearFiltro)').forEach(btn => {
-            btn.addEventListener('click', function() {
-                if (!this.classList.contains('active') && !this.closest('span')) {
-                    alert('Cambiar de página - Funcionalidad en desarrollo');
-                }
-            });
         });
         
         // Función para exportar a Excel
