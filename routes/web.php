@@ -211,4 +211,152 @@ Route::prefix('config')->group(function () {
 });
 
 
+Route::prefix('conta')->group(function () {
+
+    Route::get('/analisis', function () {
+        return view('conta.analisis.analisis');
+    })->name('conta.analisis');
+
+    Route::get('/comparativos', function () {
+        return view('conta.analisis.comparativos');
+    })->name('conta.comparativos');
+
+    Route::get('/razones', function () {
+        return view('conta.analisis.razones');
+    })->name('conta.razones');
+
+    Route::get('/reportes', function () {
+        return view('conta.analisis.reportes');
+    })->name('conta.reportes');
+
+    Route::get('/auxiliar', function () {
+        return view('conta.catalogo.auxiliar');
+    })->name('conta.auxiliar');
+
+    Route::get('/centros', function () {
+        return view('conta.catalogo.centros');
+    })->name('conta.centros');
+
+    Route::get('/configuracion', function () {
+        return view('conta.catalogo.configuracion');
+    })->name('conta.configuraciones');
+
+    Route::get('/cuentas', function () {
+        return view('conta.catalogo.cuentas');
+    })->name('conta.cuentas');
+
+    Route::get('/amortizacion', function () {
+        return view('conta.cierre.amortizacion');
+    })->name('conta.amortizacion');
+
+    Route::get('/anual', function () {
+        return view('conta.cierre.anual');
+    })->name('conta.anual');
+
+    Route::get('/depreciaciones', function () {
+        return view('conta.cierre.depreciaciones');
+    })->name('conta.depreciaciones');
+
+    Route::get('/mensual', function () {
+        return view('conta.cierre.mensual');
+    })->name('conta.mensual');
+
+    Route::get('/depreciaciones', function () {
+        return view('conta.cierre.depreciaciones');
+    })->name('conta.depreciaciones');
+
+    Route::get('/estados', function () {
+        return view('conta.estados.estados');
+    })->name('conta.estados');
+
+    Route::get('/balance', function () {
+        return view('conta.estados.balance');
+    })->name('conta.balance');
+
+    Route::get('/capital', function () {
+        return view('conta.estados.capital');
+    })->name('conta.capital');
+
+    Route::get('/comprobacion', function () {
+        return view('conta.estados.comprobacion');
+    })->name('conta.comprobacion');
+
+    Route::get('/flujo', function () {
+        return view('conta.estados.flujo');
+    })->name('conta.flujo');
+
+    Route::get('/complementos', function () {
+        return view('conta.fiscal.complementos');
+    })->name('conta.complementos');
+
+    Route::get('/contabilidad', function () {
+        return view('conta.fiscal.contabilidad');
+    })->name('conta.contabilidad');
+
+    Route::get('/declarciones', function () {
+        return view('conta.fiscal.declaraciones');
+    })->name('conta.declaracinoes');
+
+    Route::get('/diot', function () {
+        return view('conta.fiscal.diot');
+    })->name('conta.diot');
+
+    Route::get('/retenciones', function () {
+        return view('conta.fiscal.retenciones');
+    })->name('conta.retenciones');
+
+    Route::get('/asignaciones', function () {
+        return view('conta.porproyecto.asignacion');
+    })->name('conta.asignacion');
+
+    Route::get('/cierre', function () {
+        return view('conta.porproyecto.cierre');
+    })->name('conta.cierre');
+
+    Route::get('/costo', function () {
+        return view('conta.porproyecto.costo');
+    })->name('conta.costo');
+
+    Route::get('/gastos', function () {
+        return view('conta.porproyecto.gastos');
+    })->name('conta.gastos');
+
+    Route::get('/rentabilidad', function () {
+        return view('conta.porproyecto.rentabilidad');
+    })->name('conta.rentabilidad');
+
+    Route::get('/ajustes', function () {
+        return view('conta.registros.ajustes');
+    })->name('conta.ajustes');
+
+    Route::get('/auxliar', function () {
+        return view('conta.registros.auxiliar');
+    })->name('conta.regaux');
+
+    Route::get('/diario', function () {
+        return view('conta.registros.diario');
+    })->name('conta.diario');
+
+    Route::get('/libro', function () {
+        return view('conta.registros.libro');
+    })->name('conta.libro');
+
+    Route::get('/poliza', function () {
+        return view('conta.registros.polizas');
+    })->name('conta.polizas');
+
+    Route::get('/unidadenegocios', function () {
+        return view('conta.estados.unidad');
+    })->name('conta.unidad');
+
+    Route::get('/liquidacion', function () {
+        return view('conta.estados.liquidacion');
+    })->name('conta.liquidacion');
+
+    Route::get('/general', function () {
+        return view('conta.estados.general');
+    })->name('conta.general');
+
+    });
+
 require __DIR__.'/auth.php';

@@ -6,9 +6,9 @@
         <!-- Cuentas Avanzadas -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
-                <h2 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                <h1 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 28px; text-align: center;">
                     Cuentas Avanzadas
-                </h2>
+                </h1>
             </div>
 
             <div class="card-body p-4">

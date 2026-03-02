@@ -21,7 +21,7 @@
         .div_recuadro_login {
             margin: 0 auto;
             width: 60vw;
-            height: 550px;
+            height: 750px;
             box-shadow: -1px 1px 20px #999;
             overflow: hidden;
             border-style: solid;
@@ -875,7 +875,7 @@
                         </div>
                     </div>
                     
-                    <p class="login_subtitle" style="color: #083CAE; font-size: 16px; margin-top: 10px;">
+                    <p class="login_subtitle" style="color: #083CAE; font-size: 24px; margin-top: 10px;">
                         Líder en Rentabilidad de Construcción
                     </p>                
                     

@@ -778,6 +778,7 @@
     .debug-mode .close-all-tabs-btn {
         outline: 2px solid yellow;
     }
+    
 </style>
     
 </head>
@@ -930,7 +931,7 @@
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         
-                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-50 py-2">
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-[199999999] !important py-2 ">
                             <div class="px-4 py-2 border-b border-gray-100">
                                 <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
                                 <div class="text-xs text-gray-500 truncate">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
@@ -961,11 +962,6 @@
             <!-- Las pestañas se generarán dinámicamente -->
         </div>
         
-        <button class="new-tab-btn bg-green-600 hover:bg-green-700 text-white rounded-full w-7 h-7 flex items-center justify-center ml-2 flex-shrink-0" 
-                onclick="if(window.tabManager) tabManager.createNewTab('Inicio', 'home', 'fa-home', '{{ route('home') }}')"
-                title="Nueva pestaña (Ctrl+T)">
-            <i class="fas fa-plus text-xs"></i>
-        </button>
     </div>
 
     <!-- ==================== MENÚ HAMBURGUESA MÓVIL ==================== -->
@@ -1453,41 +1449,73 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="contabilidad-estados" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados', 'contabilidad', '#', 'fa-chart-pie')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados', 'contabilidad', '{{ route('conta.estados') }}', 'fa-chart-pie')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-pie"></i>
                             <span>Estado de Resultados</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'contabilidad', 'fa-chart-pie', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance General', 'contabilidad', '#', 'fa-balance-scale')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance General', 'contabilidad', '{{ route('conta.balance') }}', 'fa-balance-scale')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-balance-scale"></i>
                             <span>Balance General</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'contabilidad', 'fa-balance-scale', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación', 'contabilidad', '#', 'fa-check-double')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación', 'contabilidad', '{{ route('conta.comprobacion') }}', 'fa-check-double')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-check-double"></i>
                             <span>Balance de Comprobación</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'contabilidad', 'fa-check-double', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo', 'contabilidad', '#', 'fa-money-bill-wave')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo', 'contabilidad', '{{ route('conta.flujo') }}', 'fa-money-bill-wave')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-bill-wave"></i>
                             <span>Estado de Flujo de Efectivo</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'contabilidad', 'fa-money-bill-wave', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Cambios en el Capital', 'contabilidad', '#', 'fa-exchange-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto', 'contabilidad', '{{ route('conta.capital') }}', 'fa-exchange-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exchange-alt"></i>
-                            <span>Estado de Cambios en el Capital</span>
+                            <span>Presupuesto</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Cambios en el Capital', 'contabilidad', 'fa-exchange-alt', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto', 'contabilidad', 'fa-exchange-alt', this)"></i>
                     </div>
+
+                    <!-- =====================================================================================
+-->                 
+                     <div class="sidebar-submenu-item" onclick="navigateTo('Unidad de Negocio', 'contabilidad', '{{ route('conta.unidad') }}', 'fa-chart-column')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-chart-column"></i>
+                            <span>Estado de Resultado Unidad de Negocio</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Unidad de Negocio', 'contabilidad', 'fa-chart-column', this)"></i>
+                    </div>
+
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado Liquidacion', 'contabilidad', '{{ route('conta.liquidacion') }}', 'fa-chart-pie')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-chart-pie"></i>
+                            <span>Estado de Resultados Liquidacion</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado Liquidacion', 'contabilidad', 'fa-chart-pie', this)"></i>
+                    </div>
+
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado General', 'contabilidad', '{{ route('conta.general') }}', 'fa-newspaper')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-newspaper"></i>
+                            <span>Estado de Resultado General</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado General', 'contabilidad', 'fa-newspaper', this)"></i>
+                    </div>
+
+
+
+
+
+
                 </div>
             </div>
 
@@ -1499,7 +1527,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="contabilidad-registro" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables', 'contabilidad', '#', 'fa-file-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables', 'contabilidad', '{{ route('conta.polizas') }}', 'fa-file-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-alt"></i>
                             <span>Pólizas Contables</span>
@@ -1544,7 +1572,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="contabilidad-catalogo" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '#', 'fa-list')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '{{ route('conta.cuentas') }}', 'fa-list')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-list"></i>
                             <span>Cuentas Contables</span>
@@ -1565,7 +1593,7 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '#', 'fa-cogs')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '{{ route('conta.configuraciones') }}', 'fa-cogs')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-cogs"></i>
                             <span>Configuración Contable</span>
@@ -3193,6 +3221,7 @@ escapeHtml(text) {
         }, 3000);
     }
 }
+
 
         // ========== FUNCIÓN DE NAVEGACIÓN PRINCIPAL ==========
         function navigateTo(pageName, module, route, icon) {
