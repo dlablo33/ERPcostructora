@@ -774,6 +774,74 @@
         }
     }
 
+    /* ========== SOLUCIÓN PARA MÓVIL: REAJUSTE DE Z-INDEX ========== */
+@media (max-width: 992px) {
+    /* Reducir z-index de la barra de pestañas en móvil */
+    .tab-navigation-bar {
+        z-index: 900 !important; /* Reducido de 10000 a 900 */
+    }
+    
+    /* Aumentar z-index del menú lateral en móvil */
+    .mobile-menu-sidebar {
+        z-index: 1000 !important; /* Aumentado de 1100 a 1000 (mayor que la barra) */
+    }
+    
+    /* Asegurar que el overlay también esté por encima */
+    .mobile-overlay {
+        z-index: 950 !important; /* Intermedio entre barra y menú */
+    }
+    
+    /* Ajustar el contenido principal */
+    .main-content-container {
+        margin-top: calc(var(--navbar-height) + var(--tabbar-height));
+        padding: 1rem;
+    }
+    
+    /* Asegurar que la barra de pestañas no tape el menú */
+    .tab-navigation-bar.sidebar-open {
+        left: 0 !important; /* En móvil no se desplaza */
+        width: 100% !important;
+    }
+    
+    /* Ajustar el botón de cerrar todas las pestañas en móvil */
+    .close-all-tabs-container {
+        padding: 0 10px;
+    }
+    
+    .close-all-tabs-btn span {
+        display: none; /* Ocultar texto en móvil para ahorrar espacio */
+    }
+    
+    .close-all-tabs-btn i {
+        margin-right: 0;
+    }
+    
+    /* Hacer las pestañas más compactas en móvil */
+    .tab-item {
+        padding: 0 8px !important;
+        font-size: 12px !important;
+    }
+    
+    .tab-item i {
+        margin-right: 4px !important;
+    }
+    
+    .tab-item span {
+        max-width: 100px !important;
+    }
+}
+
+/* Ajuste adicional para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .tab-item span {
+        max-width: 70px !important;
+    }
+    
+    .close-all-tabs-container {
+        padding: 0 5px;
+    } 
+}
+
     /* ========== DEBUG (opcional - quitar en producción) ========== */
     .debug-mode .close-all-tabs-btn {
         outline: 2px solid yellow;
@@ -833,7 +901,7 @@
                     <!-- NUEVOS BOTONES: INVENTARIOS Y COMPRAS -->
                     <button onclick="toggleSectionSidebar('inventarios')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
                         <i class="fas fa-boxes"></i>
-                        <span>Inventarios</span>
+                        <span>Almacen</span>
                     </button>
 
                     <button onclick="toggleSectionSidebar('compras')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
@@ -851,12 +919,12 @@
 
                     <!-- NOTIFICACIONES -->
                     <div x-data="notifications()" x-init="initNotifications()" class="relative">
-                     <!--   <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+                      <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
                             <i class="fas fa-bell" style="color: #eaf512;"></i>
                             <span x-show="unreadCount > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                             <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
                         </button>
-                        -->
+                        
                         
                         <div x-show="isOpen" @click.away="isOpen = false" 
                              x-transition:enter="transition ease-out duration-200"
@@ -997,7 +1065,7 @@
             <!-- NUEVOS ITEMS EN MÓVIL -->
             <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('inventarios')">
                 <i class="fas fa-boxes"></i>
-                <span>Inventarios</span>
+                <span>Almacen</span>
             </div>
             <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('compras')">
                 <i class="fas fa-shopping-cart"></i>
@@ -1009,6 +1077,8 @@
             </div>
         </div>
     </div>
+
+
 
     <!-- Overlay para móvil -->
     <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
@@ -1064,13 +1134,13 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="bi-ventas" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pipeline de Proyectos', 'bi', '{{ route('ventas.papeline') }}', 'fa-filter')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Pipeline de Proyectos', 'bi', '{{ route('ventas.papeline') }}', 'fa-filter')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-filter"></i>
                             <span>Pipeline de Proyectos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pipeline de Proyectos', 'bi', 'fa-filter', this)"></i>
-                    </div>
+                    </div> -->
                     <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones', 'bi', '{{ route('ventas.propuestas') }}', 'fa-file-contract')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-contract"></i>
@@ -1095,13 +1165,13 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="bi-facturacion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Seguimiento de Facturación', 'bi', '{{ route('facturacion.seguimiento') }}', 'fa-search-dollar')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Seguimiento de Facturación', 'bi', '{{ route('facturacion.seguimiento') }}', 'fa-search-dollar')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-search-dollar"></i>
                             <span>Seguimiento de Facturación</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Seguimiento de Facturación', 'bi', 'fa-search-dollar', this)"></i>
-                    </div>
+                    </div> -->
                     <div class="sidebar-submenu-item" onclick="navigateTo('Pendiente de Facturación', 'bi', '{{ route('facturacion.pendiente') }}', 'fa-clock')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-clock"></i>
@@ -1534,34 +1604,22 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'contabilidad', 'fa-file-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Diario General', 'contabilidad', '#', 'fa-book')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Diario General', 'contabilidad', '{{ route('conta.diario') }}', 'fa-book')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-book"></i>
                             <span>Diario General</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'contabilidad', 'fa-book', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Libro Mayor', 'contabilidad', '#', 'fa-book-open')">
-                        <div class="flex items-center flex-1">
-                            <i class="fas fa-book-open"></i>
-                            <span>Libro Mayor</span>
-                        </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Libro Mayor', 'contabilidad', 'fa-book-open', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliares Contables', 'contabilidad', '#', 'fa-columns')">
+
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cobranza', 'contabilidad', '{{ route('conta.cobranza') }}', 'fa-columns')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-columns"></i>
-                            <span>Auxiliares Contables</span>
+                            <span>Cobranza</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliares Contables', 'contabilidad', 'fa-columns', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cobranza', 'contabilidad', 'fa-columns', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Ajustes y Reclasificaciones', 'contabilidad', '#', 'fa-adjust')">
-                        <div class="flex items-center flex-1">
-                            <i class="fas fa-adjust"></i>
-                            <span>Ajustes y Reclasificaciones</span>
-                        </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Ajustes y Reclasificaciones', 'contabilidad', 'fa-adjust', this)"></i>
-                    </div>
+
                 </div>
             </div>
 
@@ -1579,14 +1637,14 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'contabilidad', 'fa-list', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '#', 'fa-indent')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '{{ route('conta.auxiliar') }}', 'fa-indent')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-indent"></i>
                             <span>Auxiliar de Cuentas</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos', 'contabilidad', '#', 'fa-sitemap')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos', 'contabilidad', '{{ route('conta.centros') }}', 'fa-sitemap')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-sitemap"></i>
                             <span>Centros de Costos</span>
@@ -1610,35 +1668,35 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="contabilidad-proyecto" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra', 'contabilidad', '#', 'fa-hard-hat')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra', 'contabilidad', '{{ route('conta.costo') }}', 'fa-hard-hat')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-hard-hat"></i>
                             <span>Costos por Obra</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'contabilidad', 'fa-hard-hat', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra', 'contabilidad', '#', 'fa-tools')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra', 'contabilidad', '{{ route('conta.gastos') }}', 'fa-tools')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-tools"></i>
                             <span>Gastos Indirectos de Obra</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'contabilidad', 'fa-tools', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto', 'contabilidad', '#', 'fa-project-diagram')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto', 'contabilidad', '{{ route('conta.asignacion') }}', 'fa-project-diagram')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-project-diagram"></i>
                             <span>Asignación de Gastos por Proyecto</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Rentabilidad por Obra', 'contabilidad', '#', 'fa-chart-line')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Rentabilidad por Obra', 'contabilidad', '{{ route('conta.rentabilidad') }}', 'fa-chart-line')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-line"></i>
                             <span>Rentabilidad por Obra</span>
-                        </div>
+                        </div> 
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Rentabilidad por Obra', 'contabilidad', 'fa-chart-line', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '#', 'fa-lock')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '{{ route('conta.cierre') }}', 'fa-lock')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-lock"></i>
                             <span>Cierre de Proyectos</span>
@@ -1655,47 +1713,41 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="contabilidad-fiscal" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('DIOT', 'contabilidad', '#', 'fa-file-export')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('DIOT', 'contabilidad', '{{ route('conta.diot') }}', 'fa-file-export')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-export"></i>
                             <span>DIOT</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales/Anuales', 'contabilidad', '#', 'fa-calendar-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales', 'contabilidad', '{{ route('conta.declaraciones') }}', 'fa-calendar-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calendar-alt"></i>
-                            <span>Declaraciones Mensuales/Anuales</span>
+                            <span>Declaraciones Mensuales</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales/Anuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '#', 'fa-percentage')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '{{ route('conta.retenciones') }}', 'fa-percentage')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-percentage"></i>
                             <span>Retenciones (ISR, IVA)</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos', 'contabilidad', '#', 'fa-money-check-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos', 'contabilidad', '{{ route('conta.complemento') }}', 'fa-money-check-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-check-alt"></i>
                             <span>Complemento de Pagos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'contabilidad', 'fa-money-check-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Contabilidad Electrónica (XML)', 'contabilidad', '#', 'fa-code')">
-                        <div class="flex items-center flex-1">
-                            <i class="fas fa-code"></i>
-                            <span>Contabilidad Electrónica (XML)</span>
-                        </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contabilidad Electrónica (XML)', 'contabilidad', 'fa-code', this)"></i>
-                    </div>
+
                 </div>
             </div>
 
             <!-- Análisis y Reportes -->
             <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-analisis')">
+                <!-- <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-analisis')">
                     <span><i class="fas fa-chart-bar"></i> Análisis y Reportes</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
@@ -1728,12 +1780,14 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reportes Personalizados', 'contabilidad', 'fa-edit', this)"></i>
                     </div>
-                </div>
+                </div> -->
             </div>
+
+
 
             <!-- Cierre Contable -->
             <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-cierre')">
+                <!-- <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-cierre')">
                     <span><i class="fas fa-lock"></i> Cierre Contable</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
@@ -1766,10 +1820,11 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Amortizaciones', 'contabilidad', 'fa-calculator', this)"></i>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
+
 
     <!-- ==================== SIDEBAR DE PROYECTOS ==================== -->
     <div id="sidebar-proyectos" class="section-sidebar">
@@ -1791,41 +1846,41 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-gestion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos', 'proyectos', '#', 'fa-briefcase')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos', 'proyectos', '{{ route('proyectos.cartera') }}', 'fa-briefcase')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-briefcase"></i>
                             <span>Cartera de Proyectos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'proyectos', 'fa-briefcase', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto', 'proyectos', '#', 'fa-plus-circle')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto', 'proyectos', '{{ route('proyectos.alta') }}', 'fa-plus-circle')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-plus-circle"></i>
                             <span>Alta de Proyecto</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'proyectos', 'fa-plus-circle', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos', 'proyectos', '#', 'fa-calendar-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos', 'proyectos', '{{route ('proyectos.hitos') }}', 'fa-calendar-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calendar-alt"></i>
                             <span>Cronograma y Hitos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'proyectos', 'fa-calendar-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra', 'proyectos', '#', 'fa-book')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra', 'proyectos', '{{ route('proyectos.bitacora') }}', 'fa-book')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-book"></i>
                             <span>Bitácora de Obra</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'proyectos', 'fa-book', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estatus y Dashboard', 'proyectos', '#', 'fa-tachometer-alt')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Estatus y Dashboard', 'proyectos', '#', 'fa-tachometer-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Estatus y Dashboard</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estatus y Dashboard', 'proyectos', 'fa-tachometer-alt', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -1836,34 +1891,34 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-licitaciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas', 'proyectos', '#', 'fa-gavel')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas', 'proyectos', '{{ route('proyectos.activas') }}', 'fa-gavel')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-gavel"></i>
                             <span>Licitaciones Activas</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones', 'proyectos', '#', 'fa-file-contract')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cotizaciones', 'proyectos', '{{ route('proyectos.presupuestos') }}', 'fa-file-contract')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-contract"></i>
-                            <span>Propuestas y Cotizaciones</span>
+                            <span>Cotizaciones</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'proyectos', 'fa-file-contract', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cotizaciones', 'proyectos', 'fa-file-contract', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '#', 'fa-calculator')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '{{ route('proyectos.analisis') }}', 'fa-calculator')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calculator"></i>
                             <span>Análisis de Precios Unitarios</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Histórico de Licitaciones', 'proyectos', '#', 'fa-history')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Histórico de Licitaciones', 'proyectos', '#', 'fa-history')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-history"></i>
                             <span>Histórico</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Histórico de Licitaciones', 'proyectos', 'fa-history', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -1874,67 +1929,67 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-presupuestos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Proyecto', 'proyectos', '#', 'fa-file-invoice-dollar')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Proyecto', 'proyectos', '{{ route('proyectos.presupuesto') }}', 'fa-file-invoice-dollar')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-invoice-dollar"></i>
                             <span>Presupuesto por Proyecto</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Proyecto', 'proyectos', 'fa-file-invoice-dollar', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Partidas', 'proyectos', '#', 'fa-list-ol')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Partidas', 'proyectos', '#', 'fa-list-ol')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-list-ol"></i>
                             <span>Presupuesto por Partidas</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Partidas', 'proyectos', 'fa-list-ol', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Cambios', 'proyectos', '#', 'fa-exchange-alt')">
+                    </div> -->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Control de Cambios', 'proyectos', '#', 'fa-exchange-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exchange-alt"></i>
                             <span>Control de Cambios</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Cambios', 'proyectos', 'fa-exchange-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Comparativo Presupuesto vs Real', 'proyectos', '#', 'fa-balance-scale')">
+                    </div> -->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Comparativo Presupuesto vs Real', 'proyectos', '{{ route('proyectos.real') }}', 'fa-balance-scale')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-balance-scale"></i>
                             <span>Comparativo Presupuesto vs Real</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comparativo Presupuesto vs Real', 'proyectos', 'fa-balance-scale', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
             <!-- Costos -->
-            <div class="sidebar-menu-group">
+             <div class="sidebar-menu-group">
                 <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-costos')">
                     <span><i class="fas fa-money-bill-wave"></i> Costos</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-costos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos', 'proyectos', '#', 'fa-money-bill-wave')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos', 'proyectos', '{{ route('proyectos.directos') }}', 'fa-money-bill-wave')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-bill-wave"></i>
                             <span>Costos Directos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'proyectos', 'fa-money-bill-wave', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos', 'proyectos', '#', 'fa-tools')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos', 'proyectos', '{{ route('proyectos.indirectos') }}', 'fa-tools')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-tools"></i>
                             <span>Costos Indirectos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'proyectos', 'fa-tools', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Rentabilidad', 'proyectos', '#', 'fa-chart-line')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Rentabilidad', 'proyectos', '{{ route('proyectos.rentabilidad') }}', 'fa-chart-line')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-line"></i>
                             <span>Análisis de Rentabilidad</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Rentabilidad', 'proyectos', 'fa-chart-line', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
-            </div>
+            </div> 
 
             <!-- Avances de Obra -->
             <div class="sidebar-menu-group">
@@ -1943,21 +1998,21 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-avances" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Avance Físico y Financiero', 'proyectos', '#', 'fa-chart-bar')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Avance Físico y Financiero', 'proyectos', '#', 'fa-chart-bar')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-bar"></i>
                             <span>Avance Físico y Financiero</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Avance Físico y Financiero', 'proyectos', 'fa-chart-bar', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones', 'proyectos', '#', 'fa-calculator')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones', 'proyectos', '{{ route('proyectos.estimaciones') }}', 'fa-calculator')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calculator"></i>
                             <span>Estimaciones</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'proyectos', 'fa-calculator', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico', 'proyectos', '#', 'fa-camera')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico', 'proyectos', '{{ route('proyectos.reportes') }}', 'fa-camera')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-camera"></i>
                             <span>Reporte Fotográfico</span>
@@ -1974,27 +2029,27 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-personal" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos', 'proyectos', '#', 'fa-user-check')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos', 'proyectos', '{{ route('proyectos.asignada') }}', 'fa-user-check')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-user-check"></i>
                             <span>Asignación a Proyectos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'proyectos', 'fa-user-check', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '#', 'fa-users')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '{{ route('proyectos.flotillas') }}', 'fa-users')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-users"></i>
                             <span>Asistencia y Cuadrillas</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Rendimientos', 'proyectos', '#', 'fa-chart-line')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Rendimientos', 'proyectos', '#', 'fa-chart-line')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-line"></i>
                             <span>Rendimientos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Rendimientos', 'proyectos', 'fa-chart-line', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -2005,41 +2060,41 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-maquinaria" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo', 'proyectos', '#', 'fa-tractor')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo', 'proyectos', '{{ route('proyectos.asignacion') }}', 'fa-tractor')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-tractor"></i>
                             <span>Asignación de Equipo</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'proyectos', 'fa-tractor', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Maquinaria', 'proyectos', '#', 'fa-cogs')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Control de Maquinaria', 'proyectos', '{{ route('proyectos.control') }}', 'fa-cogs')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-cogs"></i>
                             <span>Control de Maquinaria</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Maquinaria', 'proyectos', 'fa-cogs', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo', 'proyectos', '#', 'fa-tools')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo', 'proyectos', '{{ route('proyectos.mantenimiento') }}', 'fa-tools')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-tools"></i>
                             <span>Mantenimiento de Equipo</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '#', 'fa-book')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '{{ route('proyectos.bita') }}', 'fa-book')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-book"></i>
                             <span>Bitácora de Uso</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'proyectos', 'fa-book', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Operación', 'proyectos', '#', 'fa-money-bill-wave')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Operación', 'proyectos', '#', 'fa-money-bill-wave')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-bill-wave"></i>
                             <span>Costos de Operación</span>
-                        </div>
+                        </div> 
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Operación', 'proyectos', 'fa-money-bill-wave', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -2050,21 +2105,21 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-riesgos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)', 'proyectos', '#', 'fa-exclamation-triangle')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)', 'proyectos', '{{ route('proyectos.desviaciones') }}', 'fa-exclamation-triangle')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exclamation-triangle"></i>
                             <span>Desviaciones (Costo y Tiempo)</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'proyectos', 'fa-exclamation-triangle', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Alertas e Incidencias', 'proyectos', '#', 'fa-bell')">
+                    </div> 
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Alertas e Incidencias', 'proyectos', '#', 'fa-bell')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-bell"></i>
                             <span>Alertas e Incidencias</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alertas e Incidencias', 'proyectos', 'fa-bell', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad', 'proyectos', '#', 'fa-clipboard-check')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad', 'proyectos', '{{ route('proyectos.control') }}', 'fa-clipboard-check')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-clipboard-check"></i>
                             <span>Control de Calidad</span>
@@ -2081,21 +2136,21 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="proyectos-documentacion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos', 'proyectos', '#', 'fa-file-contract')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos', 'proyectos', '{{ route('proyectos.planos') }}', 'fa-file-contract')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-contract"></i>
                             <span>Contratos y Planos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '#', 'fa-file-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '{{ route('proyectos.permisos') }}', 'fa-file-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-alt"></i>
                             <span>Permisos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'proyectos', 'fa-file-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '#', 'fa-camera')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '{{ route('proyectos.evidencia') }}', 'fa-camera')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-camera"></i>
                             <span>Evidencias (Fotos, Actas)</span>
@@ -2127,41 +2182,41 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="rrhh-personal" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados', 'rrhh', '#', 'fa-users')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados', 'rrhh', '{{ route('rh.plantilla') }}', 'fa-users')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-users"></i>
                             <span>Plantilla de Empleados</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'rrhh', 'fa-users', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Alta y Baja de Personal', 'rrhh', '#', 'fa-user-plus')">
+                   <!-- class="sidebar-submenu-item" onclick="navigateTo('Alta y Baja de Personal', 'rrhh', '#', 'fa-user-plus')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-user-plus"></i>
                             <span>Alta y Baja de Personal</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta y Baja de Personal', 'rrhh', 'fa-user-plus', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital', 'rrhh', '#', 'fa-folder')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital', 'rrhh', '{{ route('rh.expediente') }}', 'fa-folder')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-folder"></i>
-                            <span>Expediente Digital</span>
+                            <span>Incidencias</span>    
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos', 'rrhh', '#', 'fa-traffic-light')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos', 'rrhh', '{{ route('rh.semaforo') }}', 'fa-traffic-light')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-traffic-light"></i>
                             <span>Semáforo de Documentos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos', 'rrhh', 'fa-traffic-light', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Historial Laboral', 'rrhh', '#', 'fa-history')">
+                   <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Historial Laboral', 'rrhh', '#', 'fa-history')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-history"></i>
                             <span>Historial Laboral</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial Laboral', 'rrhh', 'fa-history', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -2172,35 +2227,35 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="rrhh-asistencia" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia', 'rrhh', '#', 'fa-user-clock')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia', 'rrhh', '{{ route('rh.asistencia') }}', 'fa-user-clock')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-user-clock"></i>
                             <span>Asistencia</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'rrhh', 'fa-user-clock', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia', 'rrhh', '#', 'fa-list')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia', 'rrhh', '{{ route('rh.lista') }}', 'fa-list')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-list"></i>
                             <span>Lista de Asistencia</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'rrhh', 'fa-list', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Incidencias', 'rrhh', '#', 'fa-exclamation-circle')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Incidencias', 'rrhh', '#', 'fa-exclamation-circle')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exclamation-circle"></i>
                             <span>Registro de Incidencias</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Incidencias', 'rrhh', 'fa-exclamation-circle', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos', 'rrhh', '#', 'fa-file-alt')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos', 'rrhh', '{{ route ('rh.justificantes') }}', 'fa-file-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-alt"></i>
                             <span>Justificantes y Permisos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'rrhh', 'fa-file-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios', 'rrhh', '#', 'fa-clock')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios', 'rrhh', '{{ route('rh.control') }}', 'fa-clock')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-clock"></i>
                             <span>Control de Horarios</span>
@@ -2217,41 +2272,41 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="rrhh-nomina" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina', 'rrhh', '#', 'fa-calculator')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina', 'rrhh', '{{ route('rh.calculo') }}', 'fa-calculator')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calculator"></i>
                             <span>Cálculo de Nómina</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'rrhh', 'fa-calculator', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina', 'rrhh', '#', 'fa-money-check-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina', 'rrhh', '{{ route('rh.pagos') }}', 'fa-money-check-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-check-alt"></i>
                             <span>Pagos de Nómina</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'rrhh', 'fa-money-check-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Tabla de Sueldos', 'rrhh', '#', 'fa-table')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Tabla de Sueldos', 'rrhh', '{{ route('rh.sueldos')  }}', 'fa-table')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-table"></i>
                             <span>Tabla de Sueldos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Tabla de Sueldos', 'rrhh', 'fa-table', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)', 'rrhh', '#', 'fa-file-invoice-dollar')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)', 'rrhh', '{{ route('rh.recibos') }}', 'fa-file-invoice-dollar')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-invoice-dollar"></i>
                             <span>Recibos de Nómina (Timbrado)</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'rrhh', 'fa-file-invoice-dollar', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Histórico de Pagos', 'rrhh', '#', 'fa-history')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Histórico de Pagos', 'rrhh', '#', 'fa-history')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-history"></i>
                             <span>Histórico de Pagos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Histórico de Pagos', 'rrhh', 'fa-history', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -2262,42 +2317,42 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="rrhh-prestaciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos', 'rrhh', '#', 'fa-hand-holding-usd')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos', 'rrhh', '{{ route('rh.prestamos') }}', 'fa-hand-holding-usd')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-hand-holding-usd"></i>
-                            <span>Préstamos</span>
+                            <span>Préstamos y Descuentos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'rrhh', 'fa-hand-holding-usd', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Descuentos', 'rrhh', '#', 'fa-percentage')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Descuentos', 'rrhh', '{{ route('rh.descuentos') }} ', 'fa-percentage')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-percentage"></i>
                             <span>Descuentos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Descuentos', 'rrhh', 'fa-percentage', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones', 'rrhh', '#', 'fa-umbrella-beach')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones', 'rrhh', '{{ route('rh.vacaciones') }}', 'fa-umbrella-beach')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-umbrella-beach"></i>
                             <span>Vacaciones</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'rrhh', 'fa-umbrella-beach', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Vacaciones', 'rrhh', '#', 'fa-calendar-check')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Vacaciones', 'rrhh', '#', 'fa-calendar-check')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-calendar-check"></i>
                             <span>Asignación de Vacaciones</span>
-                        </div>
+                        </div> 
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Vacaciones', 'rrhh', 'fa-calendar-check', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Aguinaldo y PTU', 'rrhh', '#', 'fa-gift')">
+                    </div> -->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Aguinaldo y PTU', 'rrhh', '#', 'fa-gift')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-gift"></i>
                             <span>Aguinaldo y PTU</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Aguinaldo y PTU', 'rrhh', 'fa-gift', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones', 'rrhh', '#', 'fa-file-contract')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones', 'rrhh', '{{ route('rh.finiquito') }}', 'fa-file-contract')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-contract"></i>
                             <span>Finiquitos y Liquidaciones</span>
@@ -2314,41 +2369,41 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="rrhh-unidades" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos de Unidades', 'rrhh', '#', 'fa-traffic-light')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos de Unidades', 'rrhh', '{{ route('rh.semaforos_unidades') }}', 'fa-traffic-light')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-traffic-light"></i>
                             <span>Semáforo de Documentos de Unidades</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos de Unidades', 'rrhh', 'fa-traffic-light', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Flotilla', 'rrhh', '#', 'fa-car')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Flotilla', 'rrhh', '{{ route('rh.flotillas') }}', 'fa-car')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-car"></i>
                             <span>Asignación de Flotilla</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Flotilla', 'rrhh', 'fa-car', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Vehículos', 'rrhh', '#', 'fa-tachometer-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Vehículos', 'rrhh', '{{ route('rh.carros') }}', 'fa-tachometer-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Control de Vehículos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Vehículos', 'rrhh', 'fa-tachometer-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'rrhh', '#', 'fa-book')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'rrhh', '{{ route('rh.bitacora') }}', 'fa-book')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-book"></i>
                             <span>Bitácora de Uso</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'rrhh', 'fa-book', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Verificaciones y Seguros', 'rrhh', '#', 'fa-shield-alt')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Verificaciones y Seguros', 'rrhh', '#', 'fa-shield-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-shield-alt"></i>
                             <span>Verificaciones y Seguros</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Verificaciones y Seguros', 'rrhh', 'fa-shield-alt', this)"></i>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -2359,86 +2414,93 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="rrhh-catalogos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('IMSS', 'rrhh', '#', 'fa-hospital')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('IMSS', 'rrhh', '{{ route('rh.imss_catalogo') }}', 'fa-hospital')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-hospital"></i>
                             <span>IMSS</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('IMSS', 'rrhh', 'fa-hospital', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Deducciones', 'rrhh', '#', 'fa-minus-circle')">
+                    </div> -->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Deducciones', 'rrhh', '#', 'fa-minus-circle')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-minus-circle"></i>
                             <span>Deducciones</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Deducciones', 'rrhh', 'fa-minus-circle', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Percepciones', 'rrhh', '#', 'fa-plus-circle')">
+                    </div> -->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Percepciones', 'rrhh', '#', 'fa-plus-circle')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-plus-circle"></i>
                             <span>Percepciones</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Percepciones', 'rrhh', 'fa-plus-circle', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos', 'rrhh', '#', 'fa-user-tag')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos', 'rrhh', '{{ route('rh.roles') }}', 'fa-user-tag')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-user-tag"></i>
                             <span>Roles y Puestos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'rrhh', 'fa-user-tag', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos', 'rrhh', '#', 'fa-sitemap')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos', 'rrhh', '{{ route('rh.areas') }}', 'fa-sitemap')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-sitemap"></i>
                             <span>Áreas y Departamentos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'rrhh', 'fa-sitemap', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Turnos', 'rrhh', '#', 'fa-clock')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Usuarios', 'rrhh', '{{ route('rh.turnos') }}', 'fa-clock')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-clock"></i>
-                            <span>Turnos</span>
+                            <span>Usuarios</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Turnos', 'rrhh', 'fa-clock', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('TuUsuariosnos', 'rrhh', 'fa-clock', this)"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Evaluación y Desarrollo -->
             <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-evaluacion')">
+                <!-- <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-evaluacion')">
                     <span><i class="fas fa-chart-line"></i> Evaluación y Desarrollo</span>
                     <i class="fas fa-chevron-right"></i>
-                </div>
+                </div> -->
                 <div id="rrhh-evaluacion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Evaluación de Desempeño', 'rrhh', '#', 'fa-chart-line')">
+
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Evaluación de Desempeño', 'rrhh', '#', 'fa-chart-line')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-chart-line"></i>
                             <span>Evaluación de Desempeño</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evaluación de Desempeño', 'rrhh', 'fa-chart-line', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Capacitaciones', 'rrhh', '#', 'fa-graduation-cap')">
+-->
+
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Capacitaciones', 'rrhh', '#', 'fa-graduation-cap')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-graduation-cap"></i>
                             <span>Capacitaciones</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Capacitaciones', 'rrhh', 'fa-graduation-cap', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Competencias', 'rrhh', '#', 'fa-award')">
+-->
+
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Competencias', 'rrhh', '#', 'fa-award')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-award"></i>
                             <span>Competencias</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Competencias', 'rrhh', 'fa-award', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Plan de Carrera', 'rrhh', '#', 'fa-briefcase')">
+-->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Plan de Carrera', 'rrhh', '#', 'fa-briefcase')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-briefcase"></i>
                             <span>Plan de Carrera</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plan de Carrera', 'rrhh', 'fa-briefcase', this)"></i>
                     </div>
+-->
                 </div>
             </div>
 
@@ -2448,36 +2510,41 @@
                     <span><i class="fas fa-chart-bar"></i> Reportes</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
-                <div id="rrhh-reportes" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Reportes IMSS', 'rrhh', '#', 'fa-file-export')">
+                 <div id="rrhh-reportes" class="sidebar-submenu">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Reportes IMSS', 'rrhh', '#', 'fa-file-export')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-export"></i>
                             <span>Reportes IMSS</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reportes IMSS', 'rrhh', 'fa-file-export', this)"></i>
-                    </div>
+                    </div> -->
+
+
+                    <!--
                     <div class="sidebar-submenu-item" onclick="navigateTo('Reportes SAT', 'rrhh', '#', 'fa-file-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-file-alt"></i>
                             <span>Reportes SAT</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reportes SAT', 'rrhh', 'fa-file-alt', this)"></i>
-                    </div>
+                    </div> -->
+
+                    <!-- 
                     <div class="sidebar-submenu-item" onclick="navigateTo('Rotación de Personal', 'rrhh', '#', 'fa-exchange-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exchange-alt"></i>
                             <span>Rotación de Personal</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Rotación de Personal', 'rrhh', 'fa-exchange-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Ausentismo', 'rrhh', '#', 'fa-user-times')">
+                    </div> -->
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Ausentismo', 'rrhh', '#', 'fa-user-times')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-user-times"></i>
                             <span>Ausentismo</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Ausentismo', 'rrhh', 'fa-user-times', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto', 'rrhh', '#', 'fa-money-bill-wave')">
+                    </div> -->
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto', 'rrhh', '{{ route ('rh.costos') }}', 'fa-money-bill-wave')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-money-bill-wave"></i>
                             <span>Costos de Nómina por Proyecto</span>
@@ -2494,7 +2561,7 @@
         <div class="section-sidebar-header">
             <div class="section-sidebar-title">
                 <i class="fas fa-boxes"></i>
-                <h2>Inventarios</h2>
+                <h2>Almacen</h2>
             </div>
             <button onclick="closeSectionSidebar()" class="section-sidebar-close">
                 <i class="fas fa-times"></i>
@@ -2509,41 +2576,48 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="inventarios-catalogos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes', 'inventarios', '#', 'fa-warehouse')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes', 'inventarios', '{{ route('almacen.almacen') }}', 'fa-warehouse')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-warehouse"></i>
                             <span>Catálogo de Almacenes</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'inventarios', 'fa-warehouse', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '#', 'fa-box')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '{{ route('almacen.articulo') }}', 'fa-box')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-box"></i>
-                            <span>Catálogo de Materiales</span>
+                            <span>Catálogo de Articulos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
+                    </div>
+                                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familia') }}', 'fa-book-open-reader')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                            <span>Catálogo de Familias</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Existencias -->
-            <div class="sidebar-menu-group">
+            <div class="sidebar-menu-group"> 
                 <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-existencias')">
                     <span><i class="fas fa-clipboard-list"></i> Existencias</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="inventarios-existencias" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén', 'inventarios', '#', 'fa-clipboard-list')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén', 'inventarios', '{{ route('almacen.inventario') }}', 'fa-clipboard-list')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-clipboard-list"></i>
                             <span>Existencias por Almacén</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'inventarios', 'fa-clipboard-list', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Kardex', 'inventarios', '#', 'fa-stream')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Vales de Equipo', 'inventarios', '{{ route('almacen.vales') }}', 'fa-stream')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-stream"></i>
-                            <span>Kardex</span>
+                            <span>Vales de equipo</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Kardex', 'inventarios', 'fa-stream', this)"></i>
                     </div>
@@ -2557,26 +2631,26 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="inventarios-movimientos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas', 'inventarios', '#', 'fa-exchange-alt')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas', 'inventarios', '{{ route('almacen.entrada') }}', 'fa-exchange-alt')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-exchange-alt"></i>
                             <span>Entradas y Salidas</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'inventarios', 'fa-exchange-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '#', 'fa-truck-moving')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-truck-moving"></i>
                             <span>Traspasos entre Almacenes</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'inventarios', 'fa-truck-moving', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Ajustes de Inventario', 'inventarios', '#', 'fa-adjust')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisicion') }}', 'fa-adjust')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-adjust"></i>
-                            <span>Ajustes de Inventario</span>
+                            <span>Requisiciones de equipo y Devoluciones</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Ajustes de Inventario', 'inventarios', 'fa-adjust', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones y Devoluciones', 'inventarios', 'fa-adjust', this)"></i>
                     </div>
                 </div>
             </div>
@@ -2603,13 +2677,25 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="compras-requisiciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones', 'compras', '#', 'fa-clipboard-check')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones', 'compras', '{{ route('compras.requisicion') }}', 'fa-clipboard-check')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-clipboard-check"></i>
                             <span>Requisiciones</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'compras', 'fa-clipboard-check', this)"></i>
                     </div>
+
+                
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Requisiciones', 'compras', '{{ route('compras.autorizacion') }}', 'fa-square-check')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-square-check"></i>
+                            <span>Autorizacion de Requisiciones</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Requisiciones', 'compras', 'fa-square-check', this)"></i>
+                </div>
+
+
+
                 </div>
             </div>
 
@@ -2620,29 +2706,40 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="compras-ordenes" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra', 'compras', '#', 'fa-shopping-cart')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra', 'compras', '{{ route('compras.ordenes') }}', 'fa-shopping-cart')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Órdenes de Compra</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'compras', 'fa-shopping-cart', this)"></i>
                     </div>
+
+
+                <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizaciones') }}', 'fa-circle-check')">
+                        <div class="flex items-center flex-1">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Autorizacion de Órdenes de Compra</span>
+                        </div>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Órdenes de Compra', 'compras', 'fa-circle-check', this)"></i>
+                </div>
+
+
                 </div>
             </div>
 
             <!-- Subcontratistas -->
             <div class="sidebar-menu-group">
                 <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-subcontratistas')">
-                    <span><i class="fas fa-handshake"></i> Subcontratistas</span>
+                    <span><i class="fas fa-handshake"></i>Proveedores</span>
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="compras-subcontratistas" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Gestión de Subcontratistas', 'compras', '#', 'fa-handshake')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Proveedores', 'compras', '{{ route('compras.gestion') }}', 'fa-handshake')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-handshake"></i>
-                            <span>Gestión de Subcontratistas</span>
+                            <span>Proveedores</span>
                         </div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gestión de Subcontratistas', 'compras', 'fa-handshake', this)"></i>
+                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proveedores', 'compras', 'fa-handshake', this)"></i>
                     </div>
                 </div>
             </div>
@@ -2654,7 +2751,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </div>
                 <div id="compras-almacen" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Almacén por Obra', 'compras', '#', 'fa-warehouse')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Almacén por Obra', 'compras', '{{ route('compras.almacen') }}', 'fa-warehouse')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-warehouse"></i>
                             <span>Almacén por Obra</span>
@@ -3594,6 +3691,8 @@ escapeHtml(text) {
                 }
             });
         });
+
+        
     </script>
     
     <!-- Modal de confirmación de cierre de sesión -->

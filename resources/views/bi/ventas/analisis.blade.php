@@ -1,1700 +1,543 @@
 @extends('layouts.navigation')
 
 @section('content')
+<div class="min-h-screen bg-gray-50 text-gray-800">
+    <section class="content container-fluid py-3">
+        <!-- Análisis de Ventas - Construcción -->
+        <div class="semaforo card mt-2">
+            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
+                <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
+                    Análisis de Ventas 
+                </h2>
+            </div>
+
+            <div class="card-body p-4">
+                <!-- 4 CUADROS DE KPI's PRINCIPALES -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
+                    <!-- Cuadro 1: Ventas Totales -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Ventas Totales</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;">$78.4M</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 2: Unidades Vendidas -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Unidades Vendidas</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;">124</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 3: Ticket Promedio -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Ticket Promedio</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;">$632K</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cuadro 4: Tasa de Conversión -->
+                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Tasa Conversión</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;">23.8%</div>
+                        </div>
+                    </div>
+                </div> 
+
+                <!-- Barra de herramientas -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <!-- Selectores -->
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <div>
+                            <select id="selectorPeriodo" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 150px;">
+                                <option value="mes">Este mes</option>
+                                <option value="trimestre" selected>Este trimestre</option>
+                                <option value="semestre">Este semestre</option>
+                                <option value="año">Este año</option>
+                                <option value="personalizado">Personalizado</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <select id="selectorProyecto" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 200px;">
+                                <option value="">Todos los proyectos</option>
+                                <option value="torre" selected> Torre Norte Corporativa</option>
+                                <option value="parque"> Parque Industrial Norte</option>
+                                <option value="hospital"> Hospital Regional</option>
+                                <option value="urbanizacion"> Urbanización Los Álamos</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Inicio -->
+                        <div>
+                            <input type="date" id="fechaInicio" value="2026-01-01" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                        </div>
+
+                        <!-- Date Fin -->
+                        <div>
+                            <input type="date" id="fechaFin" value="2026-03-31" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <!-- Botón Exportar -->
+                        <div>
+                            <button id="btnExcel" 
+                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
+                                    title="Exportar a Excel">
+                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Botón Reporte -->
+                        <div>
+                            <button id="btnReporte" 
+                                    style="background-color: white; border: 1px solid #28a745; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #28a745;"
+                                    title="Generar Reporte">
+                                <i class="fas fa-file-pdf"></i>
+                            </button>
+                        </div>
+
+                        <!-- Buscador -->
+                        <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar cliente, proyecto..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRÁFICOS PRINCIPALES -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <!-- Gráfico de Ventas por Mes -->
+                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 16px;">
+                            <i class="fas fa-chart-line"></i> Evolución de Ventas - 1er Trimestre 2026
+                        </h4>
+                        <div style="height: 200px; display: flex; align-items: flex-end; gap: 30px; justify-content: center;">
+                            <div style="text-align: center; width: 80px;">
+                                <div style="height: 100px; background: linear-gradient(to top, #083CAE, #2378e1); width: 50px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
+                                <div style="margin-top: 5px; font-weight: 600;">Enero</div>
+                                <div style="font-size: 12px; color: #083CAE;">$24.5M</div>
+                            </div>
+                            <div style="text-align: center; width: 80px;">
+                                <div style="height: 140px; background: linear-gradient(to top, #083CAE, #2378e1); width: 50px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
+                                <div style="margin-top: 5px; font-weight: 600;">Febrero</div>
+                                <div style="font-size: 12px; color: #083CAE;">$26.8M</div>
+                            </div>
+                            <div style="text-align: center; width: 80px;">
+                                <div style="height: 160px; background: linear-gradient(to top, #28a745, #34ce57); width: 50px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
+                                <div style="margin-top: 5px; font-weight: 600;">Marzo</div>
+                                <div style="font-size: 12px; color: #28a745;">$27.1M</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
+                            <span style="font-size: 12px; display: flex; align-items: center;"><span style="display: inline-block; width: 12px; height: 12px; background-color: #083CAE; margin-right: 5px;"></span> Proyectado</span>
+                            <span style="font-size: 12px; display: flex; align-items: center;"><span style="display: inline-block; width: 12px; height: 12px; background-color: #28a745; margin-right: 5px;"></span> Real</span>
+                        </div>
+                    </div>
+
+                    <!-- Ventas por Tipo de Inmueble -->
+                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 16px;">
+                            <i class="fas fa-chart-pie"></i> Ventas por Tipo
+                        </h4>
+                        <div style="margin-top: 20px;">
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 13px;"><i class="fas fa-building" style="color: #083CAE;"></i> Oficinas</span>
+                                    <span style="font-size: 13px; font-weight: 600;">42%</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 42%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 13px;"><i class="fas fa-warehouse" style="color: #28a745;"></i> Naves Industriales</span>
+                                    <span style="font-size: 13px; font-weight: 600;">28%</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 28%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 13px;"><i class="fas fa-home" style="color: #ffc107;"></i> Vivienda</span>
+                                    <span style="font-size: 13px; font-weight: 600;">18%</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 18%; height: 8px; background-color: #ffc107; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <span style="font-size: 13px;"><i class="fas fa-hospital" style="color: #dc3545;"></i> Equipamiento</span>
+                                    <span style="font-size: 13px; font-weight: 600;">12%</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 12%; height: 8px; background-color: #dc3545; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEGUNDA FILA DE GRÁFICOS -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <!-- Top Clientes -->
+                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 15px;">
+                        <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 15px;">
+                            <i class="fas fa-crown"></i> Top Clientes
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="background-color: #083CAE; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">1</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 13px;">Inmobiliaria del Norte</div>
+                                    <div style="font-size: 11px; color: #6c757d;">3 unidades • Torre Norte</div>
+                                </div>
+                                <div style="font-weight: 600; color: #28a745;">$4.2M</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="background-color: #6c757d; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">2</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 13px;">Gobierno Regional</div>
+                                    <div style="font-size: 11px; color: #6c757d;">2 unidades • Hospital Regional</div>
+                                </div>
+                                <div style="font-weight: 600; color: #28a745;">$3.8M</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="background-color: #cd7f32; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">3</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 13px;">Empresas López</div>
+                                    <div style="font-size: 11px; color: #6c757d;">2 naves • Parque Industrial</div>
+                                </div>
+                                <div style="font-weight: 600; color: #28a745;">$2.5M</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="background-color: #e9ecef; color: #495057; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">4</span>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; font-size: 13px;">Constructora ABC</div>
+                                    <div style="font-size: 11px; color: #6c757d;">1 nave + ofna • Mixto</div>
+                                </div>
+                                <div style="font-weight: 600; color: #28a745;">$1.9M</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ventas por Proyecto -->
+                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 15px;">
+                        <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 15px;">
+                            <i class="fas fa-chart-bar"></i> Ventas por Proyecto
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Torre Norte</span>
+                                    <span style="font-size: 13px; font-weight: 600;">$32.5M</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 78%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Hospital Regional</span>
+                                    <span style="font-size: 13px; font-weight: 600;">$28.4M</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 68%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Parque Industrial</span>
+                                    <span style="font-size: 13px; font-weight: 600;">$12.8M</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 45%; height: 8px; background-color: #ffc107; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Urb. Los Álamos</span>
+                                    <span style="font-size: 13px; font-weight: 600;">$4.7M</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 25%; height: 8px; background-color: #dc3545; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Etapas de Venta -->
+                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 15px;">
+                        <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 15px;">
+                            <i class="fas fa-filter"></i> Embudo de Ventas
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Prospectos</span>
+                                    <span style="font-size: 13px; font-weight: 600;">245</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 100%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Cotizaciones</span>
+                                    <span style="font-size: 13px; font-weight: 600;">98</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 40%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Negociación</span>
+                                    <span style="font-size: 13px; font-weight: 600;">45</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 18%; height: 8px; background-color: #ffc107; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span style="font-size: 13px;">Cerradas</span>
+                                    <span style="font-size: 13px; font-weight: 600;">124</span>
+                                </div>
+                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                    <div style="width: 51%; height: 8px; background-color: #dc3545; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA DE VENTAS DETALLADA -->
+                <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 12px; max-height: 400px; overflow-y: auto; margin-top: 20px;">
+                    <table class="table" style="width: 100%; font-size: 13px; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; background-color: #2378e1; color: white;">
+                            <tr>
+                                <th style="padding: 12px 8px; text-align: left;">Fecha</th>
+                                <th style="padding: 12px 8px; text-align: left;">Cliente</th>
+                                <th style="padding: 12px 8px; text-align: left;">Proyecto</th>
+                                <th style="padding: 12px 8px; text-align: left;">Tipo</th>
+                                <th style="padding: 12px 8px; text-align: center;">Unidades</th>
+                                <th style="padding: 12px 8px; text-align: right;">Monto</th>
+                                <th style="padding: 12px 8px; text-align: center;">Estado</th>
+                                <th style="padding: 12px 8px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px 8px;">2026-03-15</td>
+                                <td style="padding: 10px 8px;">Inmobiliaria del Norte</td>
+                                <td style="padding: 10px 8px;">Torre Norte</td>
+                                <td style="padding: 10px 8px;">Oficinas</td>
+                                <td style="padding: 10px 8px; text-align: center;">3</td>
+                                <td style="padding: 10px 8px; text-align: right;">$4,250,000</td>
+                                <td style="padding: 10px 8px; text-align: center;"><span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Escriturado</span></td>
+                                <td style="padding: 10px 8px; text-align: center;">
+                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;"></i>
+                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;"></i>
+                                </td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px 8px;">2026-03-14</td>
+                                <td style="padding: 10px 8px;">Gobierno Regional</td>
+                                <td style="padding: 10px 8px;">Hospital Regional</td>
+                                <td style="padding: 10px 8px;">Equipamiento</td>
+                                <td style="padding: 10px 8px; text-align: center;">2</td>
+                                <td style="padding: 10px 8px; text-align: right;">$3,800,000</td>
+                                <td style="padding: 10px 8px; text-align: center;"><span style="background-color: #ffc107; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Apartado</span></td>
+                                <td style="padding: 10px 8px; text-align: center;">
+                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;"></i>
+                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 8px;">2026-03-12</td>
+                                <td style="padding: 10px 8px;">Empresas López</td>
+                                <td style="padding: 10px 8px;">Parque Industrial</td>
+                                <td style="padding: 10px 8px;">Naves</td>
+                                <td style="padding: 10px 8px; text-align: center;">2</td>
+                                <td style="padding: 10px 8px; text-align: right;">$2,500,000</td>
+                                <td style="padding: 10px 8px; text-align: center;"><span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Escriturado</span></td>
+                                <td style="padding: 10px 8px; text-align: center;">
+                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;"></i>
+                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;"></i>
+                                </td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px 8px;">2026-03-10</td>
+                                <td style="padding: 10px 8px;">Constructora ABC</td>
+                                <td style="padding: 10px 8px;">Urb. Los Álamos</td>
+                                <td style="padding: 10px 8px;">Vivienda</td>
+                                <td style="padding: 10px 8px; text-align: center;">5</td>
+                                <td style="padding: 10px 8px; text-align: right;">$1,450,000</td>
+                                <td style="padding: 10px 8px; text-align: center;"><span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Contrato</span></td>
+                                <td style="padding: 10px 8px; text-align: center;">
+                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;"></i>
+                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 8px;">2026-03-08</td>
+                                <td style="padding: 10px 8px;">Desarrollos del Sur</td>
+                                <td style="padding: 10px 8px;">Torre Norte</td>
+                                <td style="padding: 10px 8px;">Oficinas</td>
+                                <td style="padding: 10px 8px; text-align: center;">1</td>
+                                <td style="padding: 10px 8px; text-align: right;">$1,850,000</td>
+                                <td style="padding: 10px 8px; text-align: center;"><span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Escriturado</span></td>
+                                <td style="padding: 10px 8px; text-align: center;">
+                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;"></i>
+                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;"></i>
+                                </td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="padding: 10px 8px;">2026-03-05</td>
+                                <td style="padding: 10px 8px;">Grupo Industrial</td>
+                                <td style="padding: 10px 8px;">Parque Industrial</td>
+                                <td style="padding: 10px 8px;">Nave</td>
+                                <td style="padding: 10px 8px; text-align: center;">1</td>
+                                <td style="padding: 10px 8px; text-align: right;">$1,200,000</td>
+                                <td style="padding: 10px 8px; text-align: center;"><span style="background-color: #ffc107; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Apartado</span></td>
+                                <td style="padding: 10px 8px; text-align: center;">
+                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;"></i>
+                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <div style="color: #6c757d; font-size: 13px;">
+                        Mostrando 1-6 de 48 registros
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer;">Anterior</button>
+                        <button style="padding: 5px 10px; border: 1px solid #083CAE; background-color: #083CAE; color: white; border-radius: 4px; cursor: pointer;">1</button>
+                        <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer;">2</button>
+                        <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer;">3</button>
+                        <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer;">4</button>
+                        <button style="padding: 5px 10px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer;">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
 <style>
-    :root {
-        --primary-teal: #00838f;
-        --primary-teal-light: #0097a7;
-        --primary-teal-dark: #006064;
-        --primary-blue: #1565c0;
-        --primary-blue-light: #1e88e5;
-        --primary-green: #2e7d32;
-        --primary-green-light: #4caf50;
-        --primary-amber: #ff8f00;
-        --primary-amber-light: #ffb300;
-        --primary-purple: #6a1b9a;
-        --primary-red: #c62828;
-        --accent-teal: #00695c;
-        --dark-bg: #1a237e;
-        --light-bg: #f5f7fa;
-        --card-bg: #ffffff;
-        --text-dark: #263238;
-        --text-medium: #546e7a;
-        --text-light: #78909c;
-        --border-light: #e0e0e0;
-        --border-medium: #bdbdbd;
-        --success: #4caf50;
-        --warning: #ff9800;
-        --error: #f44336;
-        --info: #2196f3;
-    }
-    
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', 'Roboto', sans-serif;
-    }
-    
-    body {
-        background-color: var(--light-bg);
-        color: var(--text-dark);
-        font-size: 13px;
-    }
-    
-    .main-content {
-        padding: 1.5rem;
-        max-width: 1800px;
-        margin: 0 auto;
-    }
-    
-    /* Header */
-    .page-header {
-        background: linear-gradient(135deg, #ffffff, #f8f9fa);
-        border-radius: 10px;
-        padding: 1.25rem 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border: 1px solid var(--border-light);
-    }
-    
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .title-section {
-        flex: 1;
-    }
-    
-    .page-title {
-        font-size: 1.6rem;
-        color: var(--dark-bg);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.4rem;
-    }
-    
-    .title-icon {
-        font-size: 1.5rem;
-        color: var(--primary-teal);
-    }
-    
-    .filter-section {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-top: 0.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .filter-label {
-        font-size: 0.8rem;
-        color: var(--text-medium);
-        font-weight: 600;
-    }
-    
-    .filter-select {
-        padding: 0.5rem 1rem;
-        border: 2px solid var(--border-light);
-        border-radius: 6px;
-        font-size: 0.8rem;
-        color: var(--text-dark);
-        background-color: white;
-        min-width: 180px;
-        cursor: pointer;
-    }
-    
-    .filter-select:focus {
-        outline: none;
-        border-color: var(--primary-teal);
-        box-shadow: 0 0 0 3px rgba(0, 131, 143, 0.1);
-    }
-    
-    .date-range {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: white;
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-        border: 2px solid var(--border-light);
-    }
-    
-    .date-range i {
-        color: var(--primary-teal);
-    }
-    
-    .date-input {
-        border: none;
-        padding: 0.25rem;
-        font-size: 0.8rem;
-        width: 100px;
-    }
-    
-    .date-input:focus {
-        outline: none;
-    }
-    
-    .header-actions {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-    }
-    
-    .btn {
-        padding: 0.6rem 1.25rem;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-        font-size: 0.8rem;
-    }
-    
-    .btn i {
-        font-size: 0.9rem;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, var(--primary-teal), var(--primary-teal-light));
-        color: white;
-        box-shadow: 0 3px 8px rgba(0, 131, 143, 0.3);
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 131, 143, 0.4);
-    }
-    
-    .btn-success {
-        background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
-        color: white;
-    }
-    
-    .btn-excel {
-        background: linear-gradient(135deg, #217346, #2d9558);
-        color: white;
-    }
-    
-    .btn-pdf {
-        background: linear-gradient(135deg, #c62828, #e53935);
-        color: white;
-    }
-    
-    .btn-analytics {
-        background: linear-gradient(135deg, #6a1b9a, #8e24aa);
-        color: white;
-    }
-    
-    /* KPI Cards */
-    .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .kpi-card {
-        background: white;
-        border-radius: 10px;
-        padding: 1.25rem;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-        border: 1.5px solid;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .kpi-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-    }
-    
-    .kpi-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .kpi-card.compras {
-        border-color: var(--primary-teal);
-    }
-    .kpi-card.compras::before { background: linear-gradient(90deg, #00838f, #0097a7); }
-    
-    .kpi-card.ahorro {
-        border-color: #2e7d32;
-    }
-    .kpi-card.ahorro::before { background: linear-gradient(90deg, #2e7d32, #4caf50); }
-    
-    .kpi-card.oc {
-        border-color: #ff8f00;
-    }
-    .kpi-card.oc::before { background: linear-gradient(90deg, #ff8f00, #ffb300); }
-    
-    .kpi-card.proveedores {
-        border-color: #6a1b9a;
-    }
-    .kpi-card.proveedores::before { background: linear-gradient(90deg, #6a1b9a, #8e24aa); }
-    
-    .kpi-card.dias {
-        border-color: #1565c0;
-    }
-    .kpi-card.dias::before { background: linear-gradient(90deg, #1565c0, #1e88e5); }
-    
-    .kpi-card.urgente {
-        border-color: #c62828;
-    }
-    .kpi-card.urgente::before { background: linear-gradient(90deg, #c62828, #e53935); }
-    
-    .kpi-icon-box {
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        color: white;
-        flex-shrink: 0;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .kpi-icon-box.teal { background: linear-gradient(135deg, #00838f, #0097a7); }
-    .kpi-icon-box.green { background: linear-gradient(135deg, #2e7d32, #4caf50); }
-    .kpi-icon-box.amber { background: linear-gradient(135deg, #ff8f00, #ffb300); }
-    .kpi-icon-box.purple { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
-    .kpi-icon-box.blue { background: linear-gradient(135deg, #1565c0, #1e88e5); }
-    .kpi-icon-box.red { background: linear-gradient(135deg, #c62828, #e53935); }
-    
-    .kpi-info {
-        flex: 1;
-        min-width: 0;
-    }
-    
-    .kpi-label {
-        font-size: 0.7rem;
-        color: var(--text-medium);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.2rem;
-    }
-    
-    .kpi-value {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        font-family: 'Roboto Mono', monospace;
-        line-height: 1.1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
-    }
-    
-    .kpi-subtext {
-        font-size: 0.65rem;
-        color: var(--text-light);
-        margin-top: 0.15rem;
-        white-space: nowrap;
-    }
-    
-    /* Pestañas de análisis */
-    .analytics-tabs {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid var(--border-light);
-        padding-bottom: 0.5rem;
-        flex-wrap: wrap;
-    }
-    
-    .tab-btn {
-        padding: 0.6rem 1.25rem;
-        background: white;
-        border: 1px solid var(--border-light);
-        border-radius: 6px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-medium);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.2s;
-    }
-    
-    .tab-btn i {
-        font-size: 0.9rem;
-    }
-    
-    .tab-btn.active {
-        background: var(--primary-teal);
-        color: white;
-        border-color: var(--primary-teal);
-    }
-    
-    .tab-btn:hover:not(.active) {
-        background: #e0f7fa;
-        border-color: var(--primary-teal);
-        color: var(--primary-teal);
-    }
-    
-    /* Cards de análisis */
-    .analytics-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .analytics-card {
-        background: white;
-        border-radius: 10px;
-        padding: 1.25rem;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-        border: 1px solid var(--border-light);
-    }
-    
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .card-title {
-        font-size: 0.9rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .card-title i {
-        color: var(--primary-teal);
-    }
-    
-    .card-actions {
-        display: flex;
-        gap: 0.5rem;
-    }
-    
-    .card-actions button {
-        background: none;
-        border: none;
-        color: var(--text-light);
-        cursor: pointer;
-        padding: 0.25rem;
-        border-radius: 4px;
-    }
-    
-    .card-actions button:hover {
-        background: #f0f0f0;
-        color: var(--primary-teal);
-    }
-    
-    /* Gráficos simulados */
-    .chart-container {
-        margin-top: 0.5rem;
-    }
-    
-    .chart-bar {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .chart-label {
-        width: 80px;
-        font-size: 0.75rem;
-        color: var(--text-medium);
-    }
-    
-    .chart-value {
-        flex: 1;
-        height: 24px;
-        background: #f5f5f5;
-        border-radius: 4px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .chart-fill {
+    .custom-card {
+        transition: transform 0.2s, box-shadow 0.2s;
         height: 100%;
-        background: linear-gradient(90deg, var(--primary-teal), var(--primary-teal-light));
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 0.5rem;
-        color: white;
-        font-size: 0.65rem;
-        font-weight: 600;
     }
     
-    .chart-fill.amber { background: linear-gradient(90deg, #ff8f00, #ffb300); }
-    .chart-fill.green { background: linear-gradient(90deg, #2e7d32, #4caf50); }
-    .chart-fill.blue { background: linear-gradient(90deg, #1565c0, #1e88e5); }
-    .chart-fill.purple { background: linear-gradient(90deg, #6a1b9a, #8e24aa); }
-    .chart-fill.red { background: linear-gradient(90deg, #c62828, #e53935); }
-    
-    .chart-percent {
-        width: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--text-dark);
+    .custom-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
+        border-color: #083CAE !important;
     }
     
-    /* Tabla de análisis */
-    .table-section {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-        overflow: hidden;
-        margin-bottom: 1.5rem;
-    }
-    
-    .analysis-table {
-        width: 100%;
-        border-collapse: collapse;
+    .table th {
+        white-space: nowrap;
         font-size: 12px;
-    }
-    
-    .analysis-table thead th {
-        background: linear-gradient(135deg, #00838f, #0097a7);
+        background-color: #2378e1 !important;
         color: white;
-        padding: 0.8rem 0.6rem;
-        font-weight: 600;
-        text-align: center;
-        font-size: 0.75rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .analysis-table thead th:last-child {
-        border-right: none;
-    }
-    
-    .analysis-table tbody td {
-        padding: 0.8rem 0.6rem;
-        text-align: center;
-        border-right: 1px solid var(--border-light);
-        border-bottom: 1px solid var(--border-light);
-        font-size: 0.75rem;
-        vertical-align: middle;
-    }
-    
-    .analysis-table tbody td:first-child {
-        text-align: left;
         font-weight: 600;
     }
     
-    .analysis-table tbody tr:hover {
-        background-color: #e0f7fa;
+    .table td {
+        white-space: nowrap;
+        font-size: 12px;
+        color: #000000 !important;
     }
     
-    .analysis-table tfoot td {
-        padding: 0.8rem 0.6rem;
-        background: #f5f5f5;
-        font-weight: 700;
-        border-top: 2px solid var(--primary-teal);
+    /* Estilo para las filas alternadas */
+    tbody tr:nth-child(odd) {
+        background-color: #ffffff;
     }
     
-    /* Indicadores de rendimiento */
-    .metric-badge {
-        display: inline-block;
-        padding: 0.2rem 0.6rem;
-        border-radius: 20px;
-        font-size: 0.65rem;
-        font-weight: 600;
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
     }
     
-    .metric-badge.alta {
-        background: #c8e6c9;
-        color: #2e7d32;
+    tbody tr:hover {
+        background-color: #e0e0e0;
     }
     
-    .metric-badge.media {
-        background: #fff3e0;
-        color: #ef6c00;
+    /* Estilo para los iconos de acción */
+    td i {
+        transition: transform 0.2s;
     }
     
-    .metric-badge.baja {
-        background: #ffebee;
-        color: #c62828;
-    }
-    
-    .metric-badge.critico {
-        background: #ffebee;
-        color: #c62828;
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.8; }
-        100% { opacity: 1; }
-    }
-    
-    /* Top proveedores */
-    .supplier-ranking {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .supplier-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem;
-        border-radius: 6px;
-        transition: all 0.2s;
-    }
-    
-    .supplier-item:hover {
-        background: #f5f5f5;
-    }
-    
-    .supplier-rank {
-        width: 24px;
-        height: 24px;
-        background: var(--primary-teal);
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        font-weight: 700;
-    }
-    
-    .supplier-info {
-        flex: 1;
-    }
-    
-    .supplier-name {
-        font-weight: 600;
-        font-size: 0.8rem;
-    }
-    
-    .supplier-category {
-        font-size: 0.65rem;
-        color: var(--text-light);
-    }
-    
-    .supplier-amount {
-        font-family: 'Roboto Mono', monospace;
-        font-weight: 700;
-        font-size: 0.85rem;
-    }
-    
-    /* Categorías de compra */
-    .category-chart {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 0.5rem;
-    }
-    
-    .category-item {
-        flex: 1 1 calc(50% - 0.75rem);
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    .category-header {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.7rem;
-    }
-    
-    .category-bar {
-        height: 8px;
-        background: #f5f5f5;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .category-fill {
-        height: 100%;
-        border-radius: 4px;
-    }
-    
-    /* Insights */
-    .insights-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        margin-top: 1rem;
-    }
-    
-    .insight-card {
-        background: #f8f9fc;
-        border-radius: 8px;
-        padding: 1rem;
-        border-left: 4px solid;
-    }
-    
-    .insight-card.teal { border-left-color: var(--primary-teal); }
-    .insight-card.green { border-left-color: #2e7d32; }
-    .insight-card.amber { border-left-color: #ff8f00; }
-    
-    .insight-title {
-        font-size: 0.7rem;
-        color: var(--text-medium);
-        text-transform: uppercase;
-        margin-bottom: 0.25rem;
-    }
-    
-    .insight-value {
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-    }
-    
-    .insight-trend {
-        font-size: 0.65rem;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }
-    
-    .trend-up { color: #2e7d32; }
-    .trend-down { color: #c62828; }
-    
-    /* Alertas de compras */
-    .alerts-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .alert-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        background: #fff8e1;
-        border-radius: 6px;
-        border-left: 4px solid #ff8f00;
-    }
-    
-    .alert-item.critical {
-        background: #ffebee;
-        border-left-color: #c62828;
-    }
-    
-    .alert-icon {
-        width: 32px;
-        height: 32px;
-        background: rgba(255, 143, 0, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #ff8f00;
-    }
-    
-    .alert-item.critical .alert-icon {
-        background: rgba(198, 40, 40, 0.1);
-        color: #c62828;
-    }
-    
-    .alert-content {
-        flex: 1;
-    }
-    
-    .alert-title {
-        font-weight: 600;
-        font-size: 0.8rem;
-    }
-    
-    .alert-desc {
-        font-size: 0.7rem;
-        color: var(--text-medium);
+    td i:hover {
+        transform: scale(1.2);
     }
     
     /* Responsive */
-    @media (max-width: 1200px) {
-        .analytics-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .insights-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    
     @media (max-width: 768px) {
-        .main-content {
-            padding: 1rem;
+        div[style*="grid-template-columns: 2fr 1fr"] {
+            grid-template-columns: 1fr !important;
         }
         
-        .page-header {
-            padding: 1.25rem;
+        div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
         }
         
-        .header-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .header-actions {
-            width: 100%;
-            flex-direction: column;
-        }
-        
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .filter-section {
-            flex-direction: column;
-            align-items: flex-start;
-            width: 100%;
-        }
-        
-        .filter-select {
-            width: 100%;
-        }
-        
-        .date-range {
-            width: 100%;
-        }
-        
-        .analytics-tabs {
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            flex: 1;
-        }
-        
-        .category-item {
-            flex: 1 1 100%;
+        .custom-card {
+            min-width: 100% !important;
         }
     }
 </style>
 
-<div class="main-content">
-    <!-- Header -->
-    <div class="page-header">
-        <div class="header-content">
-            <div class="title-section">
-                <h1 class="page-title">
-                    <i class="fas fa-chart-pie title-icon"></i>
-                    Análisis de Compras
-                </h1>
-                <div class="filter-section">
-                    <span class="filter-label">Período:</span>
-                    <div class="date-range">
-                        <i class="fas fa-calendar-alt"></i>
-                        <input type="text" class="date-input" id="fecha-inicio" placeholder="01/01/2026" value="01/01/2026">
-                        <span>→</span>
-                        <input type="text" class="date-input" id="fecha-fin" placeholder="11/02/2026" value="11/02/2026">
-                    </div>
-                    <select class="filter-select" id="categoria-filter">
-                        <option value="todas">TODAS LAS CATEGORÍAS</option>
-                        <option value="materiales">Materiales de Construcción</option>
-                        <option value="herramientas">Herramientas y Equipo</option>
-                        <option value="servicios">Servicios</option>
-                        <option value="transporte">Transporte y Logística</option>
-                        <option value="oficina">Papelería y Oficina</option>
-                    </select>
-                    <select class="filter-select" id="proveedor-filter">
-                        <option value="todos">TODOS LOS PROVEEDORES</option>
-                        <option value="transportes">Transportes Demo</option>
-                        <option value="tracto">Tracto Refacciones</option>
-                        <option value="llantera">Llantera Demo</option>
-                        <option value="diesel">Proveedor Diesel</option>
-                        <option value="allende">Unión de Crédito Allende</option>
-                    </select>
-                </div>
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-primary" id="aplicar-filtros">
-                    <i class="fas fa-filter"></i>
-                    Aplicar Filtros
-                </button>
-                <button class="btn btn-analytics" id="reporte-completo">
-                    <i class="fas fa-file-alt"></i>
-                    Reporte Completo
-                </button>
-                <button class="btn btn-excel" id="export-excel">
-                    <i class="fas fa-file-excel"></i>
-                    Excel
-                </button>
-                <button class="btn btn-pdf" id="export-pdf">
-                    <i class="fas fa-file-pdf"></i>
-                    PDF
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- KPI Cards -->
-    <div class="kpi-grid">
-        <div class="kpi-card compras">
-            <div class="kpi-icon-box teal">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Compras Totales</div>
-                <div class="kpi-value">$2,345,678</div>
-                <div class="kpi-subtext">Período: Ene-Feb 2026</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card ahorro">
-            <div class="kpi-icon-box green">
-                <i class="fas fa-piggy-bank"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Ahorro vs Presupuesto</div>
-                <div class="kpi-value">$187,432</div>
-                <div class="kpi-subtext">8.2% de ahorro</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card oc">
-            <div class="kpi-icon-box amber">
-                <i class="fas fa-file-invoice"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Órdenes de Compra</div>
-                <div class="kpi-value">156</div>
-                <div class="kpi-subtext">12 pendientes</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card proveedores">
-            <div class="kpi-icon-box purple">
-                <i class="fas fa-truck"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Proveedores Activos</div>
-                <div class="kpi-value">24</div>
-                <div class="kpi-subtext">+3 vs período anterior</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card dias">
-            <div class="kpi-icon-box blue">
-                <i class="fas fa-clock"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Días Promedio Pago</div>
-                <div class="kpi-value">32.5</div>
-                <div class="kpi-subtext">-2.3 vs meta</div>
-            </div>
-        </div>
-        
-        <div class="kpi-card urgente">
-            <div class="kpi-icon-box red">
-                <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <div class="kpi-info">
-                <div class="kpi-label">Compras Urgentes</div>
-                <div class="kpi-value">8</div>
-                <div class="kpi-subtext">$234,567</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pestañas de Análisis -->
-    <div class="analytics-tabs">
-        <button class="tab-btn active" id="tab-general">
-            <i class="fas fa-chart-pie"></i>
-            Vista General
-        </button>
-        <button class="tab-btn" id="tab-proveedores">
-            <i class="fas fa-truck"></i>
-            Análisis Proveedores
-        </button>
-        <button class="tab-btn" id="tab-categorias">
-            <i class="fas fa-tags"></i>
-            Categorías
-        </button>
-        <button class="tab-btn" id="tab-tendencias">
-            <i class="fas fa-chart-line"></i>
-            Tendencias
-        </button>
-        <button class="tab-btn" id="tab-eficiencia">
-            <i class="fas fa-stopwatch"></i>
-            Eficiencia
-        </button>
-    </div>
-
-    <!-- ========== VISTA GENERAL ========== -->
-    <div id="view-general" style="display: block;">
-        <!-- Analytics Grid -->
-        <div class="analytics-grid">
-            <!-- Compras por Categoría -->
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-tags"></i>
-                        Compras por Categoría
-                    </div>
-                    <div class="card-actions">
-                        <button title="Descargar"><i class="fas fa-download"></i></button>
-                        <button title="Expandir"><i class="fas fa-expand"></i></button>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-bar">
-                        <span class="chart-label">Materiales</span>
-                        <div class="chart-value">
-                            <div class="chart-fill" style="width: 65%;">$845,200</div>
-                        </div>
-                        <span class="chart-percent">65%</span>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Herramientas</span>
-                        <div class="chart-value">
-                            <div class="chart-fill amber" style="width: 45%;">$385,400</div>
-                        </div>
-                        <span class="chart-percent">45%</span>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Servicios</span>
-                        <div class="chart-value">
-                            <div class="chart-fill green" style="width: 38%;">$298,500</div>
-                        </div>
-                        <span class="chart-percent">38%</span>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Transporte</span>
-                        <div class="chart-value">
-                            <div class="chart-fill purple" style="width: 42%;">$456,800</div>
-                        </div>
-                        <span class="chart-percent">42%</span>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Oficina</span>
-                        <div class="chart-value">
-                            <div class="chart-fill blue" style="width: 22%;">$89,778</div>
-                        </div>
-                        <span class="chart-percent">22%</span>
-                    </div>
-                </div>
-                <div style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-light); text-align: right;">
-                    Total: $2,345,678 | Materiales representa el 36%
-                </div>
-            </div>
-            
-            <!-- Top Proveedores -->
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-trophy"></i>
-                        Top 5 Proveedores
-                    </div>
-                    <div class="card-actions">
-                        <button title="Ver todos"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
-                <div class="supplier-ranking">
-                    <div class="supplier-item">
-                        <div class="supplier-rank">1</div>
-                        <div class="supplier-info">
-                            <div class="supplier-name">Unión de Crédito Allende</div>
-                            <div class="supplier-category">Servicios Financieros</div>
-                        </div>
-                        <div class="supplier-amount">$694,297</div>
-                    </div>
-                    <div class="supplier-item">
-                        <div class="supplier-rank">2</div>
-                        <div class="supplier-info">
-                            <div class="supplier-name">Transportes Demo Mexico</div>
-                            <div class="supplier-category">Logística</div>
-                        </div>
-                        <div class="supplier-amount">$476,020</div>
-                    </div>
-                    <div class="supplier-item">
-                        <div class="supplier-rank">3</div>
-                        <div class="supplier-info">
-                            <div class="supplier-name">Llantera Demo</div>
-                            <div class="supplier-category">Refacciones</div>
-                        </div>
-                        <div class="supplier-amount">$270,180</div>
-                    </div>
-                    <div class="supplier-item">
-                        <div class="supplier-rank">4</div>
-                        <div class="supplier-info">
-                            <div class="supplier-name">Logística del Golfo</div>
-                            <div class="supplier-category">Transporte</div>
-                        </div>
-                        <div class="supplier-amount">$172,110</div>
-                    </div>
-                    <div class="supplier-item">
-                        <div class="supplier-rank">5</div>
-                        <div class="supplier-info">
-                            <div class="supplier-name">Tracto Refacciones</div>
-                            <div class="supplier-category">Autopartes</div>
-                        </div>
-                        <div class="supplier-amount">$155,138</div>
-                    </div>
-                </div>
-                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-light);">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
-                        <span>Concentración Top 5:</span>
-                        <span style="font-weight: 700; color: var(--primary-teal);">74%</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tendencias de Precios -->
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-chart-line"></i>
-                        Tendencias de Precios
-                    </div>
-                    <div class="card-actions">
-                        <button><i class="fas fa-calendar-alt"></i></button>
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">Cemento</span>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: #c62828;">+12.5%</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: #f5f5f5; border-radius: 3px;">
-                            <div style="width: 85%; height: 100%; background: #c62828; border-radius: 3px;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">Acero</span>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: #c62828;">+8.3%</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: #f5f5f5; border-radius: 3px;">
-                            <div style="width: 72%; height: 100%; background: #c62828; border-radius: 3px;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">Diesel</span>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: #2e7d32;">-3.2%</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: #f5f5f5; border-radius: 3px;">
-                            <div style="width: 35%; height: 100%; background: #2e7d32; border-radius: 3px;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">Varilla</span>
-                            <span style="font-size: 0.75rem; font-weight: 600; color: #ef6c00;">+5.7%</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: #f5f5f5; border-radius: 3px;">
-                            <div style="width: 58%; height: 100%; background: #ef6c00; border-radius: 3px;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-light);">
-                    Índice de inflación compras: +6.8% vs período anterior
-                </div>
-            </div>
-            
-            <!-- Alertas y Oportunidades -->
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-bell"></i>
-                        Alertas y Oportunidades
-                    </div>
-                    <div class="card-actions">
-                        <button><i class="fas fa-cog"></i></button>
-                    </div>
-                </div>
-                <div class="alerts-list">
-                    <div class="alert-item critical">
-                        <div class="alert-icon">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="alert-content">
-                            <div class="alert-title">Stock crítico - Cemento</div>
-                            <div class="alert-desc">Nivel por debajo del mínimo. Ordenar esta semana.</div>
-                        </div>
-                    </div>
-                    <div class="alert-item">
-                        <div class="alert-icon">
-                            <i class="fas fa-tag"></i>
-                        </div>
-                        <div class="alert-content">
-                            <div class="alert-title">Oportunidad de ahorro</div>
-                            <div class="alert-desc">Descuento 15% en compra de herramientas > $50k</div>
-                        </div>
-                    </div>
-                    <div class="alert-item">
-                        <div class="alert-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="alert-content">
-                            <div class="alert-title">Pagos por vencer</div>
-                            <div class="alert-desc">3 facturas vencen en 5 días por $234,567</div>
-                        </div>
-                    </div>
-                    <div class="alert-item critical">
-                        <div class="alert-icon">
-                            <i class="fas fa-ban"></i>
-                        </div>
-                        <div class="alert-content">
-                            <div class="alert-title">Proveedor suspendido</div>
-                            <div class="alert-desc">Constructora Habita - Incumplimiento</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Tabla de Análisis Detallado -->
-        <div class="table-section">
-            <div style="padding: 1rem 1.25rem; background: linear-gradient(135deg, #e0f7fa, #e0f2fe); border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                    <i class="fas fa-chart-bar" style="color: var(--primary-teal);"></i>
-                    Análisis de Compras por Proveedor
-                </h3>
-                <span style="font-size: 0.7rem; background: white; padding: 0.25rem 0.75rem; border-radius: 20px; border: 1px solid var(--border-light);">
-                    <i class="fas fa-sync-alt" style="margin-right: 0.25rem;"></i> Actualizado: 11/02/2026
-                </span>
-            </div>
-            <div class="table-responsive">
-                <table class="analysis-table">
-                    <thead>
-                        <tr>
-                            <th>Proveedor</th>
-                            <th>Categoría</th>
-                            <th>Compras Totales</th>
-                            <th>% Participación</th>
-                            <th>Órdenes</th>
-                            <th>Días Pago</th>
-                            <th>Cumplimiento</th>
-                            <th>Tendencia</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Unión de Crédito Allende</td>
-                            <td>Servicios Financieros</td>
-                            <td class="amount">$694,297</td>
-                            <td>29.6%</td>
-                            <td>8</td>
-                            <td>45</td>
-                            <td><span class="metric-badge alta">98%</span></td>
-                            <td><i class="fas fa-arrow-up" style="color: #c62828;"></i> +5.2%</td>
-                        </tr>
-                        <tr>
-                            <td>Transportes Demo Mexico</td>
-                            <td>Logística</td>
-                            <td class="amount">$476,020</td>
-                            <td>20.3%</td>
-                            <td>12</td>
-                            <td>32</td>
-                            <td><span class="metric-badge alta">100%</span></td>
-                            <td><i class="fas fa-arrow-down" style="color: #2e7d32;"></i> -2.1%</td>
-                        </tr>
-                        <tr>
-                            <td>Llantera Demo</td>
-                            <td>Refacciones</td>
-                            <td class="amount">$270,180</td>
-                            <td>11.5%</td>
-                            <td>15</td>
-                            <td>30</td>
-                            <td><span class="metric-badge media">92%</span></td>
-                            <td><i class="fas fa-arrow-up" style="color: #c62828;"></i> +8.3%</td>
-                        </tr>
-                        <tr>
-                            <td>Logística del Golfo</td>
-                            <td>Transporte</td>
-                            <td class="amount">$172,110</td>
-                            <td>7.3%</td>
-                            <td>9</td>
-                            <td>35</td>
-                            <td><span class="metric-badge alta">97%</span></td>
-                            <td><i class="fas fa-arrow-down" style="color: #2e7d32;"></i> -1.5%</td>
-                        </tr>
-                        <tr>
-                            <td>Tracto Refacciones</td>
-                            <td>Autopartes</td>
-                            <td class="amount">$155,138</td>
-                            <td>6.6%</td>
-                            <td>7</td>
-                            <td>28</td>
-                            <td><span class="metric-badge media">89%</span></td>
-                            <td><i class="fas fa-arrow-up" style="color: #c62828;"></i> +3.7%</td>
-                        </tr>
-                        <tr>
-                            <td>Proveedor Diesel Demo</td>
-                            <td>Combustibles</td>
-                            <td class="amount">$105,830</td>
-                            <td>4.5%</td>
-                            <td>6</td>
-                            <td>25</td>
-                            <td><span class="metric-badge alta">100%</span></td>
-                            <td><i class="fas fa-arrow-down" style="color: #2e7d32;"></i> -4.2%</td>
-                        </tr>
-                        <tr>
-                            <td>Sistemas Computacionales</td>
-                            <td>Tecnología</td>
-                            <td class="amount">$91,900</td>
-                            <td>3.9%</td>
-                            <td>4</td>
-                            <td>40</td>
-                            <td><span class="metric-badge baja">75%</span></td>
-                            <td><i class="fas fa-arrow-up" style="color: #c62828;"></i> +12.1%</td>
-                        </tr>
-                        <tr>
-                            <td>3R Freightmex</td>
-                            <td>Logística</td>
-                            <td class="amount">$78,095</td>
-                            <td>3.3%</td>
-                            <td>5</td>
-                            <td>38</td>
-                            <td><span class="metric-badge media">86%</span></td>
-                            <td><i class="fas fa-arrow-down" style="color: #2e7d32;"></i> -0.8%</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2"><strong>TOTAL / PROMEDIO</strong></td>
-                            <td><strong>$2,345,678</strong></td>
-                            <td><strong>100%</strong></td>
-                            <td><strong>78</strong></td>
-                            <td><strong>32.5</strong></td>
-                            <td><strong>93%</strong></td>
-                            <td><strong>+5.2%</strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-        
-        <!-- Insights Rápidos -->
-        <div class="insights-grid">
-            <div class="insight-card teal">
-                <div class="insight-title">Oportunidad de consolidación</div>
-                <div class="insight-value">$234,567</div>
-                <div class="insight-trend trend-up">
-                    <i class="fas fa-arrow-up"></i> 3 proveedores similares
-                </div>
-                <div style="font-size: 0.65rem; margin-top: 0.5rem;">Compras fragmentadas en refacciones</div>
-            </div>
-            <div class="insight-card green">
-                <div class="insight-title">Ahorro vs presupuesto</div>
-                <div class="insight-value">$187,432</div>
-                <div class="insight-trend trend-up">
-                    <i class="fas fa-check-circle"></i> 8.2% por debajo
-                </div>
-                <div style="font-size: 0.65rem; margin-top: 0.5rem;">Mejor desempeño en materiales</div>
-            </div>
-            <div class="insight-card amber">
-                <div class="insight-title">Compras sin orden</div>
-                <div class="insight-value">$78,234</div>
-                <div class="insight-trend trend-down">
-                    <i class="fas fa-exclamation-triangle"></i> +15% vs período anterior
-                </div>
-                <div style="font-size: 0.65rem; margin-top: 0.5rem;">Requiere revisión de políticas</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== VISTA PROVEEDORES (oculta) ========== -->
-    <div id="view-proveedores" style="display: none;">
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-chart-pie"></i>
-                        Concentración por Proveedor
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-bar">
-                        <span class="chart-label">Allende</span>
-                        <div class="chart-value">
-                            <div class="chart-fill" style="width: 30%;">30%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Transportes</span>
-                        <div class="chart-value">
-                            <div class="chart-fill amber" style="width: 20%;">20%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Llantera</span>
-                        <div class="chart-value">
-                            <div class="chart-fill green" style="width: 12%;">12%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Logística</span>
-                        <div class="chart-value">
-                            <div class="chart-fill purple" style="width: 7%;">7%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <span class="chart-label">Otros</span>
-                        <div class="chart-value">
-                            <div class="chart-fill blue" style="width: 31%;">31%</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-clock"></i>
-                        Desempeño en Entregas
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div style="text-align: center;">
-                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--primary-teal);">92%</span>
-                        <span style="font-size: 0.8rem; margin-left: 0.5rem;">a tiempo</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-around;">
-                        <div style="text-align: center;">
-                            <span style="font-size: 1rem; font-weight: 700;">8</span>
-                            <div style="font-size: 0.65rem; color: var(--text-light);">Atrasadas</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <span style="font-size: 1rem; font-weight: 700;">3.2</span>
-                            <div style="font-size: 0.65rem; color: var(--text-light);;">Días retraso</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <span style="font-size: 1rem; font-weight: 700;">24</span>
-                            <div style="font-size: 0.65rem; color: var(--text-light);;">Proveedores</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="table-section" style="margin-top: 1rem;">
-            <div style="padding: 1rem;">
-                <h3 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem;">Evaluación de Proveedores</h3>
-                <!-- Aquí iría tabla de evaluación -->
-                <p style="color: var(--text-light); text-align: center; padding: 2rem;">Vista detallada de proveedores - En construcción</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== VISTA CATEGORÍAS (oculta) ========== -->
-    <div id="view-categorias" style="display: none;">
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-tags"></i>
-                        Distribución por Categoría
-                    </div>
-                </div>
-                <div class="category-chart">
-                    <div class="category-item">
-                        <div class="category-header">
-                            <span>Materiales</span>
-                            <span style="font-weight: 600;">$845,200</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width: 36%; background: #00838f;"></div>
-                        </div>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-header">
-                            <span>Transporte</span>
-                            <span style="font-weight: 600;">$456,800</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width: 19%; background: #6a1b9a;"></div>
-                        </div>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-header">
-                            <span>Herramientas</span>
-                            <span style="font-weight: 600;">$385,400</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width: 16%; background: #ff8f00;"></div>
-                        </div>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-header">
-                            <span>Servicios</span>
-                            <span style="font-weight: 600;">$298,500</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width: 13%; background: #2e7d32;"></div>
-                        </div>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-header">
-                            <span>Oficina</span>
-                            <span style="font-weight: 600;">$89,778</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width: 4%; background: #1565c0;"></div>
-                        </div>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-header">
-                            <span>Otros</span>
-                            <span style="font-weight: 600;">$270,000</span>
-                        </div>
-                        <div class="category-bar">
-                            <div class="category-fill" style="width: 12%; background: #757575;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== VISTA TENDENCIAS (oculta) ========== -->
-    <div id="view-tendencias" style="display: none;">
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-chart-line"></i>
-                        Comportamiento Mensual
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: space-around; padding: 1rem 0;">
-                    <div style="text-align: center;">
-                        <span style="font-size: 0.7rem; color: var(--text-medium);">Octubre</span>
-                        <div style="font-size: 1rem; font-weight: 700;">$412K</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-size: 0.7rem; color: var(--text-medium);">Noviembre</span>
-                        <div style="font-size: 1rem; font-weight: 700;">$521K</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-size: 0.7rem; color: var(--text-medium);">Diciembre</span>
-                        <div style="font-size: 1rem; font-weight: 700;">$678K</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-size: 0.7rem; color: var(--text-medium);">Enero</span>
-                        <div style="font-size: 1rem; font-weight: 700;">$734K</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <span style="font-size: 0.7rem; color: var(--text-medium);">Febrero</span>
-                        <div style="font-size: 1rem; font-weight: 700;">$612K</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== VISTA EFICIENCIA (oculta) ========== -->
-    <div id="view-eficiencia" style="display: none;">
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-stopwatch"></i>
-                        Ciclo de Compra
-                    </div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 1rem; padding: 0.5rem 0;">
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">Requisición → OC</span>
-                            <span style="font-size: 0.75rem; font-weight: 600;">2.5 días</span>
-                        </div>
-                        <div style="width: 100%; height: 8px; background: #f5f5f5; border-radius: 4px;">
-                            <div style="width: 45%; height: 100%; background: #00838f; border-radius: 4px;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">OC → Entrega</span>
-                            <span style="font-size: 0.75rem; font-weight: 600;">4.8 días</span>
-                        </div>
-                        <div style="width: 100%; height: 8px; background: #f5f5f5; border-radius: 4px;">
-                            <div style="width: 65%; height: 100%; background: #00838f; border-radius: 4px;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                            <span style="font-size: 0.75rem;">Entrega → Pago</span>
-                            <span style="font-size: 0.75rem; font-weight: 600;">32.5 días</span>
-                        </div>
-                        <div style="width: 100%; height: 8px; background: #f5f5f5; border-radius: 4px;">
-                            <div style="width: 85%; height: 100%; background: #ff8f00; border-radius: 4px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Toggle entre vistas de análisis
-        const tabGeneral = document.getElementById('tab-general');
-        const tabProveedores = document.getElementById('tab-proveedores');
-        const tabCategorias = document.getElementById('tab-categorias');
-        const tabTendencias = document.getElementById('tab-tendencias');
-        const tabEficiencia = document.getElementById('tab-eficiencia');
+        console.log('Análisis de Ventas - Construcción cargado');
         
-        const viewGeneral = document.getElementById('view-general');
-        const viewProveedores = document.getElementById('view-proveedores');
-        const viewCategorias = document.getElementById('view-categorias');
-        const viewTendencias = document.getElementById('view-tendencias');
-        const viewEficiencia = document.getElementById('view-eficiencia');
-        
-        function setActiveAnalysisTab(activeTab, activeView) {
-            // Remover active de todos los tabs
-            [tabGeneral, tabProveedores, tabCategorias, tabTendencias, tabEficiencia].forEach(t => {
-                t.classList.remove('active');
-            });
-            
-            // Ocultar todas las vistas
-            viewGeneral.style.display = 'none';
-            viewProveedores.style.display = 'none';
-            viewCategorias.style.display = 'none';
-            viewTendencias.style.display = 'none';
-            viewEficiencia.style.display = 'none';
-            
-            // Activar tab y vista seleccionados
-            activeTab.classList.add('active');
-            activeView.style.display = 'block';
-        }
-        
-        tabGeneral.addEventListener('click', function() {
-            setActiveAnalysisTab(tabGeneral, viewGeneral);
+        // Botones de exportación
+        document.getElementById('btnExcel')?.addEventListener('click', function() {
+            alert('Exportando a Excel...');
         });
         
-        tabProveedores.addEventListener('click', function() {
-            setActiveAnalysisTab(tabProveedores, viewProveedores);
+        document.getElementById('btnReporte')?.addEventListener('click', function() {
+            alert('Generando reporte de ventas...');
         });
         
-        tabCategorias.addEventListener('click', function() {
-            setActiveAnalysisTab(tabCategorias, viewCategorias);
+        // Selector de período
+        const periodoSelect = document.getElementById('selectorPeriodo');
+        if (periodoSelect) {
+            periodoSelect.addEventListener('change', function() {
+                if (this.value === 'personalizado') {
+                    alert('Seleccione fechas personalizadas');
+                }
+            });
+        }
+        
+        // Iconos de acción
+        document.querySelectorAll('.fa-eye').forEach(icon => {
+            icon.addEventListener('click', function() {
+                alert('Ver detalle de venta');
+            });
         });
         
-        tabTendencias.addEventListener('click', function() {
-            setActiveAnalysisTab(tabTendencias, viewTendencias);
-        });
-        
-        tabEficiencia.addEventListener('click', function() {
-            setActiveAnalysisTab(tabEficiencia, viewEficiencia);
-        });
-        
-        // Botón aplicar filtros
-        const aplicarFiltros = document.getElementById('aplicar-filtros');
-        if (aplicarFiltros) {
-            aplicarFiltros.addEventListener('click', function() {
-                showNotification('✅ Filtros aplicados: ' + 
-                    document.getElementById('fecha-inicio').value + ' - ' + 
-                    document.getElementById('fecha-fin').value, 'success');
+        document.querySelectorAll('.fa-file-pdf').forEach(icon => {
+            icon.addEventListener('click', function() {
+                alert('Generando PDF de la venta...');
             });
-        }
-        
-        // Botón reporte completo
-        const reporteCompleto = document.getElementById('reporte-completo');
-        if (reporteCompleto) {
-            reporteCompleto.addEventListener('click', function() {
-                showNotification('📊 Generando reporte completo de análisis de compras', 'info');
-            });
-        }
-        
-        // Exportar Excel
-        const exportExcel = document.getElementById('export-excel');
-        if (exportExcel) {
-            exportExcel.addEventListener('click', function() {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    showNotification('✅ Excel exportado - Análisis de compras', 'success');
-                    this.innerHTML = originalHTML;
-                    this.disabled = false;
-                }, 800);
-            });
-        }
-        
-        // Exportar PDF
-        const exportPdf = document.getElementById('export-pdf');
-        if (exportPdf) {
-            exportPdf.addEventListener('click', function() {
-                const originalHTML = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-                this.disabled = true;
-                
-                setTimeout(() => {
-                    showNotification('✅ PDF exportado - Reporte de compras', 'success');
-                    this.innerHTML = originalHTML;
-                    this.disabled = false;
-                }, 800);
-            });
-        }
-        
-        // Filtros
-        const categoriaFilter = document.getElementById('categoria-filter');
-        if (categoriaFilter) {
-            categoriaFilter.addEventListener('change', function() {
-                showNotification(`Filtrando categoría: ${this.options[this.selectedIndex].text}`, 'info');
-            });
-        }
-        
-        const proveedorFilter = document.getElementById('proveedor-filter');
-        if (proveedorFilter) {
-            proveedorFilter.addEventListener('change', function() {
-                showNotification(`Filtrando proveedor: ${this.options[this.selectedIndex].text}`, 'info');
-            });
-        }
-        
-        // Función de notificaciones
-        function showNotification(message, type = 'success') {
-            if (typeof Alpine !== 'undefined' && Alpine.$data) {
-                const event = new CustomEvent('new-notification', {
-                    detail: {
-                        title: type === 'success' ? 'Éxito' : type === 'error' ? 'Error' : 'Información',
-                        message: message,
-                        type: type
-                    }
-                });
-                window.dispatchEvent(event);
-            } else {
-                console.log(`🔔 ${message}`);
-                alert(message);
-            }
-        }
-        
-        // Animación de entrada
-        const kpiCards = document.querySelectorAll('.kpi-card');
-        kpiCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(15px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.4s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, index * 80);
         });
     });
 </script>

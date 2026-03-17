@@ -1,0 +1,14 @@
+[0;1;31m×[0m apache2.service - The Apache HTTP Server
+     Loaded: loaded (]8;;file://ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01/usr/lib/systemd/system/apache2.service/usr/lib/systemd/system/apache2.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Mon 2026-03-02 21:47:15 UTC; 2min 1s ago
+   Duration: 9min 53.738s
+       Docs: ]8;;https://httpd.apache.org/docs/2.4/https://httpd.apache.org/docs/2.4/]8;;
+    Process: 45605 ExecStart=/usr/sbin/apachectl start [0;1;31m(code=exited, status=1/FAILURE)[0m
+        CPU: 22ms
+
+Mar 02 21:47:15 ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01 systemd[1]: Starting apache2.service - The Apache HTTP Server...
+Mar 02 21:47:15 ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01 apachectl[45608]: AH00526: Syntax error on line 20 of /etc/apache2/sites-enabled/erpconstructora.conf:
+Mar 02 21:47:15 ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01 apachectl[45608]: SSLCertificateFile: file '/etc/ssl/certs/erp.crt' does not exist or is empty
+Mar 02 21:47:15 ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01 systemd[1]: [0;1;39m[0;1;31m[0;1;39mapache2.service: Control process exited, code=exited, status=1/FAILURE[0m
+Mar 02 21:47:15 ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01 systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mapache2.service: Failed with result 'exit-code'.[0m
+Mar 02 21:47:15 ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01 systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start apache2.service - The Apache HTTP Server.[0m

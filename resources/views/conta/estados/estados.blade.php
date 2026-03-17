@@ -3,14 +3,12 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Estado de Resultados Operativo
-        rgb(120, 205, 247); 
-        -->
+        <!-- Estado de Resultados Operativo -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
                 <div style="display: flex; justify-content: center; align-items: center; position: relative;">
                     <h2 style="color: #2378e1; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                        Estado de Resultados Operativo
+                        Estado de Resultados Operativo - Construcción
                     </h2>
                     <div style="position: absolute; right: 0; display: flex; align-items: center; gap: 10px;">
                         <span style="color: #6c757d; font-size: 14px;">Al día de:</span>
@@ -97,7 +95,7 @@
     .table th {
         white-space: nowrap;
         font-size: 12px;
-        background-color:rgb(120, 205, 247);E !important;
+        background-color: #2378e1 !important;
         color: white;
         font-weight: 600;
         padding: 12px 8px;
@@ -180,284 +178,251 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Estado de Resultados Operativo');
+        console.log('DOM completamente cargado - Estado de Resultados Operativo - Construcción');
         
-        // Datos para Enero 2026
+        // Datos para Enero 2026 (Constructora)
         const datosEnero = {
-            // Ingresos Netos y sus subconceptos
-            1: { real: 21000.00, presupuesto: 20000.00 },
-            2: { real: 5000.00, presupuesto: 4800.00 },
-            3: { real: 3000.00, presupuesto: 3200.00 },
-            4: { real: 4000.00, presupuesto: 3800.00 },
-            5: { real: 6000.00, presupuesto: 5800.00 },
-            6: { real: 2000.00, presupuesto: 1800.00 },
-            7: { real: 0.00, presupuesto: 0.00 },
-            8: { real: 0.00, presupuesto: 0.00 },
-            9: { real: 0.00, presupuesto: 0.00 },
-            10: { real: 0.00, presupuesto: 0.00 },
-            11: { real: 0.00, presupuesto: 0.00 },
-            12: { real: 1000.00, presupuesto: 600.00 },
-            13: { real: 0.00, presupuesto: 0.00 },
-            // Costo Directo de Operación
-            14: { real: 6800.00, presupuesto: 6500.00 },
-            15: { real: 4200.00, presupuesto: 4000.00 },
-            16: { real: -200.00, presupuesto: 0.00 },
-            17: { real: 1100.00, presupuesto: 1000.00 },
-            18: { real: 0.00, presupuesto: 0.00 },
-            19: { real: 0.00, presupuesto: 0.00 },
-            20: { real: 1700.00, presupuesto: 1500.00 },
-            // Utilidad Antes De Indirectos
-            21: { real: 14200.00, presupuesto: 13500.00 },
-            // Costo Indirecto De Mantenimiento
-            22: { real: 82000.00, presupuesto: 80000.00 },
-            23: { real: 0.00, presupuesto: 0.00 },
-            24: { real: 0.00, presupuesto: 0.00 },
-            25: { real: 0.00, presupuesto: 0.00 },
-            26: { real: 0.00, presupuesto: 0.00 },
-            27: { real: 41000.00, presupuesto: 40000.00 },
-            28: { real: 0.00, presupuesto: 0.00 },
-            29: { real: 41000.00, presupuesto: 40000.00 },
+            // Ingresos por Obra
+            1: { real: 12500000.00, presupuesto: 12000000.00 },
+            2: { real: 5500000.00, presupuesto: 5200000.00 },
+            3: { real: 3800000.00, presupuesto: 3500000.00 },
+            4: { real: 3200000.00, presupuesto: 3300000.00 },
+            5: { real: 0.00, presupuesto: 0.00 },
+            
+            // Costo Directo de Construcción
+            6: { real: 4250000.00, presupuesto: 4000000.00 },
+            7: { real: 2850000.00, presupuesto: 2700000.00 },
+            8: { real: 1650000.00, presupuesto: 1500000.00 },
+            9: { real: 980000.00, presupuesto: 900000.00 },
+            10: { real: 650000.00, presupuesto: 600000.00 },
+            11: { real: 450000.00, presupuesto: 400000.00 },
+            12: { real: 120000.00, presupuesto: 100000.00 },
+            
+            // Utilidad Bruta
+            13: { real: 8250000.00, presupuesto: 8000000.00 },
+            
+            // Costos Indirectos de Obra
+            14: { real: 1250000.00, presupuesto: 1200000.00 },
+            15: { real: 380000.00, presupuesto: 350000.00 },
+            16: { real: 220000.00, presupuesto: 200000.00 },
+            17: { real: 150000.00, presupuesto: 140000.00 },
+            18: { real: 95000.00, presupuesto: 90000.00 },
+            19: { real: 450000.00, presupuesto: 400000.00 },
+            20: { real: 280000.00, presupuesto: 250000.00 },
+            21: { real: 120000.00, presupuesto: 100000.00 },
+            22: { real: 0.00, presupuesto: 0.00 },
+            
+            // Gastos Generales
+            23: { real: 2150000.00, presupuesto: 2000000.00 },
+            24: { real: 680000.00, presupuesto: 650000.00 },
+            25: { real: 320000.00, presupuesto: 300000.00 },
+            26: { real: 185000.00, presupuesto: 180000.00 },
+            27: { real: 520000.00, presupuesto: 500000.00 },
+            28: { real: 380000.00, presupuesto: 350000.00 },
+            29: { real: 95000.00, presupuesto: 90000.00 },
             30: { real: 0.00, presupuesto: 0.00 },
-            31: { real: 0.00, presupuesto: 0.00 },
-            // Depreciación
-            32: { real: 0.00, presupuesto: 0.00 },
-            33: { real: 0.00, presupuesto: 0.00 },
-            // Gastos De Administracion
-            34: { real: 125000.00, presupuesto: 120000.00 },
-            35: { real: 0.00, presupuesto: 0.00 },
-            36: { real: 125000.00, presupuesto: 120000.00 },
-            37: { real: 0.00, presupuesto: 0.00 },
-            38: { real: 0.00, presupuesto: 0.00 },
-            39: { real: 0.00, presupuesto: 0.00 },
-            40: { real: 0.00, presupuesto: 0.00 },
-            41: { real: 0.00, presupuesto: 0.00 },
-            42: { real: 0.00, presupuesto: 0.00 },
-            // Gastos De Transportacion
-            43: { real: 850.00, presupuesto: 800.00 },
-            44: { real: 0.00, presupuesto: 0.00 },
-            45: { real: 0.00, presupuesto: 0.00 },
-            46: { real: 850.00, presupuesto: 800.00 },
-            47: { real: 0.00, presupuesto: 0.00 },
-            48: { real: 0.00, presupuesto: 0.00 },
-            49: { real: 0.00, presupuesto: 0.00 },
-            50: { real: 0.00, presupuesto: 0.00 },
-            // Gastos Estados Resultados Default
-            51: { real: 0.00, presupuesto: 0.00 },
-            52: { real: 0.00, presupuesto: 0.00 },
+            31: { real: 420000.00, presupuesto: 400000.00 },
+            32: { real: 150000.00, presupuesto: 100000.00 },
+            
+            // Utilidad de Operación
+            33: { real: 4850000.00, presupuesto: 4800000.00 },
+            
             // Gastos Financieros
-            53: { real: 0.00, presupuesto: 0.00 },
-            54: { real: 0.00, presupuesto: 0.00 },
-            55: { real: 0.00, presupuesto: 0.00 },
-            56: { real: 0.00, presupuesto: 0.00 },
-            // Utilidad O Perdida
-            57: { real: -193650.00, presupuesto: -185800.00 },
-            // Ebitda
-            58: { real: -193650.00, presupuesto: -185800.00 }
+            34: { real: 350000.00, presupuesto: 300000.00 },
+            35: { real: 150000.00, presupuesto: 150000.00 },
+            36: { real: 200000.00, presupuesto: 150000.00 },
+            
+            // Utilidad Antes de Impuestos
+            37: { real: 4500000.00, presupuesto: 4500000.00 },
+            
+            // EBITDA
+            38: { real: 5200000.00, presupuesto: 5100000.00 },
+            
+            // Impuestos
+            39: { real: 1350000.00, presupuesto: 1350000.00 },
+            40: { real: 1350000.00, presupuesto: 1350000.00 },
+            
+            // Utilidad Neta
+            41: { real: 3150000.00, presupuesto: 3150000.00 }
         };
 
-        // Datos para Febrero 2026 (los originales)
+        // Datos para Febrero 2026 (Constructora)
         const datosFebrero = {
-            // Ingresos Netos y sus subconceptos
-            1: { real: 22000.00, presupuesto: 0.00 },
-            2: { real: 0.00, presupuesto: 0.00 },
-            3: { real: 0.00, presupuesto: 0.00 },
-            4: { real: 0.00, presupuesto: 0.00 },
-            5: { real: 22000.00, presupuesto: 0.00 },
-            6: { real: 0.00, presupuesto: 0.00 },
-            7: { real: 0.00, presupuesto: 0.00 },
-            8: { real: 0.00, presupuesto: 0.00 },
-            9: { real: 0.00, presupuesto: 0.00 },
-            10: { real: 0.00, presupuesto: 0.00 },
-            11: { real: 0.00, presupuesto: 0.00 },
-            12: { real: 0.00, presupuesto: 0.00 },
-            13: { real: 0.00, presupuesto: 0.00 },
-            // Costo Directo de Operación
-            14: { real: 7120.00, presupuesto: 0.00 },
-            15: { real: 4420.00, presupuesto: 0.00 },
-            16: { real: -300.00, presupuesto: 0.00 },
-            17: { real: 1200.00, presupuesto: 0.00 },
-            18: { real: 0.00, presupuesto: 0.00 },
-            19: { real: 0.00, presupuesto: 0.00 },
-            20: { real: 1800.00, presupuesto: 0.00 },
-            // Utilidad Antes De Indirectos
-            21: { real: 14880.00, presupuesto: 0.00 },
-            // Costo Indirecto De Mantenimiento
-            22: { real: 86000.00, presupuesto: 0.00 },
-            23: { real: 0.00, presupuesto: 0.00 },
-            24: { real: 0.00, presupuesto: 0.00 },
-            25: { real: 0.00, presupuesto: 0.00 },
-            26: { real: 0.00, presupuesto: 0.00 },
-            27: { real: 43000.00, presupuesto: 0.00 },
-            28: { real: 0.00, presupuesto: 0.00 },
-            29: { real: 43000.00, presupuesto: 0.00 },
+            // Ingresos por Obra
+            1: { real: 13800000.00, presupuesto: 13000000.00 },
+            2: { real: 6200000.00, presupuesto: 5800000.00 },
+            3: { real: 4100000.00, presupuesto: 3800000.00 },
+            4: { real: 3500000.00, presupuesto: 3400000.00 },
+            5: { real: 0.00, presupuesto: 0.00 },
+            
+            // Costo Directo de Construcción
+            6: { real: 4680000.00, presupuesto: 4400000.00 },
+            7: { real: 3120000.00, presupuesto: 2950000.00 },
+            8: { real: 1820000.00, presupuesto: 1650000.00 },
+            9: { real: 1080000.00, presupuesto: 980000.00 },
+            10: { real: 720000.00, presupuesto: 650000.00 },
+            11: { real: 520000.00, presupuesto: 450000.00 },
+            12: { real: 140000.00, presupuesto: 120000.00 },
+            
+            // Utilidad Bruta
+            13: { real: 9120000.00, presupuesto: 8600000.00 },
+            
+            // Costos Indirectos de Obra
+            14: { real: 1380000.00, presupuesto: 1300000.00 },
+            15: { real: 420000.00, presupuesto: 380000.00 },
+            16: { real: 250000.00, presupuesto: 220000.00 },
+            17: { real: 165000.00, presupuesto: 150000.00 },
+            18: { real: 105000.00, presupuesto: 95000.00 },
+            19: { real: 520000.00, presupuesto: 450000.00 },
+            20: { real: 320000.00, presupuesto: 280000.00 },
+            21: { real: 140000.00, presupuesto: 120000.00 },
+            22: { real: 0.00, presupuesto: 0.00 },
+            
+            // Gastos Generales
+            23: { real: 2320000.00, presupuesto: 2150000.00 },
+            24: { real: 720000.00, presupuesto: 680000.00 },
+            25: { real: 350000.00, presupuesto: 320000.00 },
+            26: { real: 195000.00, presupuesto: 185000.00 },
+            27: { real: 580000.00, presupuesto: 520000.00 },
+            28: { real: 420000.00, presupuesto: 380000.00 },
+            29: { real: 105000.00, presupuesto: 95000.00 },
             30: { real: 0.00, presupuesto: 0.00 },
-            31: { real: 0.00, presupuesto: 0.00 },
-            // Depreciación
-            32: { real: 0.00, presupuesto: 0.00 },
-            33: { real: 0.00, presupuesto: 0.00 },
-            // Gastos De Administracion
-            34: { real: 130000.00, presupuesto: 0.00 },
-            35: { real: 0.00, presupuesto: 0.00 },
-            36: { real: 130000.00, presupuesto: 0.00 },
-            37: { real: 0.00, presupuesto: 0.00 },
-            38: { real: 0.00, presupuesto: 0.00 },
-            39: { real: 0.00, presupuesto: 0.00 },
-            40: { real: 0.00, presupuesto: 0.00 },
-            41: { real: 0.00, presupuesto: 0.00 },
-            42: { real: 0.00, presupuesto: 0.00 },
-            // Gastos De Transportacion
-            43: { real: 880.00, presupuesto: 0.00 },
-            44: { real: 0.00, presupuesto: 0.00 },
-            45: { real: 0.00, presupuesto: 0.00 },
-            46: { real: 880.00, presupuesto: 0.00 },
-            47: { real: 0.00, presupuesto: 0.00 },
-            48: { real: 0.00, presupuesto: 0.00 },
-            49: { real: 0.00, presupuesto: 0.00 },
-            50: { real: 0.00, presupuesto: 0.00 },
-            // Gastos Estados Resultados Default
-            51: { real: 0.00, presupuesto: 0.00 },
-            52: { real: 0.00, presupuesto: 0.00 },
+            31: { real: 450000.00, presupuesto: 420000.00 },
+            32: { real: 150000.00, presupuesto: 120000.00 },
+            
+            // Utilidad de Operación
+            33: { real: 5420000.00, presupuesto: 5150000.00 },
+            
             // Gastos Financieros
-            53: { real: 0.00, presupuesto: 0.00 },
-            54: { real: 0.00, presupuesto: 0.00 },
-            55: { real: 0.00, presupuesto: 0.00 },
-            56: { real: 0.00, presupuesto: 0.00 },
-            // Utilidad O Perdida
-            57: { real: -202000.00, presupuesto: 0.00 },
-            // Ebitda
-            58: { real: -202000.00, presupuesto: 0.00 }
+            34: { real: 380000.00, presupuesto: 320000.00 },
+            35: { real: 160000.00, presupuesto: 150000.00 },
+            36: { real: 220000.00, presupuesto: 170000.00 },
+            
+            // Utilidad Antes de Impuestos
+            37: { real: 5040000.00, presupuesto: 4830000.00 },
+            
+            // EBITDA
+            38: { real: 5800000.00, presupuesto: 5470000.00 },
+            
+            // Impuestos
+            39: { real: 1512000.00, presupuesto: 1449000.00 },
+            40: { real: 1512000.00, presupuesto: 1449000.00 },
+            
+            // Utilidad Neta
+            41: { real: 3528000.00, presupuesto: 3381000.00 }
         };
 
-        // Estructura de conceptos (igual que antes)
+        // Estructura de conceptos para Constructora (expanden/contraen)
         const datosEstadoResultados = [
             {
                 id: 1,
-                concepto: 'Ingresos Netos',
+                concepto: 'Ingresos por Obra',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: [
-                    { id: 2, concepto: 'Unidad De Negocio Prueba', esEncabezado: false, nivel: 1 },
-                    { id: 3, concepto: 'Prueba Soporte', esEncabezado: false, nivel: 1 },
-                    { id: 4, concepto: 'Refrigerados', esEncabezado: false, nivel: 1 },
-                    { id: 5, concepto: 'Foraneo', esEncabezado: false, nivel: 1 },
-                    { id: 6, concepto: 'Almacenamiento Y Distribucion', esEncabezado: false, nivel: 1 },
-                    { id: 7, concepto: 'Foraneos Laredo', esEncabezado: false, nivel: 1 },
-                    { id: 8, concepto: '123', esEncabezado: false, nivel: 1 },
-                    { id: 9, concepto: 'Exportacion', esEncabezado: false, nivel: 1 },
-                    { id: 10, concepto: 'Un Bajio', esEncabezado: false, nivel: 1 },
-                    { id: 11, concepto: 'Local', esEncabezado: false, nivel: 1 },
-                    { id: 12, concepto: 'Regional', esEncabezado: false, nivel: 1 },
-                    { id: 13, concepto: 'Otros Costos De Operacion', esEncabezado: false, nivel: 1 }
+                    { id: 2, concepto: 'Torre Norte Corporativa', esEncabezado: false, nivel: 1 },
+                    { id: 3, concepto: 'Hospital Regional', esEncabezado: false, nivel: 1 },
+                    { id: 4, concepto: 'Parque Industrial Norte', esEncabezado: false, nivel: 1 },
+                    { id: 5, concepto: 'Puente Vehicular Sur', esEncabezado: false, nivel: 1 }
                 ]
             },
             {
-                id: 14,
-                concepto: 'Costo Directo De Operación (liquidaciones Cerradas)',
+                id: 6,
+                concepto: 'Costo Directo de Construcción',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: [
-                    { id: 15, concepto: 'Diesel', esEncabezado: false, nivel: 1 },
-                    { id: 16, concepto: 'Adicionales', esEncabezado: false, nivel: 1 },
-                    { id: 17, concepto: 'Gastos De Viaje Operadores', esEncabezado: false, nivel: 1 },
-                    { id: 18, concepto: 'Urea', esEncabezado: false, nivel: 1 },
-                    { id: 19, concepto: 'Casetas', esEncabezado: false, nivel: 1 },
-                    { id: 20, concepto: 'Sueldos Operadores', esEncabezado: false, nivel: 1 }
+                    { id: 7, concepto: 'Materiales', esEncabezado: false, nivel: 1 },
+                    { id: 8, concepto: 'Mano de Obra Directa', esEncabezado: false, nivel: 1 },
+                    { id: 9, concepto: 'Maquinaria y Equipo', esEncabezado: false, nivel: 1 },
+                    { id: 10, concepto: 'Subcontratos Especializados', esEncabezado: false, nivel: 1 },
+                    { id: 11, concepto: 'Herramienta Menor', esEncabezado: false, nivel: 1 },
+                    { id: 12, concepto: 'Otros Costos Directos', esEncabezado: false, nivel: 1 }
                 ]
             },
             {
-                id: 21,
-                concepto: 'Utilidad Antes De Indirectos',
+                id: 13,
+                concepto: 'Utilidad Bruta',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: []
             },
             {
-                id: 22,
-                concepto: 'Costo Indirecto De Mantenimiento',
+                id: 14,
+                concepto: 'Costos Indirectos de Obra',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: [
-                    { id: 23, concepto: 'Mantenimiento Correctivo', esEncabezado: false, nivel: 1 },
-                    { id: 24, concepto: 'Talleres Externos', esEncabezado: false, nivel: 1 },
-                    { id: 25, concepto: 'Sueldos Mtto.', esEncabezado: false, nivel: 1 },
-                    { id: 26, concepto: 'Otros Gastos Mtto.', esEncabezado: false, nivel: 1 },
-                    { id: 27, concepto: 'Llantas', esEncabezado: false, nivel: 1 },
-                    { id: 28, concepto: 'Gasolina Y Mtto. Utilitarios', esEncabezado: false, nivel: 1 },
-                    { id: 29, concepto: 'Mantenimiento Preventivo', esEncabezado: false, nivel: 1 },
-                    { id: 30, concepto: 'Cuotas Patronales Mtto.', esEncabezado: false, nivel: 1 },
-                    { id: 31, concepto: 'Siniestros', esEncabezado: false, nivel: 1 }
+                    { id: 15, concepto: 'Residente de Obra', esEncabezado: false, nivel: 1 },
+                    { id: 16, concepto: 'Supervisión Técnica', esEncabezado: false, nivel: 1 },
+                    { id: 17, concepto: 'Topografía', esEncabezado: false, nivel: 1 },
+                    { id: 18, concepto: 'Control de Calidad', esEncabezado: false, nivel: 1 },
+                    { id: 19, concepto: 'Seguridad e Higiene', esEncabezado: false, nivel: 1 },
+                    { id: 20, concepto: 'Renta de Oficinas de Obra', esEncabezado: false, nivel: 1 },
+                    { id: 21, concepto: 'Vigilancia', esEncabezado: false, nivel: 1 },
+                    { id: 22, concepto: 'Otros Indirectos', esEncabezado: false, nivel: 1 }
                 ]
             },
             {
-                id: 32,
-                concepto: 'Depreciación',
+                id: 23,
+                concepto: 'Gastos Generales',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: [
-                    { id: 33, concepto: 'Depreciación', esEncabezado: false, nivel: 1 }
+                    { id: 24, concepto: 'Sueldos Administrativos', esEncabezado: false, nivel: 1 },
+                    { id: 25, concepto: 'Renta de Oficinas Centrales', esEncabezado: false, nivel: 1 },
+                    { id: 26, concepto: 'Servicios (Luz, Agua, Internet)', esEncabezado: false, nivel: 1 },
+                    { id: 27, concepto: 'Honorarios Profesionales', esEncabezado: false, nivel: 1 },
+                    { id: 28, concepto: 'Papelería y Útiles', esEncabezado: false, nivel: 1 },
+                    { id: 29, concepto: 'Capacitación', esEncabezado: false, nivel: 1 },
+                    { id: 30, concepto: 'Gastos de Viaje', esEncabezado: false, nivel: 1 },
+                    { id: 31, concepto: 'Mantenimiento de Oficinas', esEncabezado: false, nivel: 1 },
+                    { id: 32, concepto: 'Otros Gastos Generales', esEncabezado: false, nivel: 1 }
                 ]
+            },
+            {
+                id: 33,
+                concepto: 'Utilidad de Operación',
+                esEncabezado: true,
+                nivel: 0,
+                subconceptos: []
             },
             {
                 id: 34,
-                concepto: 'Gastos De Administracion',
-                esEncabezado: true,
-                nivel: 0,
-                subconceptos: [
-                    { id: 35, concepto: 'Gastos De Viaje', esEncabezado: false, nivel: 1 },
-                    { id: 36, concepto: 'Otros Gastos Admon.', esEncabezado: false, nivel: 1 },
-                    { id: 37, concepto: 'Renta Y Vigilancia', esEncabezado: false, nivel: 1 },
-                    { id: 38, concepto: 'Cuotas Patronales Admon.', esEncabezado: false, nivel: 1 },
-                    { id: 39, concepto: 'Sistemas Y Mtto. Computo', esEncabezado: false, nivel: 1 },
-                    { id: 40, concepto: 'Servicios', esEncabezado: false, nivel: 1 },
-                    { id: 41, concepto: 'Gasolina Y Mtto. Utilitarios', esEncabezado: false, nivel: 1 },
-                    { id: 42, concepto: 'Sueldos', esEncabezado: false, nivel: 1 }
-                ]
-            },
-            {
-                id: 43,
-                concepto: 'Gastos De Transportacion',
-                esEncabezado: true,
-                nivel: 0,
-                subconceptos: [
-                    { id: 44, concepto: 'Costo Exportación', esEncabezado: false, nivel: 1 },
-                    { id: 45, concepto: 'Deducibles Siniestros', esEncabezado: false, nivel: 1 },
-                    { id: 46, concepto: 'Indirectos Operadores', esEncabezado: false, nivel: 1 },
-                    { id: 47, concepto: 'Seguros', esEncabezado: false, nivel: 1 },
-                    { id: 48, concepto: 'Rastreo Satelital Y Monitoreo', esEncabezado: false, nivel: 1 },
-                    { id: 49, concepto: 'Multas', esEncabezado: false, nivel: 1 },
-                    { id: 50, concepto: 'Otros Gastos Transportación', esEncabezado: false, nivel: 1 }
-                ]
-            },
-            {
-                id: 51,
-                concepto: 'Gastos Estados Resultados Default',
-                esEncabezado: true,
-                nivel: 0,
-                subconceptos: [
-                    { id: 52, concepto: 'Gastos Estados Resultados Default', esEncabezado: false, nivel: 1 }
-                ]
-            },
-            {
-                id: 53,
                 concepto: 'Gastos Financieros',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: [
-                    { id: 54, concepto: 'Arrendamiento', esEncabezado: false, nivel: 1 },
-                    { id: 55, concepto: 'Utilidad O Perdida Cambiaria', esEncabezado: false, nivel: 1 },
-                    { id: 56, concepto: 'Intereses Por Financiamiento', esEncabezado: false, nivel: 1 }
+                    { id: 35, concepto: 'Intereses Bancarios', esEncabezado: false, nivel: 1 },
+                    { id: 36, concepto: 'Comisiones', esEncabezado: false, nivel: 1 }
                 ]
             },
             {
-                id: 57,
-                concepto: 'Utilidad O Perdida',
+                id: 37,
+                concepto: 'Utilidad Antes de Impuestos',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: []
             },
             {
-                id: 58,
-                concepto: 'Ebitda',
+                id: 38,
+                concepto: 'EBITDA',
+                esEncabezado: true,
+                nivel: 0,
+                subconceptos: []
+            },
+            {
+                id: 39,
+                concepto: 'Impuestos',
+                esEncabezado: true,
+                nivel: 0,
+                subconceptos: [
+                    { id: 40, concepto: 'ISR', esEncabezado: false, nivel: 1 }
+                ]
+            },
+            {
+                id: 41,
+                concepto: 'Utilidad Neta',
                 esEncabezado: true,
                 nivel: 0,
                 subconceptos: []
@@ -476,7 +441,7 @@
             return (valor / base) * 100;
         }
 
-        // Estado de expansión de encabezados
+        // Estado de expansión de encabezados - TODOS CONTRAÍDOS POR DEFECTO
         let expandedHeaders = new Set();
 
         // Función para alternar expansión de encabezado
@@ -511,8 +476,7 @@
             // Variable para calcular totales
             let totalReal = 0;
             let totalPresupuesto = 0;
-            let totalDiferencia = 0;
-            let baseReal = valoresConceptos[1]?.real || 0; // Ingresos Netos como base para %
+            let baseReal = valoresConceptos[1]?.real || 0; // Ingresos por Obra como base para %
 
             datosEstadoResultados.forEach(encabezado => {
                 const valorEnc = valoresConceptos[encabezado.id] || { real: 0, presupuesto: 0 };
@@ -546,9 +510,8 @@
                 `;
 
                 encabezadoRow.addEventListener('click', (e) => {
-                    if (!e.target.classList.contains('fas')) {
-                        toggleExpand(encabezado.id);
-                    }
+                    e.stopPropagation();
+                    toggleExpand(encabezado.id);
                 });
 
                 tablaBody.appendChild(encabezadoRow);
@@ -579,7 +542,7 @@
             });
 
             // Calcular totales
-            totalDiferencia = totalReal - totalPresupuesto;
+            const totalDiferencia = totalReal - totalPresupuesto;
             const porcentajeTotalReal = totalReal !== 0 ? 100 : 0;
             const porcentajeTotalPresupuesto = totalPresupuesto !== 0 ? 100 : 0;
             const porcentajeTotalDiferencia = totalReal !== 0 ? (totalDiferencia / totalReal) * 100 : 0;
@@ -592,7 +555,7 @@
             document.getElementById('totalDiferenciaPorcentaje').textContent = porcentajeTotalDiferencia.toFixed(2) + '%';
         }
 
-        // Cargar datos iniciales (Febrero por defecto)
+        // Cargar datos iniciales (Febrero por defecto) - TODOS CONTRAÍDOS
         cargarTabla();
 
         // Event Listener para cambio de mes
