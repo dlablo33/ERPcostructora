@@ -12,6 +12,21 @@
             </div>
 
             <div class="card-body p-4">
+                <!-- Selector de registros por página -->
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label style="font-size: 13px; color: #6c757d;">Mostrar:</label>
+                        <select id="perPage" style="padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 13px;" onchange="cambiarRegistrosPorPagina()">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span style="font-size: 13px; color: #6c757d;">registros por página</span>
+                    </div>
+                </div>
+
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <!-- Grupo de agrupación -->
@@ -36,7 +51,8 @@
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);">
+                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);"
+                                    onclick="exportarAreasExcel()">
                                 <i class="fas fa-file-excel" style="color: var(--color-primary);"></i>
                                 <span class="hide-mobile">Excel</span>
                             </button>
@@ -82,145 +98,26 @@
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-001</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Dirección General</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Responsable de la estrategia y dirección de la empresa</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-001')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-002</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Administración</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Gestión administrativa, recursos y servicios generales</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-002')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-003</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Contabilidad</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Registro contable, declaraciones fiscales y finanzas</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-003')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-004</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Recursos Humanos</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Gestión de personal, nómina, reclutamiento y desarrollo</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-004')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-005</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Operaciones</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Supervisión de obras, logística y ejecución de proyectos</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-005')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-006</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Proyectos</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Planificación, seguimiento y control de proyectos</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-006')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-007</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Compras</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Adquisición de materiales, insumos y contratación de servicios</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-007')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-008</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Almacén</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Control de inventarios, recepción y despacho de materiales</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-008')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-009</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Mantenimiento</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Mantenimiento de maquinaria, equipos e instalaciones</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-009')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-010</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Seguridad e Higiene</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Supervisión de medidas de seguridad, higiene y protección civil</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-010')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-011</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Sistemas</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Soporte técnico, desarrollo de sistemas y administración de redes</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-011')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">AR-012</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">Calidad</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Control de calidad en procesos y materiales</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">—</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle del área')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea('AR-012')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar área?')) alert('Área eliminada')" title="Eliminar"></i>
-                                </td>
-                            </tr>
+                            <!-- Los datos se cargarán vía API -->
                         </tbody>
-                        <tfoot style="background-color: #e9ecef; font-weight: bold;">
-                            <tr>
-                                <td colspan="5" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">Total Áreas: 12</td>
-                            </tr>
-                        </tfoot>
                     </table>
+                </div>
+                
+                <!-- Paginación -->
+                <div id="paginacion" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px; background-color: white; border: 1px solid #dee2e6; border-radius: 4px;">
+                    <div style="font-size: 13px; color: #6c757d;">
+                        Mostrando <span id="desde">0</span> a <span id="hasta">0</span> de <span id="total">0</span> registros
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button id="prevPage" style="padding: 6px 12px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; font-size: 13px;" onclick="cambiarPagina('prev')" disabled>Anterior</button>
+                        <span id="paginaActual" style="padding: 6px 12px; background-color: var(--color-primary); color: white; border-radius: 4px; font-size: 13px;">1</span>
+                        <button id="nextPage" style="padding: 6px 12px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; font-size: 13px;" onclick="cambiarPagina('next')">Siguiente</button>
+                    </div>
+                </div>
+                
+                <!-- Total de Áreas -->
+                <div style="margin-top: 15px; display: flex; justify-content: flex-start; padding: 10px; background-color: #e9ecef; border-radius: 4px; font-size: 13px; font-weight: bold;">
+                    <span>Total Áreas: <span id="totalAreas" style="color: var(--color-primary);">0</span></span>
                 </div>
                 
                 <!-- Crear filtro -->
@@ -246,34 +143,50 @@
         
         <!-- Formulario -->
         <div style="padding: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Folio</label>
-                    <input type="text" id="modalFolioArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="AR-013">
+            <form id="formArea" onsubmit="event.preventDefault(); guardarArea();">
+                @csrf
+                <input type="hidden" id="modalAreaId" value="">
+                
+                <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Folio</label>
+                        <input type="text" id="modalFolioArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Ej: AR-013" required>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Área</label>
+                        <input type="text" id="modalNombreArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Nombre del área" required>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Descripción</label>
+                        <textarea id="modalDescripcionArea" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Descripción del área y sus funciones..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Cuenta Contable</label>
+                        <input type="text" id="modalCuentaArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="(Opcional)">
+                        <small style="display: block; font-size: 11px; color: #6c757d; margin-top: 3px;">Puedes dejarlo vacío</small>
+                    </div>
                 </div>
                 
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Área</label>
-                    <input type="text" id="modalNombreArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Nombre del área">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="cerrarModalArea()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
                 </div>
-                
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Descripción</label>
-                    <textarea id="modalDescripcionArea" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Descripción del área y sus funciones..."></textarea>
-                </div>
-                
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="(Opcional)">
-                    <small style="display: block; font-size: 11px; color: #6c757d; margin-top: 3px;">Puedes dejarlo vacío</small>
-                </div>
-            </div>
-            
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                <button onclick="cerrarModalArea()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="guardarArea()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
-            </div>
+            </form>
         </div>
+    </div>
+</div>
+
+<!-- Notificación personalizada -->
+<div id="notification" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000000; min-width: 300px; max-width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: slideInRight 0.3s ease; overflow: hidden;">
+    <div id="notificationHeader" style="padding: 15px 20px; font-weight: bold; display: flex; align-items: center; gap: 10px;">
+        <i id="notificationIcon" class="fas"></i>
+        <span id="notificationTitle"></span>
+    </div>
+    <div id="notificationBody" style="padding: 15px 20px; border-top: 1px solid #eee;">
+        <span id="notificationMessage"></span>
     </div>
 </div>
 
@@ -422,6 +335,17 @@
         }
     }
     
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
         .hide-mobile {
@@ -448,6 +372,13 @@
             max-height: 100vh;
             border-radius: 0;
         }
+        
+        #notification {
+            min-width: auto;
+            max-width: 90%;
+            right: 5%;
+            left: 5%;
+        }
     }
 </style>
 
@@ -456,53 +387,316 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Variables para agrupación
     let columnasAgrupadas = [];
     
-    // Función para abrir modal de nueva área
-    window.abrirModalArea = function() {
-        document.getElementById('modalTituloArea').textContent = 'Nueva Área';
-        document.getElementById('modalFolioArea').value = '';
-        document.getElementById('modalNombreArea').value = '';
-        document.getElementById('modalDescripcionArea').value = '';
-        document.getElementById('modalCuentaArea').value = '';
-        document.getElementById('modalArea').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+    // Variables de paginación
+    let paginaActual = 1;
+    let registrosPorPagina = 10;
+    let totalRegistros = 0;
+    let datos = [];
+    let datosAgrupados = [];
+    let modoAgrupado = false;
+    
+    // Cargar datos iniciales
+    cargarDatos();
+    
+    // Función para cambiar número de registros por página
+    window.cambiarRegistrosPorPagina = function() {
+        const perPage = document.getElementById('perPage').value;
+        registrosPorPagina = parseInt(perPage);
+        paginaActual = 1;
+        renderizarTabla();
+        actualizarPaginacion();
     };
     
-    // Función para editar área
-    window.editarArea = function(folio) {
-        document.getElementById('modalTituloArea').textContent = 'Editar Área - ' + folio;
+    // Funciones de paginación
+    window.cambiarPagina = function(direccion) {
+        if (direccion === 'prev' && paginaActual > 1) {
+            paginaActual--;
+        } else if (direccion === 'next' && paginaActual < Math.ceil(totalRegistros / registrosPorPagina)) {
+            paginaActual++;
+        }
+        renderizarTabla();
+        actualizarPaginacion();
+    };
+    
+    function actualizarPaginacion() {
+        const totalPaginas = Math.ceil(totalRegistros / registrosPorPagina);
+        const desde = totalRegistros === 0 ? 0 : (paginaActual - 1) * registrosPorPagina + 1;
+        const hasta = Math.min(paginaActual * registrosPorPagina, totalRegistros);
         
-        // Simular carga de datos según el folio
-        if (folio === 'AR-001') {
-            document.getElementById('modalFolioArea').value = 'AR-001';
-            document.getElementById('modalNombreArea').value = 'Dirección General';
-            document.getElementById('modalDescripcionArea').value = 'Responsable de la estrategia y dirección de la empresa';
-            document.getElementById('modalCuentaArea').value = '';
-        } else if (folio === 'AR-002') {
-            document.getElementById('modalFolioArea').value = 'AR-002';
-            document.getElementById('modalNombreArea').value = 'Administración';
-            document.getElementById('modalDescripcionArea').value = 'Gestión administrativa, recursos y servicios generales';
-            document.getElementById('modalCuentaArea').value = '';
-        } else if (folio === 'AR-003') {
-            document.getElementById('modalFolioArea').value = 'AR-003';
-            document.getElementById('modalNombreArea').value = 'Contabilidad';
-            document.getElementById('modalDescripcionArea').value = 'Registro contable, declaraciones fiscales y finanzas';
-            document.getElementById('modalCuentaArea').value = '';
-        } else if (folio === 'AR-004') {
-            document.getElementById('modalFolioArea').value = 'AR-004';
-            document.getElementById('modalNombreArea').value = 'Recursos Humanos';
-            document.getElementById('modalDescripcionArea').value = 'Gestión de personal, nómina, reclutamiento y desarrollo';
-            document.getElementById('modalCuentaArea').value = '';
+        document.getElementById('desde').textContent = desde;
+        document.getElementById('hasta').textContent = hasta;
+        document.getElementById('total').textContent = totalRegistros;
+        document.getElementById('paginaActual').textContent = paginaActual;
+        
+        document.getElementById('prevPage').disabled = paginaActual === 1;
+        document.getElementById('nextPage').disabled = paginaActual === totalPaginas || totalPaginas === 0;
+    }
+    
+    // Función para mostrar notificaciones
+    function mostrarNotificacion(tipo, mensaje) {
+        const notification = document.getElementById('notification');
+        const header = document.getElementById('notificationHeader');
+        const icon = document.getElementById('notificationIcon');
+        const title = document.getElementById('notificationTitle');
+        const body = document.getElementById('notificationMessage');
+        
+        if (tipo === 'success') {
+            header.style.backgroundColor = '#28a745';
+            header.style.color = 'white';
+            icon.className = 'fas fa-check-circle';
+            title.textContent = 'Éxito';
+        } else if (tipo === 'error') {
+            header.style.backgroundColor = '#dc3545';
+            header.style.color = 'white';
+            icon.className = 'fas fa-times-circle';
+            title.textContent = 'Error';
+        } else if (tipo === 'warning') {
+            header.style.backgroundColor = '#ffc107';
+            header.style.color = '#212529';
+            icon.className = 'fas fa-exclamation-triangle';
+            title.textContent = 'Advertencia';
         } else {
-            document.getElementById('modalFolioArea').value = folio;
-            document.getElementById('modalNombreArea').value = 'Área de ejemplo';
-            document.getElementById('modalDescripcionArea').value = 'Descripción del área';
-            document.getElementById('modalCuentaArea').value = '';
+            header.style.backgroundColor = '#17a2b8';
+            header.style.color = 'white';
+            icon.className = 'fas fa-info-circle';
+            title.textContent = 'Información';
         }
         
-        document.getElementById('modalArea').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        body.textContent = mensaje;
+        notification.style.display = 'block';
+        
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+    
+    // Función para cargar datos desde la API
+    function cargarDatos() {
+        fetch('/api/areas', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                datos = data.data.areas || [];
+                totalRegistros = datos.length;
+                document.getElementById('totalAreas').textContent = totalRegistros;
+                renderizarTabla();
+                actualizarPaginacion();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarNotificacion('error', 'Error al cargar los datos');
+        });
+    }
+    
+    // Función para agrupar datos
+    function agruparDatos(columna) {
+        const grupos = {};
+        
+        datos.forEach(item => {
+            let valor = item[columna];
+            if (!valor) valor = 'Sin especificar';
+            
+            if (!grupos[valor]) {
+                grupos[valor] = [];
+            }
+            grupos[valor].push(item);
+        });
+        
+        const resultado = [];
+        for (const [valor, items] of Object.entries(grupos)) {
+            resultado.push({
+                valor: valor,
+                items: items,
+                count: items.length
+            });
+        }
+        
+        return resultado;
+    }
+    
+    function renderizarTabla() {
+        const tbody = document.getElementById('tablaBody');
+        
+        // Determinar qué datos mostrar
+        let datosAMostrar = datos;
+        
+        if (columnasAgrupadas.length > 0) {
+            const columna = columnasAgrupadas[0];
+            datosAgrupados = agruparDatos(columna);
+            datosAMostrar = datosAgrupados;
+            modoAgrupado = true;
+            totalRegistros = datosAgrupados.length;
+        } else {
+            modoAgrupado = false;
+            totalRegistros = datos.length;
+        }
+        
+        const inicio = (paginaActual - 1) * registrosPorPagina;
+        const fin = inicio + registrosPorPagina;
+        const paginaActualDatos = datosAMostrar.slice(inicio, fin);
+        
+        if (!paginaActualDatos || paginaActualDatos.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="padding: 30px; text-align: center; color: #6c757d;">
+                        <i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                        No hay áreas registradas
+                    </td>
+                </tr>
+            `;
+            actualizarPaginacion();
+            return;
+        }
+        
+        let html = '';
+        
+        if (modoAgrupado) {
+            // Renderizar vista agrupada
+            paginaActualDatos.forEach((grupo, index) => {
+                const bgColor = (inicio + index) % 2 === 1 ? 'style="background-color: #f8f9fa;"' : '';
+                
+                html += `
+                    <tr ${bgColor} style="background-color: #e3f2fd; font-weight: bold;">
+                        <td colspan="5" style="padding: 10px 8px; border: 1px solid #dee2e6;">
+                            <i class="fas fa-folder-open" style="color: var(--color-primary); margin-right: 8px;"></i>
+                            ${columnasAgrupadas[0]}: ${grupo.valor} (${grupo.count} registros)
+                        </td>
+                    </tr>
+                `;
+                
+                grupo.items.forEach(item => {
+                    html += `
+                        <tr>
+                            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; padding-left: 30px;">${item.folio}</td>
+                            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.nombre}</td>
+                            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.descripcion || ''}</td>
+                            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.cuenta_contable || '—'}</td>
+                            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
+                                <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verArea(${item.id})" title="Ver detalle"></i>
+                                <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea(${item.id})" title="Editar"></i>
+                                <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="eliminarArea(${item.id})" title="Eliminar"></i>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        } else {
+            // Renderizar vista normal
+            paginaActualDatos.forEach((area, index) => {
+                const bgColor = (inicio + index) % 2 === 1 ? 'style="background-color: #f8f9fa;"' : '';
+                
+                html += `
+                    <tr ${bgColor}>
+                        <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${area.folio}</td>
+                        <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${area.nombre}</td>
+                        <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${area.descripcion || ''}</td>
+                        <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${area.cuenta_contable || '—'}</td>
+                        <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
+                            <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verArea(${area.id})" title="Ver detalle"></i>
+                            <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArea(${area.id})" title="Editar"></i>
+                            <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="eliminarArea(${area.id})" title="Eliminar"></i>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        tbody.innerHTML = html;
+        aplicarVisibilidadColumnas();
+        actualizarPaginacion();
+    }
+    
+    function aplicarVisibilidadColumnas() {
+        const checkboxes = document.querySelectorAll('#columnasLista input[type="checkbox"]');
+        const indices = {
+            folio: 0,
+            area: 1,
+            descripcion: 2,
+            cuenta_contable: 3
+        };
+        
+        checkboxes.forEach(checkbox => {
+            const columna = checkbox.dataset.columna;
+            const index = indices[columna];
+            const celdas = document.querySelectorAll(`#tablaAreas td:nth-child(${index + 1}), #tablaAreas th:nth-child(${index + 1})`);
+            
+            celdas.forEach(celda => {
+                celda.style.display = checkbox.checked ? '' : 'none';
+            });
+        });
+    }
+    
+    // Funciones para Áreas
+    window.abrirModalArea = function(id = null) {
+        document.getElementById('modalTituloArea').textContent = id ? 'Editar Área' : 'Nueva Área';
+        document.getElementById('modalAreaId').value = id || '';
+        
+        if (id) {
+            fetch(`/api/areas/${id}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar los datos');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('modalFolioArea').value = data.data.folio;
+                    document.getElementById('modalNombreArea').value = data.data.nombre;
+                    document.getElementById('modalDescripcionArea').value = data.data.descripcion || '';
+                    document.getElementById('modalCuentaArea').value = data.data.cuenta_contable || '';
+                    document.getElementById('modalArea').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarNotificacion('error', 'Error al cargar los datos del área');
+            });
+        } else {
+            document.getElementById('modalFolioArea').value = '';
+            document.getElementById('modalNombreArea').value = '';
+            document.getElementById('modalDescripcionArea').value = '';
+            document.getElementById('modalCuentaArea').value = '';
+            document.getElementById('modalArea').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    };
+    
+    window.editarArea = function(id) {
+        abrirModalArea(id);
+    };
+    
+    window.verArea = function(id) {
+        fetch(`/api/areas/${id}`, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Área: ${data.data.nombre}\nFolio: ${data.data.folio}\nDescripción: ${data.data.descripcion}\nCuenta Contable: ${data.data.cuenta_contable || 'N/A'}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarNotificacion('error', 'Error al cargar los datos del área');
+        });
     };
     
     window.cerrarModalArea = function() {
@@ -511,35 +705,124 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     window.guardarArea = function() {
-        const folio = document.getElementById('modalFolioArea').value;
-        const nombre = document.getElementById('modalNombreArea').value;
-        const descripcion = document.getElementById('modalDescripcionArea').value;
-        const cuenta = document.getElementById('modalCuentaArea').value;
+        const id = document.getElementById('modalAreaId').value;
+        const numericId = id ? parseInt(id) : null;
         
-        if (!folio || !nombre || !descripcion) {
-            alert('Por favor complete los campos obligatorios');
+        const data = {
+            folio: document.getElementById('modalFolioArea').value,
+            nombre: document.getElementById('modalNombreArea').value,
+            descripcion: document.getElementById('modalDescripcionArea').value,
+            cuenta_contable: document.getElementById('modalCuentaArea').value
+        };
+
+        const url = numericId ? `/api/areas/${numericId}` : '/api/areas';
+        const method = numericId ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            return response.json().then(data => {
+                if (!response.ok) throw { status: response.status, data: data };
+                return data;
+            });
+        })
+        .then(data => {
+            if (data.success) {
+                mostrarNotificacion('success', data.message || 'Área guardada exitosamente');
+                cerrarModalArea();
+                cargarDatos();
+            } else {
+                if (data.errors) {
+                    const mensajes = Object.values(data.errors).flat().join('\n');
+                    mostrarNotificacion('error', mensajes);
+                } else {
+                    mostrarNotificacion('error', data.message || 'Error al guardar el área');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error completo:', error);
+            if (error.data?.message) mostrarNotificacion('error', error.data.message);
+            else if (error.data?.errors) {
+                const mensajes = Object.values(error.data.errors).flat().join('\n');
+                mostrarNotificacion('error', mensajes);
+            } else {
+                mostrarNotificacion('error', 'Error de conexión al servidor');
+            }
+        });
+    };
+    
+    window.eliminarArea = function(id) {
+        if (!id) {
+            mostrarNotificacion('error', 'ID de área no válido');
             return;
         }
         
-        alert(`Área ${folio} guardada correctamente`);
-        cerrarModalArea();
+        if (confirm('¿Estás seguro de eliminar esta área?')) {
+            const numericId = parseInt(id);
+            
+            fetch(`/api/areas/${numericId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    mostrarNotificacion('success', data.message || 'Área eliminada exitosamente');
+                    cargarDatos();
+                } else {
+                    mostrarNotificacion('error', data.message || 'Error al eliminar el área');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarNotificacion('error', 'Error de conexión al servidor');
+            });
+        }
+    };
+    
+    // Función de exportación
+    window.exportarAreasExcel = function() {
+        fetch('/areas/exportar-excel', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            mostrarNotificacion('info', data.message || 'Exportación en desarrollo');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarNotificacion('error', 'Error al exportar áreas');
+        });
     };
     
     // Cerrar modal con Escape
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            cerrarModalArea();
-        }
+        if (e.key === 'Escape') cerrarModalArea();
     });
     
     // Cerrar modal al hacer clic fuera
     document.getElementById('modalArea').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalArea();
-        }
+        if (e.target === this) cerrarModalArea();
     });
     
-    // Funciones de agrupación y selector de columnas
+    // Funciones de agrupación
     function actualizarGrupoColumnas() {
         const container = document.getElementById('grupoColumnas');
         const texto = document.getElementById('textoAgrupar');
@@ -557,18 +840,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.appendChild(chip);
             });
         }
+        
+        paginaActual = 1;
+        renderizarTabla();
     }
 
     window.removerColumna = function(columna) {
         columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
         actualizarGrupoColumnas();
+        mostrarNotificacion('info', 'Desagrupando por: ' + columna);
     };
 
     // Drag & drop
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'TH' && e.target.draggable) {
+    document.querySelectorAll('[draggable="true"]').forEach(th => {
+        th.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text/plain', e.target.dataset.columna);
-        }
+        });
     });
 
     document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
@@ -579,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (columna && !columnasAgrupadas.includes(columna)) {
             columnasAgrupadas.push(columna);
             actualizarGrupoColumnas();
-            alert('Agrupando por: ' + columna);
+            mostrarNotificacion('info', 'Agrupando por: ' + columna);
         }
     });
 
@@ -603,11 +890,28 @@ document.addEventListener('DOMContentLoaded', function() {
                            id="chk_${col.field}"
                            data-columna="${col.field}"
                            checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
+                           style="margin-right: 8px; accent-color: var(--color-primary);"
+                           onchange="toggleColumna('${col.field}', this.checked)">
                     <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
                 </div>
             `).join('');
         }
+    };
+    
+    window.toggleColumna = function(columna, visible) {
+        const indices = {
+            folio: 0,
+            area: 1,
+            descripcion: 2,
+            cuenta_contable: 3
+        };
+        
+        const index = indices[columna];
+        const celdas = document.querySelectorAll(`#tablaAreas td:nth-child(${index + 1}), #tablaAreas th:nth-child(${index + 1})`);
+        
+        celdas.forEach(celda => {
+            celda.style.display = visible ? '' : 'none';
+        });
     };
 
     window.cerrarColumnSelector = function() {
@@ -621,15 +925,67 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel').addEventListener('click', () => alert('Exportar áreas a Excel'));
+    // Botón Crear filtro
+    document.getElementById('btnCrearFiltro').addEventListener('click', () => {
+        mostrarNotificacion('info', 'Funcionalidad de filtro en desarrollo');
+    });
 
     // Buscador
     document.getElementById('buscador').addEventListener('input', function(e) {
         const termino = e.target.value.toLowerCase();
-        console.log('Buscando en áreas:', termino);
+        const filas = document.querySelectorAll('#tablaBody tr');
+        let visibleCount = 0;
+        
+        filas.forEach(fila => {
+            if (fila.cells && fila.cells.length > 1 && !fila.querySelector('td[colspan]')) {
+                const texto = fila.textContent.toLowerCase();
+                const visible = texto.includes(termino);
+                fila.style.display = visible ? '' : 'none';
+                if (visible) visibleCount++;
+            }
+        });
+        
+        const tbody = document.getElementById('tablaBody');
+        const noResultsRow = document.getElementById('noResults');
+        
+        if (visibleCount === 0 && termino !== '' && !noResultsRow) {
+            const row = document.createElement('tr');
+            row.id = 'noResults';
+            row.innerHTML = '<td colspan="5" style="padding: 20px; text-align: center; color: #6c757d;">No se encontraron áreas que coincidan con la búsqueda</td>';
+            tbody.appendChild(row);
+        } else if (visibleCount > 0 && noResultsRow) {
+            noResultsRow.remove();
+        } else if (termino === '' && noResultsRow) {
+            noResultsRow.remove();
+        }
     });
+
+    // Inicializar selectores de columnas
+    function inicializarSelectoresColumnas() {
+        const columnas = [
+            { field: 'folio', caption: 'Folio' },
+            { field: 'area', caption: 'Área' },
+            { field: 'descripcion', caption: 'Descripción' },
+            { field: 'cuenta_contable', caption: 'Cuenta Contable' }
+        ];
+        
+        const lista = document.getElementById('columnasLista');
+        if (lista && lista.children.length === 0) {
+            lista.innerHTML = columnas.map(col => `
+                <div style="padding: 5px 0; display: flex; align-items: center;">
+                    <input type="checkbox" 
+                           id="chk_${col.field}"
+                           data-columna="${col.field}"
+                           checked
+                           style="margin-right: 8px; accent-color: var(--color-primary);"
+                           onchange="toggleColumna('${col.field}', this.checked)">
+                    <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
+                </div>
+            `).join('');
+        }
+    }
+    
+    inicializarSelectoresColumnas();
 });
 </script>
 @endsection

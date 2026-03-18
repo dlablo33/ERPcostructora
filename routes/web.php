@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\RH\RolController;
+use App\Http\Controllers\RH\PuestoController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -757,5 +760,47 @@ Route::prefix('proyectos')->name('proyectos.')->group(function () {
 
 });
 
+// Rutas web
+Route::resource('roles', RolController::class);
+Route::resource('puestos', PuestoController::class);
+
+// Rutas adicionales
+Route::post('roles/exportar-excel', [RolController::class, 'exportExcel'])->name('roles.export');
+Route::post('puestos/exportar-excel', [PuestoController::class, 'exportExcel'])->name('puestos.export');
+
+// Si son rutas API
+// Rutas API
+Route::prefix('api')->group(function () {
+    // Roles
+    Route::get('roles', [RolController::class, 'index']);
+    Route::post('roles', [RolController::class, 'store']);
+    Route::get('roles/{id}', [RolController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('roles/{id}', [RolController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('roles/{id}', [RolController::class, 'destroy'])->where('id', '[0-9]+');
+    
+    // Puestos (igual)
+    Route::get('puestos', [PuestoController::class, 'index']);
+    Route::post('puestos', [PuestoController::class, 'store']);
+    Route::get('puestos/{id}', [PuestoController::class, 'show'])->where('id', '[0-9]+');
+    Route::put('puestos/{id}', [PuestoController::class, 'update'])->where('id', '[0-9]+');
+    Route::delete('puestos/{id}', [PuestoController::class, 'destroy'])->where('id', '[0-9]+');
+});
+
+
+// Rutas web para Áreas
+Route::resource('areas', App\Http\Controllers\RH\AreaController::class);
+
+// Rutas API para Áreas
+Route::prefix('api')->group(function () {
+    Route::get('areas', [App\Http\Controllers\RH\AreaController::class, 'index']);
+    Route::post('areas', [App\Http\Controllers\RH\AreaController::class, 'store']);
+    Route::get('areas/{id}', [App\Http\Controllers\RH\AreaController::class, 'show']);
+    Route::put('areas/{id}', [App\Http\Controllers\RH\AreaController::class, 'update']);
+    Route::delete('areas/{id}', [App\Http\Controllers\RH\AreaController::class, 'destroy']);
+    Route::post('areas/exportar-excel', [App\Http\Controllers\RH\AreaController::class, 'exportExcel']);
+});
+
+// Rutas adicionales
+Route::post('areas/exportar-excel', [App\Http\Controllers\RH\AreaController::class, 'exportExcel'])->name('areas.export');
 
 require __DIR__.'/auth.php';

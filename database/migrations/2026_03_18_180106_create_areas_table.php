@@ -8,12 +8,12 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('areas', function (Blueprint $table) {
             $table->id();
             $table->string('folio')->unique();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
-            $table->enum('estatus', ['Activo', 'Inactivo'])->default('Activo');
+            $table->string('cuenta_contable')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -21,6 +21,6 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('areas');
     }
 };
