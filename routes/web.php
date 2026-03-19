@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RH\RolController;
 use App\Http\Controllers\RH\PuestoController;
 
+use App\Http\Controllers\RH\AreaController;
+use App\Http\Controllers\RH\PlantillaController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -800,7 +803,136 @@ Route::prefix('api')->group(function () {
     Route::post('areas/exportar-excel', [App\Http\Controllers\RH\AreaController::class, 'exportExcel']);
 });
 
+// Rutas para exportar Excel de Áreas
+Route::post('areas/exportar-excel', [App\Http\Controllers\RH\AreaController::class, 'exportExcel'])->name('areas.export');
+Route::get('areas/descargar-excel', [App\Http\Controllers\RH\AreaController::class, 'downloadExcel'])->name('areas.download');
+
+// Rutas API
+Route::prefix('api')->group(function () {
+    Route::post('areas/exportar-excel', [App\Http\Controllers\RH\AreaController::class, 'exportExcel']);
+});
+
 // Rutas adicionales
 Route::post('areas/exportar-excel', [App\Http\Controllers\RH\AreaController::class, 'exportExcel'])->name('areas.export');
+
+// Rutas web para Usuarios
+Route::resource('usuarios', App\Http\Controllers\RH\UserController::class);
+
+// Rutas API para Usuarios
+Route::prefix('api')->group(function () {
+    Route::get('usuarios', [App\Http\Controllers\RH\UserController::class, 'index']);
+    Route::post('usuarios', [App\Http\Controllers\RH\UserController::class, 'store']);
+    Route::get('usuarios/{id}', [App\Http\Controllers\RH\UserController::class, 'show']);
+    Route::put('usuarios/{id}', [App\Http\Controllers\RH\UserController::class, 'update']);
+    Route::delete('usuarios/{id}', [App\Http\Controllers\RH\UserController::class, 'destroy']);
+    Route::post('usuarios/{id}/reset-password', [App\Http\Controllers\RH\UserController::class, 'resetPassword']);
+    Route::post('usuarios/exportar-excel', [App\Http\Controllers\RH\UserController::class, 'exportExcel']);
+});
+
+// Rutas adicionales
+Route::post('usuarios/exportar-excel', [App\Http\Controllers\RH\UserController::class, 'exportExcel'])->name('usuarios.export');
+Route::post('usuarios/{id}/reset-password', [App\Http\Controllers\RH\UserController::class, 'resetPassword'])->name('usuarios.reset-password');
+
+// Rutas para exportar Excel
+Route::post('usuarios/exportar-excel', [App\Http\Controllers\RH\UserController::class, 'exportExcel'])->name('usuarios.export');
+Route::get('usuarios/download-excel', [App\Http\Controllers\RH\UserController::class, 'downloadExcel'])->name('usuarios.export.download');
+
+// Rutas API
+Route::prefix('api')->group(function () {
+    Route::post('usuarios/exportar-excel', [App\Http\Controllers\RH\UserController::class, 'exportExcel']);
+});
+
+// Rutas para exportar Excel de Roles
+Route::post('roles/exportar-excel', [App\Http\Controllers\RH\RolController::class, 'exportExcel'])->name('roles.export');
+Route::get('roles/descargar-excel', [App\Http\Controllers\RH\RolController::class, 'downloadExcel'])->name('roles.export.download');
+
+// Rutas para exportar Excel de Puestos
+Route::post('puestos/exportar-excel', [App\Http\Controllers\RH\PuestoController::class, 'exportExcel'])->name('puestos.export');
+Route::get('puestos/descargar-excel', [App\Http\Controllers\RH\PuestoController::class, 'downloadExcel'])->name('puestos.export.download');
+
+// Rutas API
+Route::prefix('api')->group(function () {
+    Route::post('roles/exportar-excel', [App\Http\Controllers\RH\RolController::class, 'exportExcel']);
+    Route::post('puestos/exportar-excel', [App\Http\Controllers\RH\PuestoController::class, 'exportExcel']);
+});
+
+// Rutas web para Plantilla
+Route::resource('plantilla', App\Http\Controllers\RH\PlantillaController::class)->parameters(['plantilla' => 'id']);
+
+// Rutas API para Plantilla
+Route::prefix('api')->group(function () {
+    Route::get('plantilla', [App\Http\Controllers\RH\PlantillaController::class, 'index']);
+    Route::get('plantilla/datagrid', [App\Http\Controllers\RH\PlantillaController::class, 'getDataGrid']);
+    Route::post('plantilla', [App\Http\Controllers\RH\PlantillaController::class, 'store']);
+    Route::get('plantilla/{id}', [App\Http\Controllers\RH\PlantillaController::class, 'show']);
+    Route::put('plantilla/{id}', [App\Http\Controllers\RH\PlantillaController::class, 'update']);
+    Route::delete('plantilla/{id}', [App\Http\Controllers\RH\PlantillaController::class, 'destroy']);
+});
+
+Route::prefix('api')->group(function () {
+    
+    // Ruta para obtener puestos por área (para select dinámicos)
+    Route::get('puestos-por-area', [App\Http\Controllers\RH\PuestoController::class, 'getByArea']);
+    Route::get('puestos-por-area', [App\Http\Controllers\RH\PlantillaController::class, 'getPuestosByArea']);
+});
+
+
+
+// Rutas resource para los módulos principales
+Route::resource('roles', RolController::class);
+Route::resource('puestos', PuestoController::class);
+Route::resource('areas', AreaController::class);
+Route::resource('plantilla', PlantillaController::class)->parameters(['plantilla' => 'id']);
+
+// Rutas adicionales para exportación
+Route::post('roles/exportar-excel', [RolController::class, 'exportExcel'])->name('roles.export');
+Route::post('puestos/exportar-excel', [PuestoController::class, 'exportExcel'])->name('puestos.export');
+Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel'])->name('areas.export');
+Route::post('plantilla/exportar-excel', [PlantillaController::class, 'exportExcel'])->name('plantilla.export');
+
+// Rutas API (para peticiones AJAX)
+Route::prefix('api')->group(function () {
+    // Roles
+    Route::get('roles', [RolController::class, 'index']);
+    Route::post('roles', [RolController::class, 'store']);
+    Route::get('roles/{id}', [RolController::class, 'show']);
+    Route::put('roles/{id}', [RolController::class, 'update']);
+    Route::delete('roles/{id}', [RolController::class, 'destroy']);
+    Route::post('roles/exportar-excel', [RolController::class, 'exportExcel']);
+    
+    // Puestos
+    Route::get('puestos', [PuestoController::class, 'index']);
+    Route::post('puestos', [PuestoController::class, 'store']);
+    Route::get('puestos/{id}', [PuestoController::class, 'show']);
+    Route::put('puestos/{id}', [PuestoController::class, 'update']);
+    Route::delete('puestos/{id}', [PuestoController::class, 'destroy']);
+    Route::post('puestos/exportar-excel', [PuestoController::class, 'exportExcel']);
+    
+    // Áreas
+    Route::get('areas', [AreaController::class, 'index']);
+    Route::post('areas', [AreaController::class, 'store']);
+    Route::get('areas/{id}', [AreaController::class, 'show']);
+    Route::put('areas/{id}', [AreaController::class, 'update']);
+    Route::delete('areas/{id}', [AreaController::class, 'destroy']);
+    Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel']);
+    
+    // Plantilla
+    Route::get('plantilla', [PlantillaController::class, 'index']);
+    Route::get('plantilla/datagrid', [PlantillaController::class, 'getDataGrid']);
+    Route::post('plantilla', [PlantillaController::class, 'store']);
+    Route::get('plantilla/{id}', [PlantillaController::class, 'show']);
+    Route::put('plantilla/{id}', [PlantillaController::class, 'update']);
+    Route::delete('plantilla/{id}', [PlantillaController::class, 'destroy']);
+    Route::post('plantilla/exportar-excel', [PlantillaController::class, 'exportExcel']);
+    
+    // Rutas especiales para selects dinámicos
+    Route::get('puestos-por-area', [PlantillaController::class, 'getPuestosByArea']);
+});
+
+// Rutas para descarga de Excel (get)
+Route::get('roles/descargar-excel', [RolController::class, 'downloadExcel'])->name('roles.export.download');
+Route::get('puestos/descargar-excel', [PuestoController::class, 'downloadExcel'])->name('puestos.export.download');
+Route::get('areas/descargar-excel', [AreaController::class, 'downloadExcel'])->name('areas.export.download');
+Route::get('plantilla/descargar-excel', [PlantillaController::class, 'downloadExcel'])->name('plantilla.export.download');
 
 require __DIR__.'/auth.php';

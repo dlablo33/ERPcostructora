@@ -4,9 +4,13 @@ namespace App\Http\Controllers\RH;
 
 use App\Models\Rol;
 use App\Models\Puesto;
+use App\Models\Area; // IMPORTANTE: Agregar el modelo Area
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RH\RolRequest;
+
+use App\Exports\RolesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RolController extends Controller
 {
@@ -22,15 +26,40 @@ class RolController extends Controller
             $rolesActivos = $roles->where('estatus', 'Activo')->count();
             $rolesInactivos = $roles->where('estatus', 'Inactivo')->count();
 
-            // Obtener puestos
-            $puestos = Puesto::whereNull('deleted_at')->get();
+            // Obtener puestos con sus áreas relacionadas
+            $puestos = Puesto::with('area')
+                            ->whereNull('deleted_at')
+                            ->orderBy('nombre')
+                            ->get();
+            
+            // Formatear puestos para incluir el nombre del área
+            $puestosFormateados = $puestos->map(function($puesto) {
+                return [
+                    'id' => $puesto->id,
+                    'folio' => $puesto->folio,
+                    'nombre' => $puesto->nombre,
+                    'descripcion' => $puesto->descripcion,
+                    'area_id' => $puesto->area_id,
+                    'area_nombre' => $puesto->area ? $puesto->area->nombre : 'Sin área',
+                    'estatus' => $puesto->estatus,
+                    'created_at' => $puesto->created_at,
+                    'updated_at' => $puesto->updated_at
+                ];
+            });
+
             $totalPuestos = $puestos->count();
             $puestosActivos = $puestos->where('estatus', 'Activo')->count();
             $puestosInactivos = $puestos->where('estatus', 'Inactivo')->count();
 
+            // Obtener áreas para el select del modal
+            $areas = Area::whereNull('deleted_at')
+                        ->orderBy('nombre')
+                        ->get(['id', 'nombre', 'folio']);
+
             \Log::info('RolController@index - Datos cargados', [
                 'roles_count' => $roles->count(),
-                'puestos_count' => $puestos->count()
+                'puestos_count' => $puestos->count(),
+                'areas_count' => $areas->count()
             ]);
 
             // Si es petición API
@@ -42,10 +71,11 @@ class RolController extends Controller
                         'totalRoles' => $totalRoles,
                         'rolesActivos' => $rolesActivos,
                         'rolesInactivos' => $rolesInactivos,
-                        'puestos' => $puestos,
+                        'puestos' => $puestosFormateados,
                         'totalPuestos' => $totalPuestos,
                         'puestosActivos' => $puestosActivos,
-                        'puestosInactivos' => $puestosInactivos
+                        'puestosInactivos' => $puestosInactivos,
+                        'areas' => $areas // Enviar áreas para el select
                     ]
                 ]);
             }
@@ -59,7 +89,8 @@ class RolController extends Controller
                 'puestos',
                 'totalPuestos',
                 'puestosActivos',
-                'puestosInactivos'
+                'puestosInactivos',
+                'areas' // Pasar áreas a la vista
             ));
 
         } catch (\Exception $e) {
@@ -351,21 +382,23 @@ class RolController extends Controller
     public function exportExcel(Request $request)
     {
         try {
-            $roles = Rol::whereNull('deleted_at')
-                       ->buscar($request->buscar)
-                       ->get();
+            $buscar = $request->buscar;
             
-            \Log::info('Exportando roles a Excel, total: ' . $roles->count());
-
+            \Log::info('Exportando roles a Excel', ['buscar' => $buscar]);
+            
+            $nombreArchivo = 'roles_' . date('Y-m-d_His') . '.xlsx';
+            
+            // Para peticiones API, devolver JSON
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Exportación en desarrollo',
-                    'data' => $roles
+                    'message' => 'Exportación completada',
+                    'download_url' => route('roles.export.download', ['buscar' => $buscar])
                 ]);
             }
-
-            return back()->with('info', 'Exportación en desarrollo');
+            
+            // Para peticiones web, devolver el archivo directamente
+            return Excel::download(new RolesExport($buscar), $nombreArchivo);
             
         } catch (\Exception $e) {
             \Log::error('Error al exportar roles: ' . $e->getMessage());
@@ -378,6 +411,23 @@ class RolController extends Controller
             }
 
             return back()->with('error', 'Error al exportar: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download Excel file for Roles
+     */
+    public function downloadExcel(Request $request)
+    {
+        try {
+            $buscar = $request->buscar;
+            $nombreArchivo = 'roles_' . date('Y-m-d_His') . '.xlsx';
+            
+            return Excel::download(new RolesExport($buscar), $nombreArchivo);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error al descargar Excel: ' . $e->getMessage());
+            return back()->with('error', 'Error al descargar: ' . $e->getMessage());
         }
     }
 }

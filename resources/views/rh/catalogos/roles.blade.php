@@ -137,7 +137,7 @@
                     </div>
                 </div>
 
-                <!-- Panel de Puestos -->
+                <!-- Panel de Puestos (ACTUALIZADO CON ÁREA) -->
                 <div id="panelPuestos" style="display: none;">
                     <!-- Barra de herramientas para Puestos -->
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
@@ -197,15 +197,16 @@
                         </div>
                     </div>
 
-                    <!-- Tabla de Puestos -->
+                    <!-- Tabla de Puestos (CON COLUMNA DE ÁREA) -->
                     <div class="table-container" style="border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; background-color: white; width: 100%;">
-                        <table class="table" id="tablaPuestos" style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px;">
+                        <table class="table" id="tablaPuestos" style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px;">
                             <thead style="background-color: var(--color-primary);">
                                 <tr>
                                     <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 10%;" draggable="true" data-columna="estatus">Estatus</th>
                                     <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 15%;" draggable="true" data-columna="folio">Folio</th>
-                                    <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 25%;" draggable="true" data-columna="puesto">Puesto</th>
-                                    <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 40%;" draggable="true" data-columna="descripcion">Descripción</th>
+                                    <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 20%;" draggable="true" data-columna="puesto">Puesto</th>
+                                    <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 15%;" draggable="true" data-columna="area">Área</th>
+                                    <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 30%;" draggable="true" data-columna="descripcion">Descripción</th>
                                     <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; position: sticky; right: 0; z-index: 35; box-shadow: -2px 0 5px rgba(0,0,0,0.1); width: 10%;">Acciones</th>
                                 </tr>
                             </thead>
@@ -235,7 +236,7 @@
                     </div>
                 </div>
                 
-                <!-- Crear filtro (visible según pestaña activa) -->
+                <!-- Crear filtro -->
                 <div style="margin-top: 15px; display: flex; justify-content: flex-start;">
                     <button id="btnCrearFiltro" style="background: transparent; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 25px; cursor: pointer; color: var(--color-primary); font-size: 13px; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-filter" style="font-size: 12px;"></i> Crear filtro
@@ -296,7 +297,7 @@
     </div>
 </div>
 
-<!-- MODAL PARA AGREGAR/EDITAR PUESTO -->
+<!-- MODAL PARA AGREGAR/EDITAR PUESTO (CON CAMPO DE ÁREA) -->
 <div id="modalPuesto" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
         
@@ -324,6 +325,14 @@
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Folio</label>
                         <input type="text" id="modalFolioPuesto" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Ej: PUE-001" required>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Área</label>
+                        <select id="modalAreaPuesto" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" required>
+                            <option value="">Seleccionar área</option>
+                            <!-- Las áreas se cargarán vía API -->
+                        </select>
                     </div>
                     
                     <div>
@@ -606,6 +615,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let puestosTotalRegistros = 0;
     let rolesDatos = [];
     let puestosDatos = [];
+    let areas = [];
     
     // Variables para datos agrupados
     let rolesAgrupados = [];
@@ -710,7 +720,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         body.textContent = mensaje;
-        
         notification.style.display = 'block';
         
         setTimeout(() => {
@@ -729,10 +738,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Datos recibidos de API:', data);
+            
             if (data.success) {
                 // Guardar todos los datos
                 rolesDatos = data.data.roles || [];
                 puestosDatos = data.data.puestos || [];
+                areas = data.data.areas || [];
                 
                 // Actualizar totales
                 rolesTotalRegistros = rolesDatos.length;
@@ -750,6 +762,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('puestosActivos').textContent = data.data.puestosActivos || 0;
                 document.getElementById('puestosInactivos').textContent = data.data.puestosInactivos || 0;
                 
+                // Llenar select de áreas
+                llenarSelectAreas();
+                
                 // Renderizar tablas
                 renderizarTablaRoles();
                 renderizarTablaPuestos();
@@ -761,6 +776,17 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error:', error);
             mostrarNotificacion('error', 'Error al cargar los datos');
         });
+    }
+    
+    // Función para llenar select de áreas
+    function llenarSelectAreas() {
+        const selectArea = document.getElementById('modalAreaPuesto');
+        if (selectArea) {
+            selectArea.innerHTML = '<option value="">Seleccionar área</option>';
+            areas.forEach(area => {
+                selectArea.innerHTML += `<option value="${area.id}">${area.nombre}</option>`;
+            });
+        }
     }
     
     // Función para agrupar datos
@@ -777,7 +803,6 @@ document.addEventListener('DOMContentLoaded', function() {
             grupos[valor].push(item);
         });
         
-        // Convertir a array de grupos
         const resultado = [];
         for (const [valor, items] of Object.entries(grupos)) {
             resultado.push({
@@ -798,7 +823,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let esAgrupado = false;
         
         if (columnasAgrupadasRoles.length > 0) {
-            // Usar la primera columna para agrupar
             const columna = columnasAgrupadasRoles[0];
             rolesAgrupados = agruparDatos(rolesDatos, columna);
             datosAMostrar = rolesAgrupados;
@@ -841,7 +865,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </tr>
                 `;
                 
-                grupo.items.forEach((item, itemIndex) => {
+                grupo.items.forEach(item => {
                     const badgeColor = item.estatus === 'Activo' ? '#28a745' : '#ffc107';
                     const badgeTextColor = item.estatus === 'Activo' ? 'white' : '#212529';
                     
@@ -904,7 +928,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let esAgrupado = false;
         
         if (columnasAgrupadasPuestos.length > 0) {
-            // Usar la primera columna para agrupar
             const columna = columnasAgrupadasPuestos[0];
             puestosAgrupados = agruparDatos(puestosDatos, columna);
             datosAMostrar = puestosAgrupados;
@@ -921,7 +944,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!paginaActual || paginaActual.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="padding: 30px; text-align: center; color: #6c757d;">
+                    <td colspan="6" style="padding: 30px; text-align: center; color: #6c757d;">
                         <i class="fas fa-info-circle" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
                         No hay puestos registrados
                     </td>
@@ -940,14 +963,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 html += `
                     <tr ${bgColor} style="background-color: #e3f2fd; font-weight: bold;">
-                        <td colspan="5" style="padding: 10px 8px; border: 1px solid #dee2e6;">
+                        <td colspan="6" style="padding: 10px 8px; border: 1px solid #dee2e6;">
                             <i class="fas fa-folder-open" style="color: var(--color-primary); margin-right: 8px;"></i>
                             ${columnasAgrupadasPuestos[0]}: ${grupo.valor} (${grupo.count} registros)
                         </td>
                     </tr>
                 `;
                 
-                grupo.items.forEach((item, itemIndex) => {
+                grupo.items.forEach(item => {
                     const badgeColor = item.estatus === 'Activo' ? '#28a745' : '#ffc107';
                     const badgeTextColor = item.estatus === 'Activo' ? 'white' : '#212529';
                     
@@ -960,6 +983,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </td>
                             <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.folio}</td>
                             <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">${item.nombre}</td>
+                            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.area_nombre || 'Sin área'}</td>
                             <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.descripcion || ''}</td>
                             <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
                                 <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verPuesto(${item.id})" title="Ver detalle"></i>
@@ -986,6 +1010,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </td>
                         <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${puesto.folio}</td>
                         <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left; font-weight: 500;">${puesto.nombre}</td>
+                        <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${puesto.area_nombre || 'Sin área'}</td>
                         <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${puesto.descripcion || ''}</td>
                         <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
                             <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verPuesto(${puesto.id})" title="Ver detalle"></i>
@@ -1004,21 +1029,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function aplicarVisibilidadColumnas(tipo) {
         const checkboxes = document.querySelectorAll(`#columnasLista${tipo === 'roles' ? 'Roles' : 'Puestos'} input[type="checkbox"]`);
-        const indices = {
-            estatus: 0,
-            folio: 1,
-            [tipo === 'roles' ? 'rol' : 'puesto']: 2,
-            descripcion: 3
-        };
+        
+        const indices = tipo === 'roles' 
+            ? { estatus: 0, folio: 1, rol: 2, descripcion: 3 }
+            : { estatus: 0, folio: 1, puesto: 2, area: 3, descripcion: 4 };
         
         checkboxes.forEach(checkbox => {
             const columna = checkbox.dataset.columna;
             const index = indices[columna];
-            const celdas = document.querySelectorAll(`#tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} td:nth-child(${index + 1}), #tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} th:nth-child(${index + 1})`);
-            
-            celdas.forEach(celda => {
-                celda.style.display = checkbox.checked ? '' : 'none';
-            });
+            if (index !== undefined) {
+                const celdas = document.querySelectorAll(`#tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} td:nth-child(${index + 1}), #tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} th:nth-child(${index + 1})`);
+                celdas.forEach(celda => {
+                    celda.style.display = checkbox.checked ? '' : 'none';
+                });
+            }
         });
     }
     
@@ -1047,8 +1071,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalRolId').value = id || '';
         
         if (id) {
-            console.log('Cargando datos para editar rol ID:', id);
-            
             fetch(`/api/roles/${id}`, {
                 headers: {
                     'Accept': 'application/json',
@@ -1056,13 +1078,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al cargar los datos');
-                }
+                if (!response.ok) throw new Error('Error al cargar los datos');
                 return response.json();
             })
             .then(data => {
-                console.log('Datos recibidos:', data);
                 if (data.success) {
                     document.getElementById('modalEstatusRol').value = data.data.estatus;
                     document.getElementById('modalFolioRol').value = data.data.folio;
@@ -1070,8 +1089,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('modalDescripcionRol').value = data.data.descripcion || '';
                     document.getElementById('modalRol').style.display = 'flex';
                     document.body.style.overflow = 'hidden';
-                } else {
-                    mostrarNotificacion('error', 'Error al cargar los datos del rol');
                 }
             })
             .catch(error => {
@@ -1118,19 +1135,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.guardarRol = function() {
         const id = document.getElementById('modalRolId').value;
-        console.log('=== GUARDAR ROL ===');
-        console.log('ID del modal:', id);
-        
-        // Asegurar que el ID sea un número si existe
         const numericId = id ? parseInt(id) : null;
-        console.log('ID numérico:', numericId);
-        
-        // Si hay ID pero no es número válido, mostrar error
-        if (id && isNaN(numericId)) {
-            console.error('ID no es un número válido');
-            mostrarNotificacion('error', 'ID de rol no válido');
-            return;
-        }
         
         const data = {
             folio: document.getElementById('modalFolioRol').value,
@@ -1138,16 +1143,9 @@ document.addEventListener('DOMContentLoaded', function() {
             descripcion: document.getElementById('modalDescripcionRol').value,
             estatus: document.getElementById('modalEstatusRol').value
         };
-        
-        console.log('Datos a guardar:', data);
 
-        // Determinar URL y método basado en si hay ID
         const url = numericId ? `/api/roles/${numericId}` : '/api/roles';
         const method = numericId ? 'PUT' : 'POST';
-        
-        console.log('URL:', url);
-        console.log('Método:', method);
-        console.log('URL completa:', window.location.origin + url);
 
         fetch(url, {
             method: method,
@@ -1160,17 +1158,12 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(data)
         })
         .then(response => {
-            console.log('Respuesta status:', response.status);
-            console.log('Respuesta OK:', response.ok);
             return response.json().then(data => {
-                if (!response.ok) {
-                    throw { status: response.status, data: data };
-                }
+                if (!response.ok) throw { status: response.status, data: data };
                 return data;
             });
         })
         .then(data => {
-            console.log('Respuesta data:', data);
             if (data.success) {
                 mostrarNotificacion('success', data.message || 'Rol guardado exitosamente');
                 cerrarModalRol();
@@ -1186,9 +1179,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error completo:', error);
-            if (error.data && error.data.message) {
-                mostrarNotificacion('error', error.data.message);
-            } else if (error.data && error.data.errors) {
+            if (error.data?.message) mostrarNotificacion('error', error.data.message);
+            else if (error.data?.errors) {
                 const mensajes = Object.values(error.data.errors).flat().join('\n');
                 mostrarNotificacion('error', mensajes);
             } else {
@@ -1198,9 +1190,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     window.eliminarRol = function(id) {
-        console.log('=== ELIMINAR ROL ===');
-        console.log('ID recibido:', id);
-        
         if (!id) {
             mostrarNotificacion('error', 'ID de rol no válido');
             return;
@@ -1208,29 +1197,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (confirm('¿Estás seguro de eliminar este rol?')) {
             const numericId = parseInt(id);
-            const url = `/api/roles/${numericId}`;
-            console.log('URL de la petición:', url);
             
-            fetch(url, {
+            fetch(`/api/roles/${numericId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => {
-                console.log('Respuesta status:', response.status);
-                return response.json().then(data => {
-                    if (!response.ok) {
-                        throw { status: response.status, data: data };
-                    }
-                    return data;
-                });
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Respuesta data:', data);
                 if (data.success) {
                     mostrarNotificacion('success', data.message || 'Rol eliminado exitosamente');
                     cargarDatos();
@@ -1239,24 +1216,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Error completo:', error);
-                if (error.data && error.data.message) {
-                    mostrarNotificacion('error', error.data.message);
-                } else {
-                    mostrarNotificacion('error', 'Error de conexión al servidor');
-                }
+                console.error('Error:', error);
+                mostrarNotificacion('error', 'Error de conexión al servidor');
             });
         }
     };
     
-    // Funciones para Puestos (similares a Roles)
+    // Funciones para Puestos (ACTUALIZADAS CON ÁREA)
     window.abrirModalPuesto = function(id = null) {
         document.getElementById('modalTituloPuesto').textContent = id ? 'Editar Puesto' : 'Nuevo Puesto';
         document.getElementById('modalPuestoId').value = id || '';
         
+        // Asegurar que el select de áreas esté lleno
+        if (areas.length > 0) {
+            llenarSelectAreas();
+        }
+        
         if (id) {
-            console.log('Cargando datos para editar puesto ID:', id);
-            
             fetch(`/api/puestos/${id}`, {
                 headers: {
                     'Accept': 'application/json',
@@ -1264,22 +1240,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al cargar los datos');
-                }
+                if (!response.ok) throw new Error('Error al cargar los datos');
                 return response.json();
             })
             .then(data => {
-                console.log('Datos recibidos:', data);
                 if (data.success) {
                     document.getElementById('modalEstatusPuesto').value = data.data.estatus;
                     document.getElementById('modalFolioPuesto').value = data.data.folio;
                     document.getElementById('modalNombrePuesto').value = data.data.nombre;
                     document.getElementById('modalDescripcionPuesto').value = data.data.descripcion || '';
+                    
+                    // Seleccionar el área correspondiente
+                    if (data.data.area_id) {
+                        document.getElementById('modalAreaPuesto').value = data.data.area_id;
+                    }
+                    
                     document.getElementById('modalPuesto').style.display = 'flex';
                     document.body.style.overflow = 'hidden';
-                } else {
-                    mostrarNotificacion('error', 'Error al cargar los datos del puesto');
                 }
             })
             .catch(error => {
@@ -1291,6 +1268,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('modalFolioPuesto').value = '';
             document.getElementById('modalNombrePuesto').value = '';
             document.getElementById('modalDescripcionPuesto').value = '';
+            document.getElementById('modalAreaPuesto').value = '';
             document.getElementById('modalPuesto').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -1310,7 +1288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert(`Puesto: ${data.data.nombre}\nFolio: ${data.data.folio}\nDescripción: ${data.data.descripcion}\nEstatus: ${data.data.estatus}`);
+                alert(`Puesto: ${data.data.nombre}\nFolio: ${data.data.folio}\nÁrea: ${data.data.area_nombre || 'Sin área'}\nDescripción: ${data.data.descripcion}\nEstatus: ${data.data.estatus}`);
             }
         })
         .catch(error => {
@@ -1326,32 +1304,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.guardarPuesto = function() {
         const id = document.getElementById('modalPuestoId').value;
-        console.log('=== GUARDAR PUESTO ===');
-        console.log('ID del modal:', id);
-        
         const numericId = id ? parseInt(id) : null;
-        console.log('ID numérico:', numericId);
-        
-        if (id && isNaN(numericId)) {
-            console.error('ID no es un número válido');
-            mostrarNotificacion('error', 'ID de puesto no válido');
-            return;
-        }
         
         const data = {
             folio: document.getElementById('modalFolioPuesto').value,
             nombre: document.getElementById('modalNombrePuesto').value,
             descripcion: document.getElementById('modalDescripcionPuesto').value,
+            area_id: document.getElementById('modalAreaPuesto').value ? parseInt(document.getElementById('modalAreaPuesto').value) : null,
             estatus: document.getElementById('modalEstatusPuesto').value
         };
-        
-        console.log('Datos a guardar:', data);
 
         const url = numericId ? `/api/puestos/${numericId}` : '/api/puestos';
         const method = numericId ? 'PUT' : 'POST';
-        
-        console.log('URL:', url);
-        console.log('Método:', method);
 
         fetch(url, {
             method: method,
@@ -1364,16 +1328,12 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(data)
         })
         .then(response => {
-            console.log('Respuesta status:', response.status);
             return response.json().then(data => {
-                if (!response.ok) {
-                    throw { status: response.status, data: data };
-                }
+                if (!response.ok) throw { status: response.status, data: data };
                 return data;
             });
         })
         .then(data => {
-            console.log('Respuesta data:', data);
             if (data.success) {
                 mostrarNotificacion('success', data.message || 'Puesto guardado exitosamente');
                 cerrarModalPuesto();
@@ -1389,9 +1349,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error completo:', error);
-            if (error.data && error.data.message) {
-                mostrarNotificacion('error', error.data.message);
-            } else if (error.data && error.data.errors) {
+            if (error.data?.message) mostrarNotificacion('error', error.data.message);
+            else if (error.data?.errors) {
                 const mensajes = Object.values(error.data.errors).flat().join('\n');
                 mostrarNotificacion('error', mensajes);
             } else {
@@ -1401,9 +1360,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     window.eliminarPuesto = function(id) {
-        console.log('=== ELIMINAR PUESTO ===');
-        console.log('ID recibido:', id);
-        
         if (!id) {
             mostrarNotificacion('error', 'ID de puesto no válido');
             return;
@@ -1411,29 +1367,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (confirm('¿Estás seguro de eliminar este puesto?')) {
             const numericId = parseInt(id);
-            const url = `/api/puestos/${numericId}`;
-            console.log('URL de la petición:', url);
             
-            fetch(url, {
+            fetch(`/api/puestos/${numericId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => {
-                console.log('Respuesta status:', response.status);
-                return response.json().then(data => {
-                    if (!response.ok) {
-                        throw { status: response.status, data: data };
-                    }
-                    return data;
-                });
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Respuesta data:', data);
                 if (data.success) {
                     mostrarNotificacion('success', data.message || 'Puesto eliminado exitosamente');
                     cargarDatos();
@@ -1442,50 +1386,84 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Error completo:', error);
-                if (error.data && error.data.message) {
-                    mostrarNotificacion('error', error.data.message);
-                } else {
-                    mostrarNotificacion('error', 'Error de conexión al servidor');
-                }
+                console.error('Error:', error);
+                mostrarNotificacion('error', 'Error de conexión al servidor');
             });
         }
     };
     
     // Funciones de exportación
     window.exportarRolesExcel = function() {
+        mostrarNotificacion('info', 'Generando archivo Excel de roles...');
+        
+        const buscar = document.getElementById('buscadorRoles').value;
+        
         fetch('/roles/exportar-excel', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json'
-            }
+                'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            },
+            body: new URLSearchParams({
+                buscar: buscar
+            })
         })
-        .then(response => response.json())
-        .then(data => {
-            mostrarNotificacion('info', data.message || 'Exportación en desarrollo');
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la descarga');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'roles_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            mostrarNotificacion('success', 'Archivo Excel de roles descargado correctamente');
         })
         .catch(error => {
             console.error('Error:', error);
-            mostrarNotificacion('error', 'Error al exportar roles');
+            mostrarNotificacion('error', 'Error al descargar el archivo de roles');
         });
     };
     
     window.exportarPuestosExcel = function() {
+        mostrarNotificacion('info', 'Generando archivo Excel de puestos...');
+        
+        const buscar = document.getElementById('buscadorPuestos').value;
+        
         fetch('/puestos/exportar-excel', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json'
-            }
+                'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            },
+            body: new URLSearchParams({
+                buscar: buscar
+            })
         })
-        .then(response => response.json())
-        .then(data => {
-            mostrarNotificacion('info', data.message || 'Exportación en desarrollo');
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la descarga');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'puestos_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            mostrarNotificacion('success', 'Archivo Excel de puestos descargado correctamente');
         })
         .catch(error => {
             console.error('Error:', error);
-            mostrarNotificacion('error', 'Error al exportar puestos');
+            mostrarNotificacion('error', 'Error al descargar el archivo de puestos');
         });
     };
     
@@ -1499,15 +1477,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cerrar modales al hacer clic fuera
     document.getElementById('modalRol').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalRol();
-        }
+        if (e.target === this) cerrarModalRol();
     });
     
     document.getElementById('modalPuesto').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalPuesto();
-        }
+        if (e.target === this) cerrarModalPuesto();
     });
     
     // Funciones de agrupación para Roles
@@ -1531,7 +1505,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Resetear a primera página y renderizar
         rolesPaginaActual = 1;
         renderizarTablaRoles();
     }
@@ -1563,7 +1536,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Resetear a primera página y renderizar
         puestosPaginaActual = 1;
         renderizarTablaPuestos();
     }
@@ -1625,6 +1597,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     { field: 'estatus', caption: 'Estatus' },
                     { field: 'folio', caption: 'Folio' },
                     { field: 'puesto', caption: 'Puesto' },
+                    { field: 'area', caption: 'Área' },
                     { field: 'descripcion', caption: 'Descripción' }
                   ];
             
@@ -1643,19 +1616,17 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     window.toggleColumna = function(tipo, columna, visible) {
-        const indices = {
-            estatus: 0,
-            folio: 1,
-            [tipo === 'roles' ? 'rol' : 'puesto']: 2,
-            descripcion: 3
-        };
+        const indices = tipo === 'roles' 
+            ? { estatus: 0, folio: 1, rol: 2, descripcion: 3 }
+            : { estatus: 0, folio: 1, puesto: 2, area: 3, descripcion: 4 };
         
         const index = indices[columna];
-        const celdas = document.querySelectorAll(`#tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} td:nth-child(${index + 1}), #tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} th:nth-child(${index + 1})`);
-        
-        celdas.forEach(celda => {
-            celda.style.display = visible ? '' : 'none';
-        });
+        if (index !== undefined) {
+            const celdas = document.querySelectorAll(`#tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} td:nth-child(${index + 1}), #tabla${tipo === 'roles' ? 'Roles' : 'Puestos'} th:nth-child(${index + 1})`);
+            celdas.forEach(celda => {
+                celda.style.display = visible ? '' : 'none';
+            });
+        }
     };
 
     window.cerrarColumnSelector = function(tipo) {
@@ -1727,7 +1698,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (visibleCount === 0 && termino !== '' && !noResultsRow) {
             const row = document.createElement('tr');
             row.id = 'noResultsPuestos';
-            row.innerHTML = '<td colspan="5" style="padding: 20px; text-align: center; color: #6c757d;">No se encontraron puestos que coincidan con la búsqueda</td>';
+            row.innerHTML = '<td colspan="6" style="padding: 20px; text-align: center; color: #6c757d;">No se encontraron puestos que coincidan con la búsqueda</td>';
             tbody.appendChild(row);
         } else if (visibleCount > 0 && noResultsRow) {
             noResultsRow.remove();
@@ -1764,6 +1735,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { field: 'estatus', caption: 'Estatus' },
             { field: 'folio', caption: 'Folio' },
             { field: 'puesto', caption: 'Puesto' },
+            { field: 'area', caption: 'Área' },
             { field: 'descripcion', caption: 'Descripción' }
         ];
         

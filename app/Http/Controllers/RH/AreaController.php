@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RH\AreaRequest;
 
+use App\Exports\AreasExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class AreaController extends Controller
 {
     /**
@@ -294,39 +297,58 @@ class AreaController extends Controller
         }
     }
 
-    /**
-     * Export to Excel
-     */
-    public function exportExcel(Request $request)
-    {
-        try {
-            $areas = Area::whereNull('deleted_at')
-                        ->buscar($request->buscar)
-                        ->get();
-            
-            \Log::info('Exportando áreas a Excel, total: ' . $areas->count());
-
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Exportación en desarrollo',
-                    'data' => $areas
-                ]);
-            }
-
-            return back()->with('info', 'Exportación en desarrollo');
-            
-        } catch (\Exception $e) {
-            \Log::error('Error al exportar áreas: ' . $e->getMessage());
-            
-            if ($request->wantsJson() || $request->is('api/*')) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al exportar: ' . $e->getMessage()
-                ], 500);
-            }
-
-            return back()->with('error', 'Error al exportar: ' . $e->getMessage());
+  /**
+ * Export to Excel
+ */
+public function exportExcel(Request $request)
+{
+    try {
+        $buscar = $request->buscar;
+        
+        \Log::info('Exportando áreas a Excel', ['buscar' => $buscar]);
+        
+        $nombreArchivo = 'areas_' . date('Y-m-d_His') . '.xlsx';
+        
+        // Para peticiones API, devolver JSON
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Exportación completada',
+                'download_url' => route('areas.export.download', ['buscar' => $buscar])
+            ]);
         }
+        
+        // Para peticiones web, devolver el archivo directamente
+        return Excel::download(new AreasExport($buscar), $nombreArchivo);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error al exportar áreas: ' . $e->getMessage());
+        
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al exportar: ' . $e->getMessage()
+            ], 500);
+        }
+
+        return back()->with('error', 'Error al exportar: ' . $e->getMessage());
     }
+}
+
+/**
+ * Download Excel file
+ */
+public function downloadExcel(Request $request)
+{
+    try {
+        $buscar = $request->buscar;
+        $nombreArchivo = 'areas_' . date('Y-m-d_His') . '.xlsx';
+        
+        return Excel::download(new AreasExport($buscar), $nombreArchivo);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error al descargar Excel: ' . $e->getMessage());
+        return back()->with('error', 'Error al descargar: ' . $e->getMessage());
+    }
+}
 }

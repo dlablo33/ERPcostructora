@@ -1,0 +1,121 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Plantilla;
+use Illuminate\Database\Seeder;
+
+class PlantillaSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $plantillas = [
+            [
+                'nombre' => 'Juan Carlos',
+                'apellido_paterno' => 'Pérez',
+                'apellido_materno' => 'López',
+                'fecha_nacimiento' => '1985-01-15',
+                'correo' => 'juan.perez@empresa.com',
+                'celular' => '8112345678',
+                'numero_seguro_social' => '12345678901',
+                'rfc' => 'PELJ850101',
+                'curp' => 'PELJ850101HDFRRN01',
+                'calle' => 'Av. Constitución',
+                'num_exterior' => '123',
+                'num_interior' => 'A',
+                'satcat_codigos_postales_codigo_postal' => '66220',
+                'cat_area_id' => 1,
+                'cat_puesto_id' => 1,
+                'sueldo' => 25000.00,
+                'fecha_ingreso' => '2020-03-15',
+                'operador' => false,
+                'estatus' => 'Activo',
+                'numero_empleado_interno' => 'EMP-001',
+                'aplica_asistencia' => true,
+                'contacto_emergencia' => 'María López',
+                'numero_emergencia' => '8112345679',
+            ],
+            [
+                'nombre' => 'María Guadalupe',
+                'apellido_paterno' => 'Rodríguez',
+                'apellido_materno' => 'García',
+                'fecha_nacimiento' => '1990-02-20',
+                'correo' => 'maria.rodriguez@empresa.com',
+                'celular' => '8123456789',
+                'numero_seguro_social' => '23456789012',
+                'rfc' => 'ROGM900101',
+                'curp' => 'ROGM900101MDFDRR02',
+                'calle' => 'Av. Juárez',
+                'num_exterior' => '456',
+                'num_interior' => '',
+                'satcat_codigos_postales_codigo_postal' => '64000',
+                'cat_area_id' => 2,
+                'cat_puesto_id' => 2,
+                'sueldo' => 28000.00,
+                'fecha_ingreso' => '2019-08-10',
+                'operador' => false,
+                'estatus' => 'Activo',
+                'numero_empleado_interno' => 'EMP-002',
+                'aplica_asistencia' => true,
+                'contacto_emergencia' => 'Carlos Rodríguez',
+                'numero_emergencia' => '8123456790',
+            ],
+            [
+                'nombre' => 'Pedro Armando',
+                'apellido_paterno' => 'García',
+                'apellido_materno' => 'Martínez',
+                'fecha_nacimiento' => '1988-03-15',
+                'correo' => 'pedro.garcia@empresa.com',
+                'celular' => '8134567890',
+                'numero_seguro_social' => '34567890123',
+                'rfc' => 'GAPA880315',
+                'curp' => 'GAPA880315HNLGRR03',
+                'calle' => 'Av. Lázaro Cárdenas',
+                'num_exterior' => '789',
+                'num_interior' => 'B',
+                'satcat_codigos_postales_codigo_postal' => '66260',
+                'cat_area_id' => 3,
+                'cat_puesto_id' => 3,
+                'sueldo' => 22000.00,
+                'fecha_ingreso' => '2021-01-20',
+                'operador' => true,
+                'numero_licencia' => 'LIC-2025-003',
+                'vencimiento_licencia' => '2025-12-31',
+                'estatus' => 'Activo',
+                'numero_empleado_interno' => 'EMP-003',
+                'aplica_asistencia' => true,
+                'contacto_emergencia' => 'Ana García',
+                'numero_emergencia' => '8134567891',
+            ],
+            [
+                'nombre' => 'Ana Sofía',
+                'apellido_paterno' => 'Martínez',
+                'apellido_materno' => 'Flores',
+                'fecha_nacimiento' => '1992-05-10',
+                'correo' => 'ana.martinez@empresa.com',
+                'celular' => '8145678901',
+                'numero_seguro_social' => '45678901234',
+                'rfc' => 'MAFA920510',
+                'curp' => 'MAFA920510MDFRRN04',
+                'calle' => 'Blvd. Díaz Ordaz',
+                'num_exterior' => '101',
+                'num_interior' => 'C',
+                'satcat_codigos_postales_codigo_postal' => '64630',
+                'cat_area_id' => 4,
+                'cat_puesto_id' => 4,
+                'sueldo' => 32000.00,
+                'fecha_ingreso' => '2022-06-15',
+                'operador' => false,
+                'estatus' => 'Activo',
+                'numero_empleado_interno' => 'EMP-004',
+                'aplica_asistencia' => true,
+                'contacto_emergencia' => 'Roberto Martínez',
+                'numero_emergencia' => '8145678902',
+            ],
+        ];
+
+        foreach ($plantillas as $plantilla) {
+            Plantilla::create($plantilla);
+        }
+    }
+}

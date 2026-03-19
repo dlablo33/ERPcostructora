@@ -795,22 +795,51 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función de exportación
     window.exportarAreasExcel = function() {
-        fetch('/areas/exportar-excel', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-                'Accept': 'application/json'
-            }
+    // Mostrar notificación de carga
+    mostrarNotificacion('info', 'Generando archivo Excel...');
+    
+    // Obtener el término de búsqueda
+    const buscar = document.getElementById('buscador').value;
+    
+    // Opción 1: Usando fetch con blob (recomendado)
+    fetch('/areas/exportar-excel', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+            'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        },
+        body: new URLSearchParams({
+            buscar: buscar
         })
-        .then(response => response.json())
-        .then(data => {
-            mostrarNotificacion('info', data.message || 'Exportación en desarrollo');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            mostrarNotificacion('error', 'Error al exportar áreas');
-        });
-    };
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la descarga');
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        // Crear URL del blob
+        const url = window.URL.createObjectURL(blob);
+        
+        // Crear enlace temporal
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'areas_' + new Date().toISOString().slice(0,19).replace(/:/g, '-') + '.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        
+        // Limpiar
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        mostrarNotificacion('success', 'Archivo Excel descargado correctamente');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion('error', 'Error al descargar el archivo');
+    });
+};
     
     // Cerrar modal con Escape
     document.addEventListener('keydown', function(e) {

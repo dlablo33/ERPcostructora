@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\RH;
 
 use App\Models\Puesto;
+use App\Models\Area;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RH\PuestoRequest;
+
+use App\Exports\PuestosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PuestoController extends Controller
 {
@@ -15,15 +19,27 @@ class PuestoController extends Controller
     public function index(Request $request)
     {
         try {
-            $puestos = Puesto::whereNull('deleted_at')->get();
+            // Obtener puestos con sus áreas relacionadas
+            $puestos = Puesto::with('area')
+                            ->whereNull('deleted_at')
+                            ->orderBy('nombre')
+                            ->get();
+            
             $totalPuestos = $puestos->count();
             $puestosActivos = $puestos->where('estatus', 'Activo')->count();
             $puestosInactivos = $puestos->where('estatus', 'Inactivo')->count();
 
+            // Obtener áreas para el filtro (si es vista web)
+            $areas = Area::whereNull('deleted_at')
+                        ->orderBy('nombre')
+                        ->get(['id', 'nombre', 'folio']);
+
             \Log::info('PuestoController@index - Datos cargados', [
-                'puestos_count' => $puestos->count()
+                'puestos_count' => $puestos->count(),
+                'areas_count' => $areas->count()
             ]);
 
+            // Si es petición API
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
                     'success' => true,
@@ -31,12 +47,20 @@ class PuestoController extends Controller
                         'puestos' => $puestos,
                         'totalPuestos' => $totalPuestos,
                         'puestosActivos' => $puestosActivos,
-                        'puestosInactivos' => $puestosInactivos
+                        'puestosInactivos' => $puestosInactivos,
+                        'areas' => $areas
                     ]
                 ]);
             }
 
-            return view('rh.catalogos.puestos', compact('puestos', 'totalPuestos', 'puestosActivos', 'puestosInactivos'));
+            // Si es vista web
+            return view('rh.catalogos.puestos', compact(
+                'puestos', 
+                'totalPuestos', 
+                'puestosActivos', 
+                'puestosInactivos',
+                'areas'
+            ));
 
         } catch (\Exception $e) {
             \Log::error('Error en PuestoController@index: ' . $e->getMessage());
@@ -53,6 +77,36 @@ class PuestoController extends Controller
     }
 
     /**
+     * Get puestos by area (for API/AJAX)
+     */
+    public function getByArea(Request $request)
+    {
+        try {
+            $areaId = $request->area_id;
+            
+            $puestos = Puesto::whereNull('deleted_at')
+                            ->when($areaId, function($query) use ($areaId) {
+                                return $query->where('area_id', $areaId);
+                            })
+                            ->orderBy('nombre')
+                            ->get(['id', 'nombre', 'folio', 'area_id']);
+
+            return response()->json([
+                'success' => true,
+                'data' => $puestos
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error al obtener puestos por área: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar puestos: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(PuestoRequest $request)
@@ -62,9 +116,16 @@ class PuestoController extends Controller
             
             $puesto = Puesto::create($request->validated());
 
-            \Log::info('Puesto creado exitosamente:', ['id' => $puesto->id, 'folio' => $puesto->folio]);
+            \Log::info('Puesto creado exitosamente:', [
+                'id' => $puesto->id, 
+                'folio' => $puesto->folio,
+                'area_id' => $puesto->area_id
+            ]);
 
             if ($request->wantsJson() || $request->is('api/*')) {
+                // Cargar la relación con área para la respuesta
+                $puesto->load('area');
+                
                 return response()->json([
                     'success' => true,
                     'message' => 'Puesto creado exitosamente',
@@ -111,7 +172,7 @@ class PuestoController extends Controller
         try {
             \Log::info('Mostrando puesto ID: ' . $id);
             
-            $puesto = Puesto::find($id);
+            $puesto = Puesto::with('area')->find($id);
             
             if (!$puesto) {
                 \Log::error('Puesto no encontrado con ID: ' . $id);
@@ -157,15 +218,11 @@ class PuestoController extends Controller
         try {
             \Log::info('=== INICIO ACTUALIZACIÓN PUESTO ===');
             \Log::info('ID recibido en URL: ' . $id);
-            \Log::info('Tipo de ID: ' . gettype($id));
-            \Log::info('¿Es numérico? ' . (is_numeric($id) ? 'SÍ' : 'NO'));
             
             // Asegurar que el ID sea un entero
             if (is_numeric($id)) {
                 $id = (int) $id;
-                \Log::info('ID convertido a entero: ' . $id);
             } else {
-                \Log::error('ID no es numérico: ' . $id);
                 return response()->json([
                     'success' => false,
                     'message' => 'ID de puesto no válido'
@@ -188,8 +245,10 @@ class PuestoController extends Controller
                 return back()->with('error', 'Puesto no encontrado');
             }
             
-            \Log::info('Puesto encontrado:', ['folio_actual' => $puesto->folio]);
-            \Log::info('Datos validados:', $request->validated());
+            \Log::info('Puesto encontrado:', [
+                'folio_actual' => $puesto->folio,
+                'area_id_actual' => $puesto->area_id
+            ]);
             
             // Actualizar el puesto
             $puesto->update($request->validated());
@@ -197,6 +256,9 @@ class PuestoController extends Controller
             \Log::info('Puesto actualizado exitosamente');
 
             if ($request->wantsJson() || $request->is('api/*')) {
+                // Cargar la relación con área para la respuesta
+                $puesto->load('area');
+                
                 return response()->json([
                     'success' => true,
                     'message' => 'Puesto actualizado exitosamente',
@@ -222,9 +284,6 @@ class PuestoController extends Controller
             
         } catch (\Exception $e) {
             \Log::error('Error al actualizar puesto: ' . $e->getMessage());
-            \Log::error('Código de error: ' . $e->getCode());
-            \Log::error('Archivo: ' . $e->getFile() . ':' . $e->getLine());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
             
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
@@ -247,7 +306,6 @@ class PuestoController extends Controller
             \Log::info('=== INICIO ELIMINACIÓN PUESTO ===');
             \Log::info('ID recibido: ' . $id);
             
-            // Asegurar que el ID sea un entero
             if (is_numeric($id)) {
                 $id = (int) $id;
             }
@@ -308,21 +366,23 @@ class PuestoController extends Controller
     public function exportExcel(Request $request)
     {
         try {
-            $puestos = Puesto::whereNull('deleted_at')
-                           ->buscar($request->buscar)
-                           ->get();
+            $buscar = $request->buscar;
             
-            \Log::info('Exportando puestos a Excel, total: ' . $puestos->count());
-
+            \Log::info('Exportando puestos a Excel', ['buscar' => $buscar]);
+            
+            $nombreArchivo = 'puestos_' . date('Y-m-d_His') . '.xlsx';
+            
+            // Para peticiones API, devolver JSON
             if ($request->wantsJson() || $request->is('api/*')) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Exportación en desarrollo',
-                    'data' => $puestos
+                    'message' => 'Exportación completada',
+                    'download_url' => route('puestos.export.download', ['buscar' => $buscar])
                 ]);
             }
-
-            return back()->with('info', 'Exportación en desarrollo');
+            
+            // Para peticiones web, devolver el archivo directamente
+            return Excel::download(new PuestosExport($buscar), $nombreArchivo);
             
         } catch (\Exception $e) {
             \Log::error('Error al exportar puestos: ' . $e->getMessage());
@@ -335,6 +395,23 @@ class PuestoController extends Controller
             }
 
             return back()->with('error', 'Error al exportar: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download Excel file for Puestos
+     */
+    public function downloadExcel(Request $request)
+    {
+        try {
+            $buscar = $request->buscar;
+            $nombreArchivo = 'puestos_' . date('Y-m-d_His') . '.xlsx';
+            
+            return Excel::download(new PuestosExport($buscar), $nombreArchivo);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error al descargar Excel: ' . $e->getMessage());
+            return back()->with('error', 'Error al descargar: ' . $e->getMessage());
         }
     }
 }

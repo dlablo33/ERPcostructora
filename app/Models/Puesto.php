@@ -9,18 +9,24 @@ class Puesto extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'puestos'; // Especificar el nombre de la tabla
+    protected $table = 'puestos';
 
     protected $fillable = [
         'folio',
         'nombre',
         'descripcion',
+        'area_id',
         'estatus'
     ];
 
     protected $casts = [
         'estatus' => 'string'
     ];
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
+    }
 
     public function scopeActivos($query)
     {
