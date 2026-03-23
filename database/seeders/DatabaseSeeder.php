@@ -49,6 +49,11 @@ class DatabaseSeeder extends Seeder
             
             // Seeder de plantilla (debe ir al final porque depende de los catálogos)
             PlantillaSeeder::class,
-        ]);
+
+            CatTiposIncidenciaSeeder::class
+
+            // database/seeders/DatabaseSeeder.php
+        
+            ]);
     }
 }

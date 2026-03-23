@@ -133,11 +133,14 @@ class Plantilla extends Model
         'monto_mensual_isr' => 'decimal:2',
         'monto_diario_isr' => 'decimal:2',
         'nomina_total' => 'decimal:2',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
-    /**
-     * RELACIONES
-     */
+    // ============================================
+    // RELACIONES
+    // ============================================
 
     // Relación con Área
     public function area()
@@ -163,7 +166,7 @@ class Plantilla extends Model
         return $this->belongsTo(CatTipoLicencia::class, 'cat_tipo_licencia_id');
     }
 
-    // Relación con Banco
+    // Relación con Banco (corregida)
     public function banco()
     {
         return $this->belongsTo(CatBanco::class, 'cat_bancos_clave', 'clave');
@@ -182,7 +185,7 @@ class Plantilla extends Model
     }
 
     // Relación con Estado
-    public function estado()
+    public function estadoRel()
     {
         return $this->belongsTo(SatcatEstado::class, 'satcat_estados_clave', 'clave');
     }
@@ -253,9 +256,15 @@ class Plantilla extends Model
         return $this->hasMany(Plantilla::class, 'coordinador_plantilla_id', 'plantilla_id');
     }
 
-    /**
-     * SCOPES
-     */
+    // Relación con Documentos
+    public function documentos()
+    {
+        return $this->hasMany(EmpleadoDocumento::class, 'plantilla_id', 'plantilla_id');
+    }
+
+    // ============================================
+    // SCOPES
+    // ============================================
 
     // Scope para DataGrid (vista principal)
     public function scopeDataGrid($query)
@@ -272,7 +281,7 @@ class Plantilla extends Model
                 WHEN plantillas.estatus = '0' OR plantillas.estatus = 'Inactivo' THEN 'Inactivo'
                 WHEN plantillas.estatus = 'Vacaciones' THEN 'Vacaciones'
                 WHEN plantillas.estatus = 'Baja' THEN 'Baja'
-                ELSE plantillas.estatus
+                ELSE 'Activo'
             END AS estatus_txt,
             CASE WHEN plantillas.operador = true THEN 'Sí' ELSE 'No' END AS is_operador"
         )
@@ -340,9 +349,27 @@ class Plantilla extends Model
         return $query;
     }
 
-    /**
-     * ACCESORES
-     */
+    // Scope para filtrar por banco
+    public function scopePorBanco($query, $bancoClave)
+    {
+        if ($bancoClave) {
+            return $query->where('plantillas.cat_bancos_clave', $bancoClave);
+        }
+        return $query;
+    }
+
+    // Scope para filtrar por tipo de cuenta
+    public function scopePorTipoCuenta($query, $tipoCuentaId)
+    {
+        if ($tipoCuentaId) {
+            return $query->where('plantillas.cat_tipo_cuenta_id', $tipoCuentaId);
+        }
+        return $query;
+    }
+
+    // ============================================
+    // ACCESORES
+    // ============================================
 
     // Obtener nombre completo
     public function getNombreCompletoAttribute()
@@ -368,9 +395,60 @@ class Plantilla extends Model
         return null;
     }
 
-    /**
-     * MUTADORES
-     */
+    // Obtener estatus en texto
+    public function getEstatusTxtAttribute()
+    {
+        $estatusMap = [
+            '1' => 'Activo',
+            '0' => 'Inactivo',
+            'Activo' => 'Activo',
+            'Inactivo' => 'Inactivo',
+            'Vacaciones' => 'Vacaciones',
+            'Baja' => 'Baja'
+        ];
+        
+        return $estatusMap[$this->estatus] ?? 'Activo';
+    }
+
+    // Obtener si es operador en texto
+    public function getIsOperadorAttribute()
+    {
+        return $this->operador ? 'Sí' : 'No';
+    }
+
+    // Obtener nombre del banco
+    public function getBancoNombreAttribute()
+    {
+        return $this->banco ? $this->banco->nombre_corto : '-';
+    }
+
+    // Obtener nombre del tipo de cuenta
+    public function getTipoCuentaNombreAttribute()
+    {
+        return $this->tipoCuenta ? $this->tipoCuenta->descripcion : '-';
+    }
+
+    // Obtener nombre del área
+    public function getAreaNombreAttribute()
+    {
+        return $this->area ? $this->area->nombre : '-';
+    }
+
+    // Obtener nombre del puesto
+    public function getPuestoNombreAttribute()
+    {
+        return $this->puesto ? $this->puesto->nombre : '-';
+    }
+
+    // Obtener nombre del coordinador
+    public function getCoordinadorNombreAttribute()
+    {
+        return $this->coordinador ? $this->coordinador->nombre_completo : '-';
+    }
+
+    // ============================================
+    // MUTADORES
+    // ============================================
 
     // Asegurar que el estatus siempre sea string
     public function setEstatusAttribute($value)
@@ -382,5 +460,23 @@ class Plantilla extends Model
     public function setSueldoAttribute($value)
     {
         $this->attributes['sueldo'] = str_replace(',', '', $value);
+    }
+
+    // Asegurar que el RFC sea mayúscula
+    public function setRfcAttribute($value)
+    {
+        $this->attributes['rfc'] = $value ? strtoupper(trim($value)) : null;
+    }
+
+    // Asegurar que el CURP sea mayúscula
+    public function setCurpAttribute($value)
+    {
+        $this->attributes['curp'] = $value ? strtoupper(trim($value)) : null;
+    }
+
+    // Asegurar que el correo sea minúscula
+    public function setCorreoAttribute($value)
+    {
+        $this->attributes['correo'] = $value ? strtolower(trim($value)) : null;
     }
 }
