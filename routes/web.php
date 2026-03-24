@@ -7,8 +7,8 @@ use App\Http\Controllers\RH\RolController;
 use App\Http\Controllers\RH\PuestoController;
 use App\Http\Controllers\RH\AreaController;
 use App\Http\Controllers\RH\PlantillaController;
-
 use App\Http\Controllers\RH\IncidenciaController;
+use App\Http\Controllers\RH\CatTipoIncidenciaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -116,19 +116,14 @@ Route::prefix('conta')->group(function () {
     Route::get('/unidadenegocios', function () { return view('conta.estados.unidad'); })->name('conta.unidad');
     Route::get('/liquidacion', function () { return view('conta.estados.liquidacion'); })->name('conta.liquidacion');
     Route::get('/general', function () { return view('conta.estados.general'); })->name('conta.general');
-    Route::get('/diot', function () { return view('conta.fiscal.diot'); })->name('conta.diot');
     Route::get('/mensuales', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaraciones');
-    Route::get('/retenciones', function () { return view('conta.fiscal.retenciones'); })->name('conta.retenciones');
     Route::get('/complemento', function () { return view('conta.fiscal.complementos'); })->name('conta.complemento');
     Route::get('/diariogeneral', function () { return view('conta.registros.diario'); })->name('conta.diario');
     Route::get('/cobranza', function () { return view('conta.registros.auxiliar'); })->name('conta.cobranza');
     Route::get('/centro', function () { return view('conta.catalogo.centros'); })->name('conta.centros');
     Route::get('/auxiliar', function () { return view('conta.catalogo.auxiliar'); })->name('conta.auxiliar');
-    Route::get('/libro', function () { return view('conta.registros.libro'); })->name('conta.libro');
     Route::get('/costoobras', function () { return view('conta.porproyecto.costo'); })->name('conta.costo');
     Route::get('/asignacion', function () { return view('conta.porproyecto.asignacion'); })->name('conta.asignacion');
-    Route::get('/cierre', function () { return view('conta.porproyecto.cierre'); })->name('conta.cierre');
-    Route::get('/gastos', function () { return view('conta.porproyecto.gastos'); })->name('conta.gastos');
     Route::get('/rentabilidad', function () { return view('conta.porproyecto.rentabilidad'); })->name('conta.rentabilidad');
 });
 
@@ -143,7 +138,7 @@ Route::prefix('rh')->name('rh.')->group(function () {
     // ASISTENCIA
     Route::get('/asistencia', function () { return view('rh.asistencia.asistencia'); })->name('asistencia');
     Route::get('/lista', function () { return view('rh.asistencia.lista'); })->name('lista');
-    Route::get('/incidencias', function () { return view('rh.asistencia.incidencias'); })->name('incidencias');
+    Route::get('/incidencias', [IncidenciaController::class, 'index'])->name('incidencias');
     Route::get('/justificantes', function () { return view('rh.asistencia.justificantes'); })->name('justificantes');
     Route::get('/control', function () { return view('rh.asistencia.control'); })->name('control');
     
@@ -174,6 +169,7 @@ Route::prefix('rh')->name('rh.')->group(function () {
     Route::get('/percepciones', function () { return view('rh.catalogos.percepciones'); })->name('percepciones');
     Route::get('/roles', [RolController::class, 'index'])->name('roles');
     Route::get('/turnos', function () { return view('rh.catalogos.turnos'); })->name('turnos');
+    Route::get('/tipos-incidencias', [CatTipoIncidenciaController::class, 'index'])->name('tipos_incidencias');
     
     // REPORTES
     Route::get('/costos', function () { return view('rh.reportes.costos'); })->name('costos');
@@ -251,7 +247,9 @@ Route::get('areas/descargar-excel', [AreaController::class, 'downloadExcel'])->n
 Route::get('plantilla/descargar-excel', [PlantillaController::class, 'downloadExcel'])->name('plantilla.export.download');
 Route::get('usuarios/download-excel', [App\Http\Controllers\RH\UserController::class, 'downloadExcel'])->name('usuarios.export.download');
 
-// Rutas API
+// ============================================
+// RUTAS API (para llamadas AJAX)
+// ============================================
 Route::prefix('api')->group(function () {
     // Roles
     Route::apiResource('roles', RolController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
@@ -289,17 +287,28 @@ Route::prefix('api')->group(function () {
         Route::delete('documentos/{documentoId}', [PlantillaController::class, 'eliminarDocumento']);
         Route::get('documentos/{documentoId}/descargar', [PlantillaController::class, 'descargarDocumento']);
     });
-});
-
-
-// Incidencias
-Route::prefix('incidencias')->name('incidencias.')->group(function () {
-    Route::get('/', [IncidenciaController::class, 'index'])->name('index');
-    Route::get('/datagrid', [IncidenciaController::class, 'getDataGrid'])->name('datagrid');
-    Route::post('/', [IncidenciaController::class, 'store'])->name('store');
-    Route::get('/{id}', [IncidenciaController::class, 'show'])->name('show');
-    Route::put('/{id}', [IncidenciaController::class, 'update'])->name('update');
-    Route::delete('/{id}', [IncidenciaController::class, 'destroy'])->name('destroy');
+    
+    // ============================================
+    // INCIDENCIAS - Rutas API
+    // ============================================
+    
+    // Catálogo de tipos de incidencia
+    Route::get('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'index']);
+    Route::get('cat-tipos-incidencias/activos', [CatTipoIncidenciaController::class, 'getActivos']);
+    Route::post('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'store']);
+    Route::get('cat-tipos-incidencias/{id}', [CatTipoIncidenciaController::class, 'show']);
+    Route::put('cat-tipos-incidencias/{id}', [CatTipoIncidenciaController::class, 'update']);
+    Route::delete('cat-tipos-incidencias/{id}', [CatTipoIncidenciaController::class, 'destroy']);
+    Route::patch('cat-tipos-incidencias/{id}/toggle-active', [CatTipoIncidenciaController::class, 'toggleActive']);
+    Route::get('cat-tipos-incidencias/stats', [CatTipoIncidenciaController::class, 'getStats']);
+    
+    // Incidencias
+    Route::get('incidencias', [IncidenciaController::class, 'index']);
+    Route::get('incidencias/datagrid', [IncidenciaController::class, 'getDataGrid']);
+    Route::post('incidencias', [IncidenciaController::class, 'store']);
+    Route::get('incidencias/{id}', [IncidenciaController::class, 'show']);
+    Route::put('incidencias/{id}', [IncidenciaController::class, 'update']);
+    Route::delete('incidencias/{id}', [IncidenciaController::class, 'destroy']);
 });
 
 require __DIR__.'/auth.php';
