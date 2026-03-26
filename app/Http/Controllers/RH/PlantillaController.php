@@ -10,6 +10,7 @@ use App\Models\CatTipoOperador;
 use App\Models\CatTipoLicencia;
 use App\Models\CatBanco;
 use App\Models\CatTipoCuenta;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RH\PlantillaRequest;
@@ -61,12 +62,16 @@ class PlantillaController extends Controller
                                         ->orderBy('descripcion')
                                         ->get();
 
+            // Obtener usuarios coordinadores para el select
+            $coordinadores = $this->getCoordinadoresList();
+
             Log::info('PlantillaController@index - Datos cargados', [
                 'plantillas_count' => $plantillas->count(),
                 'areas_count' => $areas->count(),
                 'puestos_count' => $puestos->count(),
                 'bancos_count' => $bancos->count(),
-                'tipos_cuenta_count' => $tiposCuenta->count()
+                'tipos_cuenta_count' => $tiposCuenta->count(),
+                'coordinadores_count' => $coordinadores->count()
             ]);
 
             // Si es petición API
@@ -83,7 +88,8 @@ class PlantillaController extends Controller
                         'tiposOperador' => $tiposOperador,
                         'tiposLicencia' => $tiposLicencia,
                         'bancos' => $bancos,
-                        'tiposCuenta' => $tiposCuenta
+                        'tiposCuenta' => $tiposCuenta,
+                        'coordinadores' => $coordinadores
                     ]
                 ]);
             }
@@ -99,7 +105,8 @@ class PlantillaController extends Controller
                 'tiposOperador',
                 'tiposLicencia',
                 'bancos',
-                'tiposCuenta'
+                'tiposCuenta',
+                'coordinadores'
             ));
 
         } catch (\Exception $e) {
@@ -198,19 +205,12 @@ class PlantillaController extends Controller
     }
 
     /**
-     * Get all coordinadores for select
+     * Get all coordinadores for select (usuarios del sistema)
      */
     public function getCoordinadores(Request $request)
     {
         try {
-            $coordinadores = Plantilla::select('plantilla_id', 'nombre', 'apellido_paterno', 'apellido_materno')
-                ->whereNull('deleted_at')
-                ->where('estatus', 'Activo')
-                ->get()
-                ->map(function($item) {
-                    $item->nombre_completo = trim($item->nombre . ' ' . $item->apellido_paterno . ' ' . $item->apellido_materno);
-                    return $item;
-                });
+            $coordinadores = $this->getCoordinadoresList();
 
             return response()->json([
                 'success' => true,
@@ -228,6 +228,56 @@ class PlantillaController extends Controller
     }
 
     /**
+     * Get list of coordinadores (users with coordinator roles)
+     * Helper method to get coordinadores from User model
+     */
+    private function getCoordinadoresList()
+    {
+        // Obtener usuarios del sistema que tengan rol de coordinador o administrador
+        $coordinadores = User::select('id', 'name', 'email', 'empleado', 'rol')
+            ->whereNull('deleted_at')
+            ->where('estatus', 'Activo')
+            ->where(function($query) {
+                $query->where('rol', 'Coordinador')
+                      ->orWhere('rol', 'Administrador')
+                      ->orWhere('rol', 'Supervisor')
+                      ->orWhere('rol', 'Gerente'); // Ajusta según tus roles
+            })
+            ->orderBy('name')
+            ->get()
+            ->map(function($user) {
+                // Formatear nombre completo con información adicional
+                $nombreCompleto = $user->name;
+                
+                // Agregar información de empleado si existe
+                if ($user->empleado) {
+                    $nombreCompleto .= " (Empleado: {$user->empleado})";
+                }
+                
+                // Agregar rol si no es coordinador
+                if ($user->rol && $user->rol !== 'Coordinador') {
+                    $nombreCompleto .= " - {$user->rol}";
+                }
+                
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'nombre_completo' => $nombreCompleto,
+                    'email' => $user->email,
+                    'rol' => $user->rol,
+                    'empleado' => $user->empleado
+                ];
+            });
+
+        Log::info('Lista de coordinadores obtenida:', [
+            'count' => $coordinadores->count(),
+            'roles' => $coordinadores->pluck('rol')->unique()->values()
+        ]);
+
+        return $coordinadores;
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -237,6 +287,17 @@ class PlantillaController extends Controller
             
             Log::info('=== INICIO CREACIÓN EMPLEADO ===');
             Log::info('Datos recibidos:', $request->all());
+            
+            // Validar que coordinador_id exista en users si se proporciona
+            if ($request->has('coordinador_id') && !empty($request->coordinador_id)) {
+                $coordinadorExists = User::where('id', $request->coordinador_id)
+                                         ->whereNull('deleted_at')
+                                         ->exists();
+                
+                if (!$coordinadorExists) {
+                    throw new \Exception('El coordinador seleccionado no existe o no está activo');
+                }
+            }
             
             // Obtener datos del request
             $data = $this->prepareData($request);
@@ -322,7 +383,7 @@ class PlantillaController extends Controller
                 'tipoLicencia',
                 'banco',
                 'tipoCuenta',
-                'coordinador',
+                'coordinador', // Ahora carga la relación con User
                 'pais',
                 'estadoRel',
                 'municipioRel',
@@ -354,7 +415,8 @@ class PlantillaController extends Controller
                 'banco' => $plantilla->banco?->nombre_corto,
                 'tipo_cuenta' => $plantilla->tipoCuenta?->descripcion,
                 'area' => $plantilla->area?->nombre,
-                'puesto' => $plantilla->puesto?->nombre
+                'puesto' => $plantilla->puesto?->nombre,
+                'coordinador' => $plantilla->coordinador?->name
             ]);
             
             if ($request->wantsJson() || $request->is('api/*')) {
@@ -391,6 +453,17 @@ class PlantillaController extends Controller
             Log::info('=== INICIO ACTUALIZACIÓN EMPLEADO ===');
             Log::info('ID recibido: ' . $id);
             Log::info('Datos recibidos:', $request->all());
+            
+            // Validar que coordinador_id exista en users si se proporciona
+            if ($request->has('coordinador_id') && !empty($request->coordinador_id)) {
+                $coordinadorExists = User::where('id', $request->coordinador_id)
+                                         ->whereNull('deleted_at')
+                                         ->exists();
+                
+                if (!$coordinadorExists) {
+                    throw new \Exception('El coordinador seleccionado no existe o no está activo');
+                }
+            }
             
             if (is_numeric($id)) {
                 $id = (int) $id;
@@ -600,6 +673,11 @@ class PlantillaController extends Controller
         
         if (isset($data['curp']) && $data['curp']) {
             $data['curp'] = strtoupper(trim($data['curp']));
+        }
+        
+        // Asegurar que coordinador_id sea null si está vacío
+        if (isset($data['coordinador_id']) && ($data['coordinador_id'] === '' || $data['coordinador_id'] === null)) {
+            $data['coordinador_id'] = null;
         }
         
         return $data;

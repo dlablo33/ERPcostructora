@@ -479,4 +479,20 @@ class Plantilla extends Model
     {
         $this->attributes['correo'] = $value ? strtolower(trim($value)) : null;
     }
+
+        // ============================================
+    // RELACIONES ADICIONALES
+    // ============================================
+
+    // Relación con User (usuario del sistema asociado)
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Relación con Asistencias
+    public function asistencias()
+    {
+        return $this->hasMany(\App\Models\RH\Asistencia::class, 'plantilla_id', 'plantilla_id');
+    }
 }

@@ -33,7 +33,32 @@ class User extends Authenticatable
         'estatus' => 'string',
     ];
 
-    // Scope para búsqueda
+    // ============================================
+    // RELACIONES
+    // ============================================
+
+    // Relación con Plantilla (un usuario puede estar asociado a un empleado)
+    public function plantilla()
+    {
+        return $this->hasOne(Plantilla::class, 'user_id');
+    }
+
+    // Relación con Asistencias (registros de asistencia del usuario)
+    public function asistencias()
+    {
+        return $this->hasMany(\App\Models\RH\Asistencia::class, 'user_id');
+    }
+
+    // Relación con asistencias que registró
+    public function asistenciasRegistradas()
+    {
+        return $this->hasMany(\App\Models\RH\Asistencia::class, 'registrado_por');
+    }
+
+    // ============================================
+    // SCOPES
+    // ============================================
+
     public function scopeBuscar($query, $termino)
     {
         if ($termino) {
@@ -46,13 +71,11 @@ class User extends Authenticatable
         return $query;
     }
 
-    // Scope para activos
     public function scopeActivos($query)
     {
         return $query->where('estatus', 'Activo');
     }
 
-    // Scope para inactivos
     public function scopeInactivos($query)
     {
         return $query->where('estatus', 'Inactivo');

@@ -2203,13 +2203,13 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos', 'rrhh', '{{ route('rh.semaforo') }}', 'fa-traffic-light')">
+                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos', 'rrhh', '{{ route('rh.semaforo') }}', 'fa-traffic-light')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-traffic-light"></i>
                             <span>Semáforo de Documentos</span>
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos', 'rrhh', 'fa-traffic-light', this)"></i>
-                    </div>
+                    </div> -->
                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Historial Laboral', 'rrhh', '#', 'fa-history')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-history"></i>
@@ -2638,7 +2638,12 @@
                         </div>
                         <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'inventarios', 'fa-exchange-alt', this)"></i>
                     </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
+                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Aroot@ubuntu-s-1vcpu-1gb-35gb-intel-sfo3-01:/var/www/ERPcostructora/app/Models# ls
+Area.php           CatTipoIncidencia.php  Incidencia.php        PlantillaTipoCuenta.php  SatcatEstado.php            SatcatNominaJornada.php
+CatBanco.php       CatTipoLicencia.php    NominaDeduccion.php   Puesto.php               SatcatFiguraTransporte.php  SatcatNominaPeriodicidad.php
+CatEstatus.php     CatTipoOperador.php    NominaOtrosPago.php   Rol.php                  SatcatLocalidad.php         SatcatNominaRegimen.php
+CatPuesto.php      CatUnidadNegocio.php   NominaPercepcion.php  SatcatCodigoPostal.php   SatcatMunicipio.php         SatcatPais.php
+CatTipoCuenta.php  EmpleadoDocumento.php  Plantilla.php         SatcatColonia.php        SatcatNominaContrato.php    User.phplmacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
                         <div class="flex items-center flex-1">
                             <i class="fas fa-truck-moving"></i>
                             <span>Traspasos entre Almacenes</span>

@@ -9,6 +9,8 @@ use App\Http\Controllers\RH\AreaController;
 use App\Http\Controllers\RH\PlantillaController;
 use App\Http\Controllers\RH\IncidenciaController;
 use App\Http\Controllers\RH\CatTipoIncidenciaController;
+use App\Http\Controllers\RH\AsistenciaController;
+use App\Http\Controllers\RH\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -175,6 +177,18 @@ Route::prefix('rh')->name('rh.')->group(function () {
     Route::get('/costos', function () { return view('rh.reportes.costos'); })->name('costos');
     Route::get('/sat', function () { return view('rh.reportes.sat'); })->name('sat');
     Route::get('/imss-reporte', function () { return view('rh.reportes.imss'); })->name('imss_reporte');
+
+    // RUTAS API DE ASISTENCIA (para AJAX)
+    Route::prefix('asistencia-api')->name('asistencia.api.')->group(function () {
+        Route::get('/', [AsistenciaController::class, 'index']);
+        Route::post('/', [AsistenciaController::class, 'store']);
+        Route::get('/{id}', [AsistenciaController::class, 'show']);
+        Route::put('/{id}', [AsistenciaController::class, 'update']);
+        Route::delete('/{id}', [AsistenciaController::class, 'destroy']);
+        Route::post('/entrada', [AsistenciaController::class, 'registrarEntrada']);
+        Route::post('/{id}/salida', [AsistenciaController::class, 'registrarSalida']);
+        Route::get('/exportar-excel', [AsistenciaController::class, 'exportExcel'])->name('export');
+    });
 });
 
 Route::prefix('almacen')->name('almacen.')->group(function () {
@@ -231,21 +245,21 @@ Route::resource('roles', RolController::class);
 Route::resource('puestos', PuestoController::class);
 Route::resource('areas', AreaController::class);
 Route::resource('plantilla', PlantillaController::class)->parameters(['plantilla' => 'id']);
-Route::resource('usuarios', App\Http\Controllers\RH\UserController::class);
+Route::resource('usuarios', UserController::class);
 
 // Rutas adicionales de exportación
 Route::post('roles/exportar-excel', [RolController::class, 'exportExcel'])->name('roles.export');
 Route::post('puestos/exportar-excel', [PuestoController::class, 'exportExcel'])->name('puestos.export');
 Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel'])->name('areas.export');
 Route::post('plantilla/exportar-excel', [PlantillaController::class, 'exportExcel'])->name('plantilla.export');
-Route::post('usuarios/exportar-excel', [App\Http\Controllers\RH\UserController::class, 'exportExcel'])->name('usuarios.export');
+Route::post('usuarios/exportar-excel', [UserController::class, 'exportExcel'])->name('usuarios.export');
 
 // Rutas de descarga Excel
 Route::get('roles/descargar-excel', [RolController::class, 'downloadExcel'])->name('roles.export.download');
 Route::get('puestos/descargar-excel', [PuestoController::class, 'downloadExcel'])->name('puestos.export.download');
 Route::get('areas/descargar-excel', [AreaController::class, 'downloadExcel'])->name('areas.export.download');
 Route::get('plantilla/descargar-excel', [PlantillaController::class, 'downloadExcel'])->name('plantilla.export.download');
-Route::get('usuarios/download-excel', [App\Http\Controllers\RH\UserController::class, 'downloadExcel'])->name('usuarios.export.download');
+Route::get('usuarios/download-excel', [UserController::class, 'downloadExcel'])->name('usuarios.export.download');
 
 // ============================================
 // RUTAS API (para llamadas AJAX)
@@ -264,9 +278,10 @@ Route::prefix('api')->group(function () {
     Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel']);
     
     // Usuarios
-    Route::apiResource('usuarios', App\Http\Controllers\RH\UserController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
-    Route::post('usuarios/exportar-excel', [App\Http\Controllers\RH\UserController::class, 'exportExcel']);
-    Route::post('usuarios/{id}/reset-password', [App\Http\Controllers\RH\UserController::class, 'resetPassword']);
+    Route::apiResource('usuarios', UserController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
+    Route::post('usuarios/exportar-excel', [UserController::class, 'exportExcel']);
+    Route::post('usuarios/{id}/reset-password', [UserController::class, 'resetPassword']);
+    Route::get('roles-activos', [UserController::class, 'getRoles']);
     
     // Plantilla
     Route::get('plantilla', [PlantillaController::class, 'index']);
@@ -288,11 +303,7 @@ Route::prefix('api')->group(function () {
         Route::get('documentos/{documentoId}/descargar', [PlantillaController::class, 'descargarDocumento']);
     });
     
-    // ============================================
     // INCIDENCIAS - Rutas API
-    // ============================================
-    
-    // Catálogo de tipos de incidencia
     Route::get('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'index']);
     Route::get('cat-tipos-incidencias/activos', [CatTipoIncidenciaController::class, 'getActivos']);
     Route::post('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'store']);
@@ -309,6 +320,15 @@ Route::prefix('api')->group(function () {
     Route::get('incidencias/{id}', [IncidenciaController::class, 'show']);
     Route::put('incidencias/{id}', [IncidenciaController::class, 'update']);
     Route::delete('incidencias/{id}', [IncidenciaController::class, 'destroy']);
+    
+    // Asistencia API
+    Route::get('asistencias', [AsistenciaController::class, 'index']);
+    Route::post('asistencias', [AsistenciaController::class, 'store']);
+    Route::get('asistencias/{id}', [AsistenciaController::class, 'show']);
+    Route::put('asistencias/{id}', [AsistenciaController::class, 'update']);
+    Route::delete('asistencias/{id}', [AsistenciaController::class, 'destroy']);
+    Route::post('asistencias/entrada', [AsistenciaController::class, 'registrarEntrada']);
+    Route::post('asistencias/{id}/salida', [AsistenciaController::class, 'registrarSalida']);
 });
 
 require __DIR__.'/auth.php';

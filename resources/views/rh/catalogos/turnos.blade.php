@@ -181,16 +181,7 @@
                         <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Rol</label>
                         <select id="modalRolUsuario" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" required>
                             <option value="">Seleccionar rol</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Gerente de Proyectos">Gerente de Proyectos</option>
-                            <option value="Supervisor de Obra">Supervisor de Obra</option>
-                            <option value="Residente de Obra">Residente de Obra</option>
-                            <option value="Almacenista">Almacenista</option>
-                            <option value="Recursos Humanos">Recursos Humanos</option>
-                            <option value="Finanzas">Finanzas</option>
-                            <option value="Compras">Compras</option>
-                            <option value="Sistemas">Sistemas</option>
-                            <option value="Calidad">Calidad</option>
+                            <!-- Las opciones se cargarán dinámicamente desde la API -->
                         </select>
                     </div>
                     
@@ -487,8 +478,124 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variable para reset de contraseña
     let usuarioResetId = null;
     
-    // Cargar datos iniciales
-    cargarDatos();
+    // Variable para almacenar roles desde la API
+    let rolesList = [];
+    
+    // Función para cargar roles desde la API
+    function cargarRoles() {
+        fetch('/api/roles-activos', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                rolesList = data.data;
+                actualizarSelectRoles();
+            } else {
+                console.error('Error al cargar roles:', data.message);
+                // Roles por defecto como respaldo
+                rolesList = [
+                    { id: 1, nombre: 'Administrador' },
+                    { id: 2, nombre: 'Gerente de Proyectos' },
+                    { id: 3, nombre: 'Supervisor de Obra' },
+                    { id: 4, nombre: 'Residente de Obra' },
+                    { id: 5, nombre: 'Almacenista' },
+                    { id: 6, nombre: 'Recursos Humanos' },
+                    { id: 7, nombre: 'Finanzas' },
+                    { id: 8, nombre: 'Compras' },
+                    { id: 9, nombre: 'Sistemas' },
+                    { id: 10, nombre: 'Calidad' }
+                ];
+                actualizarSelectRoles();
+            }
+        })
+        .catch(error => {
+            console.error('Error de conexión al cargar roles:', error);
+            // Roles por defecto en caso de error
+            rolesList = [
+                { id: 1, nombre: 'Administrador' },
+                { id: 2, nombre: 'Gerente de Proyectos' },
+                { id: 3, nombre: 'Supervisor de Obra' },
+                { id: 4, nombre: 'Residente de Obra' },
+                { id: 5, nombre: 'Almacenista' },
+                { id: 6, nombre: 'Recursos Humanos' },
+                { id: 7, nombre: 'Finanzas' },
+                { id: 8, nombre: 'Compras' },
+                { id: 9, nombre: 'Sistemas' },
+                { id: 10, nombre: 'Calidad' }
+            ];
+            actualizarSelectRoles();
+        });
+    }
+    
+    // Función para actualizar el select de roles
+    function actualizarSelectRoles() {
+        const selectRol = document.getElementById('modalRolUsuario');
+        if (!selectRol) return;
+        
+        // Guardar valor actual
+        const valorActual = selectRol.value;
+        
+        // Limpiar select
+        selectRol.innerHTML = '<option value="">Seleccionar rol</option>';
+        
+        // Agregar opciones desde la lista de roles
+        rolesList.forEach(rol => {
+            const option = document.createElement('option');
+            option.value = rol.nombre;
+            option.textContent = rol.nombre;
+            selectRol.appendChild(option);
+        });
+        
+        // Restaurar valor si existe
+        if (valorActual && rolesList.some(rol => rol.nombre === valorActual)) {
+            selectRol.value = valorActual;
+        }
+    }
+    
+    // Función para cargar datos desde la API
+    function cargarDatos() {
+        fetch('/api/usuarios', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                datos = data.data.usuarios || [];
+                totalRegistros = datos.length;
+                
+                document.getElementById('totalUsuarios').textContent = totalRegistros;
+                document.getElementById('usuariosActivos').textContent = data.data.usuariosActivos || 0;
+                document.getElementById('usuariosInactivos').textContent = data.data.usuariosInactivos || 0;
+                
+                // Guardar roles si vienen en la respuesta
+                if (data.data.roles) {
+                    rolesList = data.data.roles;
+                    actualizarSelectRoles();
+                }
+                
+                renderizarTabla();
+                actualizarPaginacion();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarNotificacion('error', 'Error al cargar los datos');
+        });
+        
+        // También cargar roles por si acaso
+        cargarRoles();
+    }
     
     // Función para cambiar número de registros por página
     window.cambiarRegistrosPorPagina = function() {
@@ -560,35 +667,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             notification.style.display = 'none';
         }, 3000);
-    }
-    
-    // Función para cargar datos desde la API
-    function cargarDatos() {
-        fetch('/api/usuarios', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                datos = data.data.usuarios || [];
-                totalRegistros = datos.length;
-                
-                document.getElementById('totalUsuarios').textContent = totalRegistros;
-                document.getElementById('usuariosActivos').textContent = data.data.usuariosActivos || 0;
-                document.getElementById('usuariosInactivos').textContent = data.data.usuariosInactivos || 0;
-                
-                renderizarTabla();
-                actualizarPaginacion();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            mostrarNotificacion('error', 'Error al cargar los datos');
-        });
     }
     
     // Función para agrupar datos
@@ -750,6 +828,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Funciones para Usuarios
     window.abrirModalUsuario = function(id = null) {
+        // Asegurar que el select está actualizado
+        actualizarSelectRoles();
+        
         document.getElementById('modalTituloUsuario').textContent = id ? 'Editar Usuario' : 'Nuevo Usuario';
         document.getElementById('modalUsuarioId').value = id || '';
         
@@ -757,7 +838,8 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/api/usuarios/${id}`, {
                 headers: {
                     'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                 }
             })
             .then(response => {
@@ -771,7 +853,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('modalCorreoUsuario').value = data.data.email || '';
                     document.getElementById('modalPasswordUsuario').value = '';
                     document.getElementById('modalConfirmPasswordUsuario').value = '';
-                    document.getElementById('modalRolUsuario').value = data.data.rol || '';
+                    
+                    // Establecer el rol seleccionado
+                    const rolUsuario = data.data.rol || '';
+                    const selectRol = document.getElementById('modalRolUsuario');
+                    if (selectRol && rolUsuario) {
+                        let existe = false;
+                        for(let i = 0; i < selectRol.options.length; i++) {
+                            if(selectRol.options[i].value === rolUsuario) {
+                                selectRol.selectedIndex = i;
+                                existe = true;
+                                break;
+                            }
+                        }
+                        if(!existe) {
+                            const option = document.createElement('option');
+                            option.value = rolUsuario;
+                            option.textContent = rolUsuario;
+                            option.selected = true;
+                            selectRol.appendChild(option);
+                        }
+                    }
+                    
                     document.getElementById('modalEstatusUsuario').value = data.data.estatus || 'Activo';
                     document.getElementById('modalUsuario').style.display = 'flex';
                     document.body.style.overflow = 'hidden';
@@ -782,12 +885,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 mostrarNotificacion('error', 'Error al cargar los datos del usuario');
             });
         } else {
+            // Limpiar formulario para nuevo usuario
             document.getElementById('modalFolioUsuario').value = '';
             document.getElementById('modalEmpleadoUsuario').value = '';
             document.getElementById('modalCorreoUsuario').value = '';
             document.getElementById('modalPasswordUsuario').value = '';
             document.getElementById('modalConfirmPasswordUsuario').value = '';
-            document.getElementById('modalRolUsuario').value = '';
+            
+            // Resetear select de rol
+            const selectRol = document.getElementById('modalRolUsuario');
+            if (selectRol) {
+                selectRol.selectedIndex = 0;
+            }
+            
             document.getElementById('modalEstatusUsuario').value = 'Activo';
             document.getElementById('modalUsuario').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -802,7 +912,8 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/api/usuarios/${id}`, {
             headers: {
                 'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
             }
         })
         .then(response => response.json())
@@ -983,7 +1094,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // En desarrollo mostramos la nueva contraseña, en producción no
                 if (data.new_password) {
                     mostrarNotificacion('success', `Contraseña restablecida: ${data.new_password}`);
                 } else {
@@ -1003,42 +1113,35 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función de exportación
     window.exportarUsuariosExcel = function() {
-    // Mostrar notificación de carga
-    mostrarNotificacion('info', 'Generando archivo Excel...');
-    
-    // Obtener el término de búsqueda
-    const buscar = document.getElementById('buscador').value;
-    
-    // Crear un formulario temporal para la descarga directa
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '/usuarios/exportar-excel';
-    form.style.display = 'none';
-    
-    // Agregar token CSRF
-    const csrfInput = document.createElement('input');
-    csrfInput.name = '_token';
-    csrfInput.value = document.querySelector('input[name="_token"]').value;
-    form.appendChild(csrfInput);
-    
-    // Agregar término de búsqueda
-    if (buscar) {
-        const buscarInput = document.createElement('input');
-        buscarInput.name = 'buscar';
-        buscarInput.value = buscar;
-        form.appendChild(buscarInput);
-    }
-    
-    // Agregar al body y enviar
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-    
-    // Cerrar notificación después de un momento
-    setTimeout(() => {
-        mostrarNotificacion('success', 'Descargando archivo Excel...');
-    }, 1000);
-};
+        mostrarNotificacion('info', 'Generando archivo Excel...');
+        
+        const buscar = document.getElementById('buscador').value;
+        
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/usuarios/exportar-excel';
+        form.style.display = 'none';
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.name = '_token';
+        csrfInput.value = document.querySelector('input[name="_token"]').value;
+        form.appendChild(csrfInput);
+        
+        if (buscar) {
+            const buscarInput = document.createElement('input');
+            buscarInput.name = 'buscar';
+            buscarInput.value = buscar;
+            form.appendChild(buscarInput);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+        
+        setTimeout(() => {
+            mostrarNotificacion('success', 'Descargando archivo Excel...');
+        }, 1000);
+    };
     
     // Cerrar modales con Escape
     document.addEventListener('keydown', function(e) {
@@ -1227,6 +1330,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     inicializarSelectoresColumnas();
+    
+    // Cargar datos iniciales
+    cargarDatos();
 });
 </script>
 @endsection

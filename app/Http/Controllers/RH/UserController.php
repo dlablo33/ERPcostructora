@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\RH;
 
 use App\Models\User;
+use App\Models\Rol;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RH\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use App\Exports\UsuariosExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,31 +26,39 @@ class UserController extends Controller
             $totalUsuarios = $usuarios->count();
             $usuariosActivos = $usuarios->where('estatus', 'Activo')->count();
             $usuariosInactivos = $usuarios->where('estatus', 'Inactivo')->count();
+            
+            // Obtener roles activos para el select
+            $roles = Rol::activos()
+                        ->whereNull('deleted_at')
+                        ->orderBy('nombre')
+                        ->get(['id', 'nombre', 'folio']);
 
             \Log::info('UserController@index - Datos cargados', [
-                'usuarios_count' => $usuarios->count()
+                'usuarios_count' => $usuarios->count(),
+                'roles_count' => $roles->count()
             ]);
 
-            // Si es petición API
-            if ($request->wantsJson() || $request->is('api/*')) {
+            // Si es petición JSON (para fetch API)
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'data' => [
                         'usuarios' => $usuarios,
                         'totalUsuarios' => $totalUsuarios,
                         'usuariosActivos' => $usuariosActivos,
-                        'usuariosInactivos' => $usuariosInactivos
+                        'usuariosInactivos' => $usuariosInactivos,
+                        'roles' => $roles
                     ]
                 ]);
             }
 
             // Si es vista web
-            return view('rh.catalogos.usuarios', compact('usuarios', 'totalUsuarios', 'usuariosActivos', 'usuariosInactivos'));
+            return view('rh.catalogos.usuarios', compact('usuarios', 'totalUsuarios', 'usuariosActivos', 'usuariosInactivos', 'roles'));
 
         } catch (\Exception $e) {
             \Log::error('Error en UserController@index: ' . $e->getMessage());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al cargar los datos: ' . $e->getMessage()
@@ -56,6 +66,37 @@ class UserController extends Controller
             }
 
             return back()->with('error', 'Error al cargar los datos: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get all active roles for select dropdown
+     */
+    public function getRoles(Request $request)
+    {
+        try {
+            // Obtener solo roles activos
+            $roles = Rol::activos()
+                        ->whereNull('deleted_at')
+                        ->orderBy('nombre')
+                        ->get(['id', 'nombre', 'folio']);
+            
+            \Log::info('UserController@getRoles - Roles cargados', [
+                'roles_count' => $roles->count()
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $roles
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error al obtener roles: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar los roles: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -74,7 +115,7 @@ class UserController extends Controller
 
             \Log::info('Usuario creado exitosamente:', ['id' => $usuario->id, 'folio' => $usuario->folio]);
 
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Usuario creado exitosamente',
@@ -88,7 +129,7 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::warning('Error de validación al crear usuario:', $e->errors());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error de validación',
@@ -101,7 +142,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error al crear usuario: ' . $e->getMessage());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al crear el usuario: ' . $e->getMessage()
@@ -126,7 +167,7 @@ class UserController extends Controller
             if (!$usuario) {
                 \Log::error('Usuario no encontrado con ID: ' . $id);
                 
-                if ($request->wantsJson() || $request->is('api/*')) {
+                if ($request->ajax() || $request->wantsJson()) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Usuario no encontrado'
@@ -136,7 +177,7 @@ class UserController extends Controller
                 return abort(404, 'Usuario no encontrado');
             }
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'data' => $usuario
@@ -148,7 +189,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error al mostrar usuario: ' . $e->getMessage());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al cargar el usuario: ' . $e->getMessage()
@@ -177,7 +218,7 @@ class UserController extends Controller
             if (!$usuario) {
                 \Log::error('Usuario no encontrado con ID: ' . $id);
                 
-                if ($request->wantsJson() || $request->is('api/*')) {
+                if ($request->ajax() || $request->wantsJson()) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Usuario no encontrado'
@@ -200,7 +241,7 @@ class UserController extends Controller
 
             \Log::info('Usuario actualizado exitosamente');
 
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Usuario actualizado exitosamente',
@@ -214,7 +255,7 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::warning('Error de validación al actualizar usuario:', $e->errors());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error de validación',
@@ -227,7 +268,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error al actualizar usuario: ' . $e->getMessage());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al actualizar el usuario: ' . $e->getMessage()
@@ -277,7 +318,7 @@ class UserController extends Controller
             
             \Log::info('=== FIN ELIMINACIÓN USUARIO ===');
 
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Usuario eliminado exitosamente'
@@ -290,7 +331,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error al eliminar usuario: ' . $e->getMessage());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al eliminar el usuario: ' . $e->getMessage()
@@ -320,13 +361,13 @@ class UserController extends Controller
             }
             
             // Generar contraseña aleatoria
-            $newPassword = \Str::random(10);
+            $newPassword = Str::random(10);
             $usuario->password = Hash::make($newPassword);
             $usuario->save();
             
             \Log::info('Contraseña restablecida para usuario: ' . $usuario->email);
 
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Contraseña restablecida exitosamente',
@@ -339,7 +380,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             \Log::error('Error al restablecer contraseña: ' . $e->getMessage());
             
-            if ($request->wantsJson() || $request->is('api/*')) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al restablecer contraseña: ' . $e->getMessage()
@@ -350,64 +391,64 @@ class UserController extends Controller
         }
     }
 
-/**
- * Export to Excel
- */
-public function exportExcel(Request $request)
-{
-    try {
-        $buscar = $request->buscar;
-        
-        \Log::info('Exportando usuarios a Excel', ['buscar' => $buscar]);
-        
-        $nombreArchivo = 'usuarios_' . date('Y-m-d_His') . '.xlsx';
-        
-        // Si es petición API, devolver JSON con mensaje
-        if ($request->wantsJson() || $request->is('api/*')) {
-            $usuarios = User::whereNull('deleted_at')
-                           ->buscar($buscar)
-                           ->get();
+    /**
+     * Export to Excel
+     */
+    public function exportExcel(Request $request)
+    {
+        try {
+            $buscar = $request->buscar;
             
-            return response()->json([
-                'success' => true,
-                'message' => 'Exportación completada',
-                'data' => $usuarios,
-                'download_url' => route('usuarios.export.download', ['buscar' => $buscar])
-            ]);
-        }
-        
-        // Para descarga directa desde el navegador
-        return Excel::download(new UsuariosExport($buscar), $nombreArchivo);
-        
-    } catch (\Exception $e) {
-        \Log::error('Error al exportar usuarios: ' . $e->getMessage());
-        \Log::error('Stack trace: ' . $e->getTraceAsString());
-        
-        if ($request->wantsJson() || $request->is('api/*')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al exportar: ' . $e->getMessage()
-            ], 500);
-        }
+            \Log::info('Exportando usuarios a Excel', ['buscar' => $buscar]);
+            
+            $nombreArchivo = 'usuarios_' . date('Y-m-d_His') . '.xlsx';
+            
+            // Si es petición API, devolver JSON con mensaje
+            if ($request->ajax() || $request->wantsJson()) {
+                $usuarios = User::whereNull('deleted_at')
+                               ->buscar($buscar)
+                               ->get();
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Exportación completada',
+                    'data' => $usuarios,
+                    'download_url' => route('usuarios.export.download', ['buscar' => $buscar])
+                ]);
+            }
+            
+            // Para descarga directa desde el navegador
+            return Excel::download(new UsuariosExport($buscar), $nombreArchivo);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error al exportar usuarios: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error al exportar: ' . $e->getMessage()
+                ], 500);
+            }
 
-        return back()->with('error', 'Error al exportar: ' . $e->getMessage());
+            return back()->with('error', 'Error al exportar: ' . $e->getMessage());
+        }
     }
-}
 
-/**
- * Download Excel file
- */
-public function downloadExcel(Request $request)
-{
-    try {
-        $buscar = $request->buscar;
-        $nombreArchivo = 'usuarios_' . date('Y-m-d_His') . '.xlsx';
-        
-        return Excel::download(new UsuariosExport($buscar), $nombreArchivo);
-        
-    } catch (\Exception $e) {
-        \Log::error('Error al descargar Excel: ' . $e->getMessage());
-        return back()->with('error', 'Error al descargar: ' . $e->getMessage());
+    /**
+     * Download Excel file
+     */
+    public function downloadExcel(Request $request)
+    {
+        try {
+            $buscar = $request->buscar;
+            $nombreArchivo = 'usuarios_' . date('Y-m-d_His') . '.xlsx';
+            
+            return Excel::download(new UsuariosExport($buscar), $nombreArchivo);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error al descargar Excel: ' . $e->getMessage());
+            return back()->with('error', 'Error al descargar: ' . $e->getMessage());
+        }
     }
-}
 }

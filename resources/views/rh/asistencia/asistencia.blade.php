@@ -12,6 +12,39 @@
             </div>
 
             <div class="card-body p-4">
+                <!-- Filtros rápidos -->
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; align-items: flex-end;">
+                    <div>
+                        <label style="font-size: 12px; color: #6c757d; display: block; margin-bottom: 5px;">Fecha Inicio</label>
+                        <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 13px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: #6c757d; display: block; margin-bottom: 5px;">Fecha Fin</label>
+                        <input type="date" id="fechaFin" style="padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 13px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: #6c757d; display: block; margin-bottom: 5px;">Estatus</label>
+                        <select id="filtroEstatus" style="padding: 6px 10px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 13px;">
+                            <option value="">Todos</option>
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Justificado">Justificado</option>
+                            <option value="Falta">Falta</option>
+                            <option value="Retardo">Retardo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button id="btnFiltrar" style="background: var(--color-primary); color: white; border: none; border-radius: 4px; padding: 6px 20px; cursor: pointer; font-size: 13px;">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                    </div>
+                    <div>
+                        <button id="btnLimpiarFiltros" style="background: #6c757d; color: white; border: none; border-radius: 4px; padding: 6px 20px; cursor: pointer; font-size: 13px;">
+                            <i class="fas fa-undo"></i> Limpiar
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <!-- Grupo de agrupación -->
@@ -27,7 +60,7 @@
                         <div>
                             <button id="btnAgregar" 
                                     style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-primary); font-size: 16px;" 
-                                    title="Agregar hoja de asistencia"
+                                    title="Agregar asistencia"
                                     onclick="abrirModalAsistencia()">
                                 <i class="fas fa-plus" style="color: var(--color-primary);"></i>
                             </button>
@@ -36,7 +69,8 @@
                         <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);">
+                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);"
+                                    onclick="exportarExcel()">
                                 <i class="fas fa-file-excel" style="color: var(--color-primary);"></i>
                                 <span class="hide-mobile">Excel</span>
                             </button>
@@ -62,138 +96,60 @@
                         </div>
 
                         <!-- Buscador -->
-                        <div style="position: relative; min-width: 200px;">
+                        <div style="position: relative; min-width: 250px;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-primary); font-size: 12px;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar por folio, coordinador..." style="width: 100%; padding: 8px 8px 8px 30px; border: 1px solid var(--color-primary); border-radius: 4px; font-size: 13px;">
+                            <input type="text" id="buscador" placeholder="Buscar por empleado, folio..." style="width: 100%; padding: 8px 8px 8px 30px; border: 1px solid var(--color-primary); border-radius: 4px; font-size: 13px;">
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabla de Hoja de Asistencias -->
+                <!-- Tabla de Asistencias -->
                 <div class="table-container" style="border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; background-color: white; width: 100%;">
-                    <table class="table" id="tablaAsistencias" style="width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px;">
+                    <table class="table" id="tablaAsistencias" style="width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px;">
                         <thead style="background-color: var(--color-primary);">
                             <tr>
                                 <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="folio">Folio</th>
+                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="empleado">Empleado</th>
                                 <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="fecha">Fecha</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="fecha_inicio">Fecha Inicio</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="fecha_fin">Fecha Fin</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="coordinador">Coordinador</th>
+                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="hora_entrada">Entrada</th>
+                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="hora_salida">Salida</th>
                                 <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="observaciones">Observaciones</th>
                                 <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="estatus">Estatus</th>
                                 <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; position: sticky; right: 0; z-index: 35; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tablaBody">
                             <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">101</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">15/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">01/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">15/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">JUAN PEREZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Asistencia quincenal</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 101')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 101')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 101')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">102</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">14/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">01/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">14/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">MARIA GARCIA</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Asistencia semanal</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 102')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 102')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 102')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">103</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">13/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">01/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">13/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">CARLOS LOPEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Asistencia mensual</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 103')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 103')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 103')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">104</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">12/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">01/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">12/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">ANA MARTINEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Asistencia quincenal</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 104')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 104')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 104')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">105</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">11/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">01/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">11/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">ROBERTO SANCHEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Asistencia con retrasos</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Cancelado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 105')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 105')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 105')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">106</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">10/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">01/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">10/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">LAURA FLORES</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Asistencia completa</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 106')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 106')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 106')"></i>
+                                <td colspan="8" style="text-align: center; padding: 40px;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--color-primary);"></i>
+                                    <p style="margin-top: 10px; color: #6c757d;">Cargando datos...</p>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot style="background-color: #f8f9fa;">
                             <tr>
-                                <td colspan="8" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-weight: bold; font-size: 13px;">Total Hojas de Asistencia: 6</td>
+                                <td colspan="8" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-weight: bold; font-size: 13px;">
+                                    Total Asistencias: <span id="totalAsistencias">0</span> | 
+                                    Activos: <span id="totalActivos" style="color: #28a745;">0</span> | 
+                                    Pendientes: <span id="totalPendientes" style="color: #ffc107;">0</span> | 
+                                    Faltas: <span id="totalFaltas" style="color: #dc3545;">0</span> | 
+                                    Retardos: <span id="totalRetardos" style="color: #fd7e14;">0</span>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+                
+                <!-- Paginación -->
+                <div id="paginacion" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px; background-color: white; border: 1px solid #dee2e6; border-radius: 4px;">
+                    <div style="font-size: 13px; color: #6c757d;">
+                        Mostrando <span id="desde">0</span> a <span id="hasta">0</span> de <span id="total">0</span> registros
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button id="prevPage" style="padding: 6px 12px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; font-size: 13px;" disabled>Anterior</button>
+                        <span id="paginaActual" style="padding: 6px 12px; background-color: var(--color-primary); color: white; border-radius: 4px; font-size: 13px;">1</span>
+                        <button id="nextPage" style="padding: 6px 12px; border: 1px solid #dee2e6; background-color: white; border-radius: 4px; cursor: pointer; font-size: 13px;">Siguiente</button>
+                    </div>
                 </div>
                 
                 <!-- Crear filtro -->
@@ -207,73 +163,92 @@
     </section>
 </div>
 
-<!-- MODAL PARA NUEVA HOJA DE ASISTENCIA -->
+<!-- MODAL PARA NUEVA/EDITAR ASISTENCIA -->
 <div id="modalAsistencia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
+    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 550px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
         
         <!-- Header -->
         <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="color: white; margin: 0; font-size: 18px;">Nueva Hoja de Asistencia</h3>
+            <h3 style="color: white; margin: 0; font-size: 18px;" id="modalTitulo">Nueva Asistencia</h3>
             <button onclick="cerrarModalAsistencia()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
         </div>
         
         <!-- Formulario -->
         <div style="padding: 20px;">
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Folio</label>
-                    <input type="number" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="101">
+            <form id="formAsistencia" onsubmit="event.preventDefault(); guardarAsistencia();">
+                @csrf
+                <input type="hidden" id="asistenciaId" value="">
+                
+                <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Empleado *</label>
+                        <select id="empleadoId" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" required>
+                            <option value="">Seleccionar empleado</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Fecha *</label>
+                        <input type="date" id="fecha" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" required>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Hora Entrada</label>
+                            <input type="time" id="horaEntrada" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Hora Salida</label>
+                            <input type="time" id="horaSalida" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Observaciones</label>
+                        <textarea id="observaciones" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observaciones..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Estatus *</label>
+                        <select id="estatus" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" required>
+                            <option value="Activo">Activo</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Justificado">Justificado</option>
+                            <option value="Falta">Falta</option>
+                            <option value="Retardo">Retardo</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Fecha</label>
-                    <input type="date" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" onclick="cerrarModalAsistencia()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
                 </div>
-                
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Fecha Inicio</label>
-                    <input type="date" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                </div>
-                
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Fecha Fin</label>
-                    <input type="date" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                </div>
-                
-                <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Coordinador</label>
-                    <select style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar coordinador</option>
-                        <option>JUAN PEREZ</option>
-                        <option>MARIA GARCIA</option>
-                        <option>CARLOS LOPEZ</option>
-                        <option>ANA MARTINEZ</option>
-                        <option>ROBERTO SANCHEZ</option>
-                        <option>LAURA FLORES</option>
-                    </select>
-                </div>
-                
-                <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Observaciones</label>
-                    <textarea rows="3" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observaciones..."></textarea>
-                </div>
-                
-                <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Estatus</label>
-                    <select style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Activo</option>
-                        <option>Pendiente</option>
-                        <option>Cancelado</option>
-                        <option>Finalizado</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                <button onclick="cerrarModalAsistencia()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="alert('Hoja de asistencia guardada')" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
-            </div>
+            </form>
         </div>
+    </div>
+</div>
+
+<!-- MODAL PARA VER DETALLE -->
+<div id="modalDetalle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
+        <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="color: white; margin: 0; font-size: 18px;">Detalle de Asistencia</h3>
+            <button onclick="cerrarModalDetalle()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
+        </div>
+        <div style="padding: 20px;" id="detalleContenido"></div>
+    </div>
+</div>
+
+<!-- Notificación -->
+<div id="notification" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000000; min-width: 300px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: slideInRight 0.3s ease; overflow: hidden;">
+    <div id="notificationHeader" style="padding: 15px 20px; font-weight: bold; display: flex; align-items: center; gap: 10px;">
+        <i id="notificationIcon" class="fas"></i>
+        <span id="notificationTitle"></span>
+    </div>
+    <div id="notificationBody" style="padding: 15px 20px; border-top: 1px solid #eee;">
+        <span id="notificationMessage"></span>
     </div>
 </div>
 
@@ -285,12 +260,8 @@
         --color-red: #FF0000;
     }
 
-    /* Estilos generales */
-    .semaforo .card-header h2 {
-        color: var(--color-primary) !important;
-    }
+    .semaforo .card-header h2 { color: var(--color-primary) !important; }
     
-    /* Tabla */
     .table-container {
         border: 1px solid #dee2e6;
         border-radius: 4px;
@@ -304,7 +275,6 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 12px;
-        min-width: 1000px;
     }
 
     .table th {
@@ -325,56 +295,17 @@
         vertical-align: middle;
     }
     
-    /* Alineaciones específicas */
-    .table td:nth-child(1),
-    .table td:nth-child(2),
-    .table td:nth-child(3),
-    .table td:nth-child(4),
-    .table td:nth-child(5),
-    .table td:nth-child(7) {
-        text-align: center;
-    }
+    tbody tr:nth-child(even) { background-color: #f8f9fa; }
+    tbody tr:hover { background-color: #e8f0fe; }
     
-    .table td:nth-child(6) {
-        text-align: left;
-    }
-    
-    /* Filas alternadas */
-    tbody tr:nth-child(even) {
-        background-color: #f8f9fa;
-    }
-    
-    tbody tr:hover {
-        background-color: #e8f0fe;
-    }
-    
-    /* Columna de acciones fija */
     .table th:last-child,
     .table td:last-child {
         position: sticky !important;
         right: 0 !important;
         z-index: 35 !important;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.1) !important;
     }
     
-    .table th:last-child {
-        background-color: var(--color-primary) !important;
-    }
-    
-    .table td:last-child {
-        background-color: white !important;
-        text-align: center !important;
-    }
-    
-    tbody tr:nth-child(even) td:last-child {
-        background-color: #f8f9fa !important;
-    }
-    
-    tbody tr:hover td:last-child {
-        background-color: #e8f0fe !important;
-    }
-    
-    /* Iconos de acción */
     .table td:last-child i {
         margin: 0 5px;
         font-size: 14px;
@@ -382,69 +313,18 @@
         transition: transform 0.2s;
     }
     
-    .table td:last-child i:hover {
-        transform: scale(1.2);
-    }
+    .table td:last-child i:hover { transform: scale(1.2); }
+    .table td:last-child i.fa-eye,
+    .table td:last-child i.fa-edit { color: var(--color-primary); }
+    .table td:last-child i.fa-trash { color: #dc3545; }
     
-    .table td:last-child i.fa-edit,
-    .table td:last-child i.fa-eye {
-        color: var(--color-primary);
-    }
+    .badge-activo { background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px; text-align: center; }
+    .badge-pendiente { background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px; text-align: center; }
+    .badge-justificado { background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px; text-align: center; }
+    .badge-falta { background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px; text-align: center; }
+    .badge-retardo { background-color: #fd7e14; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px; text-align: center; }
     
-    .table td:last-child i.fa-trash,
-    .table td:last-child i.fa-file-pdf {
-        color: #dc3545;
-    }
-    
-    /* Badges de estatus */
-    .badge-activo {
-        background-color: #28a745;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 70px;
-        text-align: center;
-    }
-    
-    .badge-pendiente {
-        background-color: #ffc107;
-        color: #212529;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 70px;
-        text-align: center;
-    }
-    
-    .badge-cancelado {
-        background-color: #dc3545;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 70px;
-        text-align: center;
-    }
-    
-    .badge-finalizado {
-        background-color: #6c757d;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 70px;
-        text-align: center;
-    }
-    
-    /* Drag & drop */
-    [draggable="true"] {
-        cursor: grab;
-    }
+    [draggable="true"] { cursor: grab; }
     
     .columna-agrupada {
         display: inline-flex;
@@ -465,161 +345,229 @@
         color: var(--color-primary);
     }
     
-    /* Modal */
-    #modalAsistencia {
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
+    #modalAsistencia, #modalDetalle { display: none; align-items: center; justify-content: center; }
     
     @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(-50px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Responsive */
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
     @media (max-width: 768px) {
-        .hide-mobile {
-            display: none !important;
-        }
-        
-        .table-container {
-            max-height: 500px;
-        }
-        
-        .table td {
-            padding: 8px 4px;
-            font-size: 11px;
-        }
-        
-        .table td:last-child i {
-            margin: 0 3px;
-            font-size: 12px;
-        }
-        
-        #modalAsistencia > div {
-            width: 100%;
-            height: 100%;
-            max-height: 100vh;
-            border-radius: 0;
-        }
-        
-        #modalAsistencia div[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
-        }
+        .hide-mobile { display: none !important; }
+        .table-container { max-height: 500px; }
+        .table td { padding: 8px 4px; font-size: 11px; }
+        .table td:last-child i { margin: 0 3px; font-size: 12px; }
+        #modalAsistencia > div, #modalDetalle > div { width: 100%; height: 100%; max-height: 100vh; border-radius: 0; }
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
+let datosAsistencias = [];
+let paginaActual = 1;
+let registrosPorPagina = 10;
+let columnasAgrupadas = [];
+
 document.addEventListener('DOMContentLoaded', function() {
-    let columnasAgrupadas = [];
+    cargarDatos();
+    cargarEmpleados();
     
-    // Actualizar grupo de columnas
-    function actualizarGrupoColumnas() {
-        const container = document.getElementById('grupoColumnas');
-        const texto = document.getElementById('textoAgrupar');
-        
-        container.innerHTML = '';
-        
-        if (columnasAgrupadas.length === 0) {
-            texto.style.display = 'inline';
-        } else {
-            texto.style.display = 'none';
-            columnasAgrupadas.forEach(col => {
-                const chip = document.createElement('span');
-                chip.className = 'columna-agrupada';
-                chip.innerHTML = `${col} <span class="remover" onclick="removerColumna('${col}')">&times;</span>`;
-                container.appendChild(chip);
-            });
-        }
-    }
-
-    window.removerColumna = function(columna) {
-        columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-        actualizarGrupoColumnas();
-    };
-
-    // Drag & drop
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'TH' && e.target.draggable) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.columna);
-        }
-    });
-
-    document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
+    // Eventos
+    document.getElementById('buscador').addEventListener('input', function() { paginaActual = 1; cargarDatos(); });
+    document.getElementById('btnFiltrar').addEventListener('click', function() { paginaActual = 1; cargarDatos(); });
+    document.getElementById('btnLimpiarFiltros').addEventListener('click', limpiarFiltros);
+    document.getElementById('btnCrearFiltro').addEventListener('click', () => mostrarNotificacion('info', 'Funcionalidad de filtro en desarrollo'));
+    document.getElementById('btnExcel').addEventListener('click', exportarExcel);
+    document.getElementById('prevPage').addEventListener('click', () => cambiarPagina('prev'));
+    document.getElementById('nextPage').addEventListener('click', () => cambiarPagina('next'));
     
-    document.getElementById('grupoAgrupacion').addEventListener('drop', (e) => {
-        e.preventDefault();
-        const columna = e.dataTransfer.getData('text/plain');
-        if (columna && !columnasAgrupadas.includes(columna)) {
-            columnasAgrupadas.push(columna);
-            actualizarGrupoColumnas();
-        }
-    });
-
-    // Selector de columnas
-    window.toggleColumnSelector = function() {
-        const selector = document.getElementById('columnSelector');
-        selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
-        
-        if (selector.style.display === 'block') {
-            const columnas = [
-                { field: 'folio', caption: 'Folio' },
-                { field: 'fecha', caption: 'Fecha' },
-                { field: 'fecha_inicio', caption: 'Fecha Inicio' },
-                { field: 'fecha_fin', caption: 'Fecha Fin' },
-                { field: 'coordinador', caption: 'Coordinador' },
-                { field: 'observaciones', caption: 'Observaciones' },
-                { field: 'estatus', caption: 'Estatus' }
-            ];
-            
-            const lista = document.getElementById('columnasLista');
-            lista.innerHTML = columnas.map(col => `
-                <div style="padding: 5px 0; display: flex; align-items: center;">
-                    <input type="checkbox" 
-                           id="chk_${col.field}"
-                           data-columna="${col.field}"
-                           checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
-                    <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
-                </div>
-            `).join('');
-        }
-    };
-
-    window.cerrarColumnSelector = function() {
-        document.getElementById('columnSelector').style.display = 'none';
-    };
-
-    // Cerrar selector al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
-            document.getElementById('columnSelector').style.display = 'none';
-        }
-    });
-
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel').addEventListener('click', () => alert('Exportar a Excel'));
-
-    // Buscador
-    document.getElementById('buscador').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        console.log('Buscando:', termino);
-    });
+    // Fecha por defecto
+    document.getElementById('fecha').valueAsDate = new Date();
 });
 
-// Funciones del modal
-function abrirModalAsistencia() {
+function cargarDatos() {
+    const params = new URLSearchParams();
+    if (document.getElementById('fechaInicio').value) params.append('fecha_inicio', document.getElementById('fechaInicio').value);
+    if (document.getElementById('fechaFin').value) params.append('fecha_fin', document.getElementById('fechaFin').value);
+    if (document.getElementById('filtroEstatus').value) params.append('estatus', document.getElementById('filtroEstatus').value);
+    if (document.getElementById('buscador').value) params.append('buscar', document.getElementById('buscador').value);
+    
+    fetch(`/api/asistencias?${params.toString()}`, {
+        headers: { 
+            'Accept': 'application/json', 
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            datosAsistencias = data.data.asistencias || [];
+            renderizarTabla();
+            actualizarTotales(data.data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion('error', 'Error al cargar los datos');
+    });
+}
+
+function cargarEmpleados() {
+    fetch('/api/asistencias', {
+        headers: { 
+            'Accept': 'application/json', 
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.data.empleados) {
+            const select = document.getElementById('empleadoId');
+            select.innerHTML = '<option value="">Seleccionar empleado</option>';
+            data.data.empleados.forEach(emp => {
+                select.innerHTML += `<option value="${emp.id}">${emp.nombre_completo}</option>`;
+            });
+        }
+    })
+    .catch(error => console.error('Error al cargar empleados:', error));
+}
+
+function renderizarTabla() {
+    const tbody = document.getElementById('tablaBody');
+    const inicio = (paginaActual - 1) * registrosPorPagina;
+    const fin = inicio + registrosPorPagina;
+    const paginaDatos = datosAsistencias.slice(inicio, fin);
+    
+    if (paginaDatos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;"><i class="fas fa-info-circle" style="font-size: 24px;"></i><p>No hay registros de asistencia</p></td></tr>';
+        document.getElementById('desde').textContent = '0';
+        document.getElementById('hasta').textContent = '0';
+        document.getElementById('total').textContent = '0';
+        return;
+    }
+    
+    let html = '';
+    paginaDatos.forEach((asistencia, index) => {
+        const bgColor = (inicio + index) % 2 === 1 ? 'style="background-color: #f8f9fa;"' : '';
+        const estatusBadge = asistencia.estatus_badge || `<span class="badge-${asistencia.estatus?.toLowerCase()}">${asistencia.estatus}</span>`;
+        
+        html += `
+            <tr ${bgColor}>
+                <td style="text-align: center;">${asistencia.folio || '-'}</td>
+                <td style="text-align: left;">${asistencia.empleado || '-'}</td>
+                <td style="text-align: center;">${asistencia.fecha || '-'}</td>
+                <td style="text-align: center;">${asistencia.hora_entrada || '-'}</td>
+                <td style="text-align: center;">${asistencia.hora_salida || '-'}</td>
+                <td style="text-align: left;">${asistencia.observaciones || '-'}</td>
+                <td style="text-align: center;">${estatusBadge}</td>
+                <td style="text-align: center;">
+                    <i class="fas fa-eye" onclick="verAsistencia(${asistencia.id})" title="Ver detalle"></i>
+                    <i class="fas fa-edit" onclick="editarAsistencia(${asistencia.id})" title="Editar"></i>
+                    <i class="fas fa-trash" onclick="eliminarAsistencia(${asistencia.id})" title="Eliminar"></i>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+    
+    const total = datosAsistencias.length;
+    const desde = total === 0 ? 0 : (paginaActual - 1) * registrosPorPagina + 1;
+    const hasta = Math.min(paginaActual * registrosPorPagina, total);
+    
+    document.getElementById('desde').textContent = desde;
+    document.getElementById('hasta').textContent = hasta;
+    document.getElementById('total').textContent = total;
+    document.getElementById('paginaActual').textContent = paginaActual;
+    document.getElementById('prevPage').disabled = paginaActual === 1;
+    document.getElementById('nextPage').disabled = paginaActual >= Math.ceil(total / registrosPorPagina);
+}
+
+function actualizarTotales(data) {
+    document.getElementById('totalAsistencias').textContent = data.totalAsistencias || 0;
+    document.getElementById('totalActivos').textContent = data.asistenciasActivas || 0;
+    document.getElementById('totalPendientes').textContent = data.asistenciasPendientes || 0;
+    document.getElementById('totalFaltas').textContent = data.asistenciasFaltas || 0;
+    document.getElementById('totalRetardos').textContent = data.asistenciasRetardos || 0;
+}
+
+function limpiarFiltros() {
+    document.getElementById('fechaInicio').value = '';
+    document.getElementById('fechaFin').value = '';
+    document.getElementById('filtroEstatus').value = '';
+    document.getElementById('buscador').value = '';
+    paginaActual = 1;
+    cargarDatos();
+}
+
+function cambiarPagina(direccion) {
+    const totalPaginas = Math.ceil(datosAsistencias.length / registrosPorPagina);
+    if (direccion === 'prev' && paginaActual > 1) paginaActual--;
+    if (direccion === 'next' && paginaActual < totalPaginas) paginaActual++;
+    renderizarTabla();
+}
+
+function mostrarNotificacion(tipo, mensaje) {
+    const notification = document.getElementById('notification');
+    const header = document.getElementById('notificationHeader');
+    const icon = document.getElementById('notificationIcon');
+    const title = document.getElementById('notificationTitle');
+    const body = document.getElementById('notificationMessage');
+    
+    const config = {
+        success: { bg: '#28a745', icon: 'fa-check-circle', title: 'Éxito' },
+        error: { bg: '#dc3545', icon: 'fa-times-circle', title: 'Error' },
+        warning: { bg: '#ffc107', icon: 'fa-exclamation-triangle', title: 'Advertencia' },
+        info: { bg: '#17a2b8', icon: 'fa-info-circle', title: 'Información' }
+    };
+    
+    const cfg = config[tipo] || config.info;
+    header.style.backgroundColor = cfg.bg;
+    header.style.color = tipo === 'warning' ? '#212529' : 'white';
+    icon.className = `fas ${cfg.icon}`;
+    title.textContent = cfg.title;
+    body.textContent = mensaje;
+    notification.style.display = 'block';
+    setTimeout(() => notification.style.display = 'none', 3000);
+}
+
+function abrirModalAsistencia(id = null) {
+    document.getElementById('modalTitulo').textContent = id ? 'Editar Asistencia' : 'Nueva Asistencia';
+    document.getElementById('asistenciaId').value = id || '';
+    
+    if (id) {
+        fetch(`/api/asistencias/${id}`, { 
+            headers: { 
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            } 
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('empleadoId').value = data.data.plantilla_id;
+                document.getElementById('fecha').value = data.data.fecha;
+                document.getElementById('horaEntrada').value = data.data.hora_entrada;
+                document.getElementById('horaSalida').value = data.data.hora_salida;
+                document.getElementById('observaciones').value = data.data.observaciones;
+                document.getElementById('estatus').value = data.data.estatus;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+        document.getElementById('formAsistencia').reset();
+        document.getElementById('fecha').valueAsDate = new Date();
+        document.getElementById('estatus').value = 'Activo';
+    }
+    
     document.getElementById('modalAsistencia').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
@@ -629,18 +577,236 @@ function cerrarModalAsistencia() {
     document.body.style.overflow = 'auto';
 }
 
-// Cerrar modal con Escape
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        cerrarModalAsistencia();
+function guardarAsistencia() {
+    const id = document.getElementById('asistenciaId').value;
+    const data = {
+        plantilla_id: document.getElementById('empleadoId').value,
+        fecha: document.getElementById('fecha').value,
+        hora_entrada: document.getElementById('horaEntrada').value,
+        hora_salida: document.getElementById('horaSalida').value,
+        observaciones: document.getElementById('observaciones').value,
+        estatus: document.getElementById('estatus').value
+    };
+    
+    if (!data.plantilla_id || !data.fecha) {
+        mostrarNotificacion('error', 'Complete los campos obligatorios');
+        return;
+    }
+    
+    const url = id ? `/api/asistencias/${id}` : '/api/asistencias';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            mostrarNotificacion('success', data.message);
+            cerrarModalAsistencia();
+            cargarDatos();
+        } else {
+            mostrarNotificacion('error', data.message || 'Error al guardar');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion('error', 'Error de conexión');
+    });
+}
+
+function verAsistencia(id) {
+    fetch(`/api/asistencias/${id}`, { 
+        headers: { 
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        } 
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const a = data.data;
+            document.getElementById('detalleContenido').innerHTML = `
+                <div style="display: grid; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Folio:</strong> <span>${a.folio || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Empleado:</strong> <span>${a.empleado || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Fecha:</strong> <span>${a.fecha || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Hora Entrada:</strong> <span>${a.hora_entrada || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Hora Salida:</strong> <span>${a.hora_salida || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Observaciones:</strong> <span>${a.observaciones || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+                        <strong>Estatus:</strong> <span>${a.estatus || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <strong>Registrado por:</strong> <span>${a.registrado_por || '-'}</span>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalDetalle').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function editarAsistencia(id) {
+    cerrarModalDetalle();
+    abrirModalAsistencia(id);
+}
+
+function eliminarAsistencia(id) {
+    if (confirm('¿Está seguro de eliminar esta asistencia?')) {
+        fetch(`/api/asistencias/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                mostrarNotificacion('success', data.message);
+                cargarDatos();
+            } else {
+                mostrarNotificacion('error', data.message || 'Error al eliminar');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarNotificacion('error', 'Error de conexión');
+        });
+    }
+}
+
+function cerrarModalDetalle() {
+    document.getElementById('modalDetalle').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function exportarExcel() {
+    mostrarNotificacion('info', 'Generando archivo Excel...');
+    
+    const buscar = document.getElementById('buscador').value;
+    const fechaInicio = document.getElementById('fechaInicio').value;
+    const fechaFin = document.getElementById('fechaFin').value;
+    const estatus = document.getElementById('filtroEstatus').value;
+    
+    let url = '/rh/asistencia/exportar-excel?';
+    if (buscar) url += `buscar=${encodeURIComponent(buscar)}&`;
+    if (fechaInicio) url += `fecha_inicio=${fechaInicio}&`;
+    if (fechaFin) url += `fecha_fin=${fechaFin}&`;
+    if (estatus) url += `estatus=${estatus}&`;
+    
+    window.open(url, '_blank');
+    
+    setTimeout(() => {
+        mostrarNotificacion('success', 'Descargando archivo Excel...');
+    }, 1000);
+}
+
+// Drag & drop para agrupación
+document.querySelectorAll('[draggable="true"]').forEach(th => {
+    th.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', e.target.dataset.columna));
+});
+
+document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
+document.getElementById('grupoAgrupacion').addEventListener('drop', (e) => {
+    e.preventDefault();
+    const columna = e.dataTransfer.getData('text/plain');
+    if (columna && !columnasAgrupadas.includes(columna)) {
+        columnasAgrupadas.push(columna);
+        actualizarGrupoColumnas();
+        mostrarNotificacion('info', 'Agrupando por: ' + columna);
     }
 });
 
-// Cerrar modal al hacer clic fuera
-document.getElementById('modalAsistencia').addEventListener('click', function(e) {
-    if (e.target === this) {
-        cerrarModalAsistencia();
+function actualizarGrupoColumnas() {
+    const container = document.getElementById('grupoColumnas');
+    const texto = document.getElementById('textoAgrupar');
+    container.innerHTML = '';
+    if (columnasAgrupadas.length === 0) {
+        texto.style.display = 'inline';
+    } else {
+        texto.style.display = 'none';
+        columnasAgrupadas.forEach(col => {
+            const chip = document.createElement('span');
+            chip.className = 'columna-agrupada';
+            chip.innerHTML = `${col} <span class="remover" onclick="removerColumna('${col}')">&times;</span>`;
+            container.appendChild(chip);
+        });
     }
+}
+
+window.removerColumna = function(columna) {
+    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+    actualizarGrupoColumnas();
+};
+
+// Selector de columnas
+window.toggleColumnSelector = function() {
+    const selector = document.getElementById('columnSelector');
+    selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
+    if (selector.style.display === 'block') {
+        const columnas = ['folio', 'empleado', 'fecha', 'hora_entrada', 'hora_salida', 'observaciones', 'estatus'];
+        const lista = document.getElementById('columnasLista');
+        lista.innerHTML = columnas.map(col => `
+            <div style="padding: 5px 0;">
+                <input type="checkbox" id="chk_${col}" data-columna="${col}" checked style="margin-right: 8px; accent-color: var(--color-primary);" onchange="toggleColumna('${col}', this.checked)">
+                <label for="chk_${col}" style="font-size: 12px;">${col.charAt(0).toUpperCase() + col.slice(1)}</label>
+            </div>
+        `).join('');
+    }
+};
+
+window.toggleColumna = function(columna, visible) {
+    const indices = { folio: 0, empleado: 1, fecha: 2, hora_entrada: 3, hora_salida: 4, observaciones: 5, estatus: 6 };
+    const index = indices[columna];
+    if (index !== undefined) {
+        document.querySelectorAll(`#tablaAsistencias th:nth-child(${index + 1}), #tablaAsistencias td:nth-child(${index + 1})`)
+            .forEach(celda => celda.style.display = visible ? '' : 'none');
+    }
+};
+
+window.cerrarColumnSelector = () => document.getElementById('columnSelector').style.display = 'none';
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
+        document.getElementById('columnSelector').style.display = 'none';
+    }
+});
+
+document.addEventListener('keydown', (e) => { 
+    if (e.key === 'Escape') { 
+        cerrarModalAsistencia(); 
+        cerrarModalDetalle(); 
+    } 
+});
+
+document.getElementById('modalAsistencia').addEventListener('click', (e) => { 
+    if (e.target === e.currentTarget) cerrarModalAsistencia(); 
+});
+
+document.getElementById('modalDetalle').addEventListener('click', (e) => { 
+    if (e.target === e.currentTarget) cerrarModalDetalle(); 
 });
 </script>
 @endsection
