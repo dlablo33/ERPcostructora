@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\RH\RolController;
 use App\Http\Controllers\RH\PuestoController;
 use App\Http\Controllers\RH\AreaController;
@@ -321,14 +321,39 @@ Route::prefix('api')->group(function () {
     Route::put('incidencias/{id}', [IncidenciaController::class, 'update']);
     Route::delete('incidencias/{id}', [IncidenciaController::class, 'destroy']);
     
-    // Asistencia API
-    Route::get('asistencias', [AsistenciaController::class, 'index']);
-    Route::post('asistencias', [AsistenciaController::class, 'store']);
-    Route::get('asistencias/{id}', [AsistenciaController::class, 'show']);
-    Route::put('asistencias/{id}', [AsistenciaController::class, 'update']);
-    Route::delete('asistencias/{id}', [AsistenciaController::class, 'destroy']);
-    Route::post('asistencias/entrada', [AsistenciaController::class, 'registrarEntrada']);
-    Route::post('asistencias/{id}/salida', [AsistenciaController::class, 'registrarSalida']);
+    // ============================================
+// ASISTENCIA - Rutas API
+// ============================================
+
+// ============================================
+// ASISTENCIA - Rutas API
+// ============================================
+
+// PRIMERO: Rutas específicas (sin parámetros) - DEBEN IR ANTES QUE LAS RUTAS CON {id}
+Route::get('asistencias/empleados-a-cargo', [AsistenciaController::class, 'getEmpleadosACargo']);
+Route::post('asistencias/masivo', [AsistenciaController::class, 'storeMasivo']);
+Route::post('asistencias/entrada', [AsistenciaController::class, 'registrarEntrada']);
+Route::post('asistencias/exportar-excel', [AsistenciaController::class, 'exportExcel']);
+Route::get('asistencias/debug', [AsistenciaController::class, 'debugEmpleados']);
+Route::get('asistencias/test-empleados', [AsistenciaController::class, 'testEmpleados']);
+
+// DESPUÉS: Rutas con parámetros (con {id}) - DEBEN IR AL FINAL
+Route::get('asistencias', [AsistenciaController::class, 'index']);
+Route::post('asistencias', [AsistenciaController::class, 'store']);
+Route::get('asistencias/{id}', [AsistenciaController::class, 'show']);
+Route::put('asistencias/{id}', [AsistenciaController::class, 'update']);
+Route::delete('asistencias/{id}', [AsistenciaController::class, 'destroy']);
+Route::post('asistencias/{id}/salida', [AsistenciaController::class, 'registrarSalida']);
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Rutas del chat
+    Route::get('/chat/conversations', [ChatController::class, 'getConversations']);
+    Route::get('/chat/users', [ChatController::class, 'getUsers']);
+    Route::get('/chat/messages/{userId}', [ChatController::class, 'getMessages']);
+    Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+    Route::post('/chat/mark-read/{userId}', [ChatController::class, 'markAsRead']);
 });
 
 require __DIR__.'/auth.php';

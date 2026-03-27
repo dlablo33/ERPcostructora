@@ -39,16 +39,33 @@ class Asistencia extends Model
     // RELACIONES
     // ============================================
 
+    /**
+     * Relación con el usuario (empleado como usuario del sistema)
+     */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Relación con el empleado (plantilla)
+     */
+    public function empleado()
+    {
+        return $this->belongsTo(Plantilla::class, 'plantilla_id', 'plantilla_id');
+    }
+
+    /**
+     * Alias para plantilla (por compatibilidad)
+     */
     public function plantilla()
     {
         return $this->belongsTo(Plantilla::class, 'plantilla_id', 'plantilla_id');
     }
 
+    /**
+     * Relación con el usuario que registró la asistencia
+     */
     public function registrador()
     {
         return $this->belongsTo(User::class, 'registrado_por');
@@ -58,63 +75,37 @@ class Asistencia extends Model
     // ACCESORES
     // ============================================
 
+    /**
+     * Obtener el nombre de la persona (empleado)
+     */
     public function getNombrePersonaAttribute()
     {
-        if ($this->user) {
+        // Intentar obtener desde la relación empleado
+        if ($this->relationLoaded('empleado') && $this->empleado) {
+            return $this->empleado->nombre_completo;
+        }
+        
+        // Cargar la relación si no está cargada
+        if ($this->plantilla_id && !$this->relationLoaded('empleado')) {
+            $empleado = Plantilla::find($this->plantilla_id);
+            if ($empleado) {
+                return trim($empleado->nombre . ' ' . $empleado->apellido_paterno . ' ' . $empleado->apellido_materno);
+            }
+        }
+        
+        // Intentar desde la relación user
+        if ($this->relationLoaded('user') && $this->user) {
             return $this->user->name;
         }
-        if ($this->plantilla) {
-            return $this->plantilla->nombre_completo;
-        }
+        
         return 'Desconocido';
     }
 
-    public function getFolioPersonaAttribute()
+    /**
+     * Alias para nombre_persona
+     */
+    public function getEmpleadoNombreAttribute()
     {
-        if ($this->user) {
-            return $this->user->folio;
-        }
-        if ($this->plantilla) {
-            return $this->plantilla->numero_empleado_interno ?? $this->plantilla->plantilla_id;
-        }
-        return '-';
-    }
-
-    // ============================================
-    // SCOPES
-    // ============================================
-
-    public function scopeEntreFechas($query, $fechaInicio, $fechaFin)
-    {
-        return $query->whereBetween('fecha', [$fechaInicio, $fechaFin]);
-    }
-
-    public function scopePorSemana($query, $semana)
-    {
-        return $query->where('semana', $semana);
-    }
-
-    public function scopePorEmpleado($query, $empleadoId, $tipo = null)
-    {
-        if ($tipo === 'user') {
-            return $query->where('user_id', $empleadoId);
-        }
-        if ($tipo === 'plantilla') {
-            return $query->where('plantilla_id', $empleadoId);
-        }
-        return $query->where(function($q) use ($empleadoId) {
-            $q->where('user_id', $empleadoId)
-              ->orWhere('plantilla_id', $empleadoId);
-        });
-    }
-
-    public function scopePorEstatus($query, $estatus)
-    {
-        return $query->where('estatus', $estatus);
-    }
-
-    public function scopeActivos($query)
-    {
-        return $query->where('estatus', 'Activo');
+        return $this->nombre_persona;
     }
 }

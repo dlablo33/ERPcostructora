@@ -493,6 +493,6 @@ class Plantilla extends Model
     // Relación con Asistencias
     public function asistencias()
     {
-        return $this->hasMany(\App\Models\RH\Asistencia::class, 'plantilla_id', 'plantilla_id');
+        return $this->hasMany(\App\Models\Asistencia::class, 'plantilla_id', 'plantilla_id');
     }
 }

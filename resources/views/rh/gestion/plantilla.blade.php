@@ -243,9 +243,19 @@
                             <div><label style="font-size: 12px; font-weight: 600;">Sueldo Mensual</label>
                                 <input type="number" id="modalSueldo" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;" step="0.01" min="0" oninput="calcularMontosIMSS()">
                             </div>
-                            <div><label style="font-size: 12px; font-weight: 600;">Coordinador</label>
-                                <select id="modalCoordinadorPlantillaId" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;">
-                                    <option value="">-- Seleccionar coordinador --</option>
+                            <div><label style="font-size: 12px; font-weight: 600;">Superior</label>
+                                <select id="modalCoordinadorId" name="coordinador_id" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;">
+                                    <option value="">-- Seleccionar superior --</option>
+                                    @if(isset($coordinadores) && $coordinadores->count() > 0)
+                                        @foreach($coordinadores as $coordinador)
+                                            <option value="{{ $coordinador['id'] }}">
+                                                {{ $coordinador['nombre_completo'] }}
+                                                @if($coordinador['email'])
+                                                    ({{ $coordinador['email'] }})
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -734,21 +744,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function cargarCoordinadores() {
-        fetch('/api/plantilla/coordinadores', { headers: { 'Accept': 'application/json' } })
-            .then(r => r.json()).then(data => {
-                if (data.success && data.data) {
-                    coordinadoresLista = data.data;
-                    const select = document.getElementById('modalCoordinadorPlantillaId');
-                    select.innerHTML = '<option value="">-- Seleccionar coordinador --</option>';
-                    coordinadoresLista.forEach(c => {
-                        const option = document.createElement('option');
-                        option.value = c.plantilla_id;
-                        option.textContent = c.nombre_completo;
-                        select.appendChild(option);
-                    });
-                }
-            }).catch(() => console.log('Error cargando coordinadores'));
-    }
+    fetch('/api/plantilla/coordinadores', { headers: { 'Accept': 'application/json' } })
+        .then(r => r.json()).then(data => {
+            if (data.success && data.data) {
+                coordinadoresLista = data.data;
+                const select = document.getElementById('modalCoordinadorId');
+                select.innerHTML = '<option value="">-- Seleccionar coordinador --</option>';
+                coordinadoresLista.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.textContent = c.nombre_completo;  // Solo el nombre, sin correo
+                    select.appendChild(option);
+                });
+            }
+        }).catch(() => console.log('Error cargando coordinadores'));
+}
 
     function llenarSelectAreas(areas) {
         const select = document.getElementById('modalCatAreaId');
@@ -877,7 +887,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if ((c.field === 'area' || c.field === 'puesto') && typeof valor === 'object' && valor !== null) {
                             valor = valor.nombre || valor.descripcion || '-';
                         }
-                        html += `<td style="padding:10px 8px; ${c.field === columnasAgrupadas[0] ? 'padding-left:30px;' : ''}">${formatearValor(valor, c.type)}</td>`;
+                        html += `<td style="padding:10px 8px; ${c.field === columnasAgrupadas[0] ? 'padding-left:30px;' : ''}">${formatearValor(valor, c.type)}`;
                     });
                     html += `<td style="padding:10px 8px; text-align:center;"><i class="fas fa-eye" style="color:var(--color-primary); margin:0 5px; cursor:pointer;" onclick="verEmpleado(${item.plantilla_id})" title="Ver detalle"></i> <i class="fas fa-edit" style="color:var(--color-primary); margin:0 5px; cursor:pointer;" onclick="editarEmpleado(${item.plantilla_id})" title="Editar"></i> <i class="fas fa-trash" style="color:#dc3545; margin:0 5px; cursor:pointer;" onclick="eliminarEmpleado(${item.plantilla_id})" title="Eliminar"></i>`;
                     html += '';
@@ -885,16 +895,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             pagina.forEach(item => {
-                html += '<tr>';
+                html += ' <tr>';
                 columnas.filter(c => columnasVisibles.includes(c.field)).forEach(c => {
                     let valor = item[c.field];
                     if ((c.field === 'area' || c.field === 'puesto') && typeof valor === 'object' && valor !== null) {
                         valor = valor.nombre || valor.descripcion || '-';
                     }
-                    html += `<td style="padding:10px 8px;">${formatearValor(valor, c.type)}`;
+                    html += `<td style="padding:10px 8px;">${formatearValor(valor, c.type)}</td>`;
                 });
-                html += `<td style="padding:10px 8px; text-align:center;"><i class="fas fa-eye" style="color:var(--color-primary); margin:0 5px; cursor:pointer;" onclick="verEmpleado(${item.plantilla_id})" title="Ver detalle"></i> <i class="fas fa-edit" style="color:var(--color-primary); margin:0 5px; cursor:pointer;" onclick="editarEmpleado(${item.plantilla_id})" title="Editar"></i> <i class="fas fa-trash" style="color:#dc3545; margin:0 5px; cursor:pointer;" onclick="eliminarEmpleado(${item.plantilla_id})" title="Eliminar"></i>`;
-                html += '';
+                html += `<td style="padding:10px 8px; text-align:center;"><i class="fas fa-eye" style="color:var(--color-primary); margin:0 5px; cursor:pointer;" onclick="verEmpleado(${item.plantilla_id})" title="Ver detalle"></i> <i class="fas fa-edit" style="color:var(--color-primary); margin:0 5px; cursor:pointer;" onclick="editarEmpleado(${item.plantilla_id})" title="Editar"></i> <i class="fas fa-trash" style="color:#dc3545; margin:0 5px; cursor:pointer;" onclick="eliminarEmpleado(${item.plantilla_id})" title="Eliminar"></i></td>`;
+                html += '</tr>';
             });
         }
         tbody.innerHTML = html;
@@ -964,9 +974,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     document.getElementById('modalSueldo').value = e.sueldo || ''; 
                     if (e.sueldo) calcularMontosIMSS();
-                    if (e.coordinador_plantilla_id) {
+                    if (e.coordinador_id) {
                         setTimeout(() => {
-                            document.getElementById('modalCoordinadorPlantillaId').value = e.coordinador_plantilla_id;
+                            document.getElementById('modalCoordinadorId').value = e.coordinador_id;
                         }, 500);
                     }
                     
@@ -1052,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const tipoLicenciaNombre = e.tipo_licencia?.nombre || e.tipo_licencia_nombre || (typeof e.tipo_licencia === 'string' ? e.tipo_licencia : '-');
                     const bancoNombre = e.banco?.nombre_corto || e.banco?.nombre || e.banco_nombre || (typeof e.banco === 'string' ? e.banco : '-');
                     const tipoCuentaNombre = e.tipo_cuenta?.descripcion || e.tipo_cuenta_nombre || (typeof e.tipo_cuenta === 'string' ? e.tipo_cuenta : '-');
-                    const coordinadorNombre = e.coordinador?.nombre_completo || e.coordinador_nombre || (typeof e.coordinador === 'string' ? e.coordinador : '-');
+                    const coordinadorNombre = e.coordinador?.name || e.coordinador_nombre || (typeof e.coordinador === 'string' ? e.coordinador : '-');
                     const paisNombre = e.pais?.nombre || e.pais_nombre || (typeof e.pais === 'string' ? e.pais : '-');
                     
                     const formatearTamanio = (b) => { 
@@ -1259,7 +1269,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'cat_area_id': document.getElementById('modalCatAreaId')?.value || '',
             'cat_puesto_id': document.getElementById('modalCatPuestoId')?.value || '',
             'sueldo': document.getElementById('modalSueldo')?.value || '',
-            'coordinador_plantilla_id': document.getElementById('modalCoordinadorPlantillaId')?.value || ''
+            'coordinador_id': document.getElementById('modalCoordinadorId')?.value || ''
         };
         
         for (const [key, value] of Object.entries(camposLaborales)) {

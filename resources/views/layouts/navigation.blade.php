@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
+    <script>
+    window.userId = {{ Auth::id() }};
+    window.userName = '{{ Auth::user()->name }}';
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'MejoraSoft')</title>
@@ -916,6 +922,93 @@
                         <i class="fas fa-star" style="color: #eaf512;"></i>
                         <span id="notification-dot" class="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full" style="display: none;"></span>
                     </button> -->
+
+                    <!-- En tu archivo layouts/app.blade.php, dentro del div con los iconos de la derecha -->
+<div x-data="chatWidget()" x-init="initChat()" class="relative">
+    <button @click="toggleChat()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+        <i class="fas fa-comments" style="color: #eaf512;"></i>
+        <span x-show="unreadMessagesCount > 0" x-text="unreadMessagesCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
+    </button>
+
+    <!-- Panel del Chat -->
+    <div x-show="isOpen" @click.away="isOpen = false"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 transform scale-95"
+         x-transition:enter-end="opacity-100 transform scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 transform scale-100"
+         x-transition:leave-end="opacity-0 transform scale-95"
+         class="notifications-menu" style="width: 380px; right: 0; left: auto;"> 
+        <!-- Reutilizamos estilos de .notifications-menu para consistencia -->
+
+        <div class="notifications-header bg-construction-dark"> 
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-lg"><i class="fas fa-comments"></i> Chat en Vivo</h3>
+                    <p class="text-blue-100 text-xs mt-1">Conversaciones entre usuarios</p>
+                </div>
+                <div class="flex space-x-2">
+                    <button @click="isOpen = false" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
+                        <i class="fas fa-times text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col h-96"> 
+            <!-- Lista de Conversaciones / Usuarios -->
+            <div class="flex-1 overflow-y-auto p-2" id="chat-users-list">
+                <template x-for="user in users" :key="user.id">
+                    <div @click="selectUser(user)" 
+                         :class="{'bg-blue-50': selectedUser && selectedUser.id === user.id}"
+                         class="flex items-center p-2 rounded-lg cursor-pointer hover:bg-gray-100 transition">
+                        <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center mr-3">
+                            <i class="fas fa-user text-gray-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-gray-800" x-text="user.name"></p>
+                            <p class="text-xs text-gray-500" x-text="user.email"></p>
+                        </div>
+                        <span x-show="user.unread > 0" x-text="user.unread" class="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5"></span>
+                    </div>
+                </template>
+                <div x-show="users.length === 0" class="text-center py-10 text-gray-500">
+                    <i class="fas fa-users-slash text-4xl mb-3 opacity-30"></i>
+                    <p class="font-medium">No hay otros usuarios conectados</p>
+                </div>
+            </div>
+
+            <!-- Área de Chat (se muestra cuando se selecciona un usuario) -->
+            <div x-show="selectedUser" class="border-t border-gray-200 flex flex-col h-96">
+                <div class="bg-gray-50 p-2 border-b border-gray-200">
+                    <p class="font-semibold text-gray-800" x-text="'Chateando con: ' + selectedUser.name"></p>
+                </div>
+                <div class="flex-1 overflow-y-auto p-3 space-y-2" id="chat-messages-area">
+                    <template x-for="message in messages" :key="message.id">
+                        <div :class="{'text-right': message.isOwn}">
+                            <div :class="{'bg-blue-600 text-white': message.isOwn, 'bg-gray-200 text-gray-800': !message.isOwn}" 
+                                 class="inline-block px-3 py-1 rounded-lg max-w-xs text-sm">
+                                <p x-text="message.text"></p>
+                                <span class="text-xs opacity-70 block text-right" x-text="formatTime(message.created_at)"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="p-2 border-t border-gray-200">
+                    <div class="flex space-x-2">
+                        <input type="text" x-model="newMessage" @keyup.enter="sendMessage" 
+                               placeholder="Escribe un mensaje..." 
+                               class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        <button @click="sendMessage" class="bg-construction-blue text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                     <!-- NOTIFICACIONES -->
                     <div x-data="notifications()" x-init="initNotifications()" class="relative">
@@ -3696,6 +3789,165 @@ escapeHtml(text) {
                 }
             });
         });
+
+
+    // ===============================================================================================
+
+    // En tu archivo layouts/app.blade.php, dentro de la etiqueta <script> principal o en un nuevo <script>
+
+function chatWidget() {
+    return {
+        isOpen: false,
+        users: [], // Lista de usuarios disponibles para chatear
+        selectedUser: null,
+        messages: [], // Mensajes de la conversación actual
+        newMessage: '',
+        unreadMessagesCount: 0,
+        echoChannel: null, // Instancia de Echo para el canal privado
+
+        initChat() {
+            // 1. Cargar la lista de usuarios del sistema (excluyendo al actual)
+            this.fetchUsers();
+
+            // 2. Suscribirse a un canal privado para recibir notificaciones de nuevos mensajes
+            //    Asumiendo que tienes Laravel Echo configurado con Pusher o Laravel Reverb
+            if (window.Echo) {
+                this.echoChannel = window.Echo.private(`App.Models.User.${window.userId}`) // Asegúrate de tener window.userId
+                    .listen('.NewMessage', (e) => {
+                        console.log('Nuevo mensaje recibido:', e);
+                        this.handleIncomingMessage(e.message, e.fromUser);
+                    });
+            } else {
+                console.warn('Laravel Echo no está configurado. Asegúrate de tener Pusher o Reverb funcionando.');
+            }
+
+            // Opcional: Escuchar cambios en el contador de no leídos (podría venir del backend)
+        },
+
+        fetchUsers() {
+            fetch('/api/chat/users')
+                .then(response => response.json())
+                .then(data => {
+                    this.users = data;
+                    // Podríamos inicializar los no leídos aquí si viene del backend
+                })
+                .catch(error => console.error('Error fetching users:', error));
+        },
+
+        toggleChat() {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen && this.selectedUser) {
+                this.markMessagesAsRead(this.selectedUser.id);
+            }
+        },
+
+        selectUser(user) {
+            this.selectedUser = user;
+            this.loadConversation(user.id);
+            this.markMessagesAsRead(user.id);
+        },
+
+        loadConversation(userId) {
+            fetch(`/api/chat/messages/${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    this.messages = data.map(msg => ({
+                        ...msg,
+                        isOwn: msg.user_id === window.userId // Asumiendo que tienes window.userId
+                    }));
+                    // Scroll al final del área de mensajes
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chat-messages-area');
+                        if (container) container.scrollTop = container.scrollHeight;
+                    });
+                })
+                .catch(error => console.error('Error loading conversation:', error));
+        },
+
+        sendMessage() {
+            if (!this.newMessage.trim() || !this.selectedUser) return;
+
+            const messageData = {
+                recipient_id: this.selectedUser.id,
+                message: this.newMessage.trim()
+            };
+
+            fetch('/api/chat/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(messageData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Agregar el mensaje a la conversación localmente
+                const newMsg = {
+                    id: data.id,
+                    text: data.message,
+                    user_id: window.userId,
+                    recipient_id: this.selectedUser.id,
+                    created_at: new Date().toISOString(),
+                    isOwn: true
+                };
+                this.messages.push(newMsg);
+                this.newMessage = '';
+                this.$nextTick(() => {
+                    const container = document.getElementById('chat-messages-area');
+                    if (container) container.scrollTop = container.scrollHeight;
+                });
+            })
+            .catch(error => console.error('Error sending message:', error));
+        },
+
+        handleIncomingMessage(message, fromUser) {
+            // Si el chat está abierto y estamos viendo la conversación con este usuario
+            if (this.isOpen && this.selectedUser && this.selectedUser.id === fromUser.id) {
+                // Agregar el mensaje a la conversación actual
+                const newMsg = {
+                    ...message,
+                    isOwn: false
+                };
+                this.messages.push(newMsg);
+                this.$nextTick(() => {
+                    const container = document.getElementById('chat-messages-area');
+                    if (container) container.scrollTop = container.scrollHeight;
+                });
+            } else {
+                // Incrementar el contador de no leídos
+                this.unreadMessagesCount++;
+                // También incrementar el contador para el usuario específico en la lista
+                const userInList = this.users.find(u => u.id === fromUser.id);
+                if (userInList) {
+                    userInList.unread = (userInList.unread || 0) + 1;
+                }
+            }
+        },
+
+        markMessagesAsRead(userId) {
+            fetch(`/api/chat/mark-read/${userId}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') } })
+                .then(() => {
+                    // Resetear el contador de no leídos para este usuario
+                    const userInList = this.users.find(u => u.id === userId);
+                    if (userInList) userInList.unread = 0;
+                    // Recalcular el total de no leídos
+                    this.unreadMessagesCount = this.users.reduce((sum, user) => sum + (user.unread || 0), 0);
+                })
+                .catch(error => console.error('Error marking messages as read:', error));
+        },
+
+        formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 60000);
+            if (diff < 1) return 'Ahora';
+            if (diff < 60) return `Hace ${diff} min`;
+            if (diff < 1440) return `Hace ${Math.floor(diff / 60)} h`;
+            return date.toLocaleDateString();
+        }
+    }
+}
 
         
     </script>
