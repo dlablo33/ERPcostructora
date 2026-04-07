@@ -7,51 +7,36 @@
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid var(--color-primary); padding: 15px 20px;">
                 <h2 style="color: var(--color-primary); font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Lista de Asistencia
+                    Lista de Asistencia por Día
                 </h2>
             </div>
 
             <div class="card-body p-4">
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación -->
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;" id="grupoAgrupacion">
                         <i class="fas fa-layer-group" style="color: var(--color-primary); font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar"></i>
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna aquí para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
                     </div>
                     
-                    <!-- Botones -->
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <!-- Botón Agregar (+) -->
-                        <div>
-                            <button id="btnAgregar" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-primary); font-size: 16px;" 
-                                    title="Agregar lista de asistencia"
-                                    onclick="abrirModalListaAsistencia()">
-                                <i class="fas fa-plus" style="color: var(--color-primary);"></i>
-                            </button>
-                        </div>
-
-                        <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
                                     style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);">
-                                <i class="fas fa-file-excel" style="color: var(--color-primary);"></i>
-                                <span class="hide-mobile">Excel</span>
+                                <i class="fas fa-file-excel"></i>
+                                
                             </button>
                         </div>
 
-                        <!-- Botón Seleccionar Columnas -->
                         <div style="position: relative;">
                             <button id="btnColumnas" 
                                     style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);"
                                     onclick="toggleColumnSelector()">
-                                <i class="fas fa-columns" style="color: var(--color-primary);"></i>
-                                <span class="hide-mobile">Columnas</span>
+                                <i class="fas fa-columns"></i>
+                                
                             </button>
                             
-                            <!-- Selector de columnas -->
                             <div id="columnSelector" style="display: none; position: absolute; right: 0; top: 40px; background-color: white; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 9999; min-width: 250px; max-height: 350px; overflow-y: auto;">
                                 <div style="padding: 10px; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa; display: flex; justify-content: space-between;">
                                     <strong style="color: var(--color-primary); font-size: 13px;">Seleccionar Columnas</strong>
@@ -61,90 +46,66 @@
                             </div>
                         </div>
 
-                        <!-- Buscador -->
-                        <div style="position: relative; min-width: 200px;">
+                        <div style="position: relative; min-width: 220px;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-primary); font-size: 12px;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar por folio..." style="width: 100%; padding: 8px 8px 8px 30px; border: 1px solid var(--color-primary); border-radius: 4px; font-size: 13px;">
+                            <input type="text" id="buscador" placeholder="Buscar por fecha..." style="width: 100%; padding: 8px 8px 8px 30px; border: 1px solid var(--color-primary); border-radius: 4px; font-size: 13px;">
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabla de Lista de Asistencia -->
+                <!-- Tabla -->
                 <div class="table-container" style="border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; background-color: white; width: 100%;">
-                    <table class="table" id="tablaListaAsistencia" style="width: 100%; border-collapse: collapse; font-size: 12px; min-width: 500px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px;">
                         <thead style="background-color: var(--color-primary);">
                             <tr>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="folio">Folio</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;" draggable="true" data-columna="fecha">Fecha</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; position: sticky; right: 0; z-index: 35; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">Acciones</th>
+                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;">Fecha</th>
+                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center;">Resumen</th>
+                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; position: sticky; right: 0; z-index: 35;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1001</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">15/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 1001')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 1001')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 1001')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1002</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">14/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 1002')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 1002')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 1002')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1003</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">13/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 1003')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 1003')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 1003')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1004</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">12/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 1004')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 1004')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 1004')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1005</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">11/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 1005')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 1005')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 1005')"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1006</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">10/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle folio 1006')"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Editar folio 1006')"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar registro?')) alert('Registro eliminado')"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF folio 1006')"></i>
-                                </td>
-                            </tr>
+                        <tbody id="tablaBody">
+                            @if(isset($listas) && $listas->count() > 0)
+                                @foreach($listas as $lista)
+                                @php
+                                    $fecha = $lista->fecha;
+                                    $total = $lista->total_empleados;
+                                    $presentes = $lista->presentes;
+                                    $retardos = $lista->retardos;
+                                    $ausentes = $lista->ausentes;
+                                    $fechaFormateada = \Carbon\Carbon::parse($fecha)->format('d/m/Y');
+                                    $nombreDia = \Carbon\Carbon::parse($fecha)->translatedFormat('l');
+                                @endphp
+                                <tr>
+                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
+                                        <strong>{{ $fechaFormateada }}</strong><br>
+                                        <small style="color: #6c757d;">{{ $nombreDia }}</small>
+                                    </td>
+                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6;">
+                                        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+                                            <span style="background-color: #e9ecef; padding: 2px 8px; border-radius: 3px;">Total: {{ $total }}</span>
+                                            <span style="background-color: #d4edda; color: #155724; padding: 2px 8px; border-radius: 3px;">Presentes: {{ $presentes }}</span>
+                                            <span style="background-color: #fff3cd; color: #856404; padding: 2px 8px; border-radius: 3px;">Retardos: {{ $retardos }}</span>
+                                            <span style="background-color: #f8d7da; color: #721c24; padding: 2px 8px; border-radius: 3px;">Ausentes: {{ $ausentes }}</span>
+                                        </div>
+                                    </td>
+                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; text-align: center;">
+                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalleDia('{{ $fecha }}')" title="Ver detalle"></i>
+                                        <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="generarPDFDia('{{ $fecha }}')" title="Generar PDF"></i>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="3" style="text-align: center; padding: 40px;">No hay registros de asistencia</td>
+                                </tr>
+                            @endif
                         </tbody>
                         <tfoot style="background-color: #f8f9fa;">
                             <tr>
-                                <td colspan="2" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-weight: bold; font-size: 13px;">Total Listas de Asistencia: 6</td>
-                                <td style="padding: 10px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1);"></td>
+                                <td colspan="2" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-weight: bold;" id="totalRegistros">
+                                    Total Días: {{ isset($listas) ? $listas->count() : 0 }}
+                                </td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa;"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -161,33 +122,20 @@
     </section>
 </div>
 
-<!-- MODAL PARA NUEVA LISTA DE ASISTENCIA -->
-<div id="modalListaAsistencia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
-        
-        <!-- Header -->
-        <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="color: white; margin: 0; font-size: 18px;">Nueva Lista de Asistencia</h3>
-            <button onclick="cerrarModalListaAsistencia()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
+<!-- MODAL PARA VER DETALLE DEL DÍA -->
+<div id="modalDetalleDia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+        <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between;">
+            <h3 style="color: white; margin: 0;" id="modalDetalleTitulo">Detalle de Asistencia</h3>
+            <button onclick="cerrarModalDetalle()" style="background: none; border: none; color: white; font-size: 20px;">✕</button>
         </div>
-        
-        <!-- Formulario -->
         <div style="padding: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Folio</label>
-                    <input type="number" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="1001">
-                </div>
-                
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Fecha de Asistencia</label>
-                    <input type="date" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                </div>
-            </div>
-            
+            <div id="detalleAsistenciaContent"></div>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                <button onclick="cerrarModalListaAsistencia()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="alert('Lista de asistencia guardada')" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
+                <button onclick="cerrarModalDetalle()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cerrar</button>
+                <button id="btnExportarDetalle" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">
+                    <i class="fas fa-file-excel"></i> Exportar
+                </button>
             </div>
         </div>
     </div>
@@ -196,52 +144,26 @@
 <style>
     :root {
         --color-primary: #083CAE;
-        --color-secondary: #2CBF1F;
-        --color-accent: #eaf512;
-        --color-red: #FF0000;
     }
 
-    /* Estilos generales */
-    .semaforo .card-header h2 {
-        color: var(--color-primary) !important;
+    .table td:last-child i {
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 14px;
     }
     
-    /* Tabla */
-    .table-container {
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        overflow-x: auto;
-        background-color: white;
-        width: 100%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-
-    .table th {
-        background-color: var(--color-primary) !important;
-        color: white;
-        padding: 12px 8px;
-        border: 1px solid #dee2e6;
-        font-size: 12px;
-        white-space: nowrap;
-        text-align: center;
-        font-weight: 600;
+    .table td:last-child i:hover {
+        transform: scale(1.2);
     }
     
-    .table td {
-        padding: 10px 8px;
-        border: 1px solid #dee2e6;
-        font-size: 12px;
-        vertical-align: middle;
-        text-align: center;
+    .table td:last-child i.fa-eye {
+        color: var(--color-primary);
     }
     
-    /* Filas alternadas */
+    .table td:last-child i.fa-file-pdf {
+        color: #dc3545;
+    }
+    
     tbody tr:nth-child(even) {
         background-color: #f8f9fa;
     }
@@ -250,57 +172,11 @@
         background-color: #e8f0fe;
     }
     
-    /* Columna de acciones fija */
-    .table th:last-child,
-    .table td:last-child {
-        position: sticky !important;
-        right: 0 !important;
-        z-index: 35 !important;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1) !important;
-    }
-    
-    .table th:last-child {
-        background-color: var(--color-primary) !important;
-    }
-    
-    .table td:last-child {
-        background-color: white !important;
-        text-align: center !important;
-    }
-    
-    tbody tr:nth-child(even) td:last-child {
-        background-color: #f8f9fa !important;
-    }
-    
-    tbody tr:hover td:last-child {
-        background-color: #e8f0fe !important;
-    }
-    
-    /* Iconos de acción */
-    .table td:last-child i {
-        margin: 0 5px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-    
-    .table td:last-child i:hover {
-        transform: scale(1.2);
-    }
-    
-    .table td:last-child i.fa-edit,
-    .table td:last-child i.fa-eye {
-        color: var(--color-primary);
-    }
-    
-    .table td:last-child i.fa-trash,
-    .table td:last-child i.fa-file-pdf {
-        color: #dc3545;
-    }
-    
-    /* Drag & drop */
-    [draggable="true"] {
-        cursor: grab;
+    .table-container {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        overflow-x: auto;
+        background-color: white;
     }
     
     .columna-agrupada {
@@ -312,77 +188,168 @@
         color: var(--color-primary);
         font-size: 11px;
         border: 1px solid var(--color-primary);
+        margin-right: 5px;
     }
     
     .columna-agrupada .remover {
         margin-left: 5px;
         cursor: pointer;
-        font-size: 12px;
         font-weight: bold;
-        color: var(--color-primary);
     }
     
-    /* Modal */
-    #modalListaAsistencia {
-        display: none;
-        align-items: center;
-        justify-content: center;
+    .tabla-detalle {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
     }
     
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .tabla-detalle th {
+        background-color: #e9ecef;
+        padding: 10px 8px;
+        border: 1px solid #dee2e6;
+        text-align: center;
+        font-weight: 600;
     }
     
-    /* Responsive */
-    @media (max-width: 768px) {
-        .hide-mobile {
-            display: none !important;
-        }
-        
-        .table-container {
-            max-height: 500px;
-        }
-        
-        .table td {
-            padding: 8px 4px;
-            font-size: 11px;
-        }
-        
-        .table td:last-child i {
-            margin: 0 3px;
-            font-size: 12px;
-        }
-        
-        #modalListaAsistencia > div {
-            width: 100%;
-            height: 100%;
-            max-height: 100vh;
-            border-radius: 0;
-        }
+    .tabla-detalle td {
+        padding: 8px;
+        border: 1px solid #dee2e6;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .tabla-detalle tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .estado-presente {
+        color: #28a745;
+        font-weight: 600;
+    }
+    
+    .estado-retardo {
+        color: #fd7e14;
+        font-weight: 600;
+    }
+    
+    .estado-ausente {
+        color: #dc3545;
+        font-weight: 600;
+    }
+    
+    .estado-justificado {
+        color: #17a2b8;
+        font-weight: 600;
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
+let listas = @json($listas ?? []);
+
+function formatearFecha(fechaISO) {
+    if (!fechaISO) return '';
+    const f = new Date(fechaISO);
+    return `${f.getDate().toString().padStart(2,'0')}/${(f.getMonth()+1).toString().padStart(2,'0')}/${f.getFullYear()}`;
+}
+
+function formatearHora(hora) {
+    if (!hora) return '---';
+    return hora;
+}
+
+async function verDetalleDia(fecha) {
+    try {
+        const response = await fetch(`/rh/lista/${fecha}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const fechaFormateada = formatearFecha(data.fecha);
+            document.getElementById('modalDetalleTitulo').innerHTML = `Detalle de Asistencia - ${fechaFormateada} (Folio: ${data.folio})`;
+            
+            const content = document.getElementById('detalleAsistenciaContent');
+            content.innerHTML = `
+                <div style="margin-bottom: 15px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                    <strong>Resumen:</strong> Total: ${data.resumen.total} | Presentes: ${data.resumen.presentes} | Retardos: ${data.resumen.retardos} | Ausentes: ${data.resumen.ausentes} | Justificados: ${data.resumen.justificados}
+                </div>
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Empleado</th>
+                            <th>Puesto</th>
+                            <th>Hora Entrada</th>
+                            <th>Hora Salida</th>
+                            <th>Estado</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.detalles.map((d, idx) => `
+                            <tr>
+                                <td>${idx + 1}</td>
+                                <td><strong>${d.empleado_nombre}</strong></td>
+                                <td>${d.puesto || 'N/A'}</td>
+                                <td>${formatearHora(d.hora_entrada)}</td>
+                                <td>${formatearHora(d.hora_salida)}</td>
+                                <td class="estado-${d.estado}">${d.estado.toUpperCase()}</td>
+                                <td>${d.observaciones || '---'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('modalDetalleDia').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        } else {
+            alert('Error: ' + (data.message || 'No se pudo cargar el detalle'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar el detalle');
+    }
+}
+
+function cerrarModalDetalle() {
+    document.getElementById('modalDetalleDia').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function generarPDFDia(fecha) {
+    const fechaFormateada = formatearFecha(fecha);
+    alert(`Generando reporte PDF para el día ${fechaFormateada}`);
+}
+
+// Buscador
+document.getElementById('buscador')?.addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll('#tablaBody tr');
+    let count = 0;
+    rows.forEach(row => {
+        if (row.cells && row.cells[0]) {
+            const text = row.cells[0].innerText.toLowerCase();
+            if (text.includes(term)) {
+                row.style.display = '';
+                count++;
+            } else {
+                row.style.display = 'none';
+            }
+        }
+    });
+    document.getElementById('totalRegistros').innerHTML = `Total Días: ${count}`;
+});
+
+// Drag & drop y columnas
 document.addEventListener('DOMContentLoaded', function() {
     let columnasAgrupadas = [];
     
-    // Actualizar grupo de columnas
     function actualizarGrupoColumnas() {
         const container = document.getElementById('grupoColumnas');
         const texto = document.getElementById('textoAgrupar');
-        
         container.innerHTML = '';
-        
         if (columnasAgrupadas.length === 0) {
             texto.style.display = 'inline';
         } else {
@@ -395,100 +362,69 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-
+    
     window.removerColumna = function(columna) {
         columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
         actualizarGrupoColumnas();
     };
-
-    // Drag & drop
+    
     document.addEventListener('dragstart', (e) => {
         if (e.target.tagName === 'TH' && e.target.draggable) {
             e.dataTransfer.setData('text/plain', e.target.dataset.columna);
         }
     });
-
-    document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
     
-    document.getElementById('grupoAgrupacion').addEventListener('drop', (e) => {
-        e.preventDefault();
-        const columna = e.dataTransfer.getData('text/plain');
-        if (columna && !columnasAgrupadas.includes(columna)) {
-            columnasAgrupadas.push(columna);
-            actualizarGrupoColumnas();
-        }
-    });
-
-    // Selector de columnas
+    const grupoAgrupacion = document.getElementById('grupoAgrupacion');
+    if (grupoAgrupacion) {
+        grupoAgrupacion.addEventListener('dragover', (e) => e.preventDefault());
+        grupoAgrupacion.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const columna = e.dataTransfer.getData('text/plain');
+            if (columna && !columnasAgrupadas.includes(columna)) {
+                columnasAgrupadas.push(columna);
+                actualizarGrupoColumnas();
+            }
+        });
+    }
+    
     window.toggleColumnSelector = function() {
         const selector = document.getElementById('columnSelector');
         selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
-        
         if (selector.style.display === 'block') {
-            const columnas = [
-                { field: 'folio', caption: 'Folio' },
-                { field: 'fecha', caption: 'Fecha' }
-            ];
-            
+            const columnas = ['fecha', 'resumen'];
             const lista = document.getElementById('columnasLista');
             lista.innerHTML = columnas.map(col => `
                 <div style="padding: 5px 0; display: flex; align-items: center;">
-                    <input type="checkbox" 
-                           id="chk_${col.field}"
-                           data-columna="${col.field}"
-                           checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
-                    <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
+                    <input type="checkbox" id="chk_${col}" data-columna="${col}" checked style="margin-right: 8px;">
+                    <label style="font-size: 12px;">${col.toUpperCase()}</label>
                 </div>
             `).join('');
         }
     };
-
+    
     window.cerrarColumnSelector = function() {
         document.getElementById('columnSelector').style.display = 'none';
     };
-
-    // Cerrar selector al hacer clic fuera
+    
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
             document.getElementById('columnSelector').style.display = 'none';
         }
     });
-
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel').addEventListener('click', () => alert('Exportar a Excel'));
-
-    // Buscador
-    document.getElementById('buscador').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        console.log('Buscando:', termino);
-    });
+    
+    document.getElementById('btnExcel')?.addEventListener('click', () => alert('Exportar a Excel'));
+    document.getElementById('btnCrearFiltro')?.addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
+    document.getElementById('btnExportarDetalle')?.addEventListener('click', () => alert('Exportar detalle a Excel'));
 });
 
-// Funciones del modal
-function abrirModalListaAsistencia() {
-    document.getElementById('modalListaAsistencia').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-function cerrarModalListaAsistencia() {
-    document.getElementById('modalListaAsistencia').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-// Cerrar modal con Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        cerrarModalListaAsistencia();
+        cerrarModalDetalle();
     }
 });
 
-// Cerrar modal al hacer clic fuera
-document.getElementById('modalListaAsistencia').addEventListener('click', function(e) {
-    if (e.target === this) {
-        cerrarModalListaAsistencia();
-    }
+document.getElementById('modalDetalleDia')?.addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalDetalle();
 });
 </script>
 @endsection

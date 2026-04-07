@@ -7,50 +7,99 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Message extends Model
 {
+    protected $table = 'messages';
+    
     protected $fillable = [
         'conversation_id',
         'user_id',
         'recipient_id',
         'message',
         'is_read',
-        'read_at',
-        'is_deleted_for_sender',
-        'is_deleted_for_recipient'
+        'read_at'
     ];
-
+    
     protected $casts = [
         'is_read' => 'boolean',
         'read_at' => 'datetime',
-        'is_deleted_for_sender' => 'boolean',
-        'is_deleted_for_recipient' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
-
+    
+    /**
+     * Relación con la conversación
+     */
     public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class);
     }
-
-    public function user(): BelongsTo
+    
+    /**
+     * Relación con el remitente
+     */
+    public function sender(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
-
+    
+    /**
+     * Relación con el destinatario
+     */
     public function recipient(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recipient_id');
     }
-
-    public function markAsRead(): void
+    
+    /**
+     * Marcar mensaje como leído
+     */
+    public function markAsRead()
     {
         $this->update([
             'is_read' => true,
             'read_at' => now()
         ]);
     }
-
-    public function scopeUnreadForUser($query, $userId)
+    
+    /**
+     * Verificar si el mensaje es leído
+     */
+    public function isRead(): bool
     {
-        return $query->where('recipient_id', $userId)
-                     ->where('is_read', false);
+        return $this->is_read;
+    }
+    
+    /**
+     * Scope para mensajes no leídos
+     */
+    public function scopeUnread($query)
+    {
+        return $query->where('is_read', false);
+    }
+    
+    /**
+     * Scope para mensajes leídos
+     */
+    public function scopeRead($query)
+    {
+        return $query->where('is_read', true);
+    }
+    
+    /**
+     * Scope para mensajes de un usuario específico
+     */
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where(function($q) use ($userId) {
+            $q->where('user_id', $userId)
+              ->orWhere('recipient_id', $userId);
+        });
+    }
+    
+    /**
+     * Scope para conversación específica
+     */
+    public function scopeInConversation($query, $conversationId)
+    {
+        return $query->where('conversation_id', $conversationId);
     }
 }

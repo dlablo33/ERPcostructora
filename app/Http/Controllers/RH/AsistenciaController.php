@@ -788,4 +788,44 @@ public function testEmpleados(Request $request)
         ], 500);
     }
 }
+
+/**
+ * Display attendance for a specific date
+ */
+public function showByDate($fecha)
+{
+    try {
+        $asistencias = Asistencia::where('fecha', $fecha)
+            ->with(['empleado', 'registrador'])
+            ->orderBy('created_at')
+            ->get();
+        
+        $resumen = [
+            'total' => $asistencias->count(),
+            'entradas' => $asistencias->where('tipo_registro', 'entrada')->count(),
+            'salidas' => $asistencias->where('tipo_registro', 'salida')->count(),
+            'activos' => $asistencias->where('estatus', 'Activo')->count(),
+            'pendientes' => $asistencias->where('estatus', 'Pendiente')->count(),
+            'justificados' => $asistencias->where('estatus', 'Justificado')->count(),
+            'faltas' => $asistencias->where('estatus', 'Falta')->count(),
+            'retardos' => $asistencias->where('estatus', 'Retardo')->count(),
+        ];
+        
+        return response()->json([
+            'success' => true,
+            'fecha' => $fecha,
+            'asistencias' => $asistencias,
+            'resumen' => $resumen
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al cargar: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
+
 }

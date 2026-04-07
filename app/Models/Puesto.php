@@ -12,6 +12,7 @@ class Puesto extends Model
     protected $table = 'puestos';
 
     protected $fillable = [
+        
         'folio',
         'nombre',
         'descripcion',

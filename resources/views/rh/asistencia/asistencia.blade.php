@@ -414,7 +414,7 @@ function renderizarTabla() {
     const paginaDatos = datosAsistencias.slice(inicio, fin);
     
     if (paginaDatos.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;"><i class="fas fa-info-circle" style="font-size: 24px;"></i><p>No hay registros de asistencia</p>发展</div>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;"><i class="fas fa-info-circle" style="font-size: 24px;"></i><p>No hay registros de asistencia</p></div>';
         document.getElementById('desde').textContent = '0';
         document.getElementById('hasta').textContent = '0';
         document.getElementById('total').textContent = '0';

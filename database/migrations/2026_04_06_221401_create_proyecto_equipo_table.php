@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('proyecto_equipo', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('proyecto_id');
+            $table->string('nombre', 255);
+            $table->string('rol', 255);
+            $table->string('departamento', 255);
+            $table->integer('dedicacion')->comment('Porcentaje de dedicación al proyecto');
+            $table->timestamps();
+            
+            // Foreign keys
+            $table->foreign('proyecto_id')->references('id')->on('proyectos')->onDelete('cascade');
+            
+            // Índices
+            $table->index('proyecto_id');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('proyecto_equipo');
+    }
+};

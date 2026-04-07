@@ -23,6 +23,7 @@ return new class extends Migration
             
             // Índices para búsquedas rápidas
             $table->index(['user_one_id', 'user_two_id']);
+            // En lugar de unique, crear un índice compuesto y asegurar consistencia en el código
             $table->unique(['user_one_id', 'user_two_id']);
         });
 
@@ -41,8 +42,8 @@ return new class extends Migration
             
             // Índices para optimizar consultas
             $table->index(['conversation_id', 'created_at']);
-            $table->index(['user_id', 'recipient_id']);
-            $table->index(['is_read']);
+            $table->index(['user_id', 'recipient_id', 'created_at']);
+            $table->index(['recipient_id', 'is_read', 'created_at']);
         });
     }
 

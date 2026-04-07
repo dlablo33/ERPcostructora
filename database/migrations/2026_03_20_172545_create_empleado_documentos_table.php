@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('empleado_documentos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('plantilla_id')->constrained('plantilla')->onDelete('cascade');
+            $table->unsignedBigInteger('plantilla_id');
+            $table->foreign('plantilla_id')->references('plantilla_id')->on('plantillas')->onDelete('cascade');
             $table->string('nombre_documento'); // Nombre del documento (ej: Acta de nacimiento)
             $table->string('archivo'); // Ruta del archivo
             $table->string('tipo_archivo'); // pdf, jpg, png

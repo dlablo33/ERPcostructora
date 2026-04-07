@@ -1,180 +1,267 @@
 @extends('layouts.navigation')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 text-gray-800">
+<div class="min-h-screen bg-white-50 text-white-800">
     <section class="content container-fluid py-3">
-        <!-- Cuentas Avanzadas -->
-        <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
+        <div class="card mt-2">
+            <div class="card-header" style="background-color: #ffffff; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h1 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 28px; text-align: center;">
-                    Cuentas Avanzadas
+                    <i class="fas fa-cogs"></i> Catálogos Adminitracion
                 </h1>
+                <p style="text-align: center; color: #f4f6f9; margin-top: 5px;">Administración de monedas, tipos de cambio, bancos, métodos de pago, tipos de ingreso/egreso y categorías de gastos</p>
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas con agrupación y botones -->
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
-                    <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
-                            <!-- Aquí se mostrarán las columnas agrupadas -->
+                <!-- Pestañas de navegación -->
+                <ul class="nav nav-tabs" id="catalogosTab" role="tablist" style="border-bottom: 2px solid #083CAE; margin-bottom: 20px;">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="monedas-tab" data-bs-toggle="tab" data-bs-target="#monedas" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-coins"></i> Monedas
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tipos-cambio-tab" data-bs-toggle="tab" data-bs-target="#tipos-cambio" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-exchange-alt"></i> Tipos de Cambio
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="bancos-tab" data-bs-toggle="tab" data-bs-target="#bancos" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-university"></i> Bancos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="metodos-pago-tab" data-bs-toggle="tab" data-bs-target="#metodos-pago" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-credit-card"></i> Métodos de Pago
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tipos-ingreso-tab" data-bs-toggle="tab" data-bs-target="#tipos-ingreso" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-arrow-up"></i> Tipos de Ingreso
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tipos-egreso-tab" data-bs-toggle="tab" data-bs-target="#tipos-egreso" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-arrow-down"></i> Tipos de Egreso
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="categorias-gasto-tab" data-bs-toggle="tab" data-bs-target="#categorias-gasto" type="button" role="tab" style="color: #083CAE; font-weight: 600;">
+                            <i class="fas fa-tags"></i> Categorías de Gasto
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Contenido de las pestañas -->
+                <div class="tab-content" id="catalogosTabContent">
+                    
+                    <!-- ==================== MONEDAS ==================== -->
+                    <div class="tab-pane fade show active" id="monedas" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-coins"></i> Monedas</h3>
+                            <button class="btn btn-primary" onclick="abrirModalMoneda()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nueva Moneda
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaMonedas">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Símbolo</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyMonedas">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    
-                    <!-- Grupo de botones derecho -->
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Date Inicio -->
-                        <div>
-                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
 
-                        <!-- Date Fin -->
-                        <div>
-                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
-
-                        <!-- Botón Agregar (+) -->
-                        <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #2378e1;"></i>
+                    <!-- ==================== TIPOS DE CAMBIO ==================== -->
+                    <div class="tab-pane fade" id="tipos-cambio" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-exchange-alt"></i> Tipos de Cambio</h3>
+                            <button class="btn btn-primary" onclick="abrirModalTipoCambio()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nuevo Tipo de Cambio
                             </button>
                         </div>
-
-                        <!-- Botón Exportar Excel -->
-                        <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
-                                    title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
-                            </button>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label>Fecha:</label>
+                                <input type="date" id="filtroFechaTC" class="form-control" value="{{ date('Y-m-d') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-info form-control" onclick="filtrarTiposCambio()">Filtrar</button>
+                            </div>
                         </div>
-
-                        <!-- Botón Seleccionar Columnas -->
-                        <div>
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
-                                    title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
-
-                        <!-- Buscador -->
-                        <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaTiposCambio">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Moneda Origen</th>
+                                        <th>Moneda Destino</th>
+                                        <th>Tasa</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTiposCambio">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div>
 
-                <!-- Mensaje "Sin datos" centrado -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-university" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
-                    <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay cuentas avanzadas para mostrar</p>
-                </div>
+                    <!-- ==================== BANCOS ==================== -->
+                    <div class="tab-pane fade" id="bancos" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-university"></i> Bancos</h3>
+                            <button class="btn btn-primary" onclick="abrirModalBanco()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nuevo Banco
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaBancos">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Código</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyBancos">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                <!-- Tabla de Cuentas Avanzadas -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaCuentasAvanzadas" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
-                            <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="alias">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Alias</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="banco">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Banco</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="tipo_cuenta">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Tipo de Cuenta</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="numero_cuenta">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Número de Cuenta</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="clabe">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>CLABE</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="moneda">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Moneda</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="origen">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Origen de Cuenta</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="cuenta_contable">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cuenta Contable</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Acciones</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="tablaBody">
-                            <!-- Las filas se insertarán dinámicamente -->
-                        </tbody>
-                        <!-- Fila de totales -->
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
-                            <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="8">Registros: <span id="totalRegistros">0</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                
-                <!-- Paginación y botón Crear filtro -->
-                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
-                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
-                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
-                        <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
-                        <span style="color: #2378e1;">Crear filtro</span>
-                    </button>
-                    
-                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
-                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
-                            <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
-                        </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
-                            <i class="fas fa-angle-left" style="color: #2378e1;"></i>
-                        </button>
-                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
-                            <i class="fas fa-angle-right" style="color: #2378e1;"></i>
-                        </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
-                            <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
-                        </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 12 registros</span>
+                    <!-- ==================== MÉTODOS DE PAGO ==================== -->
+                    <div class="tab-pane fade" id="metodos-pago" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-credit-card"></i> Métodos de Pago</h3>
+                            <button class="btn btn-primary" onclick="abrirModalMetodoPago()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nuevo Método de Pago
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaMetodosPago">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyMetodosPago">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TIPOS DE INGRESO ==================== -->
+                    <div class="tab-pane fade" id="tipos-ingreso" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-arrow-up"></i> Tipos de Ingreso</h3>
+                            <button class="btn btn-primary" onclick="abrirModalTipoIngreso()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nuevo Tipo de Ingreso
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaTiposIngreso">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTiposIngreso">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TIPOS DE EGRESO ==================== -->
+                    <div class="tab-pane fade" id="tipos-egreso" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-arrow-down"></i> Tipos de Egreso</h3>
+                            <button class="btn btn-primary" onclick="abrirModalTipoEgreso()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nuevo Tipo de Egreso
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaTiposEgreso">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyTiposEgreso">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ==================== CATEGORÍAS DE GASTO ==================== -->
+                    <div class="tab-pane fade" id="categorias-gasto" role="tabpanel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="color: #083CAE; margin: 0;"><i class="fas fa-tags"></i> Categorías de Gasto</h3>
+                            <button class="btn btn-primary" onclick="abrirModalCategoriaGasto()" style="background-color: #083CAE; border: none;">
+                                <i class="fas fa-plus"></i> Nueva Categoría
+                            </button>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label>Filtrar por Tipo de Egreso:</label>
+                                <select id="filtroTipoEgreso" class="form-control" onchange="filtrarCategoriasGasto()">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="tablaCategoriasGasto">
+                                <thead style="background-color: #2378e1; color: white;">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Tipo de Egreso</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyCategoriasGasto">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">Cargando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,895 +269,1088 @@
     </section>
 </div>
 
+<!-- Modal para Monedas -->
+<div class="modal fade" id="modalMoneda" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-coins"></i> Moneda</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formMoneda">
+                    <input type="hidden" id="moneda_id">
+                    <div class="mb-3">
+                        <label>Código <span class="text-danger">*</span></label>
+                        <input type="text" id="moneda_codigo" class="form-control" maxlength="3" required>
+                        <small class="text-muted">Ej: MXN, USD, EUR</small>
+                    </div>
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="moneda_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Símbolo <span class="text-danger">*</span></label>
+                        <input type="text" id="moneda_simbolo" class="form-control" maxlength="5" required>
+                        <small class="text-muted">Ej: $, US$, €</small>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="moneda_activa" class="form-check-input" checked>
+                            <label class="form-check-label">Activa</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarMoneda()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Tipos de Cambio -->
+<div class="modal fade" id="modalTipoCambio" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-exchange-alt"></i> Tipo de Cambio</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formTipoCambio">
+                    <input type="hidden" id="tipocambio_id">
+                    <div class="mb-3">
+                        <label>Moneda Origen <span class="text-danger">*</span></label>
+                        <select id="tipocambio_origen" class="form-control" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Moneda Destino <span class="text-danger">*</span></label>
+                        <select id="tipocambio_destino" class="form-control" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Tasa <span class="text-danger">*</span></label>
+                        <input type="number" id="tipocambio_tasa" class="form-control" step="0.0001" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Fecha <span class="text-danger">*</span></label>
+                        <input type="date" id="tipocambio_fecha" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarTipoCambio()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Bancos -->
+<div class="modal fade" id="modalBanco" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-university"></i> Banco</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formBanco">
+                    <input type="hidden" id="banco_id">
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="banco_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Código</label>
+                        <input type="text" id="banco_codigo" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="banco_activo" class="form-check-input" checked>
+                            <label class="form-check-label">Activo</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarBanco()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Métodos de Pago -->
+<div class="modal fade" id="modalMetodoPago" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-credit-card"></i> Método de Pago</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formMetodoPago">
+                    <input type="hidden" id="metodopago_id">
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="metodopago_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Descripción</label>
+                        <textarea id="metodopago_descripcion" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="metodopago_activo" class="form-check-input" checked>
+                            <label class="form-check-label">Activo</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarMetodoPago()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Tipos de Ingreso -->
+<div class="modal fade" id="modalTipoIngreso" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-arrow-up"></i> Tipo de Ingreso</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formTipoIngreso">
+                    <input type="hidden" id="tipoingreso_id">
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="tipoingreso_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Descripción</label>
+                        <textarea id="tipoingreso_descripcion" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="tipoingreso_activo" class="form-check-input" checked>
+                            <label class="form-check-label">Activo</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarTipoIngreso()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Tipos de Egreso -->
+<div class="modal fade" id="modalTipoEgreso" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-arrow-down"></i> Tipo de Egreso</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formTipoEgreso">
+                    <input type="hidden" id="tipoegreso_id">
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="tipoegreso_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Descripción</label>
+                        <textarea id="tipoegreso_descripcion" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="tipoegreso_activo" class="form-check-input" checked>
+                            <label class="form-check-label">Activo</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarTipoEgreso()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Categorías de Gasto -->
+<div class="modal fade" id="modalCategoriaGasto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-tags"></i> Categoría de Gasto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCategoriaGasto">
+                    <input type="hidden" id="categoriagasto_id">
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="categoriagasto_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Descripción</label>
+                        <textarea id="categoriagasto_descripcion" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label>Tipo de Egreso <span class="text-danger">*</span></label>
+                        <select id="categoriagasto_tipo_egreso_id" class="form-control" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" id="categoriagasto_activo" class="form-check-input" checked>
+                            <label class="form-check-label">Activo</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarCategoriaGasto()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    .semaforo .card-header {
-        background-color: #f4f6f9;
-        border-bottom: 2px solid #2378e1;
+    .nav-tabs .nav-link {
+        border: none;
+        color: #FFFFFF;
+        padding: 10px 20px;
+        transition: all 0.3s;
     }
-    
-    .semaforo .card-header h2 {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilos de tabla */
-    .table th {
-        white-space: nowrap;
-        font-size: 12px;
-        background-color: #2378e1 !important;
-        color: white;
-        font-weight: 600;
-        padding: 10px 4px;
-    }
-    
-    .table td {
-        white-space: nowrap;
-        font-size: 12px;
-        padding: 10px 4px;
-        color: #000000 !important;
-    }
-    
-    /* Estilo para las filas alternadas */
-    #tablaBody tr:nth-child(odd) {
-        background-color: #ffffff;
-    }
-    
-    #tablaBody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-    
-    #tablaBody tr:hover {
-        background-color: #e0e0e0;
-    }
-    
-    /* Estilo para los iconos de acción */
-    #tablaBody td i {
-        transition: transform 0.2s;
-        font-size: 14px;
+    .nav-tabs .nav-link:hover {
         color: #083CAE;
-        cursor: pointer;
+        border-bottom: 2px solid #083CAE;
     }
-    
-    #tablaBody td i:hover {
-        transform: scale(1.2);
+    .nav-tabs .nav-link.active {
+        color: #083CAE;
+        background: none;
+        border-bottom: 2px solid #083CAE;
     }
-    
-    /* Estilo para el filtro en encabezados */
-    .table th i {
-        opacity: 0.7;
-        transition: opacity 0.2s;
+    .table th {
+        background-color: #2378e1 !important;
         color: white;
     }
-    
-    .table th i:hover {
-        opacity: 1;
+    .btn-primary {
+        background-color: #083CAE;
+        border-color: #083CAE;
     }
-    
-    /* Columna de acciones fija */
-    #tablaBody td:last-child {
-        background-color: white;
-        position: sticky;
-        right: 0;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-        z-index: 15;
+    .btn-primary:hover {
+        background-color: #062d82;
+        border-color: #062d82;
     }
-    
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #2378e1;
-        color: #000000 !important;
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: white;
     }
-    
-    /* Estilos para agrupación de columnas */
-    [draggable="true"] {
-        cursor: grab;
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #138496;
+        color: white;
     }
-    
-    [draggable="true"]:active {
-        cursor: grabbing;
-        opacity: 0.7;
+    .btn-outline-info {
+        color: #17a2b8;
+        border-color: #17a2b8;
     }
-    
-    #grupoAgrupacion {
-        position: relative;
+    .btn-outline-info:hover {
+        background-color: #17a2b8;
+        color: white;
     }
-    
-    #grupoColumnas {
-        display: inline-flex;
-        align-items: center;
-    }
-    
-    .columna-agrupada {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        background-color: #f0f4ff;
-        border-radius: 16px;
-        color: #2378e1;
-        font-size: 12px;
-        margin: 2px;
-        border: 1px solid #2378e1;
-    }
-    
-    .columna-agrupada .remover {
-        margin-left: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        color: #2378e1;
-    }
-    
-    .columna-agrupada .remover:hover {
-        opacity: 0.7;
-    }
-    
-    /* Estilo para filas de grupo */
-    .fila-grupo {
-        background-color: #f0f7ff !important;
-        font-weight: 500;
-        cursor: pointer;
-    }
-    
-    .fila-grupo:hover {
-        background-color: #e1f0ff !important;
-    }
-    
-    .fila-grupo td:first-child i {
-        transition: transform 0.2s;
-        margin-right: 8px;
-    }
-    
-    .fila-grupo:not(.expandido) td:first-child i {
-        transform: rotate(-90deg);
-    }
-    
-    .fila-detalle {
-        background-color: #ffffff;
-    }
-    
-    .fila-detalle td {
-        border-top: none !important;
-    }
-    
-    .fila-detalle td:first-child {
-        padding-left: 30px !important;
-    }
-    
-    /* Estilo cuando se está arrastrando sobre el área de grupo */
-    .drag-over #grupoColumnas {
-        background-color: rgba(35, 120, 225, 0.1);
+    .badge-active {
+        background-color: #28a745;
+        color: white;
+        padding: 3px 8px;
         border-radius: 4px;
+        font-size: 11px;
     }
-    
-    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
-    #paginacionContainer {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
+    .badge-inactive {
+        background-color: #dc3545;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
     }
-    
-    /* Todos los elementos dentro del contenedor también sin fondo */
-    #paginacionContainer * {
-        background: transparent !important;
-        background-color: transparent !important;
-    }
-    
-    /* Excepción para los spans que deben tener fondo azul */
-    #paginacionContainer span[style*="background-color"] {
-        background-color: #2378e1 !important;
-    }
-    
-    /* Estilos para los botones de paginación */
-    #paginacionContainer button {
-        background: transparent !important;
-        border: none !important;
-        color: #2378e1 !important;
+    .action-icons i {
+        font-size: 16px;
         cursor: pointer;
+        margin: 0 5px;
+        transition: opacity 0.3s;
     }
-    
-    #paginacionContainer button:hover {
+    .action-icons i:hover {
         opacity: 0.7;
     }
-    
-    #paginacionContainer button i {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilo específico para btnCrearFiltro */
-    #btnCrearFiltro,
-    #btnCrearFiltro:hover,
-    #btnCrearFiltro:focus,
-    #btnCrearFiltro:active {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    
-    #btnCrearFiltro i,
-    #btnCrearFiltro span {
-        color: #2378e1 !important;
-    }
-    
-    #paginacionInfo {
-        color: #2378e1 !important;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        div[style*="justify-content: flex-end"] {
-            justify-content: center !important;
-        }
-        
-        input[type="date"], select {
-            width: 100% !important;
-        }
-        
-        button {
-            width: 100%;
-        }
-        
-        div[style*="position: relative"] {
-            width: 100%;
-        }
-        
-        input#buscador {
-            width: 100% !important;
-        }
-        
-        #paginacionContainer {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
+    .fa-edit { color: #ffc107; }
+    .fa-trash-alt { color: #dc3545; }
+    .fa-eye { color: #17a2b8; }
+    .fa-sync-alt { color: #083CAE; }
 </style>
 
-<!-- Font Awesome -->
+<!-- Bootstrap JS y dependencias -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Cuentas Avanzadas');
-        
-        // Variables para agrupación
-        let columnasAgrupadas = [];
-        let expandedGroups = new Set();
-        let datosOriginales = [];
-        let paginaActual = 1;
-        const registrosPorPagina = 8;
-        
-        // Datos de ejemplo para Cuentas Avanzadas
-        const datosCuentasAvanzadas = [
-            {
-                cuenta_id: 1,
-                alias: 'Cuenta Principal BBVA',
-                banco: 'BBVA',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '1234-5678-9012-3456',
-                clabe: '012345678901234567',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-001'
-            },
-            {
-                cuenta_id: 2,
-                alias: 'Cuenta Santander',
-                banco: 'Santander',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '5678-1234-5678-1234',
-                clabe: '014567890123456789',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-002'
-            },
-            {
-                cuenta_id: 3,
-                alias: 'Cuenta Banamex',
-                banco: 'Banamex',
-                tipo_cuenta: 'Ahorros',
-                numero_cuenta: '4321-8765-4321-8765',
-                clabe: '002345678901234567',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-003'
-            },
-            {
-                cuenta_id: 4,
-                alias: 'Cuenta HSBC',
-                banco: 'HSBC',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '2468-1357-2468-1357',
-                clabe: '021234567890123456',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-004'
-            },
-            {
-                cuenta_id: 5,
-                alias: 'Cuenta Dólares BBVA',
-                banco: 'BBVA',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '7890-1234-7890-1234',
-                clabe: '012345678901234568',
-                moneda: 'USD',
-                origen: 'Internacional',
-                cuenta_contable: '100-005'
-            },
-            {
-                cuenta_id: 6,
-                alias: 'Cuenta Banorte',
-                banco: 'Banorte',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '1357-2468-1357-2468',
-                clabe: '012345678901234569',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-006'
-            },
-            {
-                cuenta_id: 7,
-                alias: 'Cuenta Scotiabank',
-                banco: 'Scotiabank',
-                tipo_cuenta: 'Ahorros',
-                numero_cuenta: '4567-8901-4567-8901',
-                clabe: '044567890123456789',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-007'
-            },
-            {
-                cuenta_id: 8,
-                alias: 'Cuenta Inversión BBVA',
-                banco: 'BBVA',
-                tipo_cuenta: 'Inversión',
-                numero_cuenta: '1122-3344-5566-7788',
-                clabe: '012345678901234570',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-008'
-            },
-            {
-                cuenta_id: 9,
-                alias: 'Cuenta Dólares Santander',
-                banco: 'Santander',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '9988-7766-5544-3322',
-                clabe: '014567890123456790',
-                moneda: 'USD',
-                origen: 'Internacional',
-                cuenta_contable: '100-009'
-            },
-            {
-                cuenta_id: 10,
-                alias: 'Cuenta Banamex Dólares',
-                banco: 'Banamex',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '1472-5836-9258-1472',
-                clabe: '002345678901234568',
-                moneda: 'USD',
-                origen: 'Internacional',
-                cuenta_contable: '100-010'
-            },
-            {
-                cuenta_id: 11,
-                alias: 'Cuenta HSBC Ahorros',
-                banco: 'HSBC',
-                tipo_cuenta: 'Ahorros',
-                numero_cuenta: '3698-5214-7896-3214',
-                clabe: '021234567890123457',
-                moneda: 'MXN',
-                origen: 'Nacional',
-                cuenta_contable: '100-011'
-            },
-            {
-                cuenta_id: 12,
-                alias: 'Cuenta Banorte Dólares',
-                banco: 'Banorte',
-                tipo_cuenta: 'Cheques',
-                numero_cuenta: '7531-9513-7531-9513',
-                clabe: '012345678901234571',
-                moneda: 'USD',
-                origen: 'Internacional',
-                cuenta_contable: '100-012'
-            }
-        ];
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        datosOriginales = [...datosCuentasAvanzadas];
-        let datosFiltrados = [...datosCuentasAvanzadas];
-        
-        // Elementos del DOM
-        const fechaInicio = document.getElementById('fechaInicio');
-        const fechaFin = document.getElementById('fechaFin');
-        const btnCrearFiltro = document.getElementById('btnCrearFiltro');
-        const btnAgregar = document.getElementById('btnAgregar');
-        const btnExcel = document.getElementById('btnExcel');
-        const btnColumnas = document.getElementById('btnColumnas');
-        const buscador = document.getElementById('buscador');
-        const tablaBody = document.getElementById('tablaBody');
-        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const tablaFoot = document.getElementById('tablaFoot');
-        const totalRegistros = document.getElementById('totalRegistros');
-        const paginacionInfo = document.getElementById('paginacionInfo');
-        const textoAgrupar = document.getElementById('textoAgrupar');
-        
-        // Elementos de paginación
-        const btnPrimera = document.getElementById('btnPrimera');
-        const btnAnterior = document.getElementById('btnAnterior');
-        const btnSiguiente = document.getElementById('btnSiguiente');
-        const btnUltima = document.getElementById('btnUltima');
-        const paginaActualSpan = document.getElementById('paginaActual');
-        
-        // Función para formatear moneda (aunque no hay montos, lo dejamos por si acaso)
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-        
-        // Función para generar un ID único para el grupo
-        function generarGrupoId(item, columnas) {
-            return columnas.map(col => {
-                switch(col) {
-                    case 'alias': return item.alias || 'Sin alias';
-                    case 'banco': return item.banco || 'Sin banco';
-                    case 'tipo_cuenta': return item.tipo_cuenta || 'Sin tipo';
-                    case 'numero_cuenta': return item.numero_cuenta || 'Sin número';
-                    case 'clabe': return item.clabe || 'Sin CLABE';
-                    case 'moneda': return item.moneda || 'Sin moneda';
-                    case 'origen': return item.origen || 'Sin origen';
-                    case 'cuenta_contable': return item.cuenta_contable || 'Sin cuenta';
-                    default: return '';
-                }
-            }).join('||');
-        }
-        
-        // Función para agrupar datos por columnas seleccionadas
-        function agruparDatos(datos, columnas) {
-            if (columnas.length === 0) return { grupos: [], items: datos };
-            
-            const gruposMap = new Map();
-            
-            datos.forEach(item => {
-                const grupoId = generarGrupoId(item, columnas);
-                
-                if (!gruposMap.has(grupoId)) {
-                    // Crear un nuevo grupo
-                    const valorGrupo = columnas.map(col => {
-                        switch(col) {
-                            case 'alias': return item.alias || 'Sin alias';
-                            case 'banco': return item.banco || 'Sin banco';
-                            case 'tipo_cuenta': return item.tipo_cuenta || 'Sin tipo';
-                            case 'numero_cuenta': return item.numero_cuenta || 'Sin número';
-                            case 'clabe': return item.clabe || 'Sin CLABE';
-                            case 'moneda': return item.moneda || 'Sin moneda';
-                            case 'origen': return item.origen || 'Sin origen';
-                            case 'cuenta_contable': return item.cuenta_contable || 'Sin cuenta';
-                            default: return '';
-                        }
-                    }).join(' - ');
-                    
-                    gruposMap.set(grupoId, {
-                        id: grupoId,
-                        valor: valorGrupo,
-                        items: [item]
-                    });
-                } else {
-                    const grupo = gruposMap.get(grupoId);
-                    grupo.items.push(item);
-                }
-            });
-            
-            return {
-                grupos: Array.from(gruposMap.values()),
-                items: []
-            };
-        }
-        
-        // Función para obtener datos de la página actual
-        function getCurrentPageData(datos) {
-            const start = (paginaActual - 1) * registrosPorPagina;
-            const end = start + registrosPorPagina;
-            return datos.slice(start, end);
-        }
-        
-        // Función para actualizar la paginación
-        function actualizarPaginacion(total) {
-            const totalPaginas = Math.ceil(total / registrosPorPagina);
-            paginaActualSpan.textContent = paginaActual;
-            
-            // Mostrar/ocultar botones de página según sea necesario
-            document.querySelectorAll('.pagina-btn').forEach(btn => {
-                const pagina = parseInt(btn.dataset.pagina);
-                if (pagina <= totalPaginas) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-            
-            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
-            const fin = Math.min(paginaActual * registrosPorPagina, total);
-            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
-        }
-        
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            totalRegistros.textContent = datos.length;
-        }
-        
-        // Función para cargar datos en la tabla
-        function cargarTabla(datos) {
-            if (!tablaBody) return;
-            
-            // Ocultar texto de agrupar si hay columnas agrupadas
-            if (textoAgrupar) {
-                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
-            }
-            
-            // Aplicar agrupación si hay columnas seleccionadas
-            const { grupos } = agruparDatos(datos, columnasAgrupadas);
-            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-            
-            // Limpiar tabla
-            tablaBody.innerHTML = '';
-            
-            if (datos.length === 0) {
-                sinDatosMensaje.style.display = 'block';
-                tablaContainer.style.display = 'none';
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                totalRegistros.textContent = '0';
-                
-                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
+<script>
+// Variable para almacenar el token CSRF
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+// ==================== FUNCIONES GENERALES ====================
+function mostrarNotificacion(mensaje, tipo) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+    alertDiv.style.zIndex = '9999';
+    alertDiv.style.minWidth = '300px';
+    alertDiv.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alertDiv);
+    setTimeout(() => alertDiv.remove(), 3000);
+}
+
+// ==================== MONEDAS ====================
+function cargarMonedas() {
+    fetch('/api/monedas')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyMonedas');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay monedas registradas</td></tr>';
                 return;
             }
-            
-            sinDatosMensaje.style.display = 'none';
-            tablaContainer.style.display = 'block';
-            
-            if (hayGrupos) {
-                // Ocultar pie de tabla cuando hay grupos
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                // Mostrar grupos
-                grupos.forEach(grupo => {
-                    const grupoRow = document.createElement('tr');
-                    grupoRow.className = 'fila-grupo';
-                    grupoRow.dataset.grupoId = grupo.id;
-                    
-                    if (expandedGroups.has(grupo.id)) {
-                        grupoRow.classList.add('expandido');
-                    }
-                    
-                    // Determinar el banco predominante en el grupo
-                    const bancoCounts = {};
-                    grupo.items.forEach(item => {
-                        bancoCounts[item.banco] = (bancoCounts[item.banco] || 0) + 1;
-                    });
-                    
-                    let bancoPredominante = 'Banco';
-                    let maxCount = 0;
-                    for (const [banco, count] of Object.entries(bancoCounts)) {
-                        if (count > maxCount) {
-                            maxCount = count;
-                            bancoPredominante = banco;
-                        }
-                    }
-                    
-                    grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="9">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
-                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros)
-                                    </span>
-                                </div>
-                                <span class="badge" style="background-color: #2378e1; color: white; margin-right: 10px;">${bancoPredominante}</span>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(grupoRow);
-                    
-                    // Mostrar items del grupo si está expandido
-                    if (expandedGroups.has(grupo.id)) {
-                        grupo.items.forEach(item => {
-                            const detalleRow = document.createElement('tr');
-                            detalleRow.className = 'fila-detalle';
-                            
-                            detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.alias || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.banco || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.tipo_cuenta || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.numero_cuenta || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.clabe || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.origen || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_contable || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.cuenta_id}"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.cuenta_id}"></i>
-                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.cuenta_id}"></i>
-                                        <i class="fas fa-history" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Movimientos" data-id="${item.cuenta_id}"></i>
-                                    </div>
-                                </td>
-                            `;
-                            
-                            tablaBody.appendChild(detalleRow);
-                        });
-                    }
-                });
-                
-                if (paginacionInfo) {
-                    const totalRegistros = datos.length;
-                    const mostrando = grupos.length;
-                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
-                }
-            } else {
-                // Mostrar todos los items sin agrupar (con paginación)
-                const pageData = getCurrentPageData(datos);
-                
-                pageData.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    
-                    row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.alias || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.banco || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.tipo_cuenta || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.numero_cuenta || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.clabe || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.moneda || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.origen || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cuenta_contable || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                            <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.cuenta_id}"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.cuenta_id}"></i>
-                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.cuenta_id}"></i>
-                                <i class="fas fa-history" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Movimientos" data-id="${item.cuenta_id}"></i>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(row);
-                });
-                
-                // Mostrar pie de tabla con totales
-                if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
-                calcularTotales(datos);
-                
-                actualizarPaginacion(datos.length);
-            }
-        }
-        
-        // Función para actualizar la visualización de columnas agrupadas
-        function actualizarGrupoColumnas() {
-            const grupoContainer = document.getElementById('grupoColumnas');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            
-            if (!grupoContainer) return;
-            
-            grupoContainer.innerHTML = '';
-            
-            if (columnasAgrupadas.length === 0) {
-                if (textoAgrupar) textoAgrupar.style.display = 'inline';
-            } else {
-                if (textoAgrupar) textoAgrupar.style.display = 'none';
-                
-                columnasAgrupadas.forEach(col => {
-                    const nombreColumna = {
-                        'alias': 'Alias',
-                        'banco': 'Banco',
-                        'tipo_cuenta': 'Tipo de Cuenta',
-                        'numero_cuenta': 'Número de Cuenta',
-                        'clabe': 'CLABE',
-                        'moneda': 'Moneda',
-                        'origen': 'Origen de Cuenta',
-                        'cuenta_contable': 'Cuenta Contable'
-                    }[col] || col;
-                    
-                    const chip = document.createElement('span');
-                    chip.className = 'columna-agrupada';
-                    chip.innerHTML = `
-                        ${nombreColumna}
-                        <span class="remover" data-columna="${col}">&times;</span>
-                    `;
-                    grupoContainer.appendChild(chip);
-                });
-            }
-            
-            // Limpiar grupos expandidos al cambiar agrupación
-            expandedGroups.clear();
-            
-            // Recargar tabla con nueva agrupación
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Configurar drag and drop
-        function setupDragAndDrop() {
-            const encabezados = document.querySelectorAll('th[draggable="true"]');
-            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-            
-            encabezados.forEach(th => {
-                th.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', th.dataset.columna);
-                    e.dataTransfer.effectAllowed = 'copy';
-                    th.style.opacity = '0.5';
-                });
-                
-                th.addEventListener('dragend', (e) => {
-                    th.style.opacity = '1';
-                });
-            });
-            
-            grupoAgrupacion.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
-                grupoAgrupacion.classList.add('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('dragleave', () => {
-                grupoAgrupacion.classList.remove('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('drop', (e) => {
-                e.preventDefault();
-                grupoAgrupacion.classList.remove('drag-over');
-                
-                const columna = e.dataTransfer.getData('text/plain');
-                
-                if (columna && !columnasAgrupadas.includes(columna)) {
-                    columnasAgrupadas.push(columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-            
-            // Event listener para remover columnas (usando delegación)
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remover')) {
-                    const columna = e.target.dataset.columna;
-                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-        }
-        
-        // Event listener para expandir/colapsar grupos
-        document.addEventListener('click', function(e) {
-            const filaGrupo = e.target.closest('.fila-grupo');
-            if (filaGrupo) {
-                const grupoId = filaGrupo.dataset.grupoId;
-                const icono = filaGrupo.querySelector('i');
-                
-                if (expandedGroups.has(grupoId)) {
-                    expandedGroups.delete(grupoId);
-                    filaGrupo.classList.remove('expandido');
-                    if (icono) icono.className = 'fas fa-caret-right';
-                } else {
-                    expandedGroups.add(grupoId);
-                    filaGrupo.classList.add('expandido');
-                    if (icono) icono.className = 'fas fa-caret-down';
-                }
-                
-                // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosFiltrados);
-            }
+            tbody.innerHTML = data.map(moneda => `
+                <tr>
+                    <td>${moneda.codigo}</td>
+                    <td>${moneda.nombre}</td>
+                    <td>${moneda.simbolo}</td>
+                    <td><span class="badge ${moneda.activa ? 'badge-active' : 'badge-inactive'}">${moneda.activa ? 'Activa' : 'Inactiva'}</span></td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarMoneda(${moneda.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarMoneda(${moneda.id})" title="Eliminar"></i>
+                    </td>
+                </tr>
+            `).join('');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('tbodyMonedas').innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Error al cargar datos</td></tr>';
         });
-        
-        // Función para filtrar por búsqueda
-        function filtrarPorBusqueda() {
-            const termino = buscador.value.toLowerCase().trim();
-            
-            if (termino === '') {
-                datosFiltrados = [...datosOriginales];
-            } else {
-                datosFiltrados = datosOriginales.filter(item => 
-                    item.alias?.toLowerCase().includes(termino) ||
-                    item.banco?.toLowerCase().includes(termino) ||
-                    item.tipo_cuenta?.toLowerCase().includes(termino) ||
-                    item.numero_cuenta?.includes(termino) ||
-                    item.clabe?.includes(termino) ||
-                    item.moneda?.toLowerCase().includes(termino) ||
-                    item.origen?.toLowerCase().includes(termino) ||
-                    item.cuenta_contable?.toLowerCase().includes(termino)
-                );
-            }
-            
-            paginaActual = 1;
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Función para cambiar de página
-        function cambiarPagina(nuevaPagina) {
-            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
-                paginaActual = nuevaPagina;
-                cargarTabla(datosFiltrados);
-            }
-        }
-        
-        // Cargar datos iniciales
-        cargarTabla(datosOriginales);
-        
-        // Configurar drag and drop
-        setupDragAndDrop();
-        
-        // Event Listeners
-        btnCrearFiltro.addEventListener('click', function() {
-            alert('Crear filtro - Funcionalidad en desarrollo');
+}
+
+function abrirModalMoneda() {
+    document.getElementById('moneda_id').value = '';
+    document.getElementById('moneda_codigo').value = '';
+    document.getElementById('moneda_nombre').value = '';
+    document.getElementById('moneda_simbolo').value = '';
+    document.getElementById('moneda_activa').checked = true;
+    new bootstrap.Modal(document.getElementById('modalMoneda')).show();
+}
+
+function editarMoneda(id) {
+    fetch(`/api/monedas/${id}`)
+        .then(response => response.json())
+        .then(moneda => {
+            document.getElementById('moneda_id').value = moneda.id;
+            document.getElementById('moneda_codigo').value = moneda.codigo;
+            document.getElementById('moneda_nombre').value = moneda.nombre;
+            document.getElementById('moneda_simbolo').value = moneda.simbolo;
+            document.getElementById('moneda_activa').checked = moneda.activa;
+            new bootstrap.Modal(document.getElementById('modalMoneda')).show();
         });
-        
-        btnAgregar.addEventListener('click', function() {
-            alert('Agregar Cuenta - Funcionalidad en desarrollo');
-        });
-        
-        btnExcel.addEventListener('click', function() {
-            exportTableToExcel('tablaCuentasAvanzadas', 'CuentasAvanzadas');
-        });
-        
-        btnColumnas.addEventListener('click', function() {
-            alert('Selector de Columnas - Funcionalidad en desarrollo');
-        });
-        
-        buscador.addEventListener('input', filtrarPorBusqueda);
-        
-        // Eventos de paginación
-        document.querySelectorAll('.pagina-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                cambiarPagina(parseInt(this.dataset.pagina));
-            });
-        });
-        
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
-        
-        // Iconos de filtro en encabezados
-        document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
-            icon.addEventListener('click', function() {
-                alert('Filtro de columna - Funcionalidad en desarrollo');
-            });
-        });
-        
-        // Acciones de los iconos (delegación de eventos)
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fa-edit')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Editar Cuenta ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-trash-alt')) {
-                const id = e.target.getAttribute('data-id');
-                if (confirm(`¿Está seguro de eliminar la cuenta ID: ${id}?`)) {
-                    alert(`Eliminar Cuenta ID: ${id} - Funcionalidad en desarrollo`);
-                }
-            } else if (e.target.classList.contains('fa-eye')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Ver detalles de Cuenta ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-history')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Ver movimientos de Cuenta ID: ${id} - Funcionalidad en desarrollo`);
-            }
-        });
-        
-        // Función para exportar a Excel
-        function exportTableToExcel(tableId, filename = '') {
-            var table = document.getElementById(tableId);
-            if (!table) return;
-            
-            var html = table.outerHTML;
-            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
-            
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = filename + '.xls';
-            link.click();
+}
+
+function guardarMoneda() {
+    const id = document.getElementById('moneda_id').value;
+    const data = {
+        codigo: document.getElementById('moneda_codigo').value,
+        nombre: document.getElementById('moneda_nombre').value,
+        simbolo: document.getElementById('moneda_simbolo').value,
+        activa: document.getElementById('moneda_activa').checked
+    };
+    
+    const url = id ? `/api/monedas/${id}` : '/api/monedas';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalMoneda')).hide();
+            cargarMonedas();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
         }
     });
+}
+
+function eliminarMoneda(id) {
+    if (confirm('¿Está seguro de eliminar esta moneda?')) {
+        fetch(`/api/monedas/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarMonedas();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== TIPOS DE CAMBIO ====================
+function cargarSelectMonedas(selectId) {
+    fetch('/api/monedas')
+        .then(response => response.json())
+        .then(monedas => {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Seleccionar...</option>' + 
+                monedas.filter(m => m.activa).map(m => `<option value="${m.id}">${m.nombre} (${m.codigo})</option>`).join('');
+        });
+}
+
+function cargarTiposCambio() {
+    const fecha = document.getElementById('filtroFechaTC').value;
+    let url = '/api/tipos-cambio';
+    if (fecha) url += `?fecha=${fecha}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyTiposCambio');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay tipos de cambio registrados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(tc => `
+                <tr>
+                    <td>${tc.moneda_origen?.nombre || '-'} (${tc.moneda_origen?.codigo || '-'})</td>
+                    <td>${tc.moneda_destino?.nombre || '-'} (${tc.moneda_destino?.codigo || '-'})</td>
+                    <td>${parseFloat(tc.tasa).toFixed(4)}</td>
+                    <td>${tc.fecha}</td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarTipoCambio(${tc.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarTipoCambio(${tc.id})" title="Eliminar"></i>
+                    </td>
+                </table>
+            `).join('');
+        });
+}
+
+function filtrarTiposCambio() {
+    cargarTiposCambio();
+}
+
+function abrirModalTipoCambio() {
+    cargarSelectMonedas('tipocambio_origen');
+    cargarSelectMonedas('tipocambio_destino');
+    document.getElementById('tipocambio_id').value = '';
+    document.getElementById('tipocambio_tasa').value = '';
+    document.getElementById('tipocambio_fecha').value = new Date().toISOString().split('T')[0];
+    new bootstrap.Modal(document.getElementById('modalTipoCambio')).show();
+}
+
+function editarTipoCambio(id) {
+    fetch(`/api/tipos-cambio/${id}`)
+        .then(response => response.json())
+        .then(tc => {
+            cargarSelectMonedas('tipocambio_origen', tc.moneda_origen_id);
+            cargarSelectMonedas('tipocambio_destino', tc.moneda_destino_id);
+            document.getElementById('tipocambio_id').value = tc.id;
+            document.getElementById('tipocambio_tasa').value = tc.tasa;
+            document.getElementById('tipocambio_fecha').value = tc.fecha;
+            new bootstrap.Modal(document.getElementById('modalTipoCambio')).show();
+        });
+}
+
+function guardarTipoCambio() {
+    const id = document.getElementById('tipocambio_id').value;
+    const data = {
+        moneda_origen_id: document.getElementById('tipocambio_origen').value,
+        moneda_destino_id: document.getElementById('tipocambio_destino').value,
+        tasa: document.getElementById('tipocambio_tasa').value,
+        fecha: document.getElementById('tipocambio_fecha').value
+    };
+    
+    const url = id ? `/api/tipos-cambio/${id}` : '/api/tipos-cambio';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalTipoCambio')).hide();
+            cargarTiposCambio();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    });
+}
+
+function eliminarTipoCambio(id) {
+    if (confirm('¿Está seguro de eliminar este tipo de cambio?')) {
+        fetch(`/api/tipos-cambio/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarTiposCambio();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== BANCOS ====================
+function cargarBancos() {
+    fetch('/api/bancos')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyBancos');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay bancos registrados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(banco => `
+                <tr>
+                    <td>${banco.nombre}</td>
+                    <td>${banco.codigo || '-'}</td>
+                    <td><span class="badge ${banco.activo ? 'badge-active' : 'badge-inactive'}">${banco.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarBanco(${banco.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarBanco(${banco.id})" title="Eliminar"></i>
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+
+function abrirModalBanco() {
+    document.getElementById('banco_id').value = '';
+    document.getElementById('banco_nombre').value = '';
+    document.getElementById('banco_codigo').value = '';
+    document.getElementById('banco_activo').checked = true;
+    new bootstrap.Modal(document.getElementById('modalBanco')).show();
+}
+
+function editarBanco(id) {
+    fetch(`/api/bancos/${id}`)
+        .then(response => response.json())
+        .then(banco => {
+            document.getElementById('banco_id').value = banco.id;
+            document.getElementById('banco_nombre').value = banco.nombre;
+            document.getElementById('banco_codigo').value = banco.codigo || '';
+            document.getElementById('banco_activo').checked = banco.activo;
+            new bootstrap.Modal(document.getElementById('modalBanco')).show();
+        });
+}
+
+function guardarBanco() {
+    const id = document.getElementById('banco_id').value;
+    const data = {
+        nombre: document.getElementById('banco_nombre').value,
+        codigo: document.getElementById('banco_codigo').value,
+        activo: document.getElementById('banco_activo').checked
+    };
+    
+    const url = id ? `/api/bancos/${id}` : '/api/bancos';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalBanco')).hide();
+            cargarBancos();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    });
+}
+
+function eliminarBanco(id) {
+    if (confirm('¿Está seguro de eliminar este banco?')) {
+        fetch(`/api/bancos/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarBancos();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== MÉTODOS DE PAGO ====================
+function cargarMetodosPago() {
+    fetch('/api/metodos-pago')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyMetodosPago');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay métodos de pago registrados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(mp => `
+                <tr>
+                    <td>${mp.nombre}</td>
+                    <td>${mp.descripcion || '-'}</td>
+                    <td><span class="badge ${mp.activo ? 'badge-active' : 'badge-inactive'}">${mp.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarMetodoPago(${mp.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarMetodoPago(${mp.id})" title="Eliminar"></i>
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+
+function abrirModalMetodoPago() {
+    document.getElementById('metodopago_id').value = '';
+    document.getElementById('metodopago_nombre').value = '';
+    document.getElementById('metodopago_descripcion').value = '';
+    document.getElementById('metodopago_activo').checked = true;
+    new bootstrap.Modal(document.getElementById('modalMetodoPago')).show();
+}
+
+function editarMetodoPago(id) {
+    fetch(`/api/metodos-pago/${id}`)
+        .then(response => response.json())
+        .then(mp => {
+            document.getElementById('metodopago_id').value = mp.id;
+            document.getElementById('metodopago_nombre').value = mp.nombre;
+            document.getElementById('metodopago_descripcion').value = mp.descripcion || '';
+            document.getElementById('metodopago_activo').checked = mp.activo;
+            new bootstrap.Modal(document.getElementById('modalMetodoPago')).show();
+        });
+}
+
+function guardarMetodoPago() {
+    const id = document.getElementById('metodopago_id').value;
+    const data = {
+        nombre: document.getElementById('metodopago_nombre').value,
+        descripcion: document.getElementById('metodopago_descripcion').value,
+        activo: document.getElementById('metodopago_activo').checked
+    };
+    
+    const url = id ? `/api/metodos-pago/${id}` : '/api/metodos-pago';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalMetodoPago')).hide();
+            cargarMetodosPago();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    });
+}
+
+function eliminarMetodoPago(id) {
+    if (confirm('¿Está seguro de eliminar este método de pago?')) {
+        fetch(`/api/metodos-pago/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarMetodosPago();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== TIPOS DE INGRESO ====================
+function cargarTiposIngreso() {
+    fetch('/api/tipos-ingreso')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyTiposIngreso');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay tipos de ingreso registrados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(ti => `
+                <tr>
+                    <td>${ti.nombre}</td>
+                    <td>${ti.descripcion || '-'}</td>
+                    <td><span class="badge ${ti.activo ? 'badge-active' : 'badge-inactive'}">${ti.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarTipoIngreso(${ti.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarTipoIngreso(${ti.id})" title="Eliminar"></i>
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+
+function abrirModalTipoIngreso() {
+    document.getElementById('tipoingreso_id').value = '';
+    document.getElementById('tipoingreso_nombre').value = '';
+    document.getElementById('tipoingreso_descripcion').value = '';
+    document.getElementById('tipoingreso_activo').checked = true;
+    new bootstrap.Modal(document.getElementById('modalTipoIngreso')).show();
+}
+
+function editarTipoIngreso(id) {
+    fetch(`/api/tipos-ingreso/${id}`)
+        .then(response => response.json())
+        .then(ti => {
+            document.getElementById('tipoingreso_id').value = ti.id;
+            document.getElementById('tipoingreso_nombre').value = ti.nombre;
+            document.getElementById('tipoingreso_descripcion').value = ti.descripcion || '';
+            document.getElementById('tipoingreso_activo').checked = ti.activo;
+            new bootstrap.Modal(document.getElementById('modalTipoIngreso')).show();
+        });
+}
+
+function guardarTipoIngreso() {
+    const id = document.getElementById('tipoingreso_id').value;
+    const data = {
+        nombre: document.getElementById('tipoingreso_nombre').value,
+        descripcion: document.getElementById('tipoingreso_descripcion').value,
+        activo: document.getElementById('tipoingreso_activo').checked
+    };
+    
+    const url = id ? `/api/tipos-ingreso/${id}` : '/api/tipos-ingreso';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalTipoIngreso')).hide();
+            cargarTiposIngreso();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    });
+}
+
+function eliminarTipoIngreso(id) {
+    if (confirm('¿Está seguro de eliminar este tipo de ingreso?')) {
+        fetch(`/api/tipos-ingreso/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarTiposIngreso();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== TIPOS DE EGRESO ====================
+function cargarTiposEgreso() {
+    fetch('/api/tipos-egreso')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyTiposEgreso');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay tipos de egreso registrados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(te => `
+                <tr>
+                    <td>${te.nombre}</td>
+                    <td>${te.descripcion || '-'}</td>
+                    <td><span class="badge ${te.activo ? 'badge-active' : 'badge-inactive'}">${te.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarTipoEgreso(${te.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarTipoEgreso(${te.id})" title="Eliminar"></i>
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+
+function abrirModalTipoEgreso() {
+    document.getElementById('tipoegreso_id').value = '';
+    document.getElementById('tipoegreso_nombre').value = '';
+    document.getElementById('tipoegreso_descripcion').value = '';
+    document.getElementById('tipoegreso_activo').checked = true;
+    new bootstrap.Modal(document.getElementById('modalTipoEgreso')).show();
+}
+
+function editarTipoEgreso(id) {
+    fetch(`/api/tipos-egreso/${id}`)
+        .then(response => response.json())
+        .then(te => {
+            document.getElementById('tipoegreso_id').value = te.id;
+            document.getElementById('tipoegreso_nombre').value = te.nombre;
+            document.getElementById('tipoegreso_descripcion').value = te.descripcion || '';
+            document.getElementById('tipoegreso_activo').checked = te.activo;
+            new bootstrap.Modal(document.getElementById('modalTipoEgreso')).show();
+        });
+}
+
+function guardarTipoEgreso() {
+    const id = document.getElementById('tipoegreso_id').value;
+    const data = {
+        nombre: document.getElementById('tipoegreso_nombre').value,
+        descripcion: document.getElementById('tipoegreso_descripcion').value,
+        activo: document.getElementById('tipoegreso_activo').checked
+    };
+    
+    const url = id ? `/api/tipos-egreso/${id}` : '/api/tipos-egreso';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalTipoEgreso')).hide();
+            cargarTiposEgreso();
+            cargarSelectTiposEgreso(); // Recargar select para categorías
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    });
+}
+
+function eliminarTipoEgreso(id) {
+    if (confirm('¿Está seguro de eliminar este tipo de egreso?')) {
+        fetch(`/api/tipos-egreso/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarTiposEgreso();
+                cargarSelectTiposEgreso();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== CATEGORÍAS DE GASTO ====================
+function cargarSelectTiposEgreso() {
+    fetch('/api/tipos-egreso')
+        .then(response => response.json())
+        .then(tipos => {
+            const select = document.getElementById('categoriagasto_tipo_egreso_id');
+            select.innerHTML = '<option value="">Seleccionar...</option>' + 
+                tipos.filter(t => t.activo).map(t => `<option value="${t.id}">${t.nombre}</option>`).join('');
+            
+            // También cargar el filtro
+            const filtro = document.getElementById('filtroTipoEgreso');
+            filtro.innerHTML = '<option value="">Todos</option>' + 
+                tipos.map(t => `<option value="${t.id}">${t.nombre}</option>`).join('');
+        });
+}
+
+function cargarCategoriasGasto() {
+    const tipoEgresoId = document.getElementById('filtroTipoEgreso').value;
+    let url = '/api/categorias-gasto';
+    if (tipoEgresoId) url += `?tipo_egreso_id=${tipoEgresoId}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('tbodyCategoriasGasto');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay categorías registradas</td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(cat => `
+                <tr>
+                    <td>${cat.nombre}</td>
+                    <td>${cat.descripcion || '-'}</td>
+                    <td>${cat.tipo_egreso?.nombre || '-'}</td>
+                    <td><span class="badge ${cat.activo ? 'badge-active' : 'badge-inactive'}">${cat.activo ? 'Activo' : 'Inactivo'}</span></td>
+                    <td class="action-icons">
+                        <i class="fas fa-edit" onclick="editarCategoriaGasto(${cat.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarCategoriaGasto(${cat.id})" title="Eliminar"></i>
+                    </td>
+                </tr>
+            `).join('');
+        });
+}
+
+function filtrarCategoriasGasto() {
+    cargarCategoriasGasto();
+}
+
+function abrirModalCategoriaGasto() {
+    cargarSelectTiposEgreso();
+    document.getElementById('categoriagasto_id').value = '';
+    document.getElementById('categoriagasto_nombre').value = '';
+    document.getElementById('categoriagasto_descripcion').value = '';
+    document.getElementById('categoriagasto_activo').checked = true;
+    new bootstrap.Modal(document.getElementById('modalCategoriaGasto')).show();
+}
+
+function editarCategoriaGasto(id) {
+    fetch(`/api/categorias-gasto/${id}`)
+        .then(response => response.json())
+        .then(cat => {
+            cargarSelectTiposEgreso();
+            setTimeout(() => {
+                document.getElementById('categoriagasto_id').value = cat.id;
+                document.getElementById('categoriagasto_nombre').value = cat.nombre;
+                document.getElementById('categoriagasto_descripcion').value = cat.descripcion || '';
+                document.getElementById('categoriagasto_tipo_egreso_id').value = cat.tipo_egreso_id;
+                document.getElementById('categoriagasto_activo').checked = cat.activo;
+                new bootstrap.Modal(document.getElementById('modalCategoriaGasto')).show();
+            }, 500);
+        });
+}
+
+function guardarCategoriaGasto() {
+    const id = document.getElementById('categoriagasto_id').value;
+    const data = {
+        nombre: document.getElementById('categoriagasto_nombre').value,
+        descripcion: document.getElementById('categoriagasto_descripcion').value,
+        tipo_egreso_id: document.getElementById('categoriagasto_tipo_egreso_id').value,
+        activo: document.getElementById('categoriagasto_activo').checked
+    };
+    
+    const url = id ? `/api/categorias-gasto/${id}` : '/api/categorias-gasto';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalCategoriaGasto')).hide();
+            cargarCategoriasGasto();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    });
+}
+
+function eliminarCategoriaGasto(id) {
+    if (confirm('¿Está seguro de eliminar esta categoría?')) {
+        fetch(`/api/categorias-gasto/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarCategoriasGasto();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+// ==================== INICIALIZACIÓN ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar todos los datos
+    cargarMonedas();
+    cargarTiposCambio();
+    cargarBancos();
+    cargarMetodosPago();
+    cargarTiposIngreso();
+    cargarTiposEgreso();
+    cargarSelectTiposEgreso();
+    cargarCategoriasGasto();
+});
 </script>
 @endsection
