@@ -327,4 +327,188 @@ class MovimientoBancarioController extends Controller
             'moneda' => $cuenta->moneda->simbolo
         ]);
     }
+
+    // ==================================================================
+
+    /**
+ * Obtener datos para la vista de estados de cuenta
+ */
+// En app/Http/Controllers/MovimientoBancarioController.php
+    public function getDataForEstadosCuenta(Request $request)
+    {
+        try {
+            $query = MovimientoBancario::with(['cuentaBancaria.banco', 'cuentaBancaria.moneda']);
+            
+            // Filtro por cuenta bancaria
+            $cuentaId = null;
+            if ($request->has('cuenta_id') && $request->cuenta_id != '0' && $request->cuenta_id != 'null') {
+                $cuentaId = $request->cuenta_id;
+                $query->where('cuenta_bancaria_id', $cuentaId);
+            }
+            
+            // Filtro por fechas
+            $fechaInicio = $request->has('fecha_inicio') && $request->fecha_inicio ? $request->fecha_inicio : date('Y-m-01');
+            $fechaFin = $request->has('fecha_fin') && $request->fecha_fin ? $request->fecha_fin : date('Y-m-t');
+            
+            $query->whereDate('fecha', '>=', $fechaInicio)
+                  ->whereDate('fecha', '<=', $fechaFin);
+            
+            // Búsqueda
+            if ($request->has('busqueda') && $request->busqueda) {
+                $busqueda = $request->busqueda;
+                $query->where(function($q) use ($busqueda) {
+                    $q->where('folio', 'like', "%{$busqueda}%")
+                      ->orWhere('referencia', 'like', "%{$busqueda}%")
+                      ->orWhere('referencia_bancaria', 'like', "%{$busqueda}%")
+                      ->orWhere('origen', 'like', "%{$busqueda}%")
+                      ->orWhere('descripcion', 'like', "%{$busqueda}%")
+                      ->orWhere('concepto', 'like', "%{$busqueda}%");
+                });
+            }
+            
+            // Obtener movimientos ordenados
+            $movimientos = $query->orderBy('fecha', 'asc')->orderBy('id', 'asc')->get();
+            
+            // Calcular saldo inicial
+            $saldoInicial = $this->calcularSaldoInicial($cuentaId, $fechaInicio);
+            
+            // Procesar movimientos y calcular saldo corrido
+            $data = [];
+            $saldoCorrido = $saldoInicial;
+            
+            foreach ($movimientos as $movimiento) {
+                // Determinar si es cargo o abono
+                $esCargo = in_array($movimiento->tipo, ['cargo', 'egreso', 'pago', 'retiro', 'compra', 'gasto']);
+                $esAbono = in_array($movimiento->tipo, ['abono', 'ingreso', 'deposito', 'transferencia_recibida', 'pago_recibido']);
+                
+                $monto = floatval($movimiento->monto);
+                
+                if ($esCargo) {
+                    $saldoCorrido -= $monto;
+                } elseif ($esAbono) {
+                    $saldoCorrido += $monto;
+                }
+                
+                $data[] = [
+                    'id' => $movimiento->id,
+                    'fecha' => $movimiento->fecha,
+                    'folio' => $movimiento->folio ?? 'MOV-' . str_pad($movimiento->id, 6, '0', STR_PAD_LEFT),
+                    'referencia' => $movimiento->referencia ?? '-',
+                    'ref_bancaria' => $movimiento->referencia_bancaria ?? '-',
+                    'origen' => $movimiento->origen ?? $movimiento->tipo ?? '-',
+                    'descripcion' => $movimiento->descripcion ?? $movimiento->concepto ?? '-',
+                    'cargos' => $esCargo ? $monto : 0,
+                    'abonos' => $esAbono ? $monto : 0,
+                    'saldo_final' => round($saldoCorrido, 2),
+                    'banco_id' => $movimiento->cuentaBancaria->banco_id ?? null,
+                    'banco' => $movimiento->cuentaBancaria->banco->nombre ?? '',
+                    'cuenta' => $movimiento->cuentaBancaria->numero_cuenta ?? '',
+                ];
+            }
+            
+            // Calcular totales
+            $totalCargos = array_sum(array_column($data, 'cargos'));
+            $totalAbonos = array_sum(array_column($data, 'abonos'));
+            $saldoFinal = count($data) > 0 ? end($data)['saldo_final'] : $saldoInicial;
+            
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'resumen' => [
+                    'saldo_inicial' => round($saldoInicial, 2),
+                    'total_cargos' => round($totalCargos, 2),
+                    'total_abonos' => round($totalAbonos, 2),
+                    'saldo_final' => round($saldoFinal, 2)
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error en getDataForEstadosCuenta: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cargar los datos: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Calcular saldo inicial para el período
+     */
+    private function calcularSaldoInicial($cuentaId, $fechaInicio)
+    {
+        try {
+            // Si no hay cuenta seleccionada, sumar saldos iniciales de todas las cuentas
+            if (!$cuentaId) {
+                $cuentas = CuentaBancaria::where('activa', true)->get();
+                $saldoTotal = 0;
+                
+                foreach ($cuentas as $cuenta) {
+                    // Obtener saldo inicial de la cuenta
+                    $saldoBase = floatval($cuenta->saldo_inicial ?? 0);
+                    
+                    // Sumar movimientos ANTES de la fecha de inicio
+                    $movimientosPrevios = MovimientoBancario::where('cuenta_bancaria_id', $cuenta->id)
+                        ->whereDate('fecha', '<', $fechaInicio)
+                        ->get();
+                    
+                    $saldoCorrido = $saldoBase;
+                    foreach ($movimientosPrevios as $mov) {
+                        $esCargo = in_array($mov->tipo, ['cargo', 'egreso', 'pago', 'retiro', 'compra', 'gasto']);
+                        $esAbono = in_array($mov->tipo, ['abono', 'ingreso', 'deposito', 'transferencia_recibida', 'pago_recibido']);
+                        
+                        if ($esCargo) {
+                            $saldoCorrido -= floatval($mov->monto);
+                        } elseif ($esAbono) {
+                            $saldoCorrido += floatval($mov->monto);
+                        }
+                    }
+                    
+                    $saldoTotal += $saldoCorrido;
+                }
+                
+                return $saldoTotal;
+            }
+            
+            // Para una cuenta específica
+            $cuenta = CuentaBancaria::find($cuentaId);
+            if (!$cuenta) {
+                return 0;
+            }
+            
+            // Saldo inicial de la cuenta
+            $saldoBase = floatval($cuenta->saldo_inicial ?? 0);
+            
+            // Sumar movimientos ANTES de la fecha de inicio
+            $movimientosPrevios = MovimientoBancario::where('cuenta_bancaria_id', $cuentaId)
+                ->whereDate('fecha', '<', $fechaInicio)
+                ->get();
+            
+            $saldoCorrido = $saldoBase;
+            foreach ($movimientosPrevios as $mov) {
+                $esCargo = in_array($mov->tipo, ['cargo', 'egreso', 'pago', 'retiro', 'compra', 'gasto']);
+                $esAbono = in_array($mov->tipo, ['abono', 'ingreso', 'deposito', 'transferencia_recibida', 'pago_recibido']);
+                
+                if ($esCargo) {
+                    $saldoCorrido -= floatval($mov->monto);
+                } elseif ($esAbono) {
+                    $saldoCorrido += floatval($mov->monto);
+                }
+            }
+            
+            return $saldoCorrido;
+            
+        } catch (\Exception $e) {
+            Log::error('Error calculando saldo inicial: ' . $e->getMessage());
+            return 0;
+        }
+    }
+    
+
+
+/**
+ * Calcular saldo inicial para el período
+ */
+
 }

@@ -120,13 +120,25 @@ class ProyectoController extends Controller
     /**
      * Muestra los detalles de un proyecto
      */
-    public function show($id)
-    {
+    /**
+ * Muestra los detalles de un proyecto
+ */
+public function show($id)
+{
+    // Validar que el ID sea numérico
+    if (!is_numeric($id)) {
+        abort(404, 'Proyecto no encontrado');
+    }
+    
+    try {
         $proyecto = Proyecto::with(['responsable', 'equipo', 'documentos', 'costos', 'flujoEfectivo'])
             ->findOrFail($id);
         
         return view('proyectos.show', compact('proyecto'));
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        abort(404, 'Proyecto no encontrado');
     }
+}
 
     /**
      * Muestra el formulario para editar un proyecto

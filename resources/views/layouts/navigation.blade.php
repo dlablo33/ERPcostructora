@@ -55,6 +55,17 @@
         padding: 0;
         overflow-x: hidden;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Contenedor principal para footer pegajoso */
+    .app-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
 
     /* ========== NAVBAR SUPERIOR ========== */
@@ -446,7 +457,7 @@
         height: calc(100vh - var(--navbar-height));
         background: #083CAE;
         box-shadow: -5px 0 15px rgba(0,0,0,0.15);
-        z-index: 9001;
+        z-index: 20000 !important; /* Aumentado para estar sobre la barra verde */
         transition: right 0.3s ease-in-out;
         overflow-y: auto;
         display: flex;
@@ -564,7 +575,7 @@
     /* ========== CONTENIDO PRINCIPAL ========== */
     .main-content-container {
         margin-top: var(--total-header-height);
-        min-height: calc(100vh - var(--total-header-height));
+        flex: 1;
         transition: margin-left 0.3s ease, width 0.3s ease;
         padding: 1.5rem;
         width: 100%;
@@ -661,7 +672,7 @@
         visibility: visible;
     }
 
-    /* ========== NOTIFICACIONES ========== */
+    /* ========== NOTIFICACIONES - Z-index aumentado ========== */
     .notifications-menu {
         position: absolute;
         right: 0;
@@ -670,7 +681,7 @@
         background: white;
         border-radius: 12px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        z-index: 10002;
+        z-index: 200000 !important;
         margin-top: 10px;
         overflow: hidden;
         border: 1px solid rgba(8,60,174,0.1);
@@ -686,10 +697,10 @@
         color: #ffff00;
     }
 
-    /* ========== ESTILOS DEL CHAT ========== */
+    /* ========== ESTILOS DEL CHAT - Z-index aumentado ========== */
     .chat-widget-container {
         position: relative;
-        z-index: 200000 !important; /* Aumentado */
+        z-index: 200000 !important;
     }
 
     .chat-panel {
@@ -893,29 +904,28 @@
         gap: 8px;
     }
 
-    /* Agrega esto a tu sección de estilos */
-.chat-input {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 24px;
-    font-size: 0.85rem;
-    outline: none;
-    transition: all 0.2s;
-    background-color: white !important;  /* Forzar fondo blanco */
-    color: #1f2937 !important;           /* Forzar texto oscuro */
-}
+    .chat-input {
+        flex: 1;
+        padding: 0.6rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 24px;
+        font-size: 0.85rem;
+        outline: none;
+        transition: all 0.2s;
+        background-color: white !important;
+        color: #1f2937 !important;
+    }
 
-.chat-input::placeholder {
-    color: #9ca3af !important;           /* Color del placeholder */
-}
+    .chat-input::placeholder {
+        color: #9ca3af !important;
+    }
 
-.chat-input:focus {
-    border-color: #083CAE;
-    box-shadow: 0 0 0 3px rgba(8, 60, 174, 0.1);
-    background-color: white !important;
-    color: #1f2937 !important;
-}
+    .chat-input:focus {
+        border-color: #083CAE;
+        box-shadow: 0 0 0 3px rgba(8, 60, 174, 0.1);
+        background-color: white !important;
+        color: #1f2937 !important;
+    }
 
     .chat-send-btn {
         background: linear-gradient(135deg, #083CAE 0%, #1e4bd2 100%);
@@ -984,24 +994,24 @@
     }
 
     /* Estilos específicos para el input del chat */
-.chat-panel .chat-input-area .chat-input,
-.chat-panel .chat-input-area input.chat-input {
-    background-color: #ffffff !important;
-    color: #1f2937 !important;
-    border: 1px solid #d1d5db !important;
-}
+    .chat-panel .chat-input-area .chat-input,
+    .chat-panel .chat-input-area input.chat-input {
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #d1d5db !important;
+    }
 
-.chat-panel .chat-input-area .chat-input:focus {
-    background-color: #ffffff !important;
-    color: #1f2937 !important;
-    border-color: #083CAE !important;
-    outline: none !important;
-    box-shadow: 0 0 0 3px rgba(8, 60, 174, 0.1) !important;
-}
+    .chat-panel .chat-input-area .chat-input:focus {
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        border-color: #083CAE !important;
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba(8, 60, 174, 0.1) !important;
+    }
 
-.chat-panel .chat-input-area .chat-input::placeholder {
-    color: #9ca3af !important;
-}
+    .chat-panel .chat-input-area .chat-input::placeholder {
+        color: #9ca3af !important;
+    }
 
     /* ========== SCROLLBARS ========== */
     .section-sidebar::-webkit-scrollbar,
@@ -1032,6 +1042,14 @@
     #notification-dot {
         background-color: #eaf512 !important;
         box-shadow: 0 0 5px #eaf512;
+    }
+
+    /* ========== PIE DE PÁGINA ========== */
+    .app-footer {
+        background-color: #083CAE !important;
+        margin-top: auto;
+        position: relative;
+        z-index: 100;
     }
 
     /* ========== RESPONSIVE ========== */
@@ -1139,1220 +1157,1241 @@
 </head>
 
 <body class="bg-gray-50">
-    @vite(['resources/js/app.js'])
-    
-    <!-- TOP NAVIGATION BAR -->
-    <nav x-data="{ mobileMenuOpen: false }" class="bg-construction-dark text-white shadow-lg fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-8xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-4">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-md hover:bg-blue-800">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    
-                    <div class="flex items-center space-x-3">
-                        <a href="{{ route('home') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                            <img src="../img/login/logoblanco.png" alt="Logo" class="h-[180px] w-[180px]" onerror="this.src='https://via.placeholder.com/150x40/083CAE/FFFFFF?text=LOGO'">
-                        </a>
-                    </div>
-                </div>
-
-                <div class="desktop-menu hidden md:flex items-center justify-center flex-1 space-x-1">
-                    <button onclick="toggleSectionSidebar('bi')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-chart-line"></i>
-                        <span>BI</span>
-                    </button>
-                    <button onclick="toggleSectionSidebar('administracion')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <span>Administración</span>
-                    </button>
-                    <button onclick="toggleSectionSidebar('contabilidad')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-calculator"></i>
-                        <span>Contabilidad</span>
-                    </button>
-                    <button onclick="toggleSectionSidebar('proyectos')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-project-diagram"></i>
-                        <span>Proyectos</span>
-                    </button>
-                    <button onclick="toggleSectionSidebar('rrhh')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-users"></i>
-                        <span>RRHH</span>
-                    </button>
-                    <button onclick="toggleSectionSidebar('inventarios')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-boxes"></i>
-                        <span>Almacen</span>
-                    </button>
-                    <button onclick="toggleSectionSidebar('compras')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Compras</span>
-                    </button>
-                </div>
-
-                <div class="flex items-center space-x-2 ml-auto">
-                    <!-- CHAT WIDGET -->
-                    <div x-data="chatWidget()" x-init="initChat()" class="chat-widget-container">
-                        <button @click="toggleChat()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
-                            <i class="fas fa-comments text-xl" style="color: #eaf512;"></i>
-                            <span x-show="unreadMessagesCount > 0" 
-                                  x-text="unreadMessagesCount" 
-                                  class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1 font-bold"></span>
+    <div class="app-wrapper">
+        @vite(['resources/js/app.js'])
+        
+        <!-- TOP NAVIGATION BAR -->
+        <nav x-data="{ mobileMenuOpen: false }" class="bg-construction-dark text-white shadow-lg fixed top-0 left-0 right-0 z-50">
+            <div class="max-w-8xl mx-auto px-4">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center space-x-4">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-md hover:bg-blue-800">
+                            <i class="fas fa-bars text-xl"></i>
                         </button>
+                        
+                        <div class="flex items-center space-x-3">
+                            <a href="{{ route('home') }}" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                                <img src="../img/login/logoblanco.png" alt="Logo" class="h-[180px] w-[180px]" onerror="this.src='https://via.placeholder.com/150x40/083CAE/FFFFFF?text=LOGO'">
+                            </a>
+                        </div>
+                    </div>
 
-                        <div x-show="isOpen" @click.away="closeChat()" class="chat-panel">
-                            <div class="chat-header">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h3><i class="fas fa-comments mr-2"></i>Chat</h3>
-                                        <p>Conversaciones</p>
-                                    </div>
-                                    <button @click="closeChat()" class="text-white/80 hover:text-white transition">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="desktop-menu hidden md:flex items-center justify-center flex-1 space-x-1">
+                        <button onclick="toggleSectionSidebar('bi')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-chart-line"></i>
+                            <span>BI</span>
+                        </button>
+                        <button onclick="toggleSectionSidebar('administracion')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Administración</span>
+                        </button>
+                        <button onclick="toggleSectionSidebar('contabilidad')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-calculator"></i>
+                            <span>Contabilidad</span>
+                        </button>
+                        <button onclick="toggleSectionSidebar('proyectos')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Proyectos</span>
+                        </button>
+                        <button onclick="toggleSectionSidebar('rrhh')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-users"></i>
+                            <span>RRHH</span>
+                        </button>
+                        <button onclick="toggleSectionSidebar('inventarios')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-boxes"></i>
+                            <span>Almacen</span>
+                        </button>
+                        <button onclick="toggleSectionSidebar('compras')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Compras</span>
+                        </button>
+                    </div>
 
-                            <div x-show="!selectedUser" class="chat-users-list">
-                                <template x-for="user in users" :key="user.id">
-                                    <div @click="selectUser(user)" 
-                                         :class="{'active': selectedUser && selectedUser.id === user.id}"
-                                         class="chat-user-item">
-                                        <div class="chat-user-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="chat-user-info">
-                                            <div class="chat-user-name" x-text="user.name"></div>
-                                            <div class="chat-user-email" x-text="user.email"></div>
-                                        </div>
-                                        <div x-show="user.unread > 0" 
-                                             x-text="user.unread" 
-                                             class="chat-user-badge"></div>
-                                    </div>
-                                </template>
-                                <div x-show="users.length === 0" class="chat-empty">
-                                    <i class="fas fa-users-slash"></i>
-                                    <p>No hay otros usuarios</p>
-                                </div>
-                            </div>
+                    <div class="flex items-center space-x-2 ml-auto">
+                        <!-- CHAT WIDGET -->
+                        <div x-data="chatWidget()" x-init="initChat()" class="chat-widget-container">
+                            <button @click="toggleChat()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+                                <i class="fas fa-comments text-xl" style="color: #eaf512;"></i>
+                                <span x-show="unreadMessagesCount > 0" 
+                                      x-text="unreadMessagesCount" 
+                                      class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1 font-bold"></span>
+                            </button>
 
-                            <div x-show="selectedUser" class="chat-conversation">
-                                <div class="chat-conversation-header">
-                                    <div class="flex items-center gap-2">
-                                        <button @click="backToList()" class="chat-back-btn">
-                                            <i class="fas fa-arrow-left"></i>
-                                            <span>Volver</span>
-                                        </button>
+                            <div x-show="isOpen" @click.away="closeChat()" class="chat-panel">
+                                <div class="chat-header">
+                                    <div class="flex justify-between items-center">
                                         <div>
-                                            <h4 x-text="selectedUser.name"></h4>
+                                            <h3><i class="fas fa-comments mr-2"></i>Chat</h3>
+                                            <p>Conversaciones</p>
                                         </div>
+                                        <button @click="closeChat()" class="text-white/80 hover:text-white transition">
+                                            <i class="fas fa-times"></i>
+                                        </button>
                                     </div>
-                                    <button @click="closeConversation()" title="Cerrar conversación">
-                                        <i class="fas fa-times"></i>
-                                    </button>
                                 </div>
 
-                                <div class="chat-messages-area" x-ref="messagesContainer">
-                                    <template x-for="msg in messages" :key="msg.id">
-                                        <div :class="msg.isOwn ? 'message-own' : 'message-other'" class="message-bubble">
-                                            <span x-text="msg.text"></span>
-                                            <span class="message-time" x-text="formatTime(msg.created_at)"></span>
+                                <div x-show="!selectedUser" class="chat-users-list">
+                                    <template x-for="user in users" :key="user.id">
+                                        <div @click="selectUser(user)" 
+                                             :class="{'active': selectedUser && selectedUser.id === user.id}"
+                                             class="chat-user-item">
+                                            <div class="chat-user-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="chat-user-info">
+                                                <div class="chat-user-name" x-text="user.name"></div>
+                                                <div class="chat-user-email" x-text="user.email"></div>
+                                            </div>
+                                            <div x-show="user.unread > 0" 
+                                                 x-text="user.unread" 
+                                                 class="chat-user-badge"></div>
                                         </div>
                                     </template>
-                                    <div x-show="messages.length === 0" class="chat-empty">
-                                        <i class="fas fa-comment-dots"></i>
-                                        <p>No hay mensajes aún</p>
-                                        <p class="text-xs mt-1">Escribe el primer mensaje</p>
+                                    <div x-show="users.length === 0" class="chat-empty">
+                                        <i class="fas fa-users-slash"></i>
+                                        <p>No hay otros usuarios</p>
                                     </div>
                                 </div>
 
-                                <div class="chat-input-area">
-                                    <input type="text" 
-                                           x-model="newMessage" 
-                                           @keyup.enter="sendMessage" 
-                                           placeholder="Escribe un mensaje..." 
-                                           class="chat-input">
-                                    <button @click="sendMessage" class="chat-send-btn">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <div x-show="selectedUser" class="chat-conversation">
+                                    <div class="chat-conversation-header">
+                                        <div class="flex items-center gap-2">
+                                            <button @click="backToList()" class="chat-back-btn">
+                                                <i class="fas fa-arrow-left"></i>
+                                                <span>Volver</span>
+                                            </button>
+                                            <div>
+                                                <h4 x-text="selectedUser.name"></h4>
+                                            </div>
+                                        </div>
+                                        <button @click="closeConversation()" title="Cerrar conversación">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
 
-                    <!-- NOTIFICACIONES -->
-                    <div x-data="notifications()" x-init="initNotifications()" class="relative">
-                        <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
-                            <i class="fas fa-bell" style="color: #eaf512;"></i>
-                            <span x-show="unreadCount > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                            <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
-                        </button>
-                        
-                        <div x-show="isOpen" @click.away="isOpen = false" 
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 transform scale-95"
-                             x-transition:enter-end="opacity-100 transform scale-100"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 transform scale-100"
-                             x-transition:leave-end="opacity-0 transform scale-95"
-                             class="notifications-menu">
-                            
-                            <div class="notifications-header">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h3 class="font-bold text-lg"><i class="fas fa-bell"></i> Notificaciones</h3>
-                                        <p class="text-blue-100 text-xs mt-1">Tus alertas y mensajes</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button @click="markAllAsRead()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
-                                            <i class="fas fa-check-double text-white"></i>
-                                        </button>
-                                        <button @click="clearAll()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
-                                            <i class="fas fa-trash-alt text-white"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="max-h-96 overflow-y-auto">
-                                <div x-show="filteredNotifications.length === 0" class="text-center py-10 text-gray-500">
-                                    <i class="fas fa-bell-slash text-4xl mb-3 opacity-30"></i>
-                                    <p class="font-medium">No hay notificaciones</p>
-                                </div>
-                                
-                                <template x-for="notification in filteredNotifications" :key="notification.id">
-                                    <div :class="notification.read ? 'bg-white' : 'bg-blue-50'" class="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer" @click="markAsRead(notification.id)">
-                                        <div class="flex items-start space-x-3">
-                                            <div :class="notification.type" class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                <i :class="getTypeIcon(notification.type)"></i>
+                                    <div class="chat-messages-area" x-ref="messagesContainer">
+                                        <template x-for="msg in messages" :key="msg.id">
+                                            <div :class="msg.isOwn ? 'message-own' : 'message-other'" class="message-bubble">
+                                                <span x-text="msg.text"></span>
+                                                <span class="message-time" x-text="formatTime(msg.created_at)"></span>
                                             </div>
-                                            <div class="flex-1">
-                                                <div class="flex justify-between">
-                                                    <h4 class="font-semibold text-gray-800 text-sm" x-text="notification.title"></h4>
-                                                    <span class="text-xs text-gray-500" x-text="formatTime(notification.timestamp)"></span>
-                                                </div>
-                                                <p class="text-xs text-gray-600 mt-1" x-text="notification.message"></p>
-                                            </div>
-                                            <div x-show="!notification.read" class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                                        </template>
+                                        <div x-show="messages.length === 0" class="chat-empty">
+                                            <i class="fas fa-comment-dots"></i>
+                                            <p>No hay mensajes aún</p>
+                                            <p class="text-xs mt-1">Escribe el primer mensaje</p>
                                         </div>
                                     </div>
-                                </template>
+
+                                    <div class="chat-input-area">
+                                        <input type="text" 
+                                               x-model="newMessage" 
+                                               @keyup.enter="sendMessage" 
+                                               placeholder="Escribe un mensaje..." 
+                                               class="chat-input">
+                                        <button @click="sendMessage" class="chat-send-btn">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- User menu -->
-                <div class="flex items-center space-x-4">
-                    <div class="hidden md:block text-right">
-                        <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
-                        <div class="text-xs text-blue-100">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
-                    </div>
-                    
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-800">
-                            <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-blue-600 text-sm"></i>
-                            </div>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                        
-                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-[199999999] !important py-2 ">
-                            <div class="px-4 py-2 border-b border-gray-100">
-                                <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
-                                <div class="text-xs text-gray-500 truncate">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
-                            </div>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil</a>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración</a>
-                            <a href="{{ route('tareas.index') }}" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-book mr-3 text-blue-600 w-4 text-center"></i> Tareas</a>
-                            <hr class="my-1 border-gray-200">
-                            <button onclick="confirmLogout()" class="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600">
-                                <i class="fas fa-sign-out-alt mr-3 w-4 text-center"></i> Cerrar Sesión
+                        <!-- NOTIFICACIONES -->
+                        <div x-data="notifications()" x-init="initNotifications()" class="relative">
+                            <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+                                <i class="fas fa-bell" style="color: #eaf512;"></i>
+                                <span x-show="unreadCount > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                                <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
                             </button>
+                            
+                            <div x-show="isOpen" @click.away="isOpen = false" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 transform scale-95"
+                                 x-transition:enter-end="opacity-100 transform scale-100"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 transform scale-100"
+                                 x-transition:leave-end="opacity-0 transform scale-95"
+                                 class="notifications-menu">
+                                
+                                <div class="notifications-header">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h3 class="font-bold text-lg"><i class="fas fa-bell"></i> Notificaciones</h3>
+                                            <p class="text-blue-100 text-xs mt-1">Tus alertas y mensajes</p>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <button @click="markAllAsRead()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
+                                                <i class="fas fa-check-double text-white"></i>
+                                            </button>
+                                            <button @click="clearAll()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
+                                                <i class="fas fa-trash-alt text-white"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="max-h-96 overflow-y-auto">
+                                    <div x-show="filteredNotifications.length === 0" class="text-center py-10 text-gray-500">
+                                        <i class="fas fa-bell-slash text-4xl mb-3 opacity-30"></i>
+                                        <p class="font-medium">No hay notificaciones</p>
+                                    </div>
+                                    
+                                    <template x-for="notification in filteredNotifications" :key="notification.id">
+                                        <div :class="notification.read ? 'bg-white' : 'bg-blue-50'" class="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer" @click="markAsRead(notification.id)">
+                                            <div class="flex items-start space-x-3">
+                                                <div :class="notification.type" class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                    <i :class="getTypeIcon(notification.type)"></i>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="flex justify-between">
+                                                        <h4 class="font-semibold text-gray-800 text-sm" x-text="notification.title"></h4>
+                                                        <span class="text-xs text-gray-500" x-text="formatTime(notification.timestamp)"></span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-600 mt-1" x-text="notification.message"></p>
+                                                </div>
+                                                <div x-show="!notification.read" class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User menu -->
+                    <div class="flex items-center space-x-4">
+                        <div class="hidden md:block text-right">
+                            <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
+                            <div class="text-xs text-blue-100">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
+                        </div>
+                        
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-800">
+                                <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-blue-600 text-sm"></i>
+                                </div>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-[199999999] !important py-2 ">
+                                <div class="px-4 py-2 border-b border-gray-100">
+                                    <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
+                                    <div class="text-xs text-gray-500 truncate">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
+                                </div>
+                                <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil</a>
+                                <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración</a>
+                                <a href="{{ route('tareas.index') }}" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-book mr-3 text-blue-600 w-4 text-center"></i> Tareas</a>
+                                <hr class="my-1 border-gray-200">
+                                <button onclick="confirmLogout()" class="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600">
+                                    <i class="fas fa-sign-out-alt mr-3 w-4 text-center"></i> Cerrar Sesión
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-    
-    <!-- BARRA DE PESTAÑAS -->
-    <div class="tab-navigation-bar" id="tabNavigationBar">
-        <div class="close-all-tabs-container">
-            <button class="close-all-tabs-btn" onclick="if(window.tabManager) tabManager.closeAllTabs()">
-                <i class="fas fa-times-circle"></i> Cerrar
-            </button>
-        </div>
-        <div class="tabs-container-nav" id="tabsNavContainer"></div>
-    </div>
-
-    <!-- MENÚ HAMBURGUESA MÓVIL -->
-    <div class="mobile-menu-sidebar" id="mobileMenuSidebar">
-        <div class="mobile-menu-header">
-            <h3><i class="fas fa-star mr-2"></i> MejoraSoft</h3>
-            <button onclick="toggleMobileMenu()" class="text-white p-1">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="mobile-menu-items">
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('bi')">
-                <i class="fas fa-chart-line"></i>
-                <span>Business Intelligence</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('administracion')">
-                <i class="fas fa-money-bill-wave"></i>
-                <span>Administración</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('contabilidad')">
-                <i class="fas fa-calculator"></i>
-                <span>Contabilidad</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('proyectos')">
-                <i class="fas fa-project-diagram"></i>
-                <span>Proyectos</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('rrhh')">
-                <i class="fas fa-users"></i>
-                <span>Recursos Humanos</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('inventarios')">
-                <i class="fas fa-boxes"></i>
-                <span>Almacen</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('compras')">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Compras</span>
-            </div>
-            <div class="mobile-menu-item" onclick="toggleQuickSidebar()">
-                <i class="fas fa-star"></i>
-                <span>Accesos Rápidos</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
-
-    <!-- ==================== SIDEBAR DE BI ==================== -->
-    <div id="sidebar-bi" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-chart-line"></i>
-                <h2>Business Intelligence</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+        </nav>
         
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-dashboard')">
-                    <span><i class="fas fa-tachometer-alt"></i> Dashboard</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="bi-dashboard" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Directivo', 'bi', '{{ route('bi.dashboard') }}', 'fa-user-tie')">
-                        <div class="flex items-center flex-1"><i class="fas fa-user-tie"></i><span>Directivo</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Directivo', 'bi', 'fa-user-tie', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Finanzas', 'bi', '{{ route('bi.finanzas') }}', 'fa-chart-pie')">
-                        <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Finanzas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finanzas', 'bi', 'fa-chart-pie', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones', 'bi', '{{ route('bi.licitaciones') }}', 'fa-gavel')">
-                        <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones', 'bi', 'fa-gavel', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-ventas')">
-                    <span><i class="fas fa-chart-bar"></i> Ventas</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="bi-ventas" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones', 'bi', '{{ route('ventas.propuestas') }}', 'fa-file-contract')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Propuestas y Cotizaciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'bi', 'fa-file-contract', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Ventas', 'bi', '{{ route('ventas.analisis') }}', 'fa-chart-line')">
-                        <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Análisis de Ventas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Ventas', 'bi', 'fa-chart-line', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-facturacion')">
-                    <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="bi-facturacion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pendiente de Facturación', 'bi', '{{ route('facturacion.pendiente') }}', 'fa-clock')">
-                        <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Pendiente de Facturación</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pendiente de Facturación', 'bi', 'fa-clock', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Facturado', 'bi', '{{ route('facturacion.facturacion') }}', 'fa-check-circle')">
-                        <div class="flex items-center flex-1"><i class="fas fa-check-circle"></i><span>Facturado</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturado', 'bi', 'fa-check-circle', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-cobranza')">
-                    <span><i class="fas fa-hand-holding-usd"></i> Cobranza</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="bi-cobranza" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Proyecciones de Flujo', 'bi', '{{ route('cobranza.proyecciones') }}', 'fa-chart-line')">
-                        <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Proyecciones de Flujo</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proyecciones de Flujo', 'bi', 'fa-chart-line', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Historial de Pagos', 'bi', '{{ route('cobranza.historial') }}', 'fa-history')">
-                        <div class="flex items-center flex-1"><i class="fas fa-history"></i><span>Historial de Pagos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial de Pagos', 'bi', 'fa-history', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SIDEBAR DE ADMINISTRACIÓN ==================== -->
-    <div id="sidebar-administracion" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-money-bill-wave"></i>
-                <h2>Administración</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-facturacion')">
-                    <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-facturacion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Facturación', 'administracion', '{{ route('admin.facturacion') }}', 'fa-file-invoice')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-invoice"></i><span>Facturación</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación', 'administracion', 'fa-file-invoice', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('C F D I', 'administracion', '{{ route('admin.cfdi') }}', 'fa-solid fa-file-contract')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-file-contract"></i><span>CFDI</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('C F D I', 'administracion', 'fa-solid fa-file-contract', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Crédito', 'administracion', '{{ route('admin.nota') }}', 'fa-undo-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-undo-alt"></i><span>Notas de Crédito</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'administracion', 'fa-undo-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas', 'administracion', '{{ route('admin.ventas') }}', 'fa-sticky-note')">
-                        <div class="flex items-center flex-1"><i class="fas fa-sticky-note"></i><span>Notas de Ventas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'administracion', 'fa-sticky-note', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos', 'administracion', '{{ route('admin.contrarecibo') }}', 'fa-receipt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-receipt"></i><span>Contrarecibos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'administracion', 'fa-receipt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje', 'administracion', '{{ route('admin.factoraje') }}', 'fa-handshake')">
-                        <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Factoraje</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '{{ route('admin.bitacora') }}', 'fa-book')">
-                        <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'administracion', 'fa-book', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '{{ route('admin.comiciones') }}', 'fa-percentage')">
-                        <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Comisiones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comisiones', 'administracion', 'fa-percentage', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxc')">
-                    <span><i class="fas fa-hand-holding-usd"></i> Cuentas por Cobrar</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-cxc" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas por Cobrar', 'administracion', '{{ route('admin.saldos') }}', 'fa-solid fa-money-bill-trend-up')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-money-bill-trend-up"></i><span>Cuentas por Cobrar</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Cobrar', 'administracion', 'fa-solid fa-money-bill-trend-up', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxp')">
-                    <span><i class="fa-solid fa-money-check-dollar"></i> Cuentas por Pagar</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-cxp" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas por Pagar', 'administracion', '{{ route('admin.pagos') }}', 'fa-solid fa-file-invoice-dollar')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-file-invoice-dollar"></i><span>Cuentas por Pagar</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Pagar', 'administracion', 'fa-solid fa-file-invoice-dollar', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-tesoreria')">
-                    <span><i class="fas fa-university"></i> Tesorería</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-tesoreria" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos', 'administracion', '{{ route('tesoreria.depositos') }}', 'fa-money-check-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Depósitos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'administracion', 'fa-money-check-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Trasferencia', 'administracion', '{{ route('tesoreria.trasferencia') }}', 'fa-money-bill-trend-up')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-money-bill-trend-up"></i><span>Trasferencia</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Trasferencia', 'administracion', 'fa-money-bill-trend-up', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pagos', 'administracion', '{{ route('tesoreria.pagos') }}', 'fa-file-invoice-dollar')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-file-invoice-dollar"></i><span>Pagos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos', 'administracion', 'fa-file-invoice-dollar', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos', 'administracion', '{{ route('tesoreria.transacciones') }}', 'fa-exchange-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Traspasos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos', 'administracion', 'fa-exchange-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios', 'administracion', '{{ route('tesoreria.estadosdecuenta') }}', 'fa-file-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Estados de Cuenta Bancarios</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'administracion', 'fa-file-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria', 'administracion', '{{ route('tesoreria.conciliacion') }}', 'fa-balance-scale')">
-                        <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Conciliación Bancaria</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'administracion', 'fa-balance-scale', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero', 'administracion', '{{ route('tesoreria.flujos') }}', 'fa-wave-square')">
-                        <div class="flex items-center flex-1"><i class="fas fa-wave-square"></i><span>Flujo de Dinero</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'administracion', 'fa-wave-square', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual', 'administracion', '{{ route('tesoreria.flujomensual') }}', 'fa-calendar-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Flujo Mensual</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'administracion', 'fa-calendar-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos', 'administracion', '{{ route('tesoreria.programacion') }}', 'fa-calendar-check')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calendar-check"></i><span>Programación de Pagos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'administracion', 'fa-calendar-check', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-presupuestos')">
-                    <span><i class="fas fa-chart-pie"></i> Presupuestos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-presupuestos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Facturacion Proveedores', 'administracion', '{{ route('presupuestos.facturacion') }}', 'fa-chart-pie')">
-                        <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Facturacion Proveedores</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturacion Proveedores', 'administracion', 'fa-chart-pie', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual', 'administracion', '{{ route('presupuestos.mensual') }}', 'fa-calendar')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calendar"></i><span>Presupuesto Mensual</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'administracion', 'fa-calendar', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos', 'administracion', '{{ route('presupuestos.reasignacion') }}', 'fa-random')">
-                        <div class="flex items-center flex-1"><i class="fas fa-random"></i><span>Reasignación de Gastos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'administracion', 'fa-random', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos', 'administracion', '{{ route('presupuestos.gastos') }}', 'fa-home')">
-                        <div class="flex items-center flex-1"><i class="fas fa-home"></i><span>Gastos Fijos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Fijos', 'administracion', 'fa-home', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-operaciones')">
-                    <span><i class="fas fa-exchange-alt"></i> Operaciones</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-operaciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Prepago', 'administracion', '{{ route('operaciones.prepago') }}', 'fa-forward')">
-                        <div class="flex items-center flex-1"><i class="fas fa-forward"></i><span>Prepago</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'administracion', 'fa-forward', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos', 'administracion', '{{ route('operaciones.anticipo') }}', 'fa-hand-holding-usd')">
-                        <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Anticipos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'administracion', 'fa-hand-holding-usd', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Crédito', 'administracion', '{{ route('operaciones.credito') }}', 'fa-credit-card')">
-                        <div class="flex items-center flex-1"><i class="fas fa-credit-card"></i><span>Crédito</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Crédito', 'administracion', 'fa-credit-card', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cuentas-avanzadas')">
-                    <span><i class="fas fa-cogs"></i> Cuentas Avanzadas</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="admin-cuentas-avanzadas" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas', 'administracion', '{{ route('cuentasavanzadas.cuentasavanzadas') }}', 'fa-cogs')">
-                        <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Cuentas Avanzadas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Avanzadas', 'administracion', 'fa-cogs', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SIDEBAR DE CONTABILIDAD ==================== -->
-    <div id="sidebar-contabilidad" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-calculator"></i>
-                <h2>Contabilidad</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-estados')">
-                    <span><i class="fas fa-chart-line"></i> Estados Financieros</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="contabilidad-estados" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados', 'contabilidad', '{{ route('conta.estados') }}', 'fa-chart-pie')">
-                        <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Estado de Resultados</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'contabilidad', 'fa-chart-pie', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance General', 'contabilidad', '{{ route('conta.balance') }}', 'fa-balance-scale')">
-                        <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Balance General</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'contabilidad', 'fa-balance-scale', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación', 'contabilidad', '{{ route('conta.comprobacion') }}', 'fa-check-double')">
-                        <div class="flex items-center flex-1"><i class="fas fa-check-double"></i><span>Balance de Comprobación</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'contabilidad', 'fa-check-double', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo', 'contabilidad', '{{ route('conta.flujo') }}', 'fa-money-bill-wave')">
-                        <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Estado de Flujo de Efectivo</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'contabilidad', 'fa-money-bill-wave', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto', 'contabilidad', '{{ route('conta.capital') }}', 'fa-exchange-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Presupuesto</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto', 'contabilidad', 'fa-exchange-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Unidad de Negocio', 'contabilidad', '{{ route('conta.unidad') }}', 'fa-chart-column')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-chart-column"></i><span>Estado de Resultado Unidad de Negocio</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Unidad de Negocio', 'contabilidad', 'fa-chart-column', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado Liquidacion', 'contabilidad', '{{ route('conta.liquidacion') }}', 'fa-chart-pie')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-chart-pie"></i><span>Estado de Resultados Liquidacion</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado Liquidacion', 'contabilidad', 'fa-chart-pie', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado General', 'contabilidad', '{{ route('conta.general') }}', 'fa-newspaper')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-newspaper"></i><span>Estado de Resultado General</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado General', 'contabilidad', 'fa-newspaper', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-registro')">
-                    <span><i class="fas fa-book"></i> Registro Contable</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="contabilidad-registro" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables', 'contabilidad', '{{ route('conta.polizas') }}', 'fa-file-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Pólizas Contables</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'contabilidad', 'fa-file-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Diario General', 'contabilidad', '{{ route('conta.diario') }}', 'fa-book')">
-                        <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Diario General</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'contabilidad', 'fa-book', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cobranza', 'contabilidad', '{{ route('conta.cobranza') }}', 'fa-columns')">
-                        <div class="flex items-center flex-1"><i class="fas fa-columns"></i><span>Cobranza</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cobranza', 'contabilidad', 'fa-columns', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-catalogo')">
-                    <span><i class="fas fa-list-alt"></i> Catálogo Contable</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="contabilidad-catalogo" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '{{ route('conta.cuentas') }}', 'fa-list')">
-                        <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Cuentas Contables</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'contabilidad', 'fa-list', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '{{ route('conta.auxiliar') }}', 'fa-indent')">
-                        <div class="flex items-center flex-1"><i class="fas fa-indent"></i><span>Auxiliar de Cuentas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos', 'contabilidad', '{{ route('conta.centros') }}', 'fa-sitemap')">
-                        <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Centros de Costos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '{{ route('conta.configuraciones') }}', 'fa-cogs')">
-                        <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Configuración Contable</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Configuración Contable', 'contabilidad', 'fa-cogs', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-proyecto')">
-                    <span><i class="fas fa-project-diagram"></i> Contabilidad por Proyecto</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="contabilidad-proyecto" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra', 'contabilidad', '{{ route('conta.costo') }}', 'fa-hard-hat')">
-                        <div class="flex items-center flex-1"><i class="fas fa-hard-hat"></i><span>Costos por Obra</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'contabilidad', 'fa-hard-hat', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra', 'contabilidad', '{{ route('conta.gastos') }}', 'fa-tools')">
-                        <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Gastos Indirectos de Obra</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'contabilidad', 'fa-tools', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto', 'contabilidad', '{{ route('conta.asignacion') }}', 'fa-project-diagram')">
-                        <div class="flex items-center flex-1"><i class="fas fa-project-diagram"></i><span>Asignación de Gastos por Proyecto</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '{{ route('conta.cierre') }}', 'fa-lock')">
-                        <div class="flex items-center flex-1"><i class="fas fa-lock"></i><span>Cierre de Proyectos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre de Proyectos', 'contabilidad', 'fa-lock', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-fiscal')">
-                    <span><i class="fas fa-file-contract"></i> Fiscal</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="contabilidad-fiscal" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('DIOT', 'contabilidad', '{{ route('conta.diot') }}', 'fa-file-export')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-export"></i><span>DIOT</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales', 'contabilidad', '{{ route('conta.declaraciones') }}', 'fa-calendar-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Declaraciones Mensuales</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '{{ route('conta.retenciones') }}', 'fa-percentage')">
-                        <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Retenciones (ISR, IVA)</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos', 'contabilidad', '{{ route('conta.complemento') }}', 'fa-money-check-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Complemento de Pagos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'contabilidad', 'fa-money-check-alt', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SIDEBAR DE PROYECTOS ==================== -->
-    <div id="sidebar-proyectos" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-project-diagram"></i>
-                <h2>Proyectos</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-gestion')">
-                    <span><i class="fas fa-tasks"></i> Gestión de Proyectos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-gestion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos', 'proyectos', '{{ route('proyectos.cartera') }}', 'fa-briefcase')">
-                        <div class="flex items-center flex-1"><i class="fas fa-briefcase"></i><span>Cartera de Proyectos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'proyectos', 'fa-briefcase', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto', 'proyectos', '{{ route('proyectos.alta') }}', 'fa-plus-circle')">
-                        <div class="flex items-center flex-1"><i class="fas fa-plus-circle"></i><span>Alta de Proyecto</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'proyectos', 'fa-plus-circle', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos', 'proyectos', '{{route ('proyectos.hitos') }}', 'fa-calendar-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Cronograma y Hitos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'proyectos', 'fa-calendar-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra', 'proyectos', '{{ route('proyectos.bitacora') }}', 'fa-book')">
-                        <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Obra</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'proyectos', 'fa-book', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-licitaciones')">
-                    <span><i class="fas fa-gavel"></i> Licitaciones</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-licitaciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas', 'proyectos', '{{ route('proyectos.activas') }}', 'fa-gavel')">
-                        <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones Activas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cotizaciones', 'proyectos', '{{ route('proyectos.presupuestos') }}', 'fa-file-contract')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Cotizaciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cotizaciones', 'proyectos', 'fa-file-contract', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '{{ route('proyectos.analisis') }}', 'fa-calculator')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Análisis de Precios Unitarios</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-presupuestos')">
-                    <span><i class="fas fa-file-invoice-dollar"></i> Presupuestos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-presupuestos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Proyecto', 'proyectos', '{{ route('proyectos.presupuesto_proyecto') }}', 'fa-file-invoice-dollar')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-invoice-dollar"></i><span>Presupuesto por Proyecto</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Proyecto', 'proyectos', 'fa-file-invoice-dollar', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-costos')">
-                    <span><i class="fas fa-money-bill-wave"></i> Costos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-costos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos', 'proyectos', '{{ route('proyectos.directos') }}', 'fa-money-bill-wave')">
-                        <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos Directos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'proyectos', 'fa-money-bill-wave', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos', 'proyectos', '{{ route('proyectos.indirectos') }}', 'fa-tools')">
-                        <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Costos Indirectos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'proyectos', 'fa-tools', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-avances')">
-                    <span><i class="fas fa-hard-hat"></i> Avances de Obra</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-avances" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones', 'proyectos', '{{ route('proyectos.estimaciones') }}', 'fa-calculator')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Estimaciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'proyectos', 'fa-calculator', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico', 'proyectos', '{{ route('proyectos.reportes') }}', 'fa-camera')">
-                        <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Reporte Fotográfico</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reporte Fotográfico', 'proyectos', 'fa-camera', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-personal')">
-                    <span><i class="fas fa-users"></i> Personal</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-personal" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos', 'proyectos', '{{ route('proyectos.asignada') }}', 'fa-user-check')">
-                        <div class="flex items-center flex-1"><i class="fas fa-user-check"></i><span>Asignación a Proyectos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'proyectos', 'fa-user-check', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '{{ route('proyectos.flotillas') }}', 'fa-users')">
-                        <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Asistencia y Cuadrillas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-maquinaria')">
-                    <span><i class="fas fa-tractor"></i> Maquinaria y Equipo</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-maquinaria" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo', 'proyectos', '{{ route('proyectos.asignacion') }}', 'fa-tractor')">
-                        <div class="flex items-center flex-1"><i class="fas fa-tractor"></i><span>Asignación de Equipo</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'proyectos', 'fa-tractor', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo', 'proyectos', '{{ route('proyectos.mantenimiento') }}', 'fa-tools')">
-                        <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Mantenimiento de Equipo</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '{{ route('proyectos.bita') }}', 'fa-book')">
-                        <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'proyectos', 'fa-book', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-riesgos')">
-                    <span><i class="fas fa-exclamation-triangle"></i> Control de Riesgos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-riesgos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)', 'proyectos', '{{ route('proyectos.desviaciones') }}', 'fa-exclamation-triangle')">
-                        <div class="flex items-center flex-1"><i class="fas fa-exclamation-triangle"></i><span>Desviaciones (Costo y Tiempo)</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'proyectos', 'fa-exclamation-triangle', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad', 'proyectos', '{{ route('proyectos.control') }}', 'fa-clipboard-check')">
-                        <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Control de Calidad</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Calidad', 'proyectos', 'fa-clipboard-check', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-documentacion')">
-                    <span><i class="fas fa-folder"></i> Documentación</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="proyectos-documentacion" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos', 'proyectos', '{{ route('proyectos.planos') }}', 'fa-file-contract')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Contratos y Planos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '{{ route('proyectos.permisos') }}', 'fa-file-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Permisos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'proyectos', 'fa-file-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '{{ route('proyectos.evidencia') }}', 'fa-camera')">
-                        <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Evidencias (Fotos, Actas)</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'proyectos', 'fa-camera', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SIDEBAR DE RECURSOS HUMANOS ==================== -->
-    <div id="sidebar-rrhh" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-users"></i>
-                <h2>Recursos Humanos</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-personal')">
-                    <span><i class="fas fa-user-tie"></i> Gestión de Personal</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-personal" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados', 'rrhh', '{{ route('rh.plantilla') }}', 'fa-users')">
-                        <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Plantilla de Empleados</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'rrhh', 'fa-users', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital', 'rrhh', '{{ route('rh.expediente') }}', 'fa-folder')">
-                        <div class="flex items-center flex-1"><i class="fas fa-folder"></i><span>Incidencias</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-asistencia')">
-                    <span><i class="fas fa-user-clock"></i> Asistencia y Control</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-asistencia" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia', 'rrhh', '{{ route('rh.asistencia') }}', 'fa-user-clock')">
-                        <div class="flex items-center flex-1"><i class="fas fa-user-clock"></i><span>Asistencia</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'rrhh', 'fa-user-clock', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia', 'rrhh', '{{ route('rh.lista') }}', 'fa-list')">
-                        <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Lista de Asistencia</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'rrhh', 'fa-list', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos', 'rrhh', '{{ route ('rh.justificantes') }}', 'fa-file-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Justificantes y Permisos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'rrhh', 'fa-file-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios', 'rrhh', '{{ route('rh.control') }}', 'fa-clock')">
-                        <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Control de Horarios</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Horarios', 'rrhh', 'fa-clock', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-nomina')">
-                    <span><i class="fas fa-money-check-alt"></i> Nómina</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-nomina" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina', 'rrhh', '{{ route('rh.calculo') }}', 'fa-calculator')">
-                        <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Cálculo de Nómina</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'rrhh', 'fa-calculator', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina', 'rrhh', '{{ route('rh.pagos') }}', 'fa-money-check-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Pagos de Nómina</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'rrhh', 'fa-money-check-alt', this)"></i>
-                    </div>
-                    <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Tabla de Sueldos', 'rrhh', '{{ route('rh.nomina.sueldos.index') }}', 'fa-table')">
-                        <div class="flex items-center flex-1"><i class="fas fa-table"></i><span>Tabla de Sueldos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Tabla de Sueldos', 'rrhh', 'fa-table', this)"></i>
-                    </div> -->
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)', 'rrhh', '{{ route('rh.recibos') }}', 'fa-file-invoice-dollar')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-invoice-dollar"></i><span>Recibos de Nómina (Timbrado)</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'rrhh', 'fa-file-invoice-dollar', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-prestaciones')">
-                    <span><i class="fas fa-hand-holding-usd"></i> Prestaciones y Descuentos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-prestaciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos', 'rrhh', '{{ route('rh.prestamos.index') }}', 'fa-hand-holding-usd')">
-                        <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Préstamos y Descuentos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'rrhh', 'fa-hand-holding-usd', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones', 'rrhh', '{{ route('rh.vacaciones.index') }}', 'fa-umbrella-beach')">
-                        <div class="flex items-center flex-1"><i class="fas fa-umbrella-beach"></i><span>Vacaciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'rrhh', 'fa-umbrella-beach', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones', 'rrhh', '{{ route('rh.finiquito.index') }}', 'fa-file-contract')">
-                        <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Finiquitos y Liquidaciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finiquitos y Liquidaciones', 'rrhh', 'fa-file-contract', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-unidades')">
-                    <span><i class="fas fa-car"></i> Unidades y Flotilla</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-unidades" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos de Unidades', 'rrhh', '{{ route('rh.semaforos_unidades') }}', 'fa-traffic-light')">
-                        <div class="flex items-center flex-1"><i class="fas fa-traffic-light"></i><span>Semáforo de Documentos de Unidades</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos de Unidades', 'rrhh', 'fa-traffic-light', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Flotilla', 'rrhh', '{{ route('rh.flotillas') }}', 'fa-car')">
-                        <div class="flex items-center flex-1"><i class="fas fa-car"></i><span>Asignación de Flotilla</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Flotilla', 'rrhh', 'fa-car', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Control de Vehículos', 'rrhh', '{{ route('rh.carros') }}', 'fa-tachometer-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-tachometer-alt"></i><span>Control de Vehículos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Vehículos', 'rrhh', 'fa-tachometer-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'rrhh', '{{ route('rh.bitacora') }}', 'fa-book')">
-                        <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'rrhh', 'fa-book', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-catalogos')">
-                    <span><i class="fas fa-list"></i> Catálogos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-catalogos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos', 'rrhh', '{{ route('rh.roles') }}', 'fa-user-tag')">
-                        <div class="flex items-center flex-1"><i class="fas fa-user-tag"></i><span>Roles y Puestos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'rrhh', 'fa-user-tag', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos', 'rrhh', '{{ route('rh.areas') }}', 'fa-sitemap')">
-                        <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Áreas y Departamentos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'rrhh', 'fa-sitemap', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Usuarios', 'rrhh', '{{ route('rh.turnos') }}', 'fa-clock')">
-                        <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Usuarios</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Usuarios', 'rrhh', 'fa-clock', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-reportes')">
-                    <span><i class="fas fa-chart-bar"></i> Reportes</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="rrhh-reportes" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto', 'rrhh', '{{ route ('rh.costos') }}', 'fa-money-bill-wave')">
-                        <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos de Nómina por Proyecto</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Nómina por Proyecto', 'rrhh', 'fa-money-bill-wave', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SIDEBAR DE INVENTARIOS ==================== -->
-    <div id="sidebar-inventarios" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-boxes"></i>
-                <h2>Almacen</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-catalogos')">
-                    <span><i class="fas fa-warehouse"></i> Catálogos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="inventarios-catalogos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes', 'inventarios', '{{ route('almacen.almacen') }}', 'fa-warehouse')">
-                        <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Catálogo de Almacenes</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'inventarios', 'fa-warehouse', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '{{ route('almacen.articulo') }}', 'fa-box')">
-                        <div class="flex items-center flex-1"><i class="fas fa-box"></i><span>Catálogo de Articulos</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familia') }}', 'fa-book-open-reader')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-book-open-reader"></i><span>Catálogo de Familias</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-existencias')">
-                    <span><i class="fas fa-clipboard-list"></i> Existencias</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="inventarios-existencias" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén', 'inventarios', '{{ route('almacen.inventario') }}', 'fa-clipboard-list')">
-                        <div class="flex items-center flex-1"><i class="fas fa-clipboard-list"></i><span>Existencias por Almacén</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'inventarios', 'fa-clipboard-list', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Vales de Equipo', 'inventarios', '{{ route('almacen.vales') }}', 'fa-stream')">
-                        <div class="flex items-center flex-1"><i class="fas fa-stream"></i><span>Vales de equipo</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vales de Equipo', 'inventarios', 'fa-stream', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-movimientos')">
-                    <span><i class="fas fa-exchange-alt"></i> Movimientos</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="inventarios-movimientos" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas', 'inventarios', '{{ route('almacen.entrada') }}', 'fa-exchange-alt')">
-                        <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Entradas y Salidas</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'inventarios', 'fa-exchange-alt', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
-                        <div class="flex items-center flex-1"><i class="fas fa-truck-moving"></i><span>Traspasos entre Almacenes</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'inventarios', 'fa-truck-moving', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisicion') }}', 'fa-adjust')">
-                        <div class="flex items-center flex-1"><i class="fas fa-adjust"></i><span>Requisiciones de equipo y Devoluciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones y Devoluciones', 'inventarios', 'fa-adjust', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SIDEBAR DE COMPRAS ==================== -->
-    <div id="sidebar-compras" class="section-sidebar">
-        <div class="section-sidebar-header">
-            <div class="section-sidebar-title">
-                <i class="fas fa-shopping-cart"></i>
-                <h2>Compras</h2>
-            </div>
-            <button onclick="closeSectionSidebar()" class="section-sidebar-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="section-sidebar-content">
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-requisiciones')">
-                    <span><i class="fas fa-clipboard-check"></i> Requisiciones</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="compras-requisiciones" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones', 'compras', '{{ route('compras.requisicion') }}', 'fa-clipboard-check')">
-                        <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Requisiciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'compras', 'fa-clipboard-check', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Requisiciones', 'compras', '{{ route('compras.autorizacion') }}', 'fa-square-check')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-square-check"></i><span>Autorizacion de Requisiciones</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Requisiciones', 'compras', 'fa-square-check', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-ordenes')">
-                    <span><i class="fas fa-shopping-cart"></i> Órdenes de Compra</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="compras-ordenes" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra', 'compras', '{{ route('compras.ordenes') }}', 'fa-shopping-cart')">
-                        <div class="flex items-center flex-1"><i class="fas fa-shopping-cart"></i><span>Órdenes de Compra</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'compras', 'fa-shopping-cart', this)"></i>
-                    </div>
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizaciones') }}', 'fa-circle-check')">
-                        <div class="flex items-center flex-1"><i class="fa-solid fa-circle-check"></i><span>Autorizacion de Órdenes de Compra</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Órdenes de Compra', 'compras', 'fa-circle-check', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-subcontratistas')">
-                    <span><i class="fas fa-handshake"></i> Proveedores</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="compras-subcontratistas" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Proveedores', 'compras', '{{ route('compras.gestion') }}', 'fa-handshake')">
-                        <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Proveedores</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proveedores', 'compras', 'fa-handshake', this)"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-menu-group">
-                <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-almacen')">
-                    <span><i class="fas fa-warehouse"></i> Almacén por Obra</span>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <div id="compras-almacen" class="sidebar-submenu">
-                    <div class="sidebar-submenu-item" onclick="navigateTo('Almacén por Obra', 'compras', '{{ route('compras.almacen') }}', 'fa-warehouse')">
-                        <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Almacén por Obra</span></div>
-                        <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Almacén por Obra', 'compras', 'fa-warehouse', this)"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BARRA LATERAL DE FAVORITOS -->
-    <div class="quick-sidebar" id="quick-sidebar">
-        <div class="bg-construction-dark text-white p-5">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h3 class="font-bold text-lg">
-                        <i class="fas fa-star mr-2" style="color: #ffff00;"></i> Accesos Rápidos
-                    </h3>
-                    <p class="text-xs text-blue-100 mt-1">Tus módulos favoritos</p>
-                </div>
-                <button onclick="toggleQuickSidebar()" class="p-1.5 rounded-lg hover:bg-blue-800 transition">
-                    <i class="fas fa-times text-white"></i>
+        <!-- BARRA DE PESTAÑAS -->
+        <div class="tab-navigation-bar" id="tabNavigationBar">
+            <div class="close-all-tabs-container">
+                <button class="close-all-tabs-btn" onclick="if(window.tabManager) tabManager.closeAllTabs()">
+                    <i class="fas fa-times-circle"></i> Cerrar
                 </button>
             </div>
+            <div class="tabs-container-nav" id="tabsNavContainer"></div>
         </div>
-        
-        <div class="p-4 flex-1 overflow-y-auto" id="favorites-container">
-            <div id="empty-favorites" class="text-center py-10 text-white opacity-80">
-                <i class="fas fa-star text-4xl mb-3 opacity-30" style="color: #ffff00;"></i>
-                <p class="font-medium">No tienes accesos rápidos</p>
-                <p class="text-xs mt-2 opacity-70">Haz clic en la estrella ⭐ de cualquier menú para agregarlo</p>
+
+        <!-- MENÚ HAMBURGUESA MÓVIL -->
+        <div class="mobile-menu-sidebar" id="mobileMenuSidebar">
+            <div class="mobile-menu-header">
+                <h3><i class="fas fa-star mr-2"></i> MejoraSoft</h3>
+                <button onclick="toggleMobileMenu()" class="text-white p-1">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div id="favorites-list" style="display: none;"></div>
+            <div class="mobile-menu-items">
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('bi')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Business Intelligence</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('administracion')">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Administración</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('contabilidad')">
+                    <i class="fas fa-calculator"></i>
+                    <span>Contabilidad</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('proyectos')">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>Proyectos</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('rrhh')">
+                    <i class="fas fa-users"></i>
+                    <span>Recursos Humanos</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('inventarios')">
+                    <i class="fas fa-boxes"></i>
+                    <span>Almacen</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('compras')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Compras</span>
+                </div>
+                <div class="mobile-menu-item" onclick="toggleQuickSidebar()">
+                    <i class="fas fa-star"></i>
+                    <span>Accesos Rápidos</span>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- BOTÓN FLOTANTE -->
-    <button onclick="toggleQuickSidebar()" class="sidebar-toggle-btn" id="sidebar-toggle-btn">
-        <i class="fas fa-star"></i>
-        <span id="favorite-count" class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 text-xs rounded-full flex items-center justify-center font-bold" style="display: none;">0</span>
-    </button>
+        <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div id="mainContent" class="main-content-container">
-        @yield('content')
+        <!-- ==================== SIDEBAR DE BI ==================== -->
+        <div id="sidebar-bi" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Business Intelligence</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-dashboard')">
+                        <span><i class="fas fa-tachometer-alt"></i> Dashboard</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="bi-dashboard" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Directivo', 'bi', '{{ route('bi.dashboard') }}', 'fa-user-tie')">
+                            <div class="flex items-center flex-1"><i class="fas fa-user-tie"></i><span>Directivo</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Directivo', 'bi', 'fa-user-tie', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Finanzas', 'bi', '{{ route('bi.finanzas') }}', 'fa-chart-pie')">
+                            <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Finanzas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finanzas', 'bi', 'fa-chart-pie', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones', 'bi', '{{ route('bi.licitaciones') }}', 'fa-gavel')">
+                            <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones', 'bi', 'fa-gavel', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-ventas')">
+                        <span><i class="fas fa-chart-bar"></i> Ventas</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="bi-ventas" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones', 'bi', '{{ route('ventas.propuestas') }}', 'fa-file-contract')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Propuestas y Cotizaciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'bi', 'fa-file-contract', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Ventas', 'bi', '{{ route('ventas.analisis') }}', 'fa-chart-line')">
+                            <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Análisis de Ventas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Ventas', 'bi', 'fa-chart-line', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-facturacion')">
+                        <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="bi-facturacion" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Pendiente de Facturación', 'bi', '{{ route('facturacion.pendiente') }}', 'fa-clock')">
+                            <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Pendiente de Facturación</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pendiente de Facturación', 'bi', 'fa-clock', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Facturado', 'bi', '{{ route('facturacion.facturacion') }}', 'fa-check-circle')">
+                            <div class="flex items-center flex-1"><i class="fas fa-check-circle"></i><span>Facturado</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturado', 'bi', 'fa-check-circle', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-cobranza')">
+                        <span><i class="fas fa-hand-holding-usd"></i> Cobranza</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="bi-cobranza" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Proyecciones de Flujo', 'bi', '{{ route('cobranza.proyecciones') }}', 'fa-chart-line')">
+                            <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Proyecciones de Flujo</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proyecciones de Flujo', 'bi', 'fa-chart-line', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Historial de Pagos', 'bi', '{{ route('cobranza.historial') }}', 'fa-history')">
+                            <div class="flex items-center flex-1"><i class="fas fa-history"></i><span>Historial de Pagos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial de Pagos', 'bi', 'fa-history', this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIDEBAR DE ADMINISTRACIÓN ==================== -->
+        <div id="sidebar-administracion" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h2>Administración</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-facturacion')">
+                        <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-facturacion" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Facturación', 'administracion', '{{ route('admin.facturacion') }}', 'fa-file-invoice')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-invoice"></i><span>Facturación</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación', 'administracion', 'fa-file-invoice', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('C F D I', 'administracion', '{{ route('admin.cfdi') }}', 'fa-solid fa-file-contract')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-file-contract"></i><span>CFDI</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('C F D I', 'administracion', 'fa-solid fa-file-contract', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Crédito', 'administracion', '{{ route('admin.nota') }}', 'fa-undo-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-undo-alt"></i><span>Notas de Crédito</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'administracion', 'fa-undo-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas', 'administracion', '{{ route('admin.ventas') }}', 'fa-sticky-note')">
+                            <div class="flex items-center flex-1"><i class="fas fa-sticky-note"></i><span>Notas de Ventas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'administracion', 'fa-sticky-note', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos', 'administracion', '{{ route('admin.contrarecibo') }}', 'fa-receipt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-receipt"></i><span>Contrarecibos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'administracion', 'fa-receipt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje', 'administracion', '{{ route('admin.factoraje') }}', 'fa-handshake')">
+                            <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Factoraje</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '{{ route('admin.bitacora') }}', 'fa-book')">
+                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'administracion', 'fa-book', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '{{ route('admin.comiciones') }}', 'fa-percentage')">
+                            <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Comisiones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comisiones', 'administracion', 'fa-percentage', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxc')">
+                        <span><i class="fas fa-hand-holding-usd"></i> Cuentas por Cobrar</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-cxc" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas por Cobrar', 'administracion', '{{ route('admin.saldos') }}', 'fa-solid fa-money-bill-trend-up')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-money-bill-trend-up"></i><span>Cuentas por Cobrar</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Cobrar', 'administracion', 'fa-solid fa-money-bill-trend-up', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxp')">
+                        <span><i class="fa-solid fa-money-check-dollar"></i> Cuentas por Pagar</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-cxp" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas por Pagar', 'administracion', '{{ route('admin.pagos') }}', 'fa-solid fa-file-invoice-dollar')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-file-invoice-dollar"></i><span>Cuentas por Pagar</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas por Pagar', 'administracion', 'fa-solid fa-file-invoice-dollar', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-tesoreria')">
+                        <span><i class="fas fa-university"></i> Tesorería</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-tesoreria" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos', 'administracion', '{{ route('depositos.index') }}', 'fa-money-check-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Depósitos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'administracion', 'fa-money-check-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Trasferencia', 'administracion', '{{ route('tesoreria.trasferencia') }}', 'fa-money-bill-trend-up')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-money-bill-trend-up"></i><span>Trasferencia</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Trasferencia', 'administracion', 'fa-money-bill-trend-up', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Pagos', 'administracion', '{{ route('pagos.index') }}', 'fa-file-invoice-dollar')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-file-invoice-dollar"></i><span>Pagos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos', 'administracion', 'fa-file-invoice-dollar', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos', 'administracion', '{{ route('traspasos.index') }}', 'fa-exchange-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Traspasos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos', 'administracion', 'fa-exchange-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios', 'administracion', '{{ route('tesoreria.estadosdecuenta') }}', 'fa-file-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Estados de Cuenta Bancarios</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'administracion', 'fa-file-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria', 'administracion', '{{ route('tesoreria.conciliacion') }}', 'fa-balance-scale')">
+                            <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Conciliación Bancaria</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'administracion', 'fa-balance-scale', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero', 'administracion', '{{ route('tesoreria.flujos') }}', 'fa-wave-square')">
+                            <div class="flex items-center flex-1"><i class="fas fa-wave-square"></i><span>Flujo de Dinero</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'administracion', 'fa-wave-square', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual', 'administracion', '{{ route('tesoreria.flujomensual') }}', 'fa-calendar-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Flujo Mensual</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'administracion', 'fa-calendar-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos', 'administracion', '{{ route('tesoreria.programacion') }}', 'fa-calendar-check')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calendar-check"></i><span>Programación de Pagos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'administracion', 'fa-calendar-check', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-presupuestos')">
+                        <span><i class="fas fa-chart-pie"></i> Presupuestos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-presupuestos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Facturacion Proveedores', 'administracion', '{{ route('presupuestos.facturacion') }}', 'fa-chart-pie')">
+                            <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Facturacion Proveedores</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturacion Proveedores', 'administracion', 'fa-chart-pie', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual', 'administracion', '{{ route('presupuestos.mensual') }}', 'fa-calendar')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calendar"></i><span>Presupuesto Mensual</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'administracion', 'fa-calendar', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos', 'administracion', '{{ route('presupuestos.reasignacion') }}', 'fa-random')">
+                            <div class="flex items-center flex-1"><i class="fas fa-random"></i><span>Reasignación de Gastos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'administracion', 'fa-random', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos', 'administracion', '{{ route('presupuestos.gastos') }}', 'fa-home')">
+                            <div class="flex items-center flex-1"><i class="fas fa-home"></i><span>Gastos Fijos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Fijos', 'administracion', 'fa-home', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-operaciones')">
+                        <span><i class="fas fa-exchange-alt"></i> Operaciones</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-operaciones" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Prepago', 'administracion', '{{ route('operaciones.prepago') }}', 'fa-forward')">
+                            <div class="flex items-center flex-1"><i class="fas fa-forward"></i><span>Prepago</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'administracion', 'fa-forward', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos', 'administracion', '{{ route('operaciones.anticipo') }}', 'fa-hand-holding-usd')">
+                            <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Anticipos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'administracion', 'fa-hand-holding-usd', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Crédito', 'administracion', '{{ route('operaciones.credito') }}', 'fa-credit-card')">
+                            <div class="flex items-center flex-1"><i class="fas fa-credit-card"></i><span>Crédito</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Crédito', 'administracion', 'fa-credit-card', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cuentas-avanzadas')">
+                        <span><i class="fas fa-cogs"></i> Cuentas Avanzadas</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="admin-cuentas-avanzadas" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas', 'administracion', '{{ route('cuentasavanzadas.cuentasavanzadas') }}', 'fa-cogs')">
+                            <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Cuentas Avanzadas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Avanzadas', 'administracion', 'fa-cogs', this)"></i>
+                        </div>
+                       
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Cuentas Contables', 'administracion', '{{ route('registro.cuentas') }}', 'fa-cogs')">
+                            <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Registro de Cuentas Contables</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Cuentas Contables', 'administracion', 'fa-cogs', this)"></i>
+                            </div>
+
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Cuentas Bancarias', 'administracion', '{{ route('cuentas.bancarias') }}', 'fa-university')">
+                            <div class="flex items-center flex-1">
+                            <i class="fas fa-university"></i><span>Registro de Cuentas Bancarias</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Cuentas Bancarias', 'administracion', 'fa-university', this)"></i>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIDEBAR DE CONTABILIDAD ==================== -->
+        <div id="sidebar-contabilidad" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-calculator"></i>
+                    <h2>Contabilidad</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-estados')">
+                        <span><i class="fas fa-chart-line"></i> Estados Financieros</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="contabilidad-estados" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados', 'contabilidad', '{{ route('conta.estados') }}', 'fa-chart-pie')">
+                            <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Estado de Resultados</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'contabilidad', 'fa-chart-pie', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Balance General', 'contabilidad', '{{ route('conta.balance') }}', 'fa-balance-scale')">
+                            <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Balance General</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'contabilidad', 'fa-balance-scale', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación', 'contabilidad', '{{ route('conta.comprobacion') }}', 'fa-check-double')">
+                            <div class="flex items-center flex-1"><i class="fas fa-check-double"></i><span>Balance de Comprobación</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'contabilidad', 'fa-check-double', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo', 'contabilidad', '{{ route('conta.flujo') }}', 'fa-money-bill-wave')">
+                            <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Estado de Flujo de Efectivo</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'contabilidad', 'fa-money-bill-wave', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto', 'contabilidad', '{{ route('conta.capital') }}', 'fa-exchange-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Presupuesto</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto', 'contabilidad', 'fa-exchange-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Unidad de Negocio', 'contabilidad', '{{ route('conta.unidad') }}', 'fa-chart-column')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-chart-column"></i><span>Estado de Resultado Unidad de Negocio</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Unidad de Negocio', 'contabilidad', 'fa-chart-column', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado Liquidacion', 'contabilidad', '{{ route('conta.liquidacion') }}', 'fa-chart-pie')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-chart-pie"></i><span>Estado de Resultados Liquidacion</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado Liquidacion', 'contabilidad', 'fa-chart-pie', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado General', 'contabilidad', '{{ route('conta.general') }}', 'fa-newspaper')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-newspaper"></i><span>Estado de Resultado General</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado General', 'contabilidad', 'fa-newspaper', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-registro')">
+                        <span><i class="fas fa-book"></i> Registro Contable</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="contabilidad-registro" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables', 'contabilidad', '{{ route('conta.polizas') }}', 'fa-file-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Pólizas Contables</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'contabilidad', 'fa-file-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Diario General', 'contabilidad', '{{ route('conta.diario') }}', 'fa-book')">
+                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Diario General</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'contabilidad', 'fa-book', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cobranza', 'contabilidad', '{{ route('conta.cobranza') }}', 'fa-columns')">
+                            <div class="flex items-center flex-1"><i class="fas fa-columns"></i><span>Cobranza</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cobranza', 'contabilidad', 'fa-columns', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-catalogo')">
+                        <span><i class="fas fa-list-alt"></i> Catálogo Contable</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="contabilidad-catalogo" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '{{ route('conta.cuentas') }}', 'fa-list')">
+                            <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Cuentas Contables</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'contabilidad', 'fa-list', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '{{ route('conta.auxiliar') }}', 'fa-indent')">
+                            <div class="flex items-center flex-1"><i class="fas fa-indent"></i><span>Auxiliar de Cuentas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos', 'contabilidad', '{{ route('conta.centros') }}', 'fa-sitemap')">
+                            <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Centros de Costos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '{{ route('conta.configuraciones') }}', 'fa-cogs')">
+                            <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Configuración Contable</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Configuración Contable', 'contabilidad', 'fa-cogs', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-proyecto')">
+                        <span><i class="fas fa-project-diagram"></i> Contabilidad por Proyecto</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="contabilidad-proyecto" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra', 'contabilidad', '{{ route('conta.costo') }}', 'fa-hard-hat')">
+                            <div class="flex items-center flex-1"><i class="fas fa-hard-hat"></i><span>Costos por Obra</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'contabilidad', 'fa-hard-hat', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra', 'contabilidad', '{{ route('conta.gastos') }}', 'fa-tools')">
+                            <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Gastos Indirectos de Obra</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'contabilidad', 'fa-tools', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto', 'contabilidad', '{{ route('conta.asignacion') }}', 'fa-project-diagram')">
+                            <div class="flex items-center flex-1"><i class="fas fa-project-diagram"></i><span>Asignación de Gastos por Proyecto</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '{{ route('conta.cierre') }}', 'fa-lock')">
+                            <div class="flex items-center flex-1"><i class="fas fa-lock"></i><span>Cierre de Proyectos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre de Proyectos', 'contabilidad', 'fa-lock', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-fiscal')">
+                        <span><i class="fas fa-file-contract"></i> Fiscal</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="contabilidad-fiscal" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('DIOT', 'contabilidad', '{{ route('conta.diot') }}', 'fa-file-export')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-export"></i><span>DIOT</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales', 'contabilidad', '{{ route('conta.declaraciones') }}', 'fa-calendar-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Declaraciones Mensuales</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '{{ route('conta.retenciones') }}', 'fa-percentage')">
+                            <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Retenciones (ISR, IVA)</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos', 'contabilidad', '{{ route('conta.complemento') }}', 'fa-money-check-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Complemento de Pagos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'contabilidad', 'fa-money-check-alt', this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIDEBAR DE PROYECTOS ==================== -->
+        <div id="sidebar-proyectos" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-project-diagram"></i>
+                    <h2>Proyectos</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-gestion')">
+                        <span><i class="fas fa-tasks"></i> Gestión de Proyectos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-gestion" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos', 'proyectos', '{{ route('proyectos.cartera') }}', 'fa-briefcase')">
+                            <div class="flex items-center flex-1"><i class="fas fa-briefcase"></i><span>Cartera de Proyectos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'proyectos', 'fa-briefcase', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto', 'proyectos', '{{ route('proyectos.alta') }}', 'fa-plus-circle')">
+                            <div class="flex items-center flex-1"><i class="fas fa-plus-circle"></i><span>Alta de Proyecto</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'proyectos', 'fa-plus-circle', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos', 'proyectos', '{{route ('proyectos.hitos') }}', 'fa-calendar-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Cronograma y Hitos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'proyectos', 'fa-calendar-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra', 'proyectos', '{{ route('proyectos.bitacora') }}', 'fa-book')">
+                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Obra</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'proyectos', 'fa-book', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-licitaciones')">
+                        <span><i class="fas fa-gavel"></i> Licitaciones</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-licitaciones" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas', 'proyectos', '{{ route('proyectos.activas') }}', 'fa-gavel')">
+                            <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones Activas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cotizaciones', 'proyectos', '{{ route('proyectos.presupuestos') }}', 'fa-file-contract')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Cotizaciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cotizaciones', 'proyectos', 'fa-file-contract', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '{{ route('proyectos.analisis') }}', 'fa-calculator')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Análisis de Precios Unitarios</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-presupuestos')">
+                        <span><i class="fas fa-file-invoice-dollar"></i> Presupuestos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-presupuestos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto por Proyecto', 'proyectos', '{{ route('proyectos.presupuesto_proyecto') }}', 'fa-file-invoice-dollar')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-invoice-dollar"></i><span>Presupuesto por Proyecto</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto por Proyecto', 'proyectos', 'fa-file-invoice-dollar', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-costos')">
+                        <span><i class="fas fa-money-bill-wave"></i> Costos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-costos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos', 'proyectos', '{{ route('proyectos.directos') }}', 'fa-money-bill-wave')">
+                            <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos Directos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'proyectos', 'fa-money-bill-wave', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos', 'proyectos', '{{ route('proyectos.indirectos') }}', 'fa-tools')">
+                            <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Costos Indirectos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'proyectos', 'fa-tools', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-avances')">
+                        <span><i class="fas fa-hard-hat"></i> Avances de Obra</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-avances" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones', 'proyectos', '{{ route('proyectos.estimaciones') }}', 'fa-calculator')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Estimaciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'proyectos', 'fa-calculator', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico', 'proyectos', '{{ route('proyectos.reportes') }}', 'fa-camera')">
+                            <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Reporte Fotográfico</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reporte Fotográfico', 'proyectos', 'fa-camera', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-personal')">
+                        <span><i class="fas fa-users"></i> Personal</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-personal" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos', 'proyectos', '{{ route('proyectos.asignada') }}', 'fa-user-check')">
+                            <div class="flex items-center flex-1"><i class="fas fa-user-check"></i><span>Asignación a Proyectos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'proyectos', 'fa-user-check', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '{{ route('proyectos.flotillas') }}', 'fa-users')">
+                            <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Asistencia y Cuadrillas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-maquinaria')">
+                        <span><i class="fas fa-tractor"></i> Maquinaria y Equipo</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-maquinaria" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo', 'proyectos', '{{ route('proyectos.asignacion') }}', 'fa-tractor')">
+                            <div class="flex items-center flex-1"><i class="fas fa-tractor"></i><span>Asignación de Equipo</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'proyectos', 'fa-tractor', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo', 'proyectos', '{{ route('proyectos.mantenimiento') }}', 'fa-tools')">
+                            <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Mantenimiento de Equipo</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '{{ route('proyectos.bita') }}', 'fa-book')">
+                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'proyectos', 'fa-book', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-riesgos')">
+                        <span><i class="fas fa-exclamation-triangle"></i> Control de Riesgos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-riesgos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)', 'proyectos', '{{ route('proyectos.desviaciones') }}', 'fa-exclamation-triangle')">
+                            <div class="flex items-center flex-1"><i class="fas fa-exclamation-triangle"></i><span>Desviaciones (Costo y Tiempo)</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'proyectos', 'fa-exclamation-triangle', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad', 'proyectos', '{{ route('proyectos.control') }}', 'fa-clipboard-check')">
+                            <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Control de Calidad</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Calidad', 'proyectos', 'fa-clipboard-check', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-documentacion')">
+                        <span><i class="fas fa-folder"></i> Documentación</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="proyectos-documentacion" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos', 'proyectos', '{{ route('proyectos.planos') }}', 'fa-file-contract')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Contratos y Planos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '{{ route('proyectos.permisos') }}', 'fa-file-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Permisos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'proyectos', 'fa-file-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '{{ route('proyectos.evidencia') }}', 'fa-camera')">
+                            <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Evidencias (Fotos, Actas)</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'proyectos', 'fa-camera', this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIDEBAR DE RECURSOS HUMANOS ==================== -->
+        <div id="sidebar-rrhh" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-users"></i>
+                    <h2>Recursos Humanos</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-personal')">
+                        <span><i class="fas fa-user-tie"></i> Gestión de Personal</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-personal" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados', 'rrhh', '{{ route('rh.plantilla') }}', 'fa-users')">
+                            <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Plantilla de Empleados</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'rrhh', 'fa-users', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital', 'rrhh', '{{ route('rh.expediente') }}', 'fa-folder')">
+                            <div class="flex items-center flex-1"><i class="fas fa-folder"></i><span>Incidencias</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-asistencia')">
+                        <span><i class="fas fa-user-clock"></i> Asistencia y Control</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-asistencia" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia', 'rrhh', '{{ route('rh.asistencia') }}', 'fa-user-clock')">
+                            <div class="flex items-center flex-1"><i class="fas fa-user-clock"></i><span>Asistencia</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'rrhh', 'fa-user-clock', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia', 'rrhh', '{{ route('rh.lista') }}', 'fa-list')">
+                            <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Lista de Asistencia</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'rrhh', 'fa-list', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos', 'rrhh', '{{ route ('rh.justificantes') }}', 'fa-file-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Justificantes y Permisos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'rrhh', 'fa-file-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios', 'rrhh', '{{ route('rh.control') }}', 'fa-clock')">
+                            <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Control de Horarios</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Horarios', 'rrhh', 'fa-clock', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-nomina')">
+                        <span><i class="fas fa-money-check-alt"></i> Nómina</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-nomina" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina', 'rrhh', '{{ route('rh.calculo') }}', 'fa-calculator')">
+                            <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Cálculo de Nómina</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'rrhh', 'fa-calculator', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina', 'rrhh', '{{ route('rh.pagos') }}', 'fa-money-check-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Pagos de Nómina</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'rrhh', 'fa-money-check-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)', 'rrhh', '{{ route('rh.recibos') }}', 'fa-file-invoice-dollar')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-invoice-dollar"></i><span>Recibos de Nómina (Timbrado)</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'rrhh', 'fa-file-invoice-dollar', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-prestaciones')">
+                        <span><i class="fas fa-hand-holding-usd"></i> Prestaciones y Descuentos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-prestaciones" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos', 'rrhh', '{{ route('rh.prestamos.index') }}', 'fa-hand-holding-usd')">
+                            <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Préstamos y Descuentos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'rrhh', 'fa-hand-holding-usd', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones', 'rrhh', '{{ route('rh.vacaciones.index') }}', 'fa-umbrella-beach')">
+                            <div class="flex items-center flex-1"><i class="fas fa-umbrella-beach"></i><span>Vacaciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'rrhh', 'fa-umbrella-beach', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones', 'rrhh', '{{ route('rh.finiquito.index') }}', 'fa-file-contract')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Finiquitos y Liquidaciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finiquitos y Liquidaciones', 'rrhh', 'fa-file-contract', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-unidades')">
+                        <span><i class="fas fa-car"></i> Unidades y Flotilla</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-unidades" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos de Unidades', 'rrhh', '{{ route('rh.semaforos_unidades') }}', 'fa-traffic-light')">
+                            <div class="flex items-center flex-1"><i class="fas fa-traffic-light"></i><span>Semáforo de Documentos de Unidades</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos de Unidades', 'rrhh', 'fa-traffic-light', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Flotilla', 'rrhh', '{{ route('rh.flotillas') }}', 'fa-car')">
+                            <div class="flex items-center flex-1"><i class="fas fa-car"></i><span>Asignación de Flotilla</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Flotilla', 'rrhh', 'fa-car', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Control de Vehículos', 'rrhh', '{{ route('rh.carros') }}', 'fa-tachometer-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-tachometer-alt"></i><span>Control de Vehículos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Vehículos', 'rrhh', 'fa-tachometer-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'rrhh', '{{ route('rh.bitacora') }}', 'fa-book')">
+                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'rrhh', 'fa-book', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-catalogos')">
+                        <span><i class="fas fa-list"></i> Catálogos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-catalogos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos', 'rrhh', '{{ route('rh.roles') }}', 'fa-user-tag')">
+                            <div class="flex items-center flex-1"><i class="fas fa-user-tag"></i><span>Roles y Puestos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'rrhh', 'fa-user-tag', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos', 'rrhh', '{{ route('rh.areas') }}', 'fa-sitemap')">
+                            <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Áreas y Departamentos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'rrhh', 'fa-sitemap', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Usuarios', 'rrhh', '{{ route('rh.turnos') }}', 'fa-clock')">
+                            <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Usuarios</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Usuarios', 'rrhh', 'fa-clock', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-reportes')">
+                        <span><i class="fas fa-chart-bar"></i> Reportes</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="rrhh-reportes" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto', 'rrhh', '{{ route ('rh.costos') }}', 'fa-money-bill-wave')">
+                            <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos de Nómina por Proyecto</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Nómina por Proyecto', 'rrhh', 'fa-money-bill-wave', this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIDEBAR DE INVENTARIOS ==================== -->
+        <div id="sidebar-inventarios" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-boxes"></i>
+                    <h2>Almacen</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-catalogos')">
+                        <span><i class="fas fa-warehouse"></i> Catálogos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="inventarios-catalogos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes', 'inventarios', '{{ route('almacen.almacen') }}', 'fa-warehouse')">
+                            <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Catálogo de Almacenes</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'inventarios', 'fa-warehouse', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '{{ route('almacen.articulo') }}', 'fa-box')">
+                            <div class="flex items-center flex-1"><i class="fas fa-box"></i><span>Catálogo de Articulos</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familia') }}', 'fa-book-open-reader')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-book-open-reader"></i><span>Catálogo de Familias</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-existencias')">
+                        <span><i class="fas fa-clipboard-list"></i> Existencias</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="inventarios-existencias" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén', 'inventarios', '{{ route('almacen.inventario') }}', 'fa-clipboard-list')">
+                            <div class="flex items-center flex-1"><i class="fas fa-clipboard-list"></i><span>Existencias por Almacén</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'inventarios', 'fa-clipboard-list', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Vales de Equipo', 'inventarios', '{{ route('almacen.vales') }}', 'fa-stream')">
+                            <div class="flex items-center flex-1"><i class="fas fa-stream"></i><span>Vales de equipo</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vales de Equipo', 'inventarios', 'fa-stream', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-movimientos')">
+                        <span><i class="fas fa-exchange-alt"></i> Movimientos</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="inventarios-movimientos" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas', 'inventarios', '{{ route('almacen.entrada') }}', 'fa-exchange-alt')">
+                            <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Entradas y Salidas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'inventarios', 'fa-exchange-alt', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
+                            <div class="flex items-center flex-1"><i class="fas fa-truck-moving"></i><span>Traspasos entre Almacenes</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'inventarios', 'fa-truck-moving', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisicion') }}', 'fa-adjust')">
+                            <div class="flex items-center flex-1"><i class="fas fa-adjust"></i><span>Requisiciones de equipo y Devoluciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones y Devoluciones', 'inventarios', 'fa-adjust', this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SIDEBAR DE COMPRAS ==================== -->
+        <div id="sidebar-compras" class="section-sidebar">
+            <div class="section-sidebar-header">
+                <div class="section-sidebar-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h2>Compras</h2>
+                </div>
+                <button onclick="closeSectionSidebar()" class="section-sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="section-sidebar-content">
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-requisiciones')">
+                        <span><i class="fas fa-clipboard-check"></i> Requisiciones</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="compras-requisiciones" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones', 'compras', '{{ route('compras.requisicion') }}', 'fa-clipboard-check')">
+                            <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Requisiciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'compras', 'fa-clipboard-check', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Requisiciones', 'compras', '{{ route('compras.autorizacion') }}', 'fa-square-check')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-square-check"></i><span>Autorizacion de Requisiciones</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Requisiciones', 'compras', 'fa-square-check', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-ordenes')">
+                        <span><i class="fas fa-shopping-cart"></i> Órdenes de Compra</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="compras-ordenes" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra', 'compras', '{{ route('compras.ordenes') }}', 'fa-shopping-cart')">
+                            <div class="flex items-center flex-1"><i class="fas fa-shopping-cart"></i><span>Órdenes de Compra</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'compras', 'fa-shopping-cart', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizaciones') }}', 'fa-circle-check')">
+                            <div class="flex items-center flex-1"><i class="fa-solid fa-circle-check"></i><span>Autorizacion de Órdenes de Compra</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Órdenes de Compra', 'compras', 'fa-circle-check', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-subcontratistas')">
+                        <span><i class="fas fa-handshake"></i> Proveedores</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="compras-subcontratistas" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Proveedores', 'compras', '{{ route('compras.gestion') }}', 'fa-handshake')">
+                            <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Proveedores</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proveedores', 'compras', 'fa-handshake', this)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu-group">
+                    <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-almacen')">
+                        <span><i class="fas fa-warehouse"></i> Almacén por Obra</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div id="compras-almacen" class="sidebar-submenu">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Almacén por Obra', 'compras', '{{ route('compras.almacen') }}', 'fa-warehouse')">
+                            <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Almacén por Obra</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Almacén por Obra', 'compras', 'fa-warehouse', this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA LATERAL DE FAVORITOS -->
+        <div class="quick-sidebar" id="quick-sidebar">
+            <div class="bg-construction-dark text-white p-5">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-lg">
+                            <i class="fas fa-star mr-2" style="color: #ffff00;"></i> Accesos Rápidos
+                        </h3>
+                        <p class="text-xs text-blue-100 mt-1">Tus módulos favoritos</p>
+                    </div>
+                    <button onclick="toggleQuickSidebar()" class="p-1.5 rounded-lg hover:bg-blue-800 transition">
+                        <i class="fas fa-times text-white"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4 flex-1 overflow-y-auto" id="favorites-container">
+                <div id="empty-favorites" class="text-center py-10 text-white opacity-80">
+                    <i class="fas fa-star text-4xl mb-3 opacity-30" style="color: #ffff00;"></i>
+                    <p class="font-medium">No tienes accesos rápidos</p>
+                    <p class="text-xs mt-2 opacity-70">Haz clic en la estrella ⭐ de cualquier menú para agregarlo</p>
+                </div>
+                <div id="favorites-list" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- BOTÓN FLOTANTE -->
+        <button onclick="toggleQuickSidebar()" class="sidebar-toggle-btn" id="sidebar-toggle-btn">
+            <i class="fas fa-star"></i>
+            <span id="favorite-count" class="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 text-xs rounded-full flex items-center justify-center font-bold" style="display: none;">0</span>
+        </button>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div id="mainContent" class="main-content-container">
+            @yield('content')
+        </div>
+
+        <!-- PIE DE PÁGINA -->
+        <footer class="app-footer bg-construction-dark text-white py-6 px-4 mt-8">
+            <div class="container mx-auto text-center">
+                <p class="text-white text-sm">
+                    &copy; {{ date('Y') }} MejoraSoft - Todos los derechos reservados.
+                </p>
+                <p class="text-blue-100 text-xs mt-2">
+                    Sistema de gestión empresarial
+                </p>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -2530,262 +2569,280 @@
         }
 
         function chatWidget() {
-    return {
-        isOpen: false, 
-        users: [], 
-        selectedUser: null, 
-        messages: [], 
-        newMessage: '', 
-        unreadMessagesCount: 0, 
-        pollingInterval: null,
-        
-        initChat() { 
-            console.log('🟢 Inicializando chat para usuario:', window.userId); 
-            this.fetchUsers(); 
-            this.pollingInterval = setInterval(() => { 
-                if(this.selectedUser && this.isOpen) this.loadConversation(this.selectedUser.id); 
-                this.fetchUsers(); 
-            }, 3000); 
-            
-            // Actualizar contador global periódicamente
-            this.updateGlobalUnreadCount();
-            setInterval(() => this.updateGlobalUnreadCount(), 5000);
-            
-            if(window.Echo && window.Echo.connector) { 
-                console.log('✅ Configurando listener WebSocket'); 
-                const setupListener = () => { 
-                    if(window.Echo.connector.socket && window.Echo.connector.socket.readyState === 1) { 
-                        window.Echo.private(`user.${window.userId}`).listen('MessageSent', (e) => { 
-                            console.log('📨 Mensaje en tiempo real:', e); 
-                            this.handleIncomingMessage(e.message, e.fromUser); 
-                        }); 
-                        console.log('✅ Listener configurado en canal user.' + window.userId); 
-                    } else { 
-                        setTimeout(setupListener, 500); 
-                    } 
-                }; 
-                setupListener(); 
-            } else { 
-                console.warn('⚠️ Echo no disponible, usando solo polling'); 
-            } 
-        },
-        
-        updateGlobalUnreadCount() {
-            fetch('/chat/unread-count', {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                this.unreadMessagesCount = data.total_unread || 0;
-            })
-            .catch(error => console.error('Error fetching unread count:', error));
-        },
-        
-        fetchUsers() { 
-            fetch('/chat/users', {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
-                return response.json();
-            })
-            .then(data => { 
-                let usersArray = Array.isArray(data) ? data : (data.users || data.data || []); 
-                this.users = usersArray.map(user => ({
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                    unread: user.unread_count || 0
-                }));
+            return {
+                isOpen: false, 
+                users: [], 
+                selectedUser: null, 
+                messages: [], 
+                newMessage: '', 
+                unreadMessagesCount: 0, 
+                pollingInterval: null,
                 
-                // Actualizar contador global
-                const totalUnread = this.users.reduce((sum, user) => sum + (user.unread || 0), 0);
-                this.unreadMessagesCount = totalUnread;
-            })
-            .catch(error => { 
-                console.error('Error fetching users:', error); 
-                this.users = [];
-            }); 
-        },
-        
-        toggleChat() { 
-            this.isOpen = !this.isOpen; 
-            if(this.isOpen && this.selectedUser) {
-                this.markMessagesAsRead(this.selectedUser.id); 
-            }
-            if(this.isOpen) {
-                this.fetchUsers();
-            }
-        },
-        
-        closeChat() { 
-            this.isOpen = false; 
-        },
-        
-        selectUser(user) { 
-            this.selectedUser = user; 
-            this.loadConversation(user.id); 
-            this.markMessagesAsRead(user.id); 
-        },
-        
-        backToList() { 
-            this.selectedUser = null; 
-            this.messages = []; 
-        },
-        
-        closeConversation() { 
-            this.selectedUser = null; 
-            this.messages = []; 
-            this.newMessage = ''; 
-        },
-        
-        loadConversation(userId) { 
-            fetch(`/chat/messages/${userId}`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
-                return response.json();
-            })
-            .then(data => { 
-                let messagesArray = Array.isArray(data) ? data : (data.messages || data.data || []); 
-                this.messages = messagesArray.map(msg => ({
-                    id: msg.id,
-                    text: msg.message || msg.text,
-                    user_id: msg.user_id,
-                    recipient_id: msg.recipient_id,
-                    isOwn: msg.user_id === window.userId,
-                    created_at: msg.created_at
-                })); 
-                this.$nextTick(() => {
-                    const container = this.$refs.messagesContainer; 
-                    if(container) container.scrollTop = container.scrollHeight;
-                });
-            })
-            .catch(error => { 
-                console.error('Error loading conversation:', error); 
-                this.messages = [];
-            }); 
-        },
-        
-        // FUNCIÓN SEND MESSAGE CORREGIDA - LIMPIA EL INPUT
-        sendMessage() { 
-            if (!this.newMessage || !this.newMessage.trim() || !this.selectedUser) return;
-            
-            const messageText = this.newMessage.trim();
-            const messageData = {
-                recipient_id: this.selectedUser.id,
-                message: messageText
-            };
-            
-            // LIMPIAR EL INPUT INMEDIATAMENTE
-            this.newMessage = '';
-            
-            // Agregar mensaje localmente (optimista)
-            const tempMsg = {
-                id: Date.now(),
-                text: messageText,
-                user_id: window.userId,
-                recipient_id: this.selectedUser.id,
-                isOwn: true,
-                created_at: new Date().toISOString()
-            };
-            this.messages.push(tempMsg);
-            
-            // Scroll al final
-            this.$nextTick(() => {
-                const container = this.$refs.messagesContainer;
-                if (container) container.scrollTop = container.scrollHeight;
-            });
-            
-            // Enviar al servidor
-            fetch('/chat/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                initChat() { 
+                    console.log('🟢 Inicializando chat para usuario:', window.userId); 
+                    this.fetchUsers(); 
+                    this.pollingInterval = setInterval(() => { 
+                        if(this.selectedUser && this.isOpen) this.loadConversation(this.selectedUser.id); 
+                        this.fetchUsers(); 
+                    }, 3000); 
+                    
+                    // Actualizar contador global periódicamente
+                    this.updateGlobalUnreadCount();
+                    setInterval(() => this.updateGlobalUnreadCount(), 5000);
+                    
+                    if(window.Echo && window.Echo.connector) { 
+                        console.log('✅ Configurando listener WebSocket'); 
+                        const setupListener = () => { 
+                            if(window.Echo.connector.socket && window.Echo.connector.socket.readyState === 1) { 
+                                window.Echo.private(`user.${window.userId}`).listen('MessageSent', (e) => { 
+                                    console.log('📨 Mensaje en tiempo real:', e); 
+                                    this.handleIncomingMessage(e.message, e.fromUser); 
+                                }); 
+                                console.log('✅ Listener configurado en canal user.' + window.userId); 
+                            } else { 
+                                setTimeout(setupListener, 500); 
+                            } 
+                        }; 
+                        setupListener(); 
+                    } else { 
+                        console.warn('⚠️ Echo no disponible, usando solo polling'); 
+                    } 
                 },
-                body: JSON.stringify(messageData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Mensaje enviado:', data);
-                if (data.id) {
-                    tempMsg.id = data.id;
+                
+                updateGlobalUnreadCount() {
+                    fetch('/chat/unread-count', {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.unreadMessagesCount = data.total_unread || 0;
+                    })
+                    .catch(error => console.error('Error fetching unread count:', error));
+                },
+                
+                fetchUsers() { 
+                    fetch('/chat/users', {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
+                        return response.json();
+                    })
+                    .then(data => { 
+                        let usersArray = Array.isArray(data) ? data : (data.users || data.data || []); 
+                        this.users = usersArray.map(user => ({
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            unread: user.unread_count || 0
+                        }));
+                        
+                        // Actualizar contador global
+                        const totalUnread = this.users.reduce((sum, user) => sum + (user.unread || 0), 0);
+                        this.unreadMessagesCount = totalUnread;
+                    })
+                    .catch(error => { 
+                        console.error('Error fetching users:', error); 
+                        this.users = [];
+                    }); 
+                },
+                
+                toggleChat() { 
+                    this.isOpen = !this.isOpen; 
+                    if(this.isOpen && this.selectedUser) {
+                        this.markMessagesAsRead(this.selectedUser.id); 
+                    }
+                    if(this.isOpen) {
+                        this.fetchUsers();
+                    }
+                },
+                
+                closeChat() { 
+                    this.isOpen = false; 
+                },
+                
+                selectUser(user) { 
+                    this.selectedUser = user; 
+                    this.loadConversation(user.id); 
+                    this.markMessagesAsRead(user.id); 
+                },
+                
+                backToList() { 
+                    this.selectedUser = null; 
+                    this.messages = []; 
+                },
+                
+                closeConversation() { 
+                    this.selectedUser = null; 
+                    this.messages = []; 
+                    this.newMessage = ''; 
+                },
+                
+                loadConversation(userId) { 
+                    fetch(`/chat/messages/${userId}`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if(!response.ok) throw new Error(`HTTP error! status: ${response.status}`); 
+                        return response.json();
+                    })
+                    .then(data => { 
+                        let messagesArray = Array.isArray(data) ? data : (data.messages || data.data || []); 
+                        this.messages = messagesArray.map(msg => ({
+                            id: msg.id,
+                            text: msg.message || msg.text,
+                            user_id: msg.user_id,
+                            recipient_id: msg.recipient_id,
+                            isOwn: msg.user_id === window.userId,
+                            created_at: msg.created_at
+                        })); 
+                        this.$nextTick(() => {
+                            const container = this.$refs.messagesContainer; 
+                            if(container) container.scrollTop = container.scrollHeight;
+                        });
+                    })
+                    .catch(error => { 
+                        console.error('Error loading conversation:', error); 
+                        this.messages = [];
+                    }); 
+                },
+                
+                sendMessage() { 
+                    if (!this.newMessage || !this.newMessage.trim() || !this.selectedUser) return;
+                    
+                    const messageText = this.newMessage.trim();
+                    const messageData = {
+                        recipient_id: this.selectedUser.id,
+                        message: messageText
+                    };
+                    
+                    // LIMPIAR EL INPUT INMEDIATAMENTE
+                    this.newMessage = '';
+                    
+                    // Agregar mensaje localmente (optimista)
+                    const tempMsg = {
+                        id: Date.now(),
+                        text: messageText,
+                        user_id: window.userId,
+                        recipient_id: this.selectedUser.id,
+                        isOwn: true,
+                        created_at: new Date().toISOString()
+                    };
+                    this.messages.push(tempMsg);
+                    
+                    // Scroll al final
+                    this.$nextTick(() => {
+                        const container = this.$refs.messagesContainer;
+                        if (container) container.scrollTop = container.scrollHeight;
+                    });
+                    
+                    // Enviar al servidor
+                    fetch('/chat/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify(messageData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Mensaje enviado:', data);
+                        if (data.id) {
+                            tempMsg.id = data.id;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                    });
+                },
+                
+                handleIncomingMessage(message, fromUser) { 
+                    // Actualizar contador de no leídos
+                    this.updateGlobalUnreadCount();
+                    this.fetchUsers();
+                    
+                    if(this.isOpen && this.selectedUser && this.selectedUser.id === fromUser.id) { 
+                        const newMsg = {
+                            id: message.id,
+                            text: message.message,
+                            user_id: fromUser.id,
+                            recipient_id: window.userId,
+                            isOwn: false,
+                            created_at: message.created_at
+                        }; 
+                        this.messages.push(newMsg); 
+                        this.$nextTick(() => {
+                            const container = this.$refs.messagesContainer; 
+                            if(container) container.scrollTop = container.scrollHeight;
+                        });
+                        // Marcar como leídos si la conversación está abierta
+                        this.markMessagesAsRead(fromUser.id);
+                    }
+                },
+                
+                markMessagesAsRead(userId) { 
+                    fetch(`/chat/mark-read/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Mensajes marcados como leídos:', data);
+                        // Actualizar el contador local
+                        const userInList = this.users.find(u => u.id === userId);
+                        if (userInList) userInList.unread = 0;
+                        this.updateGlobalUnreadCount();
+                        this.fetchUsers();
+                    })
+                    .catch(error => console.error('Error marking messages as read:', error)); 
+                },
+                
+                formatTime(timestamp) { 
+                    if(!timestamp) return ''; 
+                    const date = new Date(timestamp); 
+                    const now = new Date(); 
+                    const diff = Math.floor((now - date) / 60000); 
+                    if(diff < 1) return 'Ahora'; 
+                    if(diff < 60) return `Hace ${diff} min`; 
+                    if(diff < 1440) return `Hace ${Math.floor(diff / 60)} h`; 
+                    return date.toLocaleDateString(); 
                 }
-            })
-            .catch(error => {
-                console.error('Error sending message:', error);
-            });
-        },
-        
-        handleIncomingMessage(message, fromUser) { 
-            // Actualizar contador de no leídos
-            this.updateGlobalUnreadCount();
-            this.fetchUsers();
-            
-            if(this.isOpen && this.selectedUser && this.selectedUser.id === fromUser.id) { 
-                const newMsg = {
-                    id: message.id,
-                    text: message.message,
-                    user_id: fromUser.id,
-                    recipient_id: window.userId,
-                    isOwn: false,
-                    created_at: message.created_at
-                }; 
-                this.messages.push(newMsg); 
-                this.$nextTick(() => {
-                    const container = this.$refs.messagesContainer; 
-                    if(container) container.scrollTop = container.scrollHeight;
-                });
-                // Marcar como leídos si la conversación está abierta
-                this.markMessagesAsRead(fromUser.id);
-            }
-        },
-        
-        markMessagesAsRead(userId) { 
-            fetch(`/chat/mark-read/${userId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Mensajes marcados como leídos:', data);
-                // Actualizar el contador local
-                const userInList = this.users.find(u => u.id === userId);
-                if (userInList) userInList.unread = 0;
-                this.updateGlobalUnreadCount();
-                this.fetchUsers();
-            })
-            .catch(error => console.error('Error marking messages as read:', error)); 
-        },
-        
-        formatTime(timestamp) { 
-            if(!timestamp) return ''; 
-            const date = new Date(timestamp); 
-            const now = new Date(); 
-            const diff = Math.floor((now - date) / 60000); 
-            if(diff < 1) return 'Ahora'; 
-            if(diff < 60) return `Hace ${diff} min`; 
-            if(diff < 1440) return `Hace ${Math.floor(diff / 60)} h`; 
-            return date.toLocaleDateString(); 
+            };
         }
-    };
-}
 
-        document.addEventListener('DOMContentLoaded', function() { window.tabManager = new TabManager(); updateFavoritesUI(); updateFavoriteStars(); window.addEventListener('resize', function() { if(window.innerWidth > 992) closeMobileMenu(); }); window.addEventListener('keydown', function(e) { if(e.key === 'Escape') { const modal = document.getElementById('logout-confirm-modal'); if(modal && modal.classList.contains('flex')) { modal.classList.add('hidden'); modal.classList.remove('flex'); } closeSectionSidebar(); closeQuickSidebar(); closeMobileMenu(); } }); });
+        document.addEventListener('DOMContentLoaded', function() { 
+            window.tabManager = new TabManager(); 
+            updateFavoritesUI(); 
+            updateFavoriteStars(); 
+            window.addEventListener('resize', function() { 
+                if(window.innerWidth > 992) closeMobileMenu(); 
+            }); 
+            window.addEventListener('keydown', function(e) { 
+                if(e.key === 'Escape') { 
+                    const modal = document.getElementById('logout-confirm-modal'); 
+                    if(modal && modal.classList.contains('flex')) { 
+                        modal.classList.add('hidden'); 
+                        modal.classList.remove('flex'); 
+                    } 
+                    closeSectionSidebar(); 
+                    closeQuickSidebar(); 
+                    closeMobileMenu(); 
+                } 
+            }); 
+        });
     </script>
     
     <!-- Modal de confirmación de cierre de sesión -->

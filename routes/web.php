@@ -20,7 +20,6 @@ use App\Http\Controllers\VacacionController;
 use App\Http\Controllers\FiniquitoController;
 use App\Http\Controllers\TablaSueldoController;
 use App\Http\Controllers\ProyectoController;
-
 use App\Http\Controllers\MonedaController;
 use App\Http\Controllers\TipoCambioController;
 use App\Http\Controllers\BancoController;
@@ -30,6 +29,18 @@ use App\Http\Controllers\TipoIngresoController;
 use App\Http\Controllers\TipoEgresoController;
 use App\Http\Controllers\CategoriaGastoController;
 use App\Http\Controllers\MovimientoBancarioController;
+use App\Http\Controllers\CuentaContableController;
+use App\Http\Controllers\DepositoController;
+use App\Http\Controllers\ChequeTransferenciaController;
+use App\Http\Controllers\PagoController;
+use App\Http\Controllers\ProveedorController;
+use App\Http\Controllers\TraspasoController;
+use App\Http\Controllers\FlujoDineroController;
+use App\Http\Controllers\FlujoMensualController;
+use App\Http\Controllers\PresupuestoProyectoController;
+use App\Http\Controllers\EstimacionesPartidaController;
+use App\Models\Proyecto;
+use App\Models\ProyectoPartida;
 
 
 Route::get('/', function () {
@@ -40,10 +51,55 @@ Route::get('/home', function () {
     return view('home');
 })->middleware(['auth'])->name('home');
 
+// ============================================
+// RUTAS CON AUTENTICACIÓN
+// ============================================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // ==========================================
+    // RUTAS API PARA PRESUPUESTO DE PROYECTOS
+    // ==========================================
+    Route::get('/api/proyectos', function() {
+        $proyectos = Proyecto::where('status', 'activo')
+            ->orderBy('codigo')
+            ->get(['id', 'codigo', 'nombre', 'cliente_nombre', 'fecha_inicio', 'fecha_fin', 'ubicacion']);
+        return response()->json(['success' => true, 'data' => $proyectos]);
+    });
+    
+    Route::get('/api/proyectos/{proyecto}/presupuesto', [PresupuestoProyectoController::class, 'getPresupuesto']);
+    Route::get('/api/proyectos/{proyecto}/partidas', [PresupuestoProyectoController::class, 'getPartidas']);
+    Route::get('/api/proyectos/{proyecto}/partidas/{partida}', [PresupuestoProyectoController::class, 'getPartida']);
+    Route::post('/api/proyectos/{proyecto}/partidas', [PresupuestoProyectoController::class, 'storePartida']);
+    Route::put('/api/proyectos/{proyecto}/partidas/{partida}', [PresupuestoProyectoController::class, 'updatePartida']);
+    Route::delete('/api/proyectos/{proyecto}/partidas/{partida}', [PresupuestoProyectoController::class, 'destroyPartida']);
+    Route::get('/api/proyectos/{proyecto}/resumen-seccion', [PresupuestoProyectoController::class, 'getResumenPorSeccion']);
+    Route::get('/api/proyectos/{proyecto}/exportar-excel', [PresupuestoProyectoController::class, 'exportarExcel']);
+    Route::get('/api/proyectos/{proyecto}/partidas-por-seccion/{seccion}', [PresupuestoProyectoController::class, 'getPartidasPorSeccion']);
+    
+    // ============================================
+// ESTIMACIONES DE OBRA
+// ============================================
+Route::prefix('estimaciones')->name('estimaciones.')->middleware(['auth'])->group(function () {
+    // Vista principal
+    Route::get('/', [EstimacionesPartidaController::class, 'index'])->name('index');
+    
+    // ========== PRIMERO: TODAS LAS RUTAS FIJAS (sin parámetros) ==========
+    Route::get('/api/resumen', [EstimacionesPartidaController::class, 'getResumen']);
+    Route::get('/api/detalle', [EstimacionesPartidaController::class, 'getDetalle']);
+    Route::get('/api/proyectos', [EstimacionesPartidaController::class, 'getProyectos']);
+    Route::get('/api/partidas/{proyectoId}', [EstimacionesPartidaController::class, 'getPartidasPorProyecto']);
+    Route::get('/api/historial/{partidaId}', [EstimacionesPartidaController::class, 'getHistorialPartida']);
+    Route::get('/exportar', [EstimacionesPartidaController::class, 'exportarResumen']);
+    
+    // ========== DESPUÉS: RUTAS CON PARÁMETROS {id} ==========
+    Route::get('/api/{id}', [EstimacionesPartidaController::class, 'show']);
+    Route::post('/api', [EstimacionesPartidaController::class, 'store']);
+    Route::put('/api/{id}', [EstimacionesPartidaController::class, 'update']);
+    Route::delete('/api/{id}', [EstimacionesPartidaController::class, 'destroy']);
+});
 });
 
 Route::get('/tareas', function () {
@@ -79,13 +135,55 @@ Route::prefix('admin')->group(function () {
     Route::get('/factoraje', function () { return view('administracion.facturacion.factoraje'); })->name('admin.factoraje');
     Route::get('/notadeventas', function () { return view('administracion.facturacion.ventas'); })->name('admin.ventas');
     Route::get('/conciliacion', function () { return view('administracion.tesoreria.conciliacion'); })->name('tesoreria.conciliacion');
-    Route::get('/depositos', function () { return view('administracion.tesoreria.depositos'); })->name('tesoreria.depositos');
+    
+    Route::get('/api/categorias-por-tipo-egreso/{tipoEgresoId}', [PagoController::class, 'getCategoriasPorTipoEgreso']);
+
+    // TRASPASOS
+    Route::get('/traspasos', [TraspasoController::class, 'index'])->name('traspasos.index');
+    Route::get('/api/traspasos', [TraspasoController::class, 'getData']);
+    Route::post('/api/traspasos', [TraspasoController::class, 'store']);
+    Route::get('/api/traspasos/{id}', [TraspasoController::class, 'show']);
+    Route::put('/api/traspasos/{id}', [TraspasoController::class, 'update']);
+    Route::delete('/api/traspasos/{id}', [TraspasoController::class, 'destroy']);
+    Route::post('/api/traspasos/{id}/aplicar', [TraspasoController::class, 'aplicar']);
+    Route::get('/api/traspasos-estadisticas', [TraspasoController::class, 'getEstadisticas']);
+    Route::get('/api/tipo-cambio', [TraspasoController::class, 'getTipoCambio']);
+
+    // FLUJO DE DINERO
+    Route::get('/flujos', [FlujoDineroController::class, 'index'])->name('tesoreria.flujos');
+    Route::get('/api/flujo-dinero', [FlujoDineroController::class, 'getData']);
+    Route::get('/api/flujo-dinero/semanas', [FlujoDineroController::class, 'getSemanas']);
+    Route::get('/api/flujo-dinero/exportar-excel', [FlujoDineroController::class, 'exportarExcel']);
+
+    // FLUJO DE DINERO MENSUAL
+    Route::get('/flujo-mensual', [FlujoMensualController::class, 'index'])->name('tesoreria.flujo_mensual');
+    Route::get('/api/flujo-mensual', [FlujoMensualController::class, 'getData']);
+    Route::get('/api/flujo-mensual/exportar-excel', [FlujoMensualController::class, 'exportarExcel']);
+
+    // DEPÓSITOS
+    Route::get('/depositos', [DepositoController::class, 'index'])->name('depositos.index');
+    Route::get('/api/depositos', [DepositoController::class, 'getData']);
+    Route::post('/api/depositos', [DepositoController::class, 'store']);
+    Route::get('/api/depositos/{id}', [DepositoController::class, 'show']);
+    Route::put('/api/depositos/{id}', [DepositoController::class, 'update']);
+    Route::delete('/api/depositos/{id}', [DepositoController::class, 'destroy']);
+    Route::post('/api/depositos/{id}/aplicar', [DepositoController::class, 'aplicar']);
+    
+    // CHEQUES Y TRANSFERENCIAS
+    Route::get('/api/cheques-transferencias', [ChequeTransferenciaController::class, 'getData']);
+    Route::post('/api/cheques-transferencias', [ChequeTransferenciaController::class, 'store']);
+    Route::get('/api/cheques-transferencias/{id}', [ChequeTransferenciaController::class, 'show']);
+    Route::put('/api/cheques-transferencias/{id}', [ChequeTransferenciaController::class, 'update']);
+    Route::delete('/api/cheques-transferencias/{id}', [ChequeTransferenciaController::class, 'destroy']);
+    Route::post('/api/cheques-transferencias/{id}/aplicar', [ChequeTransferenciaController::class, 'aplicar']);
+    Route::get('/test-datos', [ChequeTransferenciaController::class, 'test'])->name('test.datos');
+    Route::get('/trasferencia', [ChequeTransferenciaController::class, 'index'])->name('tesoreria.trasferencia');
+    
+    // TESORERÍA
     Route::get('/estadosdecuenta', function () { return view('administracion.tesoreria.estadosdecuenta'); })->name('tesoreria.estadosdecuenta');
     Route::get('/flujomensual', function () { return view('administracion.tesoreria.flujomensual'); })->name('tesoreria.flujomensual');
     Route::get('/flujos', function () { return view('administracion.tesoreria.flujos'); })->name('tesoreria.flujos');
     Route::get('/programacion', function () { return view('administracion.tesoreria.programacion'); })->name('tesoreria.programacion');
-    Route::get('/traspasos', function () { return view('administracion.tesoreria.transacciones'); })->name('tesoreria.transacciones');
-    Route::get('/trasferencia', function () { return view('administracion.tesoreria.trasferencias'); })->name('tesoreria.trasferencia');
     Route::get('/pagos', function () { return view('administracion.tesoreria.pagos'); })->name('tesoreria.pagos');
     Route::get('/facturacionproveedores', function () { return view('administracion.presupuestos.facturacion'); })->name('presupuestos.facturacion');
     Route::get('/gastosfijos', function () { return view('administracion.presupuestos.gastos'); })->name('presupuestos.gastos');
@@ -95,7 +193,27 @@ Route::prefix('admin')->group(function () {
     Route::get('/credito', function () { return view('administracion.operaciones.credito'); })->name('operaciones.credito');
     Route::get('/prepago', function () { return view('administracion.operaciones.prepago'); })->name('operaciones.prepago');
     Route::get('/cuentasavanzadas', function () { return view('administracion.cuentasavanzadas.cuentasavanzadas'); })->name('cuentasavanzadas.cuentasavanzadas');
+
+    // PROVEEDORES
+    Route::get('/proveedores', [ProveedorController::class, 'index'])->name('proveedores.index');
+    Route::get('/api/proveedores', [ProveedorController::class, 'getData']);
+    Route::post('/api/proveedores', [ProveedorController::class, 'store']);
+    Route::get('/api/proveedores/{id}', [ProveedorController::class, 'show']);
+    Route::put('/api/proveedores/{id}', [ProveedorController::class, 'update']);
+    Route::delete('/api/proveedores/{id}', [ProveedorController::class, 'destroy']);
+
+    // PAGOS
+    Route::get('/pagos', [PagoController::class, 'index'])->name('pagos.index');
+    Route::get('/api/pagos', [PagoController::class, 'getData']);
+    Route::post('/api/pagos', [PagoController::class, 'store']);
+    Route::get('/api/pagos/{id}', [PagoController::class, 'show']);
+    Route::put('/api/pagos/{id}', [PagoController::class, 'update']);
+    Route::delete('/api/pagos/{id}', [PagoController::class, 'destroy']);
+    Route::post('/api/pagos/{id}/aplicar', [PagoController::class, 'aplicar']);
+    Route::get('/api/pagos-estadisticas', [PagoController::class, 'getEstadisticas']); 
 });
+
+// ==================== RUTAS FUERA DEL GRUPO ADMIN ====================
 
 Route::prefix('config')->group(function () {
     Route::get('/config', function () { return view('config.index'); })->name('config.index');
@@ -143,7 +261,6 @@ Route::prefix('conta')->group(function () {
     Route::get('/diariogeneral', function () { return view('conta.registros.diario'); })->name('conta.diario');
     Route::get('/cobranza', function () { return view('conta.registros.auxiliar'); })->name('conta.cobranza');
     Route::get('/centro', function () { return view('conta.catalogo.centros'); })->name('conta.centros');
-    Route::get('/auxiliar', function () { return view('conta.catalogo.auxiliar'); })->name('conta.auxiliar');
     Route::get('/costoobras', function () { return view('conta.porproyecto.costo'); })->name('conta.costo');
     Route::get('/asignacion', function () { return view('conta.porproyecto.asignacion'); })->name('conta.asignacion');
     Route::get('/rentabilidad', function () { return view('conta.porproyecto.rentabilidad'); })->name('conta.rentabilidad');
@@ -195,9 +312,7 @@ Route::prefix('rh')->name('rh.')->group(function () {
     Route::get('/pagos', function () { return view('rh.nomina.pagos'); })->name('pagos');
     Route::get('/recibos', function () { return view('rh.nomina.recibos'); })->name('recibos');
     
-    // ============================================
-    // TABLA DE SUELDOS (CRUD completo)
-    // ============================================
+    // TABLA DE SUELDOS
     Route::prefix('nomina/sueldos')->name('nomina.sueldos.')->group(function () {
         Route::get('/', [TablaSueldoController::class, 'index'])->name('index');
         Route::post('/', [TablaSueldoController::class, 'store'])->name('store');
@@ -269,7 +384,7 @@ Route::prefix('rh')->name('rh.')->group(function () {
     // NOMINA
     Route::get('/nomina', [NominaController::class, 'indexView'])->name('nomina');
 
-    // RUTAS API DE ASISTENCIA (para AJAX)
+    // RUTAS API DE ASISTENCIA
     Route::prefix('asistencia-api')->name('asistencia.api.')->group(function () {
         Route::get('/', [AsistenciaController::class, 'index']);
         Route::post('/', [AsistenciaController::class, 'store']);
@@ -309,114 +424,52 @@ Route::prefix('compras')->name('compras.')->group(function () {
 });
 
 // ============================================
-// PROYECTOS (RUTAS ACTUALIZADAS Y CORREGIDAS)
+// PROYECTOS
 // ============================================
-
 Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(function () {
-    // ============================================
-    // RUTAS PRINCIPALES DEL MÓDULO DE PROYECTOS (VISTAS)
-    // ============================================
-
-    Route::get('/', [ProyectoController::class, 'index'])->name('index');
-    Route::post('/', [ProyectoController::class, 'store'])->name('store');
-    Route::get('/{id}/edit-data', [ProyectoController::class, 'editData'])->name('edit-data');
-    Route::get('/{id}/detalle', [ProyectoController::class, 'getDetalle'])->name('detalle');
-    Route::put('/{id}', [ProyectoController::class, 'update'])->name('update');
-    Route::delete('/{id}', [ProyectoController::class, 'destroy'])->name('destroy');
-    
-    // Gestión
     Route::get('/cartera', [ProyectoController::class, 'index'])->name('cartera');
+    Route::get('/dashboard', [ProyectoController::class, 'dashboard'])->name('dashboard');
     Route::get('/alta', [ProyectoController::class, 'create'])->name('alta');
-    Route::get('/hitos', function () { return view('proyectos.gestion.hitos'); })->name('hitos');
-    Route::get('/bitacora', function () { return view('proyectos.gestion.bitacora'); })->name('bitacora');
+    Route::get('/create', [ProyectoController::class, 'create'])->name('create');
+    Route::post('/', [ProyectoController::class, 'store'])->name('store');
+    Route::get('/buscar/cliente', [ProyectoController::class, 'buscarCliente'])->name('buscar-cliente');
     
-    // Presupuestos
     Route::get('/presupuestos', function () { return view('proyectos.presupuestos.presupuestos'); })->name('presupuestos');
     Route::get('/presupuesto', function () { return view('proyectos.presupuestos.presupuesto'); })->name('presupuesto_proyecto');
     Route::get('/real', function () { return view('proyectos.presupuestos.real'); })->name('real');
     
-    // Personal
+    Route::get('/hitos', function () { return view('proyectos.gestion.hitos'); })->name('hitos');
+    Route::get('/bitacora', function () { return view('proyectos.gestion.bitacora'); })->name('bitacora');
     Route::get('/asignacion', function () { return view('proyectos.personal.asignada'); })->name('asignada');
     Route::get('/flotillas', function () { return view('proyectos.personal.flotillas'); })->name('flotillas');
-    
-    // Maquinaria
     Route::get('/maquinas', function () { return view('proyectos.maquinaria.asignacion'); })->name('asignacion');
     Route::get('/control', function () { return view('proyectos.maquinaria.control'); })->name('control');
     Route::get('/mantenimiento', function () { return view('proyectos.maquinaria.mantenimiento'); })->name('mantenimiento');
     Route::get('/bitaherramienta', function () { return view('proyectos.maquinaria.bitacora'); })->name('bita');
-    
-    // Documentación
     Route::get('/planos', function () { return view('proyectos.documentacion.planos'); })->name('planos');
     Route::get('/permisos', function () { return view('proyectos.documentacion.permisos'); })->name('permisos');
     Route::get('/evidencia', function () { return view('proyectos.documentacion.evidencia'); })->name('evidencia');
-    
-    // Licitación
     Route::get('/activas', function () { return view('proyectos.licitacion.activas'); })->name('activas');
     Route::get('/cotizaciones', function () { return view('proyectos.licitacion.presupuestos'); })->name('presupuestos_licitacion');
     Route::get('/analisis', function () { return view('proyectos.licitacion.analisis'); })->name('analisis');
-    
-    // Costos
     Route::get('/analisisrentabilidad', function () { return view('proyectos.costos.rentabilidad'); })->name('rentabilidad');
     Route::get('/indirectos', function () { return view('proyectos.costos.indirectos'); })->name('indirectos');
     Route::get('/directos', function () { return view('proyectos.costos.directos'); })->name('directos');
-    
-    // Avances
     Route::get('/estimaciones', function () { return view('proyectos.avances.estimaciones'); })->name('estimaciones');
     Route::get('/reportes', function () { return view('proyectos.avances.reportes'); })->name('reportes');
-    
-    // Control
     Route::get('/control_proyectos', function () { return view('proyectos.control.control'); })->name('control');
     Route::get('/desviaciones', function () { return view('proyectos.control.desviaciones'); })->name('desviaciones');
-
-    // ============================================
-    // RUTAS CRUD PARA PROYECTOS (API y Formularios)
-    // ============================================
     
-    // Listar todos los proyectos (JSON para API)
-    Route::get('/listar', [ProyectoController::class, 'index'])->name('listar');
-    
-    // Crear nuevo proyecto (formulario)
-    Route::get('/create', [ProyectoController::class, 'create'])->name('create');
-    
-    // Almacenar nuevo proyecto
-    Route::post('/', [ProyectoController::class, 'store'])->name('store');
-    
-    // Ver detalle de un proyecto
-    Route::get('/{id}', [ProyectoController::class, 'show'])->name('show');
-    
-    // Editar proyecto (formulario)
+    Route::get('/{id}/edit-data', [ProyectoController::class, 'editData'])->name('edit-data');
+    Route::get('/{id}/detalle', [ProyectoController::class, 'getDetalle'])->name('detalle');
     Route::get('/{id}/edit', [ProyectoController::class, 'edit'])->name('edit');
-    
-    // Actualizar proyecto
     Route::put('/{id}', [ProyectoController::class, 'update'])->name('update');
-    
-    // Eliminar proyecto
     Route::delete('/{id}', [ProyectoController::class, 'destroy'])->name('destroy');
-    
-    // ============================================
-    // RUTAS ADICIONALES PARA PROYECTOS
-    // ============================================
-    
-    // Buscar cliente existente
-    Route::get('/buscar/cliente', [ProyectoController::class, 'buscarCliente'])->name('buscar-cliente');
-    
-    // Subir documento a un proyecto
     Route::post('/{proyecto_id}/documentos', [ProyectoController::class, 'subirDocumento'])->name('subir-documento');
-    
-    // Descargar documento
     Route::get('/documentos/{id}/descargar', [ProyectoController::class, 'descargarDocumento'])->name('descargar-documento');
-    
-    // Eliminar documento
     Route::delete('/documentos/{id}', [ProyectoController::class, 'eliminarDocumento'])->name('eliminar-documento');
     
-    // Dashboard
-    Route::get('/dashboard', [ProyectoController::class, 'dashboard'])->name('dashboard');
-    
-    // Reportes
-    Route::get('/reporte/general', [ProyectoController::class, 'reporteGeneral'])->name('reporte-general');
-    Route::get('/reporte/financiero', [ProyectoController::class, 'reporteFinanciero'])->name('reporte-financiero');
-    Route::get('/exportar/excel', [ProyectoController::class, 'exportarExcel'])->name('exportar-excel');
-    Route::get('/exportar/pdf', [ProyectoController::class, 'exportarPdf'])->name('exportar-pdf');
+    Route::get('/{id}', [ProyectoController::class, 'show'])->name('show');
 });
 
 // ============================================
@@ -435,7 +488,6 @@ Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel'])->nam
 Route::post('plantilla/exportar-excel', [PlantillaController::class, 'exportExcel'])->name('plantilla.export');
 Route::post('usuarios/exportar-excel', [UserController::class, 'exportExcel'])->name('usuarios.export');
 
-// Rutas de descarga Excel
 Route::get('roles/descargar-excel', [RolController::class, 'downloadExcel'])->name('roles.export.download');
 Route::get('puestos/descargar-excel', [PuestoController::class, 'downloadExcel'])->name('puestos.export.download');
 Route::get('areas/descargar-excel', [AreaController::class, 'downloadExcel'])->name('areas.export.download');
@@ -443,7 +495,7 @@ Route::get('plantilla/descargar-excel', [PlantillaController::class, 'downloadEx
 Route::get('usuarios/download-excel', [UserController::class, 'downloadExcel'])->name('usuarios.export.download');
 
 // ============================================
-// RUTAS API (para llamadas AJAX)
+// RUTAS API
 // ============================================
 Route::prefix('api')->group(function () {
     // Roles
@@ -472,11 +524,9 @@ Route::prefix('api')->group(function () {
     Route::put('plantilla/{id}', [PlantillaController::class, 'update']);
     Route::delete('plantilla/{id}', [PlantillaController::class, 'destroy']);
     Route::post('plantilla/exportar-excel', [PlantillaController::class, 'exportExcel']);
-    
-    // Rutas especiales
     Route::get('puestos-por-area', [PlantillaController::class, 'getPuestosByArea']);
     
-    // Rutas para documentos de empleados (API)
+    // Documentos de empleados
     Route::prefix('plantilla/{id}')->group(function () {
         Route::get('documentos', [PlantillaController::class, 'getDocumentos']);
         Route::post('documentos/archivo', [PlantillaController::class, 'subirArchivoDocumento']);
@@ -484,7 +534,7 @@ Route::prefix('api')->group(function () {
         Route::get('documentos/{documentoId}/descargar', [PlantillaController::class, 'descargarDocumento']);
     });
     
-    // INCIDENCIAS - Rutas API
+    // INCIDENCIAS
     Route::get('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'index']);
     Route::get('cat-tipos-incidencias/activos', [CatTipoIncidenciaController::class, 'getActivos']);
     Route::post('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'store']);
@@ -502,7 +552,7 @@ Route::prefix('api')->group(function () {
     Route::put('incidencias/{id}', [IncidenciaController::class, 'update']);
     Route::delete('incidencias/{id}', [IncidenciaController::class, 'destroy']);
 
-    // ASISTENCIA - Rutas API
+    // ASISTENCIA
     Route::get('asistencias/empleados-a-cargo', [AsistenciaController::class, 'getEmpleadosACargo']);
     Route::post('asistencias/masivo', [AsistenciaController::class, 'storeMasivo']);
     Route::post('asistencias/entrada', [AsistenciaController::class, 'registrarEntrada']);
@@ -516,7 +566,7 @@ Route::prefix('api')->group(function () {
     Route::delete('asistencias/{id}', [AsistenciaController::class, 'destroy']);
     Route::post('asistencias/{id}/salida', [AsistenciaController::class, 'registrarSalida']);
     
-    // Justificaciones y Permisos - Rutas API
+    // Justificaciones y Permisos
     Route::resource('justificaciones-permisos', JustificacionPermisoController::class)->except(['create', 'edit']);
     Route::get('justificaciones-permisos/{id}/print', [JustificacionPermisoController::class, 'print']);
     Route::get('justificaciones-permisos/{id}/justificante', [JustificacionPermisoController::class, 'downloadJustificante']);
@@ -534,19 +584,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/chat/unread-count', [ChatController::class, 'getTotalUnreadCount'])->middleware('auth');
 });
 
-
-
 // ============================================
-// RUTAS PARA CATÁLOGOS (VISTAS)
+// RUTAS PARA CATÁLOGOS
 // ============================================
 Route::middleware(['auth'])->group(function () {
-    
-    // Vista principal de catálogos
     Route::get('/administracion/cuentasavanzadas', function () {
         return view('administracion.cuentasavanzadas.cuentasavanzadas');
     })->name('cuentasavanzadas');
     
-    // Rutas para Monedas
     Route::get('/monedas', [MonedaController::class, 'index'])->name('monedas.index');
     Route::get('/monedas/create', [MonedaController::class, 'create'])->name('monedas.create');
     Route::post('/monedas', [MonedaController::class, 'store'])->name('monedas.store');
@@ -554,7 +599,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/monedas/{id}', [MonedaController::class, 'update'])->name('monedas.update');
     Route::delete('/monedas/{id}', [MonedaController::class, 'destroy'])->name('monedas.destroy');
     
-    // Rutas para Tipos de Cambio
     Route::get('/tipos-cambio', [TipoCambioController::class, 'index'])->name('tipos-cambio.index');
     Route::get('/tipos-cambio/create', [TipoCambioController::class, 'create'])->name('tipos-cambio.create');
     Route::post('/tipos-cambio', [TipoCambioController::class, 'store'])->name('tipos-cambio.store');
@@ -562,7 +606,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tipos-cambio/{id}', [TipoCambioController::class, 'update'])->name('tipos-cambio.update');
     Route::delete('/tipos-cambio/{id}', [TipoCambioController::class, 'destroy'])->name('tipos-cambio.destroy');
     
-    // Rutas para Bancos
     Route::get('/bancos', [BancoController::class, 'index'])->name('bancos.index');
     Route::get('/bancos/create', [BancoController::class, 'create'])->name('bancos.create');
     Route::post('/bancos', [BancoController::class, 'store'])->name('bancos.store');
@@ -570,7 +613,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/bancos/{id}', [BancoController::class, 'update'])->name('bancos.update');
     Route::delete('/bancos/{id}', [BancoController::class, 'destroy'])->name('bancos.destroy');
     
-    // Rutas para Cuentas Bancarias
     Route::get('/cuentas-bancarias', [CuentaBancariaController::class, 'index'])->name('cuentas-bancarias.index');
     Route::get('/cuentas-bancarias/create', [CuentaBancariaController::class, 'create'])->name('cuentas-bancarias.create');
     Route::post('/cuentas-bancarias', [CuentaBancariaController::class, 'store'])->name('cuentas-bancarias.store');
@@ -578,7 +620,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cuentas-bancarias/{id}', [CuentaBancariaController::class, 'update'])->name('cuentas-bancarias.update');
     Route::delete('/cuentas-bancarias/{id}', [CuentaBancariaController::class, 'destroy'])->name('cuentas-bancarias.destroy');
     
-    // Rutas para Métodos de Pago
     Route::get('/metodos-pago', [MetodoPagoController::class, 'index'])->name('metodos-pago.index');
     Route::get('/metodos-pago/create', [MetodoPagoController::class, 'create'])->name('metodos-pago.create');
     Route::post('/metodos-pago', [MetodoPagoController::class, 'store'])->name('metodos-pago.store');
@@ -586,7 +627,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/metodos-pago/{id}', [MetodoPagoController::class, 'update'])->name('metodos-pago.update');
     Route::delete('/metodos-pago/{id}', [MetodoPagoController::class, 'destroy'])->name('metodos-pago.destroy');
     
-    // Rutas para Tipos de Ingreso
     Route::get('/tipos-ingreso', [TipoIngresoController::class, 'index'])->name('tipos-ingreso.index');
     Route::get('/tipos-ingreso/create', [TipoIngresoController::class, 'create'])->name('tipos-ingreso.create');
     Route::post('/tipos-ingreso', [TipoIngresoController::class, 'store'])->name('tipos-ingreso.store');
@@ -594,7 +634,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tipos-ingreso/{id}', [TipoIngresoController::class, 'update'])->name('tipos-ingreso.update');
     Route::delete('/tipos-ingreso/{id}', [TipoIngresoController::class, 'destroy'])->name('tipos-ingreso.destroy');
     
-    // Rutas para Tipos de Egreso
     Route::get('/tipos-egreso', [TipoEgresoController::class, 'index'])->name('tipos-egreso.index');
     Route::get('/tipos-egreso/create', [TipoEgresoController::class, 'create'])->name('tipos-egreso.create');
     Route::post('/tipos-egreso', [TipoEgresoController::class, 'store'])->name('tipos-egreso.store');
@@ -602,7 +641,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tipos-egreso/{id}', [TipoEgresoController::class, 'update'])->name('tipos-egreso.update');
     Route::delete('/tipos-egreso/{id}', [TipoEgresoController::class, 'destroy'])->name('tipos-egreso.destroy');
     
-    // Rutas para Categorías de Gasto
     Route::get('/categorias-gasto', [CategoriaGastoController::class, 'index'])->name('categorias-gasto.index');
     Route::get('/categorias-gasto/create', [CategoriaGastoController::class, 'create'])->name('categorias-gasto.create');
     Route::post('/categorias-gasto', [CategoriaGastoController::class, 'store'])->name('categorias-gasto.store');
@@ -610,7 +648,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/categorias-gasto/{id}', [CategoriaGastoController::class, 'update'])->name('categorias-gasto.update');
     Route::delete('/categorias-gasto/{id}', [CategoriaGastoController::class, 'destroy'])->name('categorias-gasto.destroy');
     
-    // Rutas para Movimientos Bancarios
     Route::get('/movimientos', [MovimientoBancarioController::class, 'index'])->name('movimientos.index');
     Route::get('/movimientos/create', [MovimientoBancarioController::class, 'create'])->name('movimientos.create');
     Route::post('/movimientos', [MovimientoBancarioController::class, 'store'])->name('movimientos.store');
@@ -621,8 +658,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/movimientos/{id}/aplicar', [MovimientoBancarioController::class, 'aplicar'])->name('movimientos.aplicar');
     Route::post('/movimientos/{id}/cancelar', [MovimientoBancarioController::class, 'cancelar'])->name('movimientos.cancelar');
     
-    // Rutas adicionales para selects dinámicos
+    Route::get('/registro-cuentas', [CuentaContableController::class, 'index'])->name('registro.cuentas');
+    Route::get('/cuentas-bancarias', [CuentaBancariaController::class, 'index'])->name('cuentas.bancarias');
+    
     Route::get('/api/categorias-por-tipo-egreso/{tipoEgresoId}', [CategoriaGastoController::class, 'getPorTipoEgreso']);
     Route::get('/api/saldo-cuenta/{cuentaId}', [MovimientoBancarioController::class, 'getSaldoCuenta']);
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/movimientos-bancarios-data', [MovimientoBancarioController::class, 'getDataForEstadosCuenta']);
+});
+
 require __DIR__.'/auth.php';

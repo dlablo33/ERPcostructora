@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Pagos -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
@@ -12,170 +11,67 @@
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas con agrupación y botones -->
+                <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
                     <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
                         <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
-                            <!-- Aquí se mostrarán las columnas agrupadas -->
-                        </div>
+                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
                     </div>
                     
-                    <!-- Grupo de botones derecho -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Date Inicio -->
-                        <div>
-                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
-
-                        <!-- Date Fin -->
-                        <div>
-                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
-
-                        <!-- Botón Agregar (+) -->
-                        <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
-
-                        <!-- Botón Exportar Excel -->
-                        <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
-                                    title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
-
-                        <!-- Botón Seleccionar Columnas -->
-                        <div>
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
-                                    title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
-
-                        <!-- Buscador -->
-                        <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
-                        </div>
+                        <div><input type="date" id="fechaInicio" class="form-control" style="width: 140px;"></div>
+                        <div><input type="date" id="fechaFin" class="form-control" style="width: 140px;"></div>
+                        <div><button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px;"><i class="fas fa-plus" style="color: #2378e1;"></i></button></div>
+                        <div><button id="btnExcel" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px;"><i class="fas fa-file-excel" style="color: #2378e1;"></i> Excel</button></div>
+                        <div><button id="btnColumnas" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px;"><i class="fas fa-columns" style="color: #2378e1;"></i> Columnas</button></div>
+                        <div style="position: relative;"><i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i><input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; width: 200px;"></div>
                     </div>
                 </div>
 
-                <!-- Mensaje "Sin datos" centrado -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-credit-card" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
-                    <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay pagos para los filtros seleccionados</p>
+                <!-- Contadores -->
+                <div style="display: flex; gap: 20px; margin-bottom: 15px; padding: 10px; background: #e9ecef; border-radius: 8px;">
+                    <div><strong>Total Registros:</strong> <span id="totalRegistros">0</span></div>
+                    <div><strong>Completados:</strong> <span id="totalCompletados">0</span></div>
+                    <div><strong>Pendientes:</strong> <span id="totalPendientes">0</span></div>
                 </div>
 
                 <!-- Tabla de Pagos -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaPagos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; overflow-x: auto;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaPagos" style="width: 100%; font-size: 12px;">
+                        <thead style="background-color: #2378e1; color: white;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="id">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>ID</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_pago">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha Pago</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="proveedor">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Proveedor</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="concepto">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Concepto</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="monto">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Monto</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="metodo_pago">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Método de Pago</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="referencia">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Referencia</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Acciones</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
+                                <th draggable="true" data-columna="folio">Folio</th>
+                                <th draggable="true" data-columna="fecha_pago">Fecha</th>
+                                <th draggable="true" data-columna="proveedor">Proveedor</th>
+                                <th draggable="true" data-columna="concepto">Concepto</th>
+                                <th draggable="true" data-columna="monto">Monto</th>
+                                <th draggable="true" data-columna="metodo_pago">Método Pago</th>
+                                <th draggable="true" data-columna="estatus">Estatus</th>
+                                <th draggable="true" data-columna="factura">Factura</th>
+                                <th style="position: sticky; right: 0; background-color: #2378e1;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <!-- Las filas se insertarán dinámicamente -->
+                            <tr><td colspan="9" style="text-align: center;">Cargando...<\/td></tr>
                         </tbody>
-                        <!-- Fila de totales -->
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
-                            <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="5">Registros: <span id="totalRegistros">0</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumMonto">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="3"></td>
+                        <tfoot style="background-color: #e9ecef; font-weight: bold;">
+                            <tr><td colspan="4" style="text-align: center;">Totales:</td><td style="text-align: right;" id="sumMonto">$0.00<\/td><td colspan="3">
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 
-                <!-- Paginación y botón Crear filtro -->
-                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
-                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
-                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
-                        <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
-                        <span style="color: #2378e1;">Crear filtro</span>
-                    </button>
-                    
-                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
-                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
-                            <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
-                        </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
-                            <i class="fas fa-angle-left" style="color: #2378e1;"></i>
-                        </button>
-                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
-                            <i class="fas fa-angle-right" style="color: #2378e1;"></i>
-                        </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
-                            <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
-                        </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 24 registros</span>
+                <!-- Paginación -->
+                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <button id="btnCrearFiltro" style="background: transparent; border: none; color: #2378e1;"><i class="fas fa-filter"></i> Crear filtro</button>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <button id="btnPrimera" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-double-left"></i></button>
+                        <button id="btnAnterior" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-left"></i></button>
+                        <span id="paginaActual" style="background-color: #2378e1; color: white; padding: 5px 10px; border-radius: 4px;">1</span>
+                        <button id="btnSiguiente" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-right"></i></button>
+                        <button id="btnUltima" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-double-right"></i></button>
+                        <span id="paginacionInfo" style="color: #2378e1; margin-left: 10px;">Mostrando 0-0 de 0 registros</span>
                     </div>
                 </div>
             </div>
@@ -183,1085 +79,667 @@
     </section>
 </div>
 
+<!-- Modal para Pago -->
+<div class="modal fade" id="modalPago" tabindex="-1" style="z-index: 99999 !important;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-money-bill-wave"></i> Nuevo Pago</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formPago">
+                    <input type="hidden" id="pago_id">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Fecha Pago <span class="text-danger">*</span></label>
+                            <input type="date" id="fecha_pago" class="form-control" value="{{ date('Y-m-d') }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Cuenta Bancaria <span class="text-danger">*</span></label>
+                            <select id="cuenta_bancaria_id" class="form-control" required>
+                                <option value="">Seleccionar cuenta...</option>
+                                @foreach($cuentasBancarias ?? [] as $cuenta)
+                                    <option value="{{ $cuenta->id }}">{{ $cuenta->banco->nombre ?? 'Sin banco' }} - {{ $cuenta->numero_cuenta }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Proveedor</label>
+                            <select id="proveedor_id" class="form-control">
+                                <option value="">Seleccionar proveedor...</option>
+                                @foreach($proveedores ?? [] as $proveedor)
+                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }} - {{ $proveedor->rfc }}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="abrirModalProveedor()" style="font-size: 11px;">+ Nuevo Proveedor</button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Proyecto</label>
+                            <select id="proyecto_id" class="form-control">
+                                <option value="">Ninguno</option>
+                                @foreach($proyectos ?? [] as $proyecto)
+                                    <option value="{{ $proyecto->id }}">{{ $proyecto->codigo }} - {{ $proyecto->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Monto <span class="text-danger">*</span></label>
+                            <input type="number" id="monto" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Moneda <span class="text-danger">*</span></label>
+                            <select id="moneda_id" class="form-control" required>
+                                <option value="">Seleccionar moneda...</option>
+                                @foreach($monedas ?? [] as $moneda)
+                                    <option value="{{ $moneda->id }}">{{ $moneda->nombre }} ({{ $moneda->simbolo }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Tipo de Egreso <span class="text-danger">*</span></label>
+                            <select id="tipo_egreso_id" class="form-control" required>
+                                <option value="">Seleccionar tipo...</option>
+                                @foreach($tiposEgreso ?? [] as $tipo)
+                                    <option value="{{ $tipo->id }}">{{ $tipo->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Categoría de Gasto</label>
+                            <select id="categoria_gasto_id" class="form-control">
+                                <option value="">Primero seleccione un tipo de egreso</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Método de Pago <span class="text-danger">*</span></label>
+                            <select id="metodo_pago_id" class="form-control" required>
+                                <option value="">Seleccionar método...</option>
+                                @foreach($metodosPago ?? [] as $metodo)
+                                    <option value="{{ $metodo->id }}">{{ $metodo->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Factura</label>
+                            <input type="text" id="factura" class="form-control" placeholder="Número de factura">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Referencia</label>
+                            <input type="text" id="referencia" class="form-control">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Referencia Bancaria</label>
+                            <input type="text" id="referencia_bancaria" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Concepto <span class="text-danger">*</span></label>
+                        <textarea id="concepto" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label>Observaciones</label>
+                        <textarea id="observaciones" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" id="aplicar_ahora" class="form-check-input" checked>
+                        <label class="form-check-label">Aplicar pago inmediatamente (actualizar saldo)</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarPago()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Proveedor (rápido) -->
+<div class="modal fade" id="modalProveedor" tabindex="-1" style="z-index: 99999 !important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-truck"></i> Nuevo Proveedor</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formProveedor">
+                    <div class="mb-3">
+                        <label>Nombre <span class="text-danger">*</span></label>
+                        <input type="text" id="prov_nombre" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>RFC</label>
+                        <input type="text" id="prov_rfc" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email" id="prov_email" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Teléfono</label>
+                        <input type="text" id="prov_telefono" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Contacto</label>
+                        <input type="text" id="prov_contacto" class="form-control">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarProveedorRapido()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    .semaforo .card-header {
-        background-color: #f4f6f9;
-        border-bottom: 2px solid #2378e1;
-    }
-    
-    .semaforo .card-header h2 {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilos de tabla */
-    .table th {
-        white-space: nowrap;
-        font-size: 12px;
-        background-color: #2378e1 !important;
-        color: white;
-        font-weight: 600;
-        padding: 10px 4px;
-    }
-    
-    .table td {
-        white-space: nowrap;
-        font-size: 12px;
-        padding: 10px 4px;
-        color: #000000 !important;
-    }
-    
-    /* Estilo para las filas alternadas */
-    #tablaBody tr:nth-child(odd) {
-        background-color: #ffffff;
-    }
-    
-    #tablaBody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-    
-    #tablaBody tr:hover {
-        background-color: #e0e0e0;
-    }
-    
-    /* Estilo para los iconos de acción */
-    #tablaBody td i {
-        transition: transform 0.2s;
-        font-size: 14px;
-        color: #083CAE;
-        cursor: pointer;
-    }
-    
-    #tablaBody td i:hover {
-        transform: scale(1.2);
-    }
-    
-    /* Estilo para el filtro en encabezados */
-    .table th i {
-        opacity: 0.7;
-        transition: opacity 0.2s;
-        color: white;
-    }
-    
-    .table th i:hover {
-        opacity: 1;
-    }
-    
-    /* Columna de acciones fija */
-    #tablaBody td:last-child {
-        background-color: white;
-        position: sticky;
-        right: 0;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-        z-index: 15;
-    }
-    
-    /* Estilo para badges de estatus */
-    .badge {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 8px;
-        display: inline-block;
-        border-radius: 3px;
-    }
-    
-    .badge-pendiente {
-        background-color: #fd7e14;
-        color: white;
-    }
-    
-    .badge-procesado {
-        background-color: #2378e1;
-        color: white;
-    }
-    
-    .badge-completado {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-cancelado {
-        background-color: #dc3545;
-        color: white;
-    }
-    
-    .badge-rechazado {
-        background-color: #dc3545;
-        color: white;
-    }
-    
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #2378e1;
-        color: #000000 !important;
-    }
-    
-    /* Estilos para agrupación de columnas */
-    [draggable="true"] {
-        cursor: grab;
-    }
-    
-    [draggable="true"]:active {
-        cursor: grabbing;
-        opacity: 0.7;
-    }
-    
-    #grupoAgrupacion {
-        position: relative;
-    }
-    
-    #grupoColumnas {
-        display: inline-flex;
-        align-items: center;
-    }
-    
-    .columna-agrupada {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        background-color: #f0f4ff;
-        border-radius: 16px;
-        color: #2378e1;
-        font-size: 12px;
-        margin: 2px;
-        border: 1px solid #2378e1;
-    }
-    
-    .columna-agrupada .remover {
-        margin-left: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        color: #2378e1;
-    }
-    
-    .columna-agrupada .remover:hover {
-        opacity: 0.7;
-    }
-    
-    /* Estilo para filas de grupo */
-    .fila-grupo {
-        background-color: #f0f7ff !important;
-        font-weight: 500;
-        cursor: pointer;
-    }
-    
-    .fila-grupo:hover {
-        background-color: #e1f0ff !important;
-    }
-    
-    .fila-grupo td:first-child i {
-        transition: transform 0.2s;
-        margin-right: 8px;
-    }
-    
-    .fila-grupo:not(.expandido) td:first-child i {
-        transform: rotate(-90deg);
-    }
-    
-    .fila-detalle {
-        background-color: #ffffff;
-    }
-    
-    .fila-detalle td {
-        border-top: none !important;
-    }
-    
-    .fila-detalle td:first-child {
-        padding-left: 30px !important;
-    }
-    
-    /* Estilo cuando se está arrastrando sobre el área de grupo */
-    .drag-over #grupoColumnas {
-        background-color: rgba(35, 120, 225, 0.1);
-        border-radius: 4px;
-    }
-    
-    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
-    #paginacionContainer {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Todos los elementos dentro del contenedor también sin fondo */
-    #paginacionContainer * {
-        background: transparent !important;
-        background-color: transparent !important;
-    }
-    
-    /* Excepción para los spans que deben tener fondo azul */
-    #paginacionContainer span[style*="background-color"] {
-        background-color: #2378e1 !important;
-    }
-    
-    /* Estilos para los botones de paginación */
-    #paginacionContainer button {
-        background: transparent !important;
-        border: none !important;
-        color: #2378e1 !important;
-        cursor: pointer;
-    }
-    
-    #paginacionContainer button:hover {
-        opacity: 0.7;
-    }
-    
-    #paginacionContainer button i {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilo específico para btnCrearFiltro */
-    #btnCrearFiltro,
-    #btnCrearFiltro:hover,
-    #btnCrearFiltro:focus,
-    #btnCrearFiltro:active {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    
-    #btnCrearFiltro i,
-    #btnCrearFiltro span {
-        color: #2378e1 !important;
-    }
-    
-    #paginacionInfo {
-        color: #2378e1 !important;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        div[style*="justify-content: flex-end"] {
-            justify-content: center !important;
-        }
-        
-        input[type="date"], select {
-            width: 100% !important;
-        }
-        
-        button {
-            width: 100%;
-        }
-        
-        div[style*="position: relative"] {
-            width: 100%;
-        }
-        
-        #paginacionContainer {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
+    .custom-card { transition: transform 0.2s; }
+    .custom-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(8,60,174,0.15); }
+    .table th { background-color: #2378e1 !important; color: white; font-size: 12px; padding: 10px 4px; white-space: nowrap; }
+    .table td { font-size: 12px; padding: 10px 4px; white-space: nowrap; }
+    #tablaBody tr:nth-child(odd) { background-color: #ffffff; }
+    #tablaBody tr:nth-child(even) { background-color: #f2f2f2; }
+    #tablaBody tr:hover { background-color: #e0e0e0; }
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-pendiente { background-color: #fd7e14; color: white; }
+    .badge-procesado { background-color: #2378e1; color: white; }
+    .badge-completado { background-color: #28a745; color: white; }
+    .badge-cancelado { background-color: #dc3545; color: white; }
+    .badge-rechazado { background-color: #dc3545; color: white; }
+    .action-icons i { font-size: 14px; cursor: pointer; margin: 0 3px; }
+    .fa-edit { color: #ffc107; }
+    .fa-trash-alt { color: #dc3545; }
+    .fa-eye { color: #17a2b8; }
+    .fa-check-circle { color: #28a745; }
+    .fa-file-pdf { color: #dc3545; }
+    .fa-print { color: #6c757d; }
+    [draggable="true"] { cursor: grab; }
+    .columna-agrupada { display: inline-flex; align-items: center; padding: 4px 10px; background-color: #f0f4ff; border-radius: 16px; color: #2378e1; font-size: 12px; margin: 2px; border: 1px solid #2378e1; }
+    .columna-agrupada .remover { margin-left: 6px; cursor: pointer; font-weight: bold; }
+    .fila-grupo { background-color: #f0f7ff !important; font-weight: 500; cursor: pointer; }
+    .fila-detalle td:first-child { padding-left: 30px !important; }
+    tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #2378e1; }
+    .modal { z-index: 99999 !important; }
+    .modal-backdrop { z-index: 99990 !important; }
 </style>
 
-<!-- Font Awesome -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Pagos');
-        
-        // Variables para agrupación
-        let columnasAgrupadas = [];
-        let expandedGroups = new Set();
-        let datosOriginales = [];
-        let paginaActual = 1;
-        const registrosPorPagina = 8;
-        
-        // Datos de ejemplo para Pagos
-        const datosPagos = [
-            {
-                id: 1,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-01',
-                proveedor: 'Transportes del Bajío',
-                concepto: 'Pago factura F-001',
-                monto: 125800.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-001'
-            },
-            {
-                id: 2,
-                estatus: 'Pendiente',
-                fecha_pago: '2026-02-02',
-                proveedor: 'Logística Monterrey',
-                concepto: 'Pago factura F-002',
-                monto: 87500.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-001'
-            },
-            {
-                id: 3,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-03',
-                proveedor: 'Autotransportes Mexicanos',
-                concepto: 'Pago factura F-003',
-                monto: 62300.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-002'
-            },
-            {
-                id: 4,
-                estatus: 'Procesado',
-                fecha_pago: '2026-02-04',
-                proveedor: 'Ferrocarriles Nacionales',
-                concepto: 'Pago factura F-004',
-                monto: 158200.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-003'
-            },
-            {
-                id: 5,
-                estatus: 'Rechazado',
-                fecha_pago: '2026-02-05',
-                proveedor: 'Cervecería del Centro',
-                concepto: 'Pago factura F-005',
-                monto: 93400.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-002'
-            },
-            {
-                id: 6,
-                estatus: 'Cancelado',
-                fecha_pago: '2026-02-06',
-                proveedor: 'Papelera del Pacífico',
-                concepto: 'Pago factura F-006',
-                monto: 45600.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-004'
-            },
-            {
-                id: 7,
-                estatus: 'Pendiente',
-                fecha_pago: '2026-02-07',
-                proveedor: 'Minería del Norte',
-                concepto: 'Pago factura F-007',
-                monto: 212500.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-003'
-            },
-            {
-                id: 8,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-08',
-                proveedor: 'Comercializadora del Sur',
-                concepto: 'Pago factura F-008',
-                monto: 78500.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-005'
-            },
-            {
-                id: 9,
-                estatus: 'Procesado',
-                fecha_pago: '2026-02-09',
-                proveedor: 'Transportes Unidos',
-                concepto: 'Pago factura F-009',
-                monto: 112300.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-006'
-            },
-            {
-                id: 10,
-                estatus: 'Pendiente',
-                fecha_pago: '2026-02-10',
-                proveedor: 'Distribuidora de Papel',
-                concepto: 'Pago factura F-010',
-                monto: 67300.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-004'
-            },
-            {
-                id: 11,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-11',
-                proveedor: 'Maquiladora Industrial',
-                concepto: 'Pago factura F-011',
-                monto: 156700.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-007'
-            },
-            {
-                id: 12,
-                estatus: 'Rechazado',
-                fecha_pago: '2026-02-12',
-                proveedor: 'Cartones del Norte',
-                concepto: 'Pago factura F-012',
-                monto: 34200.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-005'
-            },
-            {
-                id: 13,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-13',
-                proveedor: 'Servicios Logísticos Integrales',
-                concepto: 'Pago factura F-013',
-                monto: 98700.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-008'
-            },
-            {
-                id: 14,
-                estatus: 'Pendiente',
-                fecha_pago: '2026-02-14',
-                proveedor: 'Transportes Express',
-                concepto: 'Pago factura F-014',
-                monto: 54300.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-006'
-            },
-            {
-                id: 15,
-                estatus: 'Procesado',
-                fecha_pago: '2026-02-15',
-                proveedor: 'Distribuidora de Insumos',
-                concepto: 'Pago factura F-015',
-                monto: 23400.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-009'
-            },
-            {
-                id: 16,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-16',
-                proveedor: 'Servicios Corporativos',
-                concepto: 'Pago factura F-016',
-                monto: 78900.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-010'
-            },
-            {
-                id: 17,
-                estatus: 'Pendiente',
-                fecha_pago: '2026-02-17',
-                proveedor: 'Tecnología Empresarial',
-                concepto: 'Pago factura F-017',
-                monto: 123400.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-007'
-            },
-            {
-                id: 18,
-                estatus: 'Cancelado',
-                fecha_pago: '2026-02-18',
-                proveedor: 'Proveedor de Servicios Múltiples',
-                concepto: 'Pago factura F-018',
-                monto: 32100.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-011'
-            },
-            {
-                id: 19,
-                estatus: 'Procesado',
-                fecha_pago: '2026-02-19',
-                proveedor: 'Transportes del Norte',
-                concepto: 'Pago factura F-019',
-                monto: 145600.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-012'
-            },
-            {
-                id: 20,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-20',
-                proveedor: 'Logística y Distribución',
-                concepto: 'Pago factura F-020',
-                monto: 211200.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-008'
-            },
-            {
-                id: 21,
-                estatus: 'Pendiente',
-                fecha_pago: '2026-02-21',
-                proveedor: 'Servicios de Mantenimiento',
-                concepto: 'Pago factura F-021',
-                monto: 18700.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-013'
-            },
-            {
-                id: 22,
-                estatus: 'Rechazado',
-                fecha_pago: '2026-02-22',
-                proveedor: 'Proveedor de Insumos',
-                concepto: 'Pago factura F-022',
-                monto: 45600.00,
-                metodo_pago: 'Cheque',
-                referencia: 'CHQ-009'
-            },
-            {
-                id: 23,
-                estatus: 'Completado',
-                fecha_pago: '2026-02-23',
-                proveedor: 'Consultoría Empresarial',
-                concepto: 'Pago factura F-023',
-                monto: 67800.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-014'
-            },
-            {
-                id: 24,
-                estatus: 'Procesado',
-                fecha_pago: '2026-02-24',
-                proveedor: 'Servicios Financieros',
-                concepto: 'Pago factura F-024',
-                monto: 56700.00,
-                metodo_pago: 'Transferencia',
-                referencia: 'TRX-015'
-            }
-        ];
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        datosOriginales = [...datosPagos];
-        let datosFiltrados = [...datosPagos];
+<script>
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+let columnasAgrupadas = [];
+let expandedGroups = new Set();
+let datosOriginales = [];
+let currentPage = 1;
+let rowsPerPage = 8;
+
+function formatCurrency(amount) {
+    return '$' + Number(amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-MX');
+}
+
+function getBadgeClass(estatus) {
+    const badges = {
+        'pendiente': 'badge-pendiente',
+        'procesado': 'badge-procesado',
+        'completado': 'badge-completado',
+        'cancelado': 'badge-cancelado',
+        'rechazado': 'badge-rechazado'
+    };
+    return badges[estatus] || 'badge-pendiente';
+}
+
+function getEstatusTexto(estatus) {
+    const textos = {
+        'pendiente': 'Pendiente',
+        'procesado': 'Procesado',
+        'completado': 'Completado',
+        'cancelado': 'Cancelado',
+        'rechazado': 'Rechazado'
+    };
+    return textos[estatus] || estatus;
+}
+
+// Función para cargar categorías por tipo de egreso
+function cargarCategoriasPorTipoEgreso() {
+    const tipoEgresoId = document.getElementById('tipo_egreso_id').value;
+    const categoriaSelect = document.getElementById('categoria_gasto_id');
+    
+    if (!categoriaSelect) return;
+    
+    if (tipoEgresoId) {
+        categoriaSelect.innerHTML = '<option value="">Cargando categorías...</option>';
         
-        // Elementos del DOM
-        const fechaInicio = document.getElementById('fechaInicio');
-        const fechaFin = document.getElementById('fechaFin');
-        const btnCrearFiltro = document.getElementById('btnCrearFiltro');
-        const btnAgregar = document.getElementById('btnAgregar');
-        const btnExcel = document.getElementById('btnExcel');
-        const btnColumnas = document.getElementById('btnColumnas');
-        const buscador = document.getElementById('buscador');
-        const tablaBody = document.getElementById('tablaBody');
-        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const tablaFoot = document.getElementById('tablaFoot');
-        const totalRegistros = document.getElementById('totalRegistros');
-        const sumMonto = document.getElementById('sumMonto');
-        const paginacionInfo = document.getElementById('paginacionInfo');
-        const textoAgrupar = document.getElementById('textoAgrupar');
-        
-        // Elementos de paginación
-        const btnPrimera = document.getElementById('btnPrimera');
-        const btnAnterior = document.getElementById('btnAnterior');
-        const btnSiguiente = document.getElementById('btnSiguiente');
-        const btnUltima = document.getElementById('btnUltima');
-        const paginaActualSpan = document.getElementById('paginaActual');
-        
-        // Función para formatear moneda
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-        
-        // Función para formatear fecha
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        }
-        
-        // Función para obtener la clase del badge según estatus
-        function getBadgeClass(estatus) {
-            if (estatus === 'Procesado') return 'badge-procesado';
-            if (estatus === 'Pendiente') return 'badge-pendiente';
-            if (estatus === 'Completado') return 'badge-completado';
-            if (estatus === 'Cancelado') return 'badge-cancelado';
-            if (estatus === 'Rechazado') return 'badge-rechazado';
-            return 'badge-pendiente';
-        }
-        
-        // Función para generar un ID único para el grupo
-        function generarGrupoId(item, columnas) {
-            return columnas.map(col => {
-                switch(col) {
-                    case 'id': return item.id ? item.id.toString() : 'Sin ID';
-                    case 'estatus': return item.estatus || 'Sin estatus';
-                    case 'fecha_pago': return item.fecha_pago || 'Sin fecha';
-                    case 'proveedor': return item.proveedor || 'Sin proveedor';
-                    case 'concepto': return item.concepto || 'Sin concepto';
-                    case 'monto': return item.monto ? item.monto.toString() : '0';
-                    case 'metodo_pago': return item.metodo_pago || 'Sin método';
-                    case 'referencia': return item.referencia || 'Sin referencia';
-                    default: return '';
-                }
-            }).join('||');
-        }
-        
-        // Función para agrupar datos por columnas seleccionadas
-        function agruparDatos(datos, columnas) {
-            if (columnas.length === 0) return { grupos: [], items: datos };
-            
-            const gruposMap = new Map();
-            
-            datos.forEach(item => {
-                const grupoId = generarGrupoId(item, columnas);
-                
-                if (!gruposMap.has(grupoId)) {
-                    // Crear un nuevo grupo
-                    const valorGrupo = columnas.map(col => {
-                        switch(col) {
-                            case 'id': return item.id || 'Sin ID';
-                            case 'estatus': return item.estatus || 'Sin estatus';
-                            case 'fecha_pago': return item.fecha_pago ? formatDate(item.fecha_pago) : 'Sin fecha';
-                            case 'proveedor': return item.proveedor || 'Sin proveedor';
-                            case 'concepto': return item.concepto || 'Sin concepto';
-                            case 'monto': return item.monto || 0;
-                            case 'metodo_pago': return item.metodo_pago || 'Sin método';
-                            case 'referencia': return item.referencia || 'Sin referencia';
-                            default: return '';
-                        }
-                    }).join(' - ');
-                    
-                    gruposMap.set(grupoId, {
-                        id: grupoId,
-                        valor: valorGrupo,
-                        items: [item],
-                        totalMonto: item.monto || 0
-                    });
-                } else {
-                    const grupo = gruposMap.get(grupoId);
-                    grupo.items.push(item);
-                    grupo.totalMonto += item.monto || 0;
-                }
-            });
-            
-            return {
-                grupos: Array.from(gruposMap.values()),
-                items: []
-            };
-        }
-        
-        // Función para obtener datos de la página actual
-        function getCurrentPageData(datos) {
-            const start = (paginaActual - 1) * registrosPorPagina;
-            const end = start + registrosPorPagina;
-            return datos.slice(start, end);
-        }
-        
-        // Función para actualizar la paginación
-        function actualizarPaginacion(total) {
-            const totalPaginas = Math.ceil(total / registrosPorPagina);
-            paginaActualSpan.textContent = paginaActual;
-            
-            // Mostrar/ocultar botones de página según sea necesario
-            document.querySelectorAll('.pagina-btn').forEach(btn => {
-                const pagina = parseInt(btn.dataset.pagina);
-                if (pagina <= totalPaginas) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-            
-            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
-            const fin = Math.min(paginaActual * registrosPorPagina, total);
-            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
-        }
-        
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            let sumaMonto = 0;
-            
-            datos.forEach(item => {
-                sumaMonto += item.monto || 0;
-            });
-            
-            totalRegistros.textContent = datos.length;
-            sumMonto.textContent = formatCurrency(sumaMonto);
-        }
-        
-        // Función para cargar datos en la tabla
-        function cargarTabla(datos) {
-            if (!tablaBody) return;
-            
-            // Ocultar texto de agrupar si hay columnas agrupadas
-            if (textoAgrupar) {
-                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
+        fetch(`/admin/api/categorias-por-tipo-egreso/${tipoEgresoId}`, {
+            method: 'GET',
+            headers: { 
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('HTTP error ' + response.status);
             }
-            
-            // Aplicar agrupación si hay columnas seleccionadas
-            const { grupos } = agruparDatos(datos, columnasAgrupadas);
-            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-            
-            // Limpiar tabla
-            tablaBody.innerHTML = '';
-            
-            if (datos.length === 0) {
-                sinDatosMensaje.style.display = 'block';
-                tablaContainer.style.display = 'none';
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                totalRegistros.textContent = '0';
-                sumMonto.textContent = formatCurrency(0);
-                
-                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                return;
-            }
-            
-            sinDatosMensaje.style.display = 'none';
-            tablaContainer.style.display = 'block';
-            
-            if (hayGrupos) {
-                // Ocultar pie de tabla cuando hay grupos
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                // Mostrar grupos
-                grupos.forEach(grupo => {
-                    const grupoRow = document.createElement('tr');
-                    grupoRow.className = 'fila-grupo';
-                    grupoRow.dataset.grupoId = grupo.id;
-                    
-                    if (expandedGroups.has(grupo.id)) {
-                        grupoRow.classList.add('expandido');
-                    }
-                    
-                    // Determinar el estatus predominante en el grupo
-                    const estatusCounts = {};
-                    grupo.items.forEach(item => {
-                        estatusCounts[item.estatus] = (estatusCounts[item.estatus] || 0) + 1;
-                    });
-                    
-                    let estatusPredominante = 'Pendiente';
-                    let maxCount = 0;
-                    for (const [estatus, count] of Object.entries(estatusCounts)) {
-                        if (count > maxCount) {
-                            maxCount = count;
-                            estatusPredominante = estatus;
-                        }
-                    }
-                    
-                    let badgeClass = 'badge-pendiente';
-                    if (estatusPredominante === 'Procesado') badgeClass = 'badge-procesado';
-                    else if (estatusPredominante === 'Completado') badgeClass = 'badge-completado';
-                    else if (estatusPredominante === 'Cancelado') badgeClass = 'badge-cancelado';
-                    else if (estatusPredominante === 'Rechazado') badgeClass = 'badge-rechazado';
-                    
-                    grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="8">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
-                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Monto: ${formatCurrency(grupo.totalMonto)})
-                                    </span>
-                                </div>
-                                <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(grupoRow);
-                    
-                    // Mostrar items del grupo si está expandido
-                    if (expandedGroups.has(grupo.id)) {
-                        grupo.items.forEach(item => {
-                            const detalleRow = document.createElement('tr');
-                            detalleRow.className = 'fila-detalle';
-                            
-                            // Badge para cada item
-                            let itemBadgeClass = 'badge-pendiente';
-                            if (item.estatus === 'Procesado') itemBadgeClass = 'badge-procesado';
-                            else if (item.estatus === 'Completado') itemBadgeClass = 'badge-completado';
-                            else if (item.estatus === 'Cancelado') itemBadgeClass = 'badge-cancelado';
-                            else if (item.estatus === 'Rechazado') itemBadgeClass = 'badge-rechazado';
-                            
-                            detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${(paginaActual - 1) * registrosPorPagina + grupo.items.indexOf(item) + 1}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">
-                                    <span class="badge ${itemBadgeClass}">${item.estatus}</span>
-                                </td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${formatDate(item.fecha_pago)}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.proveedor}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.concepto}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${formatCurrency(item.monto)}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.metodo_pago}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.id}"></i>
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.id}"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.id}"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.id}"></i>
-                                        <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir" data-id="${item.id}"></i>
-                                    </div>
-                                </td>
-                            `;
-                            
-                            tablaBody.appendChild(detalleRow);
-                        });
-                    }
-                });
-                
-                if (paginacionInfo) {
-                    const totalRegistros = datos.length;
-                    const mostrando = grupos.length;
-                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
-                }
+            return response.json();
+        })
+        .then(data => {
+            categoriaSelect.innerHTML = '<option value="">Seleccionar categoría...</option>';
+            if (data.length === 0) {
+                categoriaSelect.innerHTML += '<option value="" disabled>No hay categorías disponibles</option>';
             } else {
-                // Mostrar todos los items sin agrupar (con paginación)
-                const pageData = getCurrentPageData(datos);
-                
-                pageData.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    
-                    let badgeClass = 'badge-pendiente';
-                    if (item.estatus === 'Procesado') badgeClass = 'badge-procesado';
-                    else if (item.estatus === 'Completado') badgeClass = 'badge-completado';
-                    else if (item.estatus === 'Cancelado') badgeClass = 'badge-cancelado';
-                    else if (item.estatus === 'Rechazado') badgeClass = 'badge-rechazado';
-                    
-                    row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${(paginaActual - 1) * registrosPorPagina + index + 1}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px;">
-                            <span class="badge ${badgeClass}">${item.estatus}</span>
-                        </td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${formatDate(item.fecha_pago)}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.proveedor}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.concepto}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${formatCurrency(item.monto)}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.metodo_pago}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.referencia}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                            <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.id}"></i>
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.id}"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.id}"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.id}"></i>
-                                <i class="fas fa-print" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Imprimir" data-id="${item.id}"></i>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(row);
-                });
-                
-                // Mostrar pie de tabla con totales
-                if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
-                calcularTotales(datos);
-                
-                actualizarPaginacion(datos.length);
-            }
-        }
-        
-        // Función para actualizar la visualización de columnas agrupadas
-        function actualizarGrupoColumnas() {
-            const grupoContainer = document.getElementById('grupoColumnas');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            
-            if (!grupoContainer) return;
-            
-            grupoContainer.innerHTML = '';
-            
-            if (columnasAgrupadas.length === 0) {
-                if (textoAgrupar) textoAgrupar.style.display = 'inline';
-            } else {
-                if (textoAgrupar) textoAgrupar.style.display = 'none';
-                
-                columnasAgrupadas.forEach(col => {
-                    const nombreColumna = {
-                        'id': 'ID',
-                        'estatus': 'Estatus',
-                        'fecha_pago': 'Fecha Pago',
-                        'proveedor': 'Proveedor',
-                        'concepto': 'Concepto',
-                        'monto': 'Monto',
-                        'metodo_pago': 'Método de Pago',
-                        'referencia': 'Referencia'
-                    }[col] || col;
-                    
-                    const chip = document.createElement('span');
-                    chip.className = 'columna-agrupada';
-                    chip.innerHTML = `
-                        ${nombreColumna}
-                        <span class="remover" data-columna="${col}">&times;</span>
-                    `;
-                    grupoContainer.appendChild(chip);
+                data.forEach(cat => {
+                    categoriaSelect.innerHTML += `<option value="${cat.id}">${escapeHtml(cat.nombre)}</option>`;
                 });
             }
-            
-            // Limpiar grupos expandidos al cambiar agrupación
-            expandedGroups.clear();
-            
-            // Recargar tabla con nueva agrupación
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Configurar drag and drop
-        function setupDragAndDrop() {
-            const encabezados = document.querySelectorAll('th[draggable="true"]');
-            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-            
-            encabezados.forEach(th => {
-                th.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', th.dataset.columna);
-                    e.dataTransfer.effectAllowed = 'copy';
-                    th.style.opacity = '0.5';
-                });
-                
-                th.addEventListener('dragend', (e) => {
-                    th.style.opacity = '1';
-                });
-            });
-            
-            grupoAgrupacion.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
-                grupoAgrupacion.classList.add('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('dragleave', () => {
-                grupoAgrupacion.classList.remove('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('drop', (e) => {
-                e.preventDefault();
-                grupoAgrupacion.classList.remove('drag-over');
-                
-                const columna = e.dataTransfer.getData('text/plain');
-                
-                if (columna && !columnasAgrupadas.includes(columna)) {
-                    columnasAgrupadas.push(columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-            
-            // Event listener para remover columnas (usando delegación)
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remover')) {
-                    const columna = e.target.dataset.columna;
-                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-        }
-        
-        // Event listener para expandir/colapsar grupos
-        document.addEventListener('click', function(e) {
-            const filaGrupo = e.target.closest('.fila-grupo');
-            if (filaGrupo) {
-                const grupoId = filaGrupo.dataset.grupoId;
-                const icono = filaGrupo.querySelector('i');
-                
-                if (expandedGroups.has(grupoId)) {
-                    expandedGroups.delete(grupoId);
-                    filaGrupo.classList.remove('expandido');
-                    if (icono) icono.className = 'fas fa-caret-right';
-                } else {
-                    expandedGroups.add(grupoId);
-                    filaGrupo.classList.add('expandido');
-                    if (icono) icono.className = 'fas fa-caret-down';
-                }
-                
-                // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosFiltrados);
-            }
+            console.log('Categorías cargadas:', data.length);
+        })
+        .catch(error => {
+            console.error('Error al cargar categorías:', error);
+            categoriaSelect.innerHTML = '<option value="">Error al cargar categorías</option>';
+            mostrarNotificacion('Error al cargar categorías: ' + error.message, 'danger');
         });
+    } else {
+        categoriaSelect.innerHTML = '<option value="">Primero seleccione un tipo de egreso</option>';
+    }
+}
+
+function cargarPagos() {
+    console.log('Cargando pagos...');
+    fetch('/admin/api/pagos', {
+        headers: { 
+            'Accept': 'application/json', 
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('HTTP error ' + response.status);
+        return response.json();
+    })
+    .then(data => {
+        datosOriginales = data.map(d => ({
+            id: d.id,
+            folio: d.folio || '-',
+            fecha_pago: d.fecha_pago,
+            proveedor: d.proveedor?.nombre || d.proveedor_nombre || '-',
+            concepto: d.concepto || '-',
+            monto: parseFloat(d.monto) || 0,
+            metodo_pago: d.metodo_pago?.nombre || '-',
+            estatus: d.estatus || 'pendiente',
+            factura: d.factura || '-'
+        }));
         
-        // Función para filtrar por búsqueda
-        function filtrarPorBusqueda() {
-            const termino = buscador.value.toLowerCase().trim();
-            
-            if (termino === '') {
-                datosFiltrados = [...datosOriginales];
-            } else {
-                datosFiltrados = datosOriginales.filter(item => 
-                    item.proveedor?.toLowerCase().includes(termino) ||
-                    item.concepto?.toLowerCase().includes(termino) ||
-                    item.estatus?.toLowerCase().includes(termino) ||
-                    item.referencia?.toLowerCase().includes(termino)
-                );
-            }
-            
-            paginaActual = 1;
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Función para cambiar de página
-        function cambiarPagina(nuevaPagina) {
-            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
-                paginaActual = nuevaPagina;
-                cargarTabla(datosFiltrados);
-            }
-        }
-        
-        // Cargar datos iniciales
         cargarTabla(datosOriginales);
         
-        // Configurar drag and drop
-        setupDragAndDrop();
+        const total = data.length;
+        const completados = data.filter(d => d.estatus === 'completado').length;
+        const pendientes = data.filter(d => d.estatus === 'pendiente').length;
         
-        // Event Listeners
-        btnCrearFiltro.addEventListener('click', function() {
-            alert('Crear filtro - Funcionalidad en desarrollo');
+        const totalReg = document.getElementById('totalRegistros');
+        const totalComp = document.getElementById('totalCompletados');
+        const totalPend = document.getElementById('totalPendientes');
+        
+        if (totalReg) totalReg.textContent = total;
+        if (totalComp) totalComp.textContent = completados;
+        if (totalPend) totalPend.textContent = pendientes;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const tablaBody = document.getElementById('tablaBody');
+        if (tablaBody) {
+            tablaBody.innerHTML = '<tr><td colspan="9" style="color:red; text-align:center;">Error al cargar datos: ' + error.message + '<\/td></td>';
+        }
+        mostrarNotificacion('Error al cargar datos: ' + error.message, 'danger');
+    });
+}
+
+function abrirModalPago() {
+    document.getElementById('pago_id').value = '';
+    document.getElementById('fecha_pago').value = new Date().toISOString().split('T')[0];
+    document.getElementById('cuenta_bancaria_id').value = '';
+    document.getElementById('proveedor_id').value = '';
+    document.getElementById('proyecto_id').value = '';
+    document.getElementById('tipo_egreso_id').value = '';
+    document.getElementById('categoria_gasto_id').innerHTML = '<option value="">Primero seleccione un tipo de egreso</option>';
+    document.getElementById('metodo_pago_id').value = '';
+    document.getElementById('moneda_id').value = '';
+    document.getElementById('monto').value = '';
+    document.getElementById('concepto').value = '';
+    document.getElementById('referencia').value = '';
+    document.getElementById('referencia_bancaria').value = '';
+    document.getElementById('factura').value = '';
+    document.getElementById('observaciones').value = '';
+    document.getElementById('aplicar_ahora').checked = true;
+    new bootstrap.Modal(document.getElementById('modalPago')).show();
+}
+
+function abrirModalProveedor() {
+    document.getElementById('prov_nombre').value = '';
+    document.getElementById('prov_rfc').value = '';
+    document.getElementById('prov_email').value = '';
+    document.getElementById('prov_telefono').value = '';
+    document.getElementById('prov_contacto').value = '';
+    new bootstrap.Modal(document.getElementById('modalProveedor')).show();
+}
+
+function guardarProveedorRapido() {
+    const data = {
+        nombre: document.getElementById('prov_nombre').value,
+        rfc: document.getElementById('prov_rfc').value,
+        email: document.getElementById('prov_email').value,
+        telefono: document.getElementById('prov_telefono').value,
+        contacto: document.getElementById('prov_contacto').value,
+        activo: true
+    };
+    
+    fetch('/admin/api/proveedores', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion('Proveedor creado exitosamente', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalProveedor')).hide();
+            // Recargar select de proveedores
+            cargarProveedores();
+            document.getElementById('proveedor_id').value = result.data.id;
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    })
+    .catch(error => mostrarNotificacion('Error al guardar proveedor', 'danger'));
+}
+
+function cargarProveedores() {
+    fetch('/admin/api/proveedores', {
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        const select = document.getElementById('proveedor_id');
+        select.innerHTML = '<option value="">Seleccionar proveedor...</option>';
+        data.forEach(prov => {
+            select.innerHTML += `<option value="${prov.id}">${prov.nombre} - ${prov.rfc || 'Sin RFC'}</option>`;
         });
+    });
+}
+
+function editarPago(id) {
+    fetch(`/admin/api/pagos/${id}`, {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(pago => {
+        document.getElementById('pago_id').value = pago.id;
+        document.getElementById('fecha_pago').value = pago.fecha_pago;
+        document.getElementById('cuenta_bancaria_id').value = pago.cuenta_bancaria_id;
+        document.getElementById('proveedor_id').value = pago.proveedor_id || '';
+        document.getElementById('proyecto_id').value = pago.proyecto_id || '';
+        document.getElementById('tipo_egreso_id').value = pago.tipo_egreso_id;
+        document.getElementById('metodo_pago_id').value = pago.metodo_pago_id;
+        document.getElementById('moneda_id').value = pago.moneda_id;
+        document.getElementById('monto').value = pago.monto;
+        document.getElementById('concepto').value = pago.concepto;
+        document.getElementById('referencia').value = pago.referencia || '';
+        document.getElementById('referencia_bancaria').value = pago.referencia_bancaria || '';
+        document.getElementById('factura').value = pago.factura || '';
+        document.getElementById('observaciones').value = pago.observaciones || '';
+        document.getElementById('aplicar_ahora').checked = false;
         
-        btnAgregar.addEventListener('click', function() {
-            alert('Agregar Pago - Funcionalidad en desarrollo');
-        });
-        
-        btnExcel.addEventListener('click', function() {
-            exportTableToExcel('tablaPagos', 'Pagos');
-        });
-        
-        btnColumnas.addEventListener('click', function() {
-            alert('Selector de Columnas - Funcionalidad en desarrollo');
-        });
-        
-        buscador.addEventListener('input', filtrarPorBusqueda);
-        
-        // Eventos de paginación
-        document.querySelectorAll('.pagina-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                cambiarPagina(parseInt(this.dataset.pagina));
+        // Cargar categorías
+        if (pago.tipo_egreso_id) {
+            fetch(`/admin/api/categorias-por-tipo-egreso/${pago.tipo_egreso_id}`, {
+                headers: { 'Accept': 'application/json' },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('categoria_gasto_id');
+                select.innerHTML = '<option value="">Seleccionar categoría...</option>';
+                data.forEach(cat => {
+                    select.innerHTML += `<option value="${cat.id}" ${cat.id === pago.categoria_gasto_id ? 'selected' : ''}>${escapeHtml(cat.nombre)}</option>`;
+                });
             });
-        });
+        }
         
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
-        
-        // Iconos de filtro en encabezados
-        document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
-            icon.addEventListener('click', function() {
-                alert('Filtro de columna - Funcionalidad en desarrollo');
-            });
-        });
-        
-        // Acciones de los iconos (delegación de eventos)
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fa-eye')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Ver detalles de pago ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-edit')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Editar pago ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-trash-alt')) {
-                const id = e.target.getAttribute('data-id');
-                if (confirm(`¿Está seguro de eliminar el pago ID: ${id}?`)) {
-                    alert(`Eliminar pago ID: ${id} - Funcionalidad en desarrollo`);
-                }
-            } else if (e.target.classList.contains('fa-file-pdf')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Descargar PDF - Pago ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-print')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Imprimir comprobante - Pago ID: ${id} - Funcionalidad en desarrollo`);
+        new bootstrap.Modal(document.getElementById('modalPago')).show();
+    });
+}
+
+function guardarPago() {
+    const id = document.getElementById('pago_id').value;
+    const data = {
+        fecha_pago: document.getElementById('fecha_pago').value,
+        cuenta_bancaria_id: document.getElementById('cuenta_bancaria_id').value,
+        proveedor_id: document.getElementById('proveedor_id').value || null,
+        proyecto_id: document.getElementById('proyecto_id').value || null,
+        tipo_egreso_id: document.getElementById('tipo_egreso_id').value,
+        categoria_gasto_id: document.getElementById('categoria_gasto_id').value || null,
+        metodo_pago_id: document.getElementById('metodo_pago_id').value,
+        moneda_id: document.getElementById('moneda_id').value,
+        monto: document.getElementById('monto').value,
+        concepto: document.getElementById('concepto').value,
+        referencia: document.getElementById('referencia').value,
+        referencia_bancaria: document.getElementById('referencia_bancaria').value,
+        factura: document.getElementById('factura').value,
+        observaciones: document.getElementById('observaciones').value,
+        aplicar_ahora: document.getElementById('aplicar_ahora').checked
+    };
+    
+    const url = id ? `/admin/api/pagos/${id}` : '/admin/api/pagos';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            mostrarNotificacion(result.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('modalPago')).hide();
+            cargarPagos();
+        } else {
+            mostrarNotificacion(result.message, 'danger');
+        }
+    })
+    .catch(error => mostrarNotificacion('Error al guardar: ' + error.message, 'danger'));
+}
+
+function eliminarPago(id) {
+    if (confirm('¿Eliminar este pago?')) {
+        fetch(`/admin/api/pagos/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarPagos();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
             }
         });
-        
-        // Función para exportar a Excel
-        function exportTableToExcel(tableId, filename = '') {
-            var table = document.getElementById(tableId);
-            if (!table) return;
-            
-            var html = table.outerHTML;
-            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
-            
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = filename + '.xls';
-            link.click();
-        }
+    }
+}
+
+function aplicarPago(id) {
+    if (confirm('¿Aplicar este pago? Se actualizará el saldo de la cuenta bancaria.')) {
+        fetch(`/admin/api/pagos/${id}/aplicar`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cargarPagos();
+            } else {
+                mostrarNotificacion(result.message, 'danger');
+            }
+        });
+    }
+}
+
+function verDetalle(id) {
+    fetch(`/admin/api/pagos/${id}`, {
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(pago => {
+        mostrarNotificacion(`
+Folio: ${pago.folio}
+Fecha: ${formatDate(pago.fecha_pago)}
+Proveedor: ${pago.proveedor?.nombre || pago.proveedor_nombre || '-'}
+Concepto: ${pago.concepto}
+Monto: ${formatCurrency(pago.monto)}
+Método: ${pago.metodo_pago?.nombre || '-'}
+Estatus: ${getEstatusTexto(pago.estatus)}
+Factura: ${pago.factura || '-'}`, 'info');
     });
+}
+
+function mostrarNotificacion(mensaje, tipo) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${tipo} position-fixed top-0 end-0 m-3`;
+    alertDiv.style.zIndex = '99999';
+    alertDiv.style.minWidth = '300px';
+    alertDiv.innerHTML = `${mensaje}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    document.body.appendChild(alertDiv);
+    setTimeout(() => alertDiv.remove(), 3000);
+}
+
+function exportarExcel() {
+    const tabla = document.getElementById('tablaPagos');
+    const html = tabla.outerHTML;
+    const url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'pagos.xls';
+    link.click();
+}
+
+function cargarTabla(datos) {
+    const tablaBody = document.getElementById('tablaBody');
+    
+    if (datos.length === 0) {
+        tablaBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">No hay registros<\/td></tr>';
+        document.getElementById('sumMonto').textContent = formatCurrency(0);
+        return;
+    }
+    
+    const start = (currentPage - 1) * rowsPerPage;
+    const pageData = datos.slice(start, start + rowsPerPage);
+    let totalMonto = 0;
+    
+    tablaBody.innerHTML = pageData.map(item => {
+        totalMonto += item.monto;
+        return `
+            <tr>
+                <td>${escapeHtml(item.folio)}<\/td>
+                <td>${formatDate(item.fecha_pago)}<\/td>
+                <td>${escapeHtml(item.proveedor)}<\/td>
+                <td>${escapeHtml(item.concepto)}<\/td>
+                <td style="text-align:right;">${formatCurrency(item.monto)}<\/td>
+                <td>${escapeHtml(item.metodo_pago)}<\/td>
+                <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span><\/td>
+                <td>${escapeHtml(item.factura)}<\/td>
+                <td style="position:sticky;right:0;background:white;">
+                    <div class="action-icons">
+                        <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver"></i>
+                        <i class="fas fa-edit" onclick="editarPago(${item.id})" title="Editar"></i>
+                        <i class="fas fa-trash-alt" onclick="eliminarPago(${item.id})" title="Eliminar"></i>
+                        ${item.estatus === 'pendiente' ? `<i class="fas fa-check-circle" onclick="aplicarPago(${item.id})" title="Aplicar"></i>` : ''}
+                        <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="PDF"></i>
+                        <i class="fas fa-print" onclick="imprimir(${item.id})" title="Imprimir"></i>
+                    </div>
+                <\/td>
+            </tr>
+        `;
+    }).join('');
+    
+    document.getElementById('sumMonto').textContent = formatCurrency(totalMonto);
+    actualizarPaginacion(datos.length);
+}
+
+function actualizarPaginacion(total) {
+    const totalPages = Math.ceil(total / rowsPerPage);
+    document.getElementById('paginaActual').textContent = currentPage;
+    document.getElementById('paginacionInfo').textContent = `Mostrando ${Math.min((currentPage-1)*rowsPerPage+1, total)}-${Math.min(currentPage*rowsPerPage, total)} de ${total} registros`;
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Event listeners
+document.getElementById('tipo_egreso_id')?.addEventListener('change', cargarCategoriasPorTipoEgreso);
+document.getElementById('btnAgregar')?.addEventListener('click', abrirModalPago);
+document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
+document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarTabla(datosOriginales); });
+document.getElementById('btnAnterior')?.addEventListener('click', () => { if(currentPage > 1) { currentPage--; cargarTabla(datosOriginales); } });
+document.getElementById('btnSiguiente')?.addEventListener('click', () => { const total = Math.ceil(datosOriginales.length / rowsPerPage); if(currentPage < total) { currentPage++; cargarTabla(datosOriginales); } });
+document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = Math.ceil(datosOriginales.length / rowsPerPage); cargarTabla(datosOriginales); });
+document.getElementById('buscador')?.addEventListener('input', e => {
+    const busqueda = e.target.value.toLowerCase();
+    const filtrados = datosOriginales.filter(item => 
+        item.proveedor?.toLowerCase().includes(busqueda) ||
+        item.concepto?.toLowerCase().includes(busqueda) ||
+        item.folio?.toLowerCase().includes(busqueda)
+    );
+    currentPage = 1;
+    cargarTabla(filtrados);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    cargarPagos();
+});
 </script>
 @endsection
