@@ -3,811 +3,532 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Traspasos entre Almacenes -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid var(--color-primary); padding: 15px 20px;">
                 <h2 style="color: var(--color-primary); font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Traspasos entre Almacenes
+                    <i class="fas fa-exchange-alt"></i> Traspasos entre Almacenes
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- Filtros de período -->
+                <!-- Filtros -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
                     <div>
-                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 3px;">Fecha Inicio</label>
-                        <input type="date" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;" value="{{ date('Y-m-01') }}">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Fecha Inicio</label>
+                        <input type="date" id="fechaInicio" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="{{ date('Y-m-01') }}">
                     </div>
                     <div>
-                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 3px;">Fecha Fin</label>
-                        <input type="date" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;" value="{{ date('Y-m-d') }}">
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Fecha Fin</label>
+                        <input type="date" id="fechaFin" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="{{ date('Y-m-d') }}">
                     </div>
                     <div>
-                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 3px;">Almacén</label>
-                        <select style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;">
-                            <option>Todos</option>
-                            <option>Almacén Central</option>
-                            <option>Almacén Norte</option>
-                            <option>Almacén Sur</option>
-                            <option>Almacén Este</option>
-                            <option>Almacén Oeste</option>
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Proyecto</label>
+                        <select id="filtroProyecto" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
+                            <option value="">Todos los proyectos</option>
+                            @isset($proyectos)
+                                @foreach($proyectos as $proyecto)
+                                    <option value="{{ $proyecto->id }}">{{ $proyecto->codigo }} - {{ $proyecto->nombre }}</option>
+                                @endforeach
+                            @endisset
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Artículo</label>
+                        <select id="filtroArticulo" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
+                            <option value="">Todos los artículos</option>
+                            @isset($articulos)
+                                @foreach($articulos as $articulo)
+                                    <option value="{{ $articulo->id }}">{{ $articulo->codigo }} - {{ $articulo->descripcion }}</option>
+                                @endforeach
+                            @endisset
                         </select>
                     </div>
                 </div>
 
-                <!-- Barra de herramientas -->
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación -->
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: var(--color-primary); font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna aquí para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+                    <div>
+                        <button id="btnActualizar" style="background-color: var(--color-primary); color: white; border: none; border-radius: 4px; padding: 8px 20px; cursor: pointer;">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
                     </div>
-                    
-                    <!-- Botones -->
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <!-- Botón Agregar (+) -->
-                        <div>
-                            <button id="btnAgregar" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-primary); font-size: 16px;" 
-                                    title="Agregar traspaso"
-                                    onclick="abrirModalTraspaso()">
-                                <i class="fas fa-plus" style="color: var(--color-primary);"></i>
-                            </button>
-                        </div>
-
-                        <!-- Botón Exportar Excel -->
-                        <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);">
-                                <i class="fas fa-file-excel" style="color: var(--color-primary);"></i>
-                                <span class="hide-mobile">Excel</span>
-                            </button>
-                        </div>
-
-                        <!-- Botón Seleccionar Columnas -->
-                        <div style="position: relative;">
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);"
-                                    onclick="toggleColumnSelector()">
-                                <i class="fas fa-columns" style="color: var(--color-primary);"></i>
-                                <span class="hide-mobile">Columnas</span>
-                            </button>
-                            
-                            <!-- Selector de columnas -->
-                            <div id="columnSelector" style="display: none; position: absolute; right: 0; top: 40px; background-color: white; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 9999; min-width: 280px; max-height: 400px; overflow-y: auto;">
-                                <div style="padding: 10px; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa; display: flex; justify-content: space-between;">
-                                    <strong style="color: var(--color-primary); font-size: 13px;">Seleccionar Columnas</strong>
-                                    <button onclick="cerrarColumnSelector()" style="border: none; background: none; cursor: pointer; font-size: 16px;">✕</button>
-                                </div>
-                                <div id="columnasLista" style="padding: 10px;"></div>
-                            </div>
-                        </div>
-
-                        <!-- Buscador -->
-                        <div style="position: relative; min-width: 220px;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-primary); font-size: 12px;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar traspaso..." style="width: 100%; padding: 8px 8px 8px 30px; border: 1px solid var(--color-primary); border-radius: 4px; font-size: 13px;">
-                        </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btnNuevoTraspaso" onclick="abrirModalTraspaso()" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 20px; cursor: pointer; color: var(--color-primary);">
+                            <i class="fas fa-plus"></i> Nuevo Traspaso
+                        </button>
+                        <button id="btnExportar" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 20px; cursor: pointer; color: var(--color-primary);">
+                            <i class="fas fa-file-excel"></i> Exportar
+                        </button>
                     </div>
                 </div>
 
-                <!-- Tabla de Traspasos entre Almacenes -->
-                <div class="table-container" style="border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; background-color: white; width: 100%;">
-                    <table class="table" id="tablaTraspasos" style="width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px;">
-                        <thead style="background-color: var(--color-primary); position: sticky; top: 0; z-index: 20;">
+                <!-- Tabla de Traspasos -->
+                <div class="table-container">
+                    <table class="table" id="tablaTraspasos">
+                        <thead>
                             <tr>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 15%;" draggable="true" data-columna="id">ID Traspaso</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 10%;" draggable="true" data-columna="estatus">Estatus</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 12%;" draggable="true" data-columna="fecha">Fecha</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 18%;" draggable="true" data-columna="almacen_origen">Almacén Origen</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 18%;" draggable="true" data-columna="almacen_destino">Almacén Destino</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 15%;" draggable="true" data-columna="plantilla">Plantilla</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1); width: 12%;">Acciones</th>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Proyecto</th>
+                                <th>Artículo</th>
+                                <th>Cantidad</th>
+                                <th>Almacén Origen</th>
+                                <th>Almacén Destino</th>
+                                <th>Estatus</th>
+                                <th>Observaciones</th>
+                                <th>Registrado por</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-001</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Completado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">15/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Central</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Norte</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">JUAN PÉREZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-001')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-001')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF')" title="PDF"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-002</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Completado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">14/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Central</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Sur</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">MARÍA GARCÍA</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-002')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-002')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF')" title="PDF"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-003</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">13/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Norte</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Este</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">CARLOS LÓPEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-003')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-003')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="alert('Procesar traspaso')" title="Procesar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-004</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Completado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">12/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Sur</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Oeste</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">ANA MARTÍNEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-004')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-004')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF')" title="PDF"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-005</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Completado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">11/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Este</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Central</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">ROBERTO SÁNCHEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-005')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-005')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF')" title="PDF"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-006</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">10/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Oeste</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Norte</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">LAURA FLORES</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-006')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-006')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="alert('Procesar traspaso')" title="Procesar"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-007</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Completado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">09/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Central</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Este</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">JOSÉ TORRES</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-007')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-007')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF')" title="PDF"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-008</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Completado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">08/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Sur</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Norte</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">PATRICIA CASTILLO</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-008')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-008')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="alert('Generar PDF')" title="PDF"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-009</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">07/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Este</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Oeste</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">FERNANDO GONZÁLEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-009')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-009')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="alert('Procesar traspaso')" title="Procesar"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">TA-010</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">Cancelado</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">06/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Central</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Almacén Sur</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">GABRIELA NAVARRO</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle TA-010')" title="Ver detalle"></i>
-                                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarTraspaso('TA-010')" title="Editar"></i>
-                                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar traspaso?')) alert('Traspaso eliminado')" title="Eliminar"></i>
-                                    <i class="fas fa-undo-alt" style="color: #ffc107; margin: 0 5px; cursor: pointer;" onclick="alert('Reactivar traspaso')" title="Reactivar"></i>
-                                </td>
-                            </tr>
+                            <tr><td colspan="11" style="text-align: center;">Cargando...</td></tr>
                         </tbody>
-                        <tfoot style="background-color: #e9ecef; font-weight: bold;">
-                            <tr>
-                                <td colspan="7" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">Total Traspasos: 10 | Completados: 7 | Pendientes: 2 | Cancelados: 1</td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 
-                <!-- Crear filtro -->
-                <div style="margin-top: 15px; display: flex; justify-content: flex-start;">
-                    <button id="btnCrearFiltro" style="background: transparent; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 25px; cursor: pointer; color: var(--color-primary); font-size: 13px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-filter" style="font-size: 12px;"></i> Crear filtro
-                    </button>
+                <!-- Paginación -->
+                <div class="pagination-container" style="margin-top: 15px; display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
+                    <button class="page-btn" id="btnPrimera" disabled><i class="fas fa-angle-double-left"></i></button>
+                    <button class="page-btn" id="btnAnterior" disabled><i class="fas fa-angle-left"></i></button>
+                    <span>Página <span id="paginaActual">1</span> de <span id="totalPaginas">1</span></span>
+                    <button class="page-btn" id="btnSiguiente" disabled><i class="fas fa-angle-right"></i></button>
+                    <button class="page-btn" id="btnUltima" disabled><i class="fas fa-angle-double-right"></i></button>
+                    <select id="porPagina" style="padding: 5px; border-radius: 4px;">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
                 </div>
             </div>
         </div>
     </section>
 </div>
 
-<!-- MODAL PARA AGREGAR/EDITAR TRASPASO ENTRE ALMACENES -->
+<!-- MODAL TRASPASO -->
 <div id="modalTraspaso" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
-        
-        <!-- Header -->
+    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 550px; max-height: 90vh; overflow-y: auto;">
         <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="color: white; margin: 0; font-size: 18px;" id="modalTituloTraspaso">Nuevo Traspaso entre Almacenes</h3>
+            <h3 style="color: white; margin: 0;">Nuevo Traspaso entre Almacenes</h3>
             <button onclick="cerrarModalTraspaso()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
         </div>
-        
-        <!-- Formulario -->
         <div style="padding: 20px;">
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">ID Traspaso</label>
-                    <input type="text" id="modalIdTraspaso" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="TA-011">
-                </div>
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Estatus</label>
-                    <select id="modalEstatusTraspaso" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Pendiente</option>
-                        <option>Completado</option>
-                        <option>Cancelado</option>
+                    <label style="font-size: 13px; font-weight: 600;">Proyecto <span style="color: red;">*</span></label>
+                    <select id="modalProyecto" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" onchange="consultarStockDisponible()">
+                        <option value="">Seleccionar proyecto</option>
+                        @isset($proyectos)
+                            @foreach($proyectos as $proyecto)
+                                <option value="{{ $proyecto->id }}">{{ $proyecto->codigo }} - {{ $proyecto->nombre }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Fecha</label>
-                    <input type="date" id="modalFechaTraspaso" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" value="{{ date('Y-m-d') }}">
+                    <label style="font-size: 13px; font-weight: 600;">Fecha <span style="color: red;">*</span></label>
+                    <input type="date" id="modalFecha" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" value="{{ date('Y-m-d') }}">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Plantilla</label>
-                    <select id="modalPlantillaTraspaso" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar responsable</option>
-                        <option>JUAN PÉREZ</option>
-                        <option>MARÍA GARCÍA</option>
-                        <option>CARLOS LÓPEZ</option>
-                        <option>ANA MARTÍNEZ</option>
-                        <option>ROBERTO SÁNCHEZ</option>
-                        <option>LAURA FLORES</option>
-                        <option>JOSÉ TORRES</option>
-                        <option>PATRICIA CASTILLO</option>
-                        <option>FERNANDO GONZÁLEZ</option>
-                        <option>GABRIELA NAVARRO</option>
+                    <label style="font-size: 13px; font-weight: 600;">Artículo <span style="color: red;">*</span></label>
+                    <select id="modalArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" onchange="consultarStockDisponible()">
+                        <option value="">Seleccionar artículo</option>
+                        @isset($articulos)
+                            @foreach($articulos as $articulo)
+                                <option value="{{ $articulo->id }}">{{ $articulo->codigo }} - {{ $articulo->descripcion }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
-                <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Almacén Origen</label>
-                    <select id="modalOrigenTraspaso" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar almacén origen</option>
-                        <option>Almacén Central</option>
-                        <option>Almacén Norte</option>
-                        <option>Almacén Sur</option>
-                        <option>Almacén Este</option>
-                        <option>Almacén Oeste</option>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600;">Almacén Origen <span style="color: red;">*</span></label>
+                    <select id="modalOrigen" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" onchange="consultarStockDisponible()">
+                        <option value="">Seleccionar almacén origen</option>
+                        @isset($almacenes)
+                            @foreach($almacenes as $almacen)
+                                <option value="{{ $almacen->id }}">{{ $almacen->codigo }} - {{ $almacen->nombre }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
-                <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Almacén Destino</label>
-                    <select id="modalDestinoTraspaso" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar almacén destino</option>
-                        <option>Almacén Central</option>
-                        <option>Almacén Norte</option>
-                        <option>Almacén Sur</option>
-                        <option>Almacén Este</option>
-                        <option>Almacén Oeste</option>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600;">Almacén Destino <span style="color: red;">*</span></label>
+                    <select id="modalDestino" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Seleccionar almacén destino</option>
+                        @isset($almacenes)
+                            @foreach($almacenes as $almacen)
+                                <option value="{{ $almacen->id }}">{{ $almacen->codigo }} - {{ $almacen->nombre }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
+                <div>
+                    <label style="font-size: 13px; font-weight: 600;">Cantidad <span style="color: red;">*</span></label>
+                    <input type="number" step="0.001" id="modalCantidad" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="0.00" onkeyup="validarCantidad()" onchange="validarCantidad()">
+                    <div id="stockInfo" style="font-size: 11px; margin-top: 5px; color: #6c757d;"></div>
+                </div>
                 <div style="grid-column: span 2;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Observaciones</label>
-                    <textarea id="modalObservacionesTraspaso" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observaciones del traspaso..."></textarea>
+                    <label style="font-size: 13px; font-weight: 600;">Observaciones</label>
+                    <textarea id="modalObservaciones" rows="2" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observaciones..."></textarea>
                 </div>
             </div>
-            
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalTraspaso()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="guardarTraspaso()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
+                <button onclick="guardarTraspaso()" id="btnGuardarTraspaso" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    :root {
-        --color-primary: #083CAE;
-        --color-secondary: #2CBF1F;
-        --color-accent: #eaf512;
-        --color-red: #FF0000;
-    }
-
-    /* Estilos generales */
-    .semaforo .card-header h2 {
-        color: var(--color-primary) !important;
-    }
-    
-    /* Tabla */
-    .table-container {
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        overflow-x: auto;
-        background-color: white;
-        width: 100%;
-        max-height: 500px;
-        overflow-y: auto;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        scrollbar-width: thin;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-
-    .table th {
-        background-color: var(--color-primary) !important;
-        color: white;
-        padding: 12px 8px;
-        border: 1px solid #dee2e6;
-        font-size: 12px;
-        white-space: nowrap;
-        text-align: center;
-        font-weight: 600;
-    }
-    
-    .table td {
-        padding: 10px 8px;
-        border: 1px solid #dee2e6;
-        font-size: 12px;
-        vertical-align: middle;
-    }
-    
-    /* Filas alternadas */
-    tbody tr:nth-child(even) {
-        background-color: #f8f9fa;
-    }
-    
-    tbody tr:hover {
-        background-color: #e8f0fe;
-    }
-    
-    /* Columna de acciones fija */
-    .table th:last-child,
-    .table td:last-child {
-        position: sticky !important;
-        right: 0 !important;
-        z-index: 35 !important;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1) !important;
-    }
-    
-    .table th:last-child {
-        background-color: var(--color-primary) !important;
-    }
-    
-    .table td:last-child {
-        background-color: white !important;
-        text-align: center !important;
-    }
-    
-    tbody tr:nth-child(even) td:last-child {
-        background-color: #f8f9fa !important;
-    }
-    
-    tbody tr:hover td:last-child {
-        background-color: #e8f0fe !important;
-    }
-    
-    /* Iconos de acción */
-    .table td:last-child i {
-        margin: 0 5px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-    
-    .table td:last-child i:hover {
-        transform: scale(1.2);
-    }
-    
-    .table td:last-child i.fa-edit,
-    .table td:last-child i.fa-eye {
-        color: var(--color-primary);
-    }
-    
-    .table td:last-child i.fa-trash,
-    .table td:last-child i.fa-file-pdf {
-        color: #dc3545;
-    }
-    
-    .table td:last-child i.fa-check-circle {
-        color: #28a745;
-    }
-    
-    .table td:last-child i.fa-undo-alt {
-        color: #ffc107;
-    }
-    
-    /* Badges de estatus */
-    .badge-completado {
-        background-color: #28a745;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 80px;
-        text-align: center;
-    }
-    
-    .badge-pendiente {
-        background-color: #ffc107;
-        color: #212529;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 80px;
-        text-align: center;
-    }
-    
-    .badge-cancelado {
-        background-color: #dc3545;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 80px;
-        text-align: center;
-    }
-    
-    /* Drag & drop */
-    [draggable="true"] {
-        cursor: grab;
-    }
-    
-    .columna-agrupada {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 12px;
-        background-color: #e8f0fe;
-        border-radius: 4px;
-        color: var(--color-primary);
-        font-size: 11px;
-        border: 1px solid var(--color-primary);
-    }
-    
-    .columna-agrupada .remover {
-        margin-left: 5px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        color: var(--color-primary);
-    }
-    
-    /* Scroll personalizado */
-    .table-container::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    
-    .table-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-    
-    .table-container::-webkit-scrollbar-thumb {
-        background: var(--color-primary);
-        border-radius: 4px;
-    }
-    
-    /* Modal */
-    #modalTraspaso {
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .hide-mobile {
-            display: none !important;
-        }
-        
-        div[style*="grid-template-columns: repeat(4, 1fr)"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-        }
-        
-        .table-container {
-            max-height: 400px;
-        }
-        
-        .table td {
-            padding: 8px 4px;
-            font-size: 11px;
-        }
-        
-        .table td:last-child i {
-            margin: 0 3px;
-            font-size: 12px;
-        }
-        
-        #modalTraspaso > div {
-            width: 100%;
-            height: 100%;
-            max-height: 100vh;
-            border-radius: 0;
-        }
-        
-        #modalTraspaso div[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
-        }
-    }
+    :root { --color-primary: #083CAE; }
+    .table-container { border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; max-height: 500px; overflow-y: auto; }
+    .table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .table th { background-color: var(--color-primary) !important; color: white; padding: 12px 8px; border: 1px solid #dee2e6; position: sticky; top: 0; }
+    .table td { padding: 10px 8px; border: 1px solid #dee2e6; }
+    tbody tr:nth-child(even) { background-color: #f8f9fa; }
+    tbody tr:hover { background-color: #e8f0fe; }
+    .page-btn { padding: 5px 12px; border: 1px solid var(--color-primary); border-radius: 4px; background: white; cursor: pointer; color: var(--color-primary); }
+    .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .badge-transferencia { background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; display: inline-block; }
+    .stock-suficiente { color: #28a745; }
+    .stock-insuficiente { color: #dc3545; }
+    @media (max-width: 768px) { div[style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; } }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
+let currentPage = 1;
+let perPage = 10;
+let totalPages = 1;
+let stockDisponibleActual = 0;
+let unidadMedidaActual = '';
+
 document.addEventListener('DOMContentLoaded', function() {
-    let columnasAgrupadas = [];
-    
-    // Función para abrir modal de nuevo traspaso
-    window.abrirModalTraspaso = function() {
-        document.getElementById('modalTituloTraspaso').textContent = 'Nuevo Traspaso entre Almacenes';
-        document.getElementById('modalIdTraspaso').value = '';
-        document.getElementById('modalEstatusTraspaso').value = 'Pendiente';
-        document.getElementById('modalFechaTraspaso').value = new Date().toISOString().split('T')[0];
-        document.getElementById('modalOrigenTraspaso').value = 'Seleccionar almacén origen';
-        document.getElementById('modalDestinoTraspaso').value = 'Seleccionar almacén destino';
-        document.getElementById('modalPlantillaTraspaso').value = 'Seleccionar responsable';
-        document.getElementById('modalObservacionesTraspaso').value = '';
-        document.getElementById('modalTraspaso').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    // Función para editar traspaso
-    window.editarTraspaso = function(id) {
-        document.getElementById('modalTituloTraspaso').textContent = 'Editar Traspaso ' + id;
-        
-        // Simular carga de datos según el ID
-        if (id === 'TA-001') {
-            document.getElementById('modalIdTraspaso').value = 'TA-001';
-            document.getElementById('modalEstatusTraspaso').value = 'Completado';
-            document.getElementById('modalFechaTraspaso').value = '2025-03-15';
-            document.getElementById('modalOrigenTraspaso').value = 'Almacén Central';
-            document.getElementById('modalDestinoTraspaso').value = 'Almacén Norte';
-            document.getElementById('modalPlantillaTraspaso').value = 'JUAN PÉREZ';
-            document.getElementById('modalObservacionesTraspaso').value = 'Traspaso completado sin novedad';
-        } else if (id === 'TA-003') {
-            document.getElementById('modalIdTraspaso').value = 'TA-003';
-            document.getElementById('modalEstatusTraspaso').value = 'Pendiente';
-            document.getElementById('modalFechaTraspaso').value = '2025-03-13';
-            document.getElementById('modalOrigenTraspaso').value = 'Almacén Norte';
-            document.getElementById('modalDestinoTraspaso').value = 'Almacén Este';
-            document.getElementById('modalPlantillaTraspaso').value = 'CARLOS LÓPEZ';
-            document.getElementById('modalObservacionesTraspaso').value = 'Pendiente de autorización';
-        } else if (id === 'TA-010') {
-            document.getElementById('modalIdTraspaso').value = 'TA-010';
-            document.getElementById('modalEstatusTraspaso').value = 'Cancelado';
-            document.getElementById('modalFechaTraspaso').value = '2025-03-06';
-            document.getElementById('modalOrigenTraspaso').value = 'Almacén Central';
-            document.getElementById('modalDestinoTraspaso').value = 'Almacén Sur';
-            document.getElementById('modalPlantillaTraspaso').value = 'GABRIELA NAVARRO';
-            document.getElementById('modalObservacionesTraspaso').value = 'Cancelado por error en inventario';
-        } else {
-            document.getElementById('modalIdTraspaso').value = id;
-            document.getElementById('modalEstatusTraspaso').value = 'Pendiente';
-            document.getElementById('modalFechaTraspaso').value = '2025-03-10';
-            document.getElementById('modalOrigenTraspaso').value = 'Almacén Central';
-            document.getElementById('modalDestinoTraspaso').value = 'Almacén Norte';
-            document.getElementById('modalPlantillaTraspaso').value = 'JUAN PÉREZ';
-            document.getElementById('modalObservacionesTraspaso').value = '';
-        }
-        
-        document.getElementById('modalTraspaso').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.cerrarModalTraspaso = function() {
-        document.getElementById('modalTraspaso').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-    
-    window.guardarTraspaso = function() {
-        const id = document.getElementById('modalIdTraspaso').value;
-        const origen = document.getElementById('modalOrigenTraspaso').value;
-        const destino = document.getElementById('modalDestinoTraspaso').value;
-        const plantilla = document.getElementById('modalPlantillaTraspaso').value;
-        
-        if (!id || origen === 'Seleccionar almacén origen' || destino === 'Seleccionar almacén destino' || plantilla === 'Seleccionar responsable') {
-            alert('Por favor complete los campos obligatorios');
-            return;
-        }
-        
-        if (origen === destino) {
-            alert('El almacén origen y destino no pueden ser el mismo');
-            return;
-        }
-        
-        alert(`Traspaso ${id} guardado correctamente`);
-        cerrarModalTraspaso();
-    };
-    
-    // Cerrar modal con Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            cerrarModalTraspaso();
-        }
-    });
-    
-    // Cerrar modal al hacer clic fuera
-    document.getElementById('modalTraspaso').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalTraspaso();
-        }
-    });
-    
-    // Funciones de agrupación y selector de columnas
-    function actualizarGrupoColumnas() {
-        const container = document.getElementById('grupoColumnas');
-        const texto = document.getElementById('textoAgrupar');
-        
-        container.innerHTML = '';
-        
-        if (columnasAgrupadas.length === 0) {
-            texto.style.display = 'inline';
-        } else {
-            texto.style.display = 'none';
-            columnasAgrupadas.forEach(col => {
-                const chip = document.createElement('span');
-                chip.className = 'columna-agrupada';
-                chip.innerHTML = `${col} <span class="remover" onclick="removerColumna('${col}')">&times;</span>`;
-                container.appendChild(chip);
-            });
-        }
-    }
-
-    window.removerColumna = function(columna) {
-        columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-        actualizarGrupoColumnas();
-    };
-
-    // Drag & drop
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'TH' && e.target.draggable) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.columna);
-        }
-    });
-
-    document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
-    
-    document.getElementById('grupoAgrupacion').addEventListener('drop', (e) => {
-        e.preventDefault();
-        const columna = e.dataTransfer.getData('text/plain');
-        if (columna && !columnasAgrupadas.includes(columna)) {
-            columnasAgrupadas.push(columna);
-            actualizarGrupoColumnas();
-            alert('Agrupando por: ' + columna);
-        }
-    });
-
-    // Selector de columnas
-    window.toggleColumnSelector = function() {
-        const selector = document.getElementById('columnSelector');
-        selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
-        
-        if (selector.style.display === 'block') {
-            const columnas = [
-                { field: 'id', caption: 'ID Traspaso' },
-                { field: 'estatus', caption: 'Estatus' },
-                { field: 'fecha', caption: 'Fecha' },
-                { field: 'almacen_origen', caption: 'Almacén Origen' },
-                { field: 'almacen_destino', caption: 'Almacén Destino' },
-                { field: 'plantilla', caption: 'Plantilla' }
-            ];
-            
-            const lista = document.getElementById('columnasLista');
-            lista.innerHTML = columnas.map(col => `
-                <div style="padding: 5px 0; display: flex; align-items: center;">
-                    <input type="checkbox" 
-                           id="chk_${col.field}"
-                           data-columna="${col.field}"
-                           checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
-                    <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
-                </div>
-            `).join('');
-        }
-    };
-
-    window.cerrarColumnSelector = function() {
-        document.getElementById('columnSelector').style.display = 'none';
-    };
-
-    // Cerrar selector al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
-            document.getElementById('columnSelector').style.display = 'none';
-        }
-    });
-
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel').addEventListener('click', () => alert('Exportar traspasos a Excel'));
-
-    // Buscador
-    document.getElementById('buscador').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        console.log('Buscando en traspasos:', termino);
-    });
+    cargarTraspasos();
+    configurarEventos();
 });
+
+function cargarTraspasos() {
+    const fechaInicio = document.getElementById('fechaInicio')?.value || '';
+    const fechaFin = document.getElementById('fechaFin')?.value || '';
+    const proyectoId = document.getElementById('filtroProyecto')?.value || '';
+    const articuloId = document.getElementById('filtroArticulo')?.value || '';
+    
+    let url = `/inventario/api/movimientos?tipo=Transferencia&page=${currentPage}&per_page=${perPage}`;
+    if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
+    if (fechaFin) url += `&fecha_fin=${fechaFin}`;
+    if (proyectoId) url += `&proyecto_id=${proyectoId}`;
+    if (articuloId) url += `&articulo_id=${articuloId}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                renderizarTabla(response.data);
+                totalPages = response.last_page;
+                actualizarPaginacion(response.current_page, response.last_page);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function renderizarTabla(data) {
+    const tbody = document.getElementById('tablaBody');
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align: center;">No hay traspasos registrados</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    data.forEach((item, index) => {
+        const row = tbody.insertRow();
+        row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
+        
+        row.insertCell(0).innerHTML = item.id;
+        row.insertCell(1).innerHTML = item.fecha_movimiento;
+        row.insertCell(2).innerHTML = item.proyecto_nombre || '---';
+        row.insertCell(3).innerHTML = `${item.articulo_codigo}<br><small>${item.articulo_descripcion || ''}</small>`;
+        row.insertCell(4).innerHTML = `${item.cantidad} ${item.unidad_medida || ''}`;
+        row.insertCell(5).innerHTML = item.almacen_origen_nombre || '---';
+        row.insertCell(6).innerHTML = item.almacen_destino_nombre || '---';
+        row.insertCell(7).innerHTML = '<span class="badge-transferencia">Transferencia</span>';
+        row.insertCell(8).innerHTML = item.observaciones || '---';
+        row.insertCell(9).innerHTML = item.creado_por || '---';
+        row.insertCell(10).innerHTML = `<i class="fas fa-eye" onclick="verDetalle(${item.id})" style="color: var(--color-primary); cursor: pointer;" title="Ver detalle"></i>`;
+    });
+}
+
+function actualizarPaginacion(currentPage, lastPage) {
+    document.getElementById('paginaActual').textContent = currentPage;
+    document.getElementById('totalPaginas').textContent = lastPage;
+    document.getElementById('btnPrimera').disabled = currentPage === 1;
+    document.getElementById('btnAnterior').disabled = currentPage === 1;
+    document.getElementById('btnSiguiente').disabled = currentPage === lastPage;
+    document.getElementById('btnUltima').disabled = currentPage === lastPage;
+}
+
+function configurarEventos() {
+    document.getElementById('btnActualizar')?.addEventListener('click', () => {
+        currentPage = 1;
+        cargarTraspasos();
+    });
+    
+    document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarTraspasos(); });
+    document.getElementById('btnAnterior')?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; cargarTraspasos(); } });
+    document.getElementById('btnSiguiente')?.addEventListener('click', () => { currentPage++; cargarTraspasos(); });
+    document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = totalPages; cargarTraspasos(); });
+    document.getElementById('porPagina')?.addEventListener('change', (e) => { perPage = parseInt(e.target.value); currentPage = 1; cargarTraspasos(); });
+    
+    document.getElementById('btnExportar')?.addEventListener('click', () => {
+        const fechaInicio = document.getElementById('fechaInicio').value;
+        const fechaFin = document.getElementById('fechaFin').value;
+        let url = '/inventario/api/movimientos/exportar?tipo=Transferencia';
+        if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
+        if (fechaFin) url += `&fecha_fin=${fechaFin}`;
+        window.location.href = url;
+    });
+}
+
+async function consultarStockDisponible() {
+    const proyectoId = document.getElementById('modalProyecto').value;
+    const articuloId = document.getElementById('modalArticulo').value;
+    const almacenOrigenId = document.getElementById('modalOrigen').value;
+    
+    const stockInfoDiv = document.getElementById('stockInfo');
+    const cantidadInput = document.getElementById('modalCantidad');
+    
+    if (!proyectoId || !articuloId || !almacenOrigenId) {
+        stockInfoDiv.innerHTML = '';
+        stockInfoDiv.className = '';
+        stockDisponibleActual = 0;
+        return;
+    }
+    
+    stockInfoDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consultando stock...';
+    
+    try {
+        // Usar la ruta que SÍ existe: /inventario/api/movimientos/saldo
+        const url = `/inventario/api/movimientos/saldo?proyecto_id=${proyectoId}&articulo_id=${articuloId}`;
+        console.log('Consultando URL:', url);
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Respuesta:', data);
+        
+        if (data.success && data.data) {
+            // Buscar la cantidad en el almacén específico
+            const ubicacion = data.data.ubicaciones ? data.data.ubicaciones.find(u => u.almacen_id == almacenOrigenId) : null;
+            stockDisponibleActual = ubicacion ? parseFloat(ubicacion.cantidad) : 0;
+            unidadMedidaActual = data.data.unidad_medida || 'Pieza';
+            
+            const cantidad = parseFloat(cantidadInput.value) || 0;
+            
+            if (stockDisponibleActual > 0) {
+                stockInfoDiv.innerHTML = `
+                    <i class="fas fa-boxes"></i> Stock disponible: <strong>${stockDisponibleActual.toFixed(3)} ${unidadMedidaActual}</strong>
+                    ${cantidad > 0 ? `<br><i class="fas fa-arrow-right"></i> ${cantidad > stockDisponibleActual ? '⚠️ Excede el stock disponible' : '✓ Cantidad válida'}` : ''}
+                `;
+                cantidadInput.max = stockDisponibleActual;
+                cantidadInput.title = `Máximo: ${stockDisponibleActual} ${unidadMedidaActual}`;
+            } else {
+                stockInfoDiv.innerHTML = '<span style="color: #ffc107;"><i class="fas fa-exclamation-triangle"></i> No hay stock disponible en este almacén</span>';
+                cantidadInput.max = '';
+                cantidadInput.title = 'No hay stock disponible';
+            }
+            
+            if (cantidad > 0 && cantidad > stockDisponibleActual && stockDisponibleActual > 0) {
+                stockInfoDiv.classList.add('stock-insuficiente');
+                stockInfoDiv.classList.remove('stock-suficiente');
+            } else if (cantidad > 0 && stockDisponibleActual > 0) {
+                stockInfoDiv.classList.add('stock-suficiente');
+                stockInfoDiv.classList.remove('stock-insuficiente');
+            } else {
+                stockInfoDiv.classList.remove('stock-suficiente', 'stock-insuficiente');
+            }
+        } else {
+            stockDisponibleActual = 0;
+            stockInfoDiv.innerHTML = '<span style="color: #dc3545;"><i class="fas fa-times-circle"></i> No se encontró stock para este artículo</span>';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        stockDisponibleActual = 0;
+        stockInfoDiv.innerHTML = '<span style="color: #dc3545;"><i class="fas fa-times-circle"></i> Error de conexión al consultar stock</span>';
+    }
+}
+
+function validarCantidad() {
+    const cantidadInput = document.getElementById('modalCantidad');
+    const cantidad = parseFloat(cantidadInput.value) || 0;
+    const btnGuardar = document.getElementById('btnGuardarTraspaso');
+    
+    if (cantidad <= 0) {
+        btnGuardar.disabled = false;
+        btnGuardar.style.opacity = '1';
+        return;
+    }
+    
+    if (stockDisponibleActual === 0) {
+        btnGuardar.disabled = true;
+        btnGuardar.style.opacity = '0.5';
+        btnGuardar.title = 'No hay stock disponible';
+        return;
+    }
+    
+    if (cantidad > stockDisponibleActual) {
+        btnGuardar.disabled = true;
+        btnGuardar.style.opacity = '0.5';
+        btnGuardar.title = 'Stock insuficiente';
+    } else {
+        btnGuardar.disabled = false;
+        btnGuardar.style.opacity = '1';
+        btnGuardar.title = '';
+    }
+}
+
+function abrirModalTraspaso() {
+    document.getElementById('modalProyecto').value = '';
+    document.getElementById('modalFecha').value = new Date().toISOString().split('T')[0];
+    document.getElementById('modalArticulo').value = '';
+    document.getElementById('modalCantidad').value = '';
+    document.getElementById('modalOrigen').value = '';
+    document.getElementById('modalDestino').value = '';
+    document.getElementById('modalObservaciones').value = '';
+    document.getElementById('stockInfo').innerHTML = '';
+    document.getElementById('stockInfo').className = '';
+    stockDisponibleActual = 0;
+    unidadMedidaActual = '';
+    
+    const btnGuardar = document.getElementById('btnGuardarTraspaso');
+    btnGuardar.disabled = false;
+    btnGuardar.style.opacity = '1';
+    
+    document.getElementById('modalTraspaso').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalTraspaso() {
+    document.getElementById('modalTraspaso').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+async function guardarTraspaso() {
+    const proyectoId = document.getElementById('modalProyecto').value;
+    const articuloId = document.getElementById('modalArticulo').value;
+    const origenId = document.getElementById('modalOrigen').value;
+    const destinoId = document.getElementById('modalDestino').value;
+    const cantidad = parseFloat(document.getElementById('modalCantidad').value);
+    const fecha = document.getElementById('modalFecha').value;
+    const observaciones = document.getElementById('modalObservaciones').value;
+    
+    if (!proyectoId) {
+        alert('❌ Seleccione un proyecto');
+        return;
+    }
+    if (!articuloId) {
+        alert('❌ Seleccione un artículo');
+        return;
+    }
+    if (!origenId) {
+        alert('❌ Seleccione el almacén de origen');
+        return;
+    }
+    if (!destinoId) {
+        alert('❌ Seleccione el almacén de destino');
+        return;
+    }
+    if (origenId === destinoId) {
+        alert('❌ Los almacenes deben ser diferentes');
+        return;
+    }
+    if (!cantidad || cantidad <= 0) {
+        alert('❌ Ingrese una cantidad válida');
+        return;
+    }
+    if (stockDisponibleActual > 0 && cantidad > stockDisponibleActual) {
+        alert(`❌ Stock insuficiente.\n\nDisponible: ${stockDisponibleActual.toFixed(3)} ${unidadMedidaActual}\nSolicitado: ${cantidad}`);
+        return;
+    }
+    
+    const data = {
+        proyecto_id: parseInt(proyectoId),
+        articulo_id: parseInt(articuloId),
+        almacen_origen_id: parseInt(origenId),
+        almacen_destino_id: parseInt(destinoId),
+        cantidad: cantidad,
+        fecha_movimiento: fecha,
+        observaciones: observaciones
+    };
+    
+    const btnGuardar = document.getElementById('btnGuardarTraspaso');
+    const textoOriginal = btnGuardar.innerHTML;
+    btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    btnGuardar.disabled = true;
+    
+    try {
+        const response = await fetch('/inventario/api/movimientos/transferencia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('✅ ' + result.message);
+            cerrarModalTraspaso();
+            cargarTraspasos();
+        } else {
+            alert('❌ Error: ' + (result.message || 'No se pudo realizar el traspaso'));
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error de conexión: ' + error.message);
+    } finally {
+        btnGuardar.innerHTML = textoOriginal;
+        btnGuardar.disabled = false;
+    }
+}
+
+function verDetalle(id) {
+    fetch(`/inventario/api/movimientos/${id}`)
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                const m = response.data;
+                let detalles = `╔════════════════════════════════════════════════════════════╗\n`;
+                detalles += `║                   TRASPASO #${m.id}                         ║\n`;
+                detalles += `╠════════════════════════════════════════════════════════════╣\n`;
+                detalles += `║ 📅 Fecha:        ${m.fecha_movimiento}\n`;
+                detalles += `║ 🏗️ Proyecto:     ${m.proyecto_nombre || 'N/A'}\n`;
+                detalles += `║ 📦 Artículo:     ${m.articulo_codigo} - ${m.articulo_descripcion}\n`;
+                detalles += `║ 🔢 Cantidad:     ${m.cantidad} ${m.unidad_medida || ''}\n`;
+                detalles += `║ 📍 Origen:       ${m.almacen_origen_nombre || 'N/A'}\n`;
+                detalles += `║ 📍 Destino:      ${m.almacen_destino_nombre || 'N/A'}\n`;
+                detalles += `║ 💬 Observaciones: ${m.observaciones || 'N/A'}\n`;
+                detalles += `║ 👨‍💼 Registrado:   ${m.creado_por || 'N/A'}\n`;
+                detalles += `╚════════════════════════════════════════════════════════════╝`;
+                alert(detalles);
+            } else {
+                alert('❌ No se encontró el traspaso');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ Error al cargar los detalles');
+        });
+}
+
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarModalTraspaso(); });
+document.getElementById('modalTraspaso')?.addEventListener('click', (e) => { if (e.target === document.getElementById('modalTraspaso')) cerrarModalTraspaso(); });
 </script>
 @endsection

@@ -10,14 +10,14 @@ return new class extends Migration
     {
         Schema::create('requisicion_articulos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('requisicion_id')->constrained()->onDelete('cascade');
+            $table->foreignId('requisicion_id')->constrained('requisiciones')->onDelete('cascade');
             $table->string('codigo', 50)->nullable();
             $table->decimal('cantidad', 12, 3)->default(1);
             $table->string('unidad_medida', 20)->default('Pieza');
             $table->string('descripcion', 500);
             $table->text('observacion')->nullable();
             $table->boolean('pendiente')->default(true);
-            $table->foreignId('orden_compra_id')->nullable()->constrained('ordenes_compras')->nullOnDelete();
+            // $table->foreignId('orden_compra_id')->nullable()->constrained('ordenes_compras')->nullOnDelete();
             $table->decimal('cantidad_surtida', 12, 3)->default(0);
             $table->timestamps();
             

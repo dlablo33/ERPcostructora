@@ -1,0 +1,26 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('requisiciones', function (Blueprint $table) {
+            if (!Schema::hasColumn('requisiciones', 'area_id')) {
+                $table->foreignId('area_id')->nullable()->constrained('areas')->nullOnDelete();
+                $table->index('area_id');
+            }
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('requisiciones', function (Blueprint $table) {
+            $table->dropForeign(['area_id']);
+            $table->dropColumn('area_id');
+        });
+    }
+};

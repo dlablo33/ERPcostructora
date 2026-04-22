@@ -25,10 +25,10 @@
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <!-- Filtros de fecha -->
                         <div>
-                            <input type="date" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; width: 140px;" value="{{ date('Y-m-01') }}" placeholder="Fecha Inicio">
+                            <input type="date" id="fechaInicio" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; width: 140px;" value="{{ date('Y-m-01') }}">
                         </div>
                         <div>
-                            <input type="date" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; width: 140px;" value="{{ date('Y-m-d') }}" placeholder="Fecha Fin">
+                            <input type="date" id="fechaFin" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; width: 140px;" value="{{ date('Y-m-d') }}">
                         </div>
                         
                         <!-- Botón Agregar (+) -->
@@ -91,187 +91,16 @@
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <!-- Pendientes -->
                             <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-001</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">15/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">JUAN PÉREZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">3</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-001')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-001')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-001')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-002</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">14/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">MARÍA GARCÍA</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">0</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-002')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-002')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-002')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-003</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">13/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">CARLOS LÓPEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">2</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-003')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-003')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-003')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-004</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">12/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">ANA MARTÍNEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">0</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-004')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-004')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-004')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-005</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">11/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">ROBERTO SÁNCHEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">4</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-005')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-005')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-005')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-006</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">10/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">LAURA FLORES</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">2</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-006')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-006')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-006')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Pendiente</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-007</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">09/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">JOSÉ TORRES</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">0</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-check-circle" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="autorizarRequisicion('REQ-007')" title="Autorizar"></i>
-                                    <i class="fas fa-times-circle" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="rechazarRequisicion('REQ-007')" title="Rechazar"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-007')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-
-                            <!-- Autorizadas -->
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Autorizada</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-008</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">08/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">FERNANDO GONZÁLEZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">3</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-undo-alt" style="color: #ffc107; margin: 0 5px; cursor: pointer;" onclick="revertirAutorizacion('REQ-008')" title="Revertir autorización"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-008')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Autorizada</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-009</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">07/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">GABRIELA NAVARRO</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">2</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-undo-alt" style="color: #ffc107; margin: 0 5px; cursor: pointer;" onclick="revertirAutorizacion('REQ-009')" title="Revertir autorización"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-009')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-
-                            <!-- Rechazadas -->
-                            <tr style="background-color: #f8f9fa;">
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Rechazada</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-010</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">06/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">MIGUEL HERRERA</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">0</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-redo-alt" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="reabrirRequisicion('REQ-010')" title="Reabrir"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-010')" title="Ver detalle"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 80px;">Rechazada</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">REQ-011</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">05/03/2025</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">DANIEL RUIZ</td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                    <span style="background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">0</span>
-                                </td>
-                                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                    <i class="fas fa-redo-alt" style="color: #28a745; margin: 0 5px; cursor: pointer;" onclick="reabrirRequisicion('REQ-011')" title="Reabrir"></i>
-                                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="verDetalle('REQ-011')" title="Ver detalle"></i>
+                                <td colspan="6" style="text-align: center; padding: 40px;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--color-primary);"></i>
+                                    <p style="margin-top: 10px;">Cargando requisiciones...</p>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot style="background-color: #e9ecef; font-weight: bold;">
                             <tr>
-                                <td colspan="6" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">Total Requisiciones: 11</td>
+                                <td colspan="6" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">Total Requisiciones: 0</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -292,15 +121,12 @@
 <div id="modalRequisicion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 900px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
         
-        <!-- Header -->
         <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
             <h3 style="color: white; margin: 0; font-size: 18px;">Nueva Requisición</h3>
             <button onclick="cerrarModalRequisicion()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
         </div>
         
-        <!-- Formulario -->
         <div style="padding: 20px;">
-            <!-- Datos generales -->
             <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                 <h4 style="color: var(--color-primary); font-size: 15px; margin: 0 0 15px 0;">
                     <i class="fas fa-info-circle"></i> General
@@ -312,46 +138,32 @@
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #495057; margin-bottom: 5px;">Responsable</label>
-                        <select id="modalResponsable" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                            <option>Seleccionar responsable</option>
-                            <option>JUAN PÉREZ</option>
-                            <option>MARÍA GARCÍA</option>
-                            <option>CARLOS LÓPEZ</option>
-                            <option>ANA MARTÍNEZ</option>
-                            <option>ROBERTO SÁNCHEZ</option>
-                        </select>
+                        <input type="text" id="modalResponsable" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Nombre del solicitante">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #495057; margin-bottom: 5px;">Área</label>
                         <select id="modalArea" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                            <option>Seleccionar área</option>
-                            <option>Operaciones</option>
-                            <option>Proyectos</option>
-                            <option>Almacén</option>
-                            <option>Recursos Humanos</option>
-                            <option>Compras</option>
-                            <option>Finanzas</option>
-                            <option>Mantenimiento</option>
-                            <option>Calidad</option>
-                            <option>Sistemas</option>
-                            <option>Legal</option>
+                            <option value="">Seleccionar área</option>
+                            @isset($areas)
+                                @foreach($areas as $area)
+                                    <option value="{{ $area->id }}">{{ $area->nombre }}</option>
+                                @endforeach
+                            @endisset
                         </select>
                     </div>
                 </div>
             </div>
             
-            <!-- Artículos de la requisición -->
             <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <h4 style="color: var(--color-primary); font-size: 15px; margin: 0;">
                         <i class="fas fa-box"></i> Artículos Solicitados
                     </h4>
-                    <button id="btnAgregarArticulo" style="background-color: var(--color-primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;">
+                    <button type="button" id="btnAgregarArticulo" style="background-color: var(--color-primary); color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px;">
                         <i class="fas fa-plus"></i> Agregar Artículo
                     </button>
                 </div>
                 
-                <!-- Tabla de artículos -->
                 <div style="border: 1px solid #dee2e6; border-radius: 4px; overflow: hidden;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
                         <thead style="background-color: #f8f9fa;">
@@ -366,70 +178,24 @@
                             </tr>
                         </thead>
                         <tbody id="tablaArticulosRequisicion">
-                            <tr>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="text" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="HERR-001">
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="number" style="width: 80px; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; text-align: right;" value="1">
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <select style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
-                                        <option>Pieza</option>
-                                        <option>Kilogramo</option>
-                                        <option>Litro</option>
-                                        <option>Metro</option>
-                                        <option>Caja</option>
+                            <tr class="fila-articulo">
+                                <td style="padding: 8px;"><input type="text" class="art-codigo" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Código"></td>
+                                <td style="padding: 8px;"><input type="number" class="art-cantidad" style="width: 80px; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; text-align: right;" value="1"></td>
+                                <td style="padding: 8px;">
+                                    <select class="art-unidad" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
+                                        <option>Pieza</option><option>Kilogramo</option><option>Litro</option><option>Metro</option><option>Caja</option>
                                     </select>
                                 </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="text" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="Taladro Percutor 1/2&quot;">
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="text" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observaciones">
-                                </td>
-                                <td style="padding: 8px; text-align: center; border-bottom: 1px solid #dee2e6;">
-                                    <input type="checkbox" style="accent-color: var(--color-primary);" checked>
-                                </td>
-                                <td style="padding: 8px; text-align: center; border-bottom: 1px solid #dee2e6;">
-                                    <i class="fas fa-trash" style="color: #dc3545; cursor: pointer;"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="text" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="MAT-001">
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="number" style="width: 80px; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; text-align: right;" value="50">
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <select style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
-                                        <option>Kilogramo</option>
-                                        <option>Pieza</option>
-                                        <option>Litro</option>
-                                        <option>Metro</option>
-                                        <option>Caja</option>
-                                    </select>
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="text" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="Cemento Gris 50kg">
-                                </td>
-                                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                                    <input type="text" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="Para obra TRC001">
-                                </td>
-                                <td style="padding: 8px; text-align: center; border-bottom: 1px solid #dee2e6;">
-                                    <input type="checkbox" style="accent-color: var(--color-primary);">
-                                </td>
-                                <td style="padding: 8px; text-align: center; border-bottom: 1px solid #dee2e6;">
-                                    <i class="fas fa-trash" style="color: #dc3545; cursor: pointer;"></i>
-                                </td>
-                            </tr>
+                                <td style="padding: 8px;"><input type="text" class="art-descripcion" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Descripción"></td>
+                                <td style="padding: 8px;"><input type="text" class="art-observacion" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observación"></td>
+                                <td style="padding: 8px; text-align: center;"><input type="checkbox" class="art-pendiente" style="accent-color: var(--color-primary);" checked></td>
+                                <td style="padding: 8px; text-align: center;"><i class="fas fa-trash" style="color: #dc3545; cursor: pointer;" onclick="this.closest('tr').remove()"></i></td>
+                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             
-            <!-- Botones del modal -->
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalRequisicion()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
                 <button onclick="guardarRequisicion()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
@@ -442,13 +208,11 @@
 <div id="modalAutorizarRequisicion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
         
-        <!-- Header -->
         <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
             <h3 style="color: white; margin: 0; font-size: 18px;">Autorizar Requisición</h3>
             <button onclick="cerrarModalAutorizarRequisicion()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
         </div>
         
-        <!-- Formulario -->
         <div style="padding: 20px;">
             <p style="margin-bottom: 15px; font-size: 14px;">¿Está seguro de autorizar la requisición <strong id="requisicionAutorizar">REQ-001</strong>?</p>
             
@@ -471,13 +235,11 @@
 <div id="modalRechazarRequisicion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
         
-        <!-- Header -->
         <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
             <h3 style="color: white; margin: 0; font-size: 18px;">Rechazar Requisición</h3>
             <button onclick="cerrarModalRechazarRequisicion()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
         </div>
         
-        <!-- Formulario -->
         <div style="padding: 20px;">
             <p style="margin-bottom: 15px; font-size: 14px;">¿Está seguro de rechazar la requisición <strong id="requisicionRechazar">REQ-001</strong>?</p>
             
@@ -504,12 +266,6 @@
         --color-red: #FF0000;
     }
 
-    /* Estilos generales */
-    .semaforo .card-header h2 {
-        color: var(--color-primary) !important;
-    }
-    
-    /* Tabla */
     .table-container {
         border: 1px solid #dee2e6;
         border-radius: 4px;
@@ -546,7 +302,6 @@
         vertical-align: middle;
     }
     
-    /* Filas alternadas */
     tbody tr:nth-child(even) {
         background-color: #f8f9fa;
     }
@@ -555,7 +310,6 @@
         background-color: #e8f0fe;
     }
     
-    /* Columna de acciones fija */
     .table th:last-child,
     .table td:last-child {
         position: sticky !important;
@@ -581,7 +335,6 @@
         background-color: #e8f0fe !important;
     }
     
-    /* Iconos de acción */
     .table td:last-child i {
         margin: 0 5px;
         font-size: 14px;
@@ -610,7 +363,6 @@
         color: var(--color-primary);
     }
     
-    /* Badges de estatus */
     .badge-pendiente {
         background-color: #ffc107;
         color: #212529;
@@ -622,7 +374,7 @@
         text-align: center;
     }
     
-    .badge-autorizada {
+    .badge-activo, .badge-autorizada {
         background-color: #28a745;
         color: white;
         padding: 4px 8px;
@@ -633,7 +385,7 @@
         text-align: center;
     }
     
-    .badge-rechazada {
+    .badge-cancelado, .badge-rechazada {
         background-color: #dc3545;
         color: white;
         padding: 4px 8px;
@@ -644,7 +396,6 @@
         text-align: center;
     }
     
-    /* Badge para cotizadas */
     .badge-cotizadas {
         background-color: #17a2b8;
         color: white;
@@ -667,7 +418,6 @@
         text-align: center;
     }
     
-    /* Drag & drop */
     [draggable="true"] {
         cursor: grab;
     }
@@ -691,7 +441,6 @@
         color: var(--color-primary);
     }
     
-    /* Scroll personalizado */
     .table-container::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -707,7 +456,6 @@
         border-radius: 4px;
     }
     
-    /* Modal */
     #modalRequisicion, #modalAutorizarRequisicion, #modalRechazarRequisicion {
         display: none;
         align-items: center;
@@ -725,7 +473,6 @@
         }
     }
     
-    /* Responsive */
     @media (max-width: 768px) {
         .hide-mobile {
             display: none !important;
@@ -776,135 +523,594 @@
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
+// Variable global para almacenar el ID de requisición seleccionada
+let requisicionSeleccionadaId = null;
+let requisicionSeleccionadaFolio = null;
+
 document.addEventListener('DOMContentLoaded', function() {
-    let columnasAgrupadas = [];
+    cargarRequisiciones();
+    configurarEventos();
+});
+
+// Cargar requisiciones vía AJAX
+function cargarRequisiciones() {
+    const fechaInicio = document.getElementById('fechaInicio')?.value || '';
+    const fechaFin = document.getElementById('fechaFin')?.value || '';
+    const busqueda = document.getElementById('buscador')?.value || '';
     
-    // Variables para modales
-    let requisicionSeleccionada = '';
+    let url = "{{ route('compras.autorizacion.get-data') }}";
+    url += `?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}&search=${encodeURIComponent(busqueda)}`;
     
-    // Función para abrir modal de nueva requisición
-    window.abrirModalRequisicion = function() {
-        document.getElementById('modalRequisicion').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
+    fetch(url, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (response.success) {
+            renderizarTabla(response.data);
+            actualizarTotal(response.data.length);
+        } else {
+            console.error('Error:', response.message);
+            mostrarError('Error al cargar datos: ' + response.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarError('Error de conexión al cargar los datos');
+    });
+}
+
+// Renderizar tabla
+function renderizarTabla(data) {
+    const tbody = document.getElementById('tablaBody');
+    if (!tbody) return;
     
-    window.cerrarModalRequisicion = function() {
-        document.getElementById('modalRequisicion').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
+    if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No hay requisiciones para mostrar</td></tr>';
+        return;
+    }
     
-    window.guardarRequisicion = function() {
-        alert('Requisición guardada correctamente');
-        cerrarModalRequisicion();
-    };
+    tbody.innerHTML = '';
     
-    // Función para abrir modal de autorizar
-    window.autorizarRequisicion = function(requisicion) {
-        requisicionSeleccionada = requisicion;
-        document.getElementById('requisicionAutorizar').textContent = requisicion;
-        document.getElementById('modalObservacionesAutorizar').value = '';
-        document.getElementById('modalAutorizarRequisicion').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.cerrarModalAutorizarRequisicion = function() {
-        document.getElementById('modalAutorizarRequisicion').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-    
-    window.confirmarAutorizarRequisicion = function() {
-        const observaciones = document.getElementById('modalObservacionesAutorizar').value;
+    data.forEach((item, index) => {
+        const row = document.createElement('tr');
+        if (index % 2 === 1) row.style.backgroundColor = '#f8f9fa';
         
-        alert(`Requisición ${requisicionSeleccionada} autorizada correctamente.\nObservaciones: ${observaciones || 'Ninguna'}`);
-        cerrarModalAutorizarRequisicion();
-    };
-    
-    // Función para abrir modal de rechazar
-    window.rechazarRequisicion = function(requisicion) {
-        requisicionSeleccionada = requisicion;
-        document.getElementById('requisicionRechazar').textContent = requisicion;
-        document.getElementById('modalMotivoRechazo').value = '';
-        document.getElementById('modalRechazarRequisicion').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.cerrarModalRechazarRequisicion = function() {
-        document.getElementById('modalRechazarRequisicion').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-    
-    window.confirmarRechazarRequisicion = function() {
-        const motivo = document.getElementById('modalMotivoRechazo').value;
+        let estatusBadge = '';
+        let acciones = '';
         
-        if (!motivo) {
-            alert('Por favor indique el motivo del rechazo');
-            return;
+        switch (item.estatus) {
+            case 'Pendiente':
+                estatusBadge = '<span class="badge-pendiente">Pendiente</span>';
+                acciones = `
+                    <i class="fas fa-check-circle" onclick="autorizarRequisicion(${item.id}, '${item.folio}')" title="Autorizar"></i>
+                    <i class="fas fa-times-circle" onclick="rechazarRequisicion(${item.id}, '${item.folio}')" title="Rechazar"></i>
+                    <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle"></i>
+                `;
+                break;
+            case 'Activo':
+                estatusBadge = '<span class="badge-activo">Autorizada</span>';
+                acciones = `
+                    <i class="fas fa-undo-alt" onclick="revertirAutorizacion(${item.id}, '${item.folio}')" title="Revertir autorización"></i>
+                    <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle"></i>
+                `;
+                break;
+            case 'Cancelado':
+                estatusBadge = '<span class="badge-cancelado">Rechazada</span>';
+                acciones = `
+                    <i class="fas fa-redo-alt" onclick="reabrirRequisicion(${item.id}, '${item.folio}')" title="Reabrir"></i>
+                    <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle"></i>
+                `;
+                break;
+            default:
+                estatusBadge = `<span class="badge-pendiente">${item.estatus || 'Pendiente'}</span>`;
+                acciones = `<i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle"></i>`;
         }
         
-        alert(`Requisición ${requisicionSeleccionada} rechazada.\nMotivo: ${motivo}`);
-        cerrarModalRechazarRequisicion();
-    };
-    
-    // Función para ver detalle
-    window.verDetalle = function(requisicion) {
-        alert(`Ver detalle de requisición ${requisicion}`);
-    };
-    
-    // Funciones adicionales
-    window.revertirAutorizacion = function(requisicion) {
-        if (confirm(`¿Está seguro de revertir la autorización de la requisición ${requisicion}?`)) {
-            alert(`Autorización revertida para la requisición ${requisicion}`);
+        let cotizadasBadge = '';
+        if (item.cotizadas > 0) {
+            cotizadasBadge = `<span class="badge-cotizadas">${item.cotizadas_texto || item.cotizadas}</span>`;
+        } else {
+            cotizadasBadge = `<span class="badge-sin-cotizar">0</span>`;
         }
-    };
+        
+        row.innerHTML = `
+            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${estatusBadge}</td>
+            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">${escapeHtml(item.folio)}</td>
+            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.fecha_requerimiento}</td>
+            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${escapeHtml(item.solicitante)}</td>
+            <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${cotizadasBadge}</td>
+            <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: ${index % 2 === 1 ? '#f8f9fa' : 'white'}; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
+                ${acciones}
+            </td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function actualizarTotal(total) {
+    const tfoot = document.querySelector('#tablaAutorizacionRequisiciones tfoot');
+    if (tfoot) {
+        tfoot.innerHTML = `
+            <tr>
+                <td colspan="6" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">
+                    Total Requisiciones: ${total}
+                 </td>
+            </tr>
+        `;
+    }
+}
+
+function mostrarError(mensaje) {
+    console.error(mensaje);
+    // Puedes implementar un toast notification aquí
+    if (!mensaje.includes('No hay requisiciones')) {
+        alert('Error: ' + mensaje);
+    }
+}
+
+function configurarEventos() {
+    const buscador = document.getElementById('buscador');
+    if (buscador) {
+        buscador.addEventListener('input', debounce(function() {
+            cargarRequisiciones();
+        }, 500));
+    }
     
-    window.reabrirRequisicion = function(requisicion) {
-        if (confirm(`¿Está seguro de reabrir la requisición ${requisicion}?`)) {
-            alert(`Requisición ${requisicion} reabierta correctamente`);
-        }
+    const fechaInicio = document.getElementById('fechaInicio');
+    const fechaFin = document.getElementById('fechaFin');
+    if (fechaInicio) fechaInicio.addEventListener('change', () => cargarRequisiciones());
+    if (fechaFin) fechaFin.addEventListener('change', () => cargarRequisiciones());
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
     };
+}
+
+// ========== FUNCIONES DE MODALES ==========
+
+window.abrirModalRequisicion = function() {
+    document.getElementById('modalRequisicion').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+window.cerrarModalRequisicion = function() {
+    document.getElementById('modalRequisicion').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+window.guardarRequisicion = function() {
+    alert('Funcionalidad en desarrollo - Conecte con RequisicionController');
+    cerrarModalRequisicion();
+};
+
+window.autorizarRequisicion = function(id, folio) {
+    requisicionSeleccionadaId = id;
+    requisicionSeleccionadaFolio = folio;
+    document.getElementById('requisicionAutorizar').textContent = folio;
+    document.getElementById('modalObservacionesAutorizar').value = '';
+    document.getElementById('modalAutorizarRequisicion').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+window.cerrarModalAutorizarRequisicion = function() {
+    document.getElementById('modalAutorizarRequisicion').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+window.confirmarAutorizarRequisicion = function() {
+    const observaciones = document.getElementById('modalObservacionesAutorizar').value;
+    const id = requisicionSeleccionadaId;
     
-    // Cerrar modales con Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            cerrarModalRequisicion();
+    fetch(`/compras/autorizacion-requisiciones/${id}/autorizar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ observaciones: observaciones })
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (response.success) {
+            alert('✅ ' + response.message);
             cerrarModalAutorizarRequisicion();
+            cargarRequisiciones();
+        } else {
+            alert('❌ Error: ' + response.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Error al autorizar la requisición');
+    });
+};
+
+window.rechazarRequisicion = function(id, folio) {
+    requisicionSeleccionadaId = id;
+    requisicionSeleccionadaFolio = folio;
+    document.getElementById('requisicionRechazar').textContent = folio;
+    document.getElementById('modalMotivoRechazo').value = '';
+    document.getElementById('modalRechazarRequisicion').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+window.cerrarModalRechazarRequisicion = function() {
+    document.getElementById('modalRechazarRequisicion').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+window.confirmarRechazarRequisicion = function() {
+    const motivo = document.getElementById('modalMotivoRechazo').value;
+    
+    if (!motivo.trim()) {
+        alert('⚠️ Por favor indique el motivo del rechazo');
+        return;
+    }
+    
+    const id = requisicionSeleccionadaId;
+    
+    fetch(`/compras/autorizacion-requisiciones/${id}/rechazar`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ motivo: motivo })
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (response.success) {
+            alert('✅ ' + response.message);
             cerrarModalRechazarRequisicion();
+            cargarRequisiciones();
+        } else {
+            alert('❌ Error: ' + response.message);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Error al rechazar la requisición');
     });
+};
+
+// =====================================================================
+window.verDetalle = function(id) {
+    // Mostrar loading
+    const loadingMsg = document.createElement('div');
+    loadingMsg.id = 'detalleLoading';
+    loadingMsg.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100001; display: flex; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: var(--color-primary);"></i>
+                <p style="margin-top: 10px;">Cargando detalles...</p>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(loadingMsg);
     
-    // Cerrar modales al hacer clic fuera
-    document.getElementById('modalRequisicion').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalRequisicion();
+    fetch(`/compras/autorizacion-requisiciones/${id}/detalle`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
         }
-    });
-    
-    document.getElementById('modalAutorizarRequisicion').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalAutorizarRequisicion();
-        }
-    });
-    
-    document.getElementById('modalRechazarRequisicion').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalRechazarRequisicion();
-        }
-    });
-    
-    // Botón agregar artículo (simulado)
-    document.getElementById('btnAgregarArticulo').addEventListener('click', function() {
-        alert('Funcionalidad para agregar más artículos');
-    });
-    
-    // Funciones de agrupación y selector de columnas
-    function actualizarGrupoColumnas() {
-        const container = document.getElementById('grupoColumnas');
-        const texto = document.getElementById('textoAgrupar');
+    })
+    .then(response => response.json())
+    .then(response => {
+        // Remover loading
+        document.getElementById('detalleLoading')?.remove();
         
+        if (response.success) {
+            mostrarModalDetalle(response.data);
+        } else {
+            alert('❌ Error al cargar detalle: ' + response.message);
+        }
+    })
+    .catch(error => {
+        document.getElementById('detalleLoading')?.remove();
+        console.error('Error:', error);
+        alert('❌ Error al cargar el detalle');
+    });
+};
+
+// Función para mostrar modal de detalle con estilos
+function mostrarModalDetalle(data) {
+    // Crear modal
+    const modal = document.createElement('div');
+    modal.id = 'modalDetalleRequisicion';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6);
+        z-index: 100002;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    // Determinar color según estatus
+    let estatusColor = '';
+    let estatusIcono = '';
+    let estatusBg = '';
+    switch (data.estatus) {
+        case 'Pendiente':
+            estatusColor = '#ffc107';
+            estatusIcono = 'fa-clock';
+            estatusBg = '#fff3cd';
+            break;
+        case 'Activo':
+            estatusColor = '#28a745';
+            estatusIcono = 'fa-check-circle';
+            estatusBg = '#d4edda';
+            break;
+        case 'Cancelado':
+            estatusColor = '#dc3545';
+            estatusIcono = 'fa-times-circle';
+            estatusBg = '#f8d7da';
+            break;
+        default:
+            estatusColor = '#6c757d';
+            estatusIcono = 'fa-question-circle';
+            estatusBg = '#e9ecef';
+    }
+    
+    // Construir HTML de artículos
+    let articulosHtml = '';
+    data.articulos.forEach((art, idx) => {
+        articulosHtml += `
+            <div style="border-bottom: 1px solid #e9ecef; padding: 12px; ${idx % 2 === 0 ? 'background-color: #f8f9fa;' : ''}">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <strong style="color: var(--color-primary);">${idx + 1}. ${escapeHtml(art.descripcion)}</strong>
+                        ${art.codigo ? `<span style="font-size: 11px; color: #6c757d; margin-left: 8px;">(${escapeHtml(art.codigo)})</span>` : ''}
+                    </div>
+                    <span style="background-color: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                        ${art.cantidad} ${art.unidad_medida}
+                    </span>
+                </div>
+                ${art.observacion ? `<div style="font-size: 11px; color: #6c757d; margin-top: 5px;"><i class="fas fa-comment"></i> ${escapeHtml(art.observacion)}</div>` : ''}
+                <div style="display: flex; gap: 15px; margin-top: 5px; font-size: 11px;">
+                    <span><i class="fas fa-box"></i> Pendiente: ${art.pendiente ? 'Sí' : 'No'}</span>
+                    ${art.cantidad_surtida > 0 ? `<span><i class="fas fa-check"></i> Surtido: ${art.cantidad_surtida}</span>` : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    modal.innerHTML = `
+        <div style="background-color: white; border-radius: 12px; width: 95%; max-width: 700px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideInUp 0.3s ease;">
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, var(--color-primary), #052c6e); padding: 20px 25px; border-radius: 12px 12px 0 0; color: white;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 20px;">
+                            <i class="fas fa-file-alt"></i> Requisición ${escapeHtml(data.folio)}
+                        </h3>
+                        <p style="margin: 5px 0 0; opacity: 0.9; font-size: 12px;">
+                            <i class="fas fa-calendar-alt"></i> ${data.fecha_requerimiento}
+                        </p>
+                    </div>
+                    <button onclick="cerrarModalDetalle()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Body -->
+            <div style="padding: 20px 25px;">
+                <!-- Información general -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid var(--color-primary);">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase;">Solicitante</div>
+                        <div style="font-weight: 600; font-size: 14px;"><i class="fas fa-user"></i> ${escapeHtml(data.solicitante)}</div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid var(--color-primary);">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase;">Área</div>
+                        <div style="font-weight: 600; font-size: 14px;"><i class="fas fa-building"></i> ${escapeHtml(data.area)}</div>
+                    </div>
+                    ${data.proyecto ? `
+                    <div style="background-color: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid var(--color-primary);">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase;">Proyecto</div>
+                        <div style="font-weight: 600; font-size: 14px;"><i class="fas fa-project-diagram"></i> ${escapeHtml(data.proyecto)}</div>
+                    </div>
+                    ` : ''}
+                    <div style="background-color: ${estatusBg}; padding: 12px; border-radius: 8px; border-left: 4px solid ${estatusColor};">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase;">Estatus</div>
+                        <div style="font-weight: 600; font-size: 14px; color: ${estatusColor};">
+                            <i class="fas ${estatusIcono}"></i> ${data.estatus}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Observaciones generales -->
+                ${data.observaciones ? `
+                <div style="background-color: #e8f0fe; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 12px; font-weight: 600; color: var(--color-primary); margin-bottom: 5px;">
+                        <i class="fas fa-comment-dots"></i> Observaciones
+                    </div>
+                    <div style="font-size: 13px;">${escapeHtml(data.observaciones)}</div>
+                </div>
+                ` : ''}
+                
+                <!-- Artículos -->
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4 style="color: var(--color-primary); margin: 0; font-size: 16px;">
+                            <i class="fas fa-boxes"></i> Artículos Solicitados
+                        </h4>
+                        <span style="background-color: #e9ecef; padding: 4px 10px; border-radius: 20px; font-size: 11px;">
+                            <i class="fas fa-cubes"></i> Total: ${data.articulos.length}
+                        </span>
+                    </div>
+                    <div style="border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;">
+                        ${articulosHtml || '<div style="padding: 20px; text-align: center;">No hay artículos registrados</div>'}
+                    </div>
+                </div>
+                
+                <!-- Información de autorización -->
+                ${data.fecha_aprobacion ? `
+                <div style="background-color: #d4edda; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #28a745;">
+                    <div style="font-size: 12px; font-weight: 600; color: #155724; margin-bottom: 5px;">
+                        <i class="fas fa-check-circle"></i> Autorización
+                    </div>
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                        <span><i class="fas fa-user-check"></i> Aprobado por: ${escapeHtml(data.aprobado_por)}</span>
+                        <span><i class="fas fa-calendar-check"></i> Fecha: ${data.fecha_aprobacion}</span>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- Motivo de rechazo -->
+                ${data.motivo_rechazo ? `
+                <div style="background-color: #f8d7da; padding: 12px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                    <div style="font-size: 12px; font-weight: 600; color: #721c24; margin-bottom: 5px;">
+                        <i class="fas fa-ban"></i> Motivo de Rechazo
+                    </div>
+                    <div style="font-size: 13px; color: #721c24;">${escapeHtml(data.motivo_rechazo)}</div>
+                </div>
+                ` : ''}
+            </div>
+            
+            <!-- Footer -->
+            <div style="padding: 15px 25px; border-top: 1px solid #dee2e6; background-color: #f8f9fa; border-radius: 0 0 12px 12px; display: flex; justify-content: flex-end;">
+                <button onclick="cerrarModalDetalle()" style="padding: 8px 20px; border: none; border-radius: 6px; background-color: var(--color-primary); color: white; cursor: pointer; font-size: 13px;">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+}
+
+// Función para cerrar modal de detalle
+function cerrarModalDetalle() {
+    const modal = document.getElementById('modalDetalleRequisicion');
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = 'auto';
+    }
+}
+// =====================================================================
+
+window.revertirAutorizacion = function(id, folio) {
+    if (confirm(`¿Está seguro de revertir la autorización de la requisición ${folio}?\nEsta acción la regresará a estado PENDIENTE.`)) {
+        fetch(`/compras/autorizacion-requisiciones/${id}/revertir`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                alert('✅ ' + response.message);
+                cargarRequisiciones();
+            } else {
+                alert('❌ Error: ' + response.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ Error al revertir la autorización');
+        });
+    }
+};
+
+window.reabrirRequisicion = function(id, folio) {
+    if (confirm(`¿Está seguro de reabrir la requisición ${folio}?\nEsta acción la regresará a estado PENDIENTE.`)) {
+        fetch(`/compras/autorizacion-requisiciones/${id}/reabrir`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                alert('✅ ' + response.message);
+                cargarRequisiciones();
+            } else {
+                alert('❌ Error: ' + response.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ Error al reabrir la requisición');
+        });
+    }
+};
+
+// Funciones de UI adicionales
+document.getElementById('btnAgregarArticulo')?.addEventListener('click', function() {
+    const tbody = document.getElementById('tablaArticulosRequisicion');
+    if (tbody) {
+        const newRow = document.createElement('tr');
+        newRow.className = 'fila-articulo';
+        newRow.innerHTML = `
+            <td style="padding: 8px;"><input type="text" class="art-codigo" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Código"></td>
+            <td style="padding: 8px;"><input type="number" class="art-cantidad" style="width: 80px; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; text-align: right;" value="1"></td>
+            <td style="padding: 8px;">
+                <select class="art-unidad" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
+                    <option>Pieza</option><option>Kilogramo</option><option>Litro</option><option>Metro</option><option>Caja</option>
+                </select>
+            </td>
+            <td style="padding: 8px;"><input type="text" class="art-descripcion" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Descripción"></td>
+            <td style="padding: 8px;"><input type="text" class="art-observacion" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Observación"></td>
+            <td style="padding: 8px; text-align: center;"><input type="checkbox" class="art-pendiente" style="accent-color: var(--color-primary);" checked></td>
+            <td style="padding: 8px; text-align: center;"><i class="fas fa-trash" style="color: #dc3545; cursor: pointer;" onclick="this.closest('tr').remove()"></i></td>
+        `;
+        tbody.appendChild(newRow);
+    }
+});
+
+document.getElementById('btnExcel')?.addEventListener('click', () => {
+    window.location.href = "{{ route('compras.autorizacion.exportar') }}";
+});
+
+document.getElementById('btnCrearFiltro')?.addEventListener('click', () => {
+    alert('Funcionalidad de filtro avanzado en desarrollo');
+});
+
+// Funciones de agrupación y selector de columnas
+function actualizarGrupoColumnas() {
+    const container = document.getElementById('grupoColumnas');
+    const texto = document.getElementById('textoAgrupar');
+    
+    if (container && texto) {
         container.innerHTML = '';
         
         if (columnasAgrupadas.length === 0) {
@@ -919,22 +1125,26 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+}
 
-    window.removerColumna = function(columna) {
-        columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-        actualizarGrupoColumnas();
-    };
+let columnasAgrupadas = [];
 
-    // Drag & drop
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'TH' && e.target.draggable) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.columna);
-        }
-    });
+window.removerColumna = function(columna) {
+    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+    actualizarGrupoColumnas();
+};
 
-    document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
-    
-    document.getElementById('grupoAgrupacion').addEventListener('drop', (e) => {
+// Drag & drop
+document.addEventListener('dragstart', (e) => {
+    if (e.target.tagName === 'TH' && e.target.draggable) {
+        e.dataTransfer.setData('text/plain', e.target.dataset.columna);
+    }
+});
+
+const grupoAgrupacion = document.getElementById('grupoAgrupacion');
+if (grupoAgrupacion) {
+    grupoAgrupacion.addEventListener('dragover', (e) => e.preventDefault());
+    grupoAgrupacion.addEventListener('drop', (e) => {
         e.preventDefault();
         const columna = e.dataTransfer.getData('text/plain');
         if (columna && !columnasAgrupadas.includes(columna)) {
@@ -943,10 +1153,12 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Agrupando por: ' + columna);
         }
     });
+}
 
-    // Selector de columnas
-    window.toggleColumnSelector = function() {
-        const selector = document.getElementById('columnSelector');
+// Selector de columnas
+window.toggleColumnSelector = function() {
+    const selector = document.getElementById('columnSelector');
+    if (selector) {
         selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
         
         if (selector.style.display === 'block') {
@@ -959,39 +1171,54 @@ document.addEventListener('DOMContentLoaded', function() {
             ];
             
             const lista = document.getElementById('columnasLista');
-            lista.innerHTML = columnas.map(col => `
-                <div style="padding: 5px 0; display: flex; align-items: center;">
-                    <input type="checkbox" 
-                           id="chk_${col.field}"
-                           data-columna="${col.field}"
-                           checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
-                    <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
-                </div>
-            `).join('');
+            if (lista) {
+                lista.innerHTML = columnas.map(col => `
+                    <div style="padding: 5px 0; display: flex; align-items: center;">
+                        <input type="checkbox" 
+                               id="chk_${col.field}"
+                               data-columna="${col.field}"
+                               checked
+                               style="margin-right: 8px; accent-color: var(--color-primary);">
+                        <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
+                    </div>
+                `).join('');
+            }
         }
-    };
+    }
+};
 
-    window.cerrarColumnSelector = function() {
-        document.getElementById('columnSelector').style.display = 'none';
-    };
+window.cerrarColumnSelector = function() {
+    const selector = document.getElementById('columnSelector');
+    if (selector) selector.style.display = 'none';
+};
 
-    // Cerrar selector al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
-            document.getElementById('columnSelector').style.display = 'none';
-        }
-    });
+// Cerrar selector al hacer clic fuera
+document.addEventListener('click', function(e) {
+    const btnColumnas = document.getElementById('btnColumnas');
+    const columnSelector = document.getElementById('columnSelector');
+    if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector') && columnSelector) {
+        columnSelector.style.display = 'none';
+    }
+});
 
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel').addEventListener('click', () => alert('Exportar a Excel'));
+// Cerrar modales con Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        cerrarModalRequisicion();
+        cerrarModalAutorizarRequisicion();
+        cerrarModalRechazarRequisicion();
+    }
+});
 
-    // Buscador
-    document.getElementById('buscador').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        console.log('Buscando:', termino);
-    });
+// Cerrar modales al hacer clic fuera
+document.getElementById('modalRequisicion')?.addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalRequisicion();
+});
+document.getElementById('modalAutorizarRequisicion')?.addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalAutorizarRequisicion();
+});
+document.getElementById('modalRechazarRequisicion')?.addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalRechazarRequisicion();
 });
 </script>
 @endsection

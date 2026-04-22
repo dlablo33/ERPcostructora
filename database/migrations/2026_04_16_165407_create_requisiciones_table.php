@@ -14,7 +14,8 @@ return new class extends Migration
             $table->date('fecha_requerimiento');
             $table->enum('estatus', ['Pendiente', 'Activo', 'Cotizado', 'Cancelado'])->default('Pendiente');
             $table->string('solicitante', 100);
-            $table->string('area', 100);
+            // Cambiamos area (string) por area_id (foreign key a tu tabla areas)
+            $table->foreignId('area_id')->nullable()->constrained('areas')->nullOnDelete();
             $table->integer('cotizadas')->default(0);
             $table->text('observaciones')->nullable();
             $table->foreignId('creado_por')->nullable()->constrained('users')->nullOnDelete();
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->index('folio');
             $table->index('estatus');
             $table->index('fecha_requerimiento');
+            $table->index('area_id');
         });
     }
 

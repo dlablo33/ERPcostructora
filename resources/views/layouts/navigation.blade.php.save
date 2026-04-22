@@ -823,7 +823,8 @@
     }
 
     .chat-conversation-header {
-        background-color: #f9fafb;
+ 
+       background-color: #f9fafb;
         padding: 0.75rem 1rem;
         border-bottom: 1px solid #e5e7eb;
         display: flex;
@@ -2223,11 +2224,11 @@
                             <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Catálogo de Almacenes</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'inventarios', 'fa-warehouse', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '{{ route('almacen.articulo') }}', 'fa-box')">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '#', 'fa-box')">
                             <div class="flex items-center flex-1"><i class="fas fa-box"></i><span>Catálogo de Articulos</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familias') }}', 'fa-book-open-reader')">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familia') }}', 'fa-book-open-reader')">
                             <div class="flex items-center flex-1"><i class="fa-solid fa-book-open-reader"></i><span>Catálogo de Familias</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
                         </div>
@@ -2243,19 +2244,12 @@
                             <div class="flex items-center flex-1"><i class="fas fa-clipboard-list"></i><span>Existencias por Almacén</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'inventarios', 'fa-clipboard-list', this)"></i>
                         </div>
-                            <div class="sidebar-submenu-item" onclick="navigateTo('Requisición', 'inventarios', '{{ route('almacen.requisicion') }}', 'fa-truck-fast')">
-                                <div class="flex items-center flex-1"><i class="fa-solid fa-truck-fast"></i><span>Requisición</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisición', 'inventarios', 'fa-truck-fast', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Vales de Equipo', 'inventarios', '{{ route('almacen.vales') }}', 'fa-stream')">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Vales de Equipo', 'inventarios', '{{ route('almacen.vales') }}', 'fa-stream')">
                             <div class="flex items-center flex-1"><i class="fas fa-stream"></i><span>Vales de equipo</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vales de Equipo', 'inventarios', 'fa-stream', this)"></i>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
-
-
-
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-movimientos')">
                         <span><i class="fas fa-exchange-alt"></i> Movimientos</span>
@@ -2270,7 +2264,7 @@
                             <div class="flex items-center flex-1"><i class="fas fa-truck-moving"></i><span>Traspasos entre Almacenes</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'inventarios', 'fa-truck-moving', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisiciones_devoluciones_equipo') }}', 'fa-adjust')">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisicion') }}', 'fa-adjust')">
                             <div class="flex items-center flex-1"><i class="fas fa-adjust"></i><span>Requisiciones de equipo y Devoluciones</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones y Devoluciones', 'inventarios', 'fa-adjust', this)"></i>
                         </div>

@@ -37,4 +37,5 @@ class Proveedor extends Model
     }
 
     
+    
 }

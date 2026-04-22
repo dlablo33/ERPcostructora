@@ -3,55 +3,61 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Catálogo de Artículos -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid var(--color-primary); padding: 15px 20px;">
                 <h2 style="color: var(--color-primary); font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Catálogo de Artículos
+                    <i class="fas fa-box"></i> Catálogo de Artículos
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas -->
+                <!-- Filtros -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación (izquierda) -->
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: var(--color-primary); font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar"></i>
+                        <i class="fas fa-layer-group" style="color: var(--color-primary); font-size: 14px; cursor: pointer;"></i>
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna aquí para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
                     </div>
                     
-                    <!-- Grupo derecho: botones -->
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <!-- Botón Agregar (+) -->
+                        <div>
+                            <select id="filtroFamilia" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; min-width: 150px;">
+                                <option value="">Todas las familias</option>
+                                @isset($familias)
+                                    @foreach($familias as $familia)
+                                        <option value="{{ $familia->id }}">{{ $familia->nombre }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
+                        <div>
+                            <select id="filtroSubfamilia" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; min-width: 150px;">
+                                <option value="">Todas las subfamilias</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="filtroEstatus" style="padding: 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px; min-width: 100px;">
+                                <option value="">Todos</option>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
                         <div>
                             <button id="btnAgregar" 
                                     style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--color-primary); font-size: 16px;" 
-                                    title="Agregar artículo"
                                     onclick="abrirModalArticulo()">
-                                <i class="fas fa-plus" style="color: var(--color-primary);"></i>
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
-
-                        <!-- Botón Exportar Excel -->
                         <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);">
-                                <i class="fas fa-file-excel" style="color: var(--color-primary);"></i>
-                                <span class="hide-mobile">Excel</span>
+                            <button id="btnExcel" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);">
+                                <i class="fas fa-file-excel"></i> <span class="hide-mobile">Excel</span>
                             </button>
                         </div>
-
-                        <!-- Botón Seleccionar Columnas -->
                         <div style="position: relative;">
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);"
-                                    onclick="toggleColumnSelector()">
-                                <i class="fas fa-columns" style="color: var(--color-primary);"></i>
-                                <span class="hide-mobile">Columnas</span>
+                            <button id="btnColumnas" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; color: var(--color-primary);" onclick="toggleColumnSelector()">
+                                <i class="fas fa-columns"></i> <span class="hide-mobile">Columnas</span>
                             </button>
-                            
-                            <!-- Selector de columnas -->
                             <div id="columnSelector" style="display: none; position: absolute; right: 0; top: 40px; background-color: white; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); z-index: 9999; min-width: 300px; max-height: 400px; overflow-y: auto;">
                                 <div style="padding: 10px; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa; display: flex; justify-content: space-between;">
                                     <strong style="color: var(--color-primary); font-size: 13px;">Seleccionar Columnas</strong>
@@ -60,8 +66,6 @@
                                 <div id="columnasLista" style="padding: 10px;"></div>
                             </div>
                         </div>
-
-                        <!-- Buscador -->
                         <div style="position: relative; min-width: 250px;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--color-primary); font-size: 12px;"></i>
                             <input type="text" id="buscador" placeholder="Buscar artículo..." style="width: 100%; padding: 8px 8px 8px 30px; border: 1px solid var(--color-primary); border-radius: 4px; font-size: 13px;">
@@ -69,44 +73,44 @@
                     </div>
                 </div>
 
-                <!-- Tabla de Catálogo de Artículos -->
-                <div class="table-container" style="border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; background-color: white; width: 100%;">
-                    <table class="table" id="tablaArticulos" style="width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1600px;">
-                        <thead style="background-color: var(--color-primary); position: sticky; top: 0; z-index: 20;">
+                <!-- Tabla -->
+                <div class="table-container">
+                    <table class="table" id="tablaArticulos">
+                        <thead>
                             <tr>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 5%;" draggable="true" data-columna="estatus">Estatus</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 5%;" draggable="true" data-columna="id">ID</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 8%;" draggable="true" data-columna="familia">Familia</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 8%;" draggable="true" data-columna="subfamilia">Subfamilia</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 8%;" draggable="true" data-columna="codigo">Código</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 15%;" draggable="true" data-columna="descripcion">Descripción</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 8%;" draggable="true" data-columna="numero_parte">Número Parte</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 6%;" draggable="true" data-columna="ubicacion">Ubicación</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 4%;" draggable="true" data-columna="minimo">Mínimo</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 4%;" draggable="true" data-columna="maximo">Máximo</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 5%;" draggable="true" data-columna="reorden">Reorden</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 6%;" draggable="true" data-columna="unidad">Unidad Medida</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; width: 8%;" draggable="true" data-columna="cuenta_contable">Cuenta Contable</th>
-                                <th style="padding: 12px 8px; border: 1px solid #dee2e6; background-color: var(--color-primary); color: white; text-align: center; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1); width: 8%;">Acciones</th>
+                                <th draggable="true" data-columna="estatus">Estatus</th>
+                                <th draggable="true" data-columna="codigo">Código</th>
+                                <th draggable="true" data-columna="familia">Familia</th>
+                                <th draggable="true" data-columna="subfamilia">Subfamilia</th>
+                                <th draggable="true" data-columna="descripcion">Descripción</th>
+                                <th draggable="true" data-columna="numero_parte">N° Parte</th>
+                                <th draggable="true" data-columna="ubicacion">Ubicación</th>
+                                <th draggable="true" data-columna="minimo">Mínimo</th>
+                                <th draggable="true" data-columna="maximo">Máximo</th>
+                                <th draggable="true" data-columna="reorden">Reorden</th>
+                                <th draggable="true" data-columna="unidad">Unidad</th>
+                                <th draggable="true" data-columna="cuenta_contable">Cta. Contable</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <!-- Los datos se cargarán vía JavaScript con paginación -->
+                            <tr><td colspan="13" style="text-align: center;">Cargando...</td><th>
                         </tbody>
+                        <tfoot>
+                            <tr><td colspan="13" style="text-align: center;">Total: 0</td><th>
+                        </tfoot>
                     </table>
                 </div>
                 
-                <!-- Paginación y botón Crear filtro (lado izquierdo el botón, lado derecho la paginación) -->
+                <!-- Paginación -->
                 <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                    <!-- Botón Crear filtro (izquierda) -->
                     <button id="btnCrearFiltro" style="background: transparent; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 25px; cursor: pointer; color: var(--color-primary); font-size: 13px; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-filter"></i> Crear filtro
                     </button>
                     
-                    <!-- Paginación (derecha) -->
                     <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 13px; color: #6c757d;">Mostrando <span id="inicioRegistro">1</span> - <span id="finRegistro">10</span> de <span id="totalRegistros">25</span></span>
+                            <span style="font-size: 13px; color: #6c757d;">Mostrando <span id="inicioRegistro">0</span> - <span id="finRegistro">0</span> de <span id="totalRegistros">0</span></span>
                             <select id="registrosPorPagina" style="padding: 5px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;">
                                 <option value="5">5</option>
                                 <option value="10" selected>10</option>
@@ -114,22 +118,13 @@
                                 <option value="50">50</option>
                             </select>
                         </div>
-                        
                         <div style="display: flex; align-items: center; gap: 5px;">
-                            <button class="page-btn" style="width: 36px; height: 36px; border: 1px solid var(--color-primary); border-radius: 4px; background: transparent; cursor: pointer; color: var(--color-primary);" id="btnPrimera" title="Primera página">
-                                <i class="fas fa-angle-double-left"></i>
-                            </button>
-                            <button class="page-btn" style="width: 36px; height: 36px; border: 1px solid var(--color-primary); border-radius: 4px; background: transparent; cursor: pointer; color: var(--color-primary);" id="btnAnterior" title="Página anterior">
-                                <i class="fas fa-angle-left"></i>
-                            </button>
-                            <span style="min-width: 40px; height: 36px; display: flex; align-items: center; justify-content: center; background-color: var(--color-primary); color: white; border-radius: 4px; font-size: 13px;" id="paginaActual">1</span>
-                            <span style="font-size: 13px; color: #6c757d;">de <span id="totalPaginas">3</span></span>
-                            <button class="page-btn" style="width: 36px; height: 36px; border: 1px solid var(--color-primary); border-radius: 4px; background: transparent; cursor: pointer; color: var(--color-primary);" id="btnSiguiente" title="Página siguiente">
-                                <i class="fas fa-angle-right"></i>
-                            </button>
-                            <button class="page-btn" style="width: 36px; height: 36px; border: 1px solid var(--color-primary); border-radius: 4px; background: transparent; cursor: pointer; color: var(--color-primary);" id="btnUltima" title="Última página">
-                                <i class="fas fa-angle-double-right"></i>
-                            </button>
+                            <button class="page-btn" id="btnPrimera" title="Primera página"><i class="fas fa-angle-double-left"></i></button>
+                            <button class="page-btn" id="btnAnterior" title="Página anterior"><i class="fas fa-angle-left"></i></button>
+                            <span id="paginaActual" style="min-width: 40px; height: 36px; display: flex; align-items: center; justify-content: center; background-color: var(--color-primary); color: white; border-radius: 4px;">1</span>
+                            <span style="font-size: 13px;">de <span id="totalPaginas">1</span></span>
+                            <button class="page-btn" id="btnSiguiente" title="Página siguiente"><i class="fas fa-angle-right"></i></button>
+                            <button class="page-btn" id="btnUltima" title="Última página"><i class="fas fa-angle-double-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -138,109 +133,91 @@
     </section>
 </div>
 
-<!-- MODAL PARA AGREGAR/EDITAR ARTÍCULO -->
+<!-- Modal Artículo -->
 <div id="modalArticulo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 100000; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; animation: slideIn 0.3s ease;">
-        
-        <!-- Header -->
+    <div style="background-color: white; border-radius: 8px; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto;">
         <div style="background: var(--color-primary); padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="color: white; margin: 0; font-size: 18px;" id="modalTituloArticulo">Nuevo Artículo</h3>
+            <h3 style="color: white; margin: 0;" id="modalTituloArticulo">Nuevo Artículo</h3>
             <button onclick="cerrarModalArticulo()" style="background: none; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
         </div>
-        
-        <!-- Formulario -->
         <div style="padding: 20px;">
+            <input type="hidden" id="articuloId">
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Estatus</label>
+                    <label style="font-size: 13px; font-weight: 600;">Estatus</label>
                     <select id="modalEstatusArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                         <option value="Activo">Activo</option>
                         <option value="Inactivo">Inactivo</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">ID</label>
-                    <input type="text" id="modalIdArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="ART-001">
+                    <label style="font-size: 13px; font-weight: 600;">Código</label>
+                    <input type="text" id="modalCodigoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" readonly placeholder="Autogenerado">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Familia</label>
+                    <label style="font-size: 13px; font-weight: 600;">Familia</label>
                     <select id="modalFamiliaArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar familia</option>
-                        <option>Herramientas</option>
-                        <option>Materiales</option>
-                        <option>Equipo</option>
-                        <option>Consumibles</option>
-                        <option>Seguridad</option>
-                        <option>Electricidad</option>
-                        <option>Plomería</option>
-                        <option>Pinturas</option>
+                        <option value="">Seleccionar familia</option>
+                        @isset($familias)
+                            @foreach($familias as $familia)
+                                <option value="{{ $familia->id }}">{{ $familia->codigo }} - {{ $familia->nombre }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Subfamilia</label>
+                    <label style="font-size: 13px; font-weight: 600;">Subfamilia</label>
                     <select id="modalSubfamiliaArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar subfamilia</option>
-                        <option>Eléctricas</option>
-                        <option>Manuales</option>
-                        <option>Hidráulicas</option>
-                        <option>Neumáticas</option>
-                        <option>Construcción</option>
-                        <option>Acero</option>
-                        <option>Madera</option>
-                        <option>Cableado</option>
-                        <option>Tuberías</option>
-                        <option>Protección Personal</option>
+                        <option value="">Primero seleccione una familia</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Código</label>
-                    <input type="text" id="modalCodigoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="HERR-001">
+                    <label style="font-size: 13px; font-weight: 600;">Número de Parte</label>
+                    <input type="text" id="modalNumeroParteArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Número de parte">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Número de Parte</label>
-                    <input type="text" id="modalNumeroParteArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="TLD-1001">
+                    <label style="font-size: 13px; font-weight: 600;">Ubicación</label>
+                    <input type="text" id="modalUbicacionArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Ubicación en almacén">
                 </div>
                 <div style="grid-column: span 3;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Descripción</label>
-                    <input type="text" id="modalDescripcionArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Descripción completa del artículo">
+                    <label style="font-size: 13px; font-weight: 600;">Descripción <span style="color: red;">*</span></label>
+                    <input type="text" id="modalDescripcionArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Descripción del artículo">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Ubicación</label>
-                    <input type="text" id="modalUbicacionArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="A-12">
+                    <label style="font-size: 13px; font-weight: 600;">Stock Mínimo</label>
+                    <input type="number" step="0.001" id="modalMinimoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" value="0">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Mínimo</label>
-                    <input type="number" id="modalMinimoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="0">
+                    <label style="font-size: 13px; font-weight: 600;">Stock Máximo</label>
+                    <input type="number" step="0.001" id="modalMaximoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" value="0">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Máximo</label>
-                    <input type="number" id="modalMaximoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="0">
+                    <label style="font-size: 13px; font-weight: 600;">Punto de Reorden</label>
+                    <input type="number" step="0.001" id="modalReordenArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" value="0">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Punto Reorden</label>
-                    <input type="number" id="modalReordenArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="0">
-                </div>
-                <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Unidad de Medida</label>
+                    <label style="font-size: 13px; font-weight: 600;">Unidad de Medida</label>
                     <select id="modalUnidadArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar unidad</option>
-                        <option>Pieza</option>
-                        <option>Kilogramo</option>
-                        <option>Litro</option>
-                        <option>Metro</option>
-                        <option>Caja</option>
-                        <option>Paquete</option>
-                        <option>Juego</option>
-                        <option>Tonelada</option>
-                        <option>Galón</option>
+                        <option value="">Seleccionar unidad</option>
+                        <option value="Pieza">Pieza</option>
+                        <option value="Kilogramo">Kilogramo</option>
+                        <option value="Litro">Litro</option>
+                        <option value="Metro">Metro</option>
+                        <option value="Metro Cuadrado">Metro Cuadrado</option>
+                        <option value="Metro Cúbico">Metro Cúbico</option>
+                        <option value="Caja">Caja</option>
+                        <option value="Paquete">Paquete</option>
+                        <option value="Juego">Juego</option>
+                        <option value="Tonelada">Tonelada</option>
+                        <option value="Galón">Galón</option>
+                        <option value="Bulto">Bulto</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="1150-01-001">
+                    <label style="font-size: 13px; font-weight: 600;">Cuenta Contable</label>
+                    <input type="text" id="modalCuentaArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Cuenta contable">
                 </div>
             </div>
-            
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalArticulo()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
                 <button onclick="guardarArticulo()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
@@ -250,582 +227,378 @@
 </div>
 
 <style>
-    :root {
-        --color-primary: #083CAE;
-        --color-secondary: #2CBF1F;
-        --color-accent: #eaf512;
-        --color-red: #FF0000;
-    }
-
-    /* Estilos generales */
-    .semaforo .card-header h2 {
-        color: var(--color-primary) !important;
-    }
-    
-    /* Tabla */
-    .table-container {
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        overflow-x: auto;
-        background-color: white;
-        width: 100%;
-        max-height: 500px;
-        overflow-y: auto;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        scrollbar-width: thin;
-    }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-    }
-
-    .table th {
-        background-color: var(--color-primary) !important;
-        color: white;
-        padding: 12px 8px;
-        border: 1px solid #dee2e6;
-        font-size: 12px;
-        white-space: nowrap;
-        text-align: center;
-        font-weight: 600;
-    }
-    
-    .table td {
-        padding: 10px 8px;
-        border: 1px solid #dee2e6;
-        font-size: 12px;
-        vertical-align: middle;
-    }
-    
-    /* Filas alternadas */
-    tbody tr:nth-child(even) {
-        background-color: #f8f9fa;
-    }
-    
-    tbody tr:hover {
-        background-color: #e8f0fe;
-    }
-    
-    /* Columna de acciones fija */
-    .table th:last-child,
-    .table td:last-child {
-        position: sticky !important;
-        right: 0 !important;
-        z-index: 35 !important;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1) !important;
-    }
-    
-    .table th:last-child {
-        background-color: var(--color-primary) !important;
-    }
-    
-    .table td:last-child {
-        background-color: white !important;
-        text-align: center !important;
-    }
-    
-    tbody tr:nth-child(even) td:last-child {
-        background-color: #f8f9fa !important;
-    }
-    
-    tbody tr:hover td:last-child {
-        background-color: #e8f0fe !important;
-    }
-    
-    /* Iconos de acción */
-    .table td:last-child i {
-        margin: 0 5px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-    
-    .table td:last-child i:hover {
-        transform: scale(1.2);
-    }
-    
-    .table td:last-child i.fa-edit,
-    .table td:last-child i.fa-eye {
-        color: var(--color-primary);
-    }
-    
-    .table td:last-child i.fa-trash {
-        color: #dc3545;
-    }
-    
-    /* Badges de estatus */
-    .badge-activo {
-        background-color: #28a745;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 70px;
-        text-align: center;
-    }
-    
-    .badge-inactivo {
-        background-color: #ffc107;
-        color: #212529;
-        padding: 4px 8px;
-        border-radius: 3px;
-        font-size: 11px;
-        display: inline-block;
-        min-width: 70px;
-        text-align: center;
-    }
-    
-    /* Drag & drop */
-    [draggable="true"] {
-        cursor: grab;
-    }
-    
-    .columna-agrupada {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 12px;
-        background-color: #e8f0fe;
-        border-radius: 4px;
-        color: var(--color-primary);
-        font-size: 11px;
-        border: 1px solid var(--color-primary);
-    }
-    
-    .columna-agrupada .remover {
-        margin-left: 5px;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        color: var(--color-primary);
-    }
-    
-    /* Scroll personalizado */
-    .table-container::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    
-    .table-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-    
-    .table-container::-webkit-scrollbar-thumb {
-        background: var(--color-primary);
-        border-radius: 4px;
-    }
-    
-    /* Modal */
-    #modalArticulo {
-        display: none;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .hide-mobile {
-            display: none !important;
-        }
-        
-        .table-container {
-            max-height: 400px;
-        }
-        
-        .table td {
-            padding: 8px 4px;
-            font-size: 11px;
-        }
-        
-        .table td:last-child i {
-            margin: 0 3px;
-            font-size: 12px;
-        }
-        
-        #modalArticulo > div {
-            width: 100%;
-            height: 100%;
-            max-height: 100vh;
-            border-radius: 0;
-        }
-        
-        #modalArticulo div[style*="grid-template-columns: repeat(3, 1fr)"] {
-            grid-template-columns: 1fr !important;
-        }
-        
-        div[style*="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"] {
-            flex-direction: column;
-            align-items: flex-start !important;
-            gap: 15px;
-        }
-        
-        div[style*="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;"] {
-            width: 100%;
-            justify-content: space-between;
-        }
-        
-        div[style*="display: flex; align-items: center; gap: 5px;"] {
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-    }
+    :root { --color-primary: #083CAE; }
+    .table-container { border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; max-height: 500px; overflow-y: auto; }
+    .table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .table th { background-color: var(--color-primary) !important; color: white; padding: 12px 8px; border: 1px solid #dee2e6; position: sticky; top: 0; }
+    .table td { padding: 10px 8px; border: 1px solid #dee2e6; }
+    tbody tr:nth-child(even) { background-color: #f8f9fa; }
+    tbody tr:hover { background-color: #e8f0fe; }
+    .badge-activo { background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; display: inline-block; min-width: 70px; text-align: center; }
+    .badge-inactivo { background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 3px; display: inline-block; min-width: 70px; text-align: center; }
+    .table td:last-child i { margin: 0 5px; cursor: pointer; }
+    .table td:last-child i.fa-edit, .table td:last-child i.fa-eye { color: var(--color-primary); }
+    .table td:last-child i.fa-trash { color: #dc3545; }
+    .page-btn { width: 36px; height: 36px; border: 1px solid var(--color-primary); border-radius: 4px; background: transparent; cursor: pointer; color: var(--color-primary); }
+    .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    @media (max-width: 768px) { .hide-mobile { display: none; } }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
+let editingId = null;
+let currentPage = 1;
+let perPage = 10;
+let totalRecords = 0;
+let searchTimeout = null;
+
 document.addEventListener('DOMContentLoaded', function() {
-    let columnasAgrupadas = [];
-    let paginaActual = 1;
-    let registrosPorPagina = 10;
-    let datosArticulos = [];
-    let datosFiltrados = [];
-    
-    // Generar datos de ejemplo (25 artículos)
-    function generarDatosArticulos() {
-        const familias = ['Herramientas', 'Materiales', 'Equipo', 'Consumibles', 'Seguridad', 'Electricidad', 'Plomería', 'Pinturas'];
-        const subfamilias = {
-            'Herramientas': ['Eléctricas', 'Manuales', 'Hidráulicas', 'Neumáticas'],
-            'Materiales': ['Construcción', 'Acero', 'Madera'],
-            'Equipo': ['Maquinaria', 'Andamios', 'Revolvedoras'],
-            'Consumibles': ['Oficina', 'Limpieza', 'General'],
-            'Seguridad': ['Protección Personal', 'Señalización', 'Emergencia'],
-            'Electricidad': ['Cableado', 'Interruptores', 'Iluminación'],
-            'Plomería': ['Tuberías', 'Conexiones', 'Herramientas'],
-            'Pinturas': ['Vinílicas', 'Esmaltes', 'Impermeabilizantes']
-        };
-        const ubicaciones = ['A-01', 'A-02', 'B-01', 'B-02', 'C-01', 'C-02', 'D-01', 'E-01', 'F-01', 'G-01'];
-        const unidades = ['Pieza', 'Kilogramo', 'Litro', 'Metro', 'Caja', 'Paquete', 'Juego', 'Tonelada', 'Galón'];
-        
-        const datos = [];
-        
-        for (let i = 1; i <= 25; i++) {
-            const familia = familias[Math.floor(Math.random() * familias.length)];
-            const subfamiliaOptions = subfamilias[familia] || ['General'];
-            const subfamilia = subfamiliaOptions[Math.floor(Math.random() * subfamiliaOptions.length)];
-            const estatus = Math.random() > 0.2 ? 'Activo' : 'Inactivo'; // 80% activos
+    cargarArticulos();
+    configurarEventos();
+    cargarSubfamiliasPorFamilia();
+});
+
+// Cargar subfamilias cuando cambia la familia
+function cargarSubfamiliasPorFamilia() {
+    const familiaSelect = document.getElementById('modalFamiliaArticulo');
+    if (familiaSelect) {
+        familiaSelect.addEventListener('change', function() {
+            const familiaId = this.value;
+            const subfamiliaSelect = document.getElementById('modalSubfamiliaArticulo');
             
-            datos.push({
-                id: i,
-                estatus: estatus,
-                estatus_txt: estatus,
-                familia: familia,
-                subfamilia: subfamilia,
-                codigo: `ART-${String(i).padStart(3, '0')}`,
-                descripcion: `Artículo de ejemplo ${i} - ${subfamilia} - ${familia}`,
-                numero_parte: `NP-${String(Math.floor(Math.random() * 1000)).padStart(4, '0')}`,
-                ubicacion: ubicaciones[Math.floor(Math.random() * ubicaciones.length)],
-                minimo: Math.floor(Math.random() * 20) + 5,
-                maximo: Math.floor(Math.random() * 100) + 50,
-                reorden: Math.floor(Math.random() * 30) + 10,
-                unidad: unidades[Math.floor(Math.random() * unidades.length)],
-                cuenta_contable: `1150-${String(i).padStart(2, '0')}-${String(i).padStart(3, '0')}`
-            });
-        }
-        
-        return datos;
-    }
-    
-    datosArticulos = generarDatosArticulos();
-    datosFiltrados = [...datosArticulos];
-    
-    // Función para renderizar tabla con paginación
-    function renderizarTabla() {
-        const tbody = document.getElementById('tablaBody');
-        const inicio = (paginaActual - 1) * registrosPorPagina;
-        const fin = Math.min(inicio + registrosPorPagina, datosFiltrados.length);
-        const pageData = datosFiltrados.slice(inicio, fin);
-        
-        let html = '';
-        
-        pageData.forEach(item => {
-            const badgeColor = item.estatus === 'Activo' ? '#28a745' : '#ffc107';
-            const badgeTextColor = item.estatus === 'Activo' ? 'white' : '#212529';
-            
-            html += `<tr>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                    <span style="background-color: ${badgeColor}; color: ${badgeTextColor}; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">${item.estatus}</span>
-                </td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">${item.id}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.familia}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.subfamilia}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.codigo}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">${item.descripcion}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.numero_parte}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.ubicacion}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: right;">${item.minimo}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: right;">${item.maximo}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: right;">${item.reorden}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.unidad}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">${item.cuenta_contable}</td>
-                <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                    <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle ${item.codigo}')" title="Ver detalle"></i>
-                    <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarArticulo(${item.id})" title="Editar"></i>
-                    <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar artículo?')) alert('Artículo eliminado')" title="Eliminar"></i>
-                </td>
-            </tr>`;
+            if (familiaId) {
+                fetch(`/almacen/api/subfamilias-por-familia/${familiaId}`)
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.success) {
+                            subfamiliaSelect.innerHTML = '<option value="">Seleccionar subfamilia</option>';
+                            response.data.forEach(sub => {
+                                subfamiliaSelect.innerHTML += `<option value="${sub.id}">${sub.codigo} - ${sub.nombre}</option>`;
+                            });
+                        }
+                    });
+            } else {
+                subfamiliaSelect.innerHTML = '<option value="">Primero seleccione una familia</option>';
+            }
         });
-        
-        tbody.innerHTML = html;
-        
-        // Actualizar información de paginación
-        document.getElementById('inicioRegistro').textContent = datosFiltrados.length > 0 ? inicio + 1 : 0;
-        document.getElementById('finRegistro').textContent = fin;
-        document.getElementById('totalRegistros').textContent = datosFiltrados.length;
-        
-        const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-        document.getElementById('paginaActual').textContent = paginaActual;
-        document.getElementById('totalPaginas').textContent = totalPaginas;
-        
-        // Actualizar estado de botones de paginación
-        document.getElementById('btnPrimera').disabled = paginaActual === 1;
-        document.getElementById('btnAnterior').disabled = paginaActual === 1;
-        document.getElementById('btnSiguiente').disabled = paginaActual === totalPaginas;
-        document.getElementById('btnUltima').disabled = paginaActual === totalPaginas;
     }
-    
-    // Eventos de paginación
-    document.getElementById('btnPrimera').addEventListener('click', () => {
-        paginaActual = 1;
-        renderizarTabla();
-    });
-    
-    document.getElementById('btnAnterior').addEventListener('click', () => {
-        if (paginaActual > 1) {
-            paginaActual--;
-            renderizarTabla();
-        }
-    });
-    
-    document.getElementById('btnSiguiente').addEventListener('click', () => {
-        const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-        if (paginaActual < totalPaginas) {
-            paginaActual++;
-            renderizarTabla();
-        }
-    });
-    
-    document.getElementById('btnUltima').addEventListener('click', () => {
-        const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-        paginaActual = totalPaginas;
-        renderizarTabla();
-    });
-    
-    document.getElementById('registrosPorPagina').addEventListener('change', function() {
-        registrosPorPagina = parseInt(this.value);
-        paginaActual = 1;
-        renderizarTabla();
-    });
-    
-    // Buscador
-    document.getElementById('buscador').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        
-        if (termino.length === 0) {
-            datosFiltrados = [...datosArticulos];
-        } else {
-            datosFiltrados = datosArticulos.filter(item => 
-                item.codigo.toLowerCase().includes(termino) ||
-                item.descripcion.toLowerCase().includes(termino) ||
-                item.familia.toLowerCase().includes(termino) ||
-                item.subfamilia.toLowerCase().includes(termino) ||
-                item.numero_parte.toLowerCase().includes(termino) ||
-                item.ubicacion.toLowerCase().includes(termino) ||
-                item.cuenta_contable.toLowerCase().includes(termino)
-            );
-        }
-        
-        paginaActual = 1;
-        renderizarTabla();
-    });
-    
-    // Función para abrir modal de nuevo artículo
-    window.abrirModalArticulo = function() {
-        document.getElementById('modalTituloArticulo').textContent = 'Nuevo Artículo';
-        document.getElementById('modalEstatusArticulo').value = 'Activo';
-        document.getElementById('modalIdArticulo').value = '';
-        document.getElementById('modalFamiliaArticulo').value = 'Seleccionar familia';
-        document.getElementById('modalSubfamiliaArticulo').value = 'Seleccionar subfamilia';
-        document.getElementById('modalCodigoArticulo').value = '';
-        document.getElementById('modalNumeroParteArticulo').value = '';
-        document.getElementById('modalDescripcionArticulo').value = '';
-        document.getElementById('modalUbicacionArticulo').value = '';
-        document.getElementById('modalMinimoArticulo').value = '';
-        document.getElementById('modalMaximoArticulo').value = '';
-        document.getElementById('modalReordenArticulo').value = '';
-        document.getElementById('modalUnidadArticulo').value = 'Seleccionar unidad';
-        document.getElementById('modalCuentaArticulo').value = '';
-        document.getElementById('modalArticulo').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    // Función para editar artículo
-    window.editarArticulo = function(id) {
-        const articulo = datosArticulos.find(a => a.id === id);
-        if (!articulo) return;
-        
-        document.getElementById('modalTituloArticulo').textContent = 'Editar Artículo ' + articulo.codigo;
-        document.getElementById('modalEstatusArticulo').value = articulo.estatus;
-        document.getElementById('modalIdArticulo').value = articulo.id;
-        document.getElementById('modalFamiliaArticulo').value = articulo.familia;
-        document.getElementById('modalSubfamiliaArticulo').value = articulo.subfamilia;
-        document.getElementById('modalCodigoArticulo').value = articulo.codigo;
-        document.getElementById('modalNumeroParteArticulo').value = articulo.numero_parte;
-        document.getElementById('modalDescripcionArticulo').value = articulo.descripcion;
-        document.getElementById('modalUbicacionArticulo').value = articulo.ubicacion;
-        document.getElementById('modalMinimoArticulo').value = articulo.minimo;
-        document.getElementById('modalMaximoArticulo').value = articulo.maximo;
-        document.getElementById('modalReordenArticulo').value = articulo.reorden;
-        document.getElementById('modalUnidadArticulo').value = articulo.unidad;
-        document.getElementById('modalCuentaArticulo').value = articulo.cuenta_contable;
-        document.getElementById('modalArticulo').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.cerrarModalArticulo = function() {
-        document.getElementById('modalArticulo').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-    
-    window.guardarArticulo = function() {
-        const codigo = document.getElementById('modalCodigoArticulo').value;
-        const descripcion = document.getElementById('modalDescripcionArticulo').value;
-        
-        if (!codigo || !descripcion) {
-            alert('Por favor complete los campos obligatorios');
-            return;
-        }
-        
-        alert(`Artículo ${codigo} guardado correctamente`);
-        cerrarModalArticulo();
-    };
-    
-    // Cerrar modal con Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            cerrarModalArticulo();
-        }
-    });
-    
-    // Cerrar modal al hacer clic fuera
-    document.getElementById('modalArticulo').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalArticulo();
-        }
-    });
-    
-    // Funciones de agrupación y selector de columnas
-    function actualizarGrupoColumnas() {
-        const container = document.getElementById('grupoColumnas');
-        const texto = document.getElementById('textoAgrupar');
-        
-        container.innerHTML = '';
-        
-        if (columnasAgrupadas.length === 0) {
-            texto.style.display = 'inline';
-        } else {
-            texto.style.display = 'none';
-            columnasAgrupadas.forEach(col => {
-                const chip = document.createElement('span');
-                chip.className = 'columna-agrupada';
-                chip.innerHTML = `${col} <span class="remover" onclick="removerColumna('${col}')">&times;</span>`;
-                container.appendChild(chip);
-            });
-        }
-    }
+}
 
-    window.removerColumna = function(columna) {
-        columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+function cargarArticulos() {
+    const search = document.getElementById('buscador')?.value || '';
+    const familiaId = document.getElementById('filtroFamilia')?.value || '';
+    const subfamiliaId = document.getElementById('filtroSubfamilia')?.value || '';
+    const estatus = document.getElementById('filtroEstatus')?.value || '';
+    
+    let url = `{{ route('almacen.api.articulos') }}?page=${currentPage}&per_page=${perPage}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (familiaId) url += `&familia_id=${familiaId}`;
+    if (subfamiliaId) url += `&subfamilia_id=${subfamiliaId}`;
+    if (estatus) url += `&estatus=${estatus}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                renderizarTabla(response.data);
+                totalRecords = response.total;
+                const totalPages = response.last_page;
+                document.getElementById('totalRegistros').textContent = totalRecords;
+                document.getElementById('totalPaginas').textContent = totalPages;
+                document.getElementById('paginaActual').textContent = currentPage;
+                
+                const inicio = (currentPage - 1) * perPage + 1;
+                const fin = Math.min(currentPage * perPage, totalRecords);
+                document.getElementById('inicioRegistro').textContent = totalRecords > 0 ? inicio : 0;
+                document.getElementById('finRegistro').textContent = fin;
+                
+                document.getElementById('btnPrimera').disabled = currentPage === 1;
+                document.getElementById('btnAnterior').disabled = currentPage === 1;
+                document.getElementById('btnSiguiente').disabled = currentPage === totalPages;
+                document.getElementById('btnUltima').disabled = currentPage === totalPages;
+                
+                document.querySelector('#tablaArticulos tfoot td').innerHTML = `Total: ${totalRecords}`;
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function renderizarTabla(data) {
+    const tbody = document.getElementById('tablaBody');
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="13" style="text-align: center;">No hay artículos registrados</td><th';
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    data.forEach((item, index) => {
+        const row = tbody.insertRow();
+        row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
+        
+        const estatusBadge = item.estatus === 'Activo' ? '<span class="badge-activo">Activo</span>' : '<span class="badge-inactivo">Inactivo</span>';
+        
+        row.insertCell(0).innerHTML = estatusBadge;
+        row.insertCell(1).innerHTML = `<strong>${escapeHtml(item.codigo)}</strong>`;
+        row.insertCell(2).innerHTML = escapeHtml(item.familia_nombre) || '---';
+        row.insertCell(3).innerHTML = escapeHtml(item.subfamilia_nombre) || '---';
+        row.insertCell(4).innerHTML = escapeHtml(item.descripcion);
+        row.insertCell(5).innerHTML = escapeHtml(item.numero_parte) || '---';
+        row.insertCell(6).innerHTML = escapeHtml(item.ubicacion) || '---';
+        row.insertCell(7).innerHTML = item.minimo || 0;
+        row.insertCell(8).innerHTML = item.maximo || 0;
+        row.insertCell(9).innerHTML = item.punto_reorden || 0;
+        row.insertCell(10).innerHTML = escapeHtml(item.unidad_medida) || '---';
+        row.insertCell(11).innerHTML = escapeHtml(item.cuenta_contable) || '---';
+        row.insertCell(12).innerHTML = `
+            <i class="fas fa-edit" onclick="editarArticulo(${item.id})" title="Editar"></i>
+            <i class="fas fa-trash" onclick="eliminarArticulo(${item.id}, '${item.codigo}')" title="Eliminar"></i>
+        `;
+    });
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function configurarEventos() {
+    document.getElementById('buscador').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            cargarArticulos();
+        }, 500);
+    });
+    
+    document.getElementById('filtroFamilia').addEventListener('change', () => { currentPage = 1; cargarArticulos(); });
+    document.getElementById('filtroSubfamilia').addEventListener('change', () => { currentPage = 1; cargarArticulos(); });
+    document.getElementById('filtroEstatus').addEventListener('change', () => { currentPage = 1; cargarArticulos(); });
+    document.getElementById('registrosPorPagina').addEventListener('change', function() { perPage = parseInt(this.value); currentPage = 1; cargarArticulos(); });
+    
+    document.getElementById('btnPrimera').addEventListener('click', () => { currentPage = 1; cargarArticulos(); });
+    document.getElementById('btnAnterior').addEventListener('click', () => { if (currentPage > 1) { currentPage--; cargarArticulos(); } });
+    document.getElementById('btnSiguiente').addEventListener('click', () => { currentPage++; cargarArticulos(); });
+    document.getElementById('btnUltima').addEventListener('click', () => { 
+        const totalPages = parseInt(document.getElementById('totalPaginas').textContent);
+        currentPage = totalPages;
+        cargarArticulos();
+    });
+    
+    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Filtros avanzados en desarrollo'));
+    document.getElementById('btnExcel').addEventListener('click', () => window.location.href = '{{ route("almacen.api.articulos.exportar") }}');
+}
+
+window.abrirModalArticulo = function() {
+    editingId = null;
+    document.getElementById('modalTituloArticulo').textContent = 'Nuevo Artículo';
+    document.getElementById('articuloId').value = '';
+    document.getElementById('modalCodigoArticulo').value = 'Autogenerado';
+    document.getElementById('modalEstatusArticulo').value = 'Activo';
+    document.getElementById('modalFamiliaArticulo').value = '';
+    document.getElementById('modalSubfamiliaArticulo').innerHTML = '<option value="">Primero seleccione una familia</option>';
+    document.getElementById('modalDescripcionArticulo').value = '';
+    document.getElementById('modalNumeroParteArticulo').value = '';
+    document.getElementById('modalUbicacionArticulo').value = '';
+    document.getElementById('modalMinimoArticulo').value = 0;
+    document.getElementById('modalMaximoArticulo').value = 0;
+    document.getElementById('modalReordenArticulo').value = 0;
+    document.getElementById('modalUnidadArticulo').value = '';
+    document.getElementById('modalCuentaArticulo').value = '';
+    document.getElementById('modalArticulo').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+window.editarArticulo = function(id) {
+    fetch(`{{ route('almacen.api.articulos.show', '') }}/${id}`)
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                const art = response.data;
+                editingId = art.id;
+                document.getElementById('modalTituloArticulo').textContent = `Editar Artículo ${art.codigo}`;
+                document.getElementById('articuloId').value = art.id;
+                document.getElementById('modalCodigoArticulo').value = art.codigo;
+                document.getElementById('modalEstatusArticulo').value = art.estatus;
+                document.getElementById('modalFamiliaArticulo').value = art.familia_id || '';
+                document.getElementById('modalDescripcionArticulo').value = art.descripcion;
+                document.getElementById('modalNumeroParteArticulo').value = art.numero_parte || '';
+                document.getElementById('modalUbicacionArticulo').value = art.ubicacion || '';
+                document.getElementById('modalMinimoArticulo').value = art.minimo;
+                document.getElementById('modalMaximoArticulo').value = art.maximo;
+                document.getElementById('modalReordenArticulo').value = art.punto_reorden;
+                document.getElementById('modalUnidadArticulo').value = art.unidad_medida || '';
+                document.getElementById('modalCuentaArticulo').value = art.cuenta_contable || '';
+                
+                if (art.familia_id) {
+                    fetch(`/almacen/api/subfamilias-por-familia/${art.familia_id}`)
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.success) {
+                                const subSelect = document.getElementById('modalSubfamiliaArticulo');
+                                subSelect.innerHTML = '<option value="">Seleccionar subfamilia</option>';
+                                res.data.forEach(sub => {
+                                    subSelect.innerHTML += `<option value="${sub.id}" ${art.subfamilia_id == sub.id ? 'selected' : ''}>${sub.codigo} - ${sub.nombre}</option>`;
+                                });
+                            }
+                        });
+                }
+                
+                document.getElementById('modalArticulo').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+};
+
+window.guardarArticulo = function() {
+    const descripcion = document.getElementById('modalDescripcionArticulo').value.trim();
+    if (!descripcion) {
+        alert('La descripción es obligatoria');
+        return;
+    }
+    
+    const data = {
+        descripcion: descripcion,
+        numero_parte: document.getElementById('modalNumeroParteArticulo').value,
+        familia_id: document.getElementById('modalFamiliaArticulo').value || null,
+        subfamilia_id: document.getElementById('modalSubfamiliaArticulo').value || null,
+        ubicacion: document.getElementById('modalUbicacionArticulo').value,
+        minimo: parseFloat(document.getElementById('modalMinimoArticulo').value) || 0,
+        maximo: parseFloat(document.getElementById('modalMaximoArticulo').value) || 0,
+        punto_reorden: parseFloat(document.getElementById('modalReordenArticulo').value) || 0,
+        unidad_medida: document.getElementById('modalUnidadArticulo').value,
+        cuenta_contable: document.getElementById('modalCuentaArticulo').value,
+        estatus: document.getElementById('modalEstatusArticulo').value
+    };
+    
+    const url = editingId ? `{{ route('almacen.api.articulos.update', '') }}/${editingId}` : '{{ route("almacen.api.articulos.store") }}';
+    const method = editingId ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (response.success) {
+            alert(response.message);
+            cerrarModalArticulo();
+            cargarArticulos();
+        } else {
+            alert('Error: ' + response.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar el artículo');
+    });
+};
+
+window.eliminarArticulo = function(id, codigo) {
+    if (confirm(`¿Eliminar el artículo ${codigo}?`)) {
+        fetch(`{{ route('almacen.api.articulos.destroy', '') }}/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response.success) {
+                alert(response.message);
+                cargarArticulos();
+            } else {
+                alert('Error: ' + response.message);
+            }
+        });
+    }
+};
+
+window.cerrarModalArticulo = function() {
+    document.getElementById('modalArticulo').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') cerrarModalArticulo();
+});
+
+document.getElementById('modalArticulo').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalArticulo();
+});
+
+// Funciones de UI (selector de columnas, drag & drop, etc.)
+let columnasAgrupadas = [];
+
+function actualizarGrupoColumnas() {
+    const container = document.getElementById('grupoColumnas');
+    const texto = document.getElementById('textoAgrupar');
+    if (!container) return;
+    container.innerHTML = '';
+    if (columnasAgrupadas.length === 0) {
+        texto.style.display = 'inline';
+    } else {
+        texto.style.display = 'none';
+        columnasAgrupadas.forEach(col => {
+            const chip = document.createElement('span');
+            chip.className = 'columna-agrupada';
+            chip.innerHTML = `${col} <span class="remover" onclick="removerColumna('${col}')">&times;</span>`;
+            container.appendChild(chip);
+        });
+    }
+}
+
+window.removerColumna = function(columna) {
+    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+    actualizarGrupoColumnas();
+};
+
+document.addEventListener('dragstart', (e) => {
+    if (e.target.tagName === 'TH' && e.target.draggable) {
+        e.dataTransfer.setData('text/plain', e.target.dataset.columna);
+    }
+});
+
+document.getElementById('grupoAgrupacion')?.addEventListener('dragover', (e) => e.preventDefault());
+document.getElementById('grupoAgrupacion')?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const columna = e.dataTransfer.getData('text/plain');
+    if (columna && !columnasAgrupadas.includes(columna)) {
+        columnasAgrupadas.push(columna);
         actualizarGrupoColumnas();
-    };
+        alert('Agrupando por: ' + columna);
+    }
+});
 
-    // Drag & drop
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.tagName === 'TH' && e.target.draggable) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.columna);
-        }
-    });
+window.toggleColumnSelector = function() {
+    const selector = document.getElementById('columnSelector');
+    selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
+    if (selector.style.display === 'block') {
+        const columnas = [
+            { field: 'estatus', caption: 'Estatus' }, { field: 'codigo', caption: 'Código' },
+            { field: 'familia', caption: 'Familia' }, { field: 'subfamilia', caption: 'Subfamilia' },
+            { field: 'descripcion', caption: 'Descripción' }, { field: 'numero_parte', caption: 'Número Parte' },
+            { field: 'ubicacion', caption: 'Ubicación' }, { field: 'minimo', caption: 'Mínimo' },
+            { field: 'maximo', caption: 'Máximo' }, { field: 'reorden', caption: 'Reorden' },
+            { field: 'unidad', caption: 'Unidad' }, { field: 'cuenta_contable', caption: 'Cuenta Contable' }
+        ];
+        const lista = document.getElementById('columnasLista');
+        lista.innerHTML = columnas.map(col => `<div style="padding:5px 0;"><input type="checkbox" id="chk_${col.field}" checked><label> ${col.caption}</label></div>`).join('');
+    }
+};
 
-    document.getElementById('grupoAgrupacion').addEventListener('dragover', (e) => e.preventDefault());
-    
-    document.getElementById('grupoAgrupacion').addEventListener('drop', (e) => {
-        e.preventDefault();
-        const columna = e.dataTransfer.getData('text/plain');
-        if (columna && !columnasAgrupadas.includes(columna)) {
-            columnasAgrupadas.push(columna);
-            actualizarGrupoColumnas();
-            alert('Agrupando por: ' + columna);
-        }
-    });
+window.cerrarColumnSelector = function() {
+    document.getElementById('columnSelector').style.display = 'none';
+};
 
-    // Selector de columnas
-    window.toggleColumnSelector = function() {
-        const selector = document.getElementById('columnSelector');
-        selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
-        
-        if (selector.style.display === 'block') {
-            const columnas = [
-                { field: 'estatus', caption: 'Estatus' },
-                { field: 'id', caption: 'ID' },
-                { field: 'familia', caption: 'Familia' },
-                { field: 'subfamilia', caption: 'Subfamilia' },
-                { field: 'codigo', caption: 'Código' },
-                { field: 'descripcion', caption: 'Descripción' },
-                { field: 'numero_parte', caption: 'Número Parte' },
-                { field: 'ubicacion', caption: 'Ubicación' },
-                { field: 'minimo', caption: 'Mínimo' },
-                { field: 'maximo', caption: 'Máximo' },
-                { field: 'reorden', caption: 'Reorden' },
-                { field: 'unidad', caption: 'Unidad Medida' },
-                { field: 'cuenta_contable', caption: 'Cuenta Contable' }
-            ];
-            
-            const lista = document.getElementById('columnasLista');
-            lista.innerHTML = columnas.map(col => `
-                <div style="padding: 5px 0; display: flex; align-items: center;">
-                    <input type="checkbox" 
-                           id="chk_${col.field}"
-                           data-columna="${col.field}"
-                           checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
-                    <label for="chk_${col.field}" style="font-size: 12px;">${col.caption}</label>
-                </div>
-            `).join('');
-        }
-    };
-
-    window.cerrarColumnSelector = function() {
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
         document.getElementById('columnSelector').style.display = 'none';
-    };
-
-    // Cerrar selector al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#btnColumnas') && !e.target.closest('#columnSelector')) {
-            document.getElementById('columnSelector').style.display = 'none';
-        }
-    });
-
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel').addEventListener('click', () => alert('Exportar catálogo a Excel'));
-
-    // Renderizar tabla inicial
-    renderizarTabla();
+    }
 });
 </script>
 @endsection
