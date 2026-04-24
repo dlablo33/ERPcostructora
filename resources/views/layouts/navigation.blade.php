@@ -2227,6 +2227,14 @@
                             <div class="flex items-center flex-1"><i class="fas fa-box"></i><span>Catálogo de Articulos</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
                         </div>
+                        <!-- ======================================================================================== -->
+
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Activos', 'almacen', '{{ route('almacen.activos') }}', 'fa-tools')">
+                                <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Catálogo de Activos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Activos', 'almacen', 'fa-tools', this)"></i>
+                        </div>
+
+                        <!-- ========================================================================================== -->
                         <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familias') }}', 'fa-book-open-reader')">
                             <div class="flex items-center flex-1"><i class="fa-solid fa-book-open-reader"></i><span>Catálogo de Familias</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
@@ -2318,7 +2326,7 @@
                             <div class="flex items-center flex-1"><i class="fas fa-shopping-cart"></i><span>Órdenes de Compra</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'compras', 'fa-shopping-cart', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizaciones') }}', 'fa-circle-check')">
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizacion-cotizaciones') }}', 'fa-circle-check')">
                             <div class="flex items-center flex-1"><i class="fa-solid fa-circle-check"></i><span>Autorizacion de Órdenes de Compra</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Órdenes de Compra', 'compras', 'fa-circle-check', this)"></i>
                         </div>

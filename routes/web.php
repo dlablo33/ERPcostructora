@@ -48,6 +48,7 @@ use App\Http\Controllers\RequisicionMaterialController;
 use App\Http\Controllers\MovimientoInventarioController;
 use App\Http\Controllers\TraspasoAlmacenController;
 use App\Http\Controllers\AutorizacionRequisicionController;
+use App\Http\Controllers\CotizacionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -515,7 +516,25 @@ Route::prefix('almacen')->name('almacen.')->group(function () {
     Route::post('/api/devoluciones-activos/salida', [App\Http\Controllers\DevolucionActivoController::class, 'registrarSalida'])->name('api.devoluciones-activos.salida');
     Route::post('/api/devoluciones-activos/{id}/devolver', [App\Http\Controllers\DevolucionActivoController::class, 'registrarDevolucion'])->name('api.devoluciones-activos.devolver');
     Route::get('/api/devoluciones-activos/asignaciones-activas', [App\Http\Controllers\DevolucionActivoController::class, 'getAsignacionesActivas'])->name('api.devoluciones-activos.asignaciones-activas');
-});
+
+
+    // ========================================================
+
+      Route::get('/activos', [App\Http\Controllers\ActivoController::class, 'index'])->name('activos');
+    
+    // API Routes para Activos
+    Route::get('/api/activos', [App\Http\Controllers\ActivoController::class, 'getActivos'])->name('api.activos');
+    Route::get('/api/activos/{id}', [App\Http\Controllers\ActivoController::class, 'show'])->name('api.activos.show');
+    Route::post('/api/activos', [App\Http\Controllers\ActivoController::class, 'store'])->name('api.activos.store');
+    Route::put('/api/activos/{id}', [App\Http\Controllers\ActivoController::class, 'update'])->name('api.activos.update');
+    Route::delete('/api/activos/{id}', [App\Http\Controllers\ActivoController::class, 'destroy'])->name('api.activos.destroy');
+    Route::post('/api/activos/{id}/asignar', [App\Http\Controllers\ActivoController::class, 'asignar'])->name('api.activos.asignar');
+    Route::get('/api/activos/disponibles', [App\Http\Controllers\ActivoController::class, 'getDisponibles'])->name('api.activos.disponibles');
+    Route::get('/api/activos/exportar', [App\Http\Controllers\ActivoController::class, 'exportar'])->name('api.activos.exportar');
+    
+
+
+    });
 
 // ============================================
 // INVENTARIO POR PROYECTO (API)
@@ -560,25 +579,40 @@ Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(fu
 // COMPRAS
 // ============================================
 Route::prefix('compras')->name('compras.')->group(function () {
+    // Vistas simples
     Route::get('/requisicion', function () { return view('compras.requisicion.requisicion'); })->name('requisicion');
     Route::get('/autorizacion', function () { return view('compras.requisicion.autorizacion'); })->name('autorizacion');
     Route::get('/autorizaciones', function () { return view('compras.compras.autorizacion'); })->name('autorizaciones');
-    Route::get('/ordenesdecompras', function () { return view('compras.compras.ordenes'); })->name('ordenes');
     Route::get('/proveedores', function () { return view('compras.subcontratistas.gestion'); })->name('gestion');
     Route::get('/almacenobra', function () { return view('compras.almacen.almacen'); })->name('almacen');
 
-    // requisiciones 
-    Route::get('/requisiciones', [RequisicionController::class, 'index'])->name('requisiciones.index');
-    Route::get('/requisiciones/generar-folio', [RequisicionController::class, 'generarFolio'])->name('requisiciones.generar-folio');
-    Route::get('/requisiciones/proyectos', [RequisicionController::class, 'getProyectos'])->name('requisiciones.proyectos');
-    Route::get('/requisiciones/areas', [RequisicionController::class, 'getAreas'])->name('requisiciones.areas');
-    Route::get('/requisiciones/{id}', [RequisicionController::class, 'show'])->name('requisiciones.show');
-    Route::post('/requisiciones', [RequisicionController::class, 'store'])->name('requisiciones.store');
-    Route::put('/requisiciones/{id}', [RequisicionController::class, 'update'])->name('requisiciones.update');
-    Route::delete('/requisiciones/{id}', [RequisicionController::class, 'destroy'])->name('requisiciones.destroy');
-    Route::post('/requisiciones/{id}/aprobar', [RequisicionController::class, 'aprobar'])->name('requisiciones.aprobar');
-    Route::post('/requisiciones/{id}/rechazar', [RequisicionController::class, 'rechazar'])->name('requisiciones.rechazar');
-    Route::get('/requisiciones/exportar/excel', [RequisicionController::class, 'exportar'])->name('requisiciones.exportar');
+    // Proveedores
+    Route::get('/proveedores', [App\Http\Controllers\ProveedorController::class, 'index'])->name('gestion');
+    Route::get('/api/proveedores', [App\Http\Controllers\ProveedorController::class, 'getData'])->name('api.proveedores');
+    Route::get('/api/proveedores/{id}', [App\Http\Controllers\ProveedorController::class, 'show'])->name('api.proveedores.show');
+    Route::post('/api/proveedores', [App\Http\Controllers\ProveedorController::class, 'store'])->name('api.proveedores.store');
+    Route::put('/api/proveedores/{id}', [App\Http\Controllers\ProveedorController::class, 'update'])->name('api.proveedores.update');
+    Route::delete('/api/proveedores/{id}', [App\Http\Controllers\ProveedorController::class, 'destroy'])->name('api.proveedores.destroy');
+    Route::get('/api/proveedores/exportar', [App\Http\Controllers\ProveedorController::class, 'exportar'])->name('api.proveedores.exportar');
+    
+    Route::get('/autorizaciones', [CotizacionController::class, 'autorizacionCotizaciones'])->name('autorizaciones');
+
+    // ============================================
+    // REQUISICIONES
+    // ============================================
+    Route::prefix('requisiciones')->name('requisiciones.')->group(function () {
+        Route::get('/', [RequisicionController::class, 'index'])->name('index');
+        Route::get('/generar-folio', [RequisicionController::class, 'generarFolio'])->name('generar-folio');
+        Route::get('/proyectos', [RequisicionController::class, 'getProyectos'])->name('proyectos');
+        Route::get('/areas', [RequisicionController::class, 'getAreas'])->name('areas');
+        Route::get('/{id}', [RequisicionController::class, 'show'])->name('show');
+        Route::post('/', [RequisicionController::class, 'store'])->name('store');
+        Route::put('/{id}', [RequisicionController::class, 'update'])->name('update');
+        Route::delete('/{id}', [RequisicionController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/aprobar', [RequisicionController::class, 'aprobar'])->name('aprobar');
+        Route::post('/{id}/rechazar', [RequisicionController::class, 'rechazar'])->name('rechazar');
+        Route::get('/exportar/excel', [RequisicionController::class, 'exportar'])->name('exportar');
+    });
 
     // ============================================
     // AUTORIZACIÓN DE REQUISICIONES
@@ -591,6 +625,51 @@ Route::prefix('compras')->name('compras.')->group(function () {
         Route::post('/{id}/reabrir', [AutorizacionRequisicionController::class, 'reabrir'])->name('reabrir');
         Route::get('/{id}/detalle', [AutorizacionRequisicionController::class, 'detalle'])->name('detalle');
         Route::get('/exportar', [AutorizacionRequisicionController::class, 'exportar'])->name('exportar');
+    });
+
+    // ============================================
+    // ÓRDENES PARA COTIZAR
+    // ============================================
+    Route::get('/ordenes', [CotizacionController::class, 'ordenesPendientes'])->name('ordenes');
+    
+    // ============================================
+    // AUTORIZACIÓN DE COTIZACIONES
+    // ============================================
+    Route::get('/autorizacion-cotizaciones', [CotizacionController::class, 'autorizacionCotizaciones'])->name('autorizacion-cotizaciones');
+    
+    // ============================================
+// COTIZACIONES (API y vistas)
+// ============================================
+Route::prefix('cotizaciones')->name('cotizaciones.')->group(function () {
+    // Lista de requisiciones para cotizar (vista alternativa)
+    Route::get('/', [CotizacionController::class, 'index'])->name('index');
+    
+    // Formulario para solicitar cotización
+    Route::get('/solicitar/{requisicionId}', [CotizacionController::class, 'solicitar'])->name('solicitar');
+    
+    // Guardar cotización
+    Route::post('/', [CotizacionController::class, 'store'])->name('store');
+    
+    // Comparativo de cotizaciones (vista)
+    Route::get('/comparativo/{requisicionId}', [CotizacionController::class, 'comparativo'])->name('comparativo');
+    
+    // API: Obtener comparativo en JSON
+    Route::get('/comparativo-json/{requisicionId}', [CotizacionController::class, 'getComparativo'])->name('comparativo-json');
+    
+    // Seleccionar cotización ganadora
+    Route::post('/seleccionar/{cotizacionId}', [CotizacionController::class, 'seleccionar'])->name('seleccionar');
+    
+    // API: Obtener artículos de una requisición
+    Route::get('/articulos/{requisicionId}', [CotizacionController::class, 'getArticulos'])->name('get-articulos');
+    
+    // API: Obtener requisiciones para autorizar (NUEVA - NECESARIA)
+    Route::get('/requisiciones-para-autorizar', [CotizacionController::class, 'requisicionesParaAutorizar'])->name('requisiciones-para-autorizar');
+    
+    // API: Autorizar todas las cotizaciones de una requisición (NUEVA - NECESARIA)
+    Route::post('/autorizar-todas/{requisicionId}', [CotizacionController::class, 'autorizarTodasCotizaciones'])->name('autorizar-todas');
+    
+    // API: Ver detalle de cotización
+    Route::get('/{id}', [CotizacionController::class, 'show'])->name('show');
     });
 });
 

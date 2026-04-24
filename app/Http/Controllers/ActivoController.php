@@ -18,16 +18,13 @@ class ActivoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
-        $proveedores = Proveedor::orderBy('nombre')->get();
-        $operadores = User::whereHas('roles', function($q) {
-            $q->where('name', 'operador');
-        })->get();
-        
-        return view('activos.index', compact('proyectos', 'proveedores', 'operadores'));
-    }
+public function index()
+{
+    $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
+    $proveedores = Proveedor::orderBy('nombre')->get();
+
+    return view('almacen.catalogo.activos', compact('proyectos', 'proveedores'));
+}
     
     /**
      * Get activos for DataTable.
