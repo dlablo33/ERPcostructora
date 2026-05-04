@@ -26,7 +26,7 @@ class InventarioProyectoController extends Controller
     }
     
     /**
-     * Get inventario for DataTable
+     * Get inventario for DataTable (MODIFICADO para incluir costos)
      */
     public function getInventario(Request $request)
     {
@@ -73,6 +73,11 @@ class InventarioProyectoController extends Controller
                     ];
                 });
                 
+                // Calcular costo e importe
+                $costo = $item->costo_promedio ?? $item->ultimo_costo ?? 0;
+                $importe = $item->cantidad_actual * $costo;
+                $valorInventario = $importe;
+                
                 return [
                     'id' => $item->id,
                     'proyecto_id' => $item->proyecto_id,
@@ -84,6 +89,9 @@ class InventarioProyectoController extends Controller
                     'cantidad_actual' => $item->cantidad_actual,
                     'cantidad_reservada' => $item->cantidad_reservada,
                     'disponible' => $item->disponible,
+                    'costo_unitario' => $costo,
+                    'importe' => $importe,
+                    'valor_inventario' => $valorInventario,
                     'cantidad_minima' => $item->cantidad_minima,
                     'cantidad_maxima' => $item->cantidad_maxima,
                     'punto_reorden' => $item->punto_reorden,
@@ -96,13 +104,21 @@ class InventarioProyectoController extends Controller
                 ];
             });
             
+            // Calcular totales generales
+            $totalValorInventario = $data->sum('valor_inventario');
+            $totalArticulos = $data->sum('cantidad_actual');
+            
             return response()->json([
                 'success' => true,
                 'data' => $data,
                 'total' => $inventario->total(),
                 'per_page' => $inventario->perPage(),
                 'current_page' => $inventario->currentPage(),
-                'last_page' => $inventario->lastPage()
+                'last_page' => $inventario->lastPage(),
+                'totales' => [
+                    'total_valor' => $totalValorInventario,
+                    'total_articulos' => $totalArticulos
+                ]
             ]);
             
         } catch (\Exception $e) {
@@ -128,6 +144,7 @@ class InventarioProyectoController extends Controller
                 'cantidad_minima' => 'nullable|numeric|min:0',
                 'cantidad_maxima' => 'nullable|numeric|min:0',
                 'punto_reorden' => 'nullable|numeric|min:0',
+                'costo_inicial' => 'nullable|numeric|min:0',
                 'ubicacion_especifica' => 'nullable|string|max:100',
                 'lote' => 'nullable|string|max:50',
                 'observaciones' => 'nullable|string'
@@ -148,6 +165,7 @@ class InventarioProyectoController extends Controller
             }
             
             $articulo = Articulo::find($request->articulo_id);
+            $costoInicial = $request->costo_inicial ?? 0;
             
             $inventario = InventarioProyecto::create([
                 'proyecto_id' => $request->proyecto_id,
@@ -158,6 +176,8 @@ class InventarioProyectoController extends Controller
                 'cantidad_maxima' => $request->cantidad_maxima ?? 0,
                 'punto_reorden' => $request->punto_reorden ?? 0,
                 'unidad_medida' => $articulo->unidad_medida,
+                'costo_promedio' => $costoInicial > 0 ? $costoInicial : null,
+                'ultimo_costo' => $costoInicial > 0 ? $costoInicial : null,
                 'observaciones' => $request->observaciones,
                 'estatus' => 'Activo'
             ]);
@@ -178,6 +198,7 @@ class InventarioProyectoController extends Controller
                     'almacen_destino_id' => $request->almacen_id,
                     'tipo_movimiento' => 'Entrada',
                     'cantidad' => $request->cantidad_inicial,
+                    'costo_unitario' => $costoInicial > 0 ? $costoInicial : null,
                     'cantidad_antes' => 0,
                     'cantidad_despues' => $request->cantidad_inicial,
                     'referencia_tipo' => 'InventarioInicial',
@@ -207,7 +228,7 @@ class InventarioProyectoController extends Controller
     }
     
     /**
-     * Display the specified resource.
+     * Display the specified resource (MODIFICADO para incluir costos)
      */
     public function show($id)
     {
@@ -215,6 +236,9 @@ class InventarioProyectoController extends Controller
             $inventario = InventarioProyecto::with(['proyecto', 'articulo', 'ubicaciones.almacen', 'movimientos' => function($q) {
                 $q->orderBy('fecha_movimiento', 'desc')->limit(50);
             }])->findOrFail($id);
+            
+            $costo = $inventario->costo_promedio ?? $inventario->ultimo_costo ?? 0;
+            $valorInventario = $inventario->cantidad_actual * $costo;
             
             return response()->json([
                 'success' => true,
@@ -229,6 +253,10 @@ class InventarioProyectoController extends Controller
                     'cantidad_actual' => $inventario->cantidad_actual,
                     'cantidad_reservada' => $inventario->cantidad_reservada,
                     'disponible' => $inventario->disponible,
+                    'costo_promedio' => $inventario->costo_promedio,
+                    'ultimo_costo' => $inventario->ultimo_costo,
+                    'ultimo_costo_compra' => $inventario->ultimo_costo_compra,
+                    'valor_inventario' => $valorInventario,
                     'cantidad_minima' => $inventario->cantidad_minima,
                     'cantidad_maxima' => $inventario->cantidad_maxima,
                     'punto_reorden' => $inventario->punto_reorden,
@@ -250,6 +278,8 @@ class InventarioProyectoController extends Controller
                             'id' => $mov->id,
                             'tipo_movimiento' => $mov->tipo_movimiento,
                             'cantidad' => $mov->cantidad,
+                            'costo_unitario' => $mov->costo_unitario,
+                            'importe' => ($mov->costo_unitario ?? 0) * $mov->cantidad,
                             'cantidad_antes' => $mov->cantidad_antes,
                             'cantidad_despues' => $mov->cantidad_despues,
                             'referencia_tipo' => $mov->referencia_tipo,
@@ -316,7 +346,7 @@ class InventarioProyectoController extends Controller
     }
     
     /**
-     * Add stock to inventory.
+     * Add stock to inventory (MODIFICADO para aceptar costo)
      */
     public function agregarStock(Request $request, $id)
     {
@@ -324,6 +354,7 @@ class InventarioProyectoController extends Controller
             $request->validate([
                 'cantidad' => 'required|numeric|min:0.001',
                 'almacen_id' => 'required|exists:almacenes,id',
+                'costo_unitario' => 'nullable|numeric|min:0',
                 'referencia_tipo' => 'nullable|string|max:50',
                 'referencia_folio' => 'nullable|string|max:50',
                 'observaciones' => 'nullable|string'
@@ -337,7 +368,8 @@ class InventarioProyectoController extends Controller
                 $request->almacen_id,
                 $request->observaciones,
                 $request->referencia_tipo,
-                $request->referencia_folio
+                $request->referencia_folio,
+                $request->costo_unitario
             );
             
             DB::commit();
@@ -347,7 +379,9 @@ class InventarioProyectoController extends Controller
                 'message' => 'Stock agregado exitosamente',
                 'data' => [
                     'cantidad_actual' => $inventario->cantidad_actual,
-                    'disponible' => $inventario->disponible
+                    'disponible' => $inventario->disponible,
+                    'costo_promedio' => $inventario->costo_promedio,
+                    'ultimo_costo' => $inventario->ultimo_costo
                 ]
             ]);
             
@@ -441,7 +475,8 @@ class InventarioProyectoController extends Controller
                 $request->almacen_destino_id,
                 $request->observaciones,
                 'Transferencia',
-                null
+                null,
+                $inventario->costo_promedio // Usar costo promedio para la transferencia
             );
             
             // Registrar movimiento de transferencia
@@ -451,6 +486,7 @@ class InventarioProyectoController extends Controller
                 'almacen_destino_id' => $request->almacen_destino_id,
                 'tipo_movimiento' => 'Transferencia',
                 'cantidad' => $request->cantidad,
+                'costo_unitario' => $inventario->costo_promedio ?? $inventario->ultimo_costo ?? 0,
                 'cantidad_antes' => $inventario->cantidad_actual,
                 'cantidad_despues' => $inventario->cantidad_actual,
                 'observaciones' => $request->observaciones,
@@ -477,7 +513,7 @@ class InventarioProyectoController extends Controller
     }
     
     /**
-     * Get inventory summary by project.
+     * Get inventory summary by project (MODIFICADO para incluir costos)
      */
     public function getResumenPorProyecto($proyectoId)
     {
@@ -488,7 +524,10 @@ class InventarioProyectoController extends Controller
                 ->get();
             
             $totalArticulos = $inventario->count();
-            $valorTotalInventario = 0; // Se puede agregar costo más adelante
+            $valorTotalInventario = $inventario->sum(function($item) {
+                $costo = $item->costo_promedio ?? $item->ultimo_costo ?? 0;
+                return $item->cantidad_actual * $costo;
+            });
             $articulosBajoStock = $inventario->filter(function($item) {
                 return $item->estaBajoStock;
             })->count();
@@ -500,10 +539,13 @@ class InventarioProyectoController extends Controller
                     'valor_total' => $valorTotalInventario,
                     'articulos_bajo_stock' => $articulosBajoStock,
                     'detalle' => $inventario->map(function($item) {
+                        $costo = $item->costo_promedio ?? $item->ultimo_costo ?? 0;
                         return [
                             'articulo_codigo' => $item->articulo->codigo,
                             'articulo_descripcion' => $item->articulo->descripcion,
                             'disponible' => $item->disponible,
+                            'costo_unitario' => $costo,
+                            'valor_inventario' => $item->disponible * $costo,
                             'punto_reorden' => $item->punto_reorden,
                             'bajo_stock' => $item->estaBajoStock
                         ];
@@ -520,7 +562,7 @@ class InventarioProyectoController extends Controller
     }
     
     /**
-     * Export to Excel.
+     * Export to Excel (MODIFICADO para incluir costos)
      */
     public function exportar(Request $request)
     {
@@ -533,15 +575,230 @@ class InventarioProyectoController extends Controller
             
             $inventario = $query->orderBy('proyecto_id')->get();
             
+            $data = $inventario->map(function($item) {
+                return [
+                    'proyecto' => $item->proyecto->nombre,
+                    'codigo' => $item->articulo->codigo,
+                    'descripcion' => $item->articulo->descripcion,
+                    'unidad' => $item->unidad_medida,
+                    'cantidad' => $item->cantidad_actual,
+                    'costo_promedio' => $item->costo_promedio,
+                    'ultimo_costo' => $item->ultimo_costo,
+                    'valor_inventario' => $item->cantidad_actual * ($item->costo_promedio ?? $item->ultimo_costo ?? 0),
+                    'minimo' => $item->cantidad_minima,
+                    'maximo' => $item->cantidad_maxima,
+                    'punto_reorden' => $item->punto_reorden,
+                    'estatus' => $item->estatus
+                ];
+            });
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Exportación en desarrollo',
-                'total' => $inventario->count()
+                'total' => $inventario->count(),
+                'data_preview' => $data->take(10)
             ]);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al exportar: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Actualizar costo promedio manualmente
+     */
+    public function actualizarCosto(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'costo' => 'required|numeric|min:0',
+                'tipo' => 'required|in:promedio,ultimo'
+            ]);
+            
+            DB::beginTransaction();
+            
+            $inventario = InventarioProyecto::findOrFail($id);
+            
+            if ($request->tipo === 'promedio') {
+                $inventario->costo_promedio = $request->costo;
+            } else {
+                $inventario->ultimo_costo = $request->costo;
+            }
+            
+            $inventario->save();
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Costo actualizado exitosamente',
+                'data' => [
+                    'costo_promedio' => $inventario->costo_promedio,
+                    'ultimo_costo' => $inventario->ultimo_costo
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al actualizar costo: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar costo: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get inventario for Almacen por Obra view
+     */
+    /**
+ * Get inventario for Almacen por Obra view
+ */
+public function getInventarioPorObra(Request $request)
+{
+    try {
+        $query = InventarioProyecto::with(['proyecto', 'articulo.familia', 'articulo.subfamilia'])
+            ->where('estatus', 'Activo');
+        
+        // FILTRO POR PROYECTO (OBRA)
+        if ($request->filled('proyecto_id') && $request->proyecto_id !== 'todas') {
+            $query->where('proyecto_id', (int)$request->proyecto_id);
+        }
+        
+        // Búsqueda general
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('articulo', function($q) use ($search) {
+                $q->where('codigo', 'LIKE', "%{$search}%")
+                  ->orWhere('descripcion', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        // Filtrar por categoría (familia)
+        if ($request->filled('categoria') && $request->categoria !== 'todas') {
+            $query->whereHas('articulo.familia', function($q) use ($request) {
+                $q->where('nombre', $request->categoria);
+            });
+        }
+        
+        // Filtrar por subfamilia
+        if ($request->filled('familia') && $request->familia !== 'todas') {
+            $query->whereHas('articulo.subfamilia', function($q) use ($request) {
+                $q->where('nombre', $request->familia);
+            });
+        }
+        
+        $perPage = $request->get('per_page', 10);
+        $page = $request->get('page', 1);
+        
+        $inventario = $query->orderBy('id', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
+        
+        $data = $inventario->getCollection()->map(function($item) {
+            $costo = floatval($item->costo_promedio ?? $item->ultimo_costo ?? 0);
+            $importe = floatval($item->cantidad_actual) * $costo;
+            $cantidad = floatval($item->cantidad_actual);
+            $minimo = floatval($item->cantidad_minima);
+            
+            if ($minimo > 0) {
+                if ($cantidad <= ($minimo / 2)) {
+                    $estatus = 'Crítico';
+                } elseif ($cantidad <= $minimo) {
+                    $estatus = 'Bajo';
+                } else {
+                    $estatus = 'Normal';
+                }
+            } else {
+                $estatus = 'Normal';
+            }
+            
+            return [
+                'id' => $item->id,
+                'codigo' => $item->articulo->codigo ?? '---',
+                'descripcion' => $item->articulo->descripcion ?? '---',
+                'categoria' => $item->articulo->familia->nombre ?? 'Sin categoría',
+                'familia' => $item->articulo->subfamilia->nombre ?? $item->articulo->familia->nombre ?? 'Sin familia',
+                'cantidad' => $cantidad,
+                'unidad' => $item->unidad_medida ?? $item->articulo->unidad_medida ?? 'Pieza',
+                'costo' => $costo,
+                'importe' => $importe,
+                'minimo' => $minimo,
+                'maximo' => floatval($item->cantidad_maxima),
+                'estatus' => $estatus
+            ];
+        });
+        
+        // Calcular KPIs (usando el mismo query con filtros)
+        $queryKpi = clone $query;
+        $allItems = $queryKpi->get();
+        
+        $totalArticulos = $allItems->sum(function($item) {
+            return floatval($item->cantidad_actual);
+        });
+        
+        $valorInventario = $allItems->sum(function($item) {
+            $costo = floatval($item->costo_promedio ?? $item->ultimo_costo ?? 0);
+            return floatval($item->cantidad_actual) * $costo;
+        });
+        
+        $bajoMinimo = $allItems->filter(function($item) {
+            $cantidad = floatval($item->cantidad_actual);
+            $minimo = floatval($item->cantidad_minima);
+            return $minimo > 0 && $cantidad <= $minimo && $cantidad > ($minimo / 2);
+        })->count();
+        
+        $critico = $allItems->filter(function($item) {
+            $cantidad = floatval($item->cantidad_actual);
+            $minimo = floatval($item->cantidad_minima);
+            return $minimo > 0 && $cantidad <= ($minimo / 2);
+        })->count();
+        
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'total' => $inventario->total(),
+            'per_page' => $inventario->perPage(),
+            'current_page' => $inventario->currentPage(),
+            'last_page' => $inventario->lastPage(),
+            'kpis' => [
+                'total_articulos' => $totalArticulos,
+                'valor_inventario' => $valorInventario,
+                'bajo_minimo' => $bajoMinimo,
+                'critico' => $critico
+            ]
+        ]);
+        
+    } catch (\Exception $e) {
+        Log::error('Error en getInventarioPorObra: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+
+    /**
+     * Get filtros para catálogos (categorías y familias)
+     */
+    public function getFiltrosCatalogos()
+    {
+        try {
+            $categorias = \App\Models\Familia::where('estatus', 'Activo')->select('nombre')->distinct()->get();
+            $familias = \App\Models\Subfamilia::where('estatus', 'Activo')->select('nombre')->distinct()->get();
+            
+            return response()->json([
+                'success' => true,
+                'categorias' => $categorias,
+                'familias' => $familias
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
             ], 500);
         }
     }

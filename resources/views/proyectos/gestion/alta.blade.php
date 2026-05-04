@@ -167,9 +167,9 @@
                             <div>
                                 <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057; font-size: 13px;">Estado Inicial</label>
                                 <select class="form-control" id="estado_inicial" name="estado_inicial" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                                    <option value="pendiente" selected>Pendiente</option>
                                     <option value="activo">Activo</option>
                                     <option value="en_curso">En Curso</option>
-                                    <option value="pendiente">Pendiente</option>
                                     <option value="en_espera">En Espera</option>
                                 </select>
                             </div>
@@ -293,7 +293,7 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 3: RESPONSABLE Y EQUIPO -->
+                    <!-- SECCIÓN 3: RESPONSABLE Y EQUIPO - CORREGIDO -->
                     <div id="tab-responsable" class="tab-content" style="display: none;">
                         <h3 style="color: #083CAE; font-size: 18px; margin-bottom: 20px; font-weight: 600;">
                             <i class="fas fa-user-tie"></i> Responsable del Proyecto
@@ -306,15 +306,13 @@
                                 </label>
                                 <select class="form-control" id="responsable" name="responsable" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                                     <option value="">Seleccionar responsable...</option>
-                                    @isset($usuarios)
+                                    @if(isset($usuarios) && $usuarios->count() > 0)
                                         @foreach($usuarios as $usuario)
                                             <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
                                         @endforeach
                                     @else
-                                        <option value="1">Juan Pérez</option>
-                                        <option value="2">María García</option>
-                                        <option value="3">Carlos Rodríguez</option>
-                                    @endisset
+                                        <option value="" disabled>No hay usuarios disponibles</option>
+                                    @endif
                                 </select>
                             </div>
                             <div>
@@ -351,7 +349,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="equipoBody">
-                                        <!-- Los miembros se agregarán dinámicamente -->
                                     </tbody>
                                 </table>
                             </div>
@@ -460,7 +457,7 @@
                             <div class="upload-area" data-tipo="contrato" style="border: 2px dashed #ced4da; border-radius: 8px; padding: 30px; text-align: center; background-color: #f8f9fa; cursor: pointer; transition: all 0.3s;">
                                 <i class="fas fa-file-contract" style="font-size: 48px; color: #083CAE; margin-bottom: 15px;"></i>
                                 <h4 style="font-size: 16px; margin-bottom: 10px;">Contrato</h4>
-                                <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">Haz clic para seleccionar el archivo</p>
+                                <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">Arrastra o haz clic para seleccionar</p>
                                 <input type="file" class="file-input" data-tipo="contrato" accept=".pdf,.doc,.docx" style="display: none;">
                                 <p style="font-size: 11px; color: #6c757d;">PDF, DOC, DOCX (Max. 10MB)</p>
                             </div>
@@ -468,7 +465,7 @@
                             <div class="upload-area" data-tipo="anexos" style="border: 2px dashed #ced4da; border-radius: 8px; padding: 30px; text-align: center; background-color: #f8f9fa; cursor: pointer; transition: all 0.3s;">
                                 <i class="fas fa-file-pdf" style="font-size: 48px; color: #083CAE; margin-bottom: 15px;"></i>
                                 <h4 style="font-size: 16px; margin-bottom: 10px;">Anexos Técnicos</h4>
-                                <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">Haz clic para seleccionar archivos</p>
+                                <p style="font-size: 12px; color: #6c757d; margin-bottom: 15px;">Arrastra o haz clic para seleccionar</p>
                                 <input type="file" class="file-input" data-tipo="anexos" multiple accept=".pdf,.dwg,.dxf" style="display: none;">
                                 <p style="font-size: 11px; color: #6c757d;">PDF, DWG, DXF (Max. 50MB)</p>
                             </div>
@@ -530,51 +527,41 @@
     .tab-content {
         animation: fadeIn 0.3s ease;
     }
-    
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    
     .tab-btn {
         transition: all 0.3s ease;
     }
-    
     .tab-btn:hover {
         opacity: 0.9;
         transform: translateY(-2px);
     }
-    
     .tab-btn.active {
         background-color: #083CAE !important;
         color: white !important;
     }
-    
     .form-control:focus {
         outline: none;
         border-color: #083CAE;
         box-shadow: 0 0 0 3px rgba(8, 60, 174, 0.1);
     }
-    
     .upload-area:hover {
         border-color: #083CAE !important;
         background-color: #e8f0fe !important;
     }
-    
     @media (max-width: 768px) {
         div[style*="grid-template-columns"] {
             grid-template-columns: 1fr !important;
         }
-        
         .tab-btn {
             padding: 10px 15px !important;
             font-size: 12px !important;
         }
-        
         .progress-step .step-label {
             font-size: 10px !important;
         }
-        
         .progress-step .step-circle {
             width: 28px !important;
             height: 28px !important;
@@ -584,7 +571,6 @@
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -593,7 +579,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let equipoMiembros = [];
     let documentosCargados = [];
     
-    // Elementos del DOM
     const tabs = document.querySelectorAll('.tab-content');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const btnAnterior = document.getElementById('btnAnterior');
@@ -603,27 +588,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnCancelar = document.getElementById('btnCancelar');
     const progressBar = document.querySelector('.progress-bar-fill');
     const progressSteps = document.querySelectorAll('.progress-step');
-    
-    // Elementos financieros
     const presupuestoTotal = document.getElementById('presupuesto_total');
     const anticipo = document.getElementById('anticipo');
     const montoAnticipo = document.getElementById('monto_anticipo');
     const margen = document.getElementById('margen');
     const utilidad = document.getElementById('utilidad');
     
-    // Función para cambiar de pestaña
     function cambiarTab(tabIndex) {
-        // Ocultar todas las pestañas
         tabs.forEach(tab => tab.style.display = 'none');
         
-        // Mostrar la pestaña seleccionada
         const tabId = tabIndex === 1 ? 'tab-generales' : 
                       tabIndex === 2 ? 'tab-cliente' : 
                       tabIndex === 3 ? 'tab-responsable' : 
                       tabIndex === 4 ? 'tab-financiero' : 'tab-documentos';
         document.getElementById(tabId).style.display = 'block';
         
-        // Actualizar botones de pestaña
         tabButtons.forEach((btn, index) => {
             if (index + 1 === tabIndex) {
                 btn.classList.add('active');
@@ -636,12 +615,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Actualizar barra de progreso
         if (progressBar) {
             progressBar.style.width = `${(tabIndex / totalTabs) * 100}%`;
         }
         
-        // Actualizar círculos de progreso
         progressSteps.forEach((step, index) => {
             const circle = step.querySelector('.step-circle');
             const label = step.querySelector('.step-label');
@@ -656,12 +633,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Mostrar/ocultar botones de navegación
-        if (tabIndex === 1) {
-            btnAnterior.style.display = 'none';
-        } else {
-            btnAnterior.style.display = 'inline-block';
-        }
+        btnAnterior.style.display = tabIndex === 1 ? 'none' : 'inline-block';
         
         if (tabIndex === totalTabs) {
             btnSiguiente.style.display = 'none';
@@ -674,28 +646,20 @@ document.addEventListener('DOMContentLoaded', function() {
         currentTab = tabIndex;
     }
     
-    // Event listeners para pestañas
     tabButtons.forEach((btn, index) => {
         btn.addEventListener('click', () => cambiarTab(index + 1));
     });
     
-    // Botón siguiente
     btnSiguiente.addEventListener('click', () => {
-        if (validarPestanaActual()) {
-            if (currentTab < totalTabs) {
-                cambiarTab(currentTab + 1);
-            }
+        if (validarPestanaActual() && currentTab < totalTabs) {
+            cambiarTab(currentTab + 1);
         }
     });
     
-    // Botón anterior
     btnAnterior.addEventListener('click', () => {
-        if (currentTab > 1) {
-            cambiarTab(currentTab - 1);
-        }
+        if (currentTab > 1) cambiarTab(currentTab - 1);
     });
     
-    // Validar pestaña actual
     function validarPestanaActual() {
         if (currentTab === 1) {
             const requeridos = ['codigo', 'nombre_proyecto', 'tipo_proyecto', 'prioridad', 'ubicacion', 'fecha_inicio', 'fecha_fin'];
@@ -707,8 +671,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     return false;
                 }
             }
-            
-            // Validar fechas
             const fechaInicio = document.getElementById('fecha_inicio').value;
             const fechaFin = document.getElementById('fecha_fin').value;
             if (fechaInicio && fechaFin && fechaInicio > fechaFin) {
@@ -716,7 +678,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
         }
-        
         if (currentTab === 2) {
             const requeridos = ['cliente_nombre', 'cliente_rfc', 'numero_contrato'];
             for (let campo of requeridos) {
@@ -728,15 +689,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-        
         if (currentTab === 3) {
-            const responsable = document.getElementById('responsable').value;
-            if (!responsable) {
+            if (!document.getElementById('responsable').value) {
                 mostrarNotificacion('Debe seleccionar un responsable para el proyecto', 'error');
                 return false;
             }
         }
-        
         if (currentTab === 4) {
             const presupuesto = document.getElementById('presupuesto_total').value;
             if (!presupuesto || parseFloat(presupuesto) <= 0) {
@@ -745,11 +703,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
         }
-        
         return true;
     }
     
-    // Cálculos financieros
     function calcularMontoAnticipo() {
         const presupuesto = parseFloat(presupuestoTotal?.value) || 0;
         const porcentaje = parseFloat(anticipo?.value) || 0;
@@ -768,20 +724,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    if (presupuestoTotal) {
-        presupuestoTotal.addEventListener('input', () => {
-            calcularMontoAnticipo();
-            calcularUtilidad();
-        });
-    }
-    
-    if (anticipo) {
-        anticipo.addEventListener('input', calcularMontoAnticipo);
-    }
-    
-    if (margen) {
-        margen.addEventListener('input', calcularUtilidad);
-    }
+    if (presupuestoTotal) presupuestoTotal.addEventListener('input', () => { calcularMontoAnticipo(); calcularUtilidad(); });
+    if (anticipo) anticipo.addEventListener('input', calcularMontoAnticipo);
+    if (margen) margen.addEventListener('input', calcularUtilidad);
     
     // Buscar cliente
     document.getElementById('btnBuscarCliente')?.addEventListener('click', function() {
@@ -790,33 +735,37 @@ document.addEventListener('DOMContentLoaded', function() {
             mostrarNotificacion('Ingrese al menos 3 caracteres para buscar', 'warning');
             return;
         }
-        
-        // Simular búsqueda - Aquí iría la llamada AJAX real
-        mostrarNotificacion('Buscando cliente: ' + termino, 'info');
-        
-        // Simular autocompletado
-        document.getElementById('cliente_nombre').value = 'Cliente Ejemplo SA de CV';
-        document.getElementById('cliente_rfc').value = 'CLEJ850101ABC';
-        document.getElementById('cliente_email').value = 'contacto@cliente.com';
-        document.getElementById('cliente_telefono').value = '(81) 1234-5678';
-        document.getElementById('cliente_contacto').value = 'Juan Carlos López';
-        document.getElementById('cliente_cargo').value = 'Gerente de Proyectos';
+        fetch(`/proyectos/buscar-cliente?q=${encodeURIComponent(termino)}`, {
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.length > 0) {
+                const cliente = data[0];
+                document.getElementById('cliente_nombre').value = cliente.cliente_nombre || '';
+                document.getElementById('cliente_rfc').value = cliente.cliente_rfc || '';
+                document.getElementById('cliente_email').value = cliente.cliente_email || '';
+                document.getElementById('cliente_telefono').value = cliente.cliente_telefono || '';
+                document.getElementById('cliente_contacto').value = cliente.cliente_contacto || '';
+                document.getElementById('cliente_cargo').value = cliente.cliente_cargo || '';
+                mostrarNotificacion('Cliente encontrado', 'success');
+            } else {
+                mostrarNotificacion('No se encontraron clientes', 'warning');
+            }
+        });
     });
     
-    // Nuevo cliente - limpiar campos
+    // Nuevo cliente
     document.getElementById('btnNuevoCliente')?.addEventListener('click', function() {
-        document.getElementById('cliente_nombre').value = '';
-        document.getElementById('cliente_rfc').value = '';
-        document.getElementById('cliente_email').value = '';
-        document.getElementById('cliente_telefono').value = '';
-        document.getElementById('cliente_contacto').value = '';
-        document.getElementById('cliente_cargo').value = '';
+        ['cliente_nombre', 'cliente_rfc', 'cliente_email', 'cliente_telefono', 'cliente_contacto', 'cliente_cargo'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
         document.getElementById('buscar_cliente').value = '';
         document.getElementById('cliente_nombre').focus();
         mostrarNotificacion('Campos de cliente limpiados', 'success');
     });
     
-    // Agregar miembro al equipo
+    // Agregar miembro
     document.getElementById('btnAgregarMiembro')?.addEventListener('click', function() {
         const nombre = prompt('Nombre del miembro:');
         if (!nombre) return;
@@ -825,13 +774,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const departamento = prompt('Departamento:');
         if (!departamento) return;
         const dedicacion = prompt('Porcentaje de dedicación (1-100):', '100');
-        if (!dedicacion) return;
-        
-        if (isNaN(dedicacion) || dedicacion < 1 || dedicacion > 100) {
+        if (!dedicacion || isNaN(dedicacion) || dedicacion < 1 || dedicacion > 100) {
             mostrarNotificacion('La dedicación debe ser un número entre 1 y 100', 'error');
             return;
         }
-        
         equipoMiembros.push({ nombre, rol, departamento, dedicacion });
         actualizarTablaEquipo();
     });
@@ -839,7 +785,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function actualizarTablaEquipo() {
         const tbody = document.getElementById('equipoBody');
         if (!tbody) return;
-        
         tbody.innerHTML = '';
         equipoMiembros.forEach((miembro, index) => {
             const row = tbody.insertRow();
@@ -855,70 +800,50 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
             `;
         });
-        
-        // Agregar event listeners a los botones eliminar
         document.querySelectorAll('.btn-eliminar-miembro').forEach(btn => {
             btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                equipoMiembros.splice(index, 1);
+                equipoMiembros.splice(parseInt(this.dataset.index), 1);
                 actualizarTablaEquipo();
             });
         });
     }
     
-    // Áreas de carga de documentos
+    // Documentos
     document.querySelectorAll('.upload-area').forEach(area => {
         area.addEventListener('click', function() {
-            const fileInput = this.querySelector('.file-input');
-            if (fileInput) fileInput.click();
+            this.querySelector('.file-input')?.click();
         });
-        
         area.addEventListener('dragover', function(e) {
             e.preventDefault();
             this.style.borderColor = '#083CAE';
             this.style.backgroundColor = '#e8f0fe';
         });
-        
         area.addEventListener('dragleave', function(e) {
-            e.preventDefault();
             this.style.borderColor = '#ced4da';
             this.style.backgroundColor = '#f8f9fa';
         });
-        
         area.addEventListener('drop', function(e) {
             e.preventDefault();
             this.style.borderColor = '#ced4da';
             this.style.backgroundColor = '#f8f9fa';
-            
-            const files = e.dataTransfer.files;
-            const tipo = this.dataset.tipo;
-            procesarArchivos(files, tipo);
+            procesarArchivos(e.dataTransfer.files, this.dataset.tipo);
         });
     });
     
     document.querySelectorAll('.file-input').forEach(input => {
         input.addEventListener('change', function() {
-            const files = this.files;
-            const tipo = this.dataset.tipo;
-            procesarArchivos(files, tipo);
+            procesarArchivos(this.files, this.dataset.tipo);
         });
     });
     
     function procesarArchivos(files, tipo) {
+        const maxSize = tipo === 'contrato' ? 10 * 1024 * 1024 : 50 * 1024 * 1024;
         for (let file of files) {
-            // Validar tamaño
-            const maxSize = tipo === 'contrato' ? 10 * 1024 * 1024 : 50 * 1024 * 1024;
             if (file.size > maxSize) {
-                mostrarNotificacion(`El archivo ${file.name} excede el tamaño máximo permitido`, 'error');
+                mostrarNotificacion(`El archivo ${file.name} excede el tamaño máximo`, 'error');
                 continue;
             }
-            
-            documentosCargados.push({
-                tipo: tipo,
-                nombre: file.name,
-                tamaño: file.size,
-                archivo: file
-            });
+            documentosCargados.push({ tipo, nombre: file.name, tamaño: file.size, archivo: file });
         }
         actualizarListaDocumentos();
     }
@@ -926,17 +851,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function actualizarListaDocumentos() {
         const tbody = document.getElementById('documentosBody');
         if (!tbody) return;
-        
         if (documentosCargados.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">No hay documentos cargados</td></tr>';
             return;
         }
-        
         tbody.innerHTML = '';
         documentosCargados.forEach((doc, index) => {
             const row = tbody.insertRow();
             row.innerHTML = `
-                <td style="padding: 10px;">${getIconoTipo(doc.tipo)} ${doc.tipo}</td>
+                <td style="padding: 10px;"><i class="fas fa-file"></i> ${doc.tipo}</td>
                 <td style="padding: 10px;">${escapeHtml(doc.nombre)}</td>
                 <td style="padding: 10px;">${formatBytes(doc.tamaño)}</td>
                 <td style="padding: 10px;">
@@ -946,11 +869,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
             `;
         });
-        
         document.querySelectorAll('.btn-eliminar-documento').forEach(btn => {
             btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                documentosCargados.splice(index, 1);
+                documentosCargados.splice(parseInt(this.dataset.index), 1);
                 actualizarListaDocumentos();
             });
         });
@@ -958,13 +879,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Guardar proyecto
     async function guardarProyecto(status = 'activo') {
-        if (status === 'activo' && !validarFormularioCompleto()) {
-            return;
-        }
+        if (status === 'activo' && !validarFormularioCompleto()) return;
         
         const formData = new FormData();
-        
-        // Recopilar todos los datos del formulario
         const campos = ['codigo', 'nombre_proyecto', 'tipo_proyecto', 'categoria', 'prioridad', 
                         'ubicacion', 'direccion', 'fecha_inicio', 'fecha_fin', 'descripcion', 
                         'estado_inicial', 'moneda', 'tipo_cambio', 'cliente_nombre', 'cliente_rfc', 
@@ -975,15 +892,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         campos.forEach(campo => {
             const input = document.getElementById(campo);
-            if (input && input.value) {
-                formData.append(campo, input.value);
-            }
+            if (input && input.value) formData.append(campo, input.value);
         });
         
-        // Agregar equipo
         formData.append('equipo', JSON.stringify(equipoMiembros));
         
-        // Agregar costos
         const costos = {
             materiales: document.querySelector('.costo-input[data-costo="materiales"]')?.value || 0,
             mano_obra: document.querySelector('.costo-input[data-costo="mano_obra"]')?.value || 0,
@@ -992,14 +905,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         formData.append('costos', JSON.stringify(costos));
         
-        // Agregar documentos
-        documentosCargados.forEach((doc, index) => {
+        documentosCargados.forEach(doc => {
             formData.append(`documentos[${doc.tipo}][]`, doc.archivo);
         });
         
         formData.append('status', status);
         
-        // Mostrar loading
         const btn = status === 'activo' ? btnGuardar : btnGuardarBorrador;
         const originalText = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
@@ -1014,116 +925,70 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: formData
             });
-            
             const data = await response.json();
-            
             if (data.success) {
                 mostrarNotificacion(data.message, 'success');
-                setTimeout(() => {
-                    window.location.href = '/proyectos';
-                }, 1500);
+                setTimeout(() => { window.location.href = '/proyectos/cartera'; }, 1500);
             } else {
-                mostrarNotificacion(data.message || 'Error al guardar el proyecto', 'error');
+                mostrarNotificacion(data.message || 'Error al guardar', 'error');
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }
         } catch (error) {
-            console.error('Error:', error);
-            mostrarNotificacion('Error de conexión al guardar el proyecto', 'error');
+            mostrarNotificacion('Error de conexión', 'error');
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
     }
     
     function validarFormularioCompleto() {
-        // Validar sección 1
-        const seccion1 = ['codigo', 'nombre_proyecto', 'tipo_proyecto', 'prioridad', 'ubicacion', 'fecha_inicio', 'fecha_fin'];
-        for (let campo of seccion1) {
-            const input = document.getElementById(campo);
-            if (!input || !input.value.trim()) {
-                mostrarNotificacion('Complete todos los campos requeridos en Datos Generales', 'error');
+        for (let campo of ['codigo', 'nombre_proyecto', 'tipo_proyecto', 'prioridad', 'ubicacion', 'fecha_inicio', 'fecha_fin']) {
+            if (!document.getElementById(campo)?.value?.trim()) {
+                mostrarNotificacion('Complete todos los campos en Datos Generales', 'error');
                 cambiarTab(1);
                 return false;
             }
         }
-        
-        // Validar sección 2
-        const seccion2 = ['cliente_nombre', 'cliente_rfc', 'numero_contrato'];
-        for (let campo of seccion2) {
-            const input = document.getElementById(campo);
-            if (!input || !input.value.trim()) {
-                mostrarNotificacion('Complete todos los campos requeridos en Cliente y Contrato', 'error');
+        for (let campo of ['cliente_nombre', 'cliente_rfc', 'numero_contrato']) {
+            if (!document.getElementById(campo)?.value?.trim()) {
+                mostrarNotificacion('Complete todos los campos en Cliente y Contrato', 'error');
                 cambiarTab(2);
                 return false;
             }
         }
-        
-        // Validar sección 3
-        const responsable = document.getElementById('responsable').value;
-        if (!responsable) {
-            mostrarNotificacion('Seleccione un responsable para el proyecto', 'error');
+        if (!document.getElementById('responsable').value) {
+            mostrarNotificacion('Seleccione un responsable', 'error');
             cambiarTab(3);
             return false;
         }
-        
-        // Validar sección 4
-        const presupuesto = document.getElementById('presupuesto_total').value;
-        if (!presupuesto || parseFloat(presupuesto) <= 0) {
-            mostrarNotificacion('Ingrese un presupuesto total válido', 'error');
+        if (!document.getElementById('presupuesto_total').value || parseFloat(document.getElementById('presupuesto_total').value) <= 0) {
+            mostrarNotificacion('Ingrese un presupuesto válido', 'error');
             cambiarTab(4);
             return false;
         }
-        
         return true;
     }
     
-    // Eventos de guardado
     btnGuardar?.addEventListener('click', () => guardarProyecto('activo'));
     btnGuardarBorrador?.addEventListener('click', () => guardarProyecto('borrador'));
-    
-    btnCancelar?.addEventListener('click', function() {
-        if (confirm('¿Está seguro de cancelar el alta del proyecto? Se perderán los datos no guardados.')) {
-            window.location.href = '/proyectos';
-        }
+    btnCancelar?.addEventListener('click', () => {
+        if (confirm('¿Cancelar el alta del proyecto?')) window.location.href = '/proyectos';
     });
     
-    // Validación de fechas
-    document.getElementById('fecha_inicio')?.addEventListener('change', function() {
-        const fechaFin = document.getElementById('fecha_fin');
-        if (fechaFin && fechaFin.value && this.value > fechaFin.value) {
-            mostrarNotificacion('La fecha de inicio no puede ser mayor a la fecha de fin', 'error');
-            this.value = '';
-        }
+    // Autocompletar responsable
+    document.getElementById('responsable')?.addEventListener('change', function() {
+        const data = responsableData[this.value];
+        document.getElementById('cargo_responsable').value = data ? data.cargo : '';
+        document.getElementById('email_responsable').value = data ? data.email : '';
     });
     
-    document.getElementById('fecha_fin')?.addEventListener('change', function() {
-        const fechaInicio = document.getElementById('fecha_inicio');
-        if (fechaInicio && fechaInicio.value && this.value < fechaInicio.value) {
-            mostrarNotificacion('La fecha de fin no puede ser menor a la fecha de inicio', 'error');
-            this.value = '';
-        }
-    });
-    
-    // Funciones auxiliares
+    // Helpers
     function mostrarNotificacion(mensaje, tipo) {
-        const notificacion = document.createElement('div');
-        notificacion.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            background-color: ${tipo === 'success' ? '#28a745' : tipo === 'error' ? '#dc3545' : tipo === 'warning' ? '#ffc107' : '#17a2b8'};
-            color: ${tipo === 'warning' ? '#000' : 'white'};
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 9999;
-            font-size: 14px;
-            animation: fadeIn 0.3s;
-            max-width: 300px;
-        `;
-        notificacion.textContent = mensaje;
-        document.body.appendChild(notificacion);
-        setTimeout(() => notificacion.remove(), 3000);
+        const el = document.createElement('div');
+        el.style.cssText = `position:fixed;top:20px;right:20px;padding:12px 20px;border-radius:4px;z-index:9999;font-size:14px;max-width:300px;background-color:${tipo==='success'?'#28a745':tipo==='error'?'#dc3545':tipo==='warning'?'#ffc107':'#17a2b8'};color:${tipo==='warning'?'#000':'white'}`;
+        el.textContent = mensaje;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
     }
     
     function escapeHtml(text) {
@@ -1133,40 +998,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function formatBytes(bytes) {
-        if (bytes === 0) return '0 Bytes';
+        if (!bytes) return '0 Bytes';
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        return parseFloat((bytes / Math.pow(k, sizes.length - 1)).toFixed(2)) + ' ' + sizes[sizes.length - 1];
     }
     
-    function getIconoTipo(tipo) {
-        const iconos = {
-            contrato: '<i class="fas fa-file-contract"></i>',
-            anexos: '<i class="fas fa-file-pdf"></i>',
-            planos: '<i class="fas fa-draw-polygon"></i>',
-            presupuesto: '<i class="fas fa-file-excel"></i>',
-            programa: '<i class="fas fa-calendar-alt"></i>'
-        };
-        return iconos[tipo] || '<i class="fas fa-file"></i>';
-    }
-    
-    // Inicializar
+    // Iniciar
     cambiarTab(1);
-    
-    // Simular autocompletado de responsable
-    document.getElementById('responsable')?.addEventListener('change', function() {
-        const responsableData = {
-            '1': { cargo: 'Director de Proyectos', email: 'juan.perez@empresa.com' },
-            '2': { cargo: 'Gerente de Proyectos', email: 'maria.garcia@empresa.com' },
-            '3': { cargo: 'Residente de Obra', email: 'carlos.rodriguez@empresa.com' }
-        };
-        const data = responsableData[this.value];
-        if (data) {
-            document.getElementById('cargo_responsable').value = data.cargo;
-            document.getElementById('email_responsable').value = data.email;
-        }
-    });
 });
 </script>
 @endsection

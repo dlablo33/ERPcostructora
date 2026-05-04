@@ -314,4 +314,58 @@ class ArticuloController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Crear artículo temporalmente (para recepción de compras)
+     */
+    public function crearTemporal(Request $request)
+    {
+        try {
+            Log::info('Crear artículo temporal llamado', $request->all());
+            
+            $request->validate([
+                'codigo' => 'required|string|max:50',
+                'descripcion' => 'required|string|max:500',
+                'unidad_medida' => 'nullable|string|max:20'
+            ]);
+            
+            // Verificar si ya existe por código
+            $existente = Articulo::where('codigo', $request->codigo)->first();
+            
+            if ($existente) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Artículo ya existe',
+                    'data' => ['id' => $existente->id]
+                ]);
+            }
+            
+            // Crear nuevo artículo
+            $articulo = Articulo::create([
+                'codigo' => $request->codigo,
+                'descripcion' => $request->descripcion,
+                'unidad_medida' => $request->unidad_medida ?? 'Pieza',
+                'estatus' => 'Activo',
+                'minimo' => 0,
+                'maximo' => 0,
+                'punto_reorden' => 0,
+                'numero_parte' => $request->codigo
+            ]);
+            
+            Log::info('Artículo creado temporalmente', ['id' => $articulo->id, 'codigo' => $articulo->codigo]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Artículo creado temporalmente',
+                'data' => ['id' => $articulo->id]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error al crear artículo temporal: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

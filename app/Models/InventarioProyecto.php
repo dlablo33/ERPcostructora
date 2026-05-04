@@ -24,7 +24,10 @@ class InventarioProyecto extends Model
         'ultima_entrada',
         'ultima_salida',
         'observaciones',
-        'estatus'
+        'estatus',
+        'costo_promedio',
+        'ultimo_costo',
+        'ultimo_costo_compra'
     ];
     
     protected $casts = [
@@ -33,6 +36,9 @@ class InventarioProyecto extends Model
         'cantidad_minima' => 'decimal:3',
         'cantidad_maxima' => 'decimal:3',
         'punto_reorden' => 'decimal:3',
+        'costo_promedio' => 'decimal:2',
+        'ultimo_costo' => 'decimal:2',
+        'ultimo_costo_compra' => 'decimal:2',
         'ultima_entrada' => 'datetime',
         'ultima_salida' => 'datetime',
         'estatus' => 'string'
@@ -76,6 +82,13 @@ class InventarioProyecto extends Model
         return round(($this->cantidad_actual / $this->cantidad_maxima) * 100, 2);
     }
     
+    public function getValorInventarioAttribute()
+    {
+        if (!$this->costo_promedio && !$this->ultimo_costo) return 0;
+        $costo = $this->costo_promedio ?? $this->ultimo_costo ?? 0;
+        return $this->cantidad_actual * $costo;
+    }
+    
     // Scopes
     public function scopeActivos($query)
     {
@@ -87,10 +100,33 @@ class InventarioProyecto extends Model
         return $query->whereRaw('(cantidad_actual - cantidad_reservada) <= punto_reorden');
     }
     
-    // Métodos
-    public function agregarStock($cantidad, $almacenId, $observaciones = null, $referenciaTipo = null, $referenciaId = null)
+    /**
+     * Agregar stock al inventario (ENTRADA)
+     */
+    public function agregarStock($cantidad, $almacenId, $observaciones = null, $referenciaTipo = null, $referenciaId = null, $costoUnitario = null)
     {
         $cantidadAnterior = $this->cantidad_actual;
+        
+        // ACTUALIZAR COSTOS si se proporciona costo unitario
+        if ($costoUnitario && $costoUnitario > 0) {
+            // Guardar último costo
+            $this->ultimo_costo = $costoUnitario;
+            
+            // Si es una compra, guardar también en último costo de compra
+            if ($referenciaTipo === 'Compra') {
+                $this->ultimo_costo_compra = $costoUnitario;
+            }
+            
+            // Calcular costo promedio ponderado
+            if ($this->cantidad_actual > 0 && $this->costo_promedio && $this->costo_promedio > 0) {
+                $importeActual = $this->cantidad_actual * $this->costo_promedio;
+                $importeNuevo = $cantidad * $costoUnitario;
+                $cantidadTotal = $this->cantidad_actual + $cantidad;
+                $this->costo_promedio = ($importeActual + $importeNuevo) / $cantidadTotal;
+            } else {
+                $this->costo_promedio = $costoUnitario;
+            }
+        }
         
         // Actualizar stock principal
         $this->cantidad_actual += $cantidad;
@@ -113,12 +149,13 @@ class InventarioProyecto extends Model
             ]);
         }
         
-        // Registrar movimiento
+        // Registrar movimiento con costo
         MovimientoInventario::create([
             'inventario_proyecto_id' => $this->id,
             'almacen_destino_id' => $almacenId,
             'tipo_movimiento' => 'Entrada',
             'cantidad' => $cantidad,
+            'costo_unitario' => $costoUnitario,
             'cantidad_antes' => $cantidadAnterior,
             'cantidad_despues' => $this->cantidad_actual,
             'referencia_tipo' => $referenciaTipo,
@@ -131,10 +168,13 @@ class InventarioProyecto extends Model
         return true;
     }
     
+    /**
+     * Retirar stock del inventario (SALIDA)
+     */
     public function retirarStock($cantidad, $almacenId, $observaciones = null, $referenciaTipo = null, $referenciaId = null)
     {
         if ($this->disponible < $cantidad) {
-            throw new \Exception('Stock insuficiente');
+            throw new \Exception('Stock insuficiente. Disponible: ' . $this->disponible . ', solicitado: ' . $cantidad);
         }
         
         $cantidadAnterior = $this->cantidad_actual;
@@ -154,12 +194,15 @@ class InventarioProyecto extends Model
             $ubicacion->save();
         }
         
-        // Registrar movimiento
+        // Registrar movimiento (usar el costo promedio al momento de la salida)
+        $costoSalida = $this->costo_promedio ?? $this->ultimo_costo ?? 0;
+        
         MovimientoInventario::create([
             'inventario_proyecto_id' => $this->id,
             'almacen_origen_id' => $almacenId,
             'tipo_movimiento' => 'Salida',
             'cantidad' => $cantidad,
+            'costo_unitario' => $costoSalida,
             'cantidad_antes' => $cantidadAnterior,
             'cantidad_despues' => $this->cantidad_actual,
             'referencia_tipo' => $referenciaTipo,
@@ -170,5 +213,29 @@ class InventarioProyecto extends Model
         ]);
         
         return true;
+    }
+    
+    /**
+     * Actualizar costo promedio manualmente
+     */
+    public function actualizarCostoPromedio($nuevoCosto, $cantidadNueva = null)
+    {
+        if (!$cantidadNueva) {
+            $cantidadNueva = $this->cantidad_actual;
+        }
+        
+        if ($this->cantidad_actual > 0 && $this->costo_promedio && $this->costo_promedio > 0) {
+            $importeActual = $this->cantidad_actual * $this->costo_promedio;
+            $importeNuevo = $cantidadNueva * $nuevoCosto;
+            $cantidadTotal = $this->cantidad_actual + $cantidadNueva;
+            $this->costo_promedio = ($importeActual + $importeNuevo) / $cantidadTotal;
+        } else {
+            $this->costo_promedio = $nuevoCosto;
+        }
+        
+        $this->ultimo_costo = $nuevoCosto;
+        $this->save();
+        
+        return $this->costo_promedio;
     }
 }

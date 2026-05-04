@@ -19,31 +19,31 @@ class ProyectoController extends Controller
      * Muestra la cartera de proyectos (listado)
      */
     public function index(Request $request)
-{
-    $query = Proyecto::with(['responsable', 'costos']);
-    
-    // Filtros
-    if ($request->has('status') && $request->status) {
-        $query->where('status', $request->status);
+    {
+        $query = Proyecto::with(['responsable', 'costos']);
+        
+        // Filtros
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+        
+        if ($request->has('prioridad') && $request->prioridad) {
+            $query->where('prioridad', $request->prioridad);
+        }
+        
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nombre', 'LIKE', "%{$search}%")
+                  ->orWhere('codigo', 'LIKE', "%{$search}%")
+                  ->orWhere('cliente_nombre', 'LIKE', "%{$search}%");
+            });
+        }
+        
+        $proyectos = $query->orderBy('created_at', 'desc')->get();
+        
+        return view('proyectos.gestion.cartera', compact('proyectos'));
     }
-    
-    if ($request->has('prioridad') && $request->prioridad) {
-        $query->where('prioridad', $request->prioridad);
-    }
-    
-    if ($request->has('search') && $request->search) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('nombre', 'LIKE', "%{$search}%")
-              ->orWhere('codigo', 'LIKE', "%{$search}%")
-              ->orWhere('cliente_nombre', 'LIKE', "%{$search}%");
-        });
-    }
-    
-    $proyectos = $query->orderBy('created_at', 'desc')->get();
-    
-    return view('proyectos.gestion.cartera', compact('proyectos'));
-}
 
     /**
      * Muestra el formulario para crear un nuevo proyecto
@@ -54,10 +54,8 @@ class ProyectoController extends Controller
         $codigo = $this->generarCodigoProyecto();
         
         // Obtener usuarios para el responsable del proyecto
-        $usuarios = User::where('estatus', 'activo')
-            ->orWhereNull('estatus')
-            ->orderBy('name')
-            ->get();
+        // CORREGIDO: Se obtienen todos los usuarios sin filtro problemático
+        $usuarios = User::orderBy('name')->get();
         
         // Vista corregida: alta de proyecto
         return view('proyectos.gestion.alta', compact('codigo', 'usuarios'));
@@ -120,25 +118,22 @@ class ProyectoController extends Controller
     /**
      * Muestra los detalles de un proyecto
      */
-    /**
- * Muestra los detalles de un proyecto
- */
-public function show($id)
-{
-    // Validar que el ID sea numérico
-    if (!is_numeric($id)) {
-        abort(404, 'Proyecto no encontrado');
-    }
-    
-    try {
-        $proyecto = Proyecto::with(['responsable', 'equipo', 'documentos', 'costos', 'flujoEfectivo'])
-            ->findOrFail($id);
+    public function show($id)
+    {
+        // Validar que el ID sea numérico
+        if (!is_numeric($id)) {
+            abort(404, 'Proyecto no encontrado');
+        }
         
-        return view('proyectos.show', compact('proyecto'));
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        abort(404, 'Proyecto no encontrado');
+        try {
+            $proyecto = Proyecto::with(['responsable', 'equipo', 'documentos', 'costos', 'flujoEfectivo'])
+                ->findOrFail($id);
+            
+            return view('proyectos.show', compact('proyecto'));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Proyecto no encontrado');
+        }
     }
-}
 
     /**
      * Muestra el formulario para editar un proyecto
@@ -611,26 +606,26 @@ public function show($id)
     }
 
     /**
- * Obtiene datos para edición (AJAX)
- */
-public function editData($id)
-{
-    $proyecto = Proyecto::findOrFail($id);
-    return response()->json([
-        'success' => true,
-        'proyecto' => $proyecto
-    ]);
-}
+     * Obtiene datos para edición (AJAX)
+     */
+    public function editData($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'proyecto' => $proyecto
+        ]);
+    }
 
-/**
- * Obtiene detalle del proyecto (AJAX)
- */
-public function getDetalle($id)
-{
-    $proyecto = Proyecto::with(['responsable', 'equipo', 'costos'])->findOrFail($id);
-    return response()->json([
-        'success' => true,
-        'proyecto' => $proyecto
-    ]);
-}
+    /**
+     * Obtiene detalle del proyecto (AJAX)
+     */
+    public function getDetalle($id)
+    {
+        $proyecto = Proyecto::with(['responsable', 'equipo', 'costos'])->findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'proyecto' => $proyecto
+        ]);
+    }
 }

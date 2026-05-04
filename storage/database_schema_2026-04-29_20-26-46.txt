@@ -1,0 +1,1978 @@
+=== BASES DE DATOS Y TABLAS ===
+
+Fecha: 2026-04-29 20:26:43
+Conexión: mejorasoft
+
+=== TABLAS ENCONTRADAS ===
+Total de tablas: 93
+
+
+📋 TABLA: activos
+----------------------------------------------------------------------
+Columnas (28):
+  • id
+  • codigo
+  • nombre
+  • tipo_activo
+  • categoria
+  • marca
+  • modelo
+  • serie
+  • anio
+  • color
+  • ubicacion_fisica
+  • proyecto_asignado_id
+  • fecha_asignacion
+  • responsable_asignado_id
+  • estado_general
+  • estatus
+  • fecha_adquisicion
+  • costo_adquisicion
+  • valor_actual
+  • proveedor_id
+  • factura
+  • cuenta_contable
+  • descripcion
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: activos_herramientas
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • activo_id
+  • tipo_herramienta
+  • voltaje
+  • potencia
+  • requiere_calibracion
+  • fecha_ultima_calibracion
+  • fecha_proxima_calibracion
+  • numero_inventario
+  • prestamos_realizados
+  • tiempo_uso_promedio
+  • created_at
+  • updated_at
+
+📋 TABLA: activos_maquinaria
+----------------------------------------------------------------------
+Columnas (20):
+  • id
+  • activo_id
+  • horometro_actual
+  • horometro_compra
+  • horometro_ultimo_mantenimiento
+  • horometro_proximo_mantenimiento
+  • tipo_combustible
+  • consumo_promedio
+  • capacidad_tanque
+  • peso_operativo
+  • capacidad_carga
+  • unidad_capacidad
+  • dimensiones
+  • operador_actual_id
+  • licencia_requerida
+  • ultimo_servicio_fecha
+  • proximo_servicio_fecha
+  • mantenimiento_preventivo_dias
+  • created_at
+  • updated_at
+
+📋 TABLA: activos_vehiculos
+----------------------------------------------------------------------
+Columnas (26):
+  • id
+  • activo_id
+  • placas
+  • numero_economico
+  • vin
+  • kilometraje_actual
+  • kilometraje_compra
+  • kilometraje_ultimo_mantenimiento
+  • kilometraje_proximo_mantenimiento
+  • tipo_combustible
+  • consumo_promedio
+  • capacidad_tanque
+  • capacidad_pasajeros
+  • capacidad_carga
+  • tipo_vehiculo
+  • traccion
+  • transmision
+  • poliza_seguro
+  • vencimiento_seguro
+  • poliza_verificacion
+  • vencimiento_verificacion
+  • ultimo_servicio_fecha
+  • proximo_servicio_fecha
+  • licencia_requerida
+  • created_at
+  • updated_at
+
+📋 TABLA: almacenes
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • codigo
+  • nombre
+  • tipo
+  • descripcion
+  • ubicacion
+  • responsable
+  • telefono
+  • email
+  • cuenta_contable
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: areas
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • folio
+  • nombre
+  • descripcion
+  • cuenta_contable
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: articulos
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • codigo
+  • descripcion
+  • numero_parte
+  • familia_id
+  • subfamilia_id
+  • ubicacion
+  • minimo
+  • maximo
+  • punto_reorden
+  • unidad_medida
+  • cuenta_contable
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: asignaciones_activos
+----------------------------------------------------------------------
+Columnas (21):
+  • id
+  • requisicion_id
+  • activo_id
+  • proyecto_id
+  • responsable_asignado
+  • fecha_salida
+  • fecha_devolucion_real
+  • horometro_salida
+  • horometro_devolucion
+  • kilometraje_salida
+  • kilometraje_devolucion
+  • condicion_salida
+  • condicion_devolucion
+  • observaciones_salida
+  • observaciones_devolucion
+  • reporte_danos
+  • costo_reparacion
+  • estatus
+  • recibido_por
+  • created_at
+  • updated_at
+
+📋 TABLA: asistencias
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • folio
+  • user_id
+  • plantilla_id
+  • fecha
+  • hora_entrada
+  • hora_salida
+  • tipo_registro
+  • estatus
+  • observaciones
+  • registrado_por
+  • semana_inicio
+  • semana_fin
+  • semana
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: bancos
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • nombre
+  • codigo
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: cat_areas
+----------------------------------------------------------------------
+Columnas (8):
+  • cat_area_id
+  • area
+  • descripcion
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_bancos
+----------------------------------------------------------------------
+Columnas (10):
+  • cat_banco_id
+  • clave
+  • descripcion
+  • nombre_corto
+  • rfc
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_estatus
+----------------------------------------------------------------------
+Columnas (11):
+  • cat_estatus_id
+  • estatus
+  • clave
+  • tipo
+  • color
+  • orden
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_puestos
+----------------------------------------------------------------------
+Columnas (9):
+  • cat_puesto_id
+  • puesto
+  • descripcion
+  • cat_area_id
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_tipos_cuenta
+----------------------------------------------------------------------
+Columnas (8):
+  • cat_tipo_cuenta_id
+  • descripcion
+  • clave_sat
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_tipos_incidencias
+----------------------------------------------------------------------
+Columnas (11):
+  • cat_tipo_incidencia_id
+  • nombre
+  • descripcion
+  • clave_sat
+  • afecta_nomina
+  • requiere_autorizacion
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_tipos_licencia
+----------------------------------------------------------------------
+Columnas (8):
+  • cat_tipo_licencia_id
+  • tipo_licencia
+  • descripcion
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_tipos_operador
+----------------------------------------------------------------------
+Columnas (8):
+  • cat_tipo_operador_id
+  • tipo_operador
+  • descripcion
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_unidades_negocio
+----------------------------------------------------------------------
+Columnas (8):
+  • cat_unidad_negocio_id
+  • descripcion
+  • clave
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: categorias_gastos
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • nombre
+  • descripcion
+  • tipo_egreso_id
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: cheques_transferencias
+----------------------------------------------------------------------
+Columnas (26):
+  • id
+  • folio
+  • estatus
+  • forma_pago
+  • proveedor
+  • rfc
+  • cuenta_bancaria_id
+  • referencia
+  • referencia_bancaria
+  • fecha
+  • fecha_vencimiento
+  • monto
+  • monto_restante
+  • moneda_id
+  • tipo_cambio
+  • monto_original
+  • descripcion
+  • comprobante
+  • poliza_contable
+  • cuenta_contable_id
+  • proyecto_id
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: conversations
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • user_one_id
+  • user_two_id
+  • last_message_at
+  • last_read_at_user_one
+  • last_read_at_user_two
+  • created_at
+  • updated_at
+
+📋 TABLA: cotizacion_detalles
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • cotizacion_id
+  • articulo_id
+  • cantidad
+  • precio_unitario
+  • subtotal
+  • impuestos
+  • total
+  • observacion
+  • created_at
+  • updated_at
+
+📋 TABLA: cotizaciones
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • requisicion_id
+  • proveedor_id
+  • folio
+  • fecha_cotizacion
+  • tiempo_entrega_dias
+  • condiciones_pago
+  • subtotal
+  • impuestos
+  • total
+  • archivo_pdf
+  • observaciones
+  • estatus
+  • creado_por
+  • created_at
+  • updated_at
+
+📋 TABLA: cotizaciones_articulos
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • requisicion_articulo_id
+  • proveedor_id
+  • precio_unitario
+  • tiempo_entrega_dias
+  • condiciones_pago
+  • observaciones
+  • estatus
+  • creado_por
+  • created_at
+  • updated_at
+
+📋 TABLA: cuentas_bancarias
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • banco_id
+  • proyecto_id
+  • moneda_id
+  • numero_cuenta
+  • clabe
+  • titular
+  • saldo_inicial
+  • saldo_actual
+  • activa
+  • created_at
+  • updated_at
+  • tipo_cuenta
+  • created_by
+  • deleted_at
+  • cuenta_contable_id
+
+📋 TABLA: cuentas_contables
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • codigo
+  • nombre
+  • tipo
+  • naturaleza
+  • codigo_padre
+  • nivel
+  • auxiliar
+  • activa
+  • descripcion
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: depositos
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • folio
+  • fecha
+  • monto
+  • concepto
+  • cuenta_bancaria_id
+  • proyecto_id
+  • tipo_ingreso_id
+  • estatus
+  • referencia
+  • comprobante
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: detalle_listas_asistencia
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • lista_asistencia_id
+  • empleado_id
+  • empleado_nombre
+  • puesto
+  • hora_entrada
+  • hora_salida
+  • estado
+  • observaciones
+  • horas_trabajadas
+  • justificado
+  • justificacion_id
+  • created_at
+  • updated_at
+
+📋 TABLA: empleado_documentos
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • plantilla_id
+  • nombre_documento
+  • archivo
+  • tipo_archivo
+  • tamanio
+  • created_at
+  • updated_at
+
+📋 TABLA: estimaciones_partidas
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • proyecto_id
+  • partida_id
+  • fecha
+  • periodo_inicio
+  • periodo_fin
+  • avance_porcentaje
+  • cantidad_ejecutada
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: failed_jobs
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • uuid
+  • connection
+  • queue
+  • payload
+  • exception
+  • failed_at
+
+📋 TABLA: familias
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • codigo
+  • nombre
+  • descripcion
+  • cuenta_contable
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: finiquitos
+----------------------------------------------------------------------
+Columnas (22):
+  • id
+  • folio
+  • plantilla_id
+  • tipo
+  • fecha_baja
+  • fecha_ingreso
+  • salario_diario
+  • salario_integrado
+  • dias_vacaciones
+  • prima_vacacional
+  • aguinaldo
+  • indemnizacion
+  • total
+  • estatus
+  • observaciones
+  • motivo_baja
+  • fecha_pago
+  • usuario_autorizo
+  • fecha_autorizacion
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: ia_knowledge_base
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • keyword
+  • module_name
+  • response_text
+  • method_name
+  • controller_class
+  • confidence_score
+  • times_used
+  • last_used_at
+  • created_at
+  • updated_at
+
+📋 TABLA: ia_mistral_cache
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • user_question
+  • ai_response
+  • context_hash
+  • expires_at
+  • created_at
+  • updated_at
+
+📋 TABLA: incidencias
+----------------------------------------------------------------------
+Columnas (14):
+  • incidencia_id
+  • plantilla_id
+  • cat_tipo_incidencia_id
+  • descripcion
+  • fecha_incidencia
+  • estatus
+  • fecha_resolucion
+  • comentarios_resolucion
+  • autorizado_por
+  • fecha_autorizacion
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: inventario_almacen_proyecto
+----------------------------------------------------------------------
+Columnas (10):
+  • id
+  • inventario_proyecto_id
+  • almacen_id
+  • cantidad
+  • ubicacion_especifica
+  • lote
+  • fecha_caducidad
+  • observaciones
+  • created_at
+  • updated_at
+
+📋 TABLA: inventario_proyecto
+----------------------------------------------------------------------
+Columnas (19):
+  • id
+  • proyecto_id
+  • articulo_id
+  • cantidad_actual
+  • cantidad_reservada
+  • cantidad_minima
+  • cantidad_maxima
+  • punto_reorden
+  • unidad_medida
+  • ultima_entrada
+  • ultima_salida
+  • observaciones
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+  • costo_promedio
+  • ultimo_costo
+  • ultimo_costo_compra
+
+📋 TABLA: jobs
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • queue
+  • payload
+  • attempts
+  • reserved_at
+  • available_at
+  • created_at
+
+📋 TABLA: justificaciones_permisos
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • folio
+  • empleado_id
+  • empleado_nombre
+  • tipo
+  • fecha_inicio
+  • fecha_fin
+  • dias
+  • estatus
+  • tiene_justificante
+  • motivo
+  • archivo_justificante
+  • observaciones
+  • autorizado_por
+  • fecha_autorizacion
+  • created_at
+  • updated_at
+
+📋 TABLA: listas_asistencia
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • folio
+  • fecha
+  • total_empleados
+  • presentes
+  • retardos
+  • ausentes
+  • justificados
+  • cerrada
+  • fecha_cierre
+  • observaciones_generales
+  • creado_por
+  • created_at
+  • updated_at
+
+📋 TABLA: messages
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • conversation_id
+  • user_id
+  • recipient_id
+  • message
+  • is_read
+  • read_at
+  • is_deleted_for_sender
+  • is_deleted_for_recipient
+  • created_at
+  • updated_at
+
+📋 TABLA: metodos_pago
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • nombre
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: migrations
+----------------------------------------------------------------------
+Columnas (3):
+  • id
+  • migration
+  • batch
+
+📋 TABLA: monedas
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • codigo
+  • nombre
+  • simbolo
+  • activa
+  • created_at
+  • updated_at
+
+📋 TABLA: movimientos_activos
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • activo_id
+  • tipo_movimiento
+  • fecha_movimiento
+  • proyecto_origen_id
+  • proyecto_destino_id
+  • responsable_origen
+  • responsable_destino
+  • horometro_km
+  • observaciones
+  • creado_por
+  • created_at
+  • updated_at
+
+📋 TABLA: movimientos_bancarios
+----------------------------------------------------------------------
+Columnas (21):
+  • id
+  • cuenta_bancaria_id
+  • proyecto_id
+  • tipo
+  • tipo_ingreso_id
+  • tipo_egreso_id
+  • categoria_gasto_id
+  • metodo_pago_id
+  • monto
+  • fecha
+  • concepto
+  • referencia
+  • comprobante
+  • status
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+  • estimacion_id
+  • partida_id
+
+📋 TABLA: movimientos_inventario
+----------------------------------------------------------------------
+Columnas (21):
+  • id
+  • inventario_proyecto_id
+  • almacen_origen_id
+  • almacen_destino_id
+  • tipo_movimiento
+  • cantidad
+  • cantidad_antes
+  • cantidad_despues
+  • referencia_tipo
+  • referencia_id
+  • referencia_folio
+  • proveedor_id
+  • solicitante
+  • autorizado_por
+  • motivo
+  • observaciones
+  • fecha_movimiento
+  • creado_por
+  • created_at
+  • updated_at
+  • costo_unitario
+
+📋 TABLA: nomina
+----------------------------------------------------------------------
+Columnas (39):
+  • id
+  • folio
+  • empleado_id
+  • empleado_nombre
+  • puesto
+  • periodo_tipo
+  • periodo_inicio
+  • periodo_fin
+  • dias_trabajados
+  • dias_ausentes
+  • dias_retardo
+  • dias_justificados
+  • sueldo_diario
+  • sueldo_periodo
+  • sueldo_base
+  • bono_asistencia
+  • bono_productividad
+  • horas_extras
+  • prima_vacacional
+  • aguinaldo_proporcional
+  • otras_percepciones
+  • total_percepciones
+  • isr
+  • imss
+  • infonavit
+  • fonacot
+  • pension_alimenticia
+  • prestamos
+  • faltas
+  • retardos_multa
+  • otras_deducciones
+  • total_deducciones
+  • neto_pagar
+  • estatus
+  • fecha_pago
+  • observaciones
+  • calculado_por
+  • created_at
+  • updated_at
+
+📋 TABLA: nomina_deducciones
+----------------------------------------------------------------------
+Columnas (11):
+  • nomina_deduccion_id
+  • plantilla_id
+  • clave_sat
+  • concepto
+  • importe
+  • tipo_deduccion
+  • fecha_aplicacion
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: nomina_otros_pagos
+----------------------------------------------------------------------
+Columnas (10):
+  • nomina_otros_pago_id
+  • plantilla_id
+  • clave_sat
+  • concepto
+  • importe
+  • fecha_aplicacion
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: nomina_percepciones
+----------------------------------------------------------------------
+Columnas (12):
+  • nomina_percepcion_id
+  • plantilla_id
+  • clave_sat
+  • concepto
+  • importe_gravado
+  • importe_exento
+  • tipo_percepcion
+  • fecha_aplicacion
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: pagos
+----------------------------------------------------------------------
+Columnas (24):
+  • id
+  • folio
+  • fecha_pago
+  • monto
+  • concepto
+  • cuenta_bancaria_id
+  • proveedor_id
+  • proyecto_id
+  • tipo_egreso_id
+  • categoria_gasto_id
+  • metodo_pago_id
+  • moneda_id
+  • proveedor_nombre
+  • proveedor_rfc
+  • referencia
+  • referencia_bancaria
+  • factura
+  • estatus
+  • comprobante
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: password_reset_tokens
+----------------------------------------------------------------------
+Columnas (3):
+  • email
+  • token
+  • created_at
+
+📋 TABLA: personal_access_tokens
+----------------------------------------------------------------------
+Columnas (10):
+  • id
+  • tokenable_type
+  • tokenable_id
+  • name
+  • token
+  • abilities
+  • last_used_at
+  • expires_at
+  • created_at
+  • updated_at
+
+📋 TABLA: plantillas
+----------------------------------------------------------------------
+Columnas (91):
+  • plantilla_id
+  • nombre
+  • apellido_paterno
+  • apellido_materno
+  • fecha_nacimiento
+  • correo
+  • celular
+  • numero_seguro_social
+  • rfc
+  • curp
+  • alias
+  • calle
+  • num_exterior
+  • num_interior
+  • satcat_paises_clave
+  • satcat_codigos_postales_codigo_postal
+  • satcat_estados_clave
+  • satcat_municipios_clave
+  • satcat_colonias_clave
+  • satcat_localidades_clave
+  • cat_area_id
+  • cat_puesto_id
+  • sueldo
+  • fecha_ingreso
+  • reclutador
+  • fecha_baja
+  • motivo_baja_id
+  • operador
+  • cat_tipo_operador_id
+  • cat_tipo_licencia_id
+  • numero_licencia
+  • licencia_reconocimiento
+  • contacto_emergencia
+  • numero_emergencia
+  • empresa_id
+  • borrado_logico
+  • estatus
+  • vencimiento_licencia
+  • cat_tipo_cuenta_id
+  • cuenta
+  • propietario
+  • municipio
+  • estado
+  • satcat_figura_transporte_clave
+  • cat_bancos_clave
+  • cuenta_sucursal
+  • monto_mensual_imss
+  • monto_diario_imss
+  • monto_mensual_infonavit
+  • monto_diario_infonavit
+  • monto_mensual_isr
+  • monto_diario_isr
+  • sueldo_hora
+  • numero_medicina_preventiva
+  • satcat_colonias_claveopen
+  • cuenta_contable_sat_id
+  • dias_vacaciones
+  • prima_vacacional
+  • aguinaldo
+  • sueldo_diario
+  • sueldo_integrado
+  • satcat_nomina_contratos_clave
+  • satcat_nomina_jornadas_clave
+  • satcat_nomina_periodicidades_clave
+  • satcat_nomina_regimenes_clave
+  • propietario_tipo
+  • razon_social
+  • datos_generales_id
+  • estatus_seguro_social
+  • bono_asistencia
+  • bono_productividad
+  • sueldo_canacar
+  • pension_alimenticia
+  • reserva
+  • numero_empleado_interno
+  • bono_federal
+  • bono_administrativo
+  • aplica_asistencia
+  • fonacot
+  • nomina_percepciones
+  • nomina_deducciones
+  • nomina_otros_pagos
+  • nomina_total
+  • password
+  • coordinador_plantilla_id
+  • __userId__
+  • pagar_por_liquidacion
+  • created_at
+  • updated_at
+  • deleted_at
+  • user_id
+
+📋 TABLA: plantillas_tipos_cuentas
+----------------------------------------------------------------------
+Columnas (13):
+  • plantilla_tipo_cuenta_id
+  • plantilla_id
+  • cat_tipo_cuenta_id
+  • cuenta
+  • cuenta_clabe
+  • alias
+  • cat_banco_id
+  • principal
+  • activo
+  • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: prestamos
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • folio
+  • estatus
+  • fecha_inicio
+  • plantilla_id
+  • motivo
+  • monto
+  • monto_descuento
+  • numero_pagos
+  • frecuencia
+  • monto_restante
+  • observaciones
+  • gasto
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: proveedores
+----------------------------------------------------------------------
+Columnas (31):
+  • id
+  • nombre
+  • rfc
+  • email
+  • telefono
+  • contacto
+  • direccion
+  • activo
+  • created_at
+  • updated_at
+  • deleted_at
+  • alias
+  • razon_social
+  • regimen_fiscal
+  • calle
+  • num_ext
+  • num_int
+  • colonia
+  • ciudad
+  • estado
+  • codigo_postal
+  • limite_credito
+  • credito_actual
+  • forma_pago
+  • metodo_pago
+  • uso_cfdi
+  • banco
+  • cuenta_bancaria
+  • cuenta_contable
+  • cuenta_secundaria
+  • cuenta_resultado
+
+📋 TABLA: proyecto_costos
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • proyecto_id
+  • materiales
+  • mano_obra
+  • maquinaria
+  • gastos_indirectos
+  • created_at
+  • updated_at
+  • subcontratos
+
+📋 TABLA: proyecto_documentos
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • proyecto_id
+  • tipo
+  • nombre_original
+  • ruta
+  • mime_type
+  • tamaño
+  • created_at
+  • updated_at
+
+📋 TABLA: proyecto_equipo
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • proyecto_id
+  • nombre
+  • rol
+  • departamento
+  • dedicacion
+  • created_at
+  • updated_at
+
+📋 TABLA: proyecto_flujo_efectivo
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • proyecto_id
+  • mes
+  • ingreso_estimado
+  • gasto_estimado
+  • flujo_neto
+  • saldo_acumulado
+  • created_at
+  • updated_at
+
+📋 TABLA: proyecto_partidas
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • proyecto_id
+  • codigo
+  • nombre
+  • descripcion
+  • seccion
+  • categoria
+  • unidad
+  • cantidad
+  • precio_unitario
+  • importe
+  • orden
+  • activa
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: proyecto_saldos
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • proyecto_id
+  • cuenta_bancaria_id
+  • saldo_asignado
+  • saldo_disponible
+  • total_ingresos
+  • total_egresos
+  • created_at
+  • updated_at
+
+📋 TABLA: proyectos
+----------------------------------------------------------------------
+Columnas (37):
+  • id
+  • codigo
+  • nombre
+  • tipo_proyecto
+  • categoria
+  • prioridad
+  • ubicacion
+  • direccion
+  • fecha_inicio
+  • fecha_fin
+  • descripcion
+  • estado
+  • moneda
+  • tipo_cambio
+  • cliente_nombre
+  • cliente_rfc
+  • cliente_email
+  • cliente_telefono
+  • cliente_contacto
+  • cliente_cargo
+  • numero_contrato
+  • fecha_firma
+  • tipo_contrato
+  • forma_pago
+  • plazo_pago
+  • responsable_id
+  • cargo_responsable
+  • email_responsable
+  • presupuesto_total
+  • anticipo
+  • margen
+  • fondo_reserva
+  • status
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: puestos
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • folio
+  • nombre
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+  • area_id
+
+📋 TABLA: requisicion_articulos
+----------------------------------------------------------------------
+Columnas (18):
+  • id
+  • requisicion_id
+  • codigo
+  • cantidad
+  • unidad_medida
+  • descripcion
+  • observacion
+  • pendiente
+  • cantidad_surtida
+  • created_at
+  • updated_at
+  • cotizacion_seleccionada_id
+  • proveedor_seleccionado_id
+  • precio_unitario_seleccionado
+  • tiempo_entrega_seleccionado
+  • condiciones_pago_seleccionado
+  • cotizada
+  • deleted_at
+
+📋 TABLA: requisicion_material_detalle
+----------------------------------------------------------------------
+Columnas (10):
+  • id
+  • requisicion_id
+  • articulo_id
+  • cantidad_solicitada
+  • cantidad_autorizada
+  • cantidad_surtida
+  • unidad_medida
+  • observacion
+  • created_at
+  • updated_at
+
+📋 TABLA: requisiciones
+----------------------------------------------------------------------
+Columnas (18):
+  • id
+  • folio
+  • fecha_requerimiento
+  • estatus
+  • solicitante
+  • area
+  • cotizadas
+  • observaciones
+  • creado_por
+  • aprobado_por
+  • fecha_aprobacion
+  • motivo_rechazo
+  • created_at
+  • updated_at
+  • deleted_at
+  • proyecto_id
+  • area_id
+  • estatus_cotizacion
+
+📋 TABLA: requisiciones_activos
+----------------------------------------------------------------------
+Columnas (21):
+  • id
+  • folio
+  • proyecto_id
+  • activo_id
+  • cantidad
+  • fecha_requisicion
+  • fecha_requerida
+  • fecha_estimada_devolucion
+  • solicitante
+  • area
+  • prioridad
+  • motivo
+  • observaciones
+  • estatus
+  • autorizado_por
+  • fecha_autorizacion
+  • motivo_rechazo
+  • creado_por
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: requisiciones_material
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • proyecto_id
+  • folio
+  • fecha_requisicion
+  • solicitante
+  • area
+  • prioridad
+  • estatus
+  • autorizado_por
+  • fecha_autorizacion
+  • motivo_rechazo
+  • observaciones
+  • creado_por
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: roles
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • folio
+  • nombre
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: satcat_codigos_postales
+----------------------------------------------------------------------
+Columnas (5):
+  • satcat_codigo_postal_id
+  • codigo_postal
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_colonias
+----------------------------------------------------------------------
+Columnas (7):
+  • satcat_colonia_id
+  • clave
+  • satcat_codigos_postales_codigo_postal
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_estados
+----------------------------------------------------------------------
+Columnas (7):
+  • satcat_estado_id
+  • clave
+  • clave_satcat_paises
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_figuras_transporte
+----------------------------------------------------------------------
+Columnas (6):
+  • satcat_figura_transporte_id
+  • clave
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_localidades
+----------------------------------------------------------------------
+Columnas (7):
+  • satcat_localidad_id
+  • clave
+  • satcat_estados_clave
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_municipios
+----------------------------------------------------------------------
+Columnas (7):
+  • satcat_municipio_id
+  • clave
+  • clave_satcat_estados
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_nomina_contratos
+----------------------------------------------------------------------
+Columnas (6):
+  • satcat_nomina_contrato_id
+  • clave
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_nomina_jornadas
+----------------------------------------------------------------------
+Columnas (6):
+  • satcat_nomina_jornada_id
+  • clave
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_nomina_periodicidades
+----------------------------------------------------------------------
+Columnas (7):
+  • satcat_nomina_periodicidad_id
+  • clave
+  • descripcion
+  • dias
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_nomina_regimenes
+----------------------------------------------------------------------
+Columnas (6):
+  • satcat_nomina_regimen_id
+  • clave
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_paises
+----------------------------------------------------------------------
+Columnas (7):
+  • satcat_pais_id
+  • clave
+  • descripcion
+  • nacionalidad
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: subfamilias
+----------------------------------------------------------------------
+Columnas (10):
+  • id
+  • codigo
+  • familia_id
+  • nombre
+  • descripcion
+  • cuenta_contable
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: tabla_sueldos
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • folio
+  • fecha_ejecuto
+  • fecha_inicial
+  • fecha_final
+  • cantidad_registros
+  • monto
+  • estatus
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: tipos_cambio
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • moneda_origen_id
+  • moneda_destino_id
+  • tasa
+  • fecha
+  • created_at
+  • updated_at
+
+📋 TABLA: tipos_egreso
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • nombre
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: tipos_ingreso
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • nombre
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: traspasos
+----------------------------------------------------------------------
+Columnas (22):
+  • id
+  • folio
+  • fecha
+  • monto
+  • concepto
+  • cuenta_origen_id
+  • cuenta_destino_id
+  • moneda_origen_id
+  • moneda_destino_id
+  • tipo_cambio
+  • monto_destino
+  • estatus
+  • referencia
+  • referencia_bancaria
+  • poliza_contable
+  • proyecto_id
+  • observaciones
+  • comprobante
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: users
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • name
+  • email
+  • email_verified_at
+  • password
+  • remember_token
+  • created_at
+  • updated_at
+  • folio
+  • empleado
+  • rol
+  • estatus
+  • deleted_at
+
+📋 TABLA: vacaciones
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • folio
+  • plantilla_id
+  • fecha_inicio
+  • fecha_fin
+  • dias
+  • observaciones
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+
+======================================================================
+=== TABLAS IMPORTANTES (DETALLE COMPLETO) ===
+======================================================================
+
+🔍 TABLA: proyectos
+----------------------------------------------------------------------
+✓ Tabla existe
+Columnas encontradas (37):
+  • id : bigint (NOT NULL) DEFAULT nextval('proyectos_id_seq'::regclass)
+  • codigo : character varying (NOT NULL)
+  • nombre : character varying (NOT NULL)
+  • tipo_proyecto : character varying (NOT NULL)
+  • categoria : character varying (NULL)
+  • prioridad : character varying (NOT NULL) DEFAULT 'media'::character varying
+  • ubicacion : character varying (NOT NULL)
+  • direccion : text (NULL)
+  • fecha_inicio : date (NOT NULL)
+  • fecha_fin : date (NOT NULL)
+  • descripcion : text (NULL)
+  • estado : character varying (NOT NULL) DEFAULT 'pendiente'::character varying
+  • moneda : character varying (NOT NULL) DEFAULT 'MXN'::character varying
+  • tipo_cambio : numeric (NOT NULL) DEFAULT '1'::numeric
+  • cliente_nombre : character varying (NOT NULL)
+  • cliente_rfc : character varying (NOT NULL)
+  • cliente_email : character varying (NULL)
+  • cliente_telefono : character varying (NULL)
+  • cliente_contacto : character varying (NULL)
+  • cliente_cargo : character varying (NULL)
+  • numero_contrato : character varying (NOT NULL)
+  • fecha_firma : date (NULL)
+  • tipo_contrato : character varying (NULL)
+  • forma_pago : character varying (NULL)
+  • plazo_pago : integer (NULL)
+  • responsable_id : bigint (NULL)
+  • cargo_responsable : character varying (NULL)
+  • email_responsable : character varying (NULL)
+  • presupuesto_total : numeric (NOT NULL)
+  • anticipo : numeric (NOT NULL) DEFAULT '0'::numeric
+  • margen : numeric (NOT NULL) DEFAULT '0'::numeric
+  • fondo_reserva : numeric (NOT NULL) DEFAULT '0'::numeric
+  • status : character varying (NOT NULL) DEFAULT 'borrador'::character varying
+  • created_by : bigint (NOT NULL)
+  • created_at : timestamp without time zone (NULL)
+  • updated_at : timestamp without time zone (NULL)
+  • deleted_at : timestamp without time zone (NULL)
+
+📊 Ejemplo de datos (primeros 3 registros):
+
+  Registro 1:
+    id: 1
+    codigo: PRO-2026-001
+    nombre: Torre Norte Corporativa
+    tipo_proyecto: Construcción
+    categoria: Edificio Corporativo
+    prioridad: alta
+    ubicacion: Av. Reforma 123, CDMX
+    direccion: Av. Reforma 123, Col. Centro, CDMX
+    ... y 29 campos más
+
+  Registro 2:
+    id: 2
+    codigo: PRO-2026-002
+    nombre: Hospital Regional
+    tipo_proyecto: Salud
+    categoria: Hospital
+    prioridad: alta
+    ubicacion: Blvd. Miguel Alemán 456, Toluca
+    direccion: Blvd. Miguel Alemán 456, Col. Centro, Toluca
+    ... y 29 campos más
+
+  Registro 3:
+    id: 3
+    codigo: PRO-2026-003
+    nombre: Parque Industrial Norte
+    tipo_proyecto: Industrial
+    categoria: Parque Industrial
+    prioridad: media
+    ubicacion: Carretera a Querétaro Km 25, Cuautitlán
+    direccion: Carretera a Querétaro Km 25, Cuautitlán
+    ... y 29 campos más
+
+🔍 TABLA: nominas
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: plantillas
+----------------------------------------------------------------------
+✓ Tabla existe
+Columnas encontradas (91):
+  • plantilla_id : bigint (NOT NULL) DEFAULT nextval('plantillas_plantilla_id_seq'::regclass)
+  • nombre : character varying (NOT NULL)
+  • apellido_paterno : character varying (NULL)
+  • apellido_materno : character varying (NULL)
+  • fecha_nacimiento : date (NULL)
+  • correo : character varying (NULL)
+  • celular : character varying (NULL)
+  • numero_seguro_social : character varying (NULL)
+  • rfc : character varying (NULL)
+  • curp : character varying (NULL)
+  • alias : character varying (NULL)
+  • calle : character varying (NULL)
+  • num_exterior : character varying (NULL)
+  • num_interior : character varying (NULL)
+  • satcat_paises_clave : character varying (NULL)
+  • satcat_codigos_postales_codigo_postal : character varying (NULL)
+  • satcat_estados_clave : character varying (NULL)
+  • satcat_municipios_clave : character varying (NULL)
+  • satcat_colonias_clave : character varying (NULL)
+  • satcat_localidades_clave : character varying (NULL)
+  • cat_area_id : bigint (NULL)
+  • cat_puesto_id : bigint (NULL)
+  • sueldo : numeric (NULL)
+  • fecha_ingreso : date (NULL)
+  • reclutador : character varying (NULL)
+  • fecha_baja : date (NULL)
+  • motivo_baja_id : bigint (NULL)
+  • operador : boolean (NOT NULL) DEFAULT false
+  • cat_tipo_operador_id : bigint (NULL)
+  • cat_tipo_licencia_id : bigint (NULL)
+  • numero_licencia : character varying (NULL)
+  • licencia_reconocimiento : character varying (NULL)
+  • contacto_emergencia : character varying (NULL)
+  • numero_emergencia : character varying (NULL)
+  • empresa_id : bigint (NULL)
+  • borrado_logico : boolean (NOT NULL) DEFAULT false
+  • estatus : character varying (NOT NULL) DEFAULT 'Activo'::character varying
+  • vencimiento_licencia : date (NULL)
+  • cat_tipo_cuenta_id : bigint (NULL)
+  • cuenta : character varying (NULL)
+  • propietario : character varying (NULL)
+  • municipio : character varying (NULL)
+  • estado : character varying (NULL)
+  • satcat_figura_transporte_clave : character varying (NULL)
+  • cat_bancos_clave : character varying (NULL)
+  • cuenta_sucursal : character varying (NULL)
+  • monto_mensual_imss : numeric (NULL)
+  • monto_diario_imss : numeric (NULL)
+  • monto_mensual_infonavit : numeric (NULL)
+  • monto_diario_infonavit : numeric (NULL)
+  • monto_mensual_isr : numeric (NULL)
+  • monto_diario_isr : numeric (NULL)
+  • sueldo_hora : numeric (NULL)
+  • numero_medicina_preventiva : character varying (NULL)
+  • satcat_colonias_claveopen : character varying (NULL)
+  • cuenta_contable_sat_id : bigint (NULL)
+  • dias_vacaciones : integer (NULL)
+  • prima_vacacional : numeric (NULL)
+  • aguinaldo : integer (NULL)
+  • sueldo_diario : numeric (NULL)
+  • sueldo_integrado : numeric (NULL)
+  • satcat_nomina_contratos_clave : character varying (NULL)
+  • satcat_nomina_jornadas_clave : character varying (NULL)
+  • satcat_nomina_periodicidades_clave : character varying (NULL)
+  • satcat_nomina_regimenes_clave : character varying (NULL)
+  • propietario_tipo : character varying (NULL)
+  • razon_social : character varying (NULL)
+  • datos_generales_id : bigint (NULL)
+  • estatus_seguro_social : character varying (NULL)
+  • bono_asistencia : boolean (NOT NULL) DEFAULT false
+  • bono_productividad : boolean (NOT NULL) DEFAULT false
+  • sueldo_canacar : numeric (NULL)
+  • pension_alimenticia : boolean (NOT NULL) DEFAULT false
+  • reserva : boolean (NOT NULL) DEFAULT false
+  • numero_empleado_interno : character varying (NULL)
+  • bono_federal : boolean (NOT NULL) DEFAULT false
+  • bono_administrativo : boolean (NOT NULL) DEFAULT false
+  • aplica_asistencia : boolean (NOT NULL) DEFAULT false
+  • fonacot : boolean (NOT NULL) DEFAULT false
+  • nomina_percepciones : json (NULL)
+  • nomina_deducciones : json (NULL)
+  • nomina_otros_pagos : json (NULL)
+  • nomina_total : numeric (NULL)
+  • password : character varying (NULL)
+  • coordinador_plantilla_id : bigint (NULL)
+  • __userId__ : bigint (NULL)
+  • pagar_por_liquidacion : boolean (NOT NULL) DEFAULT false
+  • created_at : timestamp without time zone (NULL)
+  • updated_at : timestamp without time zone (NULL)
+  • deleted_at : timestamp without time zone (NULL)
+  • user_id : bigint (NULL)
+
+📊 Ejemplo de datos (primeros 3 registros):
+
+  Registro 1:
+    plantilla_id: 1
+    nombre: Juan Carlos
+    apellido_paterno: Pérez
+    apellido_materno: López
+    fecha_nacimiento: 1985-01-15
+    correo: juan.perez@empresa.com
+    celular: 8112345678
+    numero_seguro_social: 12345678901
+    ... y 83 campos más
+
+  Registro 2:
+    plantilla_id: 2
+    nombre: María Guadalupe
+    apellido_paterno: Rodríguez
+    apellido_materno: García
+    fecha_nacimiento: 1990-02-20
+    correo: maria.rodriguez@empresa.com
+    celular: 8123456789
+    numero_seguro_social: 23456789012
+    ... y 83 campos más
+
+  Registro 3:
+    plantilla_id: 3
+    nombre: Pedro Armando
+    apellido_paterno: García
+    apellido_materno: Martínez
+    fecha_nacimiento: 1988-03-15
+    correo: pedro.garcia@empresa.com
+    celular: 8134567890
+    numero_seguro_social: 34567890123
+    ... y 83 campos más
+
+🔍 TABLA: activo_maquinarias
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: activo_vehiculos
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: activo_herramientas
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: proyecto_costos
+----------------------------------------------------------------------
+✓ Tabla existe
+Columnas encontradas (9):
+  • id : bigint (NOT NULL) DEFAULT nextval('proyecto_costos_id_seq'::regclass)
+  • proyecto_id : bigint (NOT NULL)
+  • materiales : numeric (NOT NULL) DEFAULT '0'::numeric
+  • mano_obra : numeric (NOT NULL) DEFAULT '0'::numeric
+  • maquinaria : numeric (NOT NULL) DEFAULT '0'::numeric
+  • gastos_indirectos : numeric (NOT NULL) DEFAULT '0'::numeric
+  • created_at : timestamp without time zone (NULL)
+  • updated_at : timestamp without time zone (NULL)
+  • subcontratos : numeric (NOT NULL) DEFAULT '0'::numeric
+
+📊 Ejemplo de datos (primeros 3 registros):
+
+  Registro 1:
+    id: 1
+    proyecto_id: 1
+    materiales: 4200000.00
+    mano_obra: 3200000.00
+    maquinaria: 1800000.00
+    gastos_indirectos: 1800000.00
+    created_at: 2026-04-14 20:38:27
+    updated_at: 2026-04-14 20:38:27
+    ... y 1 campos más
+
+  Registro 2:
+    id: 2
+    proyecto_id: 2
+    materiales: 6200000.00
+    mano_obra: 4800000.00
+    maquinaria: 2500000.00
+    gastos_indirectos: 2800000.00
+    created_at: 2026-04-14 20:38:27
+    updated_at: 2026-04-14 20:38:27
+    ... y 1 campos más
+
+  Registro 3:
+    id: 3
+    proyecto_id: 3
+    materiales: 3200000.00
+    mano_obra: 2400000.00
+    maquinaria: 1300000.00
+    gastos_indirectos: 1500000.00
+    created_at: 2026-04-14 20:38:27
+    updated_at: 2026-04-14 20:38:27
+    ... y 1 campos más
+
+🔍 TABLA: proyecto_partidas
+----------------------------------------------------------------------
+✓ Tabla existe
+Columnas encontradas (16):
+  • id : bigint (NOT NULL) DEFAULT nextval('proyecto_partidas_id_seq'::regclass)
+  • proyecto_id : bigint (NOT NULL)
+  • codigo : character varying (NOT NULL)
+  • nombre : character varying (NOT NULL)
+  • descripcion : text (NULL)
+  • seccion : character varying (NULL)
+  • categoria : character varying (NOT NULL) DEFAULT 'materiales'::character varying
+  • unidad : character varying (NOT NULL) DEFAULT 'global'::character varying
+  • cantidad : numeric (NOT NULL) DEFAULT '1'::numeric
+  • precio_unitario : numeric (NOT NULL) DEFAULT '0'::numeric
+  • importe : numeric (NOT NULL)
+  • orden : integer (NOT NULL)
+  • activa : boolean (NOT NULL) DEFAULT true
+  • created_at : timestamp without time zone (NULL)
+  • updated_at : timestamp without time zone (NULL)
+  • deleted_at : timestamp without time zone (NULL)
+
+📊 Ejemplo de datos (primeros 3 registros):
+
+  Registro 1:
+    id: 1
+    proyecto_id: 1
+    codigo: CIM-001
+    nombre: Excavacion para cimentacion
+    descripcion: Excavacion a cielo abierto para zapatas
+    seccion: Cimentacion
+    categoria: maquinaria
+    unidad: m3
+    ... y 8 campos más
+
+  Registro 2:
+    id: 2
+    proyecto_id: 1
+    codigo: CIM-002
+    nombre: Acero de refuerzo
+    descripcion: Varilla de acero para zapatas
+    seccion: Cimentacion
+    categoria: materiales
+    unidad: kg
+    ... y 8 campos más
+
+  Registro 3:
+    id: 3
+    proyecto_id: 1
+    codigo: CIM-003
+    nombre: Concreto f=250 kg/cm2
+    descripcion: Concreto premezclado
+    seccion: Cimentacion
+    categoria: materiales
+    unidad: m3
+    ... y 8 campos más
+
+🔍 TABLA: cuentas_por_pagar
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: cuentas_por_cobrar
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: nomina_deduccions
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+🔍 TABLA: nomina_percepcions
+----------------------------------------------------------------------
+❌ Tabla NO existe
+
+======================================================================
+✅ Script completado exitosamente
+Total de tablas analizadas: 93

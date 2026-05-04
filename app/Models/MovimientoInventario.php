@@ -17,6 +17,7 @@ class MovimientoInventario extends Model
         'almacen_destino_id',
         'tipo_movimiento',
         'cantidad',
+        'costo_unitario',           // <-- NUEVO CAMPO
         'cantidad_antes',
         'cantidad_despues',
         'referencia_tipo',
@@ -33,6 +34,7 @@ class MovimientoInventario extends Model
     
     protected $casts = [
         'cantidad' => 'decimal:3',
+        'costo_unitario' => 'decimal:2',    // <-- NUEVO CAST
         'cantidad_antes' => 'decimal:3',
         'cantidad_despues' => 'decimal:3',
         'fecha_movimiento' => 'datetime'
@@ -83,5 +85,21 @@ class MovimientoInventario extends Model
     public function scopePorFecha($query, $fechaInicio, $fechaFin)
     {
         return $query->whereBetween('fecha_movimiento', [$fechaInicio, $fechaFin]);
+    }
+    
+    // Accessors
+    public function getCostoFormateadoAttribute()
+    {
+        return '$' . number_format($this->costo_unitario ?? 0, 2);
+    }
+    
+    public function getImporteAttribute()
+    {
+        return ($this->costo_unitario ?? 0) * $this->cantidad;
+    }
+    
+    public function getImporteFormateadoAttribute()
+    {
+        return '$' . number_format($this->importe, 2);
     }
 }

@@ -7,7 +7,9 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Events\MessageSent;
+use App\Services\MistralAIService;
 
 class ChatController extends Controller
 {
@@ -45,6 +47,7 @@ class ChatController extends Controller
                 }
             }
             
+
             $users = $users->sortByDesc(function($user) {
                 return $user->unread_count;
             })->values();
@@ -52,6 +55,7 @@ class ChatController extends Controller
             return response()->json($users);
             
         } catch (\Exception $e) {
+            Log::error('getUsers error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -92,6 +96,7 @@ class ChatController extends Controller
             return response()->json($messages);
             
         } catch (\Exception $e) {
+            Log::error('getMessages error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -101,6 +106,10 @@ class ChatController extends Controller
      */
     public function sendMessage(Request $request)
     {
+        Log::info('=== sendMessage INICIADO ===');
+        Log::info('recipient_id: ' . $request->recipient_id);
+        Log::info('message: ' . substr($request->message, 0, 100));
+        
         try {
             $request->validate([
                 'recipient_id' => 'required|exists:users,id',
@@ -110,6 +119,16 @@ class ChatController extends Controller
             $currentUserId = Auth::id();
             $recipientId = $request->recipient_id;
             
+            Log::info('Current User ID: ' . $currentUserId);
+            
+            // Verificar si el destinatario es la IA
+            $recipient = User::find($recipientId);
+            $isAI = $recipient && $recipient->email === 'ia@mejorasoft.com';
+            
+            Log::info('Is AI: ' . ($isAI ? 'YES' : 'NO'));
+            Log::info('Recipient email: ' . ($recipient ? $recipient->email : 'NOT FOUND'));
+            
+            // Crear o obtener conversación
             $conversation = Conversation::where(function($q) use ($currentUserId, $recipientId) {
                 $q->where('user_one_id', $currentUserId)->where('user_two_id', $recipientId);
             })->orWhere(function($q) use ($currentUserId, $recipientId) {
@@ -122,8 +141,12 @@ class ChatController extends Controller
                     'user_two_id' => $recipientId,
                     'last_message_at' => now(),
                 ]);
+                Log::info('Nueva conversación creada ID: ' . $conversation->id);
+            } else {
+                Log::info('Usando conversación existente ID: ' . $conversation->id);
             }
             
+            // Guardar mensaje del usuario
             $message = Message::create([
                 'conversation_id' => $conversation->id,
                 'user_id' => $currentUserId,
@@ -132,14 +155,84 @@ class ChatController extends Controller
                 'is_read' => false,
             ]);
             
+            Log::info('Mensaje guardado ID: ' . $message->id);
+            
             $conversation->update(['last_message_at' => now()]);
             
             $user = Auth::user();
             
             broadcast(new MessageSent($message, $conversation, $user))->toOthers();
             
+            // SI ES IA: Generar respuesta automática
+            if ($isAI) {
+                Log::info('=== GENERANDO RESPUESTA IA ===');
+                
+                try {
+                    // Instanciar Mistral manualmente
+                    $mistral = new MistralAIService();
+                    $aiResponseText = $mistral->ask($request->message);
+                    
+                    Log::info('Respuesta IA generada: ' . substr($aiResponseText, 0, 100));
+                    
+                    // Guardar respuesta de la IA
+                    $aiMessage = Message::create([
+                        'conversation_id' => $conversation->id,
+                        'user_id' => $recipientId,
+                        'recipient_id' => $currentUserId,
+                        'message' => $aiResponseText,
+                        'is_read' => false,
+                    ]);
+                    
+                    Log::info('Mensaje IA guardado ID: ' . $aiMessage->id);
+                    
+                    $conversation->update(['last_message_at' => now()]);
+                    
+                    broadcast(new MessageSent($aiMessage, $conversation, $recipient))->toOthers();
+                    
+                    return response()->json([
+                        'success' => true,
+                        'is_ai_response' => true,
+                        'user_message' => [
+                            'id' => $message->id,
+                            'message' => $message->message,
+                            'user_id' => $message->user_id,
+                            'recipient_id' => $message->recipient_id,
+                            'created_at' => $message->created_at,
+                            'sender_name' => $user->name
+                        ],
+                        'ai_response' => [
+                            'id' => $aiMessage->id,
+                            'message' => $aiMessage->message,
+                            'user_id' => $aiMessage->user_id,
+                            'recipient_id' => $aiMessage->recipient_id,
+                            'created_at' => $aiMessage->created_at,
+                            'sender_name' => $recipient->name
+                        ]
+                    ]);
+                    
+                } catch (\Exception $e) {
+                    Log::error('ERROR al generar respuesta IA: ' . $e->getMessage());
+                    Log::error($e->getTraceAsString());
+                    
+                    // Devolver éxito del mensaje del usuario aunque falle la IA
+                    return response()->json([
+                        'success' => true,
+                        'is_ai_response' => false,
+                        'ai_error' => $e->getMessage(),
+                        'id' => $message->id,
+                        'message' => $message->message,
+                        'user_id' => $message->user_id,
+                        'recipient_id' => $message->recipient_id,
+                        'created_at' => $message->created_at,
+                        'sender_name' => $user->name
+                    ]);
+                }
+            }
+            
+            // Respuesta normal (no IA)
             return response()->json([
                 'success' => true,
+                'is_ai_response' => false,
                 'id' => $message->id,
                 'message' => $message->message,
                 'user_id' => $message->user_id,
@@ -149,7 +242,16 @@ class ChatController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('ERROR CRÍTICO en sendMessage: ' . $e->getMessage());
+            Log::error('Archivo: ' . $e->getFile() . ' Línea: ' . $e->getLine());
+            Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'file' => basename($e->getFile()),
+                'line' => $e->getLine()
+            ], 500);
         }
     }
 
@@ -196,6 +298,7 @@ class ChatController extends Controller
             ]);
             
         } catch (\Exception $e) {
+            Log::error('markAsRead error: ' . $e->getMessage());
             return response()->json([
                 'error' => $e->getMessage()
             ], 500);
@@ -219,15 +322,14 @@ class ChatController extends Controller
                 ->where('is_read', false)
                 ->count();
             
-            // Si se llamó desde una ruta HTTP, devolver JSON
             if ($userId === null) {
                 return response()->json(['total_unread' => $totalUnread]);
             }
             
-            // Si se llamó internamente, devolver el número
             return $totalUnread;
             
         } catch (\Exception $e) {
+            Log::error('getTotalUnreadCount error: ' . $e->getMessage());
             if ($userId === null) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
@@ -276,6 +378,7 @@ class ChatController extends Controller
             return response()->json($result);
             
         } catch (\Exception $e) {
+            Log::error('getConversations error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

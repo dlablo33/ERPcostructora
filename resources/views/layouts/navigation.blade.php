@@ -2729,55 +2729,104 @@
                 },
                 
                 sendMessage() { 
-                    if (!this.newMessage || !this.newMessage.trim() || !this.selectedUser) return;
-                    
-                    const messageText = this.newMessage.trim();
-                    const messageData = {
-                        recipient_id: this.selectedUser.id,
-                        message: messageText
-                    };
-                    
-                    // LIMPIAR EL INPUT INMEDIATAMENTE
-                    this.newMessage = '';
-                    
-                    // Agregar mensaje localmente (optimista)
-                    const tempMsg = {
-                        id: Date.now(),
-                        text: messageText,
-                        user_id: window.userId,
-                        recipient_id: this.selectedUser.id,
-                        isOwn: true,
-                        created_at: new Date().toISOString()
-                    };
-                    this.messages.push(tempMsg);
-                    
-                    // Scroll al final
-                    this.$nextTick(() => {
-                        const container = this.$refs.messagesContainer;
-                        if (container) container.scrollTop = container.scrollHeight;
-                    });
-                    
-                    // Enviar al servidor
-                    fetch('/chat/send', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify(messageData)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Mensaje enviado:', data);
-                        if (data.id) {
-                            tempMsg.id = data.id;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error sending message:', error);
-                    });
-                },
+    if (!this.newMessage || !this.newMessage.trim() || !this.selectedUser) return;
+    
+    const messageText = this.newMessage.trim();
+    const messageData = {
+        recipient_id: this.selectedUser.id,
+        message: messageText
+    };
+    
+    // Guardar para posible reintento
+    const sentMessage = messageText;
+    const recipientId = this.selectedUser.id;
+    
+    // LIMPIAR INPUT INMEDIATAMENTE
+    this.newMessage = '';
+    
+    // Agregar mensaje localmente (optimista)
+    const tempMsg = {
+        id: Date.now(),
+        text: sentMessage,
+        user_id: window.userId,
+        recipient_id: recipientId,
+        isOwn: true,
+        created_at: new Date().toISOString()
+    };
+    this.messages.push(tempMsg);
+    
+    this.$nextTick(() => {
+        const container = this.$refs.messagesContainer;
+        if (container) container.scrollTop = container.scrollHeight;
+    });
+    
+    // Enviar al servidor
+    fetch('/chat/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(messageData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Respuesta del servidor:', data);
+        
+        if (data.success) {
+            // Actualizar ID del mensaje temporal si existe
+            if (data.user_message && data.user_message.id) {
+                tempMsg.id = data.user_message.id;
+            } else if (data.id) {
+                tempMsg.id = data.id;
+            }
+            
+            // SI ES RESPUESTA DE IA: agregar el mensaje de la IA
+            if (data.is_ai_response === true && data.ai_response) {
+                console.log('✅ Respuesta IA recibida:', data.ai_response.message);
+                
+                const aiMsg = {
+                    id: data.ai_response.id || Date.now() + 1,
+                    text: data.ai_response.message,
+                    user_id: data.ai_response.user_id,
+                    recipient_id: data.ai_response.recipient_id,
+                    isOwn: false,
+                    created_at: data.ai_response.created_at || new Date().toISOString()
+                };
+                this.messages.push(aiMsg);
+                
+                this.$nextTick(() => {
+                    const container = this.$refs.messagesContainer;
+                    if (container) container.scrollTop = container.scrollHeight;
+                });
+            }
+            
+            // Actualizar listas de usuarios y contadores
+            this.fetchUsers();
+            this.updateGlobalUnreadCount();
+        }
+    })
+    .catch(error => {
+        console.error('Error al enviar mensaje:', error);
+        // Mensaje de error visible al usuario
+        this.showTemporaryError('Error al enviar mensaje: ' + error.message);
+    });
+},
+
+// Agregar este método helper para mostrar errores
+showTemporaryError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fixed bottom-20 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-[9999] text-sm';
+    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i>' + message;
+    document.body.appendChild(errorDiv);
+    setTimeout(() => errorDiv.remove(), 4000);
+},
                 
                 handleIncomingMessage(message, fromUser) { 
                     // Actualizar contador de no leídos
