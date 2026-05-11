@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-04-29 20:26:43
+Fecha: 2026-05-08 21:21:49
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 93
+Total de tablas: 127
 
 
 📋 TABLA: activos
@@ -216,6 +216,49 @@ Columnas (6):
   • created_at
   • updated_at
 
+📋 TABLA: bitacora_entries
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • proyecto_id
+  • tipo
+  • titulo
+  • descripcion
+  • fecha
+  • hora
+  • responsable
+  • personal
+  • maquinaria
+  • materiales
+  • estado
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: bitacora_facturas
+----------------------------------------------------------------------
+Columnas (6):
+  • bitacora_factura_id
+  • factura_id
+  • comentario
+  • __userId__
+  • created_at
+  • updated_at
+
+📋 TABLA: bitacora_incidencias
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • bitacora_entry_id
+  • codigo
+  • tipo_incidencia
+  • prioridad
+  • accion_tomada
+  • resuelta_en
+  • created_at
+  • updated_at
+
 📋 TABLA: cat_areas
 ----------------------------------------------------------------------
 Columnas (8):
@@ -269,6 +312,53 @@ Columnas (9):
   • created_at
   • updated_at
   • deleted_at
+
+📋 TABLA: cat_series
+----------------------------------------------------------------------
+Columnas (11):
+  • cat_serie_id
+  • serie
+  • descripcion
+  • datos_generales_id
+  • cat_tipo_comprobante
+  • folio_actual
+  • folio_final
+  • satcat_csd_id
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: cat_sucursales
+----------------------------------------------------------------------
+Columnas (18):
+  • cat_sucursal_id
+  • nombre
+  • codigo
+  • calle
+  • num_exterior
+  • num_interior
+  • colonia
+  • codigo_postal
+  • municipio
+  • estado
+  • pais
+  • email
+  • telefono
+  • datos_generales_id
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: cat_tipos_comprobante
+----------------------------------------------------------------------
+Columnas (6):
+  • cat_tipo_comprobante_id
+  • clave
+  • descripcion
+  • activo
+  • created_at
+  • updated_at
 
 📋 TABLA: cat_tipos_cuenta
 ----------------------------------------------------------------------
@@ -344,6 +434,45 @@ Columnas (7):
   • created_at
   • updated_at
 
+📋 TABLA: cfdi
+----------------------------------------------------------------------
+Columnas (24):
+  • cfdi_id
+  • factura_id
+  • timbrefiscaldigitalUUID
+  • timbrefiscaldigitalFechaTimbrado
+  • timbrefiscaldigitalSelloCFD
+  • timbrefiscaldigitalSelloSAT
+  • timbrefiscaldigitalNoCertificadoSAT
+  • comprobanteSerie
+  • comprobanteFolio
+  • comprobanteFecha
+  • comprobanteMoneda
+  • comprobanteTipoCambio
+  • comprobanteSubTotal
+  • comprobanteTotal
+  • comprobanteTipoDeComprobante
+  • comprobanteMetodoPago
+  • comprobanteFormaPago
+  • comprobanteNoCertificado
+  • comprobanteSello
+  • emisorRfc
+  • receptorRfc
+  • cadena_original
+  • created_at
+  • updated_at
+
+📋 TABLA: cfdi_relacionados
+----------------------------------------------------------------------
+Columnas (7):
+  • cfdi_relacionado_id
+  • cfdi_id
+  • timbrefiscaldigitalUUID
+  • UUID
+  • satcat_tipo_relacion_clave
+  • created_at
+  • updated_at
+
 📋 TABLA: cheques_transferencias
 ----------------------------------------------------------------------
 Columnas (26):
@@ -369,6 +498,87 @@ Columnas (26):
   • cuenta_contable_id
   • proyecto_id
   • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: comentarios_bitacora
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • bitacora_entry_id
+  • user_id
+  • comentario
+  • created_at
+  • updated_at
+
+📋 TABLA: configuracion_cuenta_contable
+----------------------------------------------------------------------
+Columnas (7):
+  • configuracion_cuenta_contable_id
+  • categoria
+  • cuenta_contable_id
+  • tipo
+  • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: contactos
+----------------------------------------------------------------------
+Columnas (25):
+  • contacto_id
+  • razon_social
+  • rfc
+  • nombre_comercial
+  • email_facturacion
+  • telefono
+  • satcat_regimen_fiscal_clave
+  • satcat_uso_cfdi_clave
+  • satcat_formas_pago_clave
+  • satcat_metodos_pago_clave
+  • calle
+  • num_exterior
+  • num_interior
+  • colonia
+  • codigo_postal
+  • municipio
+  • estado
+  • pais
+  • tipo
+  • dias_credito
+  • limite_credito
+  • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: contrarecibo_facturas
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • contrarecibo_id
+  • factura_id
+  • monto_aplicado
+  • created_at
+  • updated_at
+
+📋 TABLA: contrarecibos
+----------------------------------------------------------------------
+Columnas (17):
+  • contrarecibo_id
+  • folio
+  • serie
+  • fecha_pago
+  • contacto_id
+  • monto
+  • saldo_aplicado
+  • forma_pago
+  • referencia_bancaria
+  • cuenta_origen
+  • cuenta_destino
+  • observaciones
+  • estatus
   • created_by
   • created_at
   • updated_at
@@ -473,6 +683,31 @@ Columnas (13):
   • updated_at
   • deleted_at
 
+📋 TABLA: datos_generales
+----------------------------------------------------------------------
+Columnas (21):
+  • datos_generales_id
+  • razon_social
+  • rfc
+  • calle
+  • num_exterior
+  • num_interior
+  • colonia
+  • codigo_postal
+  • municipio
+  • estado
+  • pais
+  • satcat_regimen_fiscal_clave
+  • logo_path
+  • certificado_cer
+  • certificado_key
+  • certificado_password
+  • certificado_no_serie
+  • activo
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: depositos
 ----------------------------------------------------------------------
 Columnas (16):
@@ -540,6 +775,142 @@ Columnas (13):
   • updated_at
   • deleted_at
 
+📋 TABLA: evidencia_fotografica
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • bitacora_entry_id
+  • ruta
+  • nombre_original
+  • mime_type
+  • size
+  • descripcion
+  • created_at
+  • updated_at
+
+📋 TABLA: factoraje_facturas
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • solicitud_id
+  • factura_id
+  • monto_factura
+  • pagada_cliente
+  • fecha_pago_cliente
+  • created_at
+  • updated_at
+
+📋 TABLA: factores_financieros
+----------------------------------------------------------------------
+Columnas (16):
+  • factor_id
+  • nombre
+  • rfc
+  • contacto_nombre
+  • telefono
+  • email
+  • direccion
+  • porcentaje_anticipo_default
+  • comision_default
+  • dias_plazo_default
+  • activo
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: factura_cancelada
+----------------------------------------------------------------------
+Columnas (15):
+  • id
+  • factura_id
+  • cfdi_id
+  • fecha_peticion
+  • fecha_cancelado
+  • codigo_cancelacion
+  • mensaje_cancelacion
+  • estado
+  • es_cancelable
+  • estatus_cancelacion
+  • folio_relacionado
+  • timbrefiscaldigitalUUID_relacionado
+  • satcat_tipo_relacion_clave
+  • created_at
+  • updated_at
+
+📋 TABLA: factura_relacionado
+----------------------------------------------------------------------
+Columnas (9):
+  • facturas_relacionado_id
+  • factura_id
+  • relacion_factura_id
+  • folio
+  • timbrefiscaldigitalUUID
+  • satcat_tipo_relacion_clave
+  • borrado_logico
+  • created_at
+  • updated_at
+
+📋 TABLA: facturas
+----------------------------------------------------------------------
+Columnas (35):
+  • factura_id
+  • contacto_id
+  • proyecto_id
+  • cat_serie_id
+  • cat_sucursal_id
+  • folio
+  • fecha
+  • fecha_vencimiento
+  • fecha_revision
+  • satcat_metodos_pago_clave
+  • satcat_formas_pago_clave
+  • satcat_uso_cfdi_clave
+  • satcat_regimen_fiscal_clave
+  • cat_monedas_clave
+  • tipo_cambio
+  • subtotal
+  • descuento
+  • iva
+  • riva
+  • total
+  • observaciones
+  • referencia
+  • estatus
+  • xml
+  • version
+  • poliza_contable_id
+  • created_by
+  • refacturacion
+  • created_at
+  • updated_at
+  • deleted_at
+  • factura_relacionada_id
+  • tipo_comprobante
+  • motivo_nota_credito
+  • saldo_disponible
+
+📋 TABLA: facturas_conceptos
+----------------------------------------------------------------------
+Columnas (16):
+  • factura_concepto_id
+  • factura_id
+  • partida_id
+  • articulo_id
+  • descripcion
+  • cantidad
+  • satcat_unidades_clave
+  • valor_unitario
+  • importe
+  • descuento
+  • subtotal
+  • iva
+  • tasa_iva
+  • satcat_clave_productos_clave
+  • created_at
+  • updated_at
+
 📋 TABLA: failed_jobs
 ----------------------------------------------------------------------
 Columnas (7):
@@ -589,6 +960,29 @@ Columnas (22):
   • created_at
   • updated_at
   • deleted_at
+
+📋 TABLA: hitos
+----------------------------------------------------------------------
+Columnas (19):
+  • id
+  • proyecto_id
+  • nombre
+  • descripcion
+  • fecha_programada
+  • fecha_real
+  • hora
+  • estado
+  • prioridad
+  • tipo
+  • responsable_id
+  • entregables
+  • dependencias
+  • notificar_a
+  • avance
+  • es_critico
+  • created_at
+  • updated_at
+  • fecha_fin
 
 📋 TABLA: ia_knowledge_base
 ----------------------------------------------------------------------
@@ -1080,6 +1474,35 @@ Columnas (13):
   • updated_at
   • deleted_at
 
+📋 TABLA: polizas_contables
+----------------------------------------------------------------------
+Columnas (13):
+  • poliza_contable_id
+  • folio
+  • fecha
+  • origen
+  • origen_id
+  • total_debe
+  • total_haber
+  • descripcion
+  • tipo
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: polizas_movimientos
+----------------------------------------------------------------------
+Columnas (8):
+  • id
+  • poliza_contable_id
+  • cuenta_contable_id
+  • debe
+  • haber
+  • descripcion
+  • created_at
+  • updated_at
+
 📋 TABLA: prestamos
 ----------------------------------------------------------------------
 Columnas (16):
@@ -1102,7 +1525,7 @@ Columnas (16):
 
 📋 TABLA: proveedores
 ----------------------------------------------------------------------
-Columnas (31):
+Columnas (32):
   • id
   • nombre
   • rfc
@@ -1134,6 +1557,7 @@ Columnas (31):
   • cuenta_contable
   • cuenta_secundaria
   • cuenta_resultado
+  • email_facturacion
 
 📋 TABLA: proyecto_costos
 ----------------------------------------------------------------------
@@ -1221,7 +1645,7 @@ Columnas (9):
 
 📋 TABLA: proyectos
 ----------------------------------------------------------------------
-Columnas (37):
+Columnas (43):
   • id
   • codigo
   • nombre
@@ -1259,6 +1683,12 @@ Columnas (37):
   • created_at
   • updated_at
   • deleted_at
+  • contacto_id
+  • cliente_regimen_fiscal
+  • cliente_uso_cfdi
+  • cliente_forma_pago
+  • cliente_metodo_pago
+  • cliente_direccion
 
 📋 TABLA: puestos
 ----------------------------------------------------------------------
@@ -1272,6 +1702,20 @@ Columnas (9):
   • updated_at
   • deleted_at
   • area_id
+
+📋 TABLA: reportes_generados
+----------------------------------------------------------------------
+Columnas (10):
+  • id
+  • titulo
+  • tipo
+  • fecha_inicio
+  • fecha_fin
+  • proyecto_id
+  • archivo_ruta
+  • generado_por
+  • created_at
+  • updated_at
 
 📋 TABLA: requisicion_articulos
 ----------------------------------------------------------------------
@@ -1388,6 +1832,16 @@ Columnas (8):
   • updated_at
   • deleted_at
 
+📋 TABLA: satcat_clave_productos
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+
 📋 TABLA: satcat_codigos_postales
 ----------------------------------------------------------------------
 Columnas (5):
@@ -1429,6 +1883,16 @@ Columnas (6):
   • created_at
   • updated_at
 
+📋 TABLA: satcat_formas_pago
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+
 📋 TABLA: satcat_localidades
 ----------------------------------------------------------------------
 Columnas (7):
@@ -1437,6 +1901,26 @@ Columnas (7):
   • satcat_estados_clave
   • descripcion
   • activo
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_metodos_pago
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_motivo_cancelacion
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
   • created_at
   • updated_at
 
@@ -1502,6 +1986,75 @@ Columnas (7):
   • activo
   • created_at
   • updated_at
+
+📋 TABLA: satcat_regimen_fiscal
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_tipo_relacion
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_unidades
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • clave
+  • descripcion
+  • simbolo
+  • estatus
+  • created_at
+  • updated_at
+
+📋 TABLA: satcat_uso_cfdi
+----------------------------------------------------------------------
+Columnas (6):
+  • id
+  • clave
+  • descripcion
+  • estatus
+  • created_at
+  • updated_at
+
+📋 TABLA: solicitudes_factoraje
+----------------------------------------------------------------------
+Columnas (24):
+  • solicitud_id
+  • folio
+  • fecha_solicitud
+  • fecha_autorizacion
+  • factor_id
+  • contacto_id
+  • monto_factura
+  • porcentaje_anticipo
+  • monto_anticipo
+  • tasa_interes
+  • comision
+  • iva_comision
+  • total_comision
+  • monto_recibir
+  • fecha_vencimiento_factoraje
+  • fecha_liquidacion
+  • estatus
+  • referencia_pago
+  • observaciones
+  • created_by
+  • autorizado_por
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: subfamilias
 ----------------------------------------------------------------------
@@ -1631,7 +2184,7 @@ Columnas (11):
 🔍 TABLA: proyectos
 ----------------------------------------------------------------------
 ✓ Tabla existe
-Columnas encontradas (37):
+Columnas encontradas (43):
   • id : bigint (NOT NULL) DEFAULT nextval('proyectos_id_seq'::regclass)
   • codigo : character varying (NOT NULL)
   • nombre : character varying (NOT NULL)
@@ -1669,6 +2222,12 @@ Columnas encontradas (37):
   • created_at : timestamp without time zone (NULL)
   • updated_at : timestamp without time zone (NULL)
   • deleted_at : timestamp without time zone (NULL)
+  • contacto_id : bigint (NULL)
+  • cliente_regimen_fiscal : character varying (NULL)
+  • cliente_uso_cfdi : character varying (NULL)
+  • cliente_forma_pago : character varying (NULL)
+  • cliente_metodo_pago : character varying (NULL)
+  • cliente_direccion : text (NULL)
 
 📊 Ejemplo de datos (primeros 3 registros):
 
@@ -1681,7 +2240,7 @@ Columnas encontradas (37):
     prioridad: alta
     ubicacion: Av. Reforma 123, CDMX
     direccion: Av. Reforma 123, Col. Centro, CDMX
-    ... y 29 campos más
+    ... y 35 campos más
 
   Registro 2:
     id: 2
@@ -1692,7 +2251,7 @@ Columnas encontradas (37):
     prioridad: alta
     ubicacion: Blvd. Miguel Alemán 456, Toluca
     direccion: Blvd. Miguel Alemán 456, Col. Centro, Toluca
-    ... y 29 campos más
+    ... y 35 campos más
 
   Registro 3:
     id: 3
@@ -1703,7 +2262,7 @@ Columnas encontradas (37):
     prioridad: media
     ubicacion: Carretera a Querétaro Km 25, Cuautitlán
     direccion: Carretera a Querétaro Km 25, Cuautitlán
-    ... y 29 campos más
+    ... y 35 campos más
 
 🔍 TABLA: nominas
 ----------------------------------------------------------------------
@@ -1975,4 +2534,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 93
+Total de tablas analizadas: 127

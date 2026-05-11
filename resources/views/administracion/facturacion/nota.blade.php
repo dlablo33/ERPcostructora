@@ -7,280 +7,145 @@
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                    Notas de Crédito
+                    <i class="fas fa-file-invoice"></i> Notas de Crédito
                 </h2>
             </div>
 
             <div class="card-body p-4">
-                <!-- 4 CUADROS DE NOTAS DE CRÉDITO CENTRADOS CON NÚMEROS EN NEGRO -->
+                <!-- 4 CUADROS DE NOTAS DE CRÉDITO -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <!-- Cuadro 1: Facturas -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Facturas</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalFacturas">8</div>
+                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Total</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold;" id="totalNotas">0</div>
                         </div>
                     </div>
                     
-                    <!-- Cuadro 2: Activas -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Activas</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalActivas">5</div>
+                        <div class="custom-card" style="border: 2px solid #28a745; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Timbradas</div>
+                            <div style="color: #28a745; font-size: 36px; font-weight: bold;" id="totalTimbradas">0</div>
                         </div>
                     </div>
                     
-                    <!-- Cuadro 3: Pagadas -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Pagadas</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalPagadas">2</div>
+                        <div class="custom-card" style="border: 2px solid #ffc107; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Pendientes</div>
+                            <div style="color: #ffc107; font-size: 36px; font-weight: bold;" id="totalPendientes">0</div>
                         </div>
                     </div>
                     
-                    <!-- Cuadro 4: Timbrado -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
-                        <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Timbrado</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalTimbradas">8</div>
+                        <div class="custom-card" style="border: 2px solid #dc3545; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
+                            <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Canceladas</div>
+                            <div style="color: #dc3545; font-size: 36px; font-weight: bold;" id="totalCanceladas">0</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Barra de herramientas con agrupación y botones -->
+                <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
-                    <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
-                            <!-- Aquí se mostrarán las columnas agrupadas -->
-                        </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-layer-group" style="color: #083CAE; font-size: 14px;"></i>
+                        <span style="color: #6c757d; font-size: 12px;">Arrastra columna para agrupar</span>
                     </div>
                     
-                    <!-- Grupo de botones derecho -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Date Inicio -->
                         <div>
-                            <input type="date" id="fechaInicio" value="2026-01-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaInicio" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
                         </div>
-
-                        <!-- Date Fin -->
                         <div>
-                            <input type="date" id="fechaFin" value="2026-02-17" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
                         </div>
-
-                        <!-- Botón Agregar (+) -->
                         <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #083CAE;"></i>
+                            <button id="btnAgregar" style="background-color: #083CAE; color: white; border: none; border-radius: 4px; width: 36px; height: 36px; cursor: pointer;">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
-
-                        <!-- Botón Exportar Excel -->
                         <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
-                                    title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
+                            <button id="btnExcel" style="background-color: #28a745; color: white; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer;">
+                                <i class="fas fa-file-excel"></i> Excel
                             </button>
                         </div>
-
-                        <!-- Botón Seleccionar Columnas -->
                         <div>
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
-                                    title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #083CAE;"></i>
+                            <button id="btnColumnas" style="background-color: #6c757d; color: white; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer;">
+                                <i class="fas fa-columns"></i> Columnas
                             </button>
                         </div>
-
-                        <!-- Buscador -->
                         <div style="position: relative;">
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #ddd; border-radius: 4px; width: 250px;">
                         </div>
                     </div>
                 </div>
 
-                <!-- Mensaje "Sin datos" centrado -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-file-invoice" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
-                    <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
+                <!-- Loading -->
+                <div id="loadingIndicator" style="text-align: center; padding: 40px; display: none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #083CAE;"></i>
+                    <p>Cargando datos...</p>
                 </div>
 
-                <!-- Tabla de Notas de Crédito -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaNotasCredito" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
+                <!-- Sin datos -->
+                <div id="sinDatosMensaje" style="text-align: center; padding: 60px; background: #f8f9fa; border-radius: 8px; display: none;">
+                    <i class="fas fa-file-invoice" style="font-size: 64px; color: #dee2e6;"></i>
+                    <h3 style="color: #6c757d;">No hay notas de crédito</h3>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 500px; overflow-y: auto;" id="tablaContainer">
+                    <table class="table table-bordered" id="tablaNotasCredito" style="width: 100%; font-size: 12px;">
+                        <thead style="position: sticky; top: 0; background-color: #083CAE; color: white; z-index: 10;">
                             <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="estatus">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Estatus</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_creacion">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha Creación</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="folio">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Folio</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="serie">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Serie</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="cliente">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Cliente</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="rfc">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>RFC</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="moneda">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Moneda</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="subtotal">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Subtotal</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="iva">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>IVA</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="riva">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>R.IVA</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="risr">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>R.ISR</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="total">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Total</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_timbrado">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Fecha Timbrado</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="uso_cfdi">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Uso CFDI</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="forma_pago">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Forma de Pago</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="metodo_pago">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Método de Pago</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="uuid">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>UUID</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="emisor">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Emisor</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="descripcion">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Descripción</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; align-items: center; justify-content: space-between;">
-                                        <span>Acciones</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
-                                    </div>
-                                </th>
+                                <th style="padding: 12px 6px; text-align: center;">Estatus</th>
+                                <th style="padding: 12px 6px; text-align: center;">Fecha</th>
+                                <th style="padding: 12px 6px; text-align: center;">Serie</th>
+                                <th style="padding: 12px 6px; text-align: center;">Folio</th>
+                                <th style="padding: 12px 6px;">Cliente</th>
+                                <th style="padding: 12px 6px;">RFC</th>
+                                <th style="padding: 12px 6px; text-align: center;">Moneda</th>
+                                <th style="padding: 12px 6px; text-align: right;">Subtotal</th>
+                                <th style="padding: 12px 6px; text-align: right;">IVA</th>
+                                <th style="padding: 12px 6px; text-align: right;">Total</th>
+                                <th style="padding: 12px 6px;">Factura Relacionada</th>
+                                <th style="padding: 12px 6px;">Motivo</th>
+                                <th style="padding: 12px 6px;">UUID</th>
+                                <th style="padding: 12px 6px; text-align: center; position: sticky; right: 0; background-color: #083CAE; z-index: 20;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaBody">
-                            <!-- Las filas se insertarán dinámicamente -->
-                        </tbody>
-                        <!-- Fila de totales -->
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
+                        <tbody id="tablaBody"></tbody>
+                        <tfoot style="position: sticky; bottom: 0; background-color: #e9ecef; font-weight: bold;">
                             <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #e9ecef; color: #000000;" colspan="7">Totales:</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumSubtotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumIva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumRiva">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumRisr">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="8"></td>
+                                <td colspan="7" style="padding: 10px; text-align: right;"><strong>TOTALES:</strong></td>
+                                <td style="padding: 10px; text-align: right;" id="sumSubtotal">$0.00</td>
+                                <td style="padding: 10px; text-align: right;" id="sumIva">$0.00</td>
+                                <td style="padding: 10px; text-align: right;" id="sumTotal">$0.00</td>
+                                <td colspan="4"></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 
-                <!-- Paginación y botón Crear filtro -->
-                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
-                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
-                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
-                        <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
-                        <span style="color: #2378e1;">Crear filtro</span>
+                <!-- Paginación -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <button id="btnCrearFiltro" style="background: transparent; border: none; color: #083CAE; cursor: pointer;">
+                        <i class="fas fa-filter"></i> Crear filtro
                     </button>
                     
-                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
-                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
-                            <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button id="btnPrimeraPagina" style="border: none; background: none; color: #083CAE; cursor: pointer;">
+                            <i class="fas fa-angle-double-left"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
-                            <i class="fas fa-angle-left" style="color: #2378e1;"></i>
+                        <button id="btnAnteriorPagina" style="border: none; background: none; color: #083CAE; cursor: pointer;">
+                            <i class="fas fa-angle-left"></i>
                         </button>
-                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
-                            <i class="fas fa-angle-right" style="color: #2378e1;"></i>
+                        <span style="padding: 5px 12px; background-color: #083CAE; color: white; border-radius: 4px;" id="paginaActual">1</span>
+                        <span id="paginacionInfo" style="color: #666; font-size: 12px;">Mostrando 0-0 de 0 registros</span>
+                        <button id="btnSiguientePagina" style="border: none; background: none; color: #083CAE; cursor: pointer;">
+                            <i class="fas fa-angle-right"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
-                            <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
+                        <button id="btnUltimaPagina" style="border: none; background: none; color: #083CAE; cursor: pointer;">
+                            <i class="fas fa-angle-double-right"></i>
                         </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 8 registros</span>
                     </div>
                 </div>
             </div>
@@ -288,1096 +153,915 @@
     </section>
 </div>
 
+<!-- MODAL NUEVA NOTA DE CRÉDITO -->
+<div id="modalNuevaNota" style="display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); overflow-y: auto;">
+    <div style="background-color: white; margin: 2% auto; width: 95%; max-width: 800px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        
+        <div style="background: linear-gradient(135deg, #083CAE 0%, #0a4bc9 100%); color: white; padding: 20px 25px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <i class="fas fa-plus-circle" style="font-size: 24px; margin-right: 10px;"></i>
+                <span style="font-size: 20px; font-weight: bold;">Nueva Nota de Crédito</span>
+            </div>
+            <button id="cerrarModal" style="background: none; border: none; color: white; font-size: 32px; cursor: pointer;">&times;</button>
+        </div>
+        
+        <div style="padding: 25px; max-height: 70vh; overflow-y: auto;">
+            <form id="formNuevaNota">
+                <input type="hidden" name="_token" id="csrf_token" value="{{ csrf_token() }}">
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Proyecto</label>
+                        <select id="proyecto_id" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">Seleccionar proyecto...</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Cliente *</label>
+                        <select id="contacto_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">Seleccionar cliente...</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Factura Relacionada *</label>
+                        <select id="factura_relacionada_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">Seleccionar factura...</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Serie *</label>
+                        <select id="cat_serie_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">Seleccionar serie...</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Fecha *</label>
+                        <input type="date" id="fecha" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Moneda</label>
+                        <select id="moneda" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="MXN">MXN - Peso Mexicano</option>
+                            <option value="USD">USD - Dólar Americano</option>
+                        </select>
+                    </div>
+                    
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Motivo de la Nota de Crédito *</label>
+                        <textarea id="motivo" rows="2" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;" placeholder="Ej: Devolución de mercancía, Descuento, Ajuste de precio, etc."></textarea>
+                    </div>
+                    
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Observaciones</label>
+                        <textarea id="observaciones" rows="2" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;" placeholder="Observaciones adicionales (opcional)"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Información de la factura seleccionada -->
+                <div id="infoSaldoFactura" style="display: none;"></div>
+                
+                <!-- Conceptos de la factura (SOLO LECTURA) -->
+                <div style="border-top: 2px solid #e0e0e0; padding-top: 20px; margin-top: 20px;">
+                    <h3 style="margin: 0 0 15px 0; color: #083CAE;">
+                        <i class="fas fa-list"></i> Conceptos de la factura original
+                    </h3>
+                    <div style="border: 1px solid #ddd; border-radius: 8px; overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead style="background-color: #f5f5f5;">
+                                <tr>
+                                    <th style="padding: 12px; text-align: left;">Código</th>
+                                    <th style="padding: 12px; text-align: left;">Descripción</th>
+                                    <th style="padding: 12px; text-align: right;">Cantidad</th>
+                                    <th style="padding: 12px; text-align: right;">Valor Unitario</th>
+                                    <th style="padding: 12px; text-align: right;">Importe</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaConceptosFactura">
+                                <tr id="filaConceptoVacia">
+                                    <td colspan="5" style="padding: 40px; text-align: center; color: #999;">
+                                        <i class="fas fa-info-circle"></i> Seleccione una factura para ver sus conceptos
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Totales de la nota -->
+                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                        <div style="display: flex; justify-content: flex-end; gap: 30px; flex-wrap: wrap;">
+                            <div style="text-align: right;">
+                                <div style="color: #666; font-size: 14px;">Monto acreditar:</div>
+                                <div style="font-size: 22px; font-weight: bold; color: #28a745;" id="resumenTotal">$0.00</div>
+                            </div>
+                            <div style="text-align: right; padding-left: 30px; border-left: 2px solid #ccc;">
+                                <div style="color: #666; font-size: 14px;">Saldo restante:</div>
+                                <div style="font-size: 22px; font-weight: bold; color: #083CAE;" id="saldoRestante">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div style="padding: 20px 25px; background-color: #f8f9fa; border-radius: 0 0 12px 12px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button id="btnCancelar" style="background-color: #6c757d; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer;">Cancelar</button>
+            <button id="btnGuardarNota" style="background-color: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-save"></i> Guardar
+            </button>
+            <button id="btnTimbrar" style="background-color: #ffc107; color: #333; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer;">
+                <i class="fas fa-stamp"></i> Guardar y Timbrar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA MONTO A CREDITAR -->
+<div id="modalMonto" style="display: none; position: fixed; z-index: 10003; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7);">
+    <div style="background-color: white; margin: 15% auto; width: 90%; max-width: 450px; border-radius: 12px;">
+        <div style="background: linear-gradient(135deg, #083CAE 0%, #0a4bc9 100%); color: white; padding: 15px 20px; border-radius: 12px 12px 0 0;">
+            <h3 style="margin: 0;">Monto a Creditar</h3>
+        </div>
+        <div style="padding: 25px;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Monto acreditar *</label>
+                <input type="number" id="montoACreditar" step="0.01" min="0" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                <small id="maxMontoMsg" style="color: #6c757d;"></small>
+            </div>
+            <div class="info-monto" style="background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                <small><strong>Saldo disponible:</strong> <span id="saldoDisponibleSpan">$0.00</span></small>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="btnCancelarMonto" style="background-color: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px;">Cancelar</button>
+                <button id="btnAplicarMonto" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px;">Aplicar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 30px; border-radius: 12px; text-align: center;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #083CAE;"></i>
+        <p style="margin-top: 15px;">Procesando...</p>
+    </div>
+</div>
+
 <style>
-    .semaforo .card-header {
-        background-color: #f4f6f9;
-        border-bottom: 2px solid #083CAE;
+    .custom-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .custom-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+    
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+    .badge-timbrada { background-color: #28a745; color: white; }
+    .badge-pendiente { background-color: #ffc107; color: #333; }
+    .badge-cancelada { background-color: #dc3545; color: white; }
+    
+    .table td { padding: 10px 6px; vertical-align: middle; }
+    #tablaBody tr:nth-child(even) { background-color: #f8f9fa; }
+    #tablaBody tr:hover { background-color: #e3f2fd; }
+    
+    .info-saldo {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        border-left: 4px solid #28a745;
     }
     
-    .semaforo .card-header h2 {
-        color: #083CAE !important;
-    }
-    
-    .custom-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        height: 100%;
-    }
-    
-    .custom-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important;
-        border-color: #083CAE !important;
-    }
-    
-    /* Estilos de tabla */
-    .table th {
-        white-space: nowrap;
-        font-size: 12px;
-        background-color: #2378e1 !important;
+    .btn-credito {
+        background-color: #083CAE;
         color: white;
-        font-weight: 600;
-        padding: 10px 4px;
-    }
-    
-    .table td {
-        white-space: nowrap;
-        font-size: 12px;
-        padding: 10px 4px;
-        color: #000000 !important;
-    }
-    
-    /* Estilo para las filas alternadas */
-    #tablaBody tr:nth-child(odd) {
-        background-color: #ffffff;
-    }
-    
-    #tablaBody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-    
-    #tablaBody tr:hover {
-        background-color: #e0e0e0;
-    }
-    
-    /* Estilo para los iconos de acción */
-    #tablaBody td i {
-        transition: transform 0.2s;
-        font-size: 14px;
-        color: #083CAE;
-    }
-    
-    #tablaBody td i:hover {
-        transform: scale(1.2);
-    }
-    
-    /* Estilo para el filtro en encabezados */
-    .table th i {
-        opacity: 0.7;
-        transition: opacity 0.2s;
-        color: white;
-    }
-    
-    .table th i:hover {
-        opacity: 1;
-    }
-    
-    /* Columna de acciones fija */
-    #tablaBody td:last-child {
-        background-color: white;
-        position: sticky;
-        right: 0;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-        z-index: 15;
-    }
-    
-    /* Estilo para badges de estatus */
-    .badge {
-        font-size: 11px;
-        font-weight: 600;
-        padding: 4px 8px;
-        display: inline-block;
-        border-radius: 3px;
-    }
-    
-    .badge-activa {
-        background-color: #28a745;
-        color: white;
-    }
-    
-    .badge-pagada {
-        background-color: #ffc107;
-        color: black;
-    }
-    
-    .badge-cancelada {
-        background-color: #dc3545;
-        color: white;
-    }
-    
-    .badge-pendiente {
-        background-color: #fd7e14;
-        color: white;
-    }
-    
-    /* Números alineados a la derecha */
-    .text-right {
-        text-align: right;
-    }
-    
-    /* Estilos para agrupación de columnas */
-    [draggable="true"] {
-        cursor: grab;
-    }
-    
-    [draggable="true"]:active {
-        cursor: grabbing;
-        opacity: 0.7;
-    }
-    
-    #grupoAgrupacion {
-        position: relative;
-    }
-    
-    #grupoColumnas {
-        display: inline-flex;
-        align-items: center;
-    }
-    
-    .columna-agrupada {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        background-color: #f0f4ff;
-        border-radius: 16px;
-        color: #2378e1;
-        font-size: 12px;
-        margin: 2px;
-        border: 1px solid #2378e1;
-    }
-    
-    .columna-agrupada .remover {
-        margin-left: 6px;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
         cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        color: #2378e1;
+        margin-right: 10px;
     }
     
-    .columna-agrupada .remover:hover {
-        opacity: 0.7;
+    .btn-credito:hover {
+        background-color: #0a4bc9;
     }
     
-    /* Estilo para filas de grupo */
-    .fila-grupo {
-        background-color: #f0f7ff !important;
-        font-weight: 500;
-        cursor: pointer;
-    }
-    
-    .fila-grupo:hover {
-        background-color: #e1f0ff !important;
-    }
-    
-    .fila-grupo td:first-child i {
-        transition: transform 0.2s;
-        margin-right: 8px;
-    }
-    
-    .fila-grupo:not(.expandido) td:first-child i {
-        transform: rotate(-90deg);
-    }
-    
-    .fila-detalle {
-        background-color: #ffffff;
-    }
-    
-    .fila-detalle td {
-        border-top: none !important;
-    }
-    
-    .fila-detalle td:first-child {
-        padding-left: 30px !important;
-    }
-    
-    /* Estilo cuando se está arrastrando sobre el área de grupo */
-    .drag-over #grupoColumnas {
-        background-color: rgba(35, 120, 225, 0.1);
-        border-radius: 4px;
-    }
-    
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
-        color: #000000 !important;
-    }
-    
-    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
-    #paginacionContainer {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Todos los elementos dentro del contenedor también sin fondo */
-    #paginacionContainer * {
-        background: transparent !important;
-        background-color: transparent !important;
-    }
-    
-    /* Excepción para los spans que deben tener fondo azul */
-    #paginacionContainer span[style*="background-color"] {
-        background-color: #2378e1 !important;
-    }
-    
-    /* Estilos para los botones de paginación */
-    #paginacionContainer button {
-        background: transparent !important;
-        border: none !important;
-        color: #2378e1 !important;
-        cursor: pointer;
-    }
-    
-    #paginacionContainer button:hover {
-        opacity: 0.7;
-    }
-    
-    #paginacionContainer button i {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilo específico para btnCrearFiltro */
-    #btnCrearFiltro,
-    #btnCrearFiltro:hover,
-    #btnCrearFiltro:focus,
-    #btnCrearFiltro:active {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    
-    #btnCrearFiltro i,
-    #btnCrearFiltro span {
-        color: #2378e1 !important;
-    }
-    
-    #paginacionInfo {
-        color: #2378e1 !important;
-    }
-    
-    /* Responsive */
     @media (max-width: 768px) {
-        div[style*="justify-content: flex-end"] {
-            justify-content: center !important;
-        }
-        
-        input[type="date"] {
-            width: 100% !important;
-        }
-        
-        button {
-            width: 100%;
-        }
-        
-        div[style*="position: relative"] {
-            width: 100%;
-        }
-        
-        input#buscador {
-            width: 100% !important;
-        }
-        
-        #paginacionContainer {
-            flex-direction: column;
-            align-items: flex-start;
-        }
+        div[style*="grid-template-columns: repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Notas de Crédito');
-        
-        // Variables para agrupación
-        let columnasAgrupadas = [];
-        let expandedGroups = new Set();
-        let datosOriginales = [];
-        let currentPage = 1;
-        let rowsPerPage = 10;
-        let totalRows = 0;
-        
-        // Datos de ejemplo para Notas de Crédito (8 filas)
-        const datosNotasCredito = [
-            {
-                estatus: 'Activa',
-                created_at: '2026-01-15 10:30:00',
-                folio: 1001,
-                serie: 'NC',
-                cliente: 'Maquiladora Industrial',
-                rfc: 'MII880101ABC',
-                cat_monedas_clave: 'MXN',
-                subtotal: 5000.00,
-                iva: 800.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 5800.00,
-                fecha_timbrado: '2026-01-15 10:35:00',
-                satcat_uso_cfdi_clave: 'G01',
-                satcat_formas_pago_clave: 'Transferencia',
-                satcat_metodos_pago_clave: 'PPD',
-                uuid: 'ABC123DEF456GHI789',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito por devolución'
-            },
-            {
-                estatus: 'Pagada',
-                created_at: '2026-01-14 09:15:00',
-                folio: 1002,
-                serie: 'NC',
-                cliente: 'Cartones del Norte',
-                rfc: 'CND890202XYZ',
-                cat_monedas_clave: 'MXN',
-                subtotal: 3500.00,
-                iva: 560.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 4060.00,
-                fecha_timbrado: '2026-01-14 09:20:00',
-                satcat_uso_cfdi_clave: 'G03',
-                satcat_formas_pago_clave: 'Cheque',
-                satcat_metodos_pago_clave: 'PUE',
-                uuid: 'DEF456GHI789JKL012',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito por descuento'
-            },
-            {
-                estatus: 'Activa',
-                created_at: '2026-01-13 14:20:00',
-                folio: 1003,
-                serie: 'NC',
-                cliente: 'Transportes del Bajío',
-                rfc: 'TBA890123XYZ',
-                cat_monedas_clave: 'MXN',
-                subtotal: 2800.00,
-                iva: 448.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 3248.00,
-                fecha_timbrado: '2026-01-13 14:25:00',
-                satcat_uso_cfdi_clave: 'G02',
-                satcat_formas_pago_clave: 'Efectivo',
-                satcat_metodos_pago_clave: 'PUE',
-                uuid: 'GHI789JKL012MNO345',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito por ajuste'
-            },
-            {
-                estatus: 'Cancelada',
-                created_at: '2026-01-12 11:45:00',
-                folio: 1004,
-                serie: 'NC',
-                cliente: 'Logística Monterrey',
-                rfc: 'LMN890456ABC',
-                cat_monedas_clave: 'MXN',
-                subtotal: 4200.00,
-                iva: 672.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 4872.00,
-                fecha_timbrado: '2026-01-12 11:50:00',
-                satcat_uso_cfdi_clave: 'G01',
-                satcat_formas_pago_clave: 'Transferencia',
-                satcat_metodos_pago_clave: 'PPD',
-                uuid: 'JKL012MNO345PQR678',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito cancelada'
-            },
-            {
-                estatus: 'Pagada',
-                created_at: '2026-01-11 09:30:00',
-                folio: 1005,
-                serie: 'NC',
-                cliente: 'Comercializadora del Sur',
-                rfc: 'CDS890123DEF',
-                cat_monedas_clave: 'USD',
-                subtotal: 300.00,
-                iva: 48.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 348.00,
-                fecha_timbrado: '2026-01-11 09:35:00',
-                satcat_uso_cfdi_clave: 'G03',
-                satcat_formas_pago_clave: 'Cheque',
-                satcat_metodos_pago_clave: 'PUE',
-                uuid: 'MNO345PQR678STU901',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito en USD'
-            },
-            {
-                estatus: 'Activa',
-                created_at: '2026-01-10 16:15:00',
-                folio: 1006,
-                serie: 'NC',
-                cliente: 'Papelera del Pacífico',
-                rfc: 'PDP890123GHI',
-                cat_monedas_clave: 'MXN',
-                subtotal: 6500.00,
-                iva: 1040.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 7540.00,
-                fecha_timbrado: '2026-01-10 16:20:00',
-                satcat_uso_cfdi_clave: 'G02',
-                satcat_formas_pago_clave: 'Transferencia',
-                satcat_metodos_pago_clave: 'PPD',
-                uuid: 'PQR678STU901VWX234',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito por devolución parcial'
-            },
-            {
-                estatus: 'Activa',
-                created_at: '2026-01-09 13:40:00',
-                folio: 1007,
-                serie: 'NC',
-                cliente: 'Ferrocarriles Nacionales',
-                rfc: 'FCN890123JKL',
-                cat_monedas_clave: 'MXN',
-                subtotal: 1800.00,
-                iva: 288.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 2088.00,
-                fecha_timbrado: '2026-01-09 13:45:00',
-                satcat_uso_cfdi_clave: 'G01',
-                satcat_formas_pago_clave: 'Efectivo',
-                satcat_metodos_pago_clave: 'PUE',
-                uuid: 'STU901VWX234YZA567',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito por ajuste menor'
-            },
-            {
-                estatus: 'Cancelada',
-                created_at: '2026-01-08 10:00:00',
-                folio: 1008,
-                serie: 'NC',
-                cliente: 'Minería del Norte',
-                rfc: 'MDN890123MNO',
-                cat_monedas_clave: 'MXN',
-                subtotal: 9200.00,
-                iva: 1472.00,
-                riva: 0.00,
-                risr: 0.00,
-                total: 10672.00,
-                fecha_timbrado: '2026-01-08 10:05:00',
-                satcat_uso_cfdi_clave: 'G03',
-                satcat_formas_pago_clave: 'Transferencia',
-                satcat_metodos_pago_clave: 'PPD',
-                uuid: 'VWX234YZA567BCD890',
-                empresa_emisor: 'EMPRESA SA DE CV',
-                cat_tipos_servicios_descripcion: 'Nota de Crédito cancelada por error'
-            }
-        ];
-        
-        datosOriginales = [...datosNotasCredito];
-        totalRows = datosOriginales.length;
-        
-        // Función para formatear números como moneda
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        }
-        
-        // Función para formatear fecha
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX') + ' ' + date.toLocaleTimeString('es-MX', {hour: '2-digit', minute:'2-digit'});
-        }
-        
-        // Función para formatear fecha sin hora
-        function formatShortDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX');
-        }
-        
-        // Función para actualizar contadores de los cuadros
-        function actualizarContadores(datos) {
-            const totalFacturas = datos.length;
-            const activas = datos.filter(d => d.estatus === 'Activa').length;
-            const pagadas = datos.filter(d => d.estatus === 'Pagada').length;
-            const timbradas = datos.filter(d => d.fecha_timbrado).length;
-            
-            document.getElementById('totalFacturas').textContent = totalFacturas;
-            document.getElementById('totalActivas').textContent = activas;
-            document.getElementById('totalPagadas').textContent = pagadas;
-            document.getElementById('totalTimbradas').textContent = timbradas;
-        }
-        
-        // Función para generar un ID único para el grupo
-        function generarGrupoId(item, columnas) {
-            return columnas.map(col => {
-                switch(col) {
-                    case 'estatus': return item.estatus || 'Sin estatus';
-                    case 'fecha_creacion': return item.created_at || 'Sin fecha';
-                    case 'folio': return item.folio ? item.folio.toString() : 'Sin folio';
-                    case 'serie': return item.serie || 'Sin serie';
-                    case 'cliente': return item.cliente || 'Sin cliente';
-                    case 'rfc': return item.rfc || 'Sin RFC';
-                    case 'moneda': return item.cat_monedas_clave || 'Sin moneda';
-                    case 'subtotal': return item.subtotal ? item.subtotal.toString() : '0';
-                    case 'iva': return item.iva ? item.iva.toString() : '0';
-                    case 'riva': return item.riva ? item.riva.toString() : '0';
-                    case 'risr': return item.risr ? item.risr.toString() : '0';
-                    case 'total': return item.total ? item.total.toString() : '0';
-                    case 'fecha_timbrado': return item.fecha_timbrado || 'Sin fecha';
-                    case 'uso_cfdi': return item.satcat_uso_cfdi_clave || 'Sin uso';
-                    case 'forma_pago': return item.satcat_formas_pago_clave || 'Sin forma';
-                    case 'metodo_pago': return item.satcat_metodos_pago_clave || 'Sin método';
-                    case 'uuid': return item.uuid || 'Sin UUID';
-                    case 'emisor': return item.empresa_emisor || 'Sin emisor';
-                    case 'descripcion': return item.cat_tipos_servicios_descripcion || 'Sin descripción';
-                    default: return '';
-                }
-            }).join('||');
-        }
-        
-        // Función para agrupar datos por columnas seleccionadas
-        function agruparDatos(datos, columnas) {
-            if (columnas.length === 0) return { grupos: [], items: datos };
-            
-            const gruposMap = new Map();
-            
-            datos.forEach(item => {
-                const grupoId = generarGrupoId(item, columnas);
-                
-                if (!gruposMap.has(grupoId)) {
-                    // Crear un nuevo grupo
-                    const valorGrupo = columnas.map(col => {
-                        switch(col) {
-                            case 'estatus': return item.estatus || 'Sin estatus';
-                            case 'fecha_creacion': return item.created_at ? formatDate(item.created_at) : 'Sin fecha';
-                            case 'folio': return item.folio || 'Sin folio';
-                            case 'serie': return item.serie || 'Sin serie';
-                            case 'cliente': return item.cliente || 'Sin cliente';
-                            case 'rfc': return item.rfc || 'Sin RFC';
-                            case 'moneda': return item.cat_monedas_clave || 'Sin moneda';
-                            case 'subtotal': return item.subtotal || 0;
-                            case 'iva': return item.iva || 0;
-                            case 'riva': return item.riva || 0;
-                            case 'risr': return item.risr || 0;
-                            case 'total': return item.total || 0;
-                            case 'fecha_timbrado': return item.fecha_timbrado ? formatDate(item.fecha_timbrado) : 'Sin fecha';
-                            case 'uso_cfdi': return item.satcat_uso_cfdi_clave || 'Sin uso';
-                            case 'forma_pago': return item.satcat_formas_pago_clave || 'Sin forma';
-                            case 'metodo_pago': return item.satcat_metodos_pago_clave || 'Sin método';
-                            case 'uuid': return item.uuid || 'Sin UUID';
-                            case 'emisor': return item.empresa_emisor || 'Sin emisor';
-                            case 'descripcion': return item.cat_tipos_servicios_descripcion || 'Sin descripción';
-                            default: return '';
-                        }
-                    }).join(' - ');
-                    
-                    gruposMap.set(grupoId, {
-                        id: grupoId,
-                        valor: valorGrupo,
-                        items: [item],
-                        totalSubtotal: item.subtotal || 0,
-                        totalIva: item.iva || 0,
-                        totalRiva: item.riva || 0,
-                        totalRisr: item.risr || 0,
-                        totalGeneral: item.total || 0
-                    });
-                } else {
-                    const grupo = gruposMap.get(grupoId);
-                    grupo.items.push(item);
-                    grupo.totalSubtotal += item.subtotal || 0;
-                    grupo.totalIva += item.iva || 0;
-                    grupo.totalRiva += item.riva || 0;
-                    grupo.totalRisr += item.risr || 0;
-                    grupo.totalGeneral += item.total || 0;
-                }
-            });
-            
-            return {
-                grupos: Array.from(gruposMap.values()),
-                items: []
-            };
-        }
-        
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            let totalSubtotal = 0;
-            let totalIva = 0;
-            let totalRiva = 0;
-            let totalRisr = 0;
-            let totalGeneral = 0;
-            
-            datos.forEach(item => {
-                totalSubtotal += item.subtotal || 0;
-                totalIva += item.iva || 0;
-                totalRiva += item.riva || 0;
-                totalRisr += item.risr || 0;
-                totalGeneral += item.total || 0;
-            });
-            
-            document.getElementById('sumSubtotal').textContent = formatCurrency(totalSubtotal);
-            document.getElementById('sumIva').textContent = formatCurrency(totalIva);
-            document.getElementById('sumRiva').textContent = formatCurrency(totalRiva);
-            document.getElementById('sumRisr').textContent = formatCurrency(totalRisr);
-            document.getElementById('sumTotal').textContent = formatCurrency(totalGeneral);
-        }
-        
-        // Función para obtener datos de la página actual
-        function getCurrentPageData(datos) {
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            return datos.slice(start, end);
-        }
-        
-        // Función para actualizar la paginación
-        function actualizarPaginacion(total) {
-            const totalPages = Math.ceil(total / rowsPerPage);
-            document.getElementById('paginaActual').textContent = currentPage;
-            
-            // Mostrar/ocultar botones de página según sea necesario
-            document.querySelectorAll('.pagina-btn').forEach(btn => {
-                const pagina = parseInt(btn.dataset.pagina);
-                if (pagina <= totalPages) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-            
-            document.getElementById('paginacionInfo').textContent = `Mostrando ${Math.min((currentPage - 1) * rowsPerPage + 1, total)}-${Math.min(currentPage * rowsPerPage, total)} de ${total} registros`;
-        }
-        
-        // Función para cargar datos en la tabla
-        function cargarTabla(datos) {
-            const tablaBody = document.getElementById('tablaBody');
-            const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-            const tablaContainer = document.getElementById('tablaContainer');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            const tablaFoot = document.getElementById('tablaFoot');
-            
-            if (!tablaBody) return;
-            
-            // Actualizar contadores de los cuadros
-            actualizarContadores(datos);
-            
-            // Ocultar texto de agrupar si hay columnas agrupadas
-            if (textoAgrupar) {
-                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
-            }
-            
-            // Aplicar agrupación si hay columnas seleccionadas
-            const { grupos } = agruparDatos(datos, columnasAgrupadas);
-            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-            
-            // Limpiar tabla
-            tablaBody.innerHTML = '';
-            
-            if (datos.length === 0) {
-                sinDatosMensaje.style.display = 'block';
-                tablaContainer.style.display = 'none';
-                
-                // Resetear totales
-                document.getElementById('sumSubtotal').textContent = '$0.00';
-                document.getElementById('sumIva').textContent = '$0.00';
-                document.getElementById('sumRiva').textContent = '$0.00';
-                document.getElementById('sumRisr').textContent = '$0.00';
-                document.getElementById('sumTotal').textContent = '$0.00';
-                
-                if (paginacionInfo) {
-                    paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                }
-                return;
-            }
-            
-            sinDatosMensaje.style.display = 'none';
-            tablaContainer.style.display = 'block';
-            
-            if (hayGrupos) {
-                // Ocultar pie de tabla cuando hay grupos
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                // Mostrar grupos
-                grupos.forEach(grupo => {
-                    const grupoRow = document.createElement('tr');
-                    grupoRow.className = 'fila-grupo';
-                    grupoRow.dataset.grupoId = grupo.id;
-                    
-                    if (expandedGroups.has(grupo.id)) {
-                        grupoRow.classList.add('expandido');
-                    }
-                    
-                    // Determinar el estatus predominante en el grupo
-                    const estatusCounts = {};
-                    grupo.items.forEach(item => {
-                        estatusCounts[item.estatus] = (estatusCounts[item.estatus] || 0) + 1;
-                    });
-                    
-                    let estatusPredominante = 'Activa';
-                    let maxCount = 0;
-                    for (const [estatus, count] of Object.entries(estatusCounts)) {
-                        if (count > maxCount) {
-                            maxCount = count;
-                            estatusPredominante = estatus;
-                        }
-                    }
-                    
-                    let badgeClass = 'badge-activa';
-                    if (estatusPredominante === 'Pagada') badgeClass = 'badge-pagada';
-                    else if (estatusPredominante === 'Cancelada') badgeClass = 'badge-cancelada';
-                    
-                    grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="20">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
-                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Subtotal: ${formatCurrency(grupo.totalSubtotal)} - IVA: ${formatCurrency(grupo.totalIva)} - Total: ${formatCurrency(grupo.totalGeneral)})
-                                    </span>
-                                </div>
-                                <span class="badge ${badgeClass}" style="margin-right: 10px;">${estatusPredominante}</span>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(grupoRow);
-                    
-                    // Mostrar items del grupo si está expandido
-                    if (expandedGroups.has(grupo.id)) {
-                        grupo.items.forEach(item => {
-                            const detalleRow = document.createElement('tr');
-                            detalleRow.className = 'fila-detalle';
-                            
-                            // Badge para cada item
-                            let itemBadgeClass = 'badge-activa';
-                            if (item.estatus === 'Pagada') itemBadgeClass = 'badge-pagada';
-                            else if (item.estatus === 'Cancelada') itemBadgeClass = 'badge-cancelada';
-                            
-                            detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;"><span class="badge ${itemBadgeClass}">${item.estatus || '-'}</span></td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.created_at ? formatDate(item.created_at) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.folio || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.serie || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cliente || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.rfc || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cat_monedas_clave || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.subtotal ? formatCurrency(item.subtotal) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.iva ? formatCurrency(item.iva) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.riva ? formatCurrency(item.riva) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.risr ? formatCurrency(item.risr) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha_timbrado ? formatDate(item.fecha_timbrado) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.satcat_uso_cfdi_clave || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.satcat_formas_pago_clave || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.satcat_metodos_pago_clave || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; font-size: 10px;">${item.uuid || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.empresa_emisor || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cat_tipos_servicios_descripcion || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                                        <i class="fas fa-file-code" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="XML"></i>
-                                    </div>
-                                </td>
-                            `;
-                            
-                            tablaBody.appendChild(detalleRow);
-                        });
-                    }
-                });
-                
-                if (paginacionInfo) {
-                    const totalRegistros = datos.length;
-                    const mostrando = grupos.length;
-                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
-                }
+// ============================================
+// VARIABLES GLOBALES
+// ============================================
+let datosNotas = [];
+let datosFiltrados = [];
+let currentPage = 1;
+const rowsPerPage = 10;
+let facturaSeleccionada = null;
+let saldoDisponible = 0;
+let totalFactura = 0;
+let totalNotasAplicadas = 0;
+
+// ============================================
+// UTILIDADES
+// ============================================
+function formatCurrency(amount) {
+    if (amount === null || amount === undefined) amount = 0;
+    return '$' + parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-';
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return dateString;
+        return date.toLocaleDateString('es-MX');
+    } catch(e) { return dateString; }
+}
+
+function getBadgeClass(estatus) {
+    const map = { 19: 'badge-timbrada', 1: 'badge-pendiente', 21: 'badge-cancelada' };
+    return map[estatus] || 'badge-pendiente';
+}
+
+function getEstatusDisplay(estatus) {
+    const map = { 19: 'Timbrada', 1: 'Pendiente', 21: 'Cancelada' };
+    return map[estatus] || 'Pendiente';
+}
+
+function showLoading(show) {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.style.display = show ? 'flex' : 'none';
+}
+
+function showError(msg) { 
+    Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonColor: '#083CAE' }); 
+}
+
+function showSuccess(msg) { 
+    Swal.fire({ icon: 'success', title: 'Éxito', text: msg, confirmButtonColor: '#083CAE', timer: 3000, showConfirmButton: false }); 
+}
+
+// ============================================
+// CARGA DE DATOS
+// ============================================
+function cargarDatos() {
+    showLoading(true);
+    
+    const params = new URLSearchParams();
+    const fi = document.getElementById('fechaInicio').value;
+    const ff = document.getElementById('fechaFin').value;
+    const busqueda = document.getElementById('buscador').value;
+    
+    if (fi) params.append('fecha_inicio', fi);
+    if (ff) params.append('fecha_fin', ff);
+    if (busqueda) params.append('search', busqueda);
+    
+    fetch('/notas-credito/data?' + params.toString())
+        .then(response => response.json())
+        .then(response => {
+            if (response.success && response.data) {
+                datosNotas = response.data;
+                datosFiltrados = [...datosNotas];
+                actualizarContadores(response.stats);
+                cargarTabla();
             } else {
-                // Mostrar todos los items sin agrupar (con paginación)
-                const pageData = getCurrentPageData(datos);
-                
-                pageData.forEach(item => {
-                    const row = document.createElement('tr');
-                    
-                    let badgeClass = 'badge-activa';
-                    if (item.estatus === 'Pagada') badgeClass = 'badge-pagada';
-                    else if (item.estatus === 'Cancelada') badgeClass = 'badge-cancelada';
-                    
-                    row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;"><span class="badge ${badgeClass}">${item.estatus || '-'}</span></td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.created_at ? formatDate(item.created_at) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.folio || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.serie || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cliente || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.rfc || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cat_monedas_clave || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.subtotal ? formatCurrency(item.subtotal) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.iva ? formatCurrency(item.iva) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.riva ? formatCurrency(item.riva) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.risr ? formatCurrency(item.risr) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.total ? formatCurrency(item.total) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.fecha_timbrado ? formatDate(item.fecha_timbrado) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.satcat_uso_cfdi_clave || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.satcat_formas_pago_clave || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.satcat_metodos_pago_clave || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; font-size: 10px;">${item.uuid || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.empresa_emisor || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.cat_tipos_servicios_descripcion || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                            <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF"></i>
-                                <i class="fas fa-file-code" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="XML"></i>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(row);
+                datosNotas = [];
+                datosFiltrados = [];
+                actualizarContadores({ total: 0, timbradas: 0, pendientes: 0, canceladas: 0 });
+                cargarTabla();
+            }
+            showLoading(false);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            datosNotas = [];
+            datosFiltrados = [];
+            actualizarContadores({ total: 0, timbradas: 0, pendientes: 0, canceladas: 0 });
+            cargarTabla();
+            showLoading(false);
+        });
+}
+
+function actualizarContadores(stats) {
+    document.getElementById('totalNotas').textContent = stats.total || 0;
+    document.getElementById('totalTimbradas').textContent = stats.timbradas || 0;
+    document.getElementById('totalPendientes').textContent = stats.pendientes || 0;
+    document.getElementById('totalCanceladas').textContent = stats.canceladas || 0;
+}
+
+function calcularTotales(datos) {
+    let subtotal = 0, iva = 0, total = 0;
+    datos.forEach(item => {
+        subtotal += parseFloat(item.subtotal || 0);
+        iva += parseFloat(item.iva || 0);
+        total += parseFloat(item.total || 0);
+    });
+    document.getElementById('sumSubtotal').textContent = formatCurrency(Math.abs(subtotal));
+    document.getElementById('sumIva').textContent = formatCurrency(Math.abs(iva));
+    document.getElementById('sumTotal').textContent = formatCurrency(Math.abs(total));
+}
+
+function cargarTabla() {
+    const tbody = document.getElementById('tablaBody');
+    const sinDatos = document.getElementById('sinDatosMensaje');
+    const tablaContainer = document.getElementById('tablaContainer');
+    
+    if (!tbody) return;
+    
+    if (datosFiltrados.length === 0) {
+        sinDatos.style.display = 'block';
+        tablaContainer.style.display = 'none';
+        calcularTotales([]);
+        actualizarPaginacion(0);
+        return;
+    }
+    
+    sinDatos.style.display = 'none';
+    tablaContainer.style.display = 'block';
+    
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const pageData = datosFiltrados.slice(start, end);
+    
+    tbody.innerHTML = '';
+    
+    pageData.forEach(item => {
+        const row = tbody.insertRow();
+        const badgeClass = getBadgeClass(item.estatus);
+        const estatusDisplay = getEstatusDisplay(item.estatus);
+        
+        row.innerHTML = `
+            <td style="padding: 10px 6px; text-align: center;"><span class="badge ${badgeClass}">${estatusDisplay}</span></td>
+            <td style="padding: 10px 6px; text-align: center;">${formatDate(item.fecha)}</td>
+            <td style="padding: 10px 6px;">${item.serie || '-'}</td>
+            <td style="padding: 10px 6px; text-align: center;"><strong>${item.folio || '-'}</strong></td>
+            <td style="padding: 10px 6px;">${item.cliente_nombre || '-'}</td>
+            <td style="padding: 10px 6px;">${item.cliente_rfc || '-'}</td>
+            <td style="padding: 10px 6px; text-align: center;">${item.moneda || 'MXN'}</td>
+            <td style="padding: 10px 6px; text-align: right;">${formatCurrency(Math.abs(item.subtotal || 0))}</td>
+            <td style="padding: 10px 6px; text-align: right;">${formatCurrency(Math.abs(item.iva || 0))}</td>
+            <td style="padding: 10px 6px; text-align: right;"><strong>${formatCurrency(Math.abs(item.total || 0))}</strong></td>
+            <td style="padding: 10px 6px;">${item.factura_relacionada_serie ? item.factura_relacionada_serie + '-' + item.factura_relacionada_folio : '-'}</td>
+            <td style="padding: 10px 6px; max-width: 200px; white-space: normal;">${item.motivo_nota_credito || '-'}</td>
+            <td style="padding: 10px 6px; font-size: 10px;">${item.uuid ? item.uuid.substring(0, 16) + '...' : '-'}</td>
+            <td style="padding: 10px 6px; text-align: center; background: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" title="Ver" data-id="${item.factura_id}"></i>
+                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer;" title="PDF" data-id="${item.factura_id}"></i>
+                    <i class="fas fa-file-code" style="color: #17a2b8; cursor: pointer;" title="XML" data-id="${item.factura_id}"></i>
+                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer;" title="Eliminar" data-id="${item.factura_id}"></i>
+                </div>
+            </td>
+        `;
+    });
+    
+    calcularTotales(datosFiltrados);
+    actualizarPaginacion(datosFiltrados.length);
+    
+    document.querySelectorAll('.fa-eye').forEach(el => el.addEventListener('click', () => verNota(el.dataset.id)));
+    document.querySelectorAll('.fa-file-pdf').forEach(el => el.addEventListener('click', () => window.open(`/notas-credito/${el.dataset.id}/pdf`, '_blank')));
+    document.querySelectorAll('.fa-file-code').forEach(el => el.addEventListener('click', () => showSuccess('XML en desarrollo')));
+    document.querySelectorAll('.fa-trash-alt').forEach(el => el.addEventListener('click', () => eliminarNota(el.dataset.id)));
+}
+
+function actualizarPaginacion(total) {
+    const totalPages = Math.ceil(total / rowsPerPage);
+    const start = (currentPage - 1) * rowsPerPage + 1;
+    const end = Math.min(currentPage * rowsPerPage, total);
+    document.getElementById('paginaActual').textContent = currentPage;
+    document.getElementById('paginacionInfo').textContent = `Mostrando ${total === 0 ? 0 : start}-${end} de ${total} registros`;
+}
+
+function verNota(id) {
+    fetch(`/notas-credito/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const facturaInfo = data.data.info_factura || {};
+                Swal.fire({
+                    title: `Nota de Crédito ${data.data.serie}-${data.data.folio}`,
+                    html: `<div style="text-align:left;">
+                        <p><strong>Cliente:</strong> ${data.data.cliente_nombre}</p>
+                        <p><strong>RFC:</strong> ${data.data.cliente_rfc}</p>
+                        <p><strong>Fecha:</strong> ${formatDate(data.data.fecha)}</p>
+                        <p><strong>Motivo:</strong> ${data.data.motivo_nota_credito}</p>
+                        <p><strong>Factura Relacionada:</strong> ${data.data.factura_relacionada_serie}-${data.data.factura_relacionada_folio || '-'}</p>
+                        <p><strong>Subtotal:</strong> ${formatCurrency(Math.abs(data.data.subtotal))}</p>
+                        <p><strong>IVA:</strong> ${formatCurrency(Math.abs(data.data.iva))}</p>
+                        <p><strong>Total:</strong> ${formatCurrency(Math.abs(data.data.total))}</p>
+                        <p><strong>Estatus:</strong> <span class="badge ${getBadgeClass(data.data.estatus)}">${getEstatusDisplay(data.data.estatus)}</span></p>
+                    </div>`,
+                    width: '500px',
+                    confirmButtonColor: '#083CAE'
                 });
-                
-                // Mostrar pie de tabla con totales
-                if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
-                calcularTotales(datos);
-                
-                actualizarPaginacion(datos.length);
             }
-        }
-        
-        // Función para actualizar la visualización de columnas agrupadas
-        function actualizarGrupoColumnas() {
-            const grupoContainer = document.getElementById('grupoColumnas');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            
-            if (!grupoContainer) return;
-            
-            grupoContainer.innerHTML = '';
-            
-            if (columnasAgrupadas.length === 0) {
-                if (textoAgrupar) textoAgrupar.style.display = 'inline';
-            } else {
-                if (textoAgrupar) textoAgrupar.style.display = 'none';
-                
-                columnasAgrupadas.forEach(col => {
-                    const nombreColumna = {
-                        'estatus': 'Estatus',
-                        'fecha_creacion': 'Fecha Creación',
-                        'folio': 'Folio',
-                        'serie': 'Serie',
-                        'cliente': 'Cliente',
-                        'rfc': 'RFC',
-                        'moneda': 'Moneda',
-                        'subtotal': 'Subtotal',
-                        'iva': 'IVA',
-                        'riva': 'R.IVA',
-                        'risr': 'R.ISR',
-                        'total': 'Total',
-                        'fecha_timbrado': 'Fecha Timbrado',
-                        'uso_cfdi': 'Uso CFDI',
-                        'forma_pago': 'Forma de Pago',
-                        'metodo_pago': 'Método de Pago',
-                        'uuid': 'UUID',
-                        'emisor': 'Emisor',
-                        'descripcion': 'Descripción'
-                    }[col] || col;
-                    
-                    const chip = document.createElement('span');
-                    chip.className = 'columna-agrupada';
-                    chip.innerHTML = `
-                        ${nombreColumna}
-                        <span class="remover" data-columna="${col}">&times;</span>
-                    `;
-                    grupoContainer.appendChild(chip);
-                });
-            }
-            
-            // Limpiar grupos expandidos al cambiar agrupación
-            expandedGroups.clear();
-            
-            // Recargar tabla con nueva agrupación
-            cargarTabla(datosOriginales);
-        }
-        
-        // Configurar drag and drop
-        function setupDragAndDrop() {
-            const encabezados = document.querySelectorAll('th[draggable="true"]');
-            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-            
-            encabezados.forEach(th => {
-                th.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', th.dataset.columna);
-                    e.dataTransfer.effectAllowed = 'copy';
-                    th.style.opacity = '0.5';
-                });
-                
-                th.addEventListener('dragend', (e) => {
-                    th.style.opacity = '1';
-                });
-            });
-            
-            grupoAgrupacion.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
-                grupoAgrupacion.classList.add('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('dragleave', () => {
-                grupoAgrupacion.classList.remove('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('drop', (e) => {
-                e.preventDefault();
-                grupoAgrupacion.classList.remove('drag-over');
-                
-                const columna = e.dataTransfer.getData('text/plain');
-                
-                if (columna && !columnasAgrupadas.includes(columna)) {
-                    columnasAgrupadas.push(columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-            
-            // Event listener para remover columnas (usando delegación)
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remover')) {
-                    const columna = e.target.dataset.columna;
-                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-        }
-        
-        // Event listener para expandir/colapsar grupos
-        document.addEventListener('click', function(e) {
-            const filaGrupo = e.target.closest('.fila-grupo');
-            if (filaGrupo) {
-                const grupoId = filaGrupo.dataset.grupoId;
-                const icono = filaGrupo.querySelector('i');
-                
-                if (expandedGroups.has(grupoId)) {
-                    expandedGroups.delete(grupoId);
-                    filaGrupo.classList.remove('expandido');
-                    if (icono) icono.className = 'fas fa-caret-right';
-                } else {
-                    expandedGroups.add(grupoId);
-                    filaGrupo.classList.add('expandido');
-                    if (icono) icono.className = 'fas fa-caret-down';
-                }
-                
-                // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosOriginales);
-            }
-        });
-        
-        // Cargar datos iniciales
-        cargarTabla(datosNotasCredito);
-        
-        // Configurar drag and drop
-        setupDragAndDrop();
-        
-        // Event Listeners
-        document.getElementById('fechaInicio')?.addEventListener('change', function() {
-            console.log('Fecha inicio:', this.value);
-        });
-        
-        document.getElementById('fechaFin')?.addEventListener('change', function() {
-            console.log('Fecha fin:', this.value);
-        });
-        
-        document.getElementById('btnCrearFiltro')?.addEventListener('click', function() {
-            alert('Crear filtro - Funcionalidad en desarrollo');
-        });
-        
-        document.getElementById('btnAgregar')?.addEventListener('click', function() {
-            alert('Agregar Nota de Crédito - Funcionalidad en desarrollo');
-        });
-        
-        document.getElementById('btnExcel')?.addEventListener('click', function() {
-            exportTableToExcel('tablaNotasCredito', 'NotasCredito');
-        });
-        
-        document.getElementById('btnColumnas')?.addEventListener('click', function() {
-            alert('Selector de Columnas - Funcionalidad en desarrollo');
-        });
-        
-        document.getElementById('buscador')?.addEventListener('input', function(e) {
-            const busqueda = e.target.value.toLowerCase();
-            const datosFiltrados = datosNotasCredito.filter(item => 
-                item.cliente?.toLowerCase().includes(busqueda) ||
-                item.rfc?.toLowerCase().includes(busqueda) ||
-                item.serie?.toLowerCase().includes(busqueda) ||
-                item.estatus?.toLowerCase().includes(busqueda) ||
-                item.uuid?.toLowerCase().includes(busqueda) ||
-                item.folio?.toString().includes(busqueda)
-            );
-            datosOriginales = datosFiltrados;
-            currentPage = 1;
-            cargarTabla(datosOriginales);
-        });
-        
-        // Paginación
-        document.querySelectorAll('.pagina-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                currentPage = parseInt(this.dataset.pagina);
-                cargarTabla(datosOriginales);
-            });
-        });
-        
-        document.getElementById('btnPrimera')?.addEventListener('click', function() {
-            currentPage = 1;
-            cargarTabla(datosOriginales);
-        });
-        
-        document.getElementById('btnAnterior')?.addEventListener('click', function() {
-            if (currentPage > 1) {
-                currentPage--;
-                cargarTabla(datosOriginales);
-            }
-        });
-        
-        document.getElementById('btnSiguiente')?.addEventListener('click', function() {
-            const totalPages = Math.ceil(datosOriginales.length / rowsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                cargarTabla(datosOriginales);
-            }
-        });
-        
-        document.getElementById('btnUltima')?.addEventListener('click', function() {
-            const totalPages = Math.ceil(datosOriginales.length / rowsPerPage);
-            currentPage = totalPages;
-            cargarTabla(datosOriginales);
-        });
-        
-        // Iconos de filtro en encabezados
-        document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
-            icon.addEventListener('click', function() {
-                alert('Filtro de columna - Funcionalidad en desarrollo');
-            });
-        });
-        
-        // Acciones de los iconos (delegación de eventos)
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fa-edit')) {
-                alert('Editar Nota de Crédito - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-trash-alt')) {
-                if (confirm('¿Está seguro de eliminar esta nota de crédito?')) {
-                    alert('Eliminar Nota de Crédito - Funcionalidad en desarrollo');
-                }
-            } else if (e.target.classList.contains('fa-file-pdf')) {
-                alert('Descargar PDF - Funcionalidad en desarrollo');
-            } else if (e.target.classList.contains('fa-file-code')) {
-                alert('Descargar XML - Funcionalidad en desarrollo');
-            }
-        });
-        
-        // Función para exportar a Excel
-        function exportTableToExcel(tableId, filename = '') {
-            var table = document.getElementById(tableId);
-            if (!table) return;
-            
-            var html = table.outerHTML;
-            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
-            
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = filename + '.xls';
-            link.click();
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function eliminarNota(id) {
+    Swal.fire({
+        title: '¿Eliminar nota de crédito?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/api/notas-credito/${id}`, { 
+                method: 'DELETE', 
+                headers: { 'X-CSRF-TOKEN': document.getElementById('csrf_token').value } 
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showSuccess('Nota de crédito eliminada');
+                        cargarDatos();
+                    } else {
+                        showError(data.message);
+                    }
+                })
+                .catch(error => showError('Error al eliminar'));
         }
     });
+}
+
+// ============================================
+// MODALES
+// ============================================
+function abrirModalNuevaNota() {
+    const modal = document.getElementById('modalNuevaNota');
+    if (!modal) return;
+    
+    document.getElementById('formNuevaNota').reset();
+    facturaSeleccionada = null;
+    saldoDisponible = 0;
+    totalFactura = 0;
+    totalNotasAplicadas = 0;
+    document.getElementById('resumenTotal').textContent = formatCurrency(0);
+    document.getElementById('saldoRestante').textContent = formatCurrency(0);
+    document.getElementById('infoSaldoFactura').style.display = 'none';
+    document.getElementById('tablaConceptosFactura').innerHTML = `
+        <tr id="filaConceptoVacia">
+            <td colspan="5" style="padding: 40px; text-align: center; color: #999;">
+                <i class="fas fa-info-circle"></i> Seleccione una factura para ver sus conceptos
+            <\/td>
+        <\/tr>
+    `;
+    
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha').value = hoy;
+    
+    cargarCombos();
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalNota() {
+    const modal = document.getElementById('modalNuevaNota');
+    if (modal) { modal.style.display = 'none'; document.body.style.overflow = 'auto'; }
+}
+
+function abrirModalMonto() {
+    if (!facturaSeleccionada) {
+        showError('Primero seleccione una factura');
+        return;
+    }
+    
+    const modal = document.getElementById('modalMonto');
+    if (!modal) return;
+    
+    document.getElementById('montoACreditar').value = '';
+    document.getElementById('saldoDisponibleSpan').innerHTML = formatCurrency(saldoDisponible);
+    document.getElementById('maxMontoMsg').innerHTML = `Máximo: ${formatCurrency(saldoDisponible)}`;
+    modal.style.display = 'block';
+}
+
+function cerrarModalMonto() {
+    const modal = document.getElementById('modalMonto');
+    if (modal) modal.style.display = 'none';
+}
+
+function aplicarMonto() {
+    let monto = parseFloat(document.getElementById('montoACreditar').value);
+    
+    if (isNaN(monto) || monto <= 0) {
+        showError('Ingrese un monto válido');
+        return;
+    }
+    
+    if (monto > saldoDisponible) {
+        showError(`El monto no puede exceder el saldo disponible (${formatCurrency(saldoDisponible)})`);
+        return;
+    }
+    
+    if (monto > totalFactura) {
+        showError(`El monto (${formatCurrency(monto)}) no puede exceder el total de la factura (${formatCurrency(totalFactura)})`);
+        return;
+    }
+    
+    // Verificar que el saldo restante no sea negativo
+    const nuevoSaldoRestante = saldoDisponible - monto;
+    if (nuevoSaldoRestante < 0) {
+        showError(`El monto (${formatCurrency(monto)}) excede el saldo disponible (${formatCurrency(saldoDisponible)})`);
+        return;
+    }
+    
+    document.getElementById('resumenTotal').textContent = formatCurrency(monto);
+    document.getElementById('saldoRestante').textContent = formatCurrency(nuevoSaldoRestante);
+    cerrarModalMonto();
+    
+    showSuccess(`Monto acreditar: ${formatCurrency(monto)}`);
+}
+
+function cargarCombos() {
+    // Proyectos
+    fetch('/api/proyectos/activos')
+        .then(r => r.json()).then(data => {
+            const select = document.getElementById('proyecto_id');
+            if (select && Array.isArray(data)) {
+                select.innerHTML = '<option value="">Seleccionar proyecto...</option>';
+                data.forEach(p => select.innerHTML += `<option value="${p.id}">${p.codigo} - ${p.nombre}</option>`);
+            }
+        }).catch(e => console.error('Error proyectos:', e));
+    
+    // Clientes
+    fetch('/api/contactos')
+        .then(r => r.json()).then(data => {
+            const select = document.getElementById('contacto_id');
+            if (select && Array.isArray(data)) {
+                select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+                data.forEach(c => {
+                    select.innerHTML += `<option value="${c.contacto_id}">${c.razon_social} ${c.rfc ? '- ' + c.rfc : ''}</option>`;
+                });
+                select.onchange = function() { cargarFacturasRelacionadas(this.value); };
+            }
+        }).catch(e => console.error('Error clientes:', e));
+    
+    // Series para notas de crédito
+    fetch('/api/series-nota-credito')
+        .then(r => r.json()).then(data => {
+            const select = document.getElementById('cat_serie_id');
+            if (select && Array.isArray(data)) {
+                select.innerHTML = '<option value="">Seleccionar serie...</option>';
+                data.forEach(s => {
+                    select.innerHTML += `<option value="${s.cat_serie_id}">${s.serie} - ${s.descripcion}</option>`;
+                });
+            }
+        }).catch(e => console.error('Error series:', e));
+}
+
+function cargarFacturasRelacionadas(clienteId) {
+    const selectFactura = document.getElementById('factura_relacionada_id');
+    if (!clienteId) {
+        selectFactura.innerHTML = '<option value="">Primero seleccione un cliente...</option>';
+        return;
+    }
+    
+    showLoading(true);
+    fetch(`/api/facturas-para-nota-credito?cliente_id=${clienteId}`)
+        .then(r => r.json())
+        .then(data => {
+            if (selectFactura) {
+                if (Array.isArray(data) && data.length > 0) {
+                    selectFactura.innerHTML = '<option value="">Seleccionar factura...</option>';
+                    data.forEach(f => {
+                        const saldoMostrar = f.saldo_restante || f.saldo_disponible || f.total;
+                        selectFactura.innerHTML += `<option value="${f.factura_id}" 
+                            data-total="${f.total}"
+                            data-saldo="${saldoMostrar}"
+                            data-cliente="${f.cliente_nombre}">
+                            ${f.serie}-${f.folio} | ${f.cliente_nombre} | 
+                            Total: $${parseFloat(f.total).toFixed(2)} | 
+                            Saldo: $${parseFloat(saldoMostrar).toFixed(2)}
+                        </option>`;
+                    });
+                    
+                    selectFactura.onchange = function() {
+                        const option = this.options[this.selectedIndex];
+                        if (this.value) {
+                            const total = parseFloat(option.dataset.total);
+                            const saldo = parseFloat(option.dataset.saldo);
+                            const cliente = option.dataset.cliente;
+                            cargarDetalleFactura(this.value, total, saldo, cliente);
+                        }
+                    };
+                } else {
+                    selectFactura.innerHTML = '<option value="">No hay facturas disponibles con saldo pendiente</option>';
+                }
+            }
+            showLoading(false);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            selectFactura.innerHTML = '<option value="">Error al cargar facturas</option>';
+            showLoading(false);
+        });
+}
+
+function cargarDetalleFactura(facturaId, total, saldo, cliente) {
+    showLoading(true);
+    
+    // Guardar datos de la factura
+    facturaSeleccionada = facturaId;
+    totalFactura = total;
+    saldoDisponible = saldo;
+    
+    // Obtener detalles de la factura incluyendo conceptos
+    fetch(`/facturacion/${facturaId}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Calcular notas aplicadas
+                totalNotasAplicadas = totalFactura - saldoDisponible;
+                
+                // Mostrar información del saldo
+                const infoDiv = document.getElementById('infoSaldoFactura');
+                const porcentajeRestante = (saldoDisponible / totalFactura) * 100;
+                const colorBarra = porcentajeRestante > 30 ? '#28a745' : (porcentajeRestante > 10 ? '#ffc107' : '#dc3545');
+                
+                infoDiv.style.display = 'block';
+                infoDiv.innerHTML = `
+                    <div class="info-saldo">
+                        <strong>Factura seleccionada:</strong><br>
+                        <strong>Cliente:</strong> ${cliente}<br>
+                        <strong>Total factura:</strong> ${formatCurrency(totalFactura)}<br>
+                        <strong>Notas aplicadas:</strong> ${formatCurrency(totalNotasAplicadas)}<br>
+                        <strong>Saldo disponible:</strong> <span style="color: #28a745; font-weight: bold;">${formatCurrency(saldoDisponible)}</span>
+                        <div style="margin-top: 8px; background: #e0e0e0; border-radius: 10px; overflow: hidden;">
+                            <div style="width: ${porcentajeRestante}%; background: ${colorBarra}; height: 8px;"></div>
+                        </div>
+                        <small>${porcentajeRestante.toFixed(1)}% del saldo original disponible</small>
+                        <div style="margin-top: 10px;">
+                            <button type="button" onclick="abrirModalMonto()" class="btn-credito" style="font-size: 12px; padding: 6px 12px;">
+                                <i class="fas fa-dollar-sign"></i> Especificar monto acreditar (Máx: ${formatCurrency(saldoDisponible)})
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Mostrar conceptos de la factura (solo lectura)
+                const tbodyConceptos = document.getElementById('tablaConceptosFactura');
+                if (data.conceptos && data.conceptos.length > 0) {
+                    let html = '';
+                    for (let i = 0; i < data.conceptos.length; i++) {
+                        const concepto = data.conceptos[i];
+                        const cantidad = parseFloat(concepto.cantidad) || 0;
+                        const valorUnitario = parseFloat(concepto.valor_unitario) || 0;
+                        const importe = parseFloat(concepto.importe) || 0;
+                        
+                        html += `<tr>
+                            <td style="padding: 10px;">${concepto.codigo || '-'}</td>
+                            <td style="padding: 10px;">${concepto.descripcion || '-'}</td>
+                            <td style="padding: 10px; text-align: right;">${cantidad.toFixed(2)}</td>
+                            <td style="padding: 10px; text-align: right;">${formatCurrency(valorUnitario)}</td>
+                            <td style="padding: 10px; text-align: right;">${formatCurrency(importe)}</td>
+                        </tr>`;
+                    }
+                    tbodyConceptos.innerHTML = html;
+                } else {
+                    tbodyConceptos.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="padding: 40px; text-align: center; color: #999;">
+                                <i class="fas fa-info-circle"></i> La factura no tiene conceptos registrados
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                // Actualizar totales
+                document.getElementById('resumenTotal').textContent = formatCurrency(0);
+                document.getElementById('saldoRestante').textContent = formatCurrency(saldoDisponible);
+            }
+            showLoading(false);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showLoading(false);
+            showError('Error al cargar los detalles de la factura');
+        });
+}
+
+function guardarNota(timbrar = false) {
+    // Verificar que todos los elementos existan
+    const contacto_id_elem = document.getElementById('contacto_id');
+    const cat_serie_id_elem = document.getElementById('cat_serie_id');
+    const factura_relacionada_id_elem = document.getElementById('factura_relacionada_id');
+    const motivo_elem = document.getElementById('motivo');
+    const resumenTotal_elem = document.getElementById('resumenTotal');
+    const proyecto_id_elem = document.getElementById('proyecto_id');
+    const fecha_elem = document.getElementById('fecha');
+    const moneda_elem = document.getElementById('moneda');
+    const observaciones_elem = document.getElementById('observaciones');
+    const csrf_token_elem = document.getElementById('csrf_token');
+    
+    // Validar elementos requeridos
+    if (!contacto_id_elem || !cat_serie_id_elem || !factura_relacionada_id_elem || !motivo_elem || !resumenTotal_elem) {
+        showError('Error: Elementos del formulario no encontrados');
+        return;
+    }
+    
+    const contacto_id = contacto_id_elem.value;
+    const cat_serie_id = cat_serie_id_elem.value;
+    const factura_relacionada_id = factura_relacionada_id_elem.value;
+    const motivo = motivo_elem.value?.trim() || '';
+    const montoTexto = resumenTotal_elem.textContent;
+    const monto = parseFloat(montoTexto.replace(/[^0-9.-]+/g, ''));
+    
+    if (!contacto_id) { 
+        showError('Seleccione un cliente'); 
+        return; 
+    }
+    if (!cat_serie_id) { 
+        showError('Seleccione una serie'); 
+        return; 
+    }
+    if (!factura_relacionada_id) { 
+        showError('Seleccione una factura relacionada'); 
+        return; 
+    }
+    if (!motivo) { 
+        showError('Escriba el motivo de la nota de crédito'); 
+        return; 
+    }
+    if (!monto || monto <= 0) { 
+        showError('Especifique el monto a acreditar usando el botón "Especificar monto acreditar"');
+        return; 
+    }
+    
+    if (monto > saldoDisponible) {
+        showError(`El monto (${formatCurrency(monto)}) excede el saldo disponible (${formatCurrency(saldoDisponible)}). El máximo permitido es ${formatCurrency(saldoDisponible)}`);
+        return;
+    }
+    
+    if (monto > totalFactura) {
+        showError(`El monto (${formatCurrency(monto)}) no puede exceder el total de la factura (${formatCurrency(totalFactura)})`);
+        return;
+    }
+    
+    showLoading(true);
+    
+    // Crear un concepto único para la nota de crédito
+    const conceptos = [{
+        codigo: '001',
+        descripcion: `Nota de crédito por: ${motivo.substring(0, 100)}`,
+        cantidad: 1,
+        valorUnitario: monto,
+        importe: monto
+    }];
+    
+    const data = {
+        contacto_id: parseInt(contacto_id),
+        cat_serie_id: parseInt(cat_serie_id),
+        factura_relacionada_id: parseInt(factura_relacionada_id),
+        proyecto_id: proyecto_id_elem?.value || null,
+        fecha: fecha_elem?.value || new Date().toISOString().split('T')[0],
+        moneda: moneda_elem?.value || 'MXN',
+        motivo: motivo,
+        observaciones: observaciones_elem?.value || '',
+        conceptos: conceptos,
+        timbrar: timbrar
+    };
+    
+    fetch('/api/notas-credito', {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json', 
+            'X-CSRF-TOKEN': csrf_token_elem?.value || '',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(r => r.json())
+    .then(data => {
+        showLoading(false);
+        if (data.success) {
+            const mensaje = timbrar ? 'Nota de crédito timbrada correctamente' : 'Nota de crédito guardada correctamente';
+            showSuccess(mensaje);
+            cerrarModalNota();
+            cargarDatos();
+        } else { 
+            showError(data.message || 'Error al guardar'); 
+        }
+    })
+    .catch(err => { 
+        showLoading(false); 
+        console.error('Error:', err);
+        showError('Error al guardar la nota de crédito: ' + (err.message || 'Error desconocido')); 
+    });
+}
+
+function exportToExcel() {
+    if (datosFiltrados.length === 0) { 
+        showError('No hay datos para exportar'); 
+        return; 
+    }
+    
+    let csv = 'Estatus,Fecha,Serie,Folio,Cliente,RFC,Moneda,Subtotal,IVA,Total,Factura Relacionada,Motivo,UUID\n';
+    datosFiltrados.forEach(i => {
+        csv += `${getEstatusDisplay(i.estatus)},`;
+        csv += `${formatDate(i.fecha)},`;
+        csv += `${i.serie || '-'},`;
+        csv += `${i.folio || '-'},`;
+        csv += `"${i.cliente_nombre || '-'}",`;
+        csv += `${i.cliente_rfc || '-'},`;
+        csv += `${i.moneda || 'MXN'},`;
+        csv += `${Math.abs(i.subtotal || 0)},`;
+        csv += `${Math.abs(i.iva || 0)},`;
+        csv += `${Math.abs(i.total || 0)},`;
+        csv += `${i.factura_relacionada_serie || '-'}-${i.factura_relacionada_folio || '-'},`;
+        csv += `"${i.motivo_nota_credito || '-'}",`;
+        csv += `${i.uuid || '-'}\n`;
+    });
+    
+    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `notas_credito_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showSuccess('Exportación completada');
+}
+
+function aplicarFiltros() {
+    const fi = document.getElementById('fechaInicio').value;
+    const ff = document.getElementById('fechaFin').value;
+    const busq = document.getElementById('buscador').value.toLowerCase();
+    
+    let filtrados = [...datosNotas];
+    
+    if (fi) {
+        filtrados = filtrados.filter(f => f.fecha >= fi);
+    }
+    if (ff) {
+        filtrados = filtrados.filter(f => f.fecha <= ff);
+    }
+    if (busq) {
+        filtrados = filtrados.filter(f => 
+            (f.cliente_nombre || '').toLowerCase().includes(busq) ||
+            (f.cliente_rfc || '').toLowerCase().includes(busq) ||
+            (f.folio || '').toString().includes(busq) ||
+            (f.motivo_nota_credito || '').toLowerCase().includes(busq)
+        );
+    }
+    
+    datosFiltrados = filtrados;
+    currentPage = 1;
+    cargarTabla();
+}
+
+// ============================================
+// INICIALIZACIÓN
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Inicializando módulo de notas de crédito');
+    
+    cargarDatos();
+    
+    const hoy = new Date();
+    const hace30 = new Date(); 
+    hace30.setDate(hoy.getDate() - 30);
+    document.getElementById('fechaInicio').value = hace30.toISOString().split('T')[0];
+    document.getElementById('fechaFin').value = hoy.toISOString().split('T')[0];
+    
+    // Botones principales
+    document.getElementById('btnAgregar').addEventListener('click', abrirModalNuevaNota);
+    document.getElementById('btnExcel').addEventListener('click', exportToExcel);
+    document.getElementById('btnCrearFiltro').addEventListener('click', () => showSuccess('Filtros avanzados en desarrollo'));
+    document.getElementById('btnColumnas').addEventListener('click', () => showSuccess('Selector de columnas en desarrollo'));
+    
+    // Filtros
+    document.getElementById('fechaInicio').addEventListener('change', aplicarFiltros);
+    document.getElementById('fechaFin').addEventListener('change', aplicarFiltros);
+    document.getElementById('buscador').addEventListener('input', aplicarFiltros);
+    
+    // Paginación
+    document.getElementById('btnPrimeraPagina').addEventListener('click', () => { currentPage = 1; cargarTabla(); });
+    document.getElementById('btnAnteriorPagina').addEventListener('click', () => { if (currentPage > 1) { currentPage--; cargarTabla(); } });
+    document.getElementById('btnSiguientePagina').addEventListener('click', () => { const max = Math.ceil(datosFiltrados.length / rowsPerPage); if (currentPage < max) { currentPage++; cargarTabla(); } });
+    document.getElementById('btnUltimaPagina').addEventListener('click', () => { currentPage = Math.ceil(datosFiltrados.length / rowsPerPage); cargarTabla(); });
+    
+    // Modales
+    document.getElementById('cerrarModal').addEventListener('click', cerrarModalNota);
+    document.getElementById('btnCancelar').addEventListener('click', cerrarModalNota);
+    document.getElementById('btnGuardarNota').addEventListener('click', () => guardarNota(false));
+    document.getElementById('btnTimbrar').addEventListener('click', () => guardarNota(true));
+    document.getElementById('btnCancelarMonto').addEventListener('click', cerrarModalMonto);
+    document.getElementById('btnAplicarMonto').addEventListener('click', aplicarMonto);
+    
+    // Cerrar modales al hacer clic fuera
+    window.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('modalNuevaNota')) cerrarModalNota();
+        if (e.target === document.getElementById('modalMonto')) cerrarModalMonto();
+    });
+});
 </script>
+
 @endsection

@@ -1576,14 +1576,14 @@
                             <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Factoraje</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '{{ route('admin.bitacora') }}', 'fa-book')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '{{ route('admin.bitacora') }}', 'fa-book')">
                             <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'administracion', 'fa-book', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '{{ route('admin.comiciones') }}', 'fa-percentage')">
+                        </div> -->
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '{{ route('admin.comiciones') }}', 'fa-percentage')">
                             <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Comisiones</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comisiones', 'administracion', 'fa-percentage', this)"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="sidebar-menu-group">

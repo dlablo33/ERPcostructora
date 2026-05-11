@@ -52,7 +52,17 @@ use App\Http\Controllers\CotizacionController;
 use App\Http\Controllers\CompraRecepcionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HitoController;
+use App\Http\Controllers\BitacoraController;
+use App\Http\Controllers\Facturacion\DatosGeneralesController;
+use App\Http\Controllers\Facturacion\FacturaController;
+use App\Http\Controllers\Facturacion\ReporteFacturasController;
+use App\Http\Controllers\Facturacion\TimbradoController;
+use App\Http\Controllers\ContrareciboController;
+use App\Http\Controllers\FactorajeController;
 
+// ============================================
+// RUTAS PÚBLICAS
+// ============================================
 Route::get('/', function () {
     return view('welcome');
 });
@@ -403,7 +413,7 @@ Route::prefix('rh')->name('rh.')->group(function () {
 });
 
 // ============================================
-// ALMACEN
+// ALMACEN - GRUPO PRINCIPAL
 // ============================================
 Route::prefix('almacen')->name('almacen.')->group(function () {
     
@@ -431,23 +441,13 @@ Route::prefix('almacen')->name('almacen.')->group(function () {
     Route::get('/api/inventario-fisico', [App\Http\Controllers\InventarioFisicoController::class, 'getInventario'])->name('api.inventario-fisico');
     Route::get('/api/inventario-fisico/{id}', [App\Http\Controllers\InventarioFisicoController::class, 'show'])->name('api.inventario-fisico.show');
     Route::get('/api/inventario-fisico/exportar', [App\Http\Controllers\InventarioFisicoController::class, 'exportar'])->name('api.inventario-fisico.exportar');
-    // Dentro del grupo de inventario, agregar:
-
-
+    
     // ============================================
     // CATÁLOGOS
     // ============================================
-    
-    // Catálogo de Almacenes
     Route::get('/almacenes', [App\Http\Controllers\AlmacenController::class, 'index'])->name('almacen');
-    
-    // Catálogo de Artículos
     Route::get('/articulos', [App\Http\Controllers\ArticuloController::class, 'index'])->name('articulo');
-    
-    // Catálogo de Familias y Subfamilias
     Route::get('/familias', [App\Http\Controllers\FamiliaController::class, 'index'])->name('familias');
-    
-    // Catálogo de Activos (Equipos, Maquinaria, Vehículos)
     Route::get('/activos', [App\Http\Controllers\ActivoController::class, 'index'])->name('activos');
     
     // ============================================
@@ -493,7 +493,7 @@ Route::prefix('almacen')->name('almacen.')->group(function () {
     Route::get('/api/subfamilias/exportar', [App\Http\Controllers\FamiliaController::class, 'exportarSubfamilias'])->name('api.subfamilias.exportar');
 
     // ============================================
-    // API ROUTES PARA ACTIVOS (EQUIPOS, MAQUINARIA, VEHÍCULOS)
+    // API ROUTES PARA ACTIVOS
     // ============================================
     Route::get('/api/activos', [App\Http\Controllers\ActivoController::class, 'getActivos'])->name('api.activos');
     Route::get('/api/activos/{id}', [App\Http\Controllers\ActivoController::class, 'show'])->name('api.activos.show');
@@ -522,12 +522,8 @@ Route::prefix('almacen')->name('almacen.')->group(function () {
     Route::post('/api/devoluciones-activos/{id}/devolver', [App\Http\Controllers\DevolucionActivoController::class, 'registrarDevolucion'])->name('api.devoluciones-activos.devolver');
     Route::get('/api/devoluciones-activos/asignaciones-activas', [App\Http\Controllers\DevolucionActivoController::class, 'getAsignacionesActivas'])->name('api.devoluciones-activos.asignaciones-activas');
 
-
-    // ========================================================
-
-      Route::get('/activos', [App\Http\Controllers\ActivoController::class, 'index'])->name('activos');
-    
-    // API Routes para Activos
+    // Activos (repetido? pero se mantiene)
+    Route::get('/activos', [App\Http\Controllers\ActivoController::class, 'index'])->name('activos');
     Route::get('/api/activos', [App\Http\Controllers\ActivoController::class, 'getActivos'])->name('api.activos');
     Route::get('/api/activos/{id}', [App\Http\Controllers\ActivoController::class, 'show'])->name('api.activos.show');
     Route::post('/api/activos', [App\Http\Controllers\ActivoController::class, 'store'])->name('api.activos.store');
@@ -536,10 +532,7 @@ Route::prefix('almacen')->name('almacen.')->group(function () {
     Route::post('/api/activos/{id}/asignar', [App\Http\Controllers\ActivoController::class, 'asignar'])->name('api.activos.asignar');
     Route::get('/api/activos/disponibles', [App\Http\Controllers\ActivoController::class, 'getDisponibles'])->name('api.activos.disponibles');
     Route::get('/api/activos/exportar', [App\Http\Controllers\ActivoController::class, 'exportar'])->name('api.activos.exportar');
-    
-
-
-    });
+});
 
 // ============================================
 // INVENTARIO POR PROYECTO (API)
@@ -552,10 +545,6 @@ Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(fu
     Route::get('/api/filtros-catalogos', [App\Http\Controllers\InventarioProyectoController::class, 'getFiltrosCatalogos'])
         ->name('api.filtros-catalogos');
     
-    // MOVIMIENTOS DE INVENTARIO (API)
-    Route::get('/api/movimientos', [App\Http\Controllers\MovimientoInventarioController::class, 'getMovimientos'])->name('api.movimientos');
-
-    // MOVIMIENTOS DE INVENTARIO (API)
     Route::get('/api/movimientos', [App\Http\Controllers\MovimientoInventarioController::class, 'getMovimientos'])->name('api.movimientos');
     Route::post('/api/movimientos/entrada', [App\Http\Controllers\MovimientoInventarioController::class, 'registrarEntrada'])->name('api.movimientos.entrada');
     Route::post('/api/movimientos/salida', [App\Http\Controllers\MovimientoInventarioController::class, 'registrarSalida'])->name('api.movimientos.salida');
@@ -567,7 +556,6 @@ Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(fu
     Route::get('/api/movimientos/verificar-stock', [App\Http\Controllers\MovimientoInventarioController::class, 'verificarStock'])->name('api.movimientos.verificar-stock');
     Route::get('/api/movimientos/{id}', [App\Http\Controllers\MovimientoInventarioController::class, 'show'])->name('api.movimientos.show');
 
-    // INVENTARIO DE PROYECTOS (API)
     Route::get('/api/inventario', [App\Http\Controllers\InventarioProyectoController::class, 'getInventario'])->name('api.inventario');
     Route::get('/api/inventario/{id}', [App\Http\Controllers\InventarioProyectoController::class, 'show'])->name('api.inventario.show');
     Route::post('/api/inventario', [App\Http\Controllers\InventarioProyectoController::class, 'store'])->name('api.inventario.store');
@@ -578,7 +566,6 @@ Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(fu
     Route::get('/api/inventario/resumen/{proyectoId}', [App\Http\Controllers\InventarioProyectoController::class, 'getResumenPorProyecto'])->name('api.inventario.resumen');
     Route::get('/api/inventario/exportar', [App\Http\Controllers\InventarioProyectoController::class, 'exportar'])->name('api.inventario.exportar');
     
-    // REQUISICIONES DE MATERIAL (API)
     Route::get('/api/requisiciones', [App\Http\Controllers\RequisicionMaterialController::class, 'getRequisiciones'])->name('api.requisiciones');
     Route::get('/api/requisiciones/{id}', [App\Http\Controllers\RequisicionMaterialController::class, 'show'])->name('api.requisiciones.show');
     Route::post('/api/requisiciones', [App\Http\Controllers\RequisicionMaterialController::class, 'store'])->name('api.requisiciones.store');
@@ -588,15 +575,12 @@ Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(fu
     Route::post('/api/requisiciones/{id}/ejecutar-surtido', [App\Http\Controllers\RequisicionMaterialController::class, 'ejecutarSurtido'])->name('api.requisiciones.ejecutar-surtido');
     Route::delete('/api/requisiciones/{id}', [App\Http\Controllers\RequisicionMaterialController::class, 'destroy'])->name('api.requisiciones.destroy');
 
-    // =================================================
-
     Route::post('/api/movimientos/recepcion-multiple', [App\Http\Controllers\MovimientoInventarioController::class, 'recepcionMultiple'])
-    ->name('api.movimientos.recepcion-multiple');
+        ->name('api.movimientos.recepcion-multiple');
 
     Route::post('/api/articulos/crear-temporal', [App\Http\Controllers\ArticuloController::class, 'crearTemporal'])
-    ->name('api.articulos.crear-temporal');
-
-    });
+        ->name('api.articulos.crear-temporal');
+});
 
 // ============================================
 // COMPRAS
@@ -608,9 +592,9 @@ Route::prefix('compras')->name('compras.')->group(function () {
     Route::get('/autorizaciones', function () { return view('compras.compras.autorizacion'); })->name('autorizaciones');
     Route::get('/proveedores', function () { return view('compras.subcontratistas.gestion'); })->name('gestion');
     Route::get('/almacenobra', function () {
-    $proyectos = App\Models\Proyecto::where('status', 'activo')->orderBy('nombre')->get();
-    return view('compras.almacen.almacen', compact('proyectos'));
-})->name('almacen');
+        $proyectos = App\Models\Proyecto::where('status', 'activo')->orderBy('nombre')->get();
+        return view('compras.almacen.almacen', compact('proyectos'));
+    })->name('almacen');
 
     // Proveedores
     Route::get('/proveedores', [App\Http\Controllers\ProveedorController::class, 'index'])->name('gestion');
@@ -667,46 +651,24 @@ Route::prefix('compras')->name('compras.')->group(function () {
     // COTIZACIONES (API y vistas)
     // ============================================
     Route::prefix('cotizaciones')->name('cotizaciones.')->group(function () {
-        // Lista de requisiciones para cotizar (vista alternativa)
         Route::get('/', [CotizacionController::class, 'index'])->name('index');
-        
-        // Formulario para solicitar cotización
         Route::get('/solicitar/{requisicionId}', [CotizacionController::class, 'solicitar'])->name('solicitar');
-        
-        // Guardar cotización
         Route::post('/', [CotizacionController::class, 'store'])->name('store');
-        
-        // Comparativo de cotizaciones (vista)
         Route::get('/comparativo/{requisicionId}', [CotizacionController::class, 'comparativo'])->name('comparativo');
-        
-        // API: Obtener comparativo en JSON
         Route::get('/comparativo-json/{requisicionId}', [CotizacionController::class, 'getComparativo'])->name('comparativo-json');
-        
-        // Seleccionar cotización ganadora
         Route::post('/seleccionar/{cotizacionId}', [CotizacionController::class, 'seleccionar'])->name('seleccionar');
-        
-        // API: Obtener artículos de una requisición
         Route::get('/articulos/{requisicionId}', [CotizacionController::class, 'getArticulos'])->name('get-articulos');
-        
-        // API: Obtener requisiciones para autorizar
         Route::get('/requisiciones-para-autorizar', [CotizacionController::class, 'requisicionesParaAutorizar'])->name('requisiciones-para-autorizar');
-        
-        // API: Autorizar todas las cotizaciones de una requisición
         Route::post('/autorizar-todas/{requisicionId}', [CotizacionController::class, 'autorizarTodasCotizaciones'])->name('autorizar-todas');
-        
-        // API: Ver detalle de cotización
         Route::get('/{id}', [CotizacionController::class, 'show'])->name('show');
     });
 
     // ============================================
-    // 👇 COMPRAS PENDIENTES DE RECEPCIÓN (PARA ENTRADAS DE ALMACÉN) 👇
+    // COMPRAS PENDIENTES DE RECEPCIÓN
     // ============================================
     Route::prefix('api')->name('api.')->group(function () {
-        // Obtener compras pendientes de recepción
         Route::get('/pendientes-recepcion', [App\Http\Controllers\CompraRecepcionController::class, 'pendientes'])
             ->name('pendientes-recepcion');
-        
-        // Obtener detalle de una compra específica
         Route::get('/pendientes-recepcion/{id}/detalle', [App\Http\Controllers\CompraRecepcionController::class, 'detalleCompra'])
             ->name('pendientes-recepcion.detalle');
     });
@@ -727,7 +689,6 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
     Route::get('/presupuesto', function () { return view('proyectos.presupuestos.presupuesto'); })->name('presupuesto_proyecto');
     Route::get('/real', function () { return view('proyectos.presupuestos.real'); })->name('real');
     
-        // Cronogramas y Hitos (RUTAS REALES CON CONTROLADOR)
     Route::get('/hitos', [HitoController::class, 'index'])->name('hitos');
     Route::get('/hitos/data', [HitoController::class, 'getHitos'])->name('hitos.data');
     Route::get('/hitos/estadisticas', [HitoController::class, 'estadisticas'])->name('hitos.stats');
@@ -737,9 +698,7 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
     Route::put('/hitos/{id}/estado', [HitoController::class, 'cambiarEstado'])->name('hitos.estado');
     Route::delete('/hitos/{id}', [HitoController::class, 'destroy'])->name('hitos.destroy');
 
-    // =================================================================================================
-
-    Route::get('/bitacora', function () { return view('proyectos.gestion.bitacora'); })->name('bitacora');
+    Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora');
     Route::get('/asignacion', function () { return view('proyectos.personal.asignada'); })->name('asignada');
     Route::get('/flotillas', function () { return view('proyectos.personal.flotillas'); })->name('flotillas');
     Route::get('/maquinas', function () { return view('proyectos.maquinaria.asignacion'); })->name('asignacion');
@@ -773,6 +732,40 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
 });
 
 // ============================================
+// BITÁCORA DE OBRA
+// ============================================
+Route::prefix('bitacora')->name('bitacora.')->middleware(['auth'])->group(function () {
+    Route::get('/', [BitacoraController::class, 'index'])->name('index');
+    Route::get('/export-pdf', [BitacoraController::class, 'exportPDF'])->name('export-pdf');
+    Route::get('/print', [BitacoraController::class, 'printView'])->name('print');
+});
+
+// ============================================
+// API ROUTES PARA BITÁCORA
+// ============================================
+Route::prefix('api/bitacora')->middleware(['auth'])->group(function () {
+    Route::get('/entries', [BitacoraController::class, 'getEntries'])->name('api.bitacora.entries');
+    Route::post('/entries', [BitacoraController::class, 'store'])->name('api.bitacora.store');
+    Route::get('/entries/{id}', [BitacoraController::class, 'show'])->name('api.bitacora.show');
+    Route::put('/entries/{id}', [BitacoraController::class, 'update'])->name('api.bitacora.update');
+    Route::delete('/entries/{id}', [BitacoraController::class, 'destroy'])->name('api.bitacora.destroy');
+    Route::post('/entries/{entryId}/comments', [BitacoraController::class, 'addComment'])->name('api.bitacora.comments.store');
+    Route::delete('/comments/{id}', [BitacoraController::class, 'deleteComment'])->name('api.bitacora.comments.destroy');
+    Route::post('/entries/{entryId}/upload-image', [BitacoraController::class, 'uploadImage'])->name('api.bitacora.images.upload');
+    Route::delete('/images/{id}', [BitacoraController::class, 'deleteImage'])->name('api.bitacora.images.destroy');
+    Route::get('/evidencias', [BitacoraController::class, 'getEvidencias'])->name('api.bitacora.evidencias');
+    Route::get('/incidencias', [BitacoraController::class, 'getIncidencias'])->name('api.bitacora.incidencias');
+    Route::get('/incidencias/{id}', [BitacoraController::class, 'getIncidencia'])->name('api.bitacora.incidencias.show');
+    Route::put('/incidencias/{id}/resolve', [BitacoraController::class, 'resolveIncidencia'])->name('api.bitacora.incidencias.resolve');
+    Route::put('/incidencias/{id}/prioridad', [BitacoraController::class, 'updatePrioridad'])->name('api.bitacora.incidencias.prioridad');
+    Route::get('/estadisticas', [BitacoraController::class, 'getEstadisticas'])->name('api.bitacora.estadisticas');
+    Route::get('/reportes/resumen', [BitacoraController::class, 'getResumenReporte'])->name('api.bitacora.reportes.resumen');
+    Route::post('/reportes/generar', [BitacoraController::class, 'generarReporte'])->name('api.bitacora.reportes.generar');
+    Route::get('/proyectos', [BitacoraController::class, 'getProyectosList'])->name('api.bitacora.proyectos');
+    Route::get('/responsables', [BitacoraController::class, 'getResponsablesList'])->name('api.bitacora.responsables');
+});
+
+// ============================================
 // RUTAS WEB CRUD
 // ============================================
 Route::resource('roles', RolController::class);
@@ -781,7 +774,6 @@ Route::resource('areas', AreaController::class);
 Route::resource('plantilla', PlantillaController::class)->parameters(['plantilla' => 'id']);
 Route::resource('usuarios', UserController::class);
 
-// Rutas adicionales de exportación
 Route::post('roles/exportar-excel', [RolController::class, 'exportExcel'])->name('roles.export');
 Route::post('puestos/exportar-excel', [PuestoController::class, 'exportExcel'])->name('puestos.export');
 Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel'])->name('areas.export');
@@ -795,28 +787,20 @@ Route::get('plantilla/descargar-excel', [PlantillaController::class, 'downloadEx
 Route::get('usuarios/download-excel', [UserController::class, 'downloadExcel'])->name('usuarios.export.download');
 
 // ============================================
-// RUTAS API
+// RUTAS API GENERALES
 // ============================================
 Route::prefix('api')->group(function () {
-    // Roles
     Route::apiResource('roles', RolController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('roles/exportar-excel', [RolController::class, 'exportExcel']);
-    
-    // Puestos
     Route::apiResource('puestos', PuestoController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('puestos/exportar-excel', [PuestoController::class, 'exportExcel']);
-    
-    // Áreas
     Route::apiResource('areas', AreaController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('areas/exportar-excel', [AreaController::class, 'exportExcel']);
-    
-    // Usuarios
     Route::apiResource('usuarios', UserController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('usuarios/exportar-excel', [UserController::class, 'exportExcel']);
     Route::post('usuarios/{id}/reset-password', [UserController::class, 'resetPassword']);
     Route::get('roles-activos', [UserController::class, 'getRoles']);
     
-    // Plantilla
     Route::get('plantilla', [PlantillaController::class, 'index']);
     Route::get('plantilla/datagrid', [PlantillaController::class, 'getDataGrid']);
     Route::post('plantilla', [PlantillaController::class, 'store']);
@@ -826,7 +810,6 @@ Route::prefix('api')->group(function () {
     Route::post('plantilla/exportar-excel', [PlantillaController::class, 'exportExcel']);
     Route::get('puestos-por-area', [PlantillaController::class, 'getPuestosByArea']);
     
-    // Documentos de empleados
     Route::prefix('plantilla/{id}')->group(function () {
         Route::get('documentos', [PlantillaController::class, 'getDocumentos']);
         Route::post('documentos/archivo', [PlantillaController::class, 'subirArchivoDocumento']);
@@ -834,7 +817,6 @@ Route::prefix('api')->group(function () {
         Route::get('documentos/{documentoId}/descargar', [PlantillaController::class, 'descargarDocumento']);
     });
     
-    // INCIDENCIAS
     Route::get('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'index']);
     Route::get('cat-tipos-incidencias/activos', [CatTipoIncidenciaController::class, 'getActivos']);
     Route::post('cat-tipos-incidencias', [CatTipoIncidenciaController::class, 'store']);
@@ -844,7 +826,6 @@ Route::prefix('api')->group(function () {
     Route::patch('cat-tipos-incidencias/{id}/toggle-active', [CatTipoIncidenciaController::class, 'toggleActive']);
     Route::get('cat-tipos-incidencias/stats', [CatTipoIncidenciaController::class, 'getStats']);
     
-    // Incidencias
     Route::get('incidencias', [IncidenciaController::class, 'index']);
     Route::get('incidencias/datagrid', [IncidenciaController::class, 'getDataGrid']);
     Route::post('incidencias', [IncidenciaController::class, 'store']);
@@ -852,7 +833,6 @@ Route::prefix('api')->group(function () {
     Route::put('incidencias/{id}', [IncidenciaController::class, 'update']);
     Route::delete('incidencias/{id}', [IncidenciaController::class, 'destroy']);
 
-    // ASISTENCIA
     Route::get('asistencias/empleados-a-cargo', [AsistenciaController::class, 'getEmpleadosACargo']);
     Route::post('asistencias/masivo', [AsistenciaController::class, 'storeMasivo']);
     Route::post('asistencias/entrada', [AsistenciaController::class, 'registrarEntrada']);
@@ -866,7 +846,6 @@ Route::prefix('api')->group(function () {
     Route::delete('asistencias/{id}', [AsistenciaController::class, 'destroy']);
     Route::post('asistencias/{id}/salida', [AsistenciaController::class, 'registrarSalida']);
     
-    // Justificaciones y Permisos
     Route::resource('justificaciones-permisos', JustificacionPermisoController::class)->except(['create', 'edit']);
     Route::get('justificaciones-permisos/{id}/print', [JustificacionPermisoController::class, 'print']);
     Route::get('justificaciones-permisos/{id}/justificante', [JustificacionPermisoController::class, 'downloadJustificante']);
@@ -985,6 +964,273 @@ Route::prefix('api/dashboard')->group(function () {
     Route::get('/nomina-proyectos', [App\Http\Controllers\DashboardController::class, 'getNominaProyectos']);
     Route::get('/maquinaria-estado', [App\Http\Controllers\DashboardController::class, 'getMaquinariaEstado']);
     Route::get('/maquinaria-costos', [App\Http\Controllers\DashboardController::class, 'getMaquinariaCostos']);
+});
+
+// ============================================
+// RUTAS DE FACTURACIÓN - OPTIMIZADAS Y ORGANIZADAS
+// ============================================
+
+Route::middleware(['auth'])->group(function () {
+
+    // Agrega esta línea dentro del grupo de rutas con auth, cerca de las otras rutas de facturación
+Route::get('/api/facturas-para-pago', [App\Http\Controllers\Facturacion\FacturaController::class, 'getFacturasParaPago']);
+    
+    // ==========================================
+    // VISTAS PRINCIPALES
+    // ==========================================
+    Route::get('/facturacion', [App\Http\Controllers\Facturacion\FacturaController::class, 'indexView'])->name('facturacion.index');
+    
+    // ==========================================
+    // API PARA DATOS DE TABLA Y DETALLES
+    // ==========================================
+    Route::get('/facturacion/data', [App\Http\Controllers\Facturacion\FacturaController::class, 'getData']);
+    Route::get('/facturacion/{id}', [App\Http\Controllers\Facturacion\FacturaController::class, 'show']);
+    Route::get('/facturacion/{id}/edit', [App\Http\Controllers\Facturacion\FacturaController::class, 'edit']);
+    
+    // ==========================================
+    // PDF Y XML - DEBEN IR ANTES DE LA RUTA {id}
+    // ==========================================
+    Route::get('/facturacion/{id}/pdf', [App\Http\Controllers\Facturacion\FacturaController::class, 'pdf'])->name('facturacion.pdf');
+    Route::get('/facturacion/{id}/xml', [App\Http\Controllers\Facturacion\FacturaController::class, 'downloadXml'])->name('facturacion.xml');
+    
+    // ==========================================
+    // CRUD DE FACTURAS
+    // ==========================================
+    Route::post('/api/facturas', [App\Http\Controllers\Facturacion\FacturaController::class, 'store']);
+    Route::put('/api/facturas/{id}', [App\Http\Controllers\Facturacion\FacturaController::class, 'update']);
+    Route::delete('/api/facturas/{id}', [App\Http\Controllers\Facturacion\FacturaController::class, 'destroy']);
+    
+    // ==========================================
+    // ACCIONES ESPECIALES
+    // ==========================================
+    Route::post('/facturacion/{id}/timbrar', [App\Http\Controllers\Facturacion\FacturaController::class, 'timbrar']);
+    Route::post('/facturacion/{id}/cancelar', [App\Http\Controllers\Facturacion\FacturaController::class, 'cancelar']);
+    Route::post('/facturacion/{id}/enviar-correo', [App\Http\Controllers\Facturacion\FacturaController::class, 'enviarCorreo']);
+    
+    // ==========================================
+    // CATÁLOGOS PARA SELECTS (API)
+    // ==========================================
+    
+    // Proyectos
+    Route::get('/api/proyectos/activos', [App\Http\Controllers\Facturacion\FacturaController::class, 'getProyectosActivos']);
+    
+    // Clientes
+    Route::get('/api/contactos', [App\Http\Controllers\Facturacion\FacturaController::class, 'getClientes']);
+    
+    // Series y folios
+    Route::get('/api/series/activas', [App\Http\Controllers\Facturacion\FacturaController::class, 'getSeriesActivas']);
+    Route::get('/api/series/{id}/siguiente-folio', [App\Http\Controllers\Facturacion\FacturaController::class, 'getSiguienteFolio']);
+    
+    // Catálogos SAT
+    Route::get('/api/sat/uso-cfdi', [App\Http\Controllers\Facturacion\FacturaController::class, 'getUsosCFDI']);
+    Route::get('/api/sat/formas-pago', [App\Http\Controllers\Facturacion\FacturaController::class, 'getFormasPago']);
+    Route::get('/api/sat/metodos-pago', [App\Http\Controllers\Facturacion\FacturaController::class, 'getMetodosPago']);
+});
+
+// ==========================================
+// RUTAS DE RESPALDO CON DB::table() POR SI LOS MODELOS NO EXISTEN
+// ==========================================
+Route::middleware(['auth'])->group(function () {
+    
+    // Respaldo para proyectos
+    Route::get('/api/v2/proyectos/activos', function() {
+        try {
+            $proyectos = DB::table('proyectos')
+                ->where('status', 'activo')
+                ->whereNull('deleted_at')
+                ->select('id', 'codigo', 'nombre')
+                ->orderBy('codigo')
+                ->get();
+            return response()->json($proyectos);
+        } catch (\Exception $e) {
+            return response()->json([]);
+        }
+    });
+    
+    // Respaldo para clientes
+    Route::get('/api/v2/contactos', function() {
+        try {
+            $contactos = DB::table('contactos')
+                ->where('estatus', true)
+                ->whereNull('deleted_at')
+                ->where(function($q) {
+                    $q->where('tipo', 'cliente')->orWhere('tipo', 'ambos');
+                })
+                ->select('contacto_id', 'razon_social', 'rfc')
+                ->orderBy('razon_social')
+                ->get();
+            return response()->json($contactos);
+        } catch (\Exception $e) {
+            return response()->json([]);
+        }
+    });
+    
+    // Respaldo para series
+    Route::get('/api/v2/series/activas', function() {
+        try {
+            $series = DB::table('cat_series')
+                ->where('activo', true)
+                ->select('cat_serie_id', 'serie', 'descripcion', 'folio_actual', 'folio_final')
+                ->orderBy('serie')
+                ->get();
+            return response()->json($series);
+        } catch (\Exception $e) {
+            return response()->json([]);
+        }
+    });
+    
+    // Respaldo para usos CFDI
+    Route::get('/api/v2/sat/uso-cfdi', function() {
+        try {
+            $usos = DB::table('satcat_uso_cfdi')
+                ->where('estatus', true)
+                ->select('clave', 'descripcion')
+                ->orderBy('clave')
+                ->get();
+            return response()->json($usos);
+        } catch (\Exception $e) {
+            return response()->json([
+                ['clave' => 'G01', 'descripcion' => 'Adquisición de mercancías'],
+                ['clave' => 'G02', 'descripcion' => 'Devoluciones, descuentos o bonificaciones'],
+                ['clave' => 'G03', 'descripcion' => 'Gastos en general'],
+            ]);
+        }
+    });
+    
+    // Respaldo para formas de pago
+    Route::get('/api/v2/sat/formas-pago', function() {
+        try {
+            $formas = DB::table('satcat_formas_pago')
+                ->where('estatus', true)
+                ->select('clave', 'descripcion')
+                ->orderBy('clave')
+                ->get();
+            return response()->json($formas);
+        } catch (\Exception $e) {
+            return response()->json([
+                ['clave' => '01', 'descripcion' => 'Efectivo'],
+                ['clave' => '02', 'descripcion' => 'Cheque nominativo'],
+                ['clave' => '03', 'descripcion' => 'Transferencia electrónica de fondos'],
+            ]);
+        }
+    });
+    
+    // Respaldo para métodos de pago
+    Route::get('/api/v2/sat/metodos-pago', function() {
+        try {
+            $metodos = DB::table('satcat_metodos_pago')
+                ->where('estatus', true)
+                ->select('clave', 'descripcion')
+                ->orderBy('clave')
+                ->get();
+            return response()->json($metodos);
+        } catch (\Exception $e) {
+            return response()->json([
+                ['clave' => 'PUE', 'descripcion' => 'Pago en una sola exhibición'],
+                ['clave' => 'PPD', 'descripcion' => 'Pago en parcialidades o diferido'],
+            ]);
+        }
+    });
+});
+
+// ============================================
+// RUTAS PARA NOTAS DE CRÉDITO
+// ============================================
+
+Route::middleware(['auth'])->group(function () {
+    
+    // ==========================================
+    // VISTA PRINCIPAL
+    // ==========================================
+    Route::get('/notas-credito', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'indexView'])->name('notas-credito.index');
+    
+    // ==========================================
+    // API PARA DATOS DE TABLA
+    // ==========================================
+    Route::get('/notas-credito/data', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'getData']);
+    
+    // ==========================================
+    // DATOS PARA CREAR NUEVA NOTA DE CRÉDITO
+    // ==========================================
+    Route::get('/notas-credito/create-data', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'create']);
+    
+    // ==========================================
+    // MOSTRAR NOTA DE CRÉDITO ESPECÍFICA
+    // ==========================================
+    Route::get('/notas-credito/{id}', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'show']);
+    
+    // ==========================================
+    // PDF DE NOTA DE CRÉDITO
+    // ==========================================
+    Route::get('/notas-credito/{id}/pdf', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'pdf']);
+    
+    // ==========================================
+    // CRUD DE NOTAS DE CRÉDITO
+    // ==========================================
+    Route::post('/api/notas-credito', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'store']);
+    Route::delete('/api/notas-credito/{id}', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'destroy']);
+    
+    // ==========================================
+    // OBTENER FACTURAS PARA RELACIONAR (Nota de Crédito)
+    // ==========================================
+    Route::get('/api/facturas-para-nota-credito', [App\Http\Controllers\Facturacion\FacturaController::class, 'getFacturasParaNotaCredito']);
+    
+    // ==========================================
+    // OBTENER SERIES PARA NOTAS DE CRÉDITO
+    // ==========================================
+    Route::get('/api/series-nota-credito', [App\Http\Controllers\Facturacion\FacturaController::class, 'getSeriesNotaCredito']);
+});
+
+// ============================================
+// RUTAS PARA CFDI
+// ============================================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cfdi', [App\Http\Controllers\Facturacion\CFDIController::class, 'indexView'])->name('cfdi.index');
+    Route::get('/cfdi/data', [App\Http\Controllers\Facturacion\CFDIController::class, 'getData']);
+    Route::get('/cfdi/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'show']);
+    Route::get('/cfdi/{id}/pdf', [App\Http\Controllers\Facturacion\CFDIController::class, 'pdf']);
+    Route::get('/cfdi/{id}/xml', [App\Http\Controllers\Facturacion\CFDIController::class, 'xml']);
+});
+
+// ============================================
+// RUTAS PARA VENTAS
+// ============================================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ventas', [App\Http\Controllers\VentasController::class, 'indexView'])->name('ventas.index');
+    Route::get('/ventas/data', [App\Http\Controllers\VentasController::class, 'getData']);
+    Route::get('/ventas/{id}', [App\Http\Controllers\VentasController::class, 'show']);
+});
+// ============================================
+// RUTAS PARA CONTRARECIBOS
+// ============================================
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/contrarecibos', [App\Http\Controllers\ContrareciboController::class, 'indexView'])->name('contrarecibos.index');
+    Route::get('/contrarecibos/data', [App\Http\Controllers\ContrareciboController::class, 'getData']);
+    Route::post('/contrarecibos', [App\Http\Controllers\ContrareciboController::class, 'store']);
+    Route::get('/contrarecibos/{id}', [App\Http\Controllers\ContrareciboController::class, 'show']);
+    Route::delete('/contrarecibos/{id}', [App\Http\Controllers\ContrareciboController::class, 'destroy']);
+});
+
+// ============================================
+// RUTAS PARA FACTORAJE
+// ============================================
+
+Route::middleware(['auth'])->group(function () {
+    // Factoraje
+    Route::get('/factoraje', [FactorajeController::class, 'indexView'])->name('factoraje');
+    Route::get('/factoraje/data', [FactorajeController::class, 'getData']);
+    Route::get('/factoraje/create', [FactorajeController::class, 'create']);
+    Route::get('/factoraje/factores', [FactorajeController::class, 'getFactores']);
+    Route::get('/factoraje/clientes-con-facturas', [FactorajeController::class, 'getClientesConFacturas']);
+    Route::get('/factoraje/facturas-disponibles', [FactorajeController::class, 'getFacturasDisponibles']);
+    Route::get('/factoraje/solicitud/{id}', [FactorajeController::class, 'show']);
+    Route::post('/factoraje/solicitud', [FactorajeController::class, 'store']);
+    Route::put('/factoraje/solicitud/{id}/autorizar', [FactorajeController::class, 'autorizar']);
+    Route::put('/factoraje/solicitud/{id}/rechazar', [FactorajeController::class, 'rechazar']);
+    Route::put('/factoraje/solicitud/{id}/liquidar', [FactorajeController::class, 'liquidar']);
+    Route::delete('/factoraje/solicitud/{id}', [FactorajeController::class, 'destroy']);
+    Route::get('/factoraje/excel', [FactorajeController::class, 'exportExcel']);
 });
 
 require __DIR__.'/auth.php';
