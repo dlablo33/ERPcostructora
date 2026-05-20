@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-05-08 21:21:49
+Fecha: 2026-05-18 18:04:39
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 127
+Total de tablas: 131
 
 
 📋 TABLA: activos
@@ -513,6 +513,49 @@ Columnas (6):
   • created_at
   • updated_at
 
+📋 TABLA: conciliacion_bancaria
+----------------------------------------------------------------------
+Columnas (22):
+  • id
+  • cuenta_bancaria_id
+  • folio
+  • fecha_conciliacion
+  • periodo_inicio
+  • periodo_fin
+  • saldo_inicial_sistema
+  • saldo_inicial_extracto
+  • total_ingresos_sistema
+  • total_egresos_sistema
+  • total_ingresos_extracto
+  • total_egresos_extracto
+  • saldo_final_sistema
+  • saldo_final_extracto
+  • diferencia
+  • archivo_excel
+  • estatus
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: conciliacion_detalle
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • conciliacion_id
+  • origen
+  • fecha
+  • descripcion
+  • referencia
+  • egreso
+  • ingreso
+  • numero_transaccion
+  • estatus
+  • conciliado_con
+  • created_at
+  • updated_at
+
 📋 TABLA: configuracion_cuenta_contable
 ----------------------------------------------------------------------
 Columnas (7):
@@ -960,6 +1003,30 @@ Columnas (22):
   • created_at
   • updated_at
   • deleted_at
+
+📋 TABLA: gastos_fijos
+----------------------------------------------------------------------
+Columnas (20):
+  • gasto_fijo_id
+  • proveedor_id
+  • descripcion
+  • fecha_inicio
+  • fecha_fin
+  • importe
+  • estatus
+  • cuenta_flujo_dinero
+  • satcat_uso_cfdi_clave
+  • satcat_metodos_pago_clave
+  • satcat_formas_pago_clave
+  • created_at
+  • updated_at
+  • deleted_at
+  • proyecto_id
+  • cuenta_contable_id
+  • periodicidad
+  • dia_cobro
+  • dia_mes_cobro
+  • mes_inicio_cobro
 
 📋 TABLA: hitos
 ----------------------------------------------------------------------
@@ -1519,6 +1586,28 @@ Columnas (16):
   • monto_restante
   • observaciones
   • gasto
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: programacion_pagos
+----------------------------------------------------------------------
+Columnas (18):
+  • id
+  • folio
+  • estatus
+  • fecha
+  • proveedor_id
+  • descripcion
+  • monto
+  • saldo
+  • fecha_estimada_pago
+  • fecha_pago_real
+  • proyecto_id
+  • cuenta_bancaria_id
+  • referencia_pago
+  • observaciones
+  • created_by
   • created_at
   • updated_at
   • deleted_at
@@ -2534,4 +2623,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 127
+Total de tablas analizadas: 131

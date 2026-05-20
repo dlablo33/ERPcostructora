@@ -109,7 +109,7 @@
             float: left;
             width: 45%;
             height: 100%;
-            background-image: url('../img/login/banner-costruccion.webp');
+            background-image: url('../img/login/edificio_verde.png');
             background-size: cover;
             background-position: center center;
             position: relative;

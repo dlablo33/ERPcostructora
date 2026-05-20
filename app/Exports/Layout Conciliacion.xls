@@ -1,0 +1,40 @@
+<table class="table table-hover table-sm text-nowrap" id="tableLayout" style="display: none;">
+                                    <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Descripcion</th>
+                                        <th>Referencia</th>
+                                        <th>Egresos</th>
+                                        <th>Ingresos</th>
+                                        <th>Numero Transaccion</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr id="formLayout" style="display: none">
+                                        <td>
+                                            <input type="text" class="form-control form-control-xs" id="fecha_layout">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-xs" id="descripcion_layout">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-xs" id="referencia_layout">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-xs" id="egreso_layout" format="moneda">
+                                        </td>
+                                       <td>
+                                            <input type="text" class="form-control form-control-xs" id="ingreso_layout" format="moneda">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-xs" id="numero_transaccion_layout" format="moneda">
+                                        </td>
+                                        <td>
+                                            <button id="addLayout" type="button" class="btn btn-block bg-gradient-success btn-xs"><i class="fa fa-fw fa-plus"></i></button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr style="font-size: 14px;"><th style="text-align: right;"></th><th style="text-align: right;"></th><th style="text-align: right;"></th><th style="text-align: right;"></th><th style="text-align: right;"></th><th style="text-align: right;"></th></tr></tfoot>
+                                </table>

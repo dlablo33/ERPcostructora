@@ -2,13 +2,22 @@
 <html lang="es">
 <head>
 
-    <script>
+ <script>
+@auth
     window.userId = {{ Auth::id() }};
     window.userName = '{{ Auth::user()->name }}';
-    window.baseUrl = '{{ url('/') }}';
-    console.log('Base URL:', window.baseUrl);
-    console.log('User ID:', window.userId);
-    </script>
+    window.isAuthenticated = true;
+@else
+    window.userId = null;
+    window.userName = '';
+    window.isAuthenticated = false;
+    // Redirigir automáticamente al login si la sesión expiró
+    window.location.href = '{{ route("login") }}';
+@endauth
+window.baseUrl = '{{ url('/') }}';
+console.log('Base URL:', window.baseUrl);
+console.log('User ID:', window.userId);
+</script>
 
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
