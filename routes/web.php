@@ -65,7 +65,12 @@ use App\Http\Controllers\FacturaProveedorController;
 use App\Http\Controllers\GastoFijoController;
 use App\Http\Controllers\ConciliacionBancariaController;
 use App\Http\Controllers\EstadoResultadosController;
-use App\Http\Controllers\EstadoResultadosConstruccionController;
+use App\Http\Controllers\BalanceGeneralController;
+use App\Http\Controllers\BalanzaComprobacionController;
+use App\Http\Controllers\FlujoEfectivoController;
+use App\Http\Controllers\EstadoResultadosUnidadController;
+use App\Http\Controllers\PolizaContableController;
+use App\Http\Controllers\PolizaController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -97,7 +102,7 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::get('/api/proyectos/{proyecto}/presupuesto', [PresupuestoProyectoController::class, 'getPresupuesto']);
-    Route::get('/api/proyectos/{proyecto}/partidas', [PresupuestoProyectoController::class, 'getPartidas']);
+    Route::get('/api/proyectos/{proyecto}/partidas', [PresupuestoProyectoController::class, 'getPatidas']);
     Route::get('/api/proyectos/{proyecto}/partidas/{partida}', [PresupuestoProyectoController::class, 'getPartida']);
     Route::post('/api/proyectos/{proyecto}/partidas', [PresupuestoProyectoController::class, 'storePartida']);
     Route::put('/api/proyectos/{proyecto}/partidas/{partida}', [PresupuestoProyectoController::class, 'updatePartida']);
@@ -286,69 +291,120 @@ Route::prefix('config')->group(function () {
     Route::get('/config', function () { return view('config.index'); })->name('config.index');
     Route::get('/personalizacion', function () { return view('config.topmenu.menuconfi'); })->name('config.menuconfig');
 });
-
 // ============================================
 // GRUPO CONTA
 // ============================================
 Route::prefix('conta')->group(function () {
+
+    Route::get('/flujo', [FlujoEfectivoController::class, 'index'])->name('conta.flujo');
+    Route::get('/flujo/excel', [FlujoEfectivoController::class, 'exportarExcel'])->name('conta.flujo.excel');
+    Route::get('/flujo/pdf', [FlujoEfectivoController::class, 'exportarPDF'])->name('conta.flujo.pdf');
+
+    Route::get('/unidad', [EstadoResultadosUnidadController::class, 'index'])->name('conta.unidad');
+    Route::get('/unidad/data', [EstadoResultadosUnidadController::class, 'getData'])->name('conta.unidad.data');
+    Route::get('/unidad/excel', [EstadoResultadosUnidadController::class, 'exportarExcel'])->name('conta.unidad.excel');
+    
+    // Estado de Resultados por Unidad de Negocio - CONFIGURACIÓN
+    Route::get('/unidad/config', [EstadoResultadosUnidadController::class, 'getConfiguracion'])->name('conta.unidad.config');
+    Route::post('/unidad/config/guardar', [EstadoResultadosUnidadController::class, 'guardarConfiguracion'])->name('conta.unidad.config.guardar');
+    Route::post('/unidad/concepto/guardar', [EstadoResultadosUnidadController::class, 'guardarConcepto'])->name('conta.unidad.concepto.guardar');
+    Route::delete('/unidad/concepto/{id}', [EstadoResultadosUnidadController::class, 'eliminarConcepto'])->name('conta.unidad.concepto.eliminar');
+
+    // ============================================
+    // PÓLIZAS CONTABLES - RUTAS CORREGIDAS
+    // ============================================
+
+    Route::get('/poliza/data', [PolizaController::class, 'getData']);
+    Route::get('/poliza/{id}', [PolizaController::class, 'show']);
+    Route::post('/poliza', [PolizaController::class, 'store']);
+    Route::put('/poliza/{id}', [PolizaController::class, 'update']);
+    Route::delete('/poliza/{id}', [PolizaController::class, 'destroy']);
+    Route::get('/poliza/excel', [PolizaController::class, 'exportExcel']);
+
+
+
+    // ============================================
+    // ANÁLISIS
+    // ============================================
     Route::get('/analisis', function () { return view('conta.analisis.analisis'); })->name('conta.analisis');
     Route::get('/comparativos', function () { return view('conta.analisis.comparativos'); })->name('conta.comparativos');
     Route::get('/razones', function () { return view('conta.analisis.razones'); })->name('conta.razones');
     Route::get('/reportes', function () { return view('conta.analisis.reportes'); })->name('conta.reportes');
+    
+    // ============================================
+    // CATÁLOGO CONTABLE
+    // ============================================
     Route::get('/auxiliar', function () { return view('conta.catalogo.auxiliar'); })->name('conta.auxiliar');
     Route::get('/centros', function () { return view('conta.catalogo.centros'); })->name('conta.centros');
     Route::get('/configuracion', function () { return view('conta.catalogo.configuracion'); })->name('conta.configuraciones');
     Route::get('/cuentas', function () { return view('conta.catalogo.cuentas'); })->name('conta.cuentas');
+    
+    // ============================================
+    // CIERRE CONTABLE
+    // ============================================
     Route::get('/amortizacion', function () { return view('conta.cierre.amortizacion'); })->name('conta.amortizacion');
     Route::get('/anual', function () { return view('conta.cierre.anual'); })->name('conta.anual');
     Route::get('/depreciaciones', function () { return view('conta.cierre.depreciaciones'); })->name('conta.depreciaciones');
     Route::get('/mensual', function () { return view('conta.cierre.mensual'); })->name('conta.mensual');
-    Route::get('/estados', function () { return view('conta.estados.estados'); })->name('conta.estados');
-    Route::get('/balance', function () { return view('conta.estados.balance'); })->name('conta.balance');
+    
+    // ============================================
+    // ESTADOS FINANCIEROS
+    // ============================================
+    Route::get('/estados', [EstadoResultadosController::class, 'index'])->name('conta.estados');
+    Route::get('/estados/excel', [EstadoResultadosController::class, 'exportarExcel'])->name('conta.estados.excel');
+    Route::get('/estados/pdf', [EstadoResultadosController::class, 'exportarPdf'])->name('conta.estados.pdf');
+    
+    // BALANCE GENERAL
+    Route::get('/balance', [BalanceGeneralController::class, 'index'])->name('conta.balance');
+    Route::get('/balance/excel', [BalanceGeneralController::class, 'exportarExcel'])->name('conta.balance.excel');
+    
+    // BALANZA DE COMPROBACIÓN
+    Route::get('/comprobacion', [BalanzaComprobacionController::class, 'index'])->name('conta.comprobacion');
+    Route::get('/comprobacion/excel', [BalanzaComprobacionController::class, 'exportarExcel'])->name('conta.comprobacion.excel');
+    
     Route::get('/capital', function () { return view('conta.estados.capital'); })->name('conta.capital');
-    Route::get('/comprobacion', function () { return view('conta.estados.comprobacion'); })->name('conta.comprobacion');
-    Route::get('/flujo', function () { return view('conta.estados.flujo'); })->name('conta.flujo');
+    Route::get('/liquidacion', function () { return view('conta.estados.liquidacion'); })->name('conta.liquidacion');
+    Route::get('/general', function () { return view('conta.estados.general'); })->name('conta.general');
+    
+    // ============================================
+    // FISCAL
+    // ============================================
     Route::get('/complementos', function () { return view('conta.fiscal.complementos'); })->name('conta.complementos');
     Route::get('/contabilidad', function () { return view('conta.fiscal.contabilidad'); })->name('conta.contabilidad');
-    Route::get('/declarciones', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaracinoes');
+    Route::get('/declaraciones', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaraciones');
     Route::get('/diot', function () { return view('conta.fiscal.diot'); })->name('conta.diot');
     Route::get('/retenciones', function () { return view('conta.fiscal.retenciones'); })->name('conta.retenciones');
+    
+    // ============================================
+    // POR PROYECTO
+    // ============================================
     Route::get('/asignaciones', function () { return view('conta.porproyecto.asignacion'); })->name('conta.asignacion');
     Route::get('/cierre', function () { return view('conta.porproyecto.cierre'); })->name('conta.cierre');
     Route::get('/costo', function () { return view('conta.porproyecto.costo'); })->name('conta.costo');
     Route::get('/gastos', function () { return view('conta.porproyecto.gastos'); })->name('conta.gastos');
     Route::get('/rentabilidad', function () { return view('conta.porproyecto.rentabilidad'); })->name('conta.rentabilidad');
+    
+    // ============================================
+    // REGISTROS CONTABLES
+    // ============================================
     Route::get('/ajustes', function () { return view('conta.registros.ajustes'); })->name('conta.ajustes');
     Route::get('/auxliar', function () { return view('conta.registros.auxiliar'); })->name('conta.regaux');
     Route::get('/diario', function () { return view('conta.registros.diario'); })->name('conta.diario');
     Route::get('/libro', function () { return view('conta.registros.libro'); })->name('conta.libro');
     Route::get('/poliza', function () { return view('conta.registros.polizas'); })->name('conta.polizas');
-    Route::get('/unidadenegocios', function () { return view('conta.estados.unidad'); })->name('conta.unidad');
-    Route::get('/liquidacion', function () { return view('conta.estados.liquidacion'); })->name('conta.liquidacion');
-    Route::get('/general', function () { return view('conta.estados.general'); })->name('conta.general');
-    Route::get('/mensuales', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaraciones');
-    Route::get('/complemento', function () { return view('conta.fiscal.complementos'); })->name('conta.complemento');
-    Route::get('/diariogeneral', function () { return view('conta.registros.diario'); })->name('conta.diario');
-    Route::get('/cobranza', function () { return view('conta.registros.auxiliar'); })->name('conta.cobranza');
+    
+    // ============================================
+    // ALIAS (para compatibilidad con navigation.blade.php)
+    // ============================================
     Route::get('/centro', function () { return view('conta.catalogo.centros'); })->name('conta.centros');
     Route::get('/costoobras', function () { return view('conta.porproyecto.costo'); })->name('conta.costo');
     Route::get('/asignacion', function () { return view('conta.porproyecto.asignacion'); })->name('conta.asignacion');
-    Route::get('/rentabilidad', function () { return view('conta.porproyecto.rentabilidad'); })->name('conta.rentabilidad');
-
-    // ============================================
-// ESTADO DE RESULTADOS CONSTRUCCIÓN
-// ============================================
-
-// Vista principal
-Route::get('/conta/estados', [App\Http\Controllers\EstadoResultadosController::class, 'index'])->name('conta.estados');
-
-// APIs
-Route::prefix('api')->group(function () {
-    Route::get('/estado-resultados/construccion/periodos', [App\Http\Controllers\EstadoResultadosController::class, 'getPeriodos']);
-    Route::get('/estado-resultados/construccion', [App\Http\Controllers\EstadoResultadosController::class, 'getData']);
+    Route::get('/cobranza', function () { return view('conta.registros.auxiliar'); })->name('conta.cobranza');
+    Route::get('/diariogeneral', function () { return view('conta.registros.diario'); })->name('conta.diario');
+    Route::get('/mensuales', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaraciones');
+    Route::get('/complemento', function () { return view('conta.fiscal.complementos'); })->name('conta.complemento');
+    
 });
-});
-
 // ============================================
 // API RUTAS PARA ESTADO DE RESULTADOS CONSTRUCCIÓN
 // ============================================
@@ -356,6 +412,7 @@ Route::prefix('api')->group(function () {
     Route::get('/estado-resultados/construccion/periodos', [App\Http\Controllers\Conta\EstadoResultadosConstruccionController::class, 'getPeriodos']);
     Route::get('/estado-resultados/construccion', [App\Http\Controllers\Conta\EstadoResultadosConstruccionController::class, 'getData']);
 });
+
 
 // ============================================
 // RUTAS PRINCIPALES DE RH
@@ -821,6 +878,7 @@ Route::get('usuarios/download-excel', [UserController::class, 'downloadExcel'])-
 // RUTAS API GENERALES
 // ============================================
 Route::prefix('api')->group(function () {
+
     Route::apiResource('roles', RolController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('roles/exportar-excel', [RolController::class, 'exportExcel']);
     Route::apiResource('puestos', PuestoController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
@@ -1211,5 +1269,12 @@ Route::prefix('administracion/cuentaspago')->group(function () {
     Route::get('/pagos', [CuentasPorPagarController::class, 'index'])->name('cuentaspago.pagos');
     Route::get('/detalle/{id}', [CuentasPorPagarController::class, 'getDetallePago'])->name('cuentaspago.detalle');
 });
+
+Route::prefix('api')->group(function () {
+    Route::get('/proyectos/lista', [App\Http\Controllers\PolizaController::class, 'getProyectosLista']);
+    Route::get('/cuentas-contables', [App\Http\Controllers\PolizaController::class, 'getCuentasContables']);
+});
+
+
 
 require __DIR__.'/auth.php';

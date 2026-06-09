@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-05-18 18:04:39
+Fecha: 2026-06-03 15:34:42
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 131
+Total de tablas: 132
 
 
 📋 TABLA: activos
@@ -503,6 +503,17 @@ Columnas (26):
   • updated_at
   • deleted_at
 
+📋 TABLA: codigos_sat
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • codigo_agrupador
+  • nivel
+  • nombre_cuenta
+  • created_at
+  • updated_at
+  • tipo
+
 📋 TABLA: comentarios_bitacora
 ----------------------------------------------------------------------
 Columnas (6):
@@ -569,7 +580,7 @@ Columnas (7):
 
 📋 TABLA: contactos
 ----------------------------------------------------------------------
-Columnas (25):
+Columnas (26):
   • contacto_id
   • razon_social
   • rfc
@@ -595,6 +606,7 @@ Columnas (25):
   • created_at
   • updated_at
   • deleted_at
+  • codigo_sat_default_id
 
 📋 TABLA: contrarecibo_facturas
 ----------------------------------------------------------------------
@@ -753,7 +765,7 @@ Columnas (21):
 
 📋 TABLA: depositos
 ----------------------------------------------------------------------
-Columnas (16):
+Columnas (18):
   • id
   • folio
   • fecha
@@ -770,6 +782,8 @@ Columnas (16):
   • created_at
   • updated_at
   • deleted_at
+  • codigo_sat_id
+  • cuenta_contable_id
 
 📋 TABLA: detalle_listas_asistencia
 ----------------------------------------------------------------------
@@ -1244,7 +1258,7 @@ Columnas (13):
 
 📋 TABLA: movimientos_bancarios
 ----------------------------------------------------------------------
-Columnas (21):
+Columnas (22):
   • id
   • cuenta_bancaria_id
   • proyecto_id
@@ -1266,6 +1280,7 @@ Columnas (21):
   • deleted_at
   • estimacion_id
   • partida_id
+  • codigo_sat_id
 
 📋 TABLA: movimientos_inventario
 ----------------------------------------------------------------------
@@ -1382,7 +1397,7 @@ Columnas (12):
 
 📋 TABLA: pagos
 ----------------------------------------------------------------------
-Columnas (24):
+Columnas (26):
   • id
   • folio
   • fecha_pago
@@ -1407,6 +1422,8 @@ Columnas (24):
   • created_at
   • updated_at
   • deleted_at
+  • codigo_sat_id
+  • cuenta_contable_id
 
 📋 TABLA: password_reset_tokens
 ----------------------------------------------------------------------
@@ -1614,7 +1631,7 @@ Columnas (18):
 
 📋 TABLA: proveedores
 ----------------------------------------------------------------------
-Columnas (32):
+Columnas (33):
   • id
   • nombre
   • rfc
@@ -1647,6 +1664,7 @@ Columnas (32):
   • cuenta_secundaria
   • cuenta_resultado
   • email_facturacion
+  • codigo_sat_default_id
 
 📋 TABLA: proyecto_costos
 ----------------------------------------------------------------------
@@ -2189,23 +2207,25 @@ Columnas (7):
 
 📋 TABLA: tipos_egreso
 ----------------------------------------------------------------------
-Columnas (6):
+Columnas (7):
   • id
   • nombre
   • descripcion
   • activo
   • created_at
   • updated_at
+  • codigo_sat_default_id
 
 📋 TABLA: tipos_ingreso
 ----------------------------------------------------------------------
-Columnas (6):
+Columnas (7):
   • id
   • nombre
   • descripcion
   • activo
   • created_at
   • updated_at
+  • codigo_sat_default_id
 
 📋 TABLA: traspasos
 ----------------------------------------------------------------------
@@ -2623,4 +2643,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 131
+Total de tablas analizadas: 132

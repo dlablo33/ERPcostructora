@@ -39,7 +39,8 @@ class Proveedor extends Model
         'cuenta_secundaria',
         'cuenta_resultado',
         'direccion', // Mantener por compatibilidad
-        'activo'
+        'activo',
+        'codigo_sat_default_id'  // NUEVO CAMPO
     ];
     
     protected $casts = [
@@ -48,14 +49,10 @@ class Proveedor extends Model
         'credito_actual' => 'decimal:2'
     ];
     
+    // Relaciones existentes
     public function pagos()
     {
         return $this->hasMany(Pago::class);
-    }
-    
-    public function scopeActivos($query)
-    {
-        return $query->where('activo', true);
     }
     
     public function cotizaciones()
@@ -73,6 +70,39 @@ class Proveedor extends Model
         return $this->cotizaciones()->where('estatus', 'Seleccionada');
     }
     
+    // NUEVA RELACIÓN: Código SAT por defecto para gastos
+    public function codigoSatDefault()
+    {
+        return $this->belongsTo(CodigoSat::class, 'codigo_sat_default_id');
+    }
+    
+    // Método para obtener el código SAT sugerido para un pago
+    public function getCodigoSatSugerido()
+    {
+        if ($this->codigo_sat_default_id) {
+            return $this->codigoSatDefault;
+        }
+        
+        // Si no tiene código asignado, retorna un código genérico de gastos de oficina
+        return CodigoSat::where('codigo_agrupador', '515')->first();
+    }
+    
+    // Scopes
+    public function scopeActivos($query)
+    {
+        return $query->where('activo', true);
+    }
+    
+    public function scopeConCodigoSatDefault($query)
+    {
+        return $query->whereNotNull('codigo_sat_default_id');
+    }
+    
+    public function scopeSinCodigoSatDefault($query)
+    {
+        return $query->whereNull('codigo_sat_default_id');
+    }
+    
     // Accesor para obtener dirección completa
     public function getDireccionCompletaAttribute()
     {
@@ -86,5 +116,17 @@ class Proveedor extends Model
         if ($this->codigo_postal) $direccion[] = 'CP ' . $this->codigo_postal;
         
         return implode(', ', $direccion);
+    }
+    
+    // Accesor para obtener el nombre del código SAT por defecto
+    public function getCodigoSatDefaultNombreAttribute()
+    {
+        return $this->codigoSatDefault ? $this->codigoSatDefault->nombre_cuenta : 'Sin asignar';
+    }
+    
+    // Accesor para obtener el código agrupador SAT por defecto
+    public function getCodigoSatDefaultCodigoAttribute()
+    {
+        return $this->codigoSatDefault ? $this->codigoSatDefault->codigo_agrupador : 'N/A';
     }
 }

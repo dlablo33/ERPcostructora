@@ -11,6 +11,7 @@ use App\Models\CategoriaGasto;
 use App\Models\MetodoPago;
 use App\Models\Moneda;
 use App\Models\MovimientoBancario;
+use App\Models\CodigoSat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,23 +27,38 @@ class PagoController extends Controller
     {
         // Obtener datos para los selects
         $cuentasBancarias = CuentaBancaria::with(['banco', 'moneda'])->where('activa', true)->get();
-        $proveedores = Proveedor::where('activo', true)->orderBy('nombre')->get();
+        $proveedores = Proveedor::with('codigoSatDefault')->where('activo', true)->orderBy('nombre')->get();
         $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
         $tiposEgreso = TipoEgreso::where('activo', true)->get();
         $categoriasGasto = CategoriaGasto::where('activo', true)->get();
         $metodosPago = MetodoPago::where('activo', true)->get();
         $monedas = Moneda::where('activa', true)->get();
         
+        // Códigos SAT para gastos (tipo G = Gasto, A = Activo)
+        $codigosSatGastos = CodigoSat::whereIn('tipo', ['G', 'A'])
+            ->orderBy('codigo_agrupador')
+            ->get();
+        
         return view('administracion.tesoreria.pagos', compact(
             'cuentasBancarias', 'proveedores', 'proyectos', 
-            'tiposEgreso', 'categoriasGasto', 'metodosPago', 'monedas'
+            'tiposEgreso', 'categoriasGasto', 'metodosPago', 'monedas',
+            'codigosSatGastos'
         ));
     }
 
     public function getData(Request $request)
     {
         try {
-            $query = Pago::with(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda']);
+            $query = Pago::with([
+                'cuentaBancaria.banco', 
+                'proveedor', 
+                'proyecto', 
+                'tipoEgreso', 
+                'categoriaGasto', 
+                'metodoPago', 
+                'moneda',
+                'codigoSat'
+            ]);
             
             if ($request->has('fecha_inicio') && $request->fecha_inicio) {
                 $query->whereDate('fecha_pago', '>=', $request->fecha_inicio);
@@ -85,6 +101,32 @@ class PagoController extends Controller
         }
     }
 
+    /**
+     * Obtiene el código SAT sugerido para un proveedor
+     */
+    public function getCodigoSatSugerido($proveedorId)
+    {
+        try {
+            $proveedor = Proveedor::with('codigoSatDefault')->find($proveedorId);
+            
+            if ($proveedor && $proveedor->codigo_sat_default_id) {
+                return response()->json([
+                    'success' => true,
+                    'codigo_sat_id' => $proveedor->codigo_sat_default_id,
+                    'codigo_sat_nombre' => $proveedor->codigoSatDefault?->nombre_cuenta,
+                    'codigo_sat_codigo' => $proveedor->codigoSatDefault?->codigo_agrupador
+                ]);
+            }
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'El proveedor no tiene un código SAT por defecto'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -107,10 +149,20 @@ class PagoController extends Controller
                 'referencia_bancaria' => 'nullable|string|max:100',
                 'factura' => 'nullable|string|max:50',
                 'observaciones' => 'nullable|string',
-                'aplicar_ahora' => 'boolean'
+                'aplicar_ahora' => 'boolean',
+                'codigo_sat_id' => 'required|exists:codigos_sat,id'
             ]);
             
             DB::beginTransaction();
+            
+            // Si el proveedor tiene RFC y nombre, pero no se envió, obtenerlos
+            if (!empty($validated['proveedor_id'])) {
+                $proveedor = Proveedor::find($validated['proveedor_id']);
+                if ($proveedor) {
+                    $validated['proveedor_nombre'] = $proveedor->nombre;
+                    $validated['proveedor_rfc'] = $proveedor->rfc;
+                }
+            }
             
             $validated['folio'] = Pago::generarFolio();
             $validated['estatus'] = ($validated['aplicar_ahora'] ?? false) ? 'completado' : 'pendiente';
@@ -127,7 +179,7 @@ class PagoController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Pago creado exitosamente',
-                'data' => $pago->load(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda'])
+                'data' => $pago->load(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda', 'codigoSat'])
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
@@ -149,8 +201,17 @@ class PagoController extends Controller
     public function show($id)
     {
         try {
-            $pago = Pago::with(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda', 'creador'])
-                ->findOrFail($id);
+            $pago = Pago::with([
+                'cuentaBancaria.banco', 
+                'proveedor', 
+                'proyecto', 
+                'tipoEgreso', 
+                'categoriaGasto', 
+                'metodoPago', 
+                'moneda', 
+                'creador',
+                'codigoSat'
+            ])->findOrFail($id);
             return response()->json($pago);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Pago no encontrado'], 404);
@@ -185,17 +246,28 @@ class PagoController extends Controller
                 'referencia' => 'nullable|string|max:100',
                 'referencia_bancaria' => 'nullable|string|max:100',
                 'factura' => 'nullable|string|max:50',
-                'observaciones' => 'nullable|string'
+                'observaciones' => 'nullable|string',
+                'codigo_sat_id' => 'required|exists:codigos_sat,id'
             ]);
             
             DB::beginTransaction();
+            
+            // Actualizar nombre y RFC del proveedor si se seleccionó uno
+            if (!empty($validated['proveedor_id'])) {
+                $proveedor = Proveedor::find($validated['proveedor_id']);
+                if ($proveedor) {
+                    $validated['proveedor_nombre'] = $proveedor->nombre;
+                    $validated['proveedor_rfc'] = $proveedor->rfc;
+                }
+            }
+            
             $pago->update($validated);
             DB::commit();
             
             return response()->json([
                 'success' => true,
                 'message' => 'Pago actualizado exitosamente',
-                'data' => $pago->load(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda'])
+                'data' => $pago->load(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda', 'codigoSat'])
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -248,6 +320,14 @@ class PagoController extends Controller
                 ], 422);
             }
             
+            // Validar que tenga código SAT
+            if (!$pago->codigo_sat_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El pago no tiene un código SAT asignado. Por favor edite el pago y asigne uno.'
+                ], 422);
+            }
+            
             $this->aplicarPago($pago);
             
             DB::commit();
@@ -255,7 +335,7 @@ class PagoController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Pago aplicado exitosamente. Saldo actualizado.',
-                'data' => $pago->load(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda'])
+                'data' => $pago->load(['cuentaBancaria.banco', 'proveedor', 'proyecto', 'tipoEgreso', 'categoriaGasto', 'metodoPago', 'moneda', 'codigoSat'])
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -267,8 +347,16 @@ class PagoController extends Controller
         }
     }
 
+    /**
+     * Aplica el pago: actualiza saldo de cuenta y crea movimiento bancario
+     */
     private function aplicarPago($pago)
     {
+        // Validar que tenga código SAT
+        if (!$pago->codigo_sat_id) {
+            throw new \Exception('El pago no tiene un código SAT asignado.');
+        }
+        
         // Actualizar saldo de la cuenta bancaria (EGRESO - se resta)
         $cuenta = CuentaBancaria::find($pago->cuenta_bancaria_id);
         if ($cuenta) {
@@ -278,7 +366,7 @@ class PagoController extends Controller
             Log::info('Saldo actualizado. Nuevo saldo cuenta ' . $cuenta->id . ': ' . $cuenta->saldo_actual);
         }
         
-        // Crear movimiento bancario
+        // Crear movimiento bancario con código SAT
         $movimiento = MovimientoBancario::create([
             'cuenta_bancaria_id' => $pago->cuenta_bancaria_id,
             'proyecto_id' => $pago->proyecto_id,
@@ -293,13 +381,14 @@ class PagoController extends Controller
             'comprobante' => $pago->comprobante,
             'status' => 'aplicado',
             'observaciones' => 'Pago: ' . ($pago->observaciones ?? ''),
-            'created_by' => $pago->created_by
+            'created_by' => $pago->created_by,
+            'codigo_sat_id' => $pago->codigo_sat_id
         ]);
         
         $pago->estatus = 'completado';
         $pago->save();
         
-        Log::info('Movimiento creado ID: ' . $movimiento->id);
+        Log::info('Movimiento creado ID: ' . $movimiento->id . ' con código SAT: ' . $pago->codigo_sat_id);
         
         return $movimiento;
     }

@@ -78,7 +78,8 @@
                             <tr><td colspan="9" style="text-align: center;">Cargando...<\/td></tr>
                         </tbody>
                         <tfoot style="background-color: #e9ecef; font-weight: bold;">
-                            <tr><td colspan="4" style="text-align: center;">Totales:</td><td style="text-align: right;" id="sumMonto">$0.00</td><td colspan="3"></td></tr>
+                            <tr><td colspan="4" style="text-align: center;">Totales:</td><td style="text-align: right;" id="sumMonto">$0.00<\/td><td colspan="3"><\/td>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>
@@ -154,6 +155,26 @@
                         <div class="col-md-6 mb-3">
                             <label>Referencia</label>
                             <input type="text" id="referencia" class="form-control">
+                        </div>
+                    </div>
+                    <!-- 🔴 NUEVO: Campo Código SAT -->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label>Código SAT <span class="text-danger">*</span></label>
+                            <select id="codigo_sat_id" class="form-control" required>
+                                <option value="">Seleccionar código SAT...</option>
+                                @foreach($codigosSatIngresos ?? [] as $codigo)
+                                    <option value="{{ $codigo->id }}" 
+                                        data-codigo="{{ $codigo->codigo_agrupador }}"
+                                        data-nombre="{{ $codigo->nombre_cuenta }}"
+                                        data-tipo="{{ $codigo->tipo }}">
+                                        {{ $codigo->codigo_agrupador }} - {{ $codigo->nombre_cuenta }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted" id="codigo_sat_info">
+                                <i class="fas fa-info-circle"></i> Selecciona el código SAT que corresponde a este ingreso
+                            </small>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -302,7 +323,7 @@ function cargarTabla(datos) {
     tablaBody.innerHTML = '';
     
     if (datos.length === 0) {
-        tablaBody.innerHTML = '<td><td colspan="9" style="text-align: center;">No hay depósitos registrados<\/td></tr>';
+        tablaBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">No hay depósitos registrados<\/td></tr>';
         calcularTotales(datos);
         actualizarPaginacion(0);
         return;
@@ -326,7 +347,7 @@ function cargarTabla(datos) {
                         <td>${formatDate(item.fecha)}</td>
                         <td>${item.banco || '-'}</td>
                         <td>${item.cuenta || '-'}</td>
-                        <td style="text-align:right;">${formatCurrency(item.monto)}</td>
+                        <td style="text-align:right;">${formatCurrency(item.monto)}<\/td>
                         <td>${item.concepto || '-'}</td>
                         <td>${item.tipo_ingreso || '-'}</td>
                         <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
@@ -337,7 +358,7 @@ function cargarTabla(datos) {
                                 ${item.estatus === 'pendiente' ? `<i class="fas fa-check-circle" onclick="aplicarDeposito(${item.id})" title="Aplicar"></i>` : ''}
                                 <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="PDF"></i>
                             </div>
-                        </td>
+                        <\/td>
                     `;
                     tablaBody.appendChild(detalleRow);
                 });
@@ -349,13 +370,13 @@ function cargarTabla(datos) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.folio || '-'}</td>
-                <td>${formatDate(item.fecha)}</td>
-                <td>${item.banco || '-'}</td>
-                <td>${item.cuenta || '-'}</td>
-                <td style="text-align:right;">${formatCurrency(item.monto)}</td>
-                <td>${item.concepto || '-'}</td>
-                <td>${item.tipo_ingreso || '-'}</td>
-                <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
+                <td>${formatDate(item.fecha)}<\/td>
+                <td>${item.banco || '-'}<\/td>
+                <td>${item.cuenta || '-'}<\/td>
+                <td style="text-align:right;">${formatCurrency(item.monto)}<\/td>
+                <td>${item.concepto || '-'}<\/td>
+                <td>${item.tipo_ingreso || '-'}<\/td>
+                <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span><\/td>
                 <td style="position:sticky;right:0;background:white;">
                     <div class="action-icons">
                         <i class="fas fa-edit" onclick="editarDeposito(${item.id})" title="Editar"></i>
@@ -363,7 +384,7 @@ function cargarTabla(datos) {
                         ${item.estatus === 'pendiente' ? `<i class="fas fa-check-circle" onclick="aplicarDeposito(${item.id})" title="Aplicar"></i>` : ''}
                         <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="PDF"></i>
                     </div>
-                </td>
+                <\/td>
             `;
             tablaBody.appendChild(row);
         });
@@ -412,6 +433,14 @@ function abrirModalDeposito() {
     document.getElementById('concepto').value = '';
     document.getElementById('observaciones').value = '';
     document.getElementById('aplicar_ahora').checked = true;
+    // 🔴 Limpiar código SAT
+    document.getElementById('codigo_sat_id').value = '';
+    const infoSpan = document.getElementById('codigo_sat_info');
+    if (infoSpan) {
+        infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Selecciona el código SAT que corresponde a este ingreso';
+        infoSpan.classList.remove('text-success', 'text-warning', 'text-danger');
+        infoSpan.classList.add('text-muted');
+    }
     new bootstrap.Modal(document.getElementById('modalDeposito')).show();
 }
 
@@ -435,12 +464,37 @@ function editarDeposito(id) {
         document.getElementById('concepto').value = deposito.concepto;
         document.getElementById('observaciones').value = deposito.observaciones || '';
         document.getElementById('aplicar_ahora').checked = false;
+        // 🔴 Cargar código SAT
+        document.getElementById('codigo_sat_id').value = deposito.codigo_sat_id || '';
+        
+        // Actualizar info del código SAT
+        const codigoSatSelect = document.getElementById('codigo_sat_id');
+        const selectedOption = codigoSatSelect.options[codigoSatSelect.selectedIndex];
+        const infoSpan = document.getElementById('codigo_sat_info');
+        if (selectedOption && selectedOption.value) {
+            const codigo = selectedOption.getAttribute('data-codigo') || '';
+            const nombre = selectedOption.getAttribute('data-nombre') || '';
+            infoSpan.innerHTML = `<i class="fas fa-check-circle text-success"></i> Código SAT seleccionado: ${codigo} - ${nombre}`;
+            infoSpan.classList.remove('text-muted');
+            infoSpan.classList.add('text-success');
+        } else {
+            infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Selecciona un código SAT para este ingreso';
+        }
+        
         new bootstrap.Modal(document.getElementById('modalDeposito')).show();
     });
 }
 
 function guardarDeposito() {
     const id = document.getElementById('deposito_id').value;
+    const codigoSatId = document.getElementById('codigo_sat_id').value;
+    
+    // Validar código SAT
+    if (!codigoSatId) {
+        mostrarNotificacion('Por favor seleccione un código SAT', 'warning');
+        return;
+    }
+    
     const data = {
         fecha: document.getElementById('fecha').value,
         cuenta_bancaria_id: document.getElementById('cuenta_bancaria_id').value,
@@ -450,7 +504,8 @@ function guardarDeposito() {
         referencia: document.getElementById('referencia').value,
         concepto: document.getElementById('concepto').value,
         observaciones: document.getElementById('observaciones').value,
-        aplicar_ahora: document.getElementById('aplicar_ahora').checked
+        aplicar_ahora: document.getElementById('aplicar_ahora').checked,
+        codigo_sat_id: codigoSatId
     };
     
     const url = id ? `/admin/api/depositos/${id}` : '/admin/api/depositos';

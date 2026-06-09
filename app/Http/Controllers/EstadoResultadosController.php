@@ -2,284 +2,263 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\CodigoSat;
 
-class EstadoResultadosConstruccionController extends Controller
+class EstadoResultadosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('conta.estados.construccion');
-    }
-
-    public function getPeriodos(Request $request)
-    {
-        try {
-            // Obtener períodos únicos de facturas pagadas
-            $sql = "SELECT DISTINCT TO_CHAR(fecha, 'YYYY-MM') as periodo 
-                    FROM facturas 
-                    WHERE fecha IS NOT NULL AND estatus = 'pagada'
-                    ORDER BY periodo DESC";
-            
-            $periodosFacturas = DB::select($sql);
-            
-            $todosPeriodos = [];
-            foreach ($periodosFacturas as $p) {
-                $todosPeriodos[] = $p->periodo;
-            }
-            
-            if (empty($todosPeriodos)) {
-                for ($i = 0; $i < 6; $i++) {
-                    $date = Carbon::now()->subMonths($i);
-                    $todosPeriodos[] = $date->format('Y-m');
-                }
-            }
-            
-            $todosPeriodos = array_unique($todosPeriodos);
-            rsort($todosPeriodos);
-            
-            $periodos = [];
-            foreach ($todosPeriodos as $periodo) {
-                $date = Carbon::createFromFormat('Y-m', $periodo);
-                $periodos[] = [
-                    'mes' => (int) $date->month,
-                    'anio' => (int) $date->year,
-                    'label' => $date->translatedFormat('F Y')
-                ];
-            }
-            
-            return response()->json([
-                'success' => true,
-                'periodos' => $periodos
-            ]);
-            
-        } catch (\Exception $e) {
-            // Fallback: períodos de ejemplo
-            $periodos = [
-                ['mes' => 5, 'anio' => 2026, 'label' => 'Mayo 2026'],
-                ['mes' => 4, 'anio' => 2026, 'label' => 'Abril 2026'],
-                ['mes' => 3, 'anio' => 2026, 'label' => 'Marzo 2026'],
-            ];
-            
-            return response()->json([
-                'success' => true,
-                'periodos' => $periodos
-            ]);
+        $anio = $request->get('anio', Carbon::now()->year);
+        $mes = $request->get('mes', Carbon::now()->month);
+        
+        // Obtener todos los proyectos activos
+        $proyectos = DB::table('proyectos')
+            ->select('id', 'nombre', 'codigo')
+            ->whereNull('deleted_at')
+            ->where('status', 'activo')
+            ->orderBy('nombre')
+            ->get();
+        
+        // Obtener proyectos seleccionados (manejando null)
+        $proyectosSeleccionados = $request->get('proyectos', []);
+        
+        // Si es null, convertir a array vacío
+        if ($proyectosSeleccionados === null) {
+            $proyectosSeleccionados = [];
         }
-    }
-
-    public function getData(Request $request)
-    {
-        try {
-            $mes = $request->input('mes');
-            $anio = $request->input('anio');
-
-            if (!$mes || !$anio) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Faltan parámetros mes y año'
-                ], 400);
-            }
-            
-            $inicioMes = "$anio-$mes-01";
-            $finMes = date('Y-m-t', strtotime($inicioMes));
-            
-            // INGRESOS REALES
-            $sqlIngresos = "SELECT COALESCE(SUM(total), 0) as total 
-                            FROM facturas 
-                            WHERE fecha BETWEEN '$inicioMes' AND '$finMes' 
-                            AND estatus = 'pagada'";
-            $ingresosReales = (float) DB::selectOne($sqlIngresos)->total;
-            
-            // GASTOS REALES
-            $sqlGastos = "SELECT COALESCE(SUM(monto), 0) as total 
-                          FROM pagos 
-                          WHERE fecha_pago BETWEEN '$inicioMes' AND '$finMes' 
-                          AND estatus = 'aplicado'";
-            $gastosReales = (float) DB::selectOne($sqlGastos)->total;
-            
-            // PRESUPUESTOS
-            $sqlPresupuestoIngresos = "SELECT COALESCE(SUM(presupuesto_total), 0) as total FROM proyectos";
-            $totalPresupuesto = (float) DB::selectOne($sqlPresupuestoIngresos)->total;
-            $presupuestoIngresosMensual = $totalPresupuesto > 0 ? $totalPresupuesto / 12 : 0;
-            
-            // Distribución de gastos
-            if ($gastosReales > 0) {
-                $costoDirectoReal = $gastosReales * 0.70;
-                $costosIndirectosReal = $gastosReales * 0.20;
-                $gastosGeneralesReal = $gastosReales * 0.10;
-                $gastosFinancierosReal = $gastosReales * 0.03;
-            } else {
-                $costoDirectoReal = 0;
-                $costosIndirectosReal = 0;
-                $gastosGeneralesReal = 0;
-                $gastosFinancierosReal = 0;
-            }
-            
-            // Costos por subconcepto
-            $costoMaterialesReal = $costoDirectoReal * 0.35;
-            $costoManoObraReal = $costoDirectoReal * 0.25;
-            $costoMaquinariaReal = $costoDirectoReal * 0.20;
-            $costoSubcontratosReal = $costoDirectoReal * 0.15;
-            $costoHerramientaReal = $costoDirectoReal * 0.03;
-            $costoOtrosReal = $costoDirectoReal * 0.02;
-            
-            // Valores calculados
-            $utilidadBrutaReal = $ingresosReales - $costoDirectoReal;
-            $utilidadBrutaPresup = $presupuestoIngresosMensual;
-            
-            $utilidadOperacionReal = $utilidadBrutaReal - $costosIndirectosReal - $gastosGeneralesReal;
-            $utilidadOperacionPresup = $utilidadBrutaPresup;
-            
-            $utilidadAntesReal = $utilidadOperacionReal - $gastosFinancierosReal;
-            $utilidadAntesPresup = $utilidadOperacionPresup;
-            
-            $ebitdaReal = $utilidadOperacionReal;
-            $ebitdaPresup = $utilidadOperacionPresup;
-            
-            $impuestosReal = $utilidadAntesReal * 0.30;
-            $impuestosPresup = $utilidadAntesPresup * 0.30;
-            
-            $utilidadNetaReal = $utilidadAntesReal - $impuestosReal;
-            $utilidadNetaPresup = $utilidadAntesPresup - $impuestosPresup;
-            
-            $estructura = [
-                [
-                    'id' => 1,
-                    'concepto' => 'Ingresos por Obra',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($ingresosReales, 2),
-                    'presupuesto' => round($presupuestoIngresosMensual, 2),
-                    'diferencia' => round($ingresosReales - $presupuestoIngresosMensual, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 6,
-                    'concepto' => 'Costo Directo de Construcción',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($costoDirectoReal, 2),
-                    'presupuesto' => 0,
-                    'diferencia' => round($costoDirectoReal, 2),
-                    'subconceptos' => [
-                        ['id' => 601, 'concepto' => 'Materiales', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($costoMaterialesReal, 2), 'presupuesto' => 0, 'diferencia' => round($costoMaterialesReal, 2)],
-                        ['id' => 602, 'concepto' => 'Mano de Obra Directa', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($costoManoObraReal, 2), 'presupuesto' => 0, 'diferencia' => round($costoManoObraReal, 2)],
-                        ['id' => 603, 'concepto' => 'Maquinaria y Equipo', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($costoMaquinariaReal, 2), 'presupuesto' => 0, 'diferencia' => round($costoMaquinariaReal, 2)],
-                        ['id' => 604, 'concepto' => 'Subcontratos', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($costoSubcontratosReal, 2), 'presupuesto' => 0, 'diferencia' => round($costoSubcontratosReal, 2)],
-                        ['id' => 605, 'concepto' => 'Herramienta Menor', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($costoHerramientaReal, 2), 'presupuesto' => 0, 'diferencia' => round($costoHerramientaReal, 2)],
-                        ['id' => 606, 'concepto' => 'Otros Costos', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($costoOtrosReal, 2), 'presupuesto' => 0, 'diferencia' => round($costoOtrosReal, 2)],
-                    ]
-                ],
-                [
-                    'id' => 13,
-                    'concepto' => 'Utilidad Bruta',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($utilidadBrutaReal, 2),
-                    'presupuesto' => round($utilidadBrutaPresup, 2),
-                    'diferencia' => round($utilidadBrutaReal - $utilidadBrutaPresup, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 14,
-                    'concepto' => 'Costos Indirectos de Obra',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($costosIndirectosReal, 2),
-                    'presupuesto' => 0,
-                    'diferencia' => round($costosIndirectosReal, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 23,
-                    'concepto' => 'Gastos Generales',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($gastosGeneralesReal, 2),
-                    'presupuesto' => 0,
-                    'diferencia' => round($gastosGeneralesReal, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 33,
-                    'concepto' => 'Utilidad de Operación',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($utilidadOperacionReal, 2),
-                    'presupuesto' => round($utilidadOperacionPresup, 2),
-                    'diferencia' => round($utilidadOperacionReal - $utilidadOperacionPresup, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 34,
-                    'concepto' => 'Gastos Financieros',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($gastosFinancierosReal, 2),
-                    'presupuesto' => 0,
-                    'diferencia' => round($gastosFinancierosReal, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 37,
-                    'concepto' => 'Utilidad Antes de Impuestos',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($utilidadAntesReal, 2),
-                    'presupuesto' => round($utilidadAntesPresup, 2),
-                    'diferencia' => round($utilidadAntesReal - $utilidadAntesPresup, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 38,
-                    'concepto' => 'EBITDA',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($ebitdaReal, 2),
-                    'presupuesto' => round($ebitdaPresup, 2),
-                    'diferencia' => round($ebitdaReal - $ebitdaPresup, 2),
-                    'subconceptos' => []
-                ],
-                [
-                    'id' => 39,
-                    'concepto' => 'Impuestos',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($impuestosReal, 2),
-                    'presupuesto' => round($impuestosPresup, 2),
-                    'diferencia' => round($impuestosReal - $impuestosPresup, 2),
-                    'subconceptos' => [
-                        ['id' => 3901, 'concepto' => 'ISR', 'esEncabezado' => false, 'nivel' => 1, 'real' => round($impuestosReal, 2), 'presupuesto' => round($impuestosPresup, 2), 'diferencia' => round($impuestosReal - $impuestosPresup, 2)]
-                    ]
-                ],
-                [
-                    'id' => 41,
-                    'concepto' => 'Utilidad Neta',
-                    'esEncabezado' => true,
-                    'nivel' => 0,
-                    'real' => round($utilidadNetaReal, 2),
-                    'presupuesto' => round($utilidadNetaPresup, 2),
-                    'diferencia' => round($utilidadNetaReal - $utilidadNetaPresup, 2),
-                    'subconceptos' => []
-                ]
-            ];
-            
-            return response()->json([
-                'success' => true,
-                'mes' => $mes,
-                'anio' => $anio,
-                'estructura' => $estructura
-            ]);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'line' => $e->getLine()
-            ], 500);
+        
+        // Si es string, convertir a array
+        if (is_string($proyectosSeleccionados) && !empty($proyectosSeleccionados)) {
+            $proyectosSeleccionados = explode(',', $proyectosSeleccionados);
         }
+        
+        // Si no es array, asegurar que sea array
+        if (!is_array($proyectosSeleccionados)) {
+            $proyectosSeleccionados = [];
+        }
+        
+        // Convertir a enteros
+        $proyectosSeleccionados = array_map('intval', $proyectosSeleccionados);
+        
+        // Fechas del período
+        $fechaInicio = Carbon::create($anio, $mes, 1)->startOfMonth();
+        $fechaFin = Carbon::create($anio, $mes, 1)->endOfMonth();
+        
+        // ============================================================
+        // INGRESOS POR PROYECTO Y CÓDIGO SAT
+        // ============================================================
+        $ingresosPorProyecto = DB::table('movimientos_bancarios as mb')
+            ->join('codigos_sat as cs', 'mb.codigo_sat_id', '=', 'cs.id')
+            ->select(
+                'mb.proyecto_id',
+                'cs.codigo_agrupador',
+                'cs.nombre_cuenta',
+                'cs.nivel',
+                DB::raw('SUM(mb.monto) as total')
+            )
+            ->where('mb.tipo', 'ingreso')
+            ->where('mb.status', 'aplicado')
+            ->where('cs.tipo', 'I')
+            ->whereBetween('mb.fecha', [$fechaInicio, $fechaFin])
+            ->groupBy('mb.proyecto_id', 'cs.codigo_agrupador', 'cs.nombre_cuenta', 'cs.nivel')
+            ->orderBy('cs.codigo_agrupador')
+            ->get();
+        
+        // ============================================================
+        // GASTOS POR PROYECTO Y CÓDIGO SAT
+        // ============================================================
+        $gastosPorProyecto = DB::table('movimientos_bancarios as mb')
+            ->join('codigos_sat as cs', 'mb.codigo_sat_id', '=', 'cs.id')
+            ->select(
+                'mb.proyecto_id',
+                'cs.codigo_agrupador',
+                'cs.nombre_cuenta',
+                'cs.nivel',
+                DB::raw('SUM(mb.monto) as total')
+            )
+            ->where('mb.tipo', 'egreso')
+            ->where('mb.status', 'aplicado')
+            ->where('cs.tipo', 'G')
+            ->whereBetween('mb.fecha', [$fechaInicio, $fechaFin])
+            ->groupBy('mb.proyecto_id', 'cs.codigo_agrupador', 'cs.nombre_cuenta', 'cs.nivel')
+            ->orderBy('cs.codigo_agrupador')
+            ->get();
+        
+        // ============================================================
+        // RESUMEN POR PROYECTO (TOTALES)
+        // ============================================================
+        $resumenProyectos = [];
+        $ingresosSum = DB::table('movimientos_bancarios as mb')
+            ->join('proyectos as p', 'mb.proyecto_id', '=', 'p.id')
+            ->select('p.id', 'p.codigo', 'p.nombre', DB::raw('SUM(mb.monto) as total'))
+            ->where('mb.tipo', 'ingreso')
+            ->where('mb.status', 'aplicado')
+            ->whereBetween('mb.fecha', [$fechaInicio, $fechaFin])
+            ->groupBy('p.id', 'p.codigo', 'p.nombre')
+            ->get();
+        
+        $gastosSum = DB::table('movimientos_bancarios as mb')
+            ->join('proyectos as p', 'mb.proyecto_id', '=', 'p.id')
+            ->select('p.id', DB::raw('SUM(mb.monto) as total'))
+            ->where('mb.tipo', 'egreso')
+            ->where('mb.status', 'aplicado')
+            ->whereBetween('mb.fecha', [$fechaInicio, $fechaFin])
+            ->groupBy('p.id')
+            ->get()
+            ->keyBy('id');
+        
+        foreach ($ingresosSum as $proy) {
+            $gastosProy = isset($gastosSum[$proy->id]) ? $gastosSum[$proy->id]->total : 0;
+            $utilidadProy = $proy->total - $gastosProy;
+            $margenProy = $proy->total > 0 ? ($utilidadProy / $proy->total) * 100 : 0;
+            
+            $resumenProyectos[] = [
+                'proyecto_id' => $proy->id,
+                'codigo' => $proy->codigo,
+                'nombre' => $proy->nombre,
+                'ingresos' => $proy->total,
+                'gastos' => $gastosProy,
+                'utilidad' => $utilidadProy,
+                'margen' => $margenProy
+            ];
+        }
+        
+        // Años disponibles
+        $aniosDisponibles = $this->getAniosDisponibles();
+        $meses = [
+            1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
+            5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
+            9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+        ];
+        
+        return view('conta.estados.estados', compact(
+            'ingresosPorProyecto',
+            'gastosPorProyecto',
+            'resumenProyectos',
+            'proyectos',
+            'proyectosSeleccionados',
+            'anio',
+            'mes',
+            'aniosDisponibles',
+            'meses'
+        ));
+    }
+    
+    private function getAniosDisponibles()
+    {
+        $anios = DB::table('movimientos_bancarios')
+            ->select(DB::raw('DISTINCT EXTRACT(YEAR FROM fecha) as anio'))
+            ->where('status', 'aplicado')
+            ->whereNotNull('codigo_sat_id')
+            ->pluck('anio')
+            ->toArray();
+        
+        if (empty($anios)) {
+            $anios = [date('Y')];
+        }
+        
+        sort($anios);
+        return $anios;
+    }
+    
+    public function exportarExcel(Request $request)
+    {
+        $anio = $request->get('anio', Carbon::now()->year);
+        $mes = $request->get('mes', Carbon::now()->month);
+        $fechaInicio = Carbon::create($anio, $mes, 1)->startOfMonth();
+        $fechaFin = Carbon::create($anio, $mes, 1)->endOfMonth();
+        
+        // Obtener proyectos seleccionados (manejando null)
+        $proyectosSeleccionados = $request->get('proyectos', []);
+        
+        if ($proyectosSeleccionados === null) {
+            $proyectosSeleccionados = [];
+        }
+        
+        if (is_string($proyectosSeleccionados) && !empty($proyectosSeleccionados)) {
+            $proyectosSeleccionados = explode(',', $proyectosSeleccionados);
+        }
+        
+        if (!is_array($proyectosSeleccionados)) {
+            $proyectosSeleccionados = [];
+        }
+        
+        $proyectosSeleccionados = array_map('intval', $proyectosSeleccionados);
+        
+        $ingresos = DB::table('movimientos_bancarios as mb')
+            ->join('codigos_sat as cs', 'mb.codigo_sat_id', '=', 'cs.id')
+            ->select('cs.codigo_agrupador', 'cs.nombre_cuenta', DB::raw('SUM(mb.monto) as total'))
+            ->where('mb.tipo', 'ingreso')
+            ->where('mb.status', 'aplicado')
+            ->where('cs.tipo', 'I')
+            ->whereBetween('mb.fecha', [$fechaInicio, $fechaFin])
+            ->when(!empty($proyectosSeleccionados), function($q) use ($proyectosSeleccionados) {
+                return $q->whereIn('mb.proyecto_id', $proyectosSeleccionados);
+            })
+            ->groupBy('cs.codigo_agrupador', 'cs.nombre_cuenta')
+            ->orderBy('cs.codigo_agrupador')
+            ->get();
+        
+        $gastos = DB::table('movimientos_bancarios as mb')
+            ->join('codigos_sat as cs', 'mb.codigo_sat_id', '=', 'cs.id')
+            ->select('cs.codigo_agrupador', 'cs.nombre_cuenta', DB::raw('SUM(mb.monto) as total'))
+            ->where('mb.tipo', 'egreso')
+            ->where('mb.status', 'aplicado')
+            ->where('cs.tipo', 'G')
+            ->whereBetween('mb.fecha', [$fechaInicio, $fechaFin])
+            ->when(!empty($proyectosSeleccionados), function($q) use ($proyectosSeleccionados) {
+                return $q->whereIn('mb.proyecto_id', $proyectosSeleccionados);
+            })
+            ->groupBy('cs.codigo_agrupador', 'cs.nombre_cuenta')
+            ->orderBy('cs.codigo_agrupador')
+            ->get();
+        
+        $totalIngresos = $ingresos->sum('total');
+        $totalGastos = $gastos->sum('total');
+        $utilidadNeta = $totalIngresos - $totalGastos;
+        
+        $filename = "estado_resultados_{$anio}_{$mes}.csv";
+        $handle = fopen('php://temp', 'w');
+        fputs($handle, "\xEF\xBB\xBF");
+        fputcsv($handle, ['ESTADO DE RESULTADOS']);
+        fputcsv($handle, ["Período: " . Carbon::create($anio, $mes, 1)->format('F Y')]);
+        fputcsv($handle, []);
+        fputcsv($handle, ['INGRESOS', '', '']);
+        fputcsv($handle, ['Código SAT', 'Cuenta', 'Monto']);
+        
+        foreach ($ingresos as $ingreso) {
+            fputcsv($handle, [$ingreso->codigo_agrupador, $ingreso->nombre_cuenta, number_format($ingreso->total, 2)]);
+        }
+        fputcsv($handle, ['', 'TOTAL INGRESOS', number_format($totalIngresos, 2)]);
+        fputcsv($handle, []);
+        
+        fputcsv($handle, ['GASTOS', '', '']);
+        fputcsv($handle, ['Código SAT', 'Cuenta', 'Monto']);
+        
+        foreach ($gastos as $gasto) {
+            fputcsv($handle, [$gasto->codigo_agrupador, $gasto->nombre_cuenta, number_format($gasto->total, 2)]);
+        }
+        fputcsv($handle, ['', 'TOTAL GASTOS', number_format($totalGastos, 2)]);
+        fputcsv($handle, []);
+        
+        fputcsv($handle, ['RESULTADO DEL EJERCICIO', '', '']);
+        fputcsv($handle, ['Utilidad (Pérdida) Neta', '', number_format($utilidadNeta, 2)]);
+        fputcsv($handle, ['Margen de Utilidad', '', number_format($totalIngresos > 0 ? ($utilidadNeta / $totalIngresos) * 100 : 0, 2) . '%']);
+        
+        rewind($handle);
+        $csv = stream_get_contents($handle);
+        fclose($handle);
+        
+        return response($csv, 200)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', "attachment; filename=\"$filename\"");
+    }
+    
+    public function exportarPdf(Request $request)
+    {
+        return redirect()->back()->with('info', 'Exportación a PDF en desarrollo');
     }
 }

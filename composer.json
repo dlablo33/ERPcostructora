@@ -14,7 +14,6 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
         "maatwebsite/excel": "^3.1",
-        "nativephp/mobile": "^3.2",
         "phpoffice/phpspreadsheet": "^1.30"
     },
     "require-dev": {

@@ -3,254 +3,531 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Estado de Resultados Operativo -->
-        <div class="semaforo card mt-2">
-            <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #2378e1; padding: 15px 20px;">
-                <div style="display: flex; justify-content: center; align-items: center; position: relative; flex-wrap: wrap; gap: 15px;">
-                    <h2 style="color: #2378e1; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
-                        Estado de Resultados Operativo - Construcción
-                    </h2>
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <span style="color: #6c757d; font-size: 14px;">Período:</span>
-                        <select id="periodoSelector" style="padding: 6px 12px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; background-color: white; color: #2378e1; font-weight: 500;">
-                            <option value="">Cargando períodos...</option>
+        <div class="card mt-2">
+            <div class="card-header" style="background-color: #f8f9fa; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 22px;">
+                            <i class="fas fa-chart-line"></i> Estado de Resultados Contable
+                        </h2>
+                        <p style="color: #6c757d; font-size: 13px; margin: 5px 0 0 0;">
+                            Selecciona proyectos para comparar
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <select id="anioSelector" class="form-control" style="width: 100px; border-color: #083CAE;">
+                            @foreach($aniosDisponibles as $year)
+                                <option value="{{ $year }}" {{ $anio == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
                         </select>
+                        <select id="mesSelector" class="form-control" style="width: 130px; border-color: #083CAE;">
+                            @foreach($meses as $num => $nombre)
+                                <option value="{{ $num }}" {{ $mes == $num ? 'selected' : '' }}>{{ $nombre }}</option>
+                            @endforeach
+                        </select>
+                        
+                        <!-- Selector de proyectos mejorado -->
+                        <div class="dropdown" style="position: relative;">
+                            <button id="btnSeleccionarProyectos" type="button" class="btn" style="background-color: #083CAE; color: white; border: none; padding: 6px 15px; border-radius: 4px;">
+                                <i class="fas fa-check-square"></i> Proyectos 
+                                <span id="proyectosCount" class="badge" style="background-color: #ffc107; color: #333; margin-left: 5px;">0</span>
+                            </button>
+                            <div id="panelProyectos" class="dropdown-menu" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #dee2e6; border-radius: 8px; width: 380px; max-height: 420px; overflow-y: auto; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-top: 5px;">
+                                <div style="padding: 12px; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa; border-radius: 8px 8px 0 0;">
+                                    <div style="display: flex; gap: 10px;">
+                                        <button id="btnSeleccionarTodos" type="button" class="btn btn-sm" style="background-color: #28a745; color: white; border: none; padding: 5px 12px; border-radius: 4px;">
+                                            <i class="fas fa-check-double"></i> Todos
+                                        </button>
+                                        <button id="btnLimpiarSeleccion" type="button" class="btn btn-sm" style="background-color: #6c757d; color: white; border: none; padding: 5px 12px; border-radius: 4px;">
+                                            <i class="fas fa-times"></i> Ninguno
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="listaProyectos" style="padding: 10px; max-height: 320px; overflow-y: auto;">
+                                    @foreach($proyectos as $proyecto)
+                                        <div class="checkbox-item" style="margin-bottom: 10px; padding: 8px; border-radius: 6px; transition: background-color 0.2s;">
+                                            <label style="display: flex; align-items: center; cursor: pointer; margin: 0; width: 100%;">
+                                                <input type="checkbox" class="proyecto-checkbox" value="{{ $proyecto->id }}" 
+                                                    data-codigo="{{ $proyecto->codigo }}"
+                                                    data-nombre="{{ $proyecto->nombre }}"
+                                                    style="margin-right: 12px; width: 16px; height: 16px;">
+                                                <span style="font-size: 13px;">
+                                                    <strong style="color: #083CAE;">{{ $proyecto->codigo }}</strong> - {{ Str::limit($proyecto->nombre, 45) }}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button id="btnFiltrar" class="btn" style="background-color: #083CAE; color: white; border: none; padding: 6px 18px; border-radius: 4px;">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                        <button id="btnExportarExcel" class="btn" style="background-color: #28a745; color: white; border: none; padding: 6px 18px; border-radius: 4px;">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
                     </div>
                 </div>
-                <p style="color: #083CAE !important; font-size: 14px; margin: 5px 0 0 0; text-align: center;">
-                    (Real vs Presupuesto)
-                </p>
+                <div class="mt-2" id="proyectosSeleccionadosInfo" style="font-size: 12px; color: #083CAE;">
+                    <i class="fas fa-info-circle"></i> Selecciona uno o más proyectos para comparar
+                </div>
             </div>
 
             <div class="card-body p-4">
-                <!-- Indicador de carga -->
-                <div style="text-align: center; padding: 40px 20px; display: none;" id="loadingMensaje">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #2378e1; margin-bottom: 15px;"></i>
-                    <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Cargando datos...</h3>
+                <!-- Métricas resumen más grandes -->
+                <div style="display: flex; gap: 1px; margin-bottom: 25px; background: #dee2e6; border-radius: 8px; overflow: hidden; flex-wrap: wrap;">
+                    <div style="flex: 1; background: #fff; padding: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px;">Período</div>
+                        <div style="font-size: 16px; font-weight: bold; color: #083CAE;" id="periodoTexto">{{ $meses[$mes] }} {{ $anio }}</div>
+                    </div>
+                    <div style="flex: 1; background: #fff; padding: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px;">Total Ingresos</div>
+                        <div style="font-size: 18px; font-weight: bold; color: #28a745;" id="totalIngresosSpan">$0.00</div>
+                    </div>
+                    <div style="flex: 1; background: #fff; padding: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px;">Total Gastos</div>
+                        <div style="font-size: 18px; font-weight: bold; color: #dc3545;" id="totalGastosSpan">$0.00</div>
+                    </div>
+                    <div style="flex: 1; background: #fff; padding: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px;">Utilidad Neta</div>
+                        <div style="font-size: 18px; font-weight: bold;" id="utilidadSpan">$0.00</div>
+                    </div>
+                    <div style="flex: 1; background: #fff; padding: 15px; text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px;">Margen Promedio</div>
+                        <div style="font-size: 18px; font-weight: bold;" id="margenSpan">0%</div>
+                    </div>
                 </div>
 
-                <!-- Mensaje "Sin datos" -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-chart-line" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
-                    <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
-                    <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay información para el período seleccionado</p>
+                <!-- Mensaje sin datos -->
+                <div id="sinDatosMensaje" style="text-align: center; padding: 50px; background: #f8f9fa; border-radius: 8px; display: none;">
+                    <i class="fas fa-chart-line" style="font-size: 56px; color: #adb5bd;"></i>
+                    <h4 style="color: #6c757d; margin-top: 15px;">No hay datos disponibles</h4>
+                    <p style="color: #adb5bd; font-size: 14px;">Seleccione uno o más proyectos para ver los datos</p>
                 </div>
 
-                <!-- Mensaje de error -->
-                <div style="text-align: center; padding: 40px 20px; background-color: #fee2e2; border: 1px solid #ef4444; border-radius: 8px; margin: 20px 0; display: none;" id="errorMensaje">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ef4444; margin-bottom: 15px;"></i>
-                    <h3 style="color: #dc2626; font-size: 18px; margin: 0;">Error al cargar datos</h3>
-                    <p style="color: #991b1b; font-size: 14px; margin-top: 5px;" id="errorTexto">Intente nuevamente más tarde</p>
-                </div>
-
-                <!-- Tabla de Estado de Resultados -->
-                <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative;" id="tablaContainer">
-                    <table class="table table-bordered" id="tablaEstadoResultados" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
-                        <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
-                            <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: left; background-color: #2378e1; color: white; min-width: 300px;">Concepto</th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 120px;">Real</th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 80px;">%</th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 120px;">Presupuesto</th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 80px;">%</th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 120px;">Diferencia</th>
-                                <th style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #2378e1; color: white; min-width: 80px;">%</th>
-                            </tr>
+                <!-- Tabla de resultados mejorada -->
+                <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 8px; overflow-x: auto;">
+                    <table class="table table-bordered" id="tablaResultados" style="width: 100%; font-size: 13px; margin-bottom: 0;">
+                        <thead id="tablaHeader">
+                            <tr style="background-color: #083CAE; color: white;">
+                                <th style="width: 40px; text-align: center; padding: 12px 8px;"></th>
+                                <th style="width: 220px; padding: 12px 8px;">Concepto</th>
+                                <th style="width: 120px; padding: 12px 8px;">Código SAT</th>
+                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <tr><td colspan="7" style="text-align: center; padding: 40px;">Seleccione un período para cargar datos</td></tr>
+                            <tr><td colspan="3" style="text-align: center; padding: 40px;">Seleccione proyectos para visualizar数据<\/td></tr>
                         </tbody>
-                        <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold;">
-                            <tr>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: left; background-color: #e9ecef; font-weight: bold;">TOTALES</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef;" id="totalReal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef;" id="totalRealPorcentaje">0.00%</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef;" id="totalPresupuesto">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef;" id="totalPresupuestoPorcentaje">0.00%</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef;" id="totalDiferencia">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 12px 8px; text-align: right; background-color: #e9ecef;" id="totalDiferenciaPorcentaje">0.00%</td>
-                            </tr>
-                        </tfoot>
+                        <tfoot id="tablaFooter"></tfoot>
                     </table>
                 </div>
+            </div>
+            
+            <div class="card-footer text-center" style="background-color: #f8f9fa; font-size: 11px; color: #6c757d; border-top: 1px solid #dee2e6; padding: 12px;">
+                <i class="fas fa-info-circle"></i> Reporte generado el {{ now()->format('d/m/Y H:i:s') }}
             </div>
         </div>
     </section>
 </div>
 
-<style>
-    .semaforo .card-header { background-color: #f4f6f9; border-bottom: 2px solid #083CAE; }
-    .semaforo .card-header h2 { color: #083CAE !important; }
-    .table th { white-space: nowrap; font-size: 12px; background-color: #2378e1 !important; color: white; font-weight: 600; padding: 12px 8px; }
-    .table td { white-space: nowrap; font-size: 12px; padding: 12px 8px; color: #000000 !important; }
-    .fila-encabezado { background-color: #f0f4ff !important; font-weight: bold; cursor: pointer; }
-    .fila-encabezado:hover { background-color: #e1f0ff !important; }
-    .fila-encabezado i { transition: transform 0.2s; color: #083CAE; margin-right: 8px; }
-    .fila-detalle { background-color: #ffffff; }
-    .fila-detalle:hover { background-color: #f2f2f2; }
-    .fila-detalle td:first-child { padding-left: 30px !important; }
-    .fila-detalle:nth-child(even) { background-color: #fafbfc; }
-    .text-danger { color: #dc3545 !important; }
-    tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #2378e1; color: #000000 !important; }
-    @media (max-width: 768px) { select { width: 100% !important; } .table-responsive { overflow-x: auto; } }
-</style>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Estado de Resultados Construcción - Inicializado');
+    // Datos desde el controlador
+    const anio = {{ $anio }};
+    const mes = {{ $mes }};
+    const proyectosData = @json($proyectos);
+    const ingresosPorProyectoRaw = @json($ingresosPorProyecto);
+    const gastosPorProyectoRaw = @json($gastosPorProyecto);
     
-    let expandedHeaders = new Set();
+    // Estado de expansión
+    let expandedGroups = new Set(['INGRESOS', 'GASTOS']);
+    
+    // Organizar datos por proyecto
+    let datosPorProyecto = {};
+    
+    // Inicializar datos por proyecto
+    proyectosData.forEach(p => {
+        datosPorProyecto[p.id] = {
+            id: p.id,
+            codigo: p.codigo,
+            nombre: p.nombre,
+            ingresos: [],
+            gastos: [],
+            totalIngresos: 0,
+            totalGastos: 0
+        };
+    });
+    
+    // Llenar ingresos
+    if (ingresosPorProyectoRaw && ingresosPorProyectoRaw.length > 0) {
+        ingresosPorProyectoRaw.forEach(item => {
+            if (datosPorProyecto[item.proyecto_id]) {
+                datosPorProyecto[item.proyecto_id].ingresos.push({
+                    codigo_agrupador: item.codigo_agrupador || '',
+                    nombre_cuenta: item.nombre_cuenta || '',
+                    nivel: item.nivel || 1,
+                    total: parseFloat(item.total) || 0
+                });
+                datosPorProyecto[item.proyecto_id].totalIngresos += parseFloat(item.total) || 0;
+            }
+        });
+    }
+    
+    // Llenar gastos
+    if (gastosPorProyectoRaw && gastosPorProyectoRaw.length > 0) {
+        gastosPorProyectoRaw.forEach(item => {
+            if (datosPorProyecto[item.proyecto_id]) {
+                datosPorProyecto[item.proyecto_id].gastos.push({
+                    codigo_agrupador: item.codigo_agrupador || '',
+                    nombre_cuenta: item.nombre_cuenta || '',
+                    nivel: item.nivel || 1,
+                    total: parseFloat(item.total) || 0
+                });
+                datosPorProyecto[item.proyecto_id].totalGastos += parseFloat(item.total) || 0;
+            }
+        });
+    }
     
     function formatCurrency(amount) {
-        if (amount === undefined || amount === null) amount = 0;
-        const signo = amount < 0 ? '-' : '';
-        const valor = Math.abs(amount);
-        return signo + '$' + valor.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        if (amount === undefined || amount === null || isNaN(amount)) amount = 0;
+        return '$' + parseFloat(amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     }
     
-    function calcularPorcentaje(valor, base) {
-        if (base === 0 || base === undefined || valor === 0) return 0;
-        return (valor / base) * 100;
+    // Panel de selección mejorado
+    const btnSeleccionar = document.getElementById('btnSeleccionarProyectos');
+    const panelProyectos = document.getElementById('panelProyectos');
+    
+    if (btnSeleccionar) {
+        btnSeleccionar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            panelProyectos.style.display = panelProyectos.style.display === 'none' ? 'block' : 'none';
+        });
     }
     
-    function toggleExpand(id) {
-        if (expandedHeaders.has(id)) expandedHeaders.delete(id);
-        else expandedHeaders.add(id);
-        renderizarTabla();
+    // Cerrar panel al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        if (panelProyectos && btnSeleccionar) {
+            if (!panelProyectos.contains(event.target) && !btnSeleccionar.contains(event.target)) {
+                panelProyectos.style.display = 'none';
+            }
+        }
+    });
+    
+    // Actualizar contador de proyectos seleccionados
+    function actualizarContadorProyectos() {
+        const checkboxes = document.querySelectorAll('.proyecto-checkbox:checked');
+        const count = checkboxes.length;
+        const countSpan = document.getElementById('proyectosCount');
+        if (countSpan) {
+            countSpan.textContent = count;
+        }
+        return count;
     }
     
-    function renderizarTabla() {
-        const tablaBody = document.getElementById('tablaBody');
-        if (!tablaBody || !window.estructuraActual || !window.estructuraActual.length) return;
+    // Seleccionar todos
+    const btnSeleccionarTodos = document.getElementById('btnSeleccionarTodos');
+    if (btnSeleccionarTodos) {
+        btnSeleccionarTodos.addEventListener('click', function() {
+            document.querySelectorAll('.proyecto-checkbox').forEach(cb => cb.checked = true);
+            actualizarContadorProyectos();
+            actualizarTabla();
+            if (panelProyectos) panelProyectos.style.display = 'none';
+        });
+    }
+    
+    // Limpiar selección
+    const btnLimpiarSeleccion = document.getElementById('btnLimpiarSeleccion');
+    if (btnLimpiarSeleccion) {
+        btnLimpiarSeleccion.addEventListener('click', function() {
+            document.querySelectorAll('.proyecto-checkbox').forEach(cb => cb.checked = false);
+            actualizarContadorProyectos();
+            actualizarTabla();
+            if (panelProyectos) panelProyectos.style.display = 'none';
+        });
+    }
+    
+    // Expandir/Contraer funciones
+    function toggleGroup(groupName) {
+        if (expandedGroups.has(groupName)) {
+            expandedGroups.delete(groupName);
+        } else {
+            expandedGroups.add(groupName);
+        }
+        actualizarTabla();
+    }
+    
+    // Cuando cambia un checkbox, actualizar tabla automáticamente
+    document.querySelectorAll('.proyecto-checkbox').forEach(cb => {
+        cb.addEventListener('change', function() {
+            actualizarContadorProyectos();
+            actualizarTabla();
+        });
+    });
+    
+    // Actualizar tabla
+    function actualizarTabla() {
+        // Obtener proyectos seleccionados
+        const checkboxes = document.querySelectorAll('.proyecto-checkbox:checked');
+        const idsSeleccionados = Array.from(checkboxes).map(cb => parseInt(cb.value));
         
-        tablaBody.innerHTML = '';
-        let totalReal = 0, totalPresupuesto = 0;
-        let baseReal = window.estructuraActual[0]?.real || 1;
+        if (idsSeleccionados.length === 0) {
+            document.getElementById('sinDatosMensaje').style.display = 'block';
+            document.getElementById('tablaHeader').innerHTML = '<tr style="background-color: #083CAE; color: white;"><th style="width: 40px; text-align: center; padding: 12px 8px;"></th><th style="width: 220px; padding: 12px 8px;">Concepto</th><th style="width: 120px; padding: 12px 8px;">Código SAT</th> </td>';
+            document.getElementById('tablaBody').innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px;">Seleccione proyectos para visualizar datos</td></tr>';
+            document.getElementById('tablaFooter').innerHTML = '';
+            document.getElementById('proyectosSeleccionadosInfo').innerHTML = '<i class="fas fa-info-circle"></i> Selecciona uno o más proyectos para comparar';
+            // Resetear métricas
+            document.getElementById('totalIngresosSpan').textContent = formatCurrency(0);
+            document.getElementById('totalGastosSpan').textContent = formatCurrency(0);
+            document.getElementById('utilidadSpan').textContent = formatCurrency(0);
+            document.getElementById('margenSpan').textContent = '0%';
+            return;
+        }
         
-        function renderConceptos(conceptos, nivel = 0) {
-            for (let concepto of conceptos) {
-                const real = concepto.real || 0;
-                const presupuesto = concepto.presupuesto || 0;
-                const diferencia = real - presupuesto;
-                const porcReal = calcularPorcentaje(real, baseReal);
-                const porcPres = calcularPorcentaje(presupuesto, baseReal);
-                const porcDif = calcularPorcentaje(diferencia, baseReal);
-                
-                if (nivel === 0) {
-                    totalReal += real;
-                    totalPresupuesto += presupuesto;
+        document.getElementById('sinDatosMensaje').style.display = 'none';
+        
+        // Obtener datos de los proyectos seleccionados
+        const proyectosSeleccionados = [];
+        let totalIngresosGeneral = 0;
+        let totalGastosGeneral = 0;
+        
+        for (const id of idsSeleccionados) {
+            if (datosPorProyecto[id]) {
+                proyectosSeleccionados.push(datosPorProyecto[id]);
+                totalIngresosGeneral += datosPorProyecto[id].totalIngresos || 0;
+                totalGastosGeneral += datosPorProyecto[id].totalGastos || 0;
+            }
+        }
+        
+        // Actualizar métricas
+        const utilidadGeneral = totalIngresosGeneral - totalGastosGeneral;
+        const margenGeneral = totalIngresosGeneral > 0 ? (utilidadGeneral / totalIngresosGeneral) * 100 : 0;
+        document.getElementById('totalIngresosSpan').textContent = formatCurrency(totalIngresosGeneral);
+        document.getElementById('totalGastosSpan').textContent = formatCurrency(totalGastosGeneral);
+        document.getElementById('utilidadSpan').textContent = formatCurrency(utilidadGeneral);
+        document.getElementById('margenSpan').textContent = margenGeneral.toFixed(2) + '%';
+        
+        if (utilidadGeneral >= 0) {
+            document.getElementById('utilidadSpan').style.color = '#28a745';
+        } else {
+            document.getElementById('utilidadSpan').style.color = '#dc3545';
+        }
+        
+        // Construir encabezado con azul corporativo
+        let headerHtml = '<tr style="background-color: #083CAE; color: white;">';
+        headerHtml += '<th style="width: 40px; text-align: center; padding: 12px 8px;"></th>';
+        headerHtml += '<th style="width: 220px; padding: 12px 8px;">Concepto</th>';
+        headerHtml += '<th style="width: 120px; padding: 12px 8px;">Código SAT</th>';
+        for (const proy of proyectosSeleccionados) {
+            headerHtml += `<th style="text-align: right; min-width: 140px; padding: 12px 8px;">${proy.codigo}<br><small style="font-weight: normal; font-size: 10px;">${proy.nombre.substring(0, 25)}</small></th>`;
+        }
+        headerHtml += '<th style="text-align: right; min-width: 130px; background-color: #2c3e50; color: white; padding: 12px 8px;">TOTAL</th>';
+        headerHtml += '<th style="text-align: right; min-width: 90px; background-color: #2c3e50; color: white; padding: 12px 8px;">%</th>';
+        headerHtml += '</tr>';
+        document.getElementById('tablaHeader').innerHTML = headerHtml;
+        
+        // Obtener todos los códigos SAT únicos
+        const codigosSAT = new Set();
+        for (const proy of proyectosSeleccionados) {
+            if (proy.ingresos) {
+                for (const ing of proy.ingresos) {
+                    if (ing.codigo_agrupador) codigosSAT.add(ing.codigo_agrupador);
                 }
-                
-                const row = document.createElement('tr');
-                
-                if (concepto.esEncabezado) {
-                    row.className = 'fila-encabezado';
-                    const icono = expandedHeaders.has(concepto.id) ? 'fa-chevron-down' : 'fa-chevron-right';
-                    row.innerHTML = `
-                        <td style="font-weight: bold;"><i class="fas ${icono}" style="margin-right: 8px;"></i>${concepto.concepto}</td>
-                        <td style="text-align: right; ${real < 0 ? 'color:#dc3545' : ''}">${formatCurrency(real)}</td>
-                        <td style="text-align: right;">${porcReal.toFixed(2)}%</td>
-                        <td style="text-align: right; ${presupuesto < 0 ? 'color:#dc3545' : ''}">${formatCurrency(presupuesto)}</td>
-                        <td style="text-align: right;">${porcPres.toFixed(2)}%</td>
-                        <td style="text-align: right; ${diferencia < 0 ? 'color:#dc3545' : ''}">${formatCurrency(diferencia)}</td>
-                        <td style="text-align: right;">${porcDif.toFixed(2)}%</td>
-                    `;
-                    row.addEventListener('click', (e) => { e.stopPropagation(); toggleExpand(concepto.id); });
-                } else {
-                    row.className = 'fila-detalle';
-                    row.innerHTML = `
-                        <td style="padding-left: ${30 + (nivel * 20)}px;">${concepto.concepto}</td>
-                        <td style="text-align: right; ${real < 0 ? 'color:#dc3545' : ''}">${formatCurrency(real)}</td>
-                        <td style="text-align: right;">${porcReal.toFixed(2)}%</td>
-                        <td style="text-align: right; ${presupuesto < 0 ? 'color:#dc3545' : ''}">${formatCurrency(presupuesto)}</td>
-                        <td style="text-align: right;">${porcPres.toFixed(2)}%</td>
-                        <td style="text-align: right; ${diferencia < 0 ? 'color:#dc3545' : ''}">${formatCurrency(diferencia)}</td>
-                        <td style="text-align: right;">${porcDif.toFixed(2)}%</td>
-                    `;
-                }
-                tablaBody.appendChild(row);
-                
-                if (concepto.esEncabezado && expandedHeaders.has(concepto.id) && concepto.subconceptos?.length) {
-                    renderConceptos(concepto.subconceptos, nivel + 1);
+            }
+            if (proy.gastos) {
+                for (const gas of proy.gastos) {
+                    if (gas.codigo_agrupador) codigosSAT.add(gas.codigo_agrupador);
                 }
             }
         }
         
-        renderConceptos(window.estructuraActual);
+        const codigosOrdenados = Array.from(codigosSAT).sort();
+        const codigosIngresos = codigosOrdenados.filter(c => c && c.startsWith('4'));
+        const codigosGastos = codigosOrdenados.filter(c => c && !c.startsWith('4'));
         
-        const totalDif = totalReal - totalPresupuesto;
-        document.getElementById('totalReal').textContent = formatCurrency(totalReal);
-        document.getElementById('totalRealPorcentaje').textContent = totalReal !== 0 ? '100.00%' : '0.00%';
-        document.getElementById('totalPresupuesto').textContent = formatCurrency(totalPresupuesto);
-        document.getElementById('totalPresupuestoPorcentaje').textContent = totalPresupuesto !== 0 ? '100.00%' : '0.00%';
-        document.getElementById('totalDiferencia').textContent = formatCurrency(totalDif);
-        document.getElementById('totalDiferenciaPorcentaje').textContent = totalReal !== 0 ? ((totalDif / totalReal) * 100).toFixed(2) + '%' : '0.00%';
-    }
-    
-    function cargarDatos(mes, anio) {
-        const loading = document.getElementById('loadingMensaje');
-        const sinDatos = document.getElementById('sinDatosMensaje');
-        const errorDiv = document.getElementById('errorMensaje');
-        const tabla = document.getElementById('tablaContainer');
+        let tbodyHtml = '';
         
-        loading.style.display = 'block';
-        sinDatos.style.display = 'none';
-        errorDiv.style.display = 'none';
-        tabla.style.display = 'block';
-        
-        fetch(`/api/estado-resultados/construccion?mes=${mes}&anio=${anio}`)
-            .then(res => res.json())
-            .then(result => {
-                loading.style.display = 'none';
-                if (result.success && result.estructura) {
-                    window.estructuraActual = result.estructura;
-                    renderizarTabla();
-                } else {
-                    sinDatos.style.display = 'block';
-                    tabla.style.display = 'none';
+        // Función para renderizar sección con acordeón
+        function renderSeccion(titulo, codigos, esIngreso, groupName) {
+            if (codigos.length === 0) return;
+            
+            const isExpanded = expandedGroups.has(groupName);
+            const icon = isExpanded ? 'fa-minus-square' : 'fa-plus-square';
+            const bgColor = esIngreso ? '#d4edda' : '#f8d7da';
+            
+            // Fila principal de la sección
+            tbodyHtml += `<tr style="background-color: ${bgColor}; cursor: pointer; font-weight: bold;" onclick="toggleGroup('${groupName}')">
+                <td style="text-align: center; padding: 12px 8px;"><i class="fas ${icon}" style="color: ${esIngreso ? '#155724' : '#721c24'}; font-size: 16px;"></i></td>
+                <td colspan="2" style="padding: 12px 8px;"><strong style="font-size: 14px;">${titulo}</strong></td>`;
+            
+            for (const proy of proyectosSeleccionados) {
+                const total = esIngreso ? (proy.totalIngresos || 0) : (proy.totalGastos || 0);
+                tbodyHtml += `<td style="text-align: right; padding: 12px 8px;"><strong>${formatCurrency(total)}</strong></td>`;
+            }
+            tbodyHtml += `<td style="text-align: right; padding: 12px 8px; font-weight: bold;">${formatCurrency(esIngreso ? totalIngresosGeneral : totalGastosGeneral)}</td>`;
+            tbodyHtml += `<td style="text-align: right; padding: 12px 8px; font-weight: bold;">${totalIngresosGeneral > 0 ? ((esIngreso ? totalIngresosGeneral : totalGastosGeneral) / totalIngresosGeneral * 100).toFixed(2) : 0}%</td>`;
+            tbodyHtml += `</tr>`;
+            
+            // Filas de detalle (solo si está expandido)
+            if (isExpanded) {
+                for (const codigo of codigos) {
+                    let nombreCuenta = codigo;
+                    let nivel = 2;
+                    
+                    for (const proy of proyectosSeleccionados) {
+                        const items = esIngreso ? proy.ingresos : proy.gastos;
+                        const item = items.find(i => i.codigo_agrupador === codigo);
+                        if (item) {
+                            nombreCuenta = item.nombre_cuenta || codigo;
+                            nivel = item.nivel || 2;
+                            break;
+                        }
+                    }
+                    
+                    const indent = '&nbsp;&nbsp;'.repeat((nivel - 1) * 2);
+                    let filaHtml = `<tr class="fila-detalle">
+                        <td style="padding: 10px 8px;"></td>
+                        <td style="padding: 10px 8px; padding-left: ${20 + (nivel - 1) * 15}px;">${indent}${nombreCuenta}</td>
+                        <td style="padding: 10px 8px;"><code style="font-size: 11px;">${codigo}</code></td>`;
+                    
+                    let totalFila = 0;
+                    for (const proy of proyectosSeleccionados) {
+                        const items = esIngreso ? proy.ingresos : proy.gastos;
+                        const item = items.find(i => i.codigo_agrupador === codigo);
+                        const monto = item ? (parseFloat(item.total) || 0) : 0;
+                        totalFila += monto;
+                        filaHtml += `<td style="text-align: right; padding: 10px 8px;">${formatCurrency(monto)}</td>`;
+                    }
+                    
+                    const porcentaje = totalIngresosGeneral > 0 ? (totalFila / totalIngresosGeneral) * 100 : 0;
+                    filaHtml += `<td style="text-align: right; padding: 10px 8px; font-weight: 600;">${formatCurrency(totalFila)}</td>`;
+                    filaHtml += `<td style="text-align: right; padding: 10px 8px;">${porcentaje.toFixed(2)}%</td>`;
+                    filaHtml += `</tr>`;
+                    
+                    tbodyHtml += filaHtml;
                 }
-            })
-            .catch(error => {
-                loading.style.display = 'none';
-                document.getElementById('errorTexto').textContent = error.message;
-                errorDiv.style.display = 'block';
-                tabla.style.display = 'none';
-            });
+            }
+        }
+        
+        // Renderizar secciones
+        renderSeccion('INGRESOS', codigosIngresos, true, 'INGRESOS');
+        renderSeccion('GASTOS Y COSTOS', codigosGastos, false, 'GASTOS');
+        
+        // Resultado
+        tbodyHtml += `<tr style="background-color: #d1ecf1; font-weight: bold;">
+            <td style="padding: 12px 8px;"><i class="fas fa-chart-line" style="color: #0c5460;"></i></td>
+            <td colspan="2" style="padding: 12px 8px; font-size: 14px;">RESULTADO DEL EJERCICIO</td>`;
+        
+        for (const proy of proyectosSeleccionados) {
+            const utilidad = (proy.totalIngresos || 0) - (proy.totalGastos || 0);
+            tbodyHtml += `<td style="text-align: right; padding: 12px 8px; ${utilidad >= 0 ? 'color: #155724;' : 'color: #721c24;'}">${formatCurrency(utilidad)}</td>`;
+        }
+        tbodyHtml += `<td style="text-align: right; padding: 12px 8px; ${utilidadGeneral >= 0 ? 'color: #155724;' : 'color: #721c24;'}">${formatCurrency(utilidadGeneral)}</td>`;
+        tbodyHtml += `<td style="text-align: right; padding: 12px 8px;">${margenGeneral.toFixed(2)}%</td>`;
+        tbodyHtml += `</tr>`;
+        
+        document.getElementById('tablaBody').innerHTML = tbodyHtml;
+        
+        // Información de proyectos seleccionados
+        const count = idsSeleccionados.length;
+        const nombres = idsSeleccionados.map(id => {
+            const p = proyectosData.find(p => p.id == id);
+            return p ? p.codigo : '';
+        }).join(', ');
+        document.getElementById('proyectosSeleccionadosInfo').innerHTML = `<i class="fas fa-check-circle" style="color: #28a745;"></i> <strong>${count}</strong> proyecto(s) seleccionado(s): ${nombres}`;
     }
     
-    function cargarPeriodos() {
-        fetch('/api/estado-resultados/construccion/periodos')
-            .then(res => res.json())
-            .then(result => {
-                const selector = document.getElementById('periodoSelector');
-                if (result.success && result.periodos?.length) {
-                    selector.innerHTML = '';
-                    result.periodos.forEach(periodo => {
-                        const option = document.createElement('option');
-                        option.value = `${periodo.mes}|${periodo.anio}`;
-                        option.textContent = periodo.label;
-                        selector.appendChild(option);
-                    });
-                    const primero = result.periodos[0];
-                    selector.value = `${primero.mes}|${primero.anio}`;
-                    cargarDatos(primero.mes, primero.anio);
-                } else {
-                    selector.innerHTML = '<option value="">Error al cargar períodos</option>';
+    // Sincronizar checkboxes con la selección inicial
+    function sincronizarCheckboxesIniciales() {
+        const proyectosSeleccionadosIds = @json($proyectosSeleccionadosIds ?? []);
+        if (proyectosSeleccionadosIds && proyectosSeleccionadosIds.length > 0) {
+            document.querySelectorAll('.proyecto-checkbox').forEach(cb => {
+                if (proyectosSeleccionadosIds.includes(parseInt(cb.value))) {
+                    cb.checked = true;
                 }
-            })
-            .catch(error => {
-                document.getElementById('periodoSelector').innerHTML = '<option value="">Error: ' + error.message + '</option>';
             });
+        }
+        actualizarContadorProyectos();
+        actualizarTabla();
     }
     
-    document.getElementById('periodoSelector')?.addEventListener('change', function() {
-        const [mes, anio] = this.value.split('|');
-        if (mes && anio) cargarDatos(parseInt(mes), parseInt(anio));
+    // Botones
+    const btnFiltrar = document.getElementById('btnFiltrar');
+    if (btnFiltrar) {
+        btnFiltrar.addEventListener('click', function() {
+            const anio = document.getElementById('anioSelector').value;
+            const mes = document.getElementById('mesSelector').value;
+            const checkboxes = document.querySelectorAll('.proyecto-checkbox:checked');
+            const proyectos = Array.from(checkboxes).map(cb => cb.value).join(',');
+            window.location.href = `/conta/estados?anio=${anio}&mes=${mes}&proyectos=${proyectos}`;
+        });
+    }
+    
+    const btnExportarExcel = document.getElementById('btnExportarExcel');
+    if (btnExportarExcel) {
+        btnExportarExcel.addEventListener('click', function() {
+            const params = new URLSearchParams(window.location.search);
+            window.location.href = '/conta/estados/excel?' + params.toString();
+        });
+    }
+    
+    // Hacer toggleGroup global para onclick
+    window.toggleGroup = toggleGroup;
+    
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+        sincronizarCheckboxesIniciales();
+        
+        const mesSelect = document.getElementById('mesSelector');
+        const anioSelect = document.getElementById('anioSelector');
+        if (mesSelect && anioSelect) {
+            const mesNombre = mesSelect.options[mesSelect.selectedIndex]?.text || '';
+            const anioVal = anioSelect.value;
+            document.getElementById('periodoTexto').innerHTML = `${mesNombre} ${anioVal}`;
+        }
     });
-    
-    cargarPeriodos();
-});
 </script>
+
+<style>
+    .checkbox-item:hover { 
+        background-color: #e8f0fe; 
+    }
+    .table th { 
+        font-size: 12px; 
+    }
+    .table td { 
+        font-size: 12px; 
+    }
+    .fila-detalle:hover {
+        background-color: #f8f9fa;
+    }
+    .dropdown-menu {
+        position: absolute;
+        right: 0;
+        left: auto;
+    }
+    .btn {
+        transition: all 0.2s ease;
+    }
+    .btn:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+    }
+    @media print {
+        .btn, #btnSeleccionarProyectos, #panelProyectos, #btnFiltrar, #btnExportarExcel { 
+            display: none; 
+        }
+        .card-header, .card-footer {
+            background-color: #f8f9fa !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .table th {
+            background-color: #083CAE !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+</style>
 @endsection

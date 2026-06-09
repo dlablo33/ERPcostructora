@@ -33,7 +33,10 @@ class Pago extends Model
         'estatus',
         'comprobante',
         'observaciones',
-        'created_by'
+        'created_by',
+        // NUEVOS CAMPOS
+        'codigo_sat_id',
+        'cuenta_contable_id'
     ];
     
     protected $casts = [
@@ -41,7 +44,7 @@ class Pago extends Model
         'monto' => 'decimal:2'
     ];
     
-    // Relaciones
+    // Relaciones existentes
     public function cuentaBancaria()
     {
         return $this->belongsTo(CuentaBancaria::class);
@@ -82,7 +85,18 @@ class Pago extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
     
-    // Scopes
+    // NUEVAS RELACIONES SAT
+    public function codigoSat()
+    {
+        return $this->belongsTo(CodigoSat::class, 'codigo_sat_id');
+    }
+    
+    public function cuentaContable()
+    {
+        return $this->belongsTo(CuentaContable::class, 'cuenta_contable_id');
+    }
+    
+    // Scopes existentes
     public function scopePendientes($query)
     {
         return $query->where('estatus', 'pendiente');
@@ -96,6 +110,22 @@ class Pago extends Model
     public function scopePorFecha($query, $fechaInicio, $fechaFin)
     {
         return $query->whereBetween('fecha_pago', [$fechaInicio, $fechaFin]);
+    }
+    
+    // NUEVOS SCOPES
+    public function scopeConCodigoSat($query)
+    {
+        return $query->whereNotNull('codigo_sat_id');
+    }
+    
+    public function scopeSinCodigoSat($query)
+    {
+        return $query->whereNull('codigo_sat_id');
+    }
+    
+    public function scopePorCodigoSat($query, $codigoSatId)
+    {
+        return $query->where('codigo_sat_id', $codigoSatId);
     }
     
     // Generar folio automático
@@ -117,11 +147,43 @@ class Pago extends Model
         return 'PAG-' . $year . $month . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
     }
     
-    // Aplicar pago (actualizar saldo de cuenta bancaria)
+    // NUEVO MÉTODO: Obtener código SAT sugerido desde el proveedor
+    public function getCodigoSatSugeridoAttribute()
+    {
+        if ($this->proveedor && $this->proveedor->codigoSatDefault) {
+            return $this->proveedor->codigoSatDefault;
+        }
+        
+        // Código genérico de gastos de oficina (515)
+        return CodigoSat::where('codigo_agrupador', '515')->first();
+    }
+    
+    // NUEVO MÉTODO: Asignar automáticamente el código SAT desde el proveedor
+    public function asignarCodigoSatDesdeProveedor()
+    {
+        if ($this->proveedor && $this->proveedor->codigo_sat_default_id) {
+            $this->codigo_sat_id = $this->proveedor->codigo_sat_default_id;
+            return true;
+        }
+        return false;
+    }
+    
+    // NUEVO MÉTODO: Verificar si el pago tiene código SAT válido
+    public function tieneCodigoSatValido()
+    {
+        return $this->codigo_sat_id && $this->codigoSat && in_array($this->codigoSat->tipo, ['G', 'A']);
+    }
+    
+    // Aplicar pago (actualizar saldo de cuenta bancaria) - ACTUALIZADO
     public function aplicar()
     {
         if ($this->estatus !== 'pendiente') {
             return false;
+        }
+        
+        // Validar que tenga código SAT asignado
+        if (!$this->codigo_sat_id) {
+            throw new \Exception('El pago no tiene un código SAT asignado.');
         }
         
         DB::beginTransaction();
@@ -134,7 +196,7 @@ class Pago extends Model
                 $cuenta->save();
             }
             
-            // Crear movimiento bancario
+            // Crear movimiento bancario con código SAT
             $movimiento = MovimientoBancario::create([
                 'cuenta_bancaria_id' => $this->cuenta_bancaria_id,
                 'proyecto_id' => $this->proyecto_id,
@@ -149,7 +211,8 @@ class Pago extends Model
                 'comprobante' => $this->comprobante,
                 'status' => 'aplicado',
                 'observaciones' => 'Pago: ' . ($this->observaciones ?? ''),
-                'created_by' => $this->created_by
+                'created_by' => $this->created_by,
+                'codigo_sat_id' => $this->codigo_sat_id  // NUEVO
             ]);
             
             $this->estatus = 'completado';
@@ -162,5 +225,17 @@ class Pago extends Model
             DB::rollBack();
             throw $e;
         }
+    }
+    
+    // NUEVO MÉTODO: Accesor para obtener el nombre del código SAT
+    public function getCodigoSatNombreAttribute()
+    {
+        return $this->codigoSat ? $this->codigoSat->nombre_cuenta : 'Sin asignar';
+    }
+    
+    // NUEVO MÉTODO: Accesor para obtener el código agrupador SAT
+    public function getCodigoSatCodigoAttribute()
+    {
+        return $this->codigoSat ? $this->codigoSat->codigo_agrupador : 'N/A';
     }
 }

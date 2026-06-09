@@ -1776,14 +1776,14 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fa-solid fa-chart-column"></i><span>Estado de Resultado Unidad de Negocio</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Unidad de Negocio', 'contabilidad', 'fa-chart-column', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado Liquidacion', 'contabilidad', '{{ route('conta.liquidacion') }}', 'fa-chart-pie')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado Liquidacion', 'contabilidad', '{{ route('conta.liquidacion') }}', 'fa-chart-pie')">
                             <div class="flex items-center flex-1"><i class="fa-solid fa-chart-pie"></i><span>Estado de Resultados Liquidacion</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado Liquidacion', 'contabilidad', 'fa-chart-pie', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado General', 'contabilidad', '{{ route('conta.general') }}', 'fa-newspaper')">
+                        </div> -->
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado General', 'contabilidad', '{{ route('conta.general') }}', 'fa-newspaper')">
                             <div class="flex items-center flex-1"><i class="fa-solid fa-newspaper"></i><span>Estado de Resultado General</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado General', 'contabilidad', 'fa-newspaper', this)"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="sidebar-menu-group">

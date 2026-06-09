@@ -1,0 +1,9 @@
+{
+  "appId": "com.erpcostructora.com",
+  "appName": "ERP Constructora",
+  "webDir": "public",
+  "server": {
+    "url": "http://147.182.239.195",
+    "cleartext": true
+  }
+}

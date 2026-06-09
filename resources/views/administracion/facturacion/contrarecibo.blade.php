@@ -14,28 +14,34 @@
             <div class="card-body p-4">
                 <!-- 4 CUADROS DE ESTADÍSTICAS -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                    <div style="flex: 0 1 calc(20% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; text-align: center;">
                             <div style="color: #6c757d; font-size: 14px;">Total</div>
                             <div style="color: #083CAE; font-size: 36px; font-weight: bold;" id="totalContrarecibos">0</div>
                         </div>
                     </div>
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                    <div style="flex: 0 1 calc(20% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #ffc107; border-radius: 10px; padding: 12px 20px; background-color: white; text-align: center;">
                             <div style="color: #6c757d; font-size: 14px;">Pendientes</div>
                             <div style="color: #ffc107; font-size: 36px; font-weight: bold;" id="totalPendientes">0</div>
                         </div>
                     </div>
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                    <div style="flex: 0 1 calc(20% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #28a745; border-radius: 10px; padding: 12px 20px; background-color: white; text-align: center;">
                             <div style="color: #6c757d; font-size: 14px;">Aplicados</div>
                             <div style="color: #28a745; font-size: 36px; font-weight: bold;" id="totalAplicados">0</div>
                         </div>
                     </div>
-                    <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
+                    <div style="flex: 0 1 calc(20% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #17a2b8; border-radius: 10px; padding: 12px 20px; background-color: white; text-align: center;">
                             <div style="color: #6c757d; font-size: 14px;">Monto Total</div>
                             <div style="color: #17a2b8; font-size: 36px; font-weight: bold;" id="montoTotal">$0.00</div>
+                        </div>
+                    </div>
+                    <div style="flex: 0 1 calc(20% - 15px); min-width: 150px;">
+                        <div class="custom-card" style="border: 2px solid #6c757d; border-radius: 10px; padding: 12px 20px; background-color: white; text-align: center;">
+                            <div style="color: #6c757d; font-size: 14px;">Código SAT</div>
+                            <div style="color: #6c757d; font-size: 24px; font-weight: bold;" id="totalConCodigoSAT">0</div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +106,7 @@
                                 <th style="padding: 12px 6px;">RFC</th>
                                 <th style="padding: 12px 6px;">Forma de Pago</th>
                                 <th style="padding: 12px 6px;">Referencia</th>
+                                <th style="padding: 12px 6px;">Código SAT</th>
                                 <th style="padding: 12px 6px; text-align: right;">Monto</th>
                                 <th style="padding: 12px 6px; text-align: center; position: sticky; right: 0; background-color: #083CAE; z-index: 20;">Acciones</th>
                             </tr>
@@ -107,9 +114,9 @@
                         <tbody id="tablaBody"></tbody>
                         <tfoot style="position: sticky; bottom: 0; background-color: #e9ecef; font-weight: bold;">
                             <tr>
-                                <td colspan="7" style="padding: 10px; text-align: right;"><strong>TOTAL:</strong></td>
+                                <td colspan="8" style="padding: 10px; text-align: right;"><strong>TOTAL:</strong></td>
                                 <td style="padding: 10px; text-align: right;" id="sumTotal">$0.00</td>
-                                <td></td>
+                                <td style="padding: 10px;"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -188,6 +195,24 @@
                         <input type="text" id="referencia_bancaria" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;" placeholder="Folio de transferencia o número de cheque">
                     </div>
                     
+                    <!-- 🔴 NUEVO: Campo Código SAT -->
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Código SAT *</label>
+                        <select id="codigo_sat_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                            <option value="">Seleccionar código SAT...</option>
+                            @foreach($codigosSatIngresos ?? [] as $codigo)
+                                <option value="{{ $codigo->id }}" 
+                                    data-codigo="{{ $codigo->codigo_agrupador }}"
+                                    data-nombre="{{ $codigo->nombre_cuenta }}">
+                                    {{ $codigo->codigo_agrupador }} - {{ $codigo->nombre_cuenta }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small style="color: #6c757d; margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> Código SAT que identifica este ingreso
+                        </small>
+                    </div>
+                    
                     <div style="grid-column: span 2;">
                         <label style="display: block; margin-bottom: 5px; font-weight: 600;">Observaciones</label>
                         <textarea id="observaciones" rows="2" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;" placeholder="Notas adicionales..."></textarea>
@@ -238,6 +263,61 @@
             <button id="btnGuardar" style="background-color: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer;">
                 <i class="fas fa-save"></i> Guardar Contrarecibo
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDITAR CONTRARECIBO -->
+<div id="modalEditarContrarecibo" style="display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); overflow-y: auto;">
+    <div style="background-color: white; margin: 10% auto; width: 95%; max-width: 500px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <div style="background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%); color: #333; padding: 20px 25px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <i class="fas fa-edit" style="font-size: 24px; margin-right: 10px;"></i>
+                <span style="font-size: 20px; font-weight: bold;">Editar Contrarecibo</span>
+            </div>
+            <button id="cerrarModalEditar" style="background: none; border: none; color: #333; font-size: 32px; cursor: pointer;">&times;</button>
+        </div>
+        <div style="padding: 25px;">
+            <form id="formEditarContrarecibo">
+                <input type="hidden" id="edit_contrarecibo_id">
+                <div style="margin-bottom: 15px;">
+                    <label>Fecha de Pago *</label>
+                    <input type="date" id="edit_fecha_pago" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label>Forma de Pago</label>
+                    <select id="edit_forma_pago" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="">Seleccionar...</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Cheque">Cheque</option>
+                        <option value="Tarjeta">Tarjeta de crédito</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label>Referencia Bancaria</label>
+                    <input type="text" id="edit_referencia_bancaria" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label>Código SAT *</label>
+                    <select id="edit_codigo_sat_id" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <option value="">Seleccionar código SAT...</option>
+                        @foreach($codigosSatIngresos ?? [] as $codigo)
+                            <option value="{{ $codigo->id }}">
+                                {{ $codigo->codigo_agrupador }} - {{ $codigo->nombre_cuenta }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label>Observaciones</label>
+                    <textarea id="edit_observaciones" rows="3" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+                </div>
+            </form>
+        </div>
+        <div style="padding: 20px 25px; background-color: #f8f9fa; border-radius: 0 0 12px 12px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button id="btnCancelarEditar" style="background-color: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancelar</button>
+            <button id="btnGuardarEditar" style="background-color: #ffc107; color: #333; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Actualizar</button>
         </div>
     </div>
 </div>
@@ -337,7 +417,7 @@ function cargarDatos() {
     if (ff) params.append('fecha_fin', ff);
     if (busqueda) params.append('search', busqueda);
     
-    fetch('/contrarecibos/data?' + params.toString())
+    fetch('/admin/api/contrarecibos?' + params.toString())
         .then(response => response.json())
         .then(response => {
             if (response.success && response.data) {
@@ -368,6 +448,10 @@ function actualizarContadores(stats) {
     document.getElementById('totalPendientes').textContent = stats.pendientes || 0;
     document.getElementById('totalAplicados').textContent = stats.aplicados || 0;
     document.getElementById('montoTotal').textContent = formatCurrency(stats.monto_total || 0);
+    
+    // Contar registros con código SAT
+    const conCodigoSAT = datosContrarecibos.filter(c => c.codigo_sat_id).length;
+    document.getElementById('totalConCodigoSAT').textContent = conCodigoSAT;
 }
 
 function calcularTotales(datos) {
@@ -406,6 +490,7 @@ function cargarTabla() {
         const row = tbody.insertRow();
         const badgeClass = getBadgeClass(item.estatus);
         const estatusDisplay = getEstatusDisplay(item.estatus);
+        const codigoSatDisplay = item.codigo_sat_codigo ? `${item.codigo_sat_codigo} - ${item.codigo_sat_nombre}` : '-';
         
         row.innerHTML = `
             <td style="padding: 10px 6px; text-align: center;"><span class="badge ${badgeClass}">${estatusDisplay}</span></td>
@@ -415,10 +500,13 @@ function cargarTabla() {
             <td style="padding: 10px 6px;">${item.rfc || '-'}</td>
             <td style="padding: 10px 6px;">${item.forma_pago || '-'}</td>
             <td style="padding: 10px 6px;">${item.referencia_bancaria || '-'}</td>
+            <td style="padding: 10px 6px;"><small>${codigoSatDisplay}</small></td>
             <td style="padding: 10px 6px; text-align: right;"><strong>${formatCurrency(item.monto)}</strong></td>
             <td style="padding: 10px 6px; text-align: center; background: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                 <div style="display: flex; gap: 8px; justify-content: center;">
+                    <i class="fas fa-edit" style="color: #ffc107; cursor: pointer;" title="Editar" data-id="${item.contrarecibo_id}"></i>
                     <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" title="Ver" data-id="${item.contrarecibo_id}"></i>
+                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer;" title="Eliminar" data-id="${item.contrarecibo_id}"></i>
                     <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer;" title="PDF" data-id="${item.contrarecibo_id}"></i>
                     <i class="fas fa-print" style="color: #17a2b8; cursor: pointer;" title="Imprimir" data-id="${item.contrarecibo_id}"></i>
                 </div>
@@ -429,7 +517,9 @@ function cargarTabla() {
     calcularTotales(datosFiltrados);
     actualizarPaginacion(datosFiltrados.length);
     
+    document.querySelectorAll('.fa-edit').forEach(el => el.addEventListener('click', () => editarContrarecibo(el.dataset.id)));
     document.querySelectorAll('.fa-eye').forEach(el => el.addEventListener('click', () => verContrarecibo(el.dataset.id)));
+    document.querySelectorAll('.fa-trash-alt').forEach(el => el.addEventListener('click', () => eliminarContrarecibo(el.dataset.id)));
 }
 
 function actualizarPaginacion(total) {
@@ -441,18 +531,20 @@ function actualizarPaginacion(total) {
 }
 
 function verContrarecibo(id) {
-    fetch(`/contrarecibos/${id}`)
+    fetch(`/admin/api/contrarecibos/${id}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 let facturasHtml = '';
                 if (data.facturas && data.facturas.length > 0) {
-                    facturasHtml = '<hr><strong>Facturas aplicadas:</strong><table style="width:100%; margin-top:10px;"><tr><th>Factura</th><th>Monto aplicado</th>\\th';
+                    facturasHtml = '<hr><strong>Facturas aplicadas:</strong><table style="width:100%; margin-top:10px;"><tr><th>Factura</th><th>Monto aplicado</th></tr>';
                     data.facturas.forEach(f => {
                         facturasHtml += `<tr><td>${f.serie}-${f.folio}</td><td>${formatCurrency(f.monto_aplicado)}</td></tr>`;
                     });
                     facturasHtml += '</table>';
                 }
+                
+                const codigoSatInfo = data.data.codigo_sat_codigo ? `<p><strong>Código SAT:</strong> ${data.data.codigo_sat_codigo} - ${data.data.codigo_sat_nombre}</p>` : '';
                 
                 Swal.fire({
                     title: `Contrarecibo ${data.data.folio}`,
@@ -462,6 +554,7 @@ function verContrarecibo(id) {
                         <p><strong>Forma de Pago:</strong> ${data.data.forma_pago || '-'}</p>
                         <p><strong>Referencia:</strong> ${data.data.referencia_bancaria || '-'}</p>
                         <p><strong>Monto:</strong> ${formatCurrency(data.data.monto)}</p>
+                        ${codigoSatInfo}
                         <p><strong>Observaciones:</strong> ${data.data.observaciones || '-'}</p>
                         <p><strong>Estatus:</strong> <span class="badge ${getBadgeClass(data.data.estatus)}">${getEstatusDisplay(data.data.estatus)}</span></p>
                         ${facturasHtml}
@@ -474,8 +567,90 @@ function verContrarecibo(id) {
         .catch(error => console.error('Error:', error));
 }
 
+function editarContrarecibo(id) {
+    fetch(`/admin/api/contrarecibos/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('edit_contrarecibo_id').value = id;
+                document.getElementById('edit_fecha_pago').value = data.data.fecha_pago;
+                document.getElementById('edit_forma_pago').value = data.data.forma_pago || '';
+                document.getElementById('edit_referencia_bancaria').value = data.data.referencia_bancaria || '';
+                document.getElementById('edit_observaciones').value = data.data.observaciones || '';
+                document.getElementById('edit_codigo_sat_id').value = data.data.codigo_sat_id || '';
+                
+                document.getElementById('modalEditarContrarecibo').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function eliminarContrarecibo(id) {
+    Swal.fire({
+        title: '¿Eliminar contrarecibo?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/admin/api/contrarecibos/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': document.getElementById('csrf_token').value }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccess(data.message);
+                    cargarDatos();
+                } else {
+                    showError(data.message);
+                }
+            })
+            .catch(error => showError('Error al eliminar'));
+        }
+    });
+}
+
+function guardarEdicionContrarecibo() {
+    const id = document.getElementById('edit_contrarecibo_id').value;
+    const data = {
+        fecha_pago: document.getElementById('edit_fecha_pago').value,
+        forma_pago: document.getElementById('edit_forma_pago').value,
+        referencia_bancaria: document.getElementById('edit_referencia_bancaria').value,
+        observaciones: document.getElementById('edit_observaciones').value,
+        codigo_sat_id: document.getElementById('edit_codigo_sat_id').value
+    };
+    
+    fetch(`/admin/api/contrarecibos/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.getElementById('csrf_token').value },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccess(data.message);
+            cerrarModalEditar();
+            cargarDatos();
+        } else {
+            showError(data.message);
+        }
+    })
+    .catch(error => showError('Error al actualizar'));
+}
+
+function cerrarModalEditar() {
+    document.getElementById('modalEditarContrarecibo').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
 // ============================================
-// MODALES
+// MODALES NUEVO
 // ============================================
 function abrirModalNuevoContrarecibo() {
     const modal = document.getElementById('modalNuevoContrarecibo');
@@ -508,19 +683,17 @@ function cargarCombos() {
                 data.forEach(c => {
                     select.innerHTML += `<option value="${c.contacto_id}">${c.razon_social} ${c.rfc ? '- ' + c.rfc : ''}</option>`;
                 });
+                select.onchange = function() { cargarFacturasDisponibles(); };
             }
         }).catch(e => console.error('Error clientes:', e));
     
-    // Facturas disponibles para el select
     cargarFacturasDisponibles();
 }
 
 function cargarFacturasDisponibles() {
     const clienteId = document.getElementById('contacto_id').value;
     let url = '/api/facturas-para-pago';
-    if (clienteId) {
-        url += '?cliente_id=' + clienteId;
-    }
+    if (clienteId) url += '?cliente_id=' + clienteId;
     
     fetch(url)
         .then(r => r.json())
@@ -529,47 +702,6 @@ function cargarFacturasDisponibles() {
             actualizarSelectsFactura();
         })
         .catch(e => console.error('Error facturas:', e));
-}
-
-function actualizarSelectsFactura() {
-    document.querySelectorAll('.factura-select').forEach(select => {
-        const valorActual = select.value;
-        select.innerHTML = '<option value="">Seleccionar factura...</option>';
-        if (window.facturasDisponibles && Array.isArray(window.facturasDisponibles) && window.facturasDisponibles.length > 0) {
-            window.facturasDisponibles.forEach(f => {
-                const yaSeleccionada = facturasSeleccionadas.some(fs => fs.factura_id === f.factura_id);
-                if (!yaSeleccionada || valorActual == f.factura_id) {
-                    const saldo = f.saldo_restante || f.saldo_disponible || f.total;
-                    select.innerHTML += `<option value="${f.factura_id}" data-saldo="${saldo}" data-total="${f.total}" data-cliente="${f.cliente_nombre}">${f.serie}-${f.folio} | ${f.cliente_nombre} | Total: ${formatCurrency(f.total)} | Saldo: ${formatCurrency(saldo)}</option>`;
-                }
-            });
-        } else {
-            select.innerHTML = '<option value="">No hay facturas disponibles con saldo pendiente</option>';
-        }
-        if (valorActual) select.value = valorActual;
-    });
-}
-
-// Actualizar la función que carga facturas al seleccionar cliente
-function cargarCombos() {
-    // Clientes
-    fetch('/api/contactos')
-        .then(r => r.json()).then(data => {
-            const select = document.getElementById('contacto_id');
-            if (select && Array.isArray(data)) {
-                select.innerHTML = '<option value="">Seleccionar cliente...</option>';
-                data.forEach(c => {
-                    select.innerHTML += `<option value="${c.contacto_id}">${c.razon_social} ${c.rfc ? '- ' + c.rfc : ''}</option>`;
-                });
-                // Cuando cambia el cliente, recargar facturas disponibles
-                select.onchange = function() {
-                    cargarFacturasDisponibles();
-                };
-            }
-        }).catch(e => console.error('Error clientes:', e));
-    
-    // Cargar facturas iniciales
-    cargarFacturasDisponibles();
 }
 
 function actualizarSelectsFactura() {
@@ -590,11 +722,7 @@ function actualizarSelectsFactura() {
 }
 
 function agregarFactura() {
-    const nuevaFactura = {
-        factura_id: '',
-        monto: 0
-    };
-    facturasSeleccionadas.push(nuevaFactura);
+    facturasSeleccionadas.push({ factura_id: '', monto: 0 });
     actualizarListaFacturas();
 }
 
@@ -638,7 +766,6 @@ function actualizarListaFacturas() {
     
     container.innerHTML = html;
     
-    // Cargar opciones de facturas en los selects
     document.querySelectorAll('.factura-select').forEach(select => {
         const idx = parseInt(select.dataset.index);
         select.innerHTML = '<option value="">Seleccionar factura...</option>';
@@ -651,9 +778,7 @@ function actualizarListaFacturas() {
                 }
             });
         }
-        if (facturasSeleccionadas[idx]?.factura_id) {
-            select.value = facturasSeleccionadas[idx].factura_id;
-        }
+        if (facturasSeleccionadas[idx]?.factura_id) select.value = facturasSeleccionadas[idx].factura_id;
         
         select.addEventListener('change', (e) => {
             const option = e.target.options[e.target.selectedIndex];
@@ -672,7 +797,6 @@ function actualizarListaFacturas() {
         });
     });
     
-    // Event listeners para inputs de monto
     document.querySelectorAll('.factura-monto').forEach(input => {
         const idx = parseInt(input.dataset.index);
         input.addEventListener('input', (e) => {
@@ -692,7 +816,6 @@ function actualizarListaFacturas() {
         });
     });
     
-    // Event listeners para botones de eliminar
     document.querySelectorAll('.btn-remover-factura').forEach(btn => {
         const idx = parseInt(btn.dataset.index);
         btn.addEventListener('click', () => removerFactura(idx));
@@ -703,9 +826,7 @@ function actualizarListaFacturas() {
 
 function actualizarTotalPagar() {
     let total = 0;
-    facturasSeleccionadas.forEach(f => {
-        total += f.monto || 0;
-    });
+    facturasSeleccionadas.forEach(f => { total += f.monto || 0; });
     document.getElementById('totalPagar').textContent = formatCurrency(total);
 }
 
@@ -715,9 +836,11 @@ function guardarContrarecibo() {
     const forma_pago = document.getElementById('forma_pago').value;
     const referencia_bancaria = document.getElementById('referencia_bancaria').value;
     const observaciones = document.getElementById('observaciones').value;
+    const codigo_sat_id = document.getElementById('codigo_sat_id').value;
     
     if (!contacto_id) { showError('Seleccione un cliente'); return; }
     if (!fecha_pago) { showError('Seleccione una fecha de pago'); return; }
+    if (!codigo_sat_id) { showError('Seleccione un código SAT'); return; }
     
     const facturasValidas = facturasSeleccionadas.filter(f => f.factura_id && f.monto > 0);
     if (facturasValidas.length === 0) { showError('Agregue al menos una factura con monto válido'); return; }
@@ -730,13 +853,14 @@ function guardarContrarecibo() {
         forma_pago: forma_pago || null,
         referencia_bancaria: referencia_bancaria || null,
         observaciones: observaciones || null,
+        codigo_sat_id: parseInt(codigo_sat_id),
         monto: total,
         facturas: facturasValidas.map(f => ({ factura_id: parseInt(f.factura_id), monto: f.monto }))
     };
     
     showLoading(true);
     
-    fetch('/contrarecibos', {
+    fetch('/admin/api/contrarecibos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.getElementById('csrf_token').value },
         body: JSON.stringify(data)
@@ -755,9 +879,10 @@ function guardarContrarecibo() {
 
 function exportToExcel() {
     if (datosFiltrados.length === 0) { showError('No hay datos'); return; }
-    let csv = 'Estatus,Fecha,Folio,Cliente,RFC,Forma de Pago,Referencia,Monto\n';
+    let csv = 'Estatus,Fecha,Folio,Cliente,RFC,Forma de Pago,Referencia,Código SAT,Monto\n';
     datosFiltrados.forEach(i => {
-        csv += `${getEstatusDisplay(i.estatus)},${formatDate(i.fecha)},${i.folio || '-'},"${i.cliente || '-'}",${i.rfc || '-'},${i.forma_pago || '-'},${i.referencia_bancaria || '-'},${i.monto || 0}\n`;
+        const codigoSat = i.codigo_sat_codigo ? `${i.codigo_sat_codigo} ${i.codigo_sat_nombre}` : '-';
+        csv += `${getEstatusDisplay(i.estatus)},${formatDate(i.fecha)},${i.folio || '-'},"${i.cliente || '-'}",${i.rfc || '-'},${i.forma_pago || '-'},${i.referencia_bancaria || '-'},"${codigoSat}",${i.monto || 0}\n`;
     });
     const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -785,8 +910,6 @@ function aplicarFiltros() {
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Inicializando módulo de contrarecibos');
-    
     cargarDatos();
     
     const hoy = new Date();
@@ -813,8 +936,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnGuardar').addEventListener('click', guardarContrarecibo);
     document.getElementById('btnAgregarFactura').addEventListener('click', agregarFactura);
     
+    document.getElementById('cerrarModalEditar').addEventListener('click', cerrarModalEditar);
+    document.getElementById('btnCancelarEditar').addEventListener('click', cerrarModalEditar);
+    document.getElementById('btnGuardarEditar').addEventListener('click', guardarEdicionContrarecibo);
+    
     window.addEventListener('click', (e) => {
         if (e.target === document.getElementById('modalNuevoContrarecibo')) cerrarModalContrarecibo();
+        if (e.target === document.getElementById('modalEditarContrarecibo')) cerrarModalEditar();
     });
 });
 </script>

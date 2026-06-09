@@ -6,8 +6,10 @@ use App\Models\ChequeTransferencia;
 use App\Models\CuentaBancaria;
 use App\Models\Moneda;
 use App\Models\Proyecto;
-use App\Models\Banco;
+use App\Models\Proveedor;
+use App\Models\Facturacion\Contacto;
 use App\Models\MovimientoBancario;
+use App\Models\CodigoSat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -25,13 +27,31 @@ class ChequeTransferenciaController extends Controller
         $monedas = Moneda::where('activa', true)->get();
         $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
         
-        return view('administracion.tesoreria.trasferencias', compact('cuentasBancarias', 'monedas', 'proyectos'));
+        // Proveedores y contactos para seleccionar
+        $proveedores = Proveedor::where('activo', true)->orderBy('nombre')->get(['id', 'nombre', 'rfc']);
+        $contactos = Contacto::where('tipo', 'cliente')->where('estatus', true)->orderBy('razon_social')->get(['contacto_id as id', 'razon_social as nombre', 'rfc']);
+        
+        // Códigos SAT para gastos (cheques y transferencias son egresos)
+        $codigosSatGastos = CodigoSat::whereIn('tipo', ['G', 'A'])
+            ->orderBy('codigo_agrupador')
+            ->get();
+        
+        return view('administracion.tesoreria.trasferencias', compact(
+            'cuentasBancarias', 'monedas', 'proyectos', 'codigosSatGastos', 
+            'proveedores', 'contactos'
+        ));
     }
 
     public function getData(Request $request)
     {
         try {
+            // Verificar si la relación 'codigoSat' existe, si no, usar without
             $query = ChequeTransferencia::with(['cuentaBancaria.banco', 'moneda', 'proyecto']);
+            
+            // Agregar codigoSat solo si la relación existe en el modelo
+            if (method_exists(ChequeTransferencia::class, 'codigoSat')) {
+                $query = $query->with('codigoSat');
+            }
             
             if ($request->has('fecha_inicio') && $request->fecha_inicio) {
                 $query->whereDate('fecha', '>=', $request->fecha_inicio);
@@ -48,7 +68,7 @@ class ChequeTransferenciaController extends Controller
             $registros = $query->orderBy('fecha', 'desc')->get();
             return response()->json($registros);
         } catch (\Exception $e) {
-            Log::error('Error en getData: ' . $e->getMessage());
+            Log::error('Error en getData cheques-transferencias: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -56,6 +76,8 @@ class ChequeTransferenciaController extends Controller
     public function store(Request $request)
     {
         try {
+            Log::info('Datos recibidos en store cheques-transferencias:', $request->all());
+            
             $validated = $request->validate([
                 'fecha' => 'required|date',
                 'forma_pago' => 'required|in:cheque,transferencia',
@@ -69,7 +91,10 @@ class ChequeTransferenciaController extends Controller
                 'proyecto_id' => 'nullable|exists:proyectos,id',
                 'descripcion' => 'nullable|string',
                 'observaciones' => 'nullable|string',
-                'aplicar_ahora' => 'boolean'
+                'aplicar_ahora' => 'boolean',
+                'codigo_sat_id' => 'required|exists:codigos_sat,id',
+                'proveedor_id' => 'nullable|exists:proveedores,id',
+                'contacto_id' => 'nullable|exists:contactos,contacto_id'
             ]);
             
             DB::beginTransaction();
@@ -92,11 +117,18 @@ class ChequeTransferenciaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Registro creado exitosamente',
-                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto'])
+                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto', 'codigoSat'])
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al crear registro: ' . $e->getMessage());
+            Log::error('Error al crear registro cheques-transferencias: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -107,8 +139,14 @@ class ChequeTransferenciaController extends Controller
     public function show($id)
     {
         try {
-            $registro = ChequeTransferencia::with(['cuentaBancaria.banco', 'moneda', 'proyecto'])
-                ->findOrFail($id);
+            $registro = ChequeTransferencia::with([
+                'cuentaBancaria.banco', 
+                'moneda', 
+                'proyecto',
+                'codigoSat',
+                'proveedorRel',
+                'contactoRel'
+            ])->findOrFail($id);
             return response()->json($registro);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Registro no encontrado'], 404);
@@ -132,7 +170,10 @@ class ChequeTransferenciaController extends Controller
                 'referencia_bancaria' => 'nullable|string|max:100',
                 'proyecto_id' => 'nullable|exists:proyectos,id',
                 'descripcion' => 'nullable|string',
-                'observaciones' => 'nullable|string'
+                'observaciones' => 'nullable|string',
+                'codigo_sat_id' => 'required|exists:codigos_sat,id',
+                'proveedor_id' => 'nullable|exists:proveedores,id',
+                'contacto_id' => 'nullable|exists:contactos,contacto_id'
             ]);
             
             DB::beginTransaction();
@@ -142,7 +183,7 @@ class ChequeTransferenciaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Registro actualizado exitosamente',
-                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto'])
+                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto', 'codigoSat'])
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -157,6 +198,14 @@ class ChequeTransferenciaController extends Controller
     {
         try {
             $registro = ChequeTransferencia::findOrFail($id);
+            
+            if ($registro->estatus === 'completado') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar un registro ya aplicado'
+                ], 422);
+            }
+            
             $registro->delete();
             
             return response()->json([
@@ -184,6 +233,14 @@ class ChequeTransferenciaController extends Controller
                 ], 422);
             }
             
+            // Validar que tenga código SAT
+            if (!$registro->codigo_sat_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El registro no tiene un código SAT asignado. Por favor edite y asigne uno.'
+                ], 422);
+            }
+            
             $this->aplicarMovimiento($registro);
             
             DB::commit();
@@ -191,11 +248,11 @@ class ChequeTransferenciaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Registro aplicado exitosamente. Saldo actualizado.',
-                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto'])
+                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto', 'codigoSat'])
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al aplicar: ' . $e->getMessage());
+            Log::error('Error al aplicar cheques-transferencias: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -205,23 +262,32 @@ class ChequeTransferenciaController extends Controller
 
     private function aplicarMovimiento($registro)
     {
+        // Validar que tenga código SAT
+        if (!$registro->codigo_sat_id) {
+            throw new \Exception('El registro no tiene un código SAT asignado.');
+        }
+        
         // Actualizar saldo de la cuenta bancaria (EGRESO - se resta)
         $cuenta = CuentaBancaria::find($registro->cuenta_bancaria_id);
         if ($cuenta) {
-            $cuenta->saldo_actual = $cuenta->saldo_actual - $registro->monto;
+            $nuevoSaldo = $cuenta->saldo_actual - $registro->monto;
+            $cuenta->saldo_actual = $nuevoSaldo;
             $cuenta->save();
             
-            Log::info('Saldo actualizado. Nuevo saldo: ' . $cuenta->saldo_actual);
+            Log::info('Saldo actualizado. Cuenta: ' . $cuenta->id . ', Nuevo saldo: ' . $nuevoSaldo);
         }
         
-        // Crear movimiento bancario (EGRESO)
+        // Obtener el método de pago ID según la forma de pago
+        $metodoPagoId = $registro->forma_pago === 'cheque' ? 2 : 1;
+        
+        // Crear movimiento bancario (EGRESO) con código SAT
         $movimiento = MovimientoBancario::create([
             'cuenta_bancaria_id' => $registro->cuenta_bancaria_id,
             'proyecto_id' => $registro->proyecto_id,
             'tipo' => 'egreso',
             'tipo_egreso_id' => null,
             'categoria_gasto_id' => null,
-            'metodo_pago_id' => $registro->forma_pago === 'cheque' ? 2 : 1,
+            'metodo_pago_id' => $metodoPagoId,
             'monto' => $registro->monto,
             'fecha' => $registro->fecha,
             'concepto' => $registro->descripcion ?? 'Cheque/Transferencia: ' . $registro->proveedor,
@@ -229,15 +295,37 @@ class ChequeTransferenciaController extends Controller
             'comprobante' => null,
             'status' => 'aplicado',
             'observaciones' => 'Cheque/Transferencia: ' . ($registro->observaciones ?? ''),
-            'created_by' => $registro->created_by
+            'created_by' => $registro->created_by,
+            'codigo_sat_id' => $registro->codigo_sat_id
         ]);
         
-        // Actualizar el registro a COMPLETADO (no 'aplicado')
+        // Actualizar el registro a COMPLETADO
         $registro->estatus = 'completado';
         $registro->save();
         
-        Log::info('Movimiento creado ID: ' . $movimiento->id);
+        Log::info('Movimiento creado ID: ' . $movimiento->id . ' con código SAT: ' . $registro->codigo_sat_id);
         
         return $movimiento;
+    }
+    
+    public function getEstadisticas()
+    {
+        try {
+            $total = ChequeTransferencia::count();
+            $activos = ChequeTransferencia::where('estatus', 'activo')->count();
+            $completados = ChequeTransferencia::where('estatus', 'completado')->count();
+            $cancelados = ChequeTransferencia::where('estatus', 'cancelado')->count();
+            $totalMonto = ChequeTransferencia::sum('monto');
+            
+            return response()->json([
+                'total' => $total,
+                'activos' => $activos,
+                'completados' => $completados,
+                'cancelados' => $cancelados,
+                'total_monto' => $totalMonto
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

@@ -56,8 +56,7 @@
                             <tr><td colspan="9" style="text-align: center;">Cargando...<\/td></tr>
                         </tbody>
                         <tfoot style="background-color: #e9ecef; font-weight: bold;">
-                            <tr><td colspan="4" style="text-align: center;">Totales:</td><td style="text-align: right;" id="sumMonto">$0.00<\/td><td colspan="3">
-                            </tr>
+                            <tr><td colspan="4" style="text-align: center;">Totales:</td><td style="text-align: right;" id="sumMonto">$0.00</td><td colspan="3"></td>
                         </tfoot>
                     </table>
                 </div>
@@ -111,7 +110,11 @@
                             <select id="proveedor_id" class="form-control">
                                 <option value="">Seleccionar proveedor...</option>
                                 @foreach($proveedores ?? [] as $proveedor)
-                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }} - {{ $proveedor->rfc }}</option>
+                                    <option value="{{ $proveedor->id }}" 
+                                        data-codigo-sat-id="{{ $proveedor->codigo_sat_default_id }}"
+                                        data-codigo-sat-nombre="{{ $proveedor->codigoSatDefault?->nombre_cuenta ?? '' }}">
+                                        {{ $proveedor->nombre }} - {{ $proveedor->rfc }}
+                                    </option>
                                 @endforeach
                             </select>
                             <button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="abrirModalProveedor()" style="font-size: 11px;">+ Nuevo Proveedor</button>
@@ -171,6 +174,26 @@
                         <div class="col-md-6 mb-3">
                             <label>Factura</label>
                             <input type="text" id="factura" class="form-control" placeholder="Número de factura">
+                        </div>
+                    </div>
+                    <!-- 🔴 NUEVO: Campo Código SAT -->
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label>Código SAT <span class="text-danger">*</span></label>
+                            <select id="codigo_sat_id" class="form-control" required>
+                                <option value="">Seleccionar código SAT...</option>
+                                @foreach($codigosSatGastos ?? [] as $codigo)
+                                    <option value="{{ $codigo->id }}" 
+                                        data-codigo="{{ $codigo->codigo_agrupador }}"
+                                        data-nombre="{{ $codigo->nombre_cuenta }}"
+                                        data-tipo="{{ $codigo->tipo }}">
+                                        {{ $codigo->codigo_agrupador }} - {{ $codigo->nombre_cuenta }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <small class="form-text text-muted" id="codigo_sat_info">
+                                <i class="fas fa-info-circle"></i> Al seleccionar un proveedor se cargará el código sugerido
+                            </small>
                         </div>
                     </div>
                     <div class="row">
@@ -367,6 +390,61 @@ function cargarCategoriasPorTipoEgreso() {
     }
 }
 
+// 🔴 NUEVA FUNCIÓN: Cargar código SAT sugerido al seleccionar proveedor
+function cargarCodigoSatSugerido() {
+    const proveedorId = document.getElementById('proveedor_id').value;
+    const codigoSatSelect = document.getElementById('codigo_sat_id');
+    const infoSpan = document.getElementById('codigo_sat_info');
+    
+    if (!proveedorId) {
+        if (infoSpan) {
+            infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Selecciona un proveedor para cargar el código SAT sugerido';
+            infoSpan.classList.remove('text-success', 'text-warning');
+            infoSpan.classList.add('text-muted');
+        }
+        return;
+    }
+    
+    // Mostrar estado de carga
+    if (infoSpan) {
+        infoSpan.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando código SAT sugerido...';
+    }
+    
+    fetch(`/admin/api/pagos/codigo-sat-sugerido/${proveedorId}`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.codigo_sat_id) {
+            codigoSatSelect.value = data.codigo_sat_id;
+            if (infoSpan) {
+                infoSpan.innerHTML = `<i class="fas fa-check-circle text-success"></i> Código SAT sugerido cargado: ${data.codigo_sat_codigo} - ${data.codigo_sat_nombre}`;
+                infoSpan.classList.remove('text-muted', 'text-warning');
+                infoSpan.classList.add('text-success');
+            }
+        } else {
+            if (infoSpan) {
+                infoSpan.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Este proveedor no tiene un código SAT por defecto. Selecciona uno manualmente.';
+                infoSpan.classList.remove('text-muted', 'text-success');
+                infoSpan.classList.add('text-warning');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error al cargar código SAT sugerido:', error);
+        if (infoSpan) {
+            infoSpan.innerHTML = '<i class="fas fa-exclamation-circle text-danger"></i> Error al cargar código SAT sugerido';
+            infoSpan.classList.remove('text-muted', 'text-success', 'text-warning');
+            infoSpan.classList.add('text-danger');
+        }
+    });
+}
+
 function cargarPagos() {
     console.log('Cargando pagos...');
     fetch('/admin/api/pagos', {
@@ -412,7 +490,7 @@ function cargarPagos() {
         console.error('Error:', error);
         const tablaBody = document.getElementById('tablaBody');
         if (tablaBody) {
-            tablaBody.innerHTML = '<tr><td colspan="9" style="color:red; text-align:center;">Error al cargar datos: ' + error.message + '<\/td></td>';
+            tablaBody.innerHTML = '<tr><td colspan="9" style="color:red; text-align:center;">Error al cargar datos: ' + error.message + '</td></tr>';
         }
         mostrarNotificacion('Error al cargar datos: ' + error.message, 'danger');
     });
@@ -435,6 +513,14 @@ function abrirModalPago() {
     document.getElementById('factura').value = '';
     document.getElementById('observaciones').value = '';
     document.getElementById('aplicar_ahora').checked = true;
+    // 🔴 Limpiar código SAT
+    document.getElementById('codigo_sat_id').value = '';
+    const infoSpan = document.getElementById('codigo_sat_info');
+    if (infoSpan) {
+        infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Al seleccionar un proveedor se cargará el código sugerido';
+        infoSpan.classList.remove('text-success', 'text-warning', 'text-danger');
+        infoSpan.classList.add('text-muted');
+    }
     new bootstrap.Modal(document.getElementById('modalPago')).show();
 }
 
@@ -492,7 +578,7 @@ function cargarProveedores() {
         const select = document.getElementById('proveedor_id');
         select.innerHTML = '<option value="">Seleccionar proveedor...</option>';
         data.forEach(prov => {
-            select.innerHTML += `<option value="${prov.id}">${prov.nombre} - ${prov.rfc || 'Sin RFC'}</option>`;
+            select.innerHTML += `<option value="${prov.id}" data-codigo-sat-id="${prov.codigo_sat_default_id || ''}">${prov.nombre} - ${prov.rfc || 'Sin RFC'}</option>`;
         });
     });
 }
@@ -519,6 +605,22 @@ function editarPago(id) {
         document.getElementById('factura').value = pago.factura || '';
         document.getElementById('observaciones').value = pago.observaciones || '';
         document.getElementById('aplicar_ahora').checked = false;
+        // 🔴 Cargar código SAT
+        document.getElementById('codigo_sat_id').value = pago.codigo_sat_id || '';
+        
+        // Actualizar info del código SAT
+        const codigoSatSelect = document.getElementById('codigo_sat_id');
+        const selectedOption = codigoSatSelect.options[codigoSatSelect.selectedIndex];
+        const infoSpan = document.getElementById('codigo_sat_info');
+        if (selectedOption && selectedOption.value) {
+            const codigo = selectedOption.getAttribute('data-codigo') || '';
+            const nombre = selectedOption.getAttribute('data-nombre') || '';
+            infoSpan.innerHTML = `<i class="fas fa-check-circle text-success"></i> Código SAT seleccionado: ${codigo} - ${nombre}`;
+            infoSpan.classList.remove('text-muted', 'text-warning');
+            infoSpan.classList.add('text-success');
+        } else {
+            infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Selecciona un código SAT para este pago';
+        }
         
         // Cargar categorías
         if (pago.tipo_egreso_id) {
@@ -557,8 +659,16 @@ function guardarPago() {
         referencia_bancaria: document.getElementById('referencia_bancaria').value,
         factura: document.getElementById('factura').value,
         observaciones: document.getElementById('observaciones').value,
-        aplicar_ahora: document.getElementById('aplicar_ahora').checked
+        aplicar_ahora: document.getElementById('aplicar_ahora').checked,
+        // 🔴 NUEVO: Código SAT
+        codigo_sat_id: document.getElementById('codigo_sat_id').value
     };
+    
+    // Validar que se haya seleccionado código SAT
+    if (!data.codigo_sat_id) {
+        mostrarNotificacion('Por favor seleccione un código SAT', 'warning');
+        return;
+    }
     
     const url = id ? `/admin/api/pagos/${id}` : '/admin/api/pagos';
     const method = id ? 'PUT' : 'POST';
@@ -639,7 +749,8 @@ Concepto: ${pago.concepto}
 Monto: ${formatCurrency(pago.monto)}
 Método: ${pago.metodo_pago?.nombre || '-'}
 Estatus: ${getEstatusTexto(pago.estatus)}
-Factura: ${pago.factura || '-'}`, 'info');
+Factura: ${pago.factura || '-'}
+Código SAT: ${pago.codigo_sat?.codigo_agrupador || '-'} - ${pago.codigo_sat?.nombre_cuenta || '-'}`, 'info');
     });
 }
 
@@ -719,8 +830,22 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+function generarPDF(id) {
+    mostrarNotificacion('Generando PDF...', 'info');
+    window.open(`/admin/api/pagos/${id}/pdf`, '_blank');
+}
+
+function imprimir(id) {
+    window.open(`/admin/api/pagos/${id}/print`, '_blank');
+}
+
 // Event listeners
 document.getElementById('tipo_egreso_id')?.addEventListener('change', cargarCategoriasPorTipoEgreso);
+// 🔴 NUEVO: Evento change del proveedor para cargar código SAT sugerido
+document.getElementById('proveedor_id')?.addEventListener('change', function() {
+    cargarCategoriasPorTipoEgreso();
+    cargarCodigoSatSugerido();
+});
 document.getElementById('btnAgregar')?.addEventListener('click', abrirModalPago);
 document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
 document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarTabla(datosOriginales); });
