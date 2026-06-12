@@ -25,13 +25,11 @@
         --sidebar-collapsed-width: 80px;
     }
 
-    /* Ajuste para el contenido principal considerando el menú lateral */
     .main-content {
         transition: margin-left 0.3s ease;
         margin-left: var(--sidebar-width);
     }
 
-    /* Cuando el menú está contraído */
     .sidebar-collapsed .main-content {
         margin-left: var(--sidebar-collapsed-width);
     }
@@ -67,7 +65,6 @@
         margin-top: 0.5rem;
     }
 
-    /* Estilos de tarjeta principal */
     .semaforo.card {
         background: white;
         border-radius: 10px;
@@ -92,7 +89,6 @@
         font-size: 24px;
     }
 
-    /* KPIs - Centrados y texto negro */
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -118,7 +114,6 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         margin-bottom: 10px;
-        text-align: center;
     }
 
     .kpi-card .value {
@@ -126,7 +121,6 @@
         font-weight: 700;
         color: #000000;
         margin-bottom: 0;
-        text-align: center;
         line-height: 1.2;
     }
 
@@ -136,7 +130,6 @@
         margin-top: 5px;
     }
 
-    /* Botón Agregar Gasto Indirecto con animación */
     .btn-agregar {
         background-color: #2CBF1F;
         color: white;
@@ -164,33 +157,10 @@
         transform: translateY(0);
     }
 
-    .btn-agregar i {
-        transition: transform 0.3s ease;
-    }
-
     .btn-agregar:hover i {
         transform: rotate(90deg);
     }
 
-    .btn-agregar::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-
-    .btn-agregar:active::after {
-        width: 300px;
-        height: 300px;
-    }
-
-    /* Panel de nuevo gasto indirecto */
     .panel-nuevo-gasto {
         background-color: #f8f9fa;
         border-bottom: 1px solid #dee2e6;
@@ -285,7 +255,6 @@
         transform: translateY(-2px);
     }
 
-    /* Estilos de tabla - Mejorados para evitar sobreposición */
     .table-responsive {
         overflow-x: auto;
         max-height: 500px;
@@ -301,7 +270,7 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 13px;
-        min-width: 1200px; /* Ancho mínimo para evitar que se compriman las columnas */
+        min-width: 1200px;
     }
 
     .table th {
@@ -331,23 +300,6 @@
         text-align: right;
     }
 
-    /* Estilo para las filas */
-    #tablaBody tr {
-        transition: all 0.3s ease;
-        animation: fadeInRow 0.3s ease;
-    }
-
-    @keyframes fadeInRow {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     #tablaBody tr:nth-child(odd) {
         background-color: #ffffff;
     }
@@ -362,7 +314,6 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* Estilo para los iconos de acción - Mejorado */
     .action-buttons {
         display: flex;
         gap: 8px;
@@ -399,7 +350,6 @@
         font-size: 14px;
     }
 
-    /* Columna de acciones - Mejorada para no sobreponerse */
     #tablaBody td:last-child {
         background-color: white;
         position: sticky;
@@ -410,54 +360,22 @@
         white-space: nowrap;
     }
 
-    /* Badges de tipo */
     .badge {
         font-size: 11px;
         font-weight: 600;
         padding: 4px 8px;
         border-radius: 3px;
         display: inline-block;
-        animation: pulseBadge 2s infinite;
         white-space: nowrap;
     }
 
-    @keyframes pulseBadge {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
+    .badge-administrativo { background-color: #083CAE; color: white; }
+    .badge-oficina { background-color: #1A4F8C; color: white; }
+    .badge-viaticos { background-color: #C4540A; color: white; }
+    .badge-servicios { background-color: #1A6644; color: white; }
+    .badge-seguros { background-color: #8C6A0A; color: white; }
+    .badge-impuestos { background-color: #8C1A1A; color: white; }
 
-    .badge-administrativo {
-        background-color: #083CAE;
-        color: white;
-    }
-
-    .badge-oficina {
-        background-color: #1A4F8C;
-        color: white;
-    }
-
-    .badge-viaticos {
-        background-color: #C4540A;
-        color: white;
-    }
-
-    .badge-servicios {
-        background-color: #1A6644;
-        color: white;
-    }
-
-    .badge-seguros {
-        background-color: #8C6A0A;
-        color: white;
-    }
-
-    .badge-impuestos {
-        background-color: #8C1A1A;
-        color: white;
-    }
-
-    /* Filtros y búsqueda */
     .filters-container {
         display: flex;
         gap: 15px;
@@ -520,16 +438,8 @@
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
-        animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(8,60,174,0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(8,60,174,0); }
-        100% { box-shadow: 0 0 0 0 rgba(8,60,174,0); }
-    }
-
-    /* Tabs */
     .tabs-container {
         display: flex;
         gap: 2px;
@@ -538,7 +448,6 @@
         border-bottom: 1px solid #dee2e6;
         overflow-x: auto;
         white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
     }
 
     .tab-item {
@@ -570,7 +479,6 @@
         font-weight: 700;
     }
 
-    /* Paginación */
     .pagination-container {
         display: flex;
         justify-content: space-between;
@@ -611,7 +519,6 @@
         color: white;
         border-color: #083CAE;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(8,60,174,0.2);
     }
 
     .page-btn.active {
@@ -625,7 +532,6 @@
         cursor: not-allowed;
     }
 
-    /* Proyectos */
     .project-tag {
         display: flex;
         align-items: center;
@@ -656,7 +562,6 @@
         max-width: 120px;
     }
 
-    /* Toast */
     .toast-container {
         position: fixed;
         bottom: 20px;
@@ -683,42 +588,18 @@
         border-left: 4px solid;
     }
 
-    .toast.success {
-        border-left-color: #28a745;
-    }
-
-    .toast.success i {
-        color: #28a745;
-    }
-
-    .toast.warning {
-        border-left-color: #ffc107;
-    }
-
-    .toast.warning i {
-        color: #ffc107;
-    }
-
-    .toast.error {
-        border-left-color: #dc3545;
-    }
-
-    .toast.error i {
-        color: #dc3545;
-    }
+    .toast.success { border-left-color: #28a745; }
+    .toast.success i { color: #28a745; }
+    .toast.warning { border-left-color: #ffc107; }
+    .toast.warning i { color: #ffc107; }
+    .toast.error { border-left-color: #dc3545; }
+    .toast.error i { color: #dc3545; }
 
     @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
 
-    /* Modal */
     .modal {
         display: none;
         position: fixed;
@@ -731,9 +612,7 @@
         animation: fadeIn 0.3s ease;
     }
 
-    .modal.show {
-        display: block;
-    }
+    .modal.show { display: block; }
 
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -748,14 +627,8 @@
     }
 
     @keyframes slideInDown {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
     }
 
     .modal-content {
@@ -785,375 +658,145 @@
         border: none;
         font-size: 20px;
         cursor: pointer;
-        transition: opacity 0.3s;
     }
 
-    .modal-header.danger-header .close:hover {
-        opacity: 1;
-    }
+    .modal-body { padding: 20px; font-size: 13.5px; color: #495057; }
+    .modal-footer { padding: 12px 16px; background: #f8f9fa; display: flex; justify-content: flex-end; gap: 8px; }
+    tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #083CAE; color: #000000 !important; }
+    .mono { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; color: #000000; }
+    .text-right { text-align: right; }
 
-    .modal-body {
-        padding: 20px;
-        font-size: 13.5px;
-        color: #495057;
-    }
-
-    .modal-footer {
-        padding: 12px 16px;
-        background: #f8f9fa;
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-
-    /* Estilo para el pie de tabla */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
-        color: #000000 !important;
-    }
-
-    /* Monospace para números */
-    .mono {
-        font-family: 'SFMono-Regular', Consolas, monospace;
-        font-size: 12px;
-        color: #000000;
-    }
-
-    /* Texto a la derecha */
-    .text-right {
-        text-align: right;
-    }
-
-    /* Centrar texto */
-    .text-center {
-        text-align: center;
-    }
-
-    /* Responsive */
-    @media (max-width: 1200px) {
-        .kpi-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 992px) {
-        .main-content {
-            margin-left: 0 !important;
-        }
-        
-        .content {
-            max-width: 100vw !important;
-            padding: 1rem;
-        }
-        
-        .semaforo.card {
-            margin-left: 0;
-            margin-right: 0;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .kpi-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .filters-container {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .search-box {
-            width: 100%;
-        }
-
-        .filter-select {
-            width: 100%;
-        }
-
-        #tablaBody td:last-child {
-            position: static;
-            box-shadow: none;
-            background-color: transparent;
-        }
-
-        .btn-agregar {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .action-buttons {
-            justify-content: flex-start;
-        }
-
-        .modal-dialog {
-            margin: 50px auto;
-        }
-    }
-
-    /* Scrollbar personalizada */
-    .table-responsive::-webkit-scrollbar {
-        height: 8px;
-        width: 8px;
-    }
-
-    .table-responsive::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    .table-responsive::-webkit-scrollbar-thumb {
-        background: #083CAE;
-        border-radius: 4px;
-    }
-
-    .table-responsive::-webkit-scrollbar-thumb:hover {
-        background: #062D8A;
-    }
-
-    /* ========== SOLUCIÓN DE EMERGENCIA PARA EL MENÚ LATERAL ========== */
-/* Forzar que el menú lateral esté por encima de todo */
-.section-sidebar,
-.section-sidebar * {
-    z-index: 10050 !important;
-}
-
-.section-sidebar.open {
-    z-index: 10050 !important;
-}
-
-/* Reducir drásticamente el z-index de la barra de pestañas */
-.tab-navigation-bar {
-    z-index: 9000 !important; /* Muy por debajo del menú */
-}
-
-.tab-navigation-bar * {
-    z-index: 9001 !important;
-}
-
-/* Reducir z-index de los elementos problemáticos de la tabla */
-.semaforo .table th {
-    z-index: 10 !important; /* Mínimo */
-}
-
-.semaforo #tablaBody td:last-child {
-    z-index: 5 !important; /* Mínimo */
-}
-
-.semaforo .tabs-container {
-    position: relative;
-    z-index: 1 !important; /* Lo más bajo posible */
-}
-
-/* Asegurar que el menú móvil también esté arriba */
-.mobile-menu-sidebar {
-    z-index: 10060 !important;
-}
-
-.quick-sidebar {
-    z-index: 10055 !important;
-}
-
-/* Ajuste para el contenido principal cuando el menú está abierto */
-.section-sidebar.open ~ .main-content-container {
-    pointer-events: none; /* Deshabilitar interacción con el contenido */
-}
-
-.section-sidebar.open ~ .main-content-container .btn-agregar,
-.section-sidebar.open ~ .main-content-container .tab-item,
-.section-sidebar.open ~ .main-content-container .filter-select,
-.section-sidebar.open ~ .main-content-container .search-box input {
-    pointer-events: none; /* Deshabilitar elementos interactivos */
-    opacity: 0.7; /* Feedback visual de que está deshabilitado */
-}
-    
+    @media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 992px) { .main-content, .content { margin-left: 0 !important; max-width: 100vw !important; } }
+    @media (max-width: 768px) { .kpi-grid { grid-template-columns: 1fr; } .filters-container { flex-direction: column; } .search-box, .filter-select { width: 100%; } .btn-agregar { width: 100%; justify-content: center; } }
 </style>
 
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Gastos Indirectos por Obra -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header">
-                <h2>
-                    
-                    Gastos Indirectos por Obra
-                </h2>
+                <h2>Gastos Indirectos por Obra</h2>
             </div>
             
-            <!-- KPIs - Centrados y texto negro -->
+            <!-- KPIs -->
             <div class="kpi-grid">
                 <div class="kpi-card">
                     <div class="label">Total Indirectos</div>
-                    <div class="value" id="kpiTotal">$1,847,500</div>
-                    <div class="sub">vs presupuesto $1.6M</div>
+                    <div class="value" id="kpiTotal">$0</div>
+                    <div class="sub" id="kpiTotalSub">cargando...</div>
                 </div>
                 <div class="kpi-card">
                     <div class="label">% Indirectos</div>
-                    <div class="value" id="kpiPorcentaje">18.5%</div>
+                    <div class="value" id="kpiPorcentaje">0%</div>
                     <div class="sub">sobre costo directo</div>
                 </div>
                 <div class="kpi-card">
                     <div class="label">Administración</div>
-                    <div class="value" id="kpiAdmin">$845,200</div>
-                    <div class="sub">45.7% del total</div>
+                    <div class="value" id="kpiAdmin">$0</div>
+                    <div class="sub" id="kpiAdminSub">0% del total</div>
                 </div>
                 <div class="kpi-card">
                     <div class="label">Servicios</div>
-                    <div class="value" id="kpiServicios">$482,300</div>
-                    <div class="sub">26.1% del total</div>
+                    <div class="value" id="kpiServicios">$0</div>
+                    <div class="sub" id="kpiServiciosSub">0% del total</div>
                 </div>
             </div>
             
-            <!-- Panel de nuevo gasto indirecto -->
+            <!-- Panel nuevo gasto -->
             <div class="panel-nuevo-gasto" id="panelNuevoGasto">
-                <form id="gastoForm" onsubmit="return false">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Proyecto <span class="req">*</span></label>
-                            <select class="form-control" id="fProyecto">
-                                <option value="">— Seleccionar —</option>
-                                <option value="TRC001">TRC001 - Torre Residencial Cumbres</option>
-                                <option value="PAC002">PAC002 - Puente Av. Constitución</option>
-                                <option value="CIA003">CIA003 - Complejo Industrial Apodaca</option>
-                                <option value="RHR004">RHR004 - Hospital Regional</option>
-                                <option value="VPS005">VPS005 - Vialidad Periférico Sur</option>
-                                <option value="PGA006">PGA006 - Plaza Galerías Monterrey</option>
-                                <option value="CCM007">CCM007 - Centro Comercial Metropolitano</option>
-                                <option value="UAN008">UAN008 - Unidad Habitacional Anáhuac</option>
-                                <option value="PIR009">PIR009 - Parque Industrial Roble</option>
-                                <option value="EST010">EST010 - Estadio Universitario</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Fecha <span class="req">*</span></label>
-                            <input type="date" class="form-control" id="fFecha" value="{{ date('Y-m-d') }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Folio</label>
-                            <input type="text" class="form-control" id="fFolio" placeholder="GIN-2025-XXXX">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipo de Gasto <span class="req">*</span></label>
-                            <select class="form-control" id="fTipo">
-                                <option value="">— Seleccionar —</option>
-                                <optgroup label="Administrativos">
-                                    <option value="Administrativo">Gastos Administrativos</option>
-                                    <option value="Oficina">Gastos de Oficina</option>
-                                    <option value="Papeleria">Papelería</option>
-                                    <option value="Comunicaciones">Comunicaciones</option>
-                                </optgroup>
-                                <optgroup label="Viáticos">
-                                    <option value="Viaticos">Viáticos</option>
-                                    <option value="Transporte">Transporte</option>
-                                    <option value="Alimentacion">Alimentación</option>
-                                    <option value="Hospedaje">Hospedaje</option>
-                                </optgroup>
-                                <optgroup label="Servicios">
-                                    <option value="Servicios">Servicios Generales</option>
-                                    <option value="Limpieza">Limpieza</option>
-                                    <option value="Seguridad">Seguridad</option>
-                                </optgroup>
-                                <optgroup label="Seguros">
-                                    <option value="Seguros">Seguros</option>
-                                    <option value="Fianzas">Fianzas</option>
-                                </optgroup>
-                                <optgroup label="Impuestos">
-                                    <option value="Impuestos">Impuestos y Derechos</option>
-                                    <option value="Permisos">Permisos</option>
-                                    <option value="Licencias">Licencias</option>
-                                </optgroup>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Monto <span class="req">*</span></label>
-                            <input type="number" class="form-control" id="fMonto" placeholder="0.00" min="0" step="0.01">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Proveedor</label>
-                            <input type="text" class="form-control" id="fProveedor" placeholder="Nombre del proveedor">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Partida Indirecta</label>
-                            <select class="form-control" id="fPartida">
-                                <option value="">— Seleccionar —</option>
-                                <option value="ADMIN01">ADMIN01 - Gastos Administrativos</option>
-                                <option value="VIA01">VIA01 - Viáticos</option>
-                                <option value="SER01">SER01 - Servicios</option>
-                                <option value="SEG01">SEG01 - Seguros</option>
-                                <option value="IMP01">IMP01 - Impuestos</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipo Documento</label>
-                            <select class="form-control" id="fTipoDoc">
-                                <option>Factura</option>
-                                <option>Recibo</option>
-                                <option>Comprobante</option>
-                                <option>Contrato</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Forma de Pago</label>
-                            <select class="form-control" id="fPago">
-                                <option>Transferencia</option>
-                                <option>Cheque</option>
-                                <option>Efectivo</option>
-                                <option>Tarjeta</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label>Concepto / Descripción</label>
-                            <textarea class="form-control" id="fNotas" rows="2" placeholder="Detalle del gasto indirecto..."></textarea>
-                        </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Proyecto <span class="req">*</span></label>
+                        <select class="form-control" id="fProyecto">
+                            <option value="">— Seleccionar —</option>
+                        </select>
                     </div>
-
-                    <div style="text-align: right; margin-top: 15px;">
-                        <button type="button" class="btn-cancelar" onclick="togglePanelNuevoGasto()">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                        <button type="button" class="btn-guardar" onclick="agregarGasto()">
-                            <i class="fas fa-save"></i> Guardar Gasto
-                        </button>
+                    <div class="form-group">
+                        <label>Fecha <span class="req">*</span></label>
+                        <input type="date" class="form-control" id="fFecha" value="{{ date('Y-m-d') }}">
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label>Folio</label>
+                        <input type="text" class="form-control" id="fFolio" placeholder="Se genera automático" readonly style="background:#f8f9fa;">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Gasto <span class="req">*</span></label>
+                        <select class="form-control" id="fTipo">
+                            <option value="">— Seleccionar —</option>
+                            <option value="Administrativo">Administrativos</option>
+                            <option value="Oficina">Gastos de Oficina</option>
+                            <option value="Viaticos">Viáticos</option>
+                            <option value="Servicios">Servicios</option>
+                            <option value="Seguros">Seguros</option>
+                            <option value="Impuestos">Impuestos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Monto <span class="req">*</span></label>
+                        <input type="number" class="form-control" id="fMonto" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Proveedor</label>
+                        <input type="text" class="form-control" id="fProveedor" placeholder="Nombre del proveedor">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo Documento</label>
+                        <select class="form-control" id="fTipoDoc">
+                            <option>Factura</option>
+                            <option>Recibo</option>
+                            <option>Comprobante</option>
+                            <option>Contrato</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Forma de Pago</label>
+                        <select class="form-control" id="fPago">
+                            <option>Transferencia</option>
+                            <option>Cheque</option>
+                            <option>Efectivo</option>
+                            <option>Tarjeta</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Concepto / Descripción</label>
+                        <textarea class="form-control" id="fNotas" rows="2" placeholder="Detalle del gasto indirecto..."></textarea>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 15px;">
+                    <button type="button" class="btn-cancelar" onclick="togglePanelNuevoGasto()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn-guardar" onclick="agregarGasto()">
+                        <i class="fas fa-save"></i> Guardar Gasto
+                    </button>
+                </div>
             </div>
             
-            <!-- Barra de acciones con botón a la derecha -->
+            <!-- Barra de acciones -->
             <div style="padding: 15px 20px; background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <button class="btn-agregar" onclick="togglePanelNuevoGasto()">
-                    <i class="fas fa-plus-circle"></i>
-                    Agregar Gasto Indirecto
+                    <i class="fas fa-plus-circle"></i> Agregar Gasto Indirecto
                 </button>
             </div>
             
             <!-- Tabs -->
             <div class="tabs-container">
-                <div class="tab-item active" onclick="setTab(this, 'todos')">
+                <div class="tab-item active" data-tab="todos" onclick="setTab(this, 'todos')">
                     <i class="fas fa-list mr-1"></i> Todos los Gastos
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'administrativos')">
+                <div class="tab-item" data-tab="administrativos" onclick="setTab(this, 'administrativos')">
                     <i class="fas fa-briefcase mr-1"></i> Administrativos
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'viaticos')">
+                <div class="tab-item" data-tab="viaticos" onclick="setTab(this, 'viaticos')">
                     <i class="fas fa-plane mr-1"></i> Viáticos
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'servicios')">
+                <div class="tab-item" data-tab="servicios" onclick="setTab(this, 'servicios')">
                     <i class="fas fa-cogs mr-1"></i> Servicios
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'seguros')">
+                <div class="tab-item" data-tab="seguros" onclick="setTab(this, 'seguros')">
                     <i class="fas fa-shield-alt mr-1"></i> Seguros
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'impuestos')">
+                <div class="tab-item" data-tab="impuestos" onclick="setTab(this, 'impuestos')">
                     <i class="fas fa-file-invoice mr-1"></i> Impuestos
                 </div>
             </div>
@@ -1163,53 +806,41 @@
                 <div class="filters-container">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar por folio, proyecto, concepto..." oninput="filtrar()">
+                        <input type="text" id="searchInput" placeholder="Buscar por folio, proyecto, concepto..." oninput="debounceSearch()">
                     </div>
-                    
                     <select class="filter-select" id="filterProyecto" onchange="filtrar()">
                         <option value="">Todos los proyectos</option>
-                        <option value="TRC001">TRC001 - Torre Cumbres</option>
-                        <option value="PAC002">PAC002 - Puente Constitución</option>
-                        <option value="CIA003">CIA003 - Complejo Apodaca</option>
-                        <option value="RHR004">RHR004 - Hospital Regional</option>
-                        <option value="VPS005">VPS005 - Periférico Sur</option>
-                        <option value="PGA006">PGA006 - Plaza Galerías</option>
-                        <option value="CCM007">CCM007 - Centro Comercial</option>
-                        <option value="UAN008">UAN008 - Unidad Anáhuac</option>
-                        <option value="PIR009">PIR009 - Parque Roble</option>
-                        <option value="EST010">EST010 - Estadio</option>
                     </select>
-                    
                     <select class="filter-select" id="filterTipo" onchange="filtrar()">
                         <option value="">Todos los tipos</option>
-                        <option value="Administrativo">Administrativos</option>
-                        <option value="Oficina">Gastos de Oficina</option>
-                        <option value="Viaticos">Viáticos</option>
-                        <option value="Servicios">Servicios</option>
-                        <option value="Seguros">Seguros</option>
-                        <option value="Impuestos">Impuestos</option>
+                        <option value="ADMIN01">Administrativos</option>
+                        <option value="VIA01">Viáticos</option>
+                        <option value="SER01">Servicios</option>
+                        <option value="SEG01">Seguros</option>
+                        <option value="IMP01">Impuestos</option>
                     </select>
-                    
                     <span class="filter-badge" id="filterCount">0</span>
                 </div>
             </div>
             
-            <!-- Tabla - Contenedor con scroll -->
+            <!-- Tabla -->
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="folio">Folio <i class="fas fa-sort" onclick="ordenar('folio')"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="fecha">Fecha <i class="fas fa-sort" onclick="ordenar('fecha')"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="proyecto">Proyecto <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="tipo">Tipo Gasto <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="proveedor">Proveedor <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="monto">Monto <i class="fas fa-sort" onclick="ordenar('monto')"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="partida">Partida <i class="fas fa-filter"></i></th>
+                            <th onclick="ordenar('folio')">Folio <i class="fas fa-sort"></i></th>
+                            <th onclick="ordenar('fecha')">Fecha <i class="fas fa-sort"></i></th>
+                            <th>Proyecto</th>
+                            <th>Tipo Gasto</th>
+                            <th>Proveedor</th>
+                            <th onclick="ordenar('monto')">Monto <i class="fas fa-sort"></i></th>
+                            <th>Partida</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaBody"></tbody>
+                    <tbody id="tablaBody">
+                        <tr><td colspan="8" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
+                    </tbody>
                     <tfoot id="tablaFoot"></tfoot>
                 </table>
             </div>
@@ -1224,7 +855,7 @@
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     <span class="page-btn active" id="pageNum">1</span>
-                    <button class="page-btn" onclick="cambiarPagina(1)" id="btnSiguiente">
+                    <button class="page-btn" onclick="cambiarPagina(1)" id="btnSiguiente" disabled>
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -1233,383 +864,208 @@
     </section>
 </div>
 
-<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Delete Modal -->
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header danger-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-exclamation-triangle"></i> Confirmar eliminación
-                </h5>
-                <button type="button" class="close" onclick="cerrarModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5><i class="fas fa-exclamation-triangle"></i> Confirmar eliminación</h5>
+                <button type="button" class="close" onclick="cerrarModal()">&times;</button>
             </div>
             <div class="modal-body">
                 ¿Estás seguro de que deseas eliminar este gasto indirecto? Esta acción <strong>no se puede deshacer</strong>.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
-                <button type="button" class="btn-guardar" style="background: #dc3545;" onclick="confirmarEliminar()">
-                    <i class="fas fa-trash"></i> Eliminar
-                </button>
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-guardar" style="background: #dc3545;" onclick="confirmarEliminar()">Eliminar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Datos de proyectos
-const proyectoColors = {
-    'TRC001': '#083CAE', 'PAC002': '#1A4F8C',
-    'CIA003': '#1A6644', 'RHR004': '#8C6A0A', 'VPS005': '#6B1A8C',
-    'PGA006': '#9C27B0', 'CCM007': '#FF9800', 'UAN008': '#00BCD4',
-    'PIR009': '#4CAF50', 'EST010': '#E91E63'
-};
-
-const proyectoNames = {
-    'TRC001': 'Torre Residencial Cumbres',
-    'PAC002': 'Puente Av. Constitución',
-    'CIA003': 'Complejo Industrial Apodaca',
-    'RHR004': 'Hospital Regional',
-    'VPS005': 'Vialidad Periférico Sur',
-    'PGA006': 'Plaza Galerías Monterrey',
-    'CCM007': 'Centro Comercial Metropolitano',
-    'UAN008': 'Unidad Habitacional Anáhuac',
-    'PIR009': 'Parque Industrial Roble',
-    'EST010': 'Estadio Universitario'
-};
-
-// Proveedores de servicios indirectos
-const proveedores = [
-    'Servicios Administrativos SA', 'Oficina Total', 'Papelería El Lápiz',
-    'Viáticos Express', 'Transportes Ejecutivos', 'Hoteles del Norte',
-    'Seguros Monterrey', 'Fianzas México', 'Consultoría Integral',
-    'Limpieza Profesional', 'Seguridad Privada', 'Vigilancia Especializada',
-    'Despacho Contable', 'Servicios de Ingeniería', 'Telecomunicaciones MX',
-    'Internet Profesional', 'Capacitación Ejecutiva', 'Software Integral',
-    'Gestoría Administrativa', 'Servicios Legales', 'Impuestos y Asesoría'
-];
-
-// Generar 100 gastos indirectos
-let gastos = [];
-let nextId = 1;
-
-for (let i = 0; i < 100; i++) {
-    const proyectos = Object.keys(proyectoNames);
-    const proyecto = proyectos[Math.floor(Math.random() * proyectos.length)];
-    
-    const tiposPrincipales = ['Administrativo', 'Oficina', 'Viaticos', 'Servicios', 'Seguros', 'Impuestos'];
-    const tipo = tiposPrincipales[Math.floor(Math.random() * tiposPrincipales.length)];
-    
-    const proveedor = proveedores[Math.floor(Math.random() * proveedores.length)];
-    const monto = Math.floor(Math.random() * 50000) + 2000;
-    const fecha = new Date(2025, Math.floor(Math.random() * 6), Math.floor(Math.random() * 28) + 1);
-    const fechaStr = fecha.toISOString().split('T')[0];
-    
-    const tiposDoc = ['Factura', 'Recibo', 'Comprobante', 'Contrato'];
-    const tipoDoc = tiposDoc[Math.floor(Math.random() * tiposDoc.length)];
-    
-    const formasPago = ['Transferencia', 'Cheque', 'Efectivo', 'Tarjeta'];
-    const formaPago = formasPago[Math.floor(Math.random() * formasPago.length)];
-    
-    const partidas = ['ADMIN01', 'VIA01', 'SER01', 'SEG01', 'IMP01'];
-    const partida = partidas[Math.floor(Math.random() * partidas.length)];
-    
-    const conceptos = [
-        'Gastos administrativos generales',
-        'Papelería y útiles de oficina',
-        'Viáticos personal de supervisión',
-        'Servicio de limpieza mensual',
-        'Póliza de seguro de obra',
-        'Pago de impuestos y derechos',
-        'Servicio de vigilancia',
-        'Gastos de transporte',
-        'Honorarios profesionales',
-        'Renta de equipo de oficina',
-        'Servicios de comunicación',
-        'Capacitación de personal',
-        'Gastos de representación',
-        'Mantenimiento de equipo',
-        'Servicios de consultoría'
-    ];
-    const concepto = conceptos[Math.floor(Math.random() * conceptos.length)];
-    
-    gastos.push({
-        id: nextId++,
-        folio: `GIN-2025-${String(i + 1).padStart(4, '0')}`,
-        fecha: fechaStr,
-        proyecto: proyecto,
-        tipo: tipo,
-        proveedor: proveedor,
-        monto: monto,
-        partida: partida,
-        tipoDoc: tipoDoc,
-        formaPago: formaPago,
-        concepto: concepto
-    });
-}
-
-// Variables globales
-let gastosFiltrados = [...gastos];
-let deletingId = null;
-let currentTab = 'todos';
+let gastosData = [];
 let currentPage = 1;
-const PER_PAGE = 10;
+let perPage = 10;
+let totalPages = 1;
+let currentTab = 'todos';
 let sortKey = 'fecha';
-let sortDir = -1;
+let sortDir = 'desc';
+let searchTimeout;
+let deletingId = null;
 
-// Detectar si el sidebar está colapsado
-function checkSidebarState() {
-    const body = document.body;
-    if (body.classList.contains('sidebar-collapsed')) {
-        document.querySelector('.min-h-screen').classList.add('sidebar-collapsed');
-    } else {
-        document.querySelector('.min-h-screen').classList.remove('sidebar-collapsed');
-    }
-}
+// Configuración de API
+const API_URL = '/api/gastos-indirectos';
 
-// Observar cambios en el sidebar
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.attributeName === 'class') {
-            checkSidebarState();
-        }
-    });
-});
+// Proyectos y tipos
+let proyectosList = [];
+let tiposGastoList = [];
 
-observer.observe(document.body, { attributes: true });
-
-// Funciones helper
-const fmt = n => '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-const fmtFecha = s => { 
-    const [y, m, d] = s.split('-'); 
-    return `${d} ${['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][+m-1]} ${y}`; 
-};
-
-function getBadgeClass(tipo) {
-    switch(tipo) {
-        case 'Administrativo': return 'badge-administrativo';
-        case 'Oficina': return 'badge-oficina';
-        case 'Viaticos': return 'badge-viaticos';
-        case 'Servicios': return 'badge-servicios';
-        case 'Seguros': return 'badge-seguros';
-        case 'Impuestos': return 'badge-impuestos';
-        default: return 'badge-administrativo';
-    }
-}
-
-// Panel de nuevo gasto
-function togglePanelNuevoGasto() {
-    const panel = document.getElementById('panelNuevoGasto');
-    panel.classList.toggle('show');
-    if (panel.classList.contains('show')) {
-        document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
-    }
-}
-
-// Agregar gasto
-function agregarGasto() {
-    const proyecto = document.getElementById('fProyecto').value;
-    const fecha = document.getElementById('fFecha').value;
-    const monto = parseFloat(document.getElementById('fMonto').value);
-    const tipo = document.getElementById('fTipo').value;
-    
-    if (!proyecto || !fecha || !monto || !tipo) { 
-        mostrarToast('❌ Completa los campos obligatorios', 'warning'); 
-        return; 
-    }
-
-    if (monto <= 0) {
-        mostrarToast('❌ El monto debe ser mayor a cero', 'warning');
-        return;
-    }
-
-    const nuevoGasto = {
-        id: nextId++,
-        folio: document.getElementById('fFolio').value || `GIN-2025-${String(nextId).padStart(4, '0')}`,
-        fecha: fecha,
-        proyecto: proyecto,
-        tipo: tipo,
-        proveedor: document.getElementById('fProveedor').value || 'Proveedor no especificado',
-        monto: monto,
-        partida: document.getElementById('fPartida').value || '—',
-        tipoDoc: document.getElementById('fTipoDoc').value,
-        formaPago: document.getElementById('fPago').value,
-        concepto: document.getElementById('fNotas').value || 'Sin concepto',
-    };
-    
-    gastos.unshift(nuevoGasto);
-    
-    // Limpiar formulario
-    document.getElementById('fProyecto').value = '';
-    document.getElementById('fFolio').value = '';
-    document.getElementById('fMonto').value = '';
-    document.getElementById('fTipo').value = '';
-    document.getElementById('fProveedor').value = '';
-    document.getElementById('fPartida').value = '';
-    document.getElementById('fNotas').value = '';
-    
-    togglePanelNuevoGasto();
-    currentPage = 1; 
-    filtrar();
-    actualizarKPIs();
-    mostrarToast('✅ Gasto indirecto registrado correctamente', 'success');
-}
-
-// Filtrar
-function getFiltered() {
-    const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
-    const fP = document.getElementById('filterProyecto')?.value || '';
-    const fT = document.getElementById('filterTipo')?.value || '';
-    
-    return gastos.filter(g => {
-        let tabMatch = true;
-        if (currentTab === 'administrativos') {
-            tabMatch = g.tipo === 'Administrativo' || g.tipo === 'Oficina';
-        } else if (currentTab === 'viaticos') {
-            tabMatch = g.tipo === 'Viaticos';
-        } else if (currentTab === 'servicios') {
-            tabMatch = g.tipo === 'Servicios';
-        } else if (currentTab === 'seguros') {
-            tabMatch = g.tipo === 'Seguros';
-        } else if (currentTab === 'impuestos') {
-            tabMatch = g.tipo === 'Impuestos';
-        }
+// Cargar datos iniciales
+async function cargarDatos() {
+    try {
+        const params = new URLSearchParams({
+            page: currentPage,
+            per_page: perPage,
+            sort_key: sortKey,
+            sort_dir: sortDir,
+            search: document.getElementById('searchInput')?.value || '',
+            proyecto_id: document.getElementById('filterProyecto')?.value || '',
+            tipo_gasto: document.getElementById('filterTipo')?.value || ''
+        });
         
-        const searchStr = [g.folio, g.proyecto, g.tipo, g.proveedor, g.concepto, proyectoNames[g.proyecto] || ''].join(' ').toLowerCase();
-        const mSrch = !q || searchStr.includes(q);
-        const mP = !fP || g.proyecto === fP;
-        const mT = !fT || g.tipo === fT;
+        const response = await fetch(`${API_URL}?${params}`);
+        const result = await response.json();
         
-        return tabMatch && mSrch && mP && mT;
-    }).sort((a, b) => {
-        let av = a[sortKey], bv = b[sortKey];
-        if (sortKey === 'monto') {
-            av = +av;
-            bv = +bv;
+        if (result.success) {
+            gastosData = result.data.gastos;
+            totalPages = result.data.pagination.last_page;
+            
+            // Cargar filtros si es primera vez
+            if (proyectosList.length === 0 && result.data.filtros?.proyectos) {
+                proyectosList = result.data.filtros.proyectos;
+                tiposGastoList = result.data.filtros.tipos_gasto || [];
+                cargarFiltros();
+            }
+            
+            renderTabla();
+            actualizarKPIs(result.data.kpis);
+            actualizarPaginacion(result.data.pagination);
+        } else {
+            mostrarToast('Error al cargar datos', 'error');
         }
-        if (sortKey === 'fecha') {
-            av = new Date(av);
-            bv = new Date(bv);
-        }
-        return av < bv ? -sortDir : av > bv ? sortDir : 0;
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarToast('Error de conexión', 'error');
+    }
+}
+
+// Cargar filtros
+function cargarFiltros() {
+    const proyectoSelect = document.getElementById('filterProyecto');
+    const fProyecto = document.getElementById('fProyecto');
+    
+    proyectoSelect.innerHTML = '<option value="">Todos los proyectos</option>';
+    fProyecto.innerHTML = '<option value="">— Seleccionar —</option>';
+    
+    proyectosList.forEach(p => {
+        proyectoSelect.innerHTML += `<option value="${p.id}">${p.codigo} - ${p.nombre}</option>`;
+        fProyecto.innerHTML += `<option value="${p.id}">${p.codigo} - ${p.nombre}</option>`;
     });
 }
 
 // Renderizar tabla
 function renderTabla() {
-    gastosFiltrados = getFiltered();
-    const total = gastosFiltrados.length;
-    const pages = Math.ceil(total / PER_PAGE) || 1;
-    
-    if (currentPage > pages) currentPage = pages;
-    if (currentPage < 1) currentPage = 1;
-    
-    const start = (currentPage - 1) * PER_PAGE;
-    const slice = gastosFiltrados.slice(start, start + PER_PAGE);
-
-    document.getElementById('filterCount').textContent = total;
-    document.getElementById('footerInfo').textContent = `${slice.length} de ${total} registros`;
-    document.getElementById('pageNum').textContent = currentPage;
-    
-    document.getElementById('btnAnterior').disabled = currentPage === 1;
-    document.getElementById('btnSiguiente').disabled = currentPage === pages;
-
     const body = document.getElementById('tablaBody');
     
-    if (!slice.length) {
+    if (!gastosData.length) {
         body.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px;">
-            <div style="padding: 40px 20px; text-align: center;">
-                <i class="fas fa-folder-open" style="font-size: 2rem; color: #dee2e6;"></i>
-                <p style="font-size: 13px; color: #868e96; margin-top: 10px;">No se encontraron gastos indirectos</p>
-            </div>
+            <i class="fas fa-folder-open" style="font-size: 2rem; color: #dee2e6;"></i>
+            <p style="margin-top: 10px;">No se encontraron gastos indirectos</p>
         </td></tr>`;
-    } else {
-        body.innerHTML = slice.map(g => {
-            const color = proyectoColors[g.proyecto] || '#888';
-            const badgeClass = getBadgeClass(g.tipo);
-            
-            return `<tr>
-                <td><span class="mono">${g.folio}</span></td>
-                <td>${fmtFecha(g.fecha)}</td>
-                <td>
-                    <div class="project-tag">
-                        <div class="project-dot" style="background:${color}"></div>
-                        <div>
-                            <div class="project-code">${g.proyecto}</div>
-                            <div class="project-name">${proyectoNames[g.proyecto] || ''}</div>
-                        </div>
-                    </div>
-                </td>
-                <td><span class="badge ${badgeClass}">${g.tipo}</span></td>
-                <td>${g.proveedor}</td>
-                <td class="text-right"><span class="mono" style="font-weight:700">${fmt(g.monto)}</span></td>
-                <td>${g.partida}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="action-btn" onclick="verDetalle(${g.id})" title="Ver detalle">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="action-btn" onclick="editarGasto(${g.id})" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="action-btn delete" onclick="abrirModal(${g.id})" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>`;
-        }).join('');
+        document.getElementById('tablaFoot').innerHTML = '';
+        document.getElementById('filterCount').textContent = '0';
+        document.getElementById('footerInfo').textContent = '0 registros';
+        return;
     }
-
-    // Totales
-    const totalMonto = gastosFiltrados.reduce((a, b) => a + b.monto, 0);
+    
+    body.innerHTML = gastosData.map(g => `
+        <tr>
+            <td><span class="mono">${g.folio}</span></td>
+            <td>${g.fecha_lista || g.fecha}</td>
+            <td>
+                <div class="project-tag">
+                    <div class="project-dot" style="background:${g.proyecto_color || '#083CAE'}"></div>
+                    <div>
+                        <div class="project-code">${g.proyecto_codigo || 'N/A'}</div>
+                        <div class="project-name">${g.proyecto_nombre || ''}</div>
+                    </div>
+                </div>
+            </td>
+            <td><span class="badge ${g.badge_class}">${g.tipo}</span></td>
+            <td>${g.proveedor || '-'}</td>
+            <td class="text-right"><span class="mono" style="font-weight:700">${g.monto_formateado}</span></td>
+            <td>${g.partida}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="verDetalle(${g.id})" title="Ver detalle"><i class="fas fa-eye"></i></button>
+                    <button class="action-btn" onclick="editarGasto(${g.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete" onclick="abrirModal(${g.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+    
+    const totalMonto = gastosData.reduce((sum, g) => sum + g.monto, 0);
     document.getElementById('tablaFoot').innerHTML = `<tr>
         <td colspan="5" style="text-align: right; font-weight:600;">Total filtrado:</td>
-        <td class="text-right"><span class="mono" style="font-weight:700">${fmt(totalMonto)}</span></td>
+        <td class="text-right"><span class="mono" style="font-weight:700">${formatMoney(totalMonto)}</span></td>
         <td colspan="2"></td>
     </tr>`;
-    
-    actualizarKPIs();
+    document.getElementById('filterCount').textContent = gastosData.length;
 }
 
 // Actualizar KPIs
-function actualizarKPIs() {
-    const total = gastos.reduce((a, b) => a + b.monto, 0);
-    const administrativos = gastos.filter(g => g.tipo === 'Administrativo' || g.tipo === 'Oficina').reduce((a, b) => a + b.monto, 0);
-    const servicios = gastos.filter(g => g.tipo === 'Servicios').reduce((a, b) => a + b.monto, 0);
-    const porcentaje = ((total / 10000000) * 100).toFixed(1);
+function actualizarKPIs(kpis) {
+    if (!kpis) return;
+    document.getElementById('kpiTotal').textContent = kpis.total_formateado || '$0';
+    document.getElementById('kpiTotalSub').textContent = `Total de gastos`;
+    document.getElementById('kpiPorcentaje').textContent = kpis.porcentaje_sobre_costo || '0%';
+    document.getElementById('kpiAdmin').textContent = kpis.administrativos_formateado || '$0';
+    document.getElementById('kpiServicios').textContent = kpis.servicios_formateado || '$0';
     
-    document.getElementById('kpiTotal').textContent = fmt(total);
-    document.getElementById('kpiPorcentaje').textContent = porcentaje + '%';
-    document.getElementById('kpiAdmin').textContent = fmt(administrativos);
-    document.getElementById('kpiServicios').textContent = fmt(servicios);
+    const total = kpis.total || 0;
+    const admin = kpis.administrativos || 0;
+    const servicios = kpis.servicios || 0;
+    const adminPorc = total > 0 ? ((admin / total) * 100).toFixed(1) : 0;
+    const servPorc = total > 0 ? ((servicios / total) * 100).toFixed(1) : 0;
+    
+    document.getElementById('kpiAdminSub').textContent = `${adminPorc}% del total`;
+    document.getElementById('kpiServiciosSub').textContent = `${servPorc}% del total`;
 }
 
-// Mostrar toast
-function mostrarToast(msg, tipo = 'success') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${tipo}`;
-    const icon = tipo === 'success' ? 'fa-check-circle' : tipo === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
-    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.animation = 'slideInRight 0.3s reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+// Actualizar paginación
+function actualizarPaginacion(pagination) {
+    if (!pagination) return;
+    document.getElementById('footerInfo').textContent = `${pagination.from || 0}-${pagination.to || 0} de ${pagination.total || 0} registros`;
+    document.getElementById('pageNum').textContent = pagination.current_page || 1;
+    document.getElementById('btnAnterior').disabled = pagination.current_page === 1;
+    document.getElementById('btnSiguiente').disabled = pagination.current_page === pagination.last_page;
+    currentPage = pagination.current_page;
+    totalPages = pagination.last_page;
 }
 
 // Filtrar
-function filtrar() { 
-    currentPage = 1; 
-    renderTabla(); 
+function filtrar() {
+    currentPage = 1;
+    cargarDatos();
+}
+
+// Debounce para búsqueda
+function debounceSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => filtrar(), 500);
+}
+
+// Cambiar página
+function cambiarPagina(dir) {
+    const newPage = currentPage + dir;
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        cargarDatos();
+    }
+}
+
+// Ordenar
+function ordenar(key) {
+    if (sortKey === key) {
+        sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+        sortKey = key;
+        sortDir = 'asc';
+    }
+    cargarDatos();
 }
 
 // Cambiar tab
@@ -1617,98 +1073,156 @@ function setTab(el, tab) {
     document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
     currentTab = tab;
-    currentPage = 1;
-    renderTabla();
+    
+    let tipoGasto = '';
+    if (tab === 'administrativos') tipoGasto = 'ADMIN01';
+    else if (tab === 'viaticos') tipoGasto = 'VIA01';
+    else if (tab === 'servicios') tipoGasto = 'SER01';
+    else if (tab === 'seguros') tipoGasto = 'SEG01';
+    else if (tab === 'impuestos') tipoGasto = 'IMP01';
+    
+    document.getElementById('filterTipo').value = tipoGasto;
+    filtrar();
 }
 
-// Ordenar
-function ordenar(key) { 
-    if (sortKey === key) {
-        sortDir *= -1;
-    } else {
-        sortKey = key;
-        sortDir = 1;
+// Panel nuevo gasto
+function togglePanelNuevoGasto() {
+    const panel = document.getElementById('panelNuevoGasto');
+    panel.classList.toggle('show');
+    if (panel.classList.contains('show')) {
+        document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
+        document.getElementById('fFolio').value = 'Generando...';
     }
-    renderTabla(); 
 }
 
-// Cambiar página
-function cambiarPagina(dir) { 
-    const pages = Math.ceil(getFiltered().length / PER_PAGE) || 1; 
-    currentPage = Math.max(1, Math.min(pages, currentPage + dir)); 
-    renderTabla(); 
+// Agregar gasto
+async function agregarGasto() {
+    const proyectoId = document.getElementById('fProyecto').value;
+    const fecha = document.getElementById('fFecha').value;
+    const monto = parseFloat(document.getElementById('fMonto').value);
+    const tipo = document.getElementById('fTipo').value;
+    
+    if (!proyectoId || !fecha || !monto || !tipo) {
+        mostrarToast('❌ Completa los campos obligatorios', 'warning');
+        return;
+    }
+    
+    if (monto <= 0) {
+        mostrarToast('❌ El monto debe ser mayor a cero', 'warning');
+        return;
+    }
+    
+    const data = {
+        proyecto_id: parseInt(proyectoId),
+        fecha: fecha,
+        monto: monto,
+        tipo: tipo,
+        proveedor: document.getElementById('fProveedor').value,
+        tipo_documento: document.getElementById('fTipoDoc').value,
+        forma_pago: document.getElementById('fPago').value,
+        concepto: document.getElementById('fNotas').value
+    };
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            mostrarToast('✅ Gasto registrado correctamente', 'success');
+            togglePanelNuevoGasto();
+            limpiarFormulario();
+            cargarDatos();
+        } else {
+            mostrarToast('❌ Error: ' + result.message, 'error');
+        }
+    } catch (error) {
+        mostrarToast('❌ Error de conexión', 'error');
+    }
 }
 
-// Modal
-function abrirModal(id) { 
-    deletingId = id; 
-    document.getElementById('deleteModal').classList.add('show');
-}
-
-function cerrarModal() {
-    document.getElementById('deleteModal').classList.remove('show');
-    deletingId = null;
-}
-
-function confirmarEliminar() { 
-    gastos = gastos.filter(g => g.id !== deletingId); 
-    cerrarModal();
-    renderTabla(); 
-    mostrarToast('Registro eliminado', 'warning'); 
+// Limpiar formulario
+function limpiarFormulario() {
+    document.getElementById('fProyecto').value = '';
+    document.getElementById('fMonto').value = '';
+    document.getElementById('fTipo').value = '';
+    document.getElementById('fProveedor').value = '';
+    document.getElementById('fNotas').value = '';
+    document.getElementById('fTipoDoc').value = 'Factura';
+    document.getElementById('fPago').value = 'Transferencia';
 }
 
 // Ver detalle
-function verDetalle(id) { 
-    const g = gastos.find(x => x.id === id); 
-    if (g) mostrarToast(`${g.folio} - ${g.concepto} - ${fmt(g.monto)}`, 'info'); 
+function verDetalle(id) {
+    const gasto = gastosData.find(g => g.id === id);
+    if (gasto) {
+        mostrarToast(`${gasto.folio} - ${gasto.concepto} - ${gasto.monto_formateado}`, 'info');
+    }
 }
 
-// Editar
+// Editar gasto
 function editarGasto(id) {
-    const g = gastos.find(x => x.id === id); 
-    if (!g) return;
+    const gasto = gastosData.find(g => g.id === id);
+    if (!gasto) return;
     
-    document.getElementById('fProyecto').value = g.proyecto;
-    document.getElementById('fFolio').value = g.folio;
-    document.getElementById('fFecha').value = g.fecha;
-    document.getElementById('fMonto').value = g.monto;
-    document.getElementById('fTipo').value = g.tipo;
-    document.getElementById('fProveedor').value = g.proveedor;
-    document.getElementById('fPartida').value = g.partida !== '—' ? g.partida : '';
-    document.getElementById('fTipoDoc').value = g.tipoDoc;
-    document.getElementById('fPago').value = g.formaPago;
-    document.getElementById('fNotas').value = g.concepto;
+    document.getElementById('fProyecto').value = gasto.proyecto_id;
+    document.getElementById('fFecha').value = gasto.fecha;
+    document.getElementById('fMonto').value = gasto.monto;
+    document.getElementById('fTipo').value = gasto.tipo;
+    document.getElementById('fProveedor').value = gasto.proveedor;
+    document.getElementById('fTipoDoc').value = gasto.tipo_documento;
+    document.getElementById('fPago').value = gasto.forma_pago;
+    document.getElementById('fNotas').value = gasto.concepto;
     
     const panel = document.getElementById('panelNuevoGasto');
     if (!panel.classList.contains('show')) {
         panel.classList.add('show');
     }
-    
-    mostrarToast(`Editando: ${g.folio}`, 'info');
-    window.scrollTo({ top: 200, behavior: 'smooth' });
+    mostrarToast(`Editando: ${gasto.folio}`, 'info');
 }
 
-// Drag and drop
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.getAttribute('data-columna'));
-}
-
-// Cerrar modal al hacer clic fuera
-window.onclick = function(event) {
-    const modal = document.getElementById('deleteModal');
-    if (event.target === modal) {
-        cerrarModal();
+// Modal
+function abrirModal(id) { deletingId = id; document.getElementById('deleteModal').classList.add('show'); }
+function cerrarModal() { document.getElementById('deleteModal').classList.remove('show'); deletingId = null; }
+async function confirmarEliminar() {
+    if (!deletingId) return;
+    try {
+        const response = await fetch(`${API_URL}/${deletingId}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        });
+        const result = await response.json();
+        if (result.success) {
+            mostrarToast('Registro eliminado', 'warning');
+            cerrarModal();
+            cargarDatos();
+        } else {
+            mostrarToast('Error al eliminar', 'error');
+        }
+    } catch (error) {
+        mostrarToast('Error de conexión', 'error');
     }
 }
 
+// Toast
+function mostrarToast(msg, tipo = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    const icon = tipo === 'success' ? 'fa-check-circle' : tipo === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.animation = 'slideInRight 0.3s reverse'; setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+function formatMoney(amount) { return '$' + amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
 // Inicializar
 document.addEventListener('DOMContentLoaded', function() {
-    renderTabla();
-    checkSidebarState();
-    
-    // Escuchar cambios en el tamaño de la ventana
-    window.addEventListener('resize', checkSidebarState);
+    cargarDatos();
 });
 </script>
-
 @endsection

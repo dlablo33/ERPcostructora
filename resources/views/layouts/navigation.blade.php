@@ -1812,10 +1812,10 @@ console.log('User ID:', window.userId);
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="contabilidad-catalogo" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '{{ route('conta.cuentas') }}', 'fa-list')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '{{ route('conta.cuentas') }}', 'fa-list')">
                             <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Cuentas Contables</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'contabilidad', 'fa-list', this)"></i>
-                        </div>
+                        </div> -->
                         <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '{{ route('conta.auxiliar') }}', 'fa-indent')">
                             <div class="flex items-center flex-1"><i class="fas fa-indent"></i><span>Auxiliar de Cuentas</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
@@ -1824,10 +1824,10 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Centros de Costos</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '{{ route('conta.configuraciones') }}', 'fa-cogs')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '{{ route('conta.configuraciones') }}', 'fa-cogs')">
                             <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Configuración Contable</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Configuración Contable', 'contabilidad', 'fa-cogs', this)"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="sidebar-menu-group">
@@ -1848,10 +1848,10 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fas fa-project-diagram"></i><span>Asignación de Gastos por Proyecto</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '{{ route('conta.cierre') }}', 'fa-lock')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '{{ route('conta.cierre') }}', 'fa-lock')">
                             <div class="flex items-center flex-1"><i class="fas fa-lock"></i><span>Cierre de Proyectos</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre de Proyectos', 'contabilidad', 'fa-lock', this)"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="sidebar-menu-group">
@@ -1864,10 +1864,10 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fas fa-file-export"></i><span>DIOT</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales', 'contabilidad', '{{ route('conta.declaraciones') }}', 'fa-calendar-alt')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales', 'contabilidad', '{{ route('conta.declaraciones') }}', 'fa-calendar-alt')">
                             <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Declaraciones Mensuales</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
-                        </div>
+                        </div> -->
                         <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '{{ route('conta.retenciones') }}', 'fa-percentage')">
                             <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Retenciones (ISR, IVA)</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>

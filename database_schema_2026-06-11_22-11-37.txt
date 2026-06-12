@@ -1,15 +1,15 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-06-03 15:34:42
+Fecha: 2026-06-11 22:11:35
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 132
+Total de tablas: 137
 
 
 📋 TABLA: activos
 ----------------------------------------------------------------------
-Columnas (28):
+Columnas (29):
   • id
   • codigo
   • nombre
@@ -38,6 +38,7 @@ Columnas (28):
   • created_at
   • updated_at
   • deleted_at
+  • unidad_negocio_id
 
 📋 TABLA: activos_herramientas
 ----------------------------------------------------------------------
@@ -567,6 +568,30 @@ Columnas (13):
   • created_at
   • updated_at
 
+📋 TABLA: config_conceptos
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • categoria
+  • codigo_sat
+  • nombre_concepto
+  • descripcion
+  • activo
+  • orden
+  • created_at
+  • updated_at
+
+📋 TABLA: config_unidad_conceptos
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • unidad_negocio_id
+  • concepto_id
+  • porcentaje
+  • activo
+  • created_at
+  • updated_at
+
 📋 TABLA: configuracion_cuenta_contable
 ----------------------------------------------------------------------
 Columnas (7):
@@ -1042,6 +1067,48 @@ Columnas (20):
   • dia_mes_cobro
   • mes_inicio_cobro
 
+📋 TABLA: gastos_indirectos
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • folio
+  • fecha
+  • proyecto_id
+  • proveedor_id
+  • monto
+  • partida
+  • tipo_documento
+  • forma_pago
+  • concepto
+  • tipo_gasto_id
+  • poliza_contable_id
+  • estatus
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: gastos_proyecto
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • folio
+  • fecha
+  • proyecto_id
+  • categoria_id
+  • proveedor_id
+  • monto
+  • partida
+  • tipo_documento
+  • estatus
+  • avance
+  • notas
+  • poliza_contable_id
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: hitos
 ----------------------------------------------------------------------
 Columnas (19):
@@ -1307,6 +1374,19 @@ Columnas (21):
   • updated_at
   • costo_unitario
 
+📋 TABLA: movimientos_poliza
+----------------------------------------------------------------------
+Columnas (9):
+  • id
+  • poliza_contable_id
+  • cuenta_contable_id
+  • debe
+  • haber
+  • descripcion
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: nomina
 ----------------------------------------------------------------------
 Columnas (39):
@@ -1560,7 +1640,7 @@ Columnas (13):
 
 📋 TABLA: polizas_contables
 ----------------------------------------------------------------------
-Columnas (13):
+Columnas (14):
   • poliza_contable_id
   • folio
   • fecha
@@ -1574,6 +1654,7 @@ Columnas (13):
   • created_at
   • updated_at
   • deleted_at
+  • proyecto_id
 
 📋 TABLA: polizas_movimientos
 ----------------------------------------------------------------------
@@ -1752,7 +1833,7 @@ Columnas (9):
 
 📋 TABLA: proyectos
 ----------------------------------------------------------------------
-Columnas (43):
+Columnas (44):
   • id
   • codigo
   • nombre
@@ -1796,6 +1877,7 @@ Columnas (43):
   • cliente_forma_pago
   • cliente_metodo_pago
   • cliente_direccion
+  • unidad_negocio_id
 
 📋 TABLA: puestos
 ----------------------------------------------------------------------
@@ -2293,7 +2375,7 @@ Columnas (11):
 🔍 TABLA: proyectos
 ----------------------------------------------------------------------
 ✓ Tabla existe
-Columnas encontradas (43):
+Columnas encontradas (44):
   • id : bigint (NOT NULL) DEFAULT nextval('proyectos_id_seq'::regclass)
   • codigo : character varying (NOT NULL)
   • nombre : character varying (NOT NULL)
@@ -2337,6 +2419,7 @@ Columnas encontradas (43):
   • cliente_forma_pago : character varying (NULL)
   • cliente_metodo_pago : character varying (NULL)
   • cliente_direccion : text (NULL)
+  • unidad_negocio_id : bigint (NULL)
 
 📊 Ejemplo de datos (primeros 3 registros):
 
@@ -2349,7 +2432,7 @@ Columnas encontradas (43):
     prioridad: alta
     ubicacion: Av. Reforma 123, CDMX
     direccion: Av. Reforma 123, Col. Centro, CDMX
-    ... y 35 campos más
+    ... y 36 campos más
 
   Registro 2:
     id: 2
@@ -2360,7 +2443,7 @@ Columnas encontradas (43):
     prioridad: alta
     ubicacion: Blvd. Miguel Alemán 456, Toluca
     direccion: Blvd. Miguel Alemán 456, Col. Centro, Toluca
-    ... y 35 campos más
+    ... y 36 campos más
 
   Registro 3:
     id: 3
@@ -2371,7 +2454,7 @@ Columnas encontradas (43):
     prioridad: media
     ubicacion: Carretera a Querétaro Km 25, Cuautitlán
     direccion: Carretera a Querétaro Km 25, Cuautitlán
-    ... y 35 campos más
+    ... y 36 campos más
 
 🔍 TABLA: nominas
 ----------------------------------------------------------------------
@@ -2643,4 +2726,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 132
+Total de tablas analizadas: 137

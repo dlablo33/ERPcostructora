@@ -46,158 +46,52 @@
                     </button>
                 </div>
 
+                <!-- Loading spinner -->
+                <div id="loadingSpinner" style="display: none; text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #083CAE;"></i>
+                    <p style="margin-top: 15px; color: #6c757d;">Cargando datos...</p>
+                </div>
+
                 <!-- Tabla DIOT -->
-                <div style="border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                <div id="tablaContainer" style="border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                     <!-- Encabezados de tabla -->
                     <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
                         <div>Razón Social</div>
-                        <div>Proveedor</div>
-                        <div>Categoría</div>
+                        <div>RFC</div>
                         <div style="text-align: right;">Subtotal</div>
                         <div style="text-align: right;">IVA 16%</div>
                         <div style="text-align: right;">IVA 8%</div>
                         <div style="text-align: right;">IVA 0%</div>
                         <div style="text-align: right;">IVA Exento</div>
+                        <div style="text-align: right;">Total</div>
                     </div>
 
-                    <!-- Cuerpo de la tabla con datos -->
-                    <div style="padding: 5px 0;">
-                        <!-- Fila 1 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                            <div style="font-weight: 500;">Constructora del Norte S.A. de C.V.</div>
-                            <div>PROV-001</div>
-                            <div>Materiales</div>
-                            <div style="text-align: right; font-family: monospace;">$45,230.50</div>
-                            <div style="text-align: right; font-family: monospace;">$7,236.88</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 2 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                            <div style="font-weight: 500;">Servicios Integrales de Logística</div>
-                            <div>PROV-002</div>
-                            <div>Servicios</div>
-                            <div style="text-align: right; font-family: monospace;">$18,500.00</div>
-                            <div style="text-align: right; font-family: monospace;">$2,960.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 3 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                            <div style="font-weight: 500;">Proveedora de Materiales y Equipos</div>
-                            <div>PROV-003</div>
-                            <div>Equipos</div>
-                            <div style="text-align: right; font-family: monospace;">$32,150.75</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$2,572.06</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 4 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                            <div style="font-weight: 500;">Consultoría y Asesoría Empresarial</div>
-                            <div>PROV-004</div>
-                            <div>Honorarios</div>
-                            <div style="text-align: right; font-family: monospace;">$12,000.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$12,000.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 5 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                            <div style="font-weight: 500;">Comercializadora Internacional</div>
-                            <div>PROV-005</div>
-                            <div>Importaciones</div>
-                            <div style="text-align: right; font-family: monospace;">$87,450.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$87,450.00</div>
-                        </div>
-
-                        <!-- Fila 6 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                            <div style="font-weight: 500;">Servicios de Transporte y Carga</div>
-                            <div>PROV-006</div>
-                            <div>Transporte</div>
-                            <div style="text-align: right; font-family: monospace;">$23,800.00</div>
-                            <div style="text-align: right; font-family: monospace;">$3,808.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 7 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                            <div style="font-weight: 500;">Proveedora de Alimentos y Bebidas</div>
-                            <div>PROV-007</div>
-                            <div>Insumos</div>
-                            <div style="text-align: right; font-family: monospace;">$9,850.25</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$788.02</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 8 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                            <div style="font-weight: 500;">Arrendadora de Maquinaria Pesada</div>
-                            <div>PROV-008</div>
-                            <div>Rentas</div>
-                            <div style="text-align: right; font-family: monospace;">$42,000.00</div>
-                            <div style="text-align: right; font-family: monospace;">$6,720.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                        </div>
-
-                        <!-- Fila 9 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                            <div style="font-weight: 500;">Servicios de Limpieza Industrial</div>
-                            <div>PROV-009</div>
-                            <div>Servicios</div>
-                            <div style="text-align: right; font-family: monospace;">$5,600.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$5,600.00</div>
-                        </div>
-
-                        <!-- Fila 10 -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                            <div style="font-weight: 500;">Distribuidora de Material Eléctrico</div>
-                            <div>PROV-010</div>
-                            <div>Materiales</div>
-                            <div style="text-align: right; font-family: monospace;">$28,450.00</div>
-                            <div style="text-align: right; font-family: monospace;">$4,552.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
-                            <div style="text-align: right; font-family: monospace;">$0.00</div>
+                    <!-- Cuerpo de la tabla -->
+                    <div id="tablaBody" style="padding: 5px 0;">
+                        <div style="text-align: center; padding: 40px; color: #6c757d;">
+                            <i class="fas fa-info-circle"></i> Selecciona un período para cargar los datos
                         </div>
                     </div>
 
                     <!-- Pie de tabla con totales -->
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; background-color: #e9ecef; padding: 15px 20px; font-weight: 700; color: #083CAE; border-top: 2px solid #083CAE;">
+                    <div id="tablaFooter" style="display: none; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; background-color: #e9ecef; padding: 15px 20px; font-weight: 700; color: #083CAE; border-top: 2px solid #083CAE;">
                         <div style="font-size: 14px;">TOTALES</div>
                         <div></div>
-                        <div></div>
-                        <div style="text-align: right; font-family: monospace;">$305,031.50</div>
-                        <div style="text-align: right; font-family: monospace;">$25,276.88</div>
-                        <div style="text-align: right; font-family: monospace;">$3,360.08</div>
-                        <div style="text-align: right; font-family: monospace;">$12,000.00</div>
-                        <div style="text-align: right; font-family: monospace;">$93,050.00</div>
+                        <div id="totalSubtotal" style="text-align: right; font-family: monospace;">$0.00</div>
+                        <div id="totalIva16" style="text-align: right; font-family: monospace;">$0.00</div>
+                        <div id="totalIva8" style="text-align: right; font-family: monospace;">$0.00</div>
+                        <div id="totalIva0" style="text-align: right; font-family: monospace;">$0.00</div>
+                        <div id="totalIvaExento" style="text-align: right; font-family: monospace;">$0.00</div>
+                        <div id="totalGeneral" style="text-align: right; font-family: monospace;">$0.00</div>
                     </div>
                 </div>
 
-                <!-- Información adicional -->
-                
+                <!-- Sin datos -->
+                <div id="sinDatosMensaje" style="display: none; text-align: center; padding: 40px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin-top: 20px;">
+                    <i class="fas fa-folder-open" style="font-size: 48px; color: #ced4da;"></i>
+                    <h3 style="color: #6c757d; font-size: 18px; margin-top: 15px;">Sin datos</h3>
+                    <p style="color: #adb5bd;">No hay operaciones con proveedores en el período seleccionado</p>
+                </div>
             </div>
         </div>
     </section>
@@ -220,12 +114,15 @@
     }
 
     /* Estilo para filas alternadas */
-    [style*="background-color: #f8f9fa"] {
-        transition: background-color 0.2s ease;
+    .fila-operacion:nth-child(even) {
+        background-color: #f8f9fa;
     }
 
-    [style*="background-color: #ffffff"]:hover,
-    [style*="background-color: #f8f9fa"]:hover {
+    .fila-operacion:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    .fila-operacion:hover {
         background-color: #e3f2fd !important;
         cursor: default;
     }
@@ -262,8 +159,9 @@
         box-shadow: 0 0 0 2px rgba(8, 60, 174, 0.2);
     }
 
-    /* Estilo para números en monospace */
-    [style*="font-family: monospace"] {
+    /* Estilo para números */
+    .mono {
+        font-family: 'SFMono-Regular', Consolas, monospace;
         font-size: 13px;
     }
 
@@ -287,7 +185,6 @@
             padding: 10px !important;
         }
         
-        /* Ajustar el filtro en móvil */
         [style*="display: flex; gap: 15px; align-items: center"] {
             width: 100%;
             justify-content: space-between;
@@ -308,50 +205,249 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btnDescargar = document.getElementById('btnDescargar');
-        const mes = document.getElementById('mes');
-        const anio = document.getElementById('anio');
+// API URLs
+const API_URL = '/api/diot/data';
+const API_DESCARGAR = '/api/diot/descargar';
 
-        // Evento para el botón de descarga
-        btnDescargar.addEventListener('click', function() {
-            const mesSel = mes.options[mes.selectedIndex].text;
-            const anioSel = anio.value;
-            
-            // Simular descarga
-            alert(`Descargando archivo DIOT para ${mesSel} ${anioSel}...`);
-            
-            // Crear contenido de ejemplo para el archivo .txt
-            const contenido = `DIOT - Declaración Informativa de Operaciones con Terceros\n`;
-            const contenido2 = `Período: ${mesSel} ${anioSel}\n`;
-            const contenido3 = `Generado: ${new Date().toLocaleString()}\n`;
-            const contenido4 = `Total de registros: 10\n`;
-            
-            console.log('Archivo .txt generado:', contenido + contenido2 + contenido3 + contenido4);
-            
-            // Feedback visual
-            btnDescargar.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                btnDescargar.style.transform = 'scale(1)';
-            }, 200);
-        });
+// Elementos del DOM
+const mesSelect = document.getElementById('mes');
+const anioSelect = document.getElementById('anio');
+const btnDescargar = document.getElementById('btnDescargar');
+const loadingSpinner = document.getElementById('loadingSpinner');
+const tablaContainer = document.getElementById('tablaContainer');
+const tablaBody = document.getElementById('tablaBody');
+const tablaFooter = document.getElementById('tablaFooter');
+const sinDatosMensaje = document.getElementById('sinDatosMensaje');
 
-        // Evento para cambio de período (simulado)
-        [mes, anio].forEach(select => {
-            select.addEventListener('change', function() {
-                const mesSel = mes.options[mes.selectedIndex].text;
-                const anioSel = anio.value;
-                console.log(`Cambiando a período: ${mesSel} ${anioSel}`);
-                
-                // Aquí se podría actualizar la tabla con datos del nuevo período
-                // Por ahora solo mostramos un mensaje en consola
-            });
-        });
+// Variables
+let datosActuales = [];
 
-        // Formato de moneda (opcional, para valores simulados)
-        function formatCurrency(value) {
-            return '$' + value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+// Formatear moneda
+function formatCurrency(value) {
+    return '$' + parseFloat(value).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Formatear número
+function formatNumber(value) {
+    return parseFloat(value).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Cargar datos
+async function cargarDatos() {
+    const mes = mesSelect.value;
+    const anio = anioSelect.value;
+    
+    // Mostrar loading
+    loadingSpinner.style.display = 'block';
+    tablaBody.innerHTML = '';
+    tablaFooter.style.display = 'none';
+    sinDatosMensaje.style.display = 'none';
+    
+    try {
+        const response = await fetch(`${API_URL}?mes=${mes}&anio=${anio}`);
+        const result = await response.json();
+        
+        loadingSpinner.style.display = 'none';
+        
+        if (result.success && result.data && result.data.length > 0) {
+            datosActuales = result.data;
+            renderizarTabla(result.data);
+            renderizarTotales(result.totales);
+            tablaFooter.style.display = 'grid';
+            sinDatosMensaje.style.display = 'none';
+        } else {
+            tablaBody.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #6c757d;">
+                    <i class="fas fa-info-circle"></i> No hay operaciones con proveedores en el período seleccionado
+                </div>
+            `;
+            tablaFooter.style.display = 'none';
+            sinDatosMensaje.style.display = 'block';
         }
+    } catch (error) {
+        console.error('Error:', error);
+        loadingSpinner.style.display = 'none';
+        tablaBody.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #dc3545;">
+                <i class="fas fa-exclamation-triangle"></i> Error al cargar los datos
+            </div>
+        `;
+        mostrarToast('Error al cargar datos', 'error');
+    }
+}
+
+// Renderizar tabla
+function renderizarTabla(datos) {
+    if (!datos || datos.length === 0) {
+        tablaBody.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #6c757d;">
+                <i class="fas fa-info-circle"></i> No hay datos para mostrar
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div style="padding: 5px 0;">';
+    
+    datos.forEach((item, index) => {
+        const subtotal = parseFloat(item.subtotal) || 0;
+        const iva16 = parseFloat(item.iva_16) || 0;
+        const iva8 = parseFloat(item.iva_8) || 0;
+        const iva0 = parseFloat(item.iva_0) || 0;
+        const ivaExento = parseFloat(item.iva_exento) || 0;
+        const total = subtotal + iva16 + iva8 + iva0 + ivaExento;
+        
+        html += `
+            <div class="fila-operacion" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center;">
+                <div style="font-weight: 500;">${escapeHtml(item.razon_social || item.nombre || 'Sin nombre')}</div>
+                <div>${escapeHtml(item.rfc || '-')}</div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(subtotal)}</div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(iva16)}</div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(iva8)}</div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(iva0)}</div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(ivaExento)}</div>
+                <div style="text-align: right; font-family: monospace; font-weight: 600;">${formatCurrency(total)}</div>
+            </div>
+        `;
     });
+    
+    html += '</div>';
+    tablaBody.innerHTML = html;
+}
+
+// Renderizar totales
+function renderizarTotales(totales) {
+    if (!totales) return;
+    
+    const subtotal = parseFloat(totales.subtotal) || 0;
+    const iva16 = parseFloat(totales.iva_16) || 0;
+    const iva8 = parseFloat(totales.iva_8) || 0;
+    const iva0 = parseFloat(totales.iva_0) || 0;
+    const ivaExento = parseFloat(totales.iva_exento) || 0;
+    const totalGeneral = subtotal + iva16 + iva8 + iva0 + ivaExento;
+    
+    document.getElementById('totalSubtotal').textContent = formatCurrency(subtotal);
+    document.getElementById('totalIva16').textContent = formatCurrency(iva16);
+    document.getElementById('totalIva8').textContent = formatCurrency(iva8);
+    document.getElementById('totalIva0').textContent = formatCurrency(iva0);
+    document.getElementById('totalIvaExento').textContent = formatCurrency(ivaExento);
+    document.getElementById('totalGeneral').textContent = formatCurrency(totalGeneral);
+}
+
+// Descargar archivo
+async function descargarArchivo() {
+    const mes = mesSelect.value;
+    const anio = anioSelect.value;
+    const mesNombre = mesSelect.options[mesSelect.selectedIndex].text;
+    
+    try {
+        btnDescargar.disabled = true;
+        btnDescargar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+        
+        const response = await fetch(`${API_DESCARGAR}?mes=${mes}&anio=${anio}`);
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `DIOT_${mesNombre}_${anio}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            mostrarToast('Archivo descargado correctamente', 'success');
+        } else {
+            const error = await response.json();
+            mostrarToast(error.message || 'Error al generar archivo', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarToast('Error al descargar archivo', 'error');
+    } finally {
+        btnDescargar.disabled = false;
+        btnDescargar.innerHTML = '<i class="fas fa-download"></i> Descargar .txt';
+    }
+}
+
+// Mostrar toast
+function mostrarToast(msg, tipo = 'success') {
+    const container = document.getElementById('toastContainer');
+    if (!container) {
+        // Crear container si no existe
+        const newContainer = document.createElement('div');
+        newContainer.className = 'toast-container';
+        newContainer.id = 'toastContainer';
+        newContainer.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;';
+        document.body.appendChild(newContainer);
+    }
+    
+    const toastContainer = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    const icon = tipo === 'success' ? 'fa-check-circle' : tipo === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    toast.style.cssText = 'background: #1A1D23; color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; display: flex; align-items: center; gap: 12px; min-width: 300px; max-width: 400px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); animation: slideInRight 0.3s ease; border-left: 4px solid;';
+    
+    if (tipo === 'success') toast.style.borderLeftColor = '#28a745';
+    else if (tipo === 'warning') toast.style.borderLeftColor = '#ffc107';
+    else toast.style.borderLeftColor = '#dc3545';
+    
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Escapar HTML
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// Eventos
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar datos iniciales
+    cargarDatos();
+    
+    // Evento cambio de mes/año
+    mesSelect.addEventListener('change', cargarDatos);
+    anioSelect.addEventListener('change', cargarDatos);
+    
+    // Evento descarga
+    btnDescargar.addEventListener('click', descargarArchivo);
+});
+
+// Estilos adicionales para toast
+const style = document.createElement('style');
+style.textContent = `
+    .toast-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+`;
+document.head.appendChild(style);
 </script>
 @endsection

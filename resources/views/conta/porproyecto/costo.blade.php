@@ -14,44 +14,50 @@
                         <div style="position: absolute; right: 0; display: flex; align-items: center; gap: 10px;">
                             <span style="color: #083CAE; font-size: 14px;">Obra:</span>
                             <select id="obraSelect" style="padding: 6px 12px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; background-color: white; color: #083CAE; font-weight: 500; width: 250px;">
-                                <option value="OB-001" selected>OB-001 - Edificio Corporativo Reforma</option>
-                                <option value="OB-002">OB-002 - Puente Vehicular Norte</option>
-                                <option value="OB-003">OB-003 - Urbanización Los Pinos</option>
-                                <option value="OB-004">OB-004 - Remodelación Centro</option>
-                                <option value="OB-005">OB-005 - Parque Industrial</option>
+                                <option value="">-- Seleccione una obra --</option>
+                                @foreach($obras as $obra)
+                                    <option value="{{ $obra->id }}" {{ $proyectoId == $obra->id ? 'selected' : '' }}>
+                                        {{ $obra->codigo }} - {{ $obra->nombre }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    <!-- Barra de botones superior -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                        <!-- Fechas a la izquierda -->
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            <div style="display: flex; align-items: center; gap: 5px;">
-                                <span style="font-size: 13px; color: #6c757d;">Fecha inicio:</span>
-                                <input type="date" id="dateStart" value="2026-01-01" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; background-color: white;">
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 5px;">
-                                <span style="font-size: 13px; color: #6c757d;">Fecha fin:</span>
-                                <input type="date" id="dateEnd" value="2026-03-31" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; background-color: white;">
-                            </div>
-                            <button id="btnConsultar" style="background-color: #2CBF1F; color: white; border: none; border-radius: 4px; padding: 6px 15px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                                <i class="fas fa-search"></i> Consultar
-                            </button>
-                        </div>
+                    <!-- Formulario único -->
+                    <form method="GET" action="{{ route('conta.costo') }}" id="filtrosForm">
+                        <input type="hidden" name="proyecto_id" id="hiddenProyectoId" value="{{ $proyectoId }}">
                         
-                        <!-- Botones de la derecha -->
-                        <div style="display: flex; gap: 8px;">
-                            <button id="btnExcel" style="background-color: #2CBF1F; color: white; border: none; border-radius: 4px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Exportar a Excel">
-                                <i class="fas fa-file-excel"></i>
-                            </button>
-                            <button id="btnPDF" style="background-color: #2CBF1F; color: white; border: none; border-radius: 4px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Exportar a PDF">
-                                <i class="fas fa-file-pdf"></i>
-                            </button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <span style="font-size: 13px; color: #6c757d;">Fecha inicio:</span>
+                                    <input type="date" name="fecha_inicio" value="{{ $fechaInicio }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; background-color: white;">
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <span style="font-size: 13px; color: #6c757d;">Fecha fin:</span>
+                                    <input type="date" name="fecha_fin" value="{{ $fechaFin }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; background-color: white;">
+                                </div>
+                                <button type="submit" id="btnConsultar" style="background-color: #2CBF1F; color: white; border: none; border-radius: 4px; padding: 6px 15px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                                    <i class="fas fa-search"></i> Consultar
+                                </button>
+                                <a href="{{ route('conta.costo') }}" style="background-color: #6c757d; color: white; border: none; border-radius: 4px; padding: 6px 15px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                                    <i class="fas fa-undo"></i> Limpiar
+                                </a>
+                            </div>
+                            
+                            <div style="display: flex; gap: 8px;">
+                                <a href="{{ route('conta.costo.exportar', request()->all()) }}" id="btnExcel" style="background-color: #2CBF1F; color: white; border: none; border-radius: 4px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none;" title="Exportar a Excel">
+                                    <i class="fas fa-file-excel"></i>
+                                </a>
+                                <button id="btnPDF" type="button" style="background-color: #2CBF1F; color: white; border: none; border-radius: 4px; width: 36px; height: 36px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Exportar a PDF">
+                                    <i class="fas fa-file-pdf"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
                     <!-- Información de la obra seleccionada -->
                     <div style="margin-bottom: 25px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
@@ -59,18 +65,21 @@
                             <div style="display: flex; align-items: center; gap: 15px;">
                                 <i class="fas fa-hard-hat" style="color: #083CAE; font-size: 24px;"></i>
                                 <div>
-                                    <span style="font-weight: bold; color: #083CAE; font-size: 16px;" id="obraNombre">Edificio Corporativo Reforma</span>
-                                    <span style="color: #6c757d; font-size: 12px; display: block;">Código: OB-001 | Cliente: Constructora del Norte S.A. de C.V.</span>
+                                    <span style="font-weight: bold; color: #083CAE; font-size: 16px;" id="obraNombre">{{ $obraSeleccionada->nombre ?? 'Seleccione una obra' }}</span>
+                                    <span style="color: #6c757d; font-size: 12px; display: block;">
+                                        Código: {{ $obraSeleccionada->codigo ?? '-' }} | 
+                                        Cliente: {{ $obraSeleccionada->cliente_nombre ?? '-' }}
+                                    </span>
                                 </div>
                             </div>
                             <div style="display: flex; gap: 20px;">
                                 <div style="text-align: right;">
                                     <div style="font-size: 11px; color: #6c757d;">Presupuesto Original</div>
-                                    <div style="font-size: 16px; font-weight: bold; color: #083CAE;">$2,500,000.00</div>
+                                    <div style="font-size: 16px; font-weight: bold; color: #083CAE;">${{ number_format($presupuestoOriginal, 2) }}</div>
                                 </div>
                                 <div style="text-align: right;">
                                     <div style="font-size: 11px; color: #6c757d;">Avance Físico</div>
-                                    <div style="font-size: 16px; font-weight: bold; color: #28a745;">75%</div>
+                                    <div style="font-size: 16px; font-weight: bold; color: #28a745;">{{ $avanceFisico }}%</div>
                                 </div>
                             </div>
                         </div>
@@ -80,34 +89,40 @@
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
                         <div style="background-color: white; border: 1px solid #083CAE; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Costo Directo</div>
-                            <div style="font-size: 20px; font-weight: bold;">$1,875,000</div>
+                            <div style="font-size: 20px; font-weight: bold;">${{ number_format($costoDirecto, 2) }}</div>
                         </div>
                         <div style="background-color: white; border: 1px solid #083CAE; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Indirectos</div>
-                            <div style="font-size: 20px; font-weight: bold;">$312,500</div>
+                            <div style="font-size: 20px; font-weight: bold;">${{ number_format($indirectos, 2) }}</div>
                         </div>
                         <div style="background-color: white; border: 1px solid #083CAE; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Costo Real</div>
-                            <div style="font-size: 20px; font-weight: bold;">$1,702,350</div>
+                            <div style="font-size: 20px; font-weight: bold;">${{ number_format($costoReal, 2) }}</div>
                         </div>
                         <div style="background-color: white; border: 1px solid #083CAE; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                             <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Variación</div>
-                            <div style="font-size: 20px; font-weight: bold;">+$172,650</div>
+                            <div style="font-size: 20px; font-weight: bold; color: {{ $variacion >= 0 ? '#28a745' : '#dc3545' }};">{{ $variacionPrefijo }}${{ number_format(abs($variacion), 2) }}</div>
                         </div>
                     </div>
 
                     <!-- Pestañas -->
                     <div style="border-bottom: 2px solid #dee2e6; margin-bottom: 20px; display: flex; gap: 5px;">
-                        <button class="tab-button active" data-tab="apu" style="background-color: #083CAE; color: white; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 8px 8px 0 0; cursor: pointer;">
+                        <button class="tab-button active" data-tab="apu" type="button" style="background-color: #083CAE; color: white; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 8px 8px 0 0; cursor: pointer;">
                             <i class="fas fa-calculator" style="margin-right: 8px;"></i> Análisis de Precios Unitarios
                         </button>
-                        <button class="tab-button" data-tab="insumos" style="background-color: #e9ecef; color: #495057; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 8px 8px 0 0; cursor: pointer;">
+                        <button class="tab-button" data-tab="insumos" type="button" style="background-color: #e9ecef; color: #495057; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 8px 8px 0 0; cursor: pointer;">
                             <i class="fas fa-cubes" style="margin-right: 8px;"></i> Explosión de Insumos
                         </button>
                     </div>
 
                     <!-- Tabla de APU -->
                     <div id="tab-apu" class="tab-content" style="display: block;">
+                        @if($conceptos->count() == 0)
+                        <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 8px;">
+                            <i class="fas fa-info-circle" style="font-size: 48px; color: #ced4da;"></i>
+                            <p style="margin-top: 15px; color: #6c757d;">No hay conceptos registrados para esta obra</p>
+                        </div>
+                        @else
                         <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 8px; overflow: auto; max-height: 450px;">
                             <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
                                 <thead style="position: sticky; top: 0; background-color: #2378e1;">
@@ -121,43 +136,37 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($conceptos as $concepto)
                                     <tr style="border-bottom: 1px solid #dee2e6;">
-                                        <td style="padding: 10px;">C-001</td>
-                                        <td style="padding: 10px;">Excavación para cimentación</td>
-                                        <td style="padding: 10px; text-align: center;">m³</td>
-                                        <td style="padding: 10px; text-align: right;">450.00</td>
-                                        <td style="padding: 10px; text-align: right;">$208.69</td>
-                                        <td style="padding: 10px; text-align: right;">$93,910.50</td>
+                                        <td style="padding: 10px;">{{ $concepto->codigo }}</td>
+                                        <td style="padding: 10px;">{{ $concepto->concepto }}</td>
+                                        <td style="padding: 10px; text-align: center;">{{ $concepto->unidad }}</td>
+                                        <td style="padding: 10px; text-align: right;">{{ $concepto->cantidad_formateada }}</td>
+                                        <td style="padding: 10px; text-align: right;">{{ $concepto->pu_formateado }}</td>
+                                        <td style="padding: 10px; text-align: right;">{{ $concepto->importe_formateado }}</td>
                                     </tr>
-                                    <tr style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
-                                        <td style="padding: 10px;">C-002</td>
-                                        <td style="padding: 10px;">Cimentación de concreto armado</td>
-                                        <td style="padding: 10px; text-align: center;">m³</td>
-                                        <td style="padding: 10px; text-align: right;">320.00</td>
-                                        <td style="padding: 10px; text-align: right;">$3,207.09</td>
-                                        <td style="padding: 10px; text-align: right;">$1,026,268.80</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #dee2e6;">
-                                        <td style="padding: 10px;">C-003</td>
-                                        <td style="padding: 10px;">Muro de tabique rojo</td>
-                                        <td style="padding: 10px; text-align: center;">m²</td>
-                                        <td style="padding: 10px; text-align: right;">1,250.00</td>
-                                        <td style="padding: 10px; text-align: right;">$433.41</td>
-                                        <td style="padding: 10px; text-align: right;">$541,762.50</td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                                 <tfoot style="background-color: #e9ecef;">
                                     <tr>
                                         <td colspan="5" style="padding: 12px 8px; text-align: right; font-weight: bold;">TOTAL COSTO DIRECTO:</td>
-                                        <td style="padding: 12px 8px; text-align: right; font-weight: bold;">$1,661,941.80</td>
+                                        <td style="padding: 12px 8px; text-align: right; font-weight: bold;">${{ number_format($totalCostoDirecto, 2) }}</td>
                                     </tr>
                                 </tfoot>
                             </table>
                         </div>
+                        @endif
                     </div>
 
                     <!-- Tabla de Insumos -->
                     <div id="tab-insumos" class="tab-content" style="display: none;">
+                        @if($insumos->count() == 0)
+                        <div style="text-align: center; padding: 40px; background-color: #f8f9fa; border-radius: 8px;">
+                            <i class="fas fa-info-circle" style="font-size: 48px; color: #ced4da;"></i>
+                            <p style="margin-top: 15px; color: #6c757d;">No hay insumos registrados para esta obra</p>
+                            <p style="font-size: 12px; color: #adb5bd;">Nota: Se requiere la tabla proyecto_partida_insumos para esta funcionalidad</p>
+                        </div>
+                        @else
                         <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 8px; overflow: auto; max-height: 450px;">
                             <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
                                 <thead style="position: sticky; top: 0; background-color: #2378e1;">
@@ -171,69 +180,73 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($insumos as $insumo)
                                     <tr style="border-bottom: 1px solid #dee2e6;">
-                                        <td style="padding: 10px;">MAT-001</td>
-                                        <td style="padding: 10px;">Cemento gris</td>
-                                        <td style="padding: 10px; text-align: center;">ton</td>
-                                        <td style="padding: 10px; text-align: right;">85.50</td>
-                                        <td style="padding: 10px; text-align: right;">82.30</td>
-                                        <td style="padding: 10px; text-align: right; color: #28a745;">-3.20</td>
+                                        <td style="padding: 10px;">{{ $insumo->codigo }}</td>
+                                        <td style="padding: 10px;">{{ $insumo->insumo }}</td>
+                                        <td style="padding: 10px; text-align: center;">{{ $insumo->unidad }}</td>
+                                        <td style="padding: 10px; text-align: right;">{{ $insumo->cantidad_presupuestada_formateada }}</td>
+                                        <td style="padding: 10px; text-align: right;">{{ $insumo->cantidad_real_formateada }}</td>
+                                        <td style="padding: 10px; text-align: right;" class="{{ $insumo->variacion_clase }}">{{ $insumo->variacion_formateada }}</td>
                                     </tr>
-                                    <tr style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
-                                        <td style="padding: 10px;">MAT-002</td>
-                                        <td style="padding: 10px;">Varilla 3/8"</td>
-                                        <td style="padding: 10px; text-align: center;">ton</td>
-                                        <td style="padding: 10px; text-align: right;">42.00</td>
-                                        <td style="padding: 10px; text-align: right;">44.50</td>
-                                        <td style="padding: 10px; text-align: right; color: #dc3545;">+2.50</td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #dee2e6;">
-                                        <td style="padding: 10px;">MO-001</td>
-                                        <td style="padding: 10px;">Albañil (FSR 1.6825)</td>
-                                        <td style="padding: 10px; text-align: center;">jor</td>
-                                        <td style="padding: 10px; text-align: right;">320.00</td>
-                                        <td style="padding: 10px; text-align: right;">305.00</td>
-                                        <td style="padding: 10px; text-align: right; color: #28a745;">-15.00</td>
-                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        @endif
 
                         <!-- Programa de Suministros -->
                         <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
                             <h4 style="color: #083CAE; font-size: 15px; font-weight: 600; margin-bottom: 15px;">
                                 <i class="fas fa-truck mr-2"></i> Programa de Suministros
                             </h4>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <input type="date" value="2026-03-01" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
-                                <input type="date" value="2026-03-31" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
-                                <button style="background-color: #083CAE; color: white; border: none; border-radius: 4px; padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;">
-                                    <i class="fas fa-calendar-alt mr-2"></i> Generar Programa
-                                </button>
+                            <form method="GET" action="{{ route('conta.costo') }}" id="programaForm" style="display: inline;">
+                                <input type="hidden" name="proyecto_id" value="{{ $proyectoId }}">
+                                <input type="hidden" name="fecha_inicio" value="{{ $fechaInicio }}">
+                                <input type="hidden" name="fecha_fin" value="{{ $fechaFin }}">
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <input type="date" name="programa_inicio" value="{{ request('programa_inicio', date('Y-m-01')) }}" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                    <input type="date" name="programa_fin" value="{{ request('programa_fin', date('Y-m-t')) }}" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                    <button type="submit" style="background-color: #083CAE; color: white; border: none; border-radius: 4px; padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;">
+                                        <i class="fas fa-calendar-alt mr-2"></i> Generar Programa
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            @if($programaSuministros->count() > 0)
+                            <div style="margin-top: 20px;">
+                                <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background-color: #e9ecef;">
+                                            <th style="padding: 8px; text-align: left;">Código</th>
+                                            <th style="padding: 8px; text-align: left;">Insumo</th>
+                                            <th style="padding: 8px; text-align: center;">Unidad</th>
+                                            <th style="padding: 8px; text-align: right;">Cantidad Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($programaSuministros as $item)
+                                        <tr style="border-bottom: 1px solid #dee2e6;">
+                                            <td style="padding: 6px;">{{ $item->codigo }}</td>
+                                            <td style="padding: 6px;">{{ $item->insumo }}</td>
+                                            <td style="padding: 6px; text-align: center;">{{ $item->unidad }}</td>
+                                            <td style="padding: 6px; text-align: right;">{{ $item->cantidad_formateada }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Paginación -->
-                    <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; gap: 15px;">
-                        <span style="color: #6c757d; font-size: 13px;">Mostrando 1-3 de 45 conceptos</span>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="page-btn" disabled style="padding: 6px 10px; border: 1px solid #dee2e6; background: white; border-radius: 4px; color: #6c757d; cursor: not-allowed;">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="page-btn active" style="padding: 6px 12px; border: 1px solid #083CAE; background: #083CAE; color: white; border-radius: 4px;">1</button>
-                            <button class="page-btn" style="padding: 6px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer; color: #083CAE;">2</button>
-                            <button class="page-btn" style="padding: 6px 12px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer; color: #083CAE;">3</button>
-                            <button class="page-btn" style="padding: 6px 10px; border: 1px solid #dee2e6; background: white; border-radius: 4px; cursor: pointer; color: #083CAE;">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
+                            @endif
                         </div>
                     </div>
 
                     <!-- Nota al pie -->
                     <div style="margin-top: 20px; font-size: 11px; color: #6c757d; text-align: center; border-top: 1px solid #dee2e6; padding-top: 15px;">
                         <i class="fas fa-info-circle" style="color: #083CAE;"></i>
-                        Costos correspondientes al período del 01/01/2026 al 31/03/2026 - Obra: Edificio Corporativo Reforma
+                        Costos correspondientes al período del {{ \Carbon\Carbon::parse($fechaInicio)->format('d/m/Y') }} al {{ \Carbon\Carbon::parse($fechaFin)->format('d/m/Y') }}
+                        @if($obraSeleccionada)
+                        - Obra: {{ $obraSeleccionada->nombre ?? '' }}
+                        @endif
                     </div>
                 </div>
             </div>
@@ -263,7 +276,6 @@
         padding: 25px;
     }
     
-    /* Estilo para pestañas */
     .tab-button {
         transition: all 0.3s ease;
         border: 1px solid #dee2e6;
@@ -282,7 +294,6 @@
         border-color: #083CAE;
     }
     
-    /* Estilo para cuadros de resumen */
     [style*="grid-template-columns: repeat(4, 1fr)"] > div {
         transition: transform 0.2s, box-shadow 0.2s;
     }
@@ -292,7 +303,6 @@
         box-shadow: 0 6px 12px rgba(8, 60, 174, 0.15) !important;
     }
     
-    /* Estilo para botones */
     #btnConsultar, #btnExcel, #btnPDF {
         transition: all 0.3s ease;
     }
@@ -309,7 +319,6 @@
         box-shadow: 0 4px 8px rgba(44, 191, 31, 0.3);
     }
     
-    /* Estilo para tabla */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -342,7 +351,6 @@
         font-weight: bold;
     }
     
-    /* Estilo para selects e inputs */
     select, input[type="date"] {
         cursor: pointer;
         transition: all 0.3s ease;
@@ -358,28 +366,6 @@
         box-shadow: 0 0 0 2px rgba(8, 60, 174, 0.2);
     }
     
-    /* Estilo para botones de paginación */
-    .page-btn {
-        transition: all 0.2s;
-    }
-    
-    .page-btn:not(:disabled):not(.active):hover {
-        background-color: #e9ecef !important;
-        transform: translateY(-2px);
-    }
-    
-    .page-btn.active {
-        background-color: #083CAE !important;
-        border-color: #083CAE !important;
-        color: white !important;
-    }
-    
-    .page-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-    
-    /* Scrollbar personalizada */
     .table-responsive::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -399,7 +385,6 @@
         background: #0a4ad0;
     }
     
-    /* Responsive */
     @media (max-width: 768px) {
         [style*="grid-template-columns: repeat(4, 1fr)"] {
             grid-template-columns: 1fr !important;
@@ -437,12 +422,40 @@
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Costos por Obra - Inicializado correctamente');
+        
+        const form = document.getElementById('filtrosForm');
+        const obraSelect = document.getElementById('obraSelect');
+        const hiddenProyectoId = document.getElementById('hiddenProyectoId');
+        const fechaInicio = document.querySelector('input[name="fecha_inicio"]');
+        const fechaFin = document.querySelector('input[name="fecha_fin"]');
+        
+        // Al cambiar la obra, actualizar el hidden y enviar el formulario
+        if (obraSelect) {
+            obraSelect.addEventListener('change', function() {
+                // Actualizar el hidden con el valor seleccionado
+                hiddenProyectoId.value = this.value;
+                // Enviar el formulario
+                form.submit();
+            });
+        }
+        
+        // Auto-submit al cambiar fechas
+        if (fechaInicio) {
+            fechaInicio.addEventListener('change', function() {
+                form.submit();
+            });
+        }
+        
+        if (fechaFin) {
+            fechaFin.addEventListener('change', function() {
+                form.submit();
+            });
+        }
         
         // Manejo de pestañas
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -452,19 +465,19 @@
             tabContents.forEach(content => {
                 content.style.display = 'none';
             });
-
             tabButtons.forEach(button => {
                 button.classList.remove('active');
                 button.style.backgroundColor = '#e9ecef';
                 button.style.color = '#495057';
             });
-
-            document.getElementById(`tab-${tabId}`).style.display = 'block';
-
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.style.display = 'block';
             const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
-            activeButton.classList.add('active');
-            activeButton.style.backgroundColor = '#083CAE';
-            activeButton.style.color = 'white';
+            if (activeButton) {
+                activeButton.classList.add('active');
+                activeButton.style.backgroundColor = '#083CAE';
+                activeButton.style.color = 'white';
+            }
         }
 
         tabButtons.forEach(button => {
@@ -477,36 +490,11 @@
         // Mostrar APU por defecto
         showTab('apu');
 
-        // Event Listeners
-        document.getElementById('btnConsultar').addEventListener('click', function() {
-            const obraSelect = document.getElementById('obraSelect');
-            const obraText = obraSelect.options[obraSelect.selectedIndex].text;
-            const fechaInicio = document.getElementById('dateStart').value;
-            const fechaFin = document.getElementById('dateEnd').value;
-            
-            alert(`Consultando costos para:\nObra: ${obraText}\nPeríodo: ${fechaInicio} al ${fechaFin}`);
-            
-            // Feedback visual
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => this.style.transform = 'scale(1)', 200);
-        });
-
-        document.getElementById('btnExcel').addEventListener('click', function() {
-            alert('Exportando costos de obra a Excel...');
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => this.style.transform = 'scale(1)', 200);
-        });
-
-        document.getElementById('btnPDF').addEventListener('click', function() {
+        // Botón PDF (simulación)
+        document.getElementById('btnPDF')?.addEventListener('click', function() {
             alert('Exportando costos de obra a PDF...');
             this.style.transform = 'scale(0.95)';
             setTimeout(() => this.style.transform = 'scale(1)', 200);
-        });
-
-        // Cambio de obra
-        document.getElementById('obraSelect').addEventListener('change', function() {
-            const obraText = this.options[this.selectedIndex].text;
-            document.getElementById('obraNombre').textContent = obraText.split(' - ')[1] || obraText;
         });
     });
 </script>

@@ -12,9 +12,8 @@
             </div>
 
             <div class="card-body p-4">
-                <!-- Filtro mensual y botón de descarga - TODO A LA DERECHA -->
+                <!-- Filtro mensual y botón de descarga -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 30px; gap: 15px; flex-wrap: wrap;">
-                    <!-- Filtro de mes y año -->
                     <div style="display: flex; gap: 15px; align-items: center;">
                         <div style="font-weight: 600; color: #083CAE; font-size: 15px;">Período:</div>
                         <div style="display: flex; border: 1px solid #083CAE; border-radius: 8px; overflow: hidden;">
@@ -38,17 +37,20 @@
                                 <option value="2026" selected>2026</option>
                             </select>
                         </div>
+                        <button id="btnConsultar" style="background-color: #083CAE; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                            <i class="fas fa-search"></i> Consultar
+                        </button>
+                        <a href="{{ route('conta.retenciones') }}" style="background-color: #6c757d; color: white; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; text-decoration: none;">
+                            <i class="fas fa-undo"></i> Limpiar
+                        </a>
+                        <a href="#" id="btnDescargar" style="background-color: #2CBF1F; color: white; border: none; border-radius: 8px; padding: 12px 30px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+                            <i class="fas fa-download"></i> Descargar Reporte
+                        </a>
                     </div>
-
-                    <!-- Botón de descarga verde -->
-                    <button id="btnDescargar" style="background-color: #2CBF1F; color: white; border: none; border-radius: 8px; padding: 12px 30px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-download"></i> Descargar Reporte
-                    </button>
                 </div>
 
-                <!-- Tarjetas de resumen de retenciones -->
+                <!-- Tarjetas de resumen -->
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
-                    <!-- Total ISR Retenido -->
                     <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 48px; height: 48px; background-color: #e6f2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
@@ -56,12 +58,11 @@
                             </div>
                             <div>
                                 <div style="font-size: 13px; color: #6c757d; margin-bottom: 5px;">Total ISR Retenido</div>
-                                <div style="font-size: 20px; font-weight: bold; color: #083CAE;">$45,230.50</div>
+                                <div style="font-size: 20px; font-weight: bold; color: #083CAE;" id="totalIsr">$0.00</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Total IVA Retenido -->
                     <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 48px; height: 48px; background-color: #e6f2ff; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
@@ -69,12 +70,11 @@
                             </div>
                             <div>
                                 <div style="font-size: 13px; color: #6c757d; margin-bottom: 5px;">Total IVA Retenido</div>
-                                <div style="font-size: 20px; font-weight: bold; color: #083CAE;">$12,875.32</div>
+                                <div style="font-size: 20px; font-weight: bold; color: #083CAE;" id="totalIva">$0.00</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Proveedores con Retención -->
                     <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 48px; height: 48px; background-color: #fff3cd; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
@@ -82,12 +82,11 @@
                             </div>
                             <div>
                                 <div style="font-size: 13px; color: #6c757d; margin-bottom: 5px;">Proveedores</div>
-                                <div style="font-size: 20px; font-weight: bold; color: #856404;">24 proveedores</div>
+                                <div style="font-size: 20px; font-weight: bold; color: #856404;" id="totalProveedores">0</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Total Operaciones -->
                     <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div style="width: 48px; height: 48px; background-color: #d4edda; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
@@ -95,13 +94,19 @@
                             </div>
                             <div>
                                 <div style="font-size: 13px; color: #6c757d; margin-bottom: 5px;">Total Operaciones</div>
-                                <div style="font-size: 20px; font-weight: bold; color: #155724;">87 facturas</div>
+                                <div style="font-size: 20px; font-weight: bold; color: #155724;" id="totalOperaciones">0</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pestañas de retenciones -->
+                <!-- Loading spinner -->
+                <div id="loadingSpinner" style="display: none; text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #083CAE;"></i>
+                    <p style="margin-top: 15px; color: #6c757d;">Cargando datos...</p>
+                </div>
+
+                <!-- Pestañas -->
                 <div style="border-bottom: 2px solid #dee2e6; margin-bottom: 20px; display: flex; gap: 5px;">
                     <button class="tab-button active" data-tab="isr" style="background-color: #083CAE; color: white; border: none; padding: 10px 25px; font-size: 14px; font-weight: 600; border-radius: 8px 8px 0 0; cursor: pointer;">
                         <i class="fas fa-percent" style="margin-right: 8px;"></i> Retenciones ISR
@@ -117,96 +122,16 @@
                 <!-- CONTENIDO: Retenciones ISR -->
                 <div id="tab-isr" class="tab-content" style="display: block;">
                     <div style="border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                        <!-- Encabezados de tabla -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
                             <div>Razón Social / RFC</div>
-                            <div>Proveedor</div>
                             <div style="text-align: right;">Subtotal</div>
                             <div style="text-align: right;">Tasa ISR</div>
                             <div style="text-align: right;">ISR Retenido</div>
                             <div style="text-align: center;">Acciones</div>
                         </div>
-
-                        <!-- Cuerpo de la tabla ISR -->
-                        <div style="padding: 5px 0;">
-                            <!-- Fila 1 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                                <div>
-                                    <div style="font-weight: 500;">Constructora del Norte S.A. de C.V.</div>
-                                    <div style="font-size: 11px; color: #6c757d;">CNO851203HDF</div>
-                                </div>
-                                <div>PROV-001</div>
-                                <div style="text-align: right; font-family: monospace;">$45,230.50</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$4,523.05</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 2 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                                <div>
-                                    <div style="font-weight: 500;">Servicios Integrales de Logística</div>
-                                    <div style="font-size: 11px; color: #6c757d;">SIL970512ABC</div>
-                                </div>
-                                <div>PROV-002</div>
-                                <div style="text-align: right; font-family: monospace;">$18,500.00</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$1,850.00</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 3 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                                <div>
-                                    <div style="font-weight: 500;">Consultoría y Asesoría Empresarial</div>
-                                    <div style="font-size: 11px; color: #6c757d;">CAE880104XYZ</div>
-                                </div>
-                                <div>PROV-004</div>
-                                <div style="text-align: right; font-family: monospace;">$12,000.00</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$1,200.00</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 4 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                                <div>
-                                    <div style="font-weight: 500;">Arrendadora de Maquinaria Pesada</div>
-                                    <div style="font-size: 11px; color: #6c757d;">AMP901234JKL</div>
-                                </div>
-                                <div>PROV-008</div>
-                                <div style="text-align: right; font-family: monospace;">$42,000.00</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$4,200.00</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 5 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                                <div>
-                                    <div style="font-weight: 500;">Servicios de Limpieza Industrial</div>
-                                    <div style="font-size: 11px; color: #6c757d;">SLI750908MNO</div>
-                                </div>
-                                <div>PROV-009</div>
-                                <div style="text-align: right; font-family: monospace;">$5,600.00</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$560.00</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
+                        <div id="tablaIsrBody" style="padding: 5px 0;">
+                            <div style="text-align: center; padding: 40px; color: #6c757d;">
+                                <i class="fas fa-info-circle"></i> Seleccione un período para cargar los datos
                             </div>
                         </div>
                     </div>
@@ -215,80 +140,16 @@
                 <!-- CONTENIDO: Retenciones IVA -->
                 <div id="tab-iva" class="tab-content" style="display: none;">
                     <div style="border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                        <!-- Encabezados de tabla -->
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
                             <div>Razón Social / RFC</div>
-                            <div>Proveedor</div>
                             <div style="text-align: right;">Subtotal</div>
                             <div style="text-align: right;">Tasa IVA</div>
                             <div style="text-align: right;">IVA Retenido</div>
                             <div style="text-align: center;">Acciones</div>
                         </div>
-
-                        <!-- Cuerpo de la tabla IVA -->
-                        <div style="padding: 5px 0;">
-                            <!-- Fila 1 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                                <div>
-                                    <div style="font-weight: 500;">Proveedora de Materiales y Equipos</div>
-                                    <div style="font-size: 11px; color: #6c757d;">PME760512QWE</div>
-                                </div>
-                                <div>PROV-003</div>
-                                <div style="text-align: right; font-family: monospace;">$32,150.75</div>
-                                <div style="text-align: right;">8%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$2,572.06</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 2 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                                <div>
-                                    <div style="font-weight: 500;">Servicios de Transporte y Carga</div>
-                                    <div style="font-size: 11px; color: #6c757d;">STC830921RTY</div>
-                                </div>
-                                <div>PROV-006</div>
-                                <div style="text-align: right; font-family: monospace;">$23,800.00</div>
-                                <div style="text-align: right;">16%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$3,808.00</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 3 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #ffffff;">
-                                <div>
-                                    <div style="font-weight: 500;">Proveedora de Alimentos y Bebidas</div>
-                                    <div style="font-size: 11px; color: #6c757d;">PAB950401UIO</div>
-                                </div>
-                                <div>PROV-007</div>
-                                <div style="text-align: right; font-family: monospace;">$9,850.25</div>
-                                <div style="text-align: right;">8%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$788.02</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
-                            </div>
-
-                            <!-- Fila 4 -->
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: #f8f9fa;">
-                                <div>
-                                    <div style="font-weight: 500;">Distribuidora de Material Eléctrico</div>
-                                    <div style="font-size: 11px; color: #6c757d;">DME880214ASD</div>
-                                </div>
-                                <div>PROV-010</div>
-                                <div style="text-align: right; font-family: monospace;">$28,450.00</div>
-                                <div style="text-align: right;">16%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">$4,552.00</div>
-                                <div style="text-align: center;">
-                                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle"></i>
-                                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF"></i>
-                                </div>
+                        <div id="tablaIvaBody" style="padding: 5px 0;">
+                            <div style="text-align: center; padding: 40px; color: #6c757d;">
+                                <i class="fas fa-info-circle"></i> Seleccione un período para cargar los datos
                             </div>
                         </div>
                     </div>
@@ -296,158 +157,10 @@
 
                 <!-- CONTENIDO: Resumen -->
                 <div id="tab-resumen" class="tab-content" style="display: none;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-                        <!-- Gráfico ISR -->
-                        <div style="border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; background-color: white;">
-                            <h4 style="color: #083CAE; font-size: 16px; font-weight: 600; margin-bottom: 15px;">
-                                <i class="fas fa-percent" style="margin-right: 8px;"></i> Distribución ISR por Proveedor
-                            </h4>
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Constructora del Norte</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$4,523.05</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 35%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Arrendadora de Maquinaria</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$4,200.00</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 32%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Servicios Integrales</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$1,850.00</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 14%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Consultoría Empresarial</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$1,200.00</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 9%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Limpieza Industrial</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$560.00</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 4%; height: 8px; background-color: #083CAE; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Gráfico IVA -->
-                        <div style="border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; background-color: white;">
-                            <h4 style="color: #083CAE; font-size: 16px; font-weight: 600; margin-bottom: 15px;">
-                                <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Distribución IVA por Proveedor
-                            </h4>
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Material Eléctrico</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$4,552.00</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 40%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Transporte y Carga</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$3,808.00</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 33%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Materiales y Equipos</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$2,572.06</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 22%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                        <span style="font-size: 13px;">Alimentos y Bebidas</span>
-                                        <span style="font-size: 13px; font-weight: 600;">$788.02</span>
-                                    </div>
-                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                        <div style="width: 7%; height: 8px; background-color: #28a745; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tabla de resumen -->
-                    <div style="border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden;">
-                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
-                            <div>Concepto</div>
-                            <div style="text-align: right;">Base</div>
-                            <div style="text-align: right;">Tasa</div>
-                            <div style="text-align: right;">Retención</div>
-                            <div style="text-align: right;">% del Total</div>
-                        </div>
-                        <div style="padding: 5px 0;">
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; background-color: #ffffff;">
-                                <div style="font-weight: 500;">ISR - Servicios Profesionales</div>
-                                <div style="text-align: right; font-family: monospace;">$123,330.50</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600;">$12,333.05</div>
-                                <div style="text-align: right;">27.3%</div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
-                                <div style="font-weight: 500;">ISR - Arrendamiento</div>
-                                <div style="text-align: right; font-family: monospace;">$42,000.00</div>
-                                <div style="text-align: right;">10%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600;">$4,200.00</div>
-                                <div style="text-align: right;">9.3%</div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; background-color: #ffffff;">
-                                <div style="font-weight: 500;">IVA - Tasa 16%</div>
-                                <div style="text-align: right; font-family: monospace;">$52,250.00</div>
-                                <div style="text-align: right;">16%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600;">$8,360.00</div>
-                                <div style="text-align: right;">18.5%</div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
-                                <div style="font-weight: 500;">IVA - Tasa 8%</div>
-                                <div style="text-align: right; font-family: monospace;">$42,001.00</div>
-                                <div style="text-align: right;">8%</div>
-                                <div style="text-align: right; font-family: monospace; font-weight: 600;">$3,360.08</div>
-                                <div style="text-align: right;">7.4%</div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; background-color: #e9ecef; font-weight: 700;">
-                                <div style="color: #083CAE;">TOTALES</div>
-                                <div style="text-align: right; font-family: monospace;">$217,581.50</div>
-                                <div style="text-align: right;"></div>
-                                <div style="text-align: right; font-family: monospace;">$28,253.13</div>
-                                <div style="text-align: right;">100%</div>
-                            </div>
-                        </div>
+                    <div id="resumenContainer" style="text-align: center; padding: 40px; color: #6c757d;">
+                        <i class="fas fa-info-circle"></i> Seleccione un período para cargar los datos
                     </div>
                 </div>
-
-                <!-- Información adicional -->
-
             </div>
         </div>
     </section>
@@ -458,151 +171,61 @@
         background-color: #f4f6f9;
         border-bottom: 2px solid #083CAE;
     }
-    
     .semaforo .card-header h2 {
         color: #083CAE !important;
     }
-
-    /* Estilo para los encabezados de tabla */
-    [style*="background-color: #6B8ACE"] {
-        transition: background-color 0.2s ease;
-        letter-spacing: 0.3px;
-    }
-
-    /* Estilo para filas alternadas */
-    [style*="background-color: #f8f9fa"] {
-        transition: background-color 0.2s ease;
-    }
-
-    [style*="background-color: #ffffff"]:hover,
-    [style*="background-color: #f8f9fa"]:hover {
-        background-color: #e3f2fd !important;
-        cursor: default;
-    }
-
-    /* Estilo para el botón de descarga */
-    #btnDescargar {
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(44, 191, 31, 0.2);
-    }
-
-    #btnDescargar:hover {
-        background-color: #249e1a !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(44, 191, 31, 0.3);
-    }
-
-    #btnDescargar:active {
-        transform: translateY(0);
-    }
-
-    /* Estilo para selects */
-    select {
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    select:hover {
-        border-color: #2CBF1F !important;
-    }
-
-    select:focus {
-        outline: none;
-        border-color: #083CAE;
-        box-shadow: 0 0 0 2px rgba(8, 60, 174, 0.2);
-    }
-
-    /* Estilo para números en monospace */
-    [style*="font-family: monospace"] {
-        font-size: 13px;
-    }
-
-    /* Estilo para tarjetas */
-    [style*="grid-template-columns: repeat(4, 1fr)"] > div {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    [style*="grid-template-columns: repeat(4, 1fr)"] > div:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-    }
-
-    /* Estilo para pestañas */
     .tab-button {
         transition: all 0.3s ease;
         border: 1px solid #dee2e6;
         border-bottom: none;
         margin-bottom: -2px;
     }
-
     .tab-button:hover {
         opacity: 0.9;
         transform: translateY(-2px);
     }
-
     .tab-button.active {
         background-color: #083CAE !important;
         color: white !important;
         border-color: #083CAE;
     }
-
-    /* Estilo para iconos de acción */
+    [style*="grid-template-columns: repeat(4, 1fr)"] > div {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    [style*="grid-template-columns: repeat(4, 1fr)"] > div:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    }
     .fa-eye:hover, .fa-file-pdf:hover {
         transform: scale(1.2);
         transition: transform 0.2s;
     }
-
     .fa-eye:hover {
         color: #0056b3 !important;
     }
-
     .fa-file-pdf:hover {
         color: #b02a37 !important;
     }
-
-    /* Responsive */
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
     @media (max-width: 768px) {
-        [style*="grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-            gap: 10px;
-        }
-        
         [style*="grid-template-columns: repeat(4, 1fr)"] {
             grid-template-columns: 1fr !important;
         }
-        
-        [style*="grid-template-columns: 1fr 1fr"] {
-            grid-template-columns: 1fr !important;
-        }
-        
         [style*="display: flex; justify-content: flex-end"] {
             flex-direction: column;
             align-items: stretch !important;
         }
-        
-        .semaforo .card-header h2 {
-            font-size: 18px !important;
-        }
-        
-        [style*="padding: 12px 20px"] {
-            padding: 10px !important;
-        }
-        
-        /* Ajustar el filtro en móvil */
-        [style*="display: flex; gap: 15px; align-items: center"] {
-            width: 100%;
-            justify-content: space-between;
-        }
-        
-        [style*="display: flex; border: 1px solid #083CAE; border-radius: 8px; overflow: hidden"] {
-            flex: 1;
-        }
-        
-        #btnDescargar {
-            width: 100%;
-            justify-content: center;
-        }
-        
         .tab-button {
             flex: 1;
             text-align: center;
@@ -611,80 +234,368 @@
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btnDescargar = document.getElementById('btnDescargar');
-        const mes = document.getElementById('mes');
-        const anio = document.getElementById('anio');
+// API URLs
+const API_URL = '/api/retenciones/data';
+const API_EXPORTAR = '/api/retenciones/exportar';
+
+// Elementos DOM
+const mesSelect = document.getElementById('mes');
+const anioSelect = document.getElementById('anio');
+const btnConsultar = document.getElementById('btnConsultar');
+const btnDescargar = document.getElementById('btnDescargar');
+const loadingSpinner = document.getElementById('loadingSpinner');
+
+// Variables
+let datosActuales = null;
+
+// Formatear moneda
+function formatCurrency(value) {
+    return '$' + parseFloat(value).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Cargar datos
+async function cargarDatos() {
+    const mes = mesSelect.value;
+    const anio = anioSelect.value;
+    
+    loadingSpinner.style.display = 'block';
+    
+    try {
+        const response = await fetch(`${API_URL}?mes=${mes}&anio=${anio}`);
+        const result = await response.json();
         
-        // Manejo de pestañas
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content');
-
-        function showTab(tabId) {
-            tabContents.forEach(content => {
-                content.style.display = 'none';
-            });
-
-            tabButtons.forEach(button => {
-                button.classList.remove('active');
-                button.style.backgroundColor = '#e9ecef';
-                button.style.color = '#495057';
-            });
-
-            document.getElementById(`tab-${tabId}`).style.display = 'block';
-
-            const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
-            activeButton.classList.add('active');
-            activeButton.style.backgroundColor = '#083CAE';
-            activeButton.style.color = 'white';
+        loadingSpinner.style.display = 'none';
+        
+        if (result.success) {
+            datosActuales = result.data;
+            actualizarEstadisticas(result.data.estadisticas);
+            renderizarIsr(result.data.retenciones_isr);
+            renderizarIva(result.data.retenciones_iva);
+            renderizarResumen(result.data.resumen_general);
+        } else {
+            mostrarToast('Error al cargar datos: ' + result.message, 'error');
         }
+    } catch (error) {
+        loadingSpinner.style.display = 'none';
+        console.error('Error:', error);
+        mostrarToast('Error de conexión', 'error');
+    }
+}
 
-        tabButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const tabId = this.dataset.tab;
-                showTab(tabId);
-            });
+// Actualizar tarjetas de estadísticas
+function actualizarEstadisticas(estadisticas) {
+    if (!estadisticas) return;
+    document.getElementById('totalIsr').textContent = estadisticas.total_isr_formateado || '$0.00';
+    document.getElementById('totalIva').textContent = estadisticas.total_iva_formateado || '$0.00';
+    document.getElementById('totalProveedores').textContent = estadisticas.total_proveedores || 0;
+    document.getElementById('totalOperaciones').textContent = estadisticas.total_operaciones || 0;
+}
+
+// Renderizar tabla ISR
+function renderizarIsr(retenciones) {
+    const container = document.getElementById('tablaIsrBody');
+    
+    if (!retenciones || retenciones.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #6c757d;"><i class="fas fa-info-circle"></i> No hay retenciones de ISR en el período seleccionado</div>';
+        return;
+    }
+    
+    let html = '<div style="padding: 5px 0;">';
+    let index = 0;
+    
+    retenciones.forEach(retencion => {
+        const bgColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
+        html += `
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: ${bgColor};">
+                <div>
+                    <div style="font-weight: 500;">${escapeHtml(retencion.razon_social || retencion.nombre)}</div>
+                    <div style="font-size: 11px; color: #6c757d;">${escapeHtml(retencion.rfc || '-')}</div>
+                </div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(retencion.subtotal)}</div>
+                <div style="text-align: right;">10%</div>
+                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">${formatCurrency(retencion.isr_retenido)}</div>
+                <div style="text-align: center;">
+                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle" data-rfc="${retencion.rfc}" data-tipo="isr"></i>
+                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF" data-rfc="${retencion.rfc}" data-tipo="isr"></i>
+                </div>
+            </div>
+        `;
+        index++;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Renderizar tabla IVA
+function renderizarIva(retenciones) {
+    const container = document.getElementById('tablaIvaBody');
+    
+    if (!retenciones || retenciones.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #6c757d;"><i class="fas fa-info-circle"></i> No hay retenciones de IVA en el período seleccionado</div>';
+        return;
+    }
+    
+    let html = '<div style="padding: 5px 0;">';
+    let index = 0;
+    
+    retenciones.forEach(retencion => {
+        const bgColor = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
+        html += `
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; align-items: center; background-color: ${bgColor};">
+                <div>
+                    <div style="font-weight: 500;">${escapeHtml(retencion.razon_social || retencion.nombre)}</div>
+                    <div style="font-size: 11px; color: #6c757d;">${escapeHtml(retencion.rfc || '-')}</div>
+                </div>
+                <div style="text-align: right; font-family: monospace;">${formatCurrency(retencion.subtotal)}</div>
+                <div style="text-align: right;">${retencion.tasa_formateada || '16%'}</div>
+                <div style="text-align: right; font-family: monospace; font-weight: 600; color: #083CAE;">${formatCurrency(retencion.iva_retenido)}</div>
+                <div style="text-align: center;">
+                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle" data-rfc="${retencion.rfc}" data-tipo="iva"></i>
+                    <i class="fas fa-file-pdf" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Descargar PDF" data-rfc="${retencion.rfc}" data-tipo="iva"></i>
+                </div>
+            </div>
+        `;
+        index++;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Renderizar resumen
+function renderizarResumen(resumen) {
+    const container = document.getElementById('resumenContainer');
+    
+    if (!resumen) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #6c757d;"><i class="fas fa-info-circle"></i> No hay datos para el período seleccionado</div>';
+        return;
+    }
+    
+    // Calcular porcentajes para gráficos
+    const totalIsr = resumen.total_isr || 0;
+    const totalIva = resumen.total_iva || 0;
+    const totalGeneral = totalIsr + totalIva;
+    
+    let isrHtml = '';
+    let ivaHtml = '';
+    let resumenTablaHtml = '';
+    
+    // ISR por concepto
+    if (resumen.isr_por_concepto && resumen.isr_por_concepto.length > 0) {
+        resumen.isr_por_concepto.forEach(item => {
+            const porcentaje = totalIsr > 0 ? (item.retencion / totalIsr * 100).toFixed(1) : 0;
+            isrHtml += `
+                <div style="margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-size: 13px;">${escapeHtml(item.concepto)}</span>
+                        <span style="font-size: 13px; font-weight: 600;">${formatCurrency(item.retencion)}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${porcentaje}%; background-color: #083CAE;"></div>
+                    </div>
+                </div>
+            `;
         });
-
-        // Mostrar ISR por defecto
-        showTab('isr');
-
-        // Evento para el botón de descarga
-        btnDescargar.addEventListener('click', function() {
-            const mesSel = mes.options[mes.selectedIndex].text;
-            const anioSel = anio.value;
-            
-            // Simular descarga
-            alert(`Descargando reporte de retenciones para ${mesSel} ${anioSel}...`);
-            
-            // Crear contenido de ejemplo para el archivo
-            const contenido = `REPORTE DE RETENCIONES - ISR e IVA\n`;
-            const contenido2 = `Período: ${mesSel} ${anioSel}\n`;
-            const contenido3 = `Generado: ${new Date().toLocaleString()}\n`;
-            const contenido4 = `Total ISR Retenido: $45,230.50\n`;
-            const contenido5 = `Total IVA Retenido: $12,875.32\n`;
-            
-            console.log('Reporte generado:', contenido + contenido2 + contenido3 + contenido4 + contenido5);
-            
-            // Feedback visual
-            btnDescargar.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                btnDescargar.style.transform = 'scale(1)';
-            }, 200);
+    }
+    
+    // IVA por tasa
+    if (resumen.iva_por_tasa && resumen.iva_por_tasa.length > 0) {
+        resumen.iva_por_tasa.forEach(item => {
+            const porcentaje = totalIva > 0 ? (item.retencion / totalIva * 100).toFixed(1) : 0;
+            ivaHtml += `
+                <div style="margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span style="font-size: 13px;">IVA ${item.tasa || 16}%</span>
+                        <span style="font-size: 13px; font-weight: 600;">${formatCurrency(item.retencion)}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${porcentaje}%; background-color: #28a745;"></div>
+                    </div>
+                </div>
+            `;
         });
+    }
+    
+    // Resumen de conceptos
+    resumenTablaHtml = `
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; background-color: #6B8ACE; padding: 15px 20px; font-weight: 700; color: white; border-bottom: 2px solid #083CAE;">
+            <div>Concepto</div>
+            <div style="text-align: right;">Base</div>
+            <div style="text-align: right;">Tasa</div>
+            <div style="text-align: right;">Retención</div>
+            <div style="text-align: right;">% del Total</div>
+        </div>
+        <div style="padding: 5px 0;">
+    `;
+    
+    if (resumen.isr_por_concepto) {
+        resumen.isr_por_concepto.forEach((item, idx) => {
+            const bgColor = idx % 2 === 0 ? '#ffffff' : '#f8f9fa';
+            const porcentaje = totalGeneral > 0 ? (item.retencion / totalGeneral * 100).toFixed(1) : 0;
+            resumenTablaHtml += `
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; background-color: ${bgColor};">
+                    <div style="font-weight: 500;">ISR - ${escapeHtml(item.concepto)}</div>
+                    <div style="text-align: right; font-family: monospace;">${formatCurrency(item.base)}</div>
+                    <div style="text-align: right;">10%</div>
+                    <div style="text-align: right; font-family: monospace; font-weight: 600;">${formatCurrency(item.retencion)}</div>
+                    <div style="text-align: right;">${porcentaje}%</div>
+                </div>
+            `;
+        });
+    }
+    
+    if (resumen.iva_por_tasa) {
+        resumen.iva_por_tasa.forEach((item, idx) => {
+            const bgColor = (resumen.isr_por_concepto?.length + idx) % 2 === 0 ? '#ffffff' : '#f8f9fa';
+            const porcentaje = totalGeneral > 0 ? (item.retencion / totalGeneral * 100).toFixed(1) : 0;
+            resumenTablaHtml += `
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; border-bottom: 1px solid #dee2e6; background-color: ${bgColor};">
+                    <div style="font-weight: 500;">IVA - Tasa ${item.tasa || 16}%</div>
+                    <div style="text-align: right; font-family: monospace;">${formatCurrency(item.base)}</div>
+                    <div style="text-align: right;">${item.tasa || 16}%</div>
+                    <div style="text-align: right; font-family: monospace; font-weight: 600;">${formatCurrency(item.retencion)}</div>
+                    <div style="text-align: right;">${porcentaje}%</div>
+                </div>
+            `;
+        });
+    }
+    
+    resumenTablaHtml += `
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 20px; background-color: #e9ecef; font-weight: 700;">
+                <div style="color: #083CAE;">TOTALES</div>
+                <div style="text-align: right; font-family: monospace;">${resumen.total_base_formateado || '$0.00'}</div>
+                <div style="text-align: right;"></div>
+                <div style="text-align: right; font-family: monospace;">${resumen.total_retencion_formateado || '$0.00'}</div>
+                <div style="text-align: right;">100%</div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div style="border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; background-color: white;">
+                <h4 style="color: #083CAE; font-size: 16px; font-weight: 600; margin-bottom: 15px;">
+                    <i class="fas fa-percent" style="margin-right: 8px;"></i> Distribución ISR por Concepto
+                </h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    ${isrHtml || '<p>No hay datos de ISR</p>'}
+                </div>
+            </div>
+            <div style="border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; background-color: white;">
+                <h4 style="color: #083CAE; font-size: 16px; font-weight: 600; margin-bottom: 15px;">
+                    <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Distribución IVA por Tasa
+                </h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    ${ivaHtml || '<p>No hay datos de IVA</p>'}
+                </div>
+            </div>
+        </div>
+        <div style="border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden;">
+            ${resumenTablaHtml}
+        </div>
+    `;
+}
 
-        // Evento para cambio de período (simulado)
-        [mes, anio].forEach(select => {
-            select.addEventListener('change', function() {
-                const mesSel = mes.options[mes.selectedIndex].text;
-                const anioSel = anio.value;
-                console.log(`Cambiando a período: ${mesSel} ${anioSel}`);
-            });
+// Descargar reporte
+function descargarReporte() {
+    const mes = mesSelect.value;
+    const anio = anioSelect.value;
+    const url = `${API_EXPORTAR}?mes=${mes}&anio=${anio}`;
+    window.open(url, '_blank');
+    mostrarToast('Descargando reporte...', 'success');
+}
+
+// Mostrar toast
+function mostrarToast(msg, tipo = 'success') {
+    const container = document.getElementById('toastContainer') || (() => {
+        const div = document.createElement('div');
+        div.id = 'toastContainer';
+        div.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;';
+        document.body.appendChild(div);
+        return div;
+    })();
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.style.cssText = `background:#1A1D23; color:white; padding:12px 20px; border-radius:8px; font-size:13px; display:flex; align-items:center; gap:12px; min-width:300px; box-shadow:0 8px 24px rgba(0,0,0,0.2); animation:slideInRight 0.3s ease; border-left:4px solid ${tipo === 'success' ? '#28a745' : '#dc3545'};`;
+    const icon = tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Escapar HTML
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// Manejo de pestañas
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+    });
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+        button.style.backgroundColor = '#e9ecef';
+        button.style.color = '#495057';
+    });
+    document.getElementById(`tab-${tabId}`).style.display = 'block';
+    const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
+    activeButton.classList.add('active');
+    activeButton.style.backgroundColor = '#083CAE';
+    activeButton.style.color = 'white';
+}
+
+// Eventos
+document.addEventListener('DOMContentLoaded', function() {
+    // Eventos de pestañas
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            showTab(this.dataset.tab);
         });
     });
+    
+    // Eventos de botones
+    btnConsultar.addEventListener('click', cargarDatos);
+    btnDescargar.addEventListener('click', descargarReporte);
+    
+    // Cargar datos iniciales
+    cargarDatos();
+    
+    // Eventos delegados para iconos
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('fa-eye')) {
+            const rfc = e.target.dataset.rfc;
+            const tipo = e.target.dataset.tipo;
+            mostrarToast(`Ver detalle de retención ${tipo.toUpperCase()} para RFC: ${rfc}`, 'info');
+        } else if (e.target.classList.contains('fa-file-pdf')) {
+            const rfc = e.target.dataset.rfc;
+            const tipo = e.target.dataset.tipo;
+            mostrarToast(`Descargando PDF de retención ${tipo.toUpperCase()} para RFC: ${rfc}`, 'success');
+        }
+    });
+});
+
+// Estilos adicionales
+const style = document.createElement('style');
+style.textContent = `
+    .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .progress-bar { width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+`;
+document.head.appendChild(style);
 </script>
 @endsection

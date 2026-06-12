@@ -47,7 +47,6 @@
         margin-top: 0.5rem;
     }
 
-    /* Estilos de tarjeta principal */
     .semaforo.card {
         background: white;
         border-radius: 10px;
@@ -71,7 +70,6 @@
         font-size: 24px;
     }
 
-    /* KPIs - Centrados y texto negro */
     .kpi-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -109,7 +107,6 @@
         line-height: 1.2;
     }
 
-    /* Botón Agregar Gasto con animación */
     .btn-agregar {
         background-color: #1A8C3C;
         color: white;
@@ -138,33 +135,10 @@
         transform: translateY(0);
     }
 
-    .btn-agregar i {
-        transition: transform 0.3s ease;
-    }
-
     .btn-agregar:hover i {
         transform: rotate(90deg);
     }
 
-    .btn-agregar::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-
-    .btn-agregar:active::after {
-        width: 300px;
-        height: 300px;
-    }
-
-    /* Panel de nuevo gasto */
     .panel-nuevo-gasto {
         background-color: #f8f9fa;
         border-bottom: 1px solid #dee2e6;
@@ -259,7 +233,6 @@
         transform: translateY(-2px);
     }
 
-    /* Estilos de tabla */
     .table {
         width: 100%;
         border-collapse: collapse;
@@ -293,23 +266,6 @@
         text-align: right;
     }
 
-    /* Estilo para las filas */
-    #tablaBody tr {
-        transition: all 0.3s ease;
-        animation: fadeInRow 0.3s ease;
-    }
-
-    @keyframes fadeInRow {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     #tablaBody tr:nth-child(odd) {
         background-color: #ffffff;
     }
@@ -324,11 +280,9 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* Estilo para los iconos de acción */
     #tablaBody td i {
         transition: all 0.3s ease;
         font-size: 14px;
-        color: #083CAE;
         cursor: pointer;
         margin: 0 4px;
     }
@@ -342,7 +296,6 @@
         color: #dc3545;
     }
 
-    /* Columna de acciones fija */
     #tablaBody td:last-child {
         background-color: white;
         position: sticky;
@@ -351,20 +304,12 @@
         z-index: 15;
     }
 
-    /* Badges de estatus */
     .badge {
         font-size: 11px;
         font-weight: 600;
         padding: 4px 8px;
         border-radius: 3px;
         display: inline-block;
-        animation: pulseBadge 2s infinite;
-    }
-
-    @keyframes pulseBadge {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
     }
 
     .badge-aprobado {
@@ -387,7 +332,6 @@
         color: white;
     }
 
-    /* Filtros y búsqueda */
     .filters-container {
         display: flex;
         gap: 15px;
@@ -450,22 +394,16 @@
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
-        animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(8,60,174,0.7); }
-        70% { box-shadow: 0 0 0 10px rgba(8,60,174,0); }
-        100% { box-shadow: 0 0 0 0 rgba(8,60,174,0); }
-    }
-
-    /* Tabs */
     .tabs-container {
         display: flex;
         gap: 2px;
         padding: 0 15px;
         background-color: #f8f9fa;
         border-bottom: 1px solid #dee2e6;
+        overflow-x: auto;
+        white-space: nowrap;
     }
 
     .tab-item {
@@ -479,6 +417,9 @@
         border-radius: 6px 6px 0 0;
         margin-bottom: -1px;
         transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
     }
 
     .tab-item:hover {
@@ -494,7 +435,6 @@
         font-weight: 700;
     }
 
-    /* Área de agrupación - sin texto */
     .grupo-agrupacion {
         padding: 12px 20px;
         background-color: #f8f9fa;
@@ -523,18 +463,6 @@
         font-size: 12px;
         margin: 2px;
         border: 1px solid #083CAE;
-        animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
     }
 
     .columna-agrupada .remover {
@@ -549,107 +477,6 @@
         opacity: 0.7;
     }
 
-    .btn-icon {
-        background: transparent;
-        border: 1px solid #083CAE;
-        border-radius: 20px;
-        color: #083CAE;
-        cursor: pointer;
-        padding: 6px 15px;
-        font-size: 12px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-    }
-
-    .btn-icon:hover {
-        background-color: #083CAE;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(8,60,174,0.3);
-    }
-
-    /* Paginación */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        background-color: transparent;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .pagination-info {
-        color: #000000;
-        font-size: 13px;
-    }
-
-    .pagination-controls {
-        display: flex;
-        gap: 5px;
-        align-items: center;
-    }
-
-    .page-btn {
-        background: transparent;
-        border: 1px solid #dee2e6;
-        color: #083CAE;
-        cursor: pointer;
-        padding: 5px 10px;
-        font-size: 13px;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-        min-width: 35px;
-    }
-
-    .page-btn:hover:not(:disabled) {
-        background-color: #083CAE;
-        color: white;
-        border-color: #083CAE;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(8,60,174,0.2);
-    }
-
-    .page-btn.active {
-        background-color: #083CAE;
-        color: white;
-        border-color: #083CAE;
-    }
-
-    .page-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    /* Proyectos */
-    .project-tag {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-    }
-    
-    .project-dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 2px;
-        flex-shrink: 0;
-    }
-    
-    .project-code {
-        font-weight: 700;
-        font-size: 12px;
-        line-height: 1.2;
-        color: #000000;
-    }
-    
-    .project-name {
-        font-size: 10.5px;
-        color: #6b7280;
-    }
-
-    /* Progress bar */
     .progress-wrap {
         display: flex;
         align-items: center;
@@ -687,7 +514,85 @@
         text-align: right;
     }
 
-    /* Toast */
+    .project-tag {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    
+    .project-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+    
+    .project-code {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1.2;
+        color: #000000;
+    }
+    
+    .project-name {
+        font-size: 10.5px;
+        color: #6b7280;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background-color: transparent;
+        border-top: 1px solid #e5e7eb;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pagination-info {
+        color: #000000;
+        font-size: 13px;
+    }
+
+    .pagination-controls {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .page-btn {
+        background: transparent;
+        border: 1px solid #dee2e6;
+        color: #083CAE;
+        cursor: pointer;
+        padding: 5px 10px;
+        font-size: 13px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        min-width: 35px;
+    }
+
+    .page-btn:hover:not(:disabled) {
+        background-color: #083CAE;
+        color: white;
+        border-color: #083CAE;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(8,60,174,0.2);
+    }
+
+    .page-btn.active {
+        background-color: #083CAE;
+        color: white;
+        border-color: #083CAE;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
     .toast-container {
         position: fixed;
         bottom: 20px;
@@ -708,47 +613,24 @@
         align-items: center;
         gap: 12px;
         min-width: 300px;
+        max-width: 400px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         animation: slideInRight 0.3s ease;
         border-left: 4px solid;
     }
 
-    .toast.success {
-        border-left-color: #28a745;
-    }
-
-    .toast.success i {
-        color: #28a745;
-    }
-
-    .toast.warning {
-        border-left-color: #ffc107;
-    }
-
-    .toast.warning i {
-        color: #ffc107;
-    }
-
-    .toast.error {
-        border-left-color: #dc3545;
-    }
-
-    .toast.error i {
-        color: #dc3545;
-    }
+    .toast.success { border-left-color: #28a745; }
+    .toast.success i { color: #28a745; }
+    .toast.warning { border-left-color: #ffc107; }
+    .toast.warning i { color: #ffc107; }
+    .toast.error { border-left-color: #dc3545; }
+    .toast.error i { color: #dc3545; }
 
     @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
 
-    /* Modal */
     .modal {
         display: none;
         position: fixed;
@@ -761,9 +643,7 @@
         animation: fadeIn 0.3s ease;
     }
 
-    .modal.show {
-        display: block;
-    }
+    .modal.show { display: block; }
 
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -774,17 +654,12 @@
         max-width: 400px;
         margin: 100px auto;
         animation: slideInDown 0.3s ease;
+        padding: 0 15px;
     }
 
     @keyframes slideInDown {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
     }
 
     .modal-content {
@@ -814,374 +689,176 @@
         border: none;
         font-size: 20px;
         cursor: pointer;
-        transition: opacity 0.3s;
     }
 
-    .modal-header.danger-header .close:hover {
-        opacity: 1;
-    }
+    .modal-body { padding: 20px; font-size: 13.5px; color: #495057; }
+    .modal-footer { padding: 12px 16px; background: #f8f9fa; display: flex; justify-content: flex-end; gap: 8px; }
+    tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #083CAE; color: #000000 !important; }
+    .mono { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 12px; color: #000000; }
+    .text-right { text-align: right; }
 
-    .modal-body {
-        padding: 20px;
-        font-size: 13.5px;
-        color: #495057;
-    }
-
-    .modal-footer {
-        padding: 12px 16px;
-        background: #f8f9fa;
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-        .kpi-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .filters-container {
-            flex-direction: column;
-        }
-
-        .search-box {
-            width: 100%;
-        }
-
-        .filter-select {
-            width: 100%;
-        }
-
-        .grupo-agrupacion {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .btn-icon {
-            width: 100%;
-            justify-content: center;
-        }
-
-        #tablaBody td:last-child {
-            position: static;
-            box-shadow: none;
-        }
-
-        .btn-agregar {
-            margin-left: 0;
-            width: 100%;
-            justify-content: center;
-        }
+        .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .filters-container { flex-direction: column; }
+        .search-box, .filter-select { width: 100%; }
+        .grupo-agrupacion { flex-direction: column; align-items: flex-start; }
+        .btn-agregar { margin-left: 0; width: 100%; justify-content: center; }
+        #tablaBody td:last-child { position: static; box-shadow: none; }
+        .tabs-container { overflow-x: auto; }
+        .tab-item { font-size: 11px; padding: 8px 12px; }
     }
 
-    /* Drag and drop */
-    [draggable="true"] {
-        cursor: grab;
-    }
-    
-    [draggable="true"]:active {
-        cursor: grabbing;
-        opacity: 0.7;
-    }
-    
-    .drag-over .grupo-columnas {
-        background-color: rgba(8,60,174,0.1);
-        border-radius: 4px;
-        padding: 5px;
-    }
-
-    /* Table container */
-    .table-container {
-        overflow-x: auto;
-        max-height: 500px;
-        overflow-y: auto;
-        width: 100%;
-        background: white;
-    }
-
-    /* Estilo para el pie de tabla */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #083CAE;
-        color: #000000 !important;
-    }
-
-    /* Monospace para números */
-    .mono {
-        font-family: 'SFMono-Regular', Consolas, monospace;
-        font-size: 12px;
-        color: #000000;
-    }
-
-    /* Texto a la derecha */
-    .text-right {
-        text-align: right;
-    }
-
-    /* Centrar texto */
-    .text-center {
-        text-align: center;
-    }
-
-    /* =========================================================================================== */
-    /* ========== SOLUCIÓN: MENÚ LATERAL SOBRE LAS TABS ========== */
-/* Asegurar que el menú lateral esté por encima de todo */
-.section-sidebar {
-    z-index: 10010 !important; /* Mayor que el z-index de la barra de pestañas (10000) */
-}
-
-/* Reducir z-index de la barra de pestañas del layout */
-.tab-navigation-bar {
-    z-index: 9990 !important; /* Por debajo del menú lateral */
-}
-
-/* Ajustar elementos internos de la barra de pestañas */
-.tabs-container-nav,
-.tab-item,
-.close-all-tabs-container {
-    z-index: 9991 !important;
-}
-
-/* Reducir z-index de los elementos de la tabla que estaban interfiriendo */
-.semaforo .table th {
-    z-index: 15 !important; /* Reducido de 20 a 15 */
-}
-
-.semaforo #tablaBody td:last-child {
-    z-index: 10 !important; /* Reducido de 15 a 10 */
-}
-
-/* Ajuste para el menú de favoritos */
-.quick-sidebar {
-    z-index: 10009 !important; /* Por debajo del menú principal */
-}
-
-/* Ajuste para el menú móvil */
-.mobile-menu-sidebar {
-    z-index: 10020 !important; /* Mayor en móvil */
-}
-
-.mobile-overlay {
-    z-index: 10015 !important;
-}
-
-/* Cuando el menú está abierto, reducir interacción con el contenido */
-.section-sidebar.open ~ .main-content-container {
-    pointer-events: none; /* Evita clics en elementos detrás */
-}
-
-.section-sidebar.open ~ .main-content-container .semaforo.card {
-    pointer-events: auto; /* Permite interacción con la tarjeta si es necesario */
-}
-
-/* Ajuste responsive para móvil */
-@media (max-width: 992px) {
-    .section-sidebar {
-        z-index: 10030 !important; /* Aún más alto en móvil */
-    }
-    
-    .tab-navigation-bar {
-        z-index: 9995 !important;
-    }
-    
-    .mobile-menu-sidebar {
-        z-index: 10040 !important;
-    }
-}
-
+    [draggable="true"] { cursor: grab; }
+    [draggable="true"]:active { cursor: grabbing; opacity: 0.7; }
+    .drag-over .grupo-columnas { background-color: rgba(8,60,174,0.1); border-radius: 4px; padding: 5px; }
+    .table-container { overflow-x: auto; max-height: 500px; overflow-y: auto; width: 100%; background: white; }
 </style>
 
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Facturacion / Gastos por Proyecto -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header">
-                <h2>
-                    
-                    Asignación de Gastos por Proyecto
-                </h2>
+                <h2>Asignación de Gastos por Proyecto</h2>
             </div>
             
-            <!-- KPIs - Centrados y texto negro -->
+            <!-- KPIs -->
             <div class="kpi-grid">
                 <div class="kpi-card">
-                    <div class="label">Gasto Total del Mes</div>
-                    <div class="value" id="kpiTotal">$4,245,800</div>
+                    <div class="label">Gasto Total</div>
+                    <div class="value" id="kpiTotal">$0</div>
                 </div>
                 <div class="kpi-card">
                     <div class="label">Proyectos Activos</div>
-                    <div class="value" id="kpiProyectos">15</div>
+                    <div class="value" id="kpiProyectos">0</div>
                 </div>
                 <div class="kpi-card">
                     <div class="label">Gastos Aprobados</div>
-                    <div class="value" id="kpiAprobados">$2,845,600</div>
+                    <div class="value" id="kpiAprobados">$0</div>
                 </div>
                 <div class="kpi-card">
                     <div class="label">Pendientes</div>
-                    <div class="value" id="kpiPendientes">$1,400,200</div>
+                    <div class="value" id="kpiPendientes">$0</div>
                 </div>
             </div>
             
-            <!-- Panel de nuevo gasto -->
+            <!-- Panel nuevo gasto -->
             <div class="panel-nuevo-gasto" id="panelNuevoGasto">
-                <form id="gastoForm" onsubmit="return false">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Proyecto <span class="req">*</span></label>
-                            <select class="form-control" id="fProyecto">
-                                <option value="">— Seleccionar —</option>
-                                <option value="TRC001">TRC001 - Torre Residencial Cumbres</option>
-                                <option value="PAC002">PAC002 - Puente Av. Constitución</option>
-                                <option value="CIA003">CIA003 - Complejo Industrial Apodaca</option>
-                                <option value="RHR004">RHR004 - Hospital Regional</option>
-                                <option value="VPS005">VPS005 - Vialidad Periférico Sur</option>
-                                <option value="PGA006">PGA006 - Plaza Galerías Monterrey</option>
-                                <option value="CCM007">CCM007 - Centro Comercial Metropolitano</option>
-                                <option value="UAN008">UAN008 - Unidad Habitacional Anáhuac</option>
-                                <option value="PIR009">PIR009 - Parque Industrial Roble</option>
-                                <option value="EST010">EST010 - Estadio Universitario</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Fecha <span class="req">*</span></label>
-                            <input type="date" class="form-control" id="fFecha" value="{{ date('Y-m-d') }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Folio</label>
-                            <input type="text" class="form-control" id="fFolio" placeholder="FAC-2025-XXXX">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Categoría <span class="req">*</span></label>
-                            <select class="form-control" id="fCategoria">
-                                <option value="">— Seleccionar —</option>
-                                <optgroup label="Materiales">
-                                    <option value="Concreto">Concreto Premezclado</option>
-                                    <option value="Acero">Acero de Refuerzo</option>
-                                    <option value="Block">Block y Tabique</option>
-                                    <option value="Cemento">Cemento Gris</option>
-                                    <option value="Varilla">Varilla Corrugada</option>
-                                    <option value="Madera">Madera para Cimbra</option>
-                                    <option value="Tuberia">Tubería PVC</option>
-                                    <option value="Cable">Cable Eléctrico</option>
-                                    <option value="Pintura">Pintura Vinílica</option>
-                                </optgroup>
-                                <optgroup label="Mano de Obra">
-                                    <option value="Albañiles">Cuadrilla de Albañiles</option>
-                                    <option value="Electricistas">Electricistas</option>
-                                    <option value="Plomeros">Plomeros</option>
-                                    <option value="Carpinteros">Carpinteros</option>
-                                    <option value="Herreros">Herreros</option>
-                                    <option value="Ingenieros">Ingenieros Residentes</option>
-                                </optgroup>
-                                <optgroup label="Maquinaria">
-                                    <option value="Retroexcavadora">Renta de Retroexcavadora</option>
-                                    <option value="Grua">Grúa Torre</option>
-                                    <option value="Montacargas">Montacargas</option>
-                                    <option value="Compactadora">Compactadora</option>
-                                    <option value="Revolvedora">Revolvedora de Concreto</option>
-                                </optgroup>
-                                <optgroup label="Servicios">
-                                    <option value="Seguridad">Servicio de Seguridad</option>
-                                    <option value="Limpieza">Limpieza de Obra</option>
-                                    <option value="RentaBaños">Renta de Baños Portátiles</option>
-                                </optgroup>
-                                <optgroup label="Administrativo">
-                                    <option value="Permisos">Permisos y Licencias</option>
-                                    <option value="Seguros">Seguros de Obra</option>
-                                    <option value="Honorarios">Honorarios Profesionales</option>
-                                    <option value="Combustible">Combustible</option>
-                                </optgroup>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Monto <span class="req">*</span></label>
-                            <input type="number" class="form-control" id="fMonto" placeholder="0.00" min="0" step="0.01">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Proveedor</label>
-                            <input type="text" class="form-control" id="fProveedor" placeholder="Nombre del proveedor">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Partida</label>
-                            <select class="form-control" id="fPartida">
-                                <option value="">— Opcional —</option>
-                                <option value="CIMENTACION">01 - Cimentación</option>
-                                <option value="ESTRUCTURA">02 - Estructura</option>
-                                <option value="ALBAÑILERIA">03 - Albañilería</option>
-                                <option value="ACABADOS">04 - Acabados</option>
-                                <option value="INSTALACIONES">05 - Instalaciones</option>
-                                <option value="ELECTRICAS">06 - Eléctricas</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tipo Documento</label>
-                            <select class="form-control" id="fTipoDoc">
-                                <option>Factura</option>
-                                <option>Nota de Remisión</option>
-                                <option>Recibo</option>
-                                <option>Nómina</option>
-                                <option>Contrato</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Estatus</label>
-                            <select class="form-control" id="fEstatus">
-                                <option>Pendiente</option>
-                                <option>Aprobado</option>
-                                <option>Rechazado</option>
-                                <option>En revisión</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="grid-column: span 2;">
-                            <label>Notas</label>
-                            <textarea class="form-control" id="fNotas" rows="2" placeholder="Detalles adicionales..."></textarea>
-                        </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Proyecto <span class="req">*</span></label>
+                        <select class="form-control" id="fProyecto">
+                            <option value="">— Seleccionar —</option>
+                        </select>
                     </div>
-
-                    <div style="text-align: right; margin-top: 15px;">
-                        <button type="button" class="btn-cancelar" onclick="togglePanelNuevoGasto()">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                        <button type="button" class="btn-guardar" onclick="agregarGasto()">
-                            <i class="fas fa-save"></i> Guardar Gasto
-                        </button>
+                    <div class="form-group">
+                        <label>Fecha <span class="req">*</span></label>
+                        <input type="date" class="form-control" id="fFecha" value="{{ date('Y-m-d') }}">
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label>Folio</label>
+                        <input type="text" class="form-control" id="fFolio" placeholder="Se genera automático" readonly style="background:#f8f9fa;">
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría <span class="req">*</span></label>
+                        <select class="form-control" id="fCategoria">
+                            <option value="">— Seleccionar —</option>
+                            <option value="Concreto">Concreto Premezclado</option>
+                            <option value="Acero">Acero de Refuerzo</option>
+                            <option value="Block">Block y Tabique</option>
+                            <option value="Cemento">Cemento Gris</option>
+                            <option value="Varilla">Varilla Corrugada</option>
+                            <option value="Madera">Madera para Cimbra</option>
+                            <option value="Albañiles">Cuadrilla de Albañiles</option>
+                            <option value="Electricistas">Electricistas</option>
+                            <option value="Plomeros">Plomeros</option>
+                            <option value="Retroexcavadora">Renta de Retroexcavadora</option>
+                            <option value="Grua">Grúa Torre</option>
+                            <option value="Seguridad">Servicio de Seguridad</option>
+                            <option value="Limpieza">Limpieza de Obra</option>
+                            <option value="Permisos">Permisos y Licencias</option>
+                            <option value="Seguros">Seguros de Obra</option>
+                            <option value="Honorarios">Honorarios Profesionales</option>
+                            <option value="Combustible">Combustible</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Monto <span class="req">*</span></label>
+                        <input type="number" class="form-control" id="fMonto" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Proveedor</label>
+                        <input type="text" class="form-control" id="fProveedor" placeholder="Nombre del proveedor">
+                    </div>
+                    <div class="form-group">
+                        <label>Partida</label>
+                        <select class="form-control" id="fPartida">
+                            <option value="">— Opcional —</option>
+                            <option value="CIMENTACION">01 - Cimentación</option>
+                            <option value="ESTRUCTURA">02 - Estructura</option>
+                            <option value="ALBAÑILERIA">03 - Albañilería</option>
+                            <option value="ACABADOS">04 - Acabados</option>
+                            <option value="INSTALACIONES">05 - Instalaciones</option>
+                            <option value="ELECTRICAS">06 - Eléctricas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo Documento</label>
+                        <select class="form-control" id="fTipoDoc">
+                            <option>Factura</option>
+                            <option>Nota de Remisión</option>
+                            <option>Recibo</option>
+                            <option>Contrato</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estatus</label>
+                        <select class="form-control" id="fEstatus">
+                            <option>Pendiente</option>
+                            <option>Aprobado</option>
+                            <option>Rechazado</option>
+                            <option>En revisión</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Avance (%)</label>
+                        <input type="number" class="form-control" id="fAvance" placeholder="0" min="0" max="100" value="0">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Notas</label>
+                        <textarea class="form-control" id="fNotas" rows="2" placeholder="Detalles adicionales..."></textarea>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 15px;">
+                    <button type="button" class="btn-cancelar" onclick="togglePanelNuevoGasto()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn-guardar" onclick="agregarGasto()">
+                        <i class="fas fa-save"></i> Guardar Gasto
+                    </button>
+                </div>
             </div>
             
-            <!-- Área de agrupación - sin texto -->
+            <!-- Área de agrupación -->
             <div class="grupo-agrupacion" id="grupoAgrupacion">
                 <div class="grupo-columnas" id="grupoColumnas"></div>
                 <button class="btn-agregar" onclick="togglePanelNuevoGasto()">
-                    <i class="fas fa-plus-circle"></i>
-                    Agregar Nuevo Gasto
+                    <i class="fas fa-plus-circle"></i> Agregar Nuevo Gasto
                 </button>
             </div>
             
             <!-- Tabs -->
             <div class="tabs-container">
-                <div class="tab-item active" onclick="setTab(this, 'todos')">
-                    <i class="fas fa-list mr-1"></i> Todos los Gastos
+                <div class="tab-item active" data-tab="todos" onclick="setTab(this, 'todos')">
+                    <i class="fas fa-list"></i> Todos los Gastos
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'pendientes')">
-                    <i class="fas fa-hourglass-half mr-1"></i> Pendientes
+                <div class="tab-item" data-tab="pendientes" onclick="setTab(this, 'pendientes')">
+                    <i class="fas fa-hourglass-half"></i> Pendientes
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'aprobados')">
-                    <i class="fas fa-check-circle mr-1"></i> Aprobados
+                <div class="tab-item" data-tab="aprobados" onclick="setTab(this, 'aprobados')">
+                    <i class="fas fa-check-circle"></i> Aprobados
                 </div>
-                <div class="tab-item" onclick="setTab(this, 'rechazados')">
-                    <i class="fas fa-times-circle mr-1"></i> Rechazados
+                <div class="tab-item" data-tab="rechazados" onclick="setTab(this, 'rechazados')">
+                    <i class="fas fa-times-circle"></i> Rechazados
                 </div>
             </div>
             
@@ -1190,32 +867,14 @@
                 <div class="filters-container">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Buscar por folio, proyecto, proveedor..." oninput="filtrar()">
+                        <input type="text" id="searchInput" placeholder="Buscar por folio, proyecto, proveedor..." oninput="debounceSearch()">
                     </div>
-                    
                     <select class="filter-select" id="filterProyecto" onchange="filtrar()">
                         <option value="">Todos los proyectos</option>
-                        <option value="TRC001">TRC001 - Torre Cumbres</option>
-                        <option value="PAC002">PAC002 - Puente Constitución</option>
-                        <option value="CIA003">CIA003 - Complejo Apodaca</option>
-                        <option value="RHR004">RHR004 - Hospital Regional</option>
-                        <option value="VPS005">VPS005 - Periférico Sur</option>
-                        <option value="PGA006">PGA006 - Plaza Galerías</option>
-                        <option value="CCM007">CCM007 - Centro Comercial</option>
-                        <option value="UAN008">UAN008 - Unidad Anáhuac</option>
-                        <option value="PIR009">PIR009 - Parque Roble</option>
-                        <option value="EST010">EST010 - Estadio</option>
                     </select>
-                    
                     <select class="filter-select" id="filterCategoria" onchange="filtrar()">
                         <option value="">Todas categorías</option>
-                        <option value="Materiales">Materiales</option>
-                        <option value="Mano de Obra">Mano de Obra</option>
-                        <option value="Maquinaria">Maquinaria</option>
-                        <option value="Servicios">Servicios</option>
-                        <option value="Administrativo">Administrativo</option>
                     </select>
-                    
                     <select class="filter-select" id="filterEstatus" onchange="filtrar()">
                         <option value="">Todos estatus</option>
                         <option value="Aprobado">Aprobado</option>
@@ -1223,7 +882,6 @@
                         <option value="Rechazado">Rechazado</option>
                         <option value="En revisión">En revisión</option>
                     </select>
-                    
                     <span class="filter-badge" id="filterCount">0</span>
                 </div>
             </div>
@@ -1233,18 +891,20 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="folio">Folio <i class="fas fa-sort" onclick="ordenar('folio')"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="fecha">Fecha <i class="fas fa-sort" onclick="ordenar('fecha')"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="proyecto">Proyecto <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="categoria">Categoría <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="proveedor">Proveedor <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="monto">Monto <i class="fas fa-sort" onclick="ordenar('monto')"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="avance">Avance <i class="fas fa-filter"></i></th>
-                            <th draggable="true" ondragstart="drag(event)" data-columna="estatus">Estatus <i class="fas fa-filter"></i></th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="folio">Folio</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="fecha">Fecha</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="proyecto">Proyecto</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="categoria">Categoría</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="proveedor">Proveedor</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="monto">Monto</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="avance">Avance</th>
+                            <th draggable="true" ondragstart="drag(event)" data-columna="estatus">Estatus</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaBody"></tbody>
+                    <tbody id="tablaBody">
+                        <tr><td colspan="9" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
+                    </tbody>
                     <tfoot id="tablaFoot"></tfoot>
                 </table>
             </div>
@@ -1259,7 +919,7 @@
                         <i class="fas fa-chevron-left"></i>
                     </button>
                     <span class="page-btn active" id="pageNum">1</span>
-                    <button class="page-btn" onclick="cambiarPagina(1)" id="btnSiguiente">
+                    <button class="page-btn" onclick="cambiarPagina(1)" id="btnSiguiente" disabled>
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -1268,354 +928,226 @@
     </section>
 </div>
 
-<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Delete Modal -->
 <div class="modal" id="deleteModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header danger-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-exclamation-triangle"></i> Confirmar eliminación
-                </h5>
-                <button type="button" class="close" onclick="cerrarModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5><i class="fas fa-exclamation-triangle"></i> Confirmar eliminación</h5>
+                <button type="button" class="close" onclick="cerrarModal()">&times;</button>
             </div>
             <div class="modal-body">
                 ¿Estás seguro de que deseas eliminar este gasto? Esta acción <strong>no se puede deshacer</strong>.
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
-                <button type="button" class="btn-guardar" style="background: #dc3545;" onclick="confirmarEliminar()">
-                    <i class="fas fa-trash"></i> Eliminar
-                </button>
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-guardar" style="background: #dc3545;" onclick="confirmarEliminar()">Eliminar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Datos de proyectos
-const proyectoColors = {
-    'TRC001': '#C4540A', 'PAC002': '#1A4F8C',
-    'CIA003': '#1A6644', 'RHR004': '#8C6A0A', 'VPS005': '#6B1A8C',
-    'PGA006': '#9C27B0', 'CCM007': '#FF9800', 'UAN008': '#00BCD4',
-    'PIR009': '#4CAF50', 'EST010': '#E91E63'
-};
-
-const proyectoNames = {
-    'TRC001': 'Torre Residencial Cumbres',
-    'PAC002': 'Puente Av. Constitución',
-    'CIA003': 'Complejo Industrial Apodaca',
-    'RHR004': 'Hospital Regional',
-    'VPS005': 'Vialidad Periférico Sur',
-    'PGA006': 'Plaza Galerías Monterrey',
-    'CCM007': 'Centro Comercial Metropolitano',
-    'UAN008': 'Unidad Habitacional Anáhuac',
-    'PIR009': 'Parque Industrial Roble',
-    'EST010': 'Estadio Universitario'
-};
-
-// Proveedores
-const proveedores = [
-    'CEMEX México', 'Grupo Acerero', 'Ferrecarril SA', 'Constructora del Norte',
-    'Materiales Monterrey', 'Cementos Mexicanos', 'Aceros Corsa', 'Vibrotech',
-    'Maquinaria Pesada SA', 'Rentex', 'Andamios del Norte', 'Rotoplas',
-    'Urrea Herramientas', 'Trueper', 'Home Depot Pro', 'Pinturas Berel',
-    'Comex', 'Sherwin Williams', 'Interceramic', 'Grupo Lamosa',
-    'Daltile México', 'Helvex', 'Iusa', 'Ternium', 'Deacero',
-    'Aceros Ocotlán', 'Gerdau Corsa', 'ArcelorMittal', 'Grupo SIMEC',
-    'Tubacero', 'Tuberías Procarsa', 'Grupo IUSA', 'Conduit',
-    'Voltech', 'Luminis', 'Philips', 'PEMEX', 'Gas LP Monterrey',
-    'Servicios de Agua', 'CFE', 'Telcel', 'Telmex', 'Totalplay',
-    'Seguros BBVA', 'Seguros Monterrey', 'GNP Seguros', 'Quálitas',
-    'Ingeniería Estructural SA', 'Arquitectura Integral', 'Topografía del Norte',
-    'Seguridad Privada Profesional', 'Limpieza Industrial', 'Baños Portátiles del Norte',
-    'Grúas Monterrey', 'Transportes Especializados', 'Logística Integral'
-];
-
-// Generar 100 gastos
-let gastos = [];
-let nextId = 1;
-
-for (let i = 0; i < 100; i++) {
-    const proyectos = Object.keys(proyectoNames);
-    const proyecto = proyectos[Math.floor(Math.random() * proyectos.length)];
-    const categorias = ['Concreto', 'Acero', 'Block', 'Cemento', 'Varilla', 'Madera', 'Tuberia', 'Cable', 'Pintura', 'Albañiles', 'Electricistas', 'Plomeros', 'Retroexcavadora', 'Grua', 'Montacargas', 'Seguridad', 'Limpieza', 'Permisos', 'Seguros', 'Honorarios', 'Combustible'];
-    const categoria = categorias[Math.floor(Math.random() * categorias.length)];
-    const proveedor = proveedores[Math.floor(Math.random() * proveedores.length)];
-    const estatuses = ['Aprobado', 'Pendiente', 'Rechazado', 'En revisión'];
-    const estatus = estatuses[Math.floor(Math.random() * estatuses.length)];
-    const monto = Math.floor(Math.random() * 200000) + 5000;
-    const avance = Math.floor(Math.random() * 101);
-    const fecha = new Date(2025, Math.floor(Math.random() * 3), Math.floor(Math.random() * 28) + 1);
-    const fechaStr = fecha.toISOString().split('T')[0];
-    const tiposDoc = ['Factura', 'Nota de Remisión', 'Recibo', 'Nómina', 'Contrato'];
-    const tipoDoc = tiposDoc[Math.floor(Math.random() * tiposDoc.length)];
-    const partidas = ['CIMENTACION', 'ESTRUCTURA', 'ALBAÑILERIA', 'ACABADOS', 'INSTALACIONES', 'ELECTRICAS'];
-    const partida = partidas[Math.floor(Math.random() * partidas.length)];
-    
-    gastos.push({
-        id: nextId++,
-        folio: `FAC-2025-${String(i + 1).padStart(4, '0')}`,
-        fecha: fechaStr,
-        proyecto: proyecto,
-        categoria: categoria,
-        proveedor: proveedor,
-        monto: monto,
-        partida: partida,
-        tipoDoc: tipoDoc,
-        estatus: estatus,
-        avance: avance,
-        notas: `Nota del gasto ${i + 1}`
-    });
-}
+// Configuración API
+const API_URL = '/api/gastos-proyecto';
 
 // Variables globales
-let gastosFiltrados = [...gastos];
-let deletingId = null;
-let currentTab = 'todos';
+let gastosData = [];
 let currentPage = 1;
-const PER_PAGE = 10;
+let perPage = 10;
+let totalPages = 1;
+let currentTab = 'todos';
 let sortKey = 'fecha';
-let sortDir = -1;
+let sortDir = 'desc';
+let deletingId = null;
 let columnasAgrupadas = [];
+let searchTimeout;
 
-// Funciones helper
-const fmt = n => '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Proyectos y categorías
+let proyectosList = [];
+let categoriasList = [];
 
-const fmtFecha = s => { 
-    const [y, m, d] = s.split('-'); 
-    return `${d} ${['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][+m-1]} ${y}`; 
-};
+// Inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    cargarDatos();
+    cargarFiltros();
+});
 
-function catGrupo(c) {
-    const materiales = ['Concreto', 'Acero', 'Block', 'Cemento', 'Varilla', 'Madera', 'Tuberia', 'Cable', 'Pintura'];
-    const manoObra = ['Albañiles', 'Electricistas', 'Plomeros', 'Carpinteros', 'Herreros', 'Ingenieros'];
-    const maquinaria = ['Retroexcavadora', 'Grua', 'Montacargas', 'Compactadora', 'Revolvedora'];
-    const servicios = ['Seguridad', 'Limpieza', 'RentaBaños'];
-    const administrativo = ['Permisos', 'Seguros', 'Honorarios', 'Combustible'];
-    
-    if (materiales.includes(c)) return 'Materiales';
-    if (manoObra.includes(c)) return 'Mano de Obra';
-    if (maquinaria.includes(c)) return 'Maquinaria';
-    if (servicios.includes(c)) return 'Servicios';
-    return 'Administrativo';
-}
-
-// Panel de nuevo gasto
-function togglePanelNuevoGasto() {
-    const panel = document.getElementById('panelNuevoGasto');
-    panel.classList.toggle('show');
-    if (panel.classList.contains('show')) {
-        document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
-    }
-}
-
-// Agregar gasto
-function agregarGasto() {
-    const proyecto = document.getElementById('fProyecto').value;
-    const fecha = document.getElementById('fFecha').value;
-    const monto = parseFloat(document.getElementById('fMonto').value);
-    const categoria = document.getElementById('fCategoria').value;
-    
-    if (!proyecto || !fecha || !monto || !categoria) { 
-        mostrarToast('❌ Completa los campos obligatorios', 'warning'); 
-        return; 
-    }
-
-    if (monto <= 0) {
-        mostrarToast('❌ El monto debe ser mayor a cero', 'warning');
-        return;
-    }
-
-    const nuevoGasto = {
-        id: nextId++,
-        folio: document.getElementById('fFolio').value || `FAC-2025-${String(nextId).padStart(4, '0')}`,
-        fecha: fecha,
-        proyecto: proyecto,
-        categoria: categoria,
-        proveedor: document.getElementById('fProveedor').value || 'Proveedor no especificado',
-        monto: monto,
-        partida: document.getElementById('fPartida').value || '—',
-        tipoDoc: document.getElementById('fTipoDoc').value,
-        estatus: document.getElementById('fEstatus').value,
-        avance: Math.floor(Math.random() * 60) + 20,
-        notas: document.getElementById('fNotas').value || 'Sin notas',
-    };
-    
-    gastos.unshift(nuevoGasto);
-    
-    // Limpiar formulario
-    document.getElementById('fProyecto').value = '';
-    document.getElementById('fFolio').value = '';
-    document.getElementById('fMonto').value = '';
-    document.getElementById('fCategoria').value = '';
-    document.getElementById('fProveedor').value = '';
-    document.getElementById('fPartida').value = '';
-    document.getElementById('fNotas').value = '';
-    document.getElementById('fTipoDoc').value = 'Factura';
-    document.getElementById('fEstatus').value = 'Pendiente';
-    
-    togglePanelNuevoGasto();
-    currentPage = 1; 
-    filtrar();
-    actualizarKPIs();
-    mostrarToast('✅ Gasto registrado correctamente', 'success');
-}
-
-// Filtrar
-function getFiltered() {
-    const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
-    const fP = document.getElementById('filterProyecto')?.value || '';
-    const fC = document.getElementById('filterCategoria')?.value || '';
-    const fE = document.getElementById('filterEstatus')?.value || '';
-    
-    return gastos.filter(g => {
-        let tabMatch = true;
-        if (currentTab === 'pendientes') {
-            tabMatch = g.estatus === 'Pendiente' || g.estatus === 'En revisión';
-        } else if (currentTab === 'aprobados') {
-            tabMatch = g.estatus === 'Aprobado';
-        } else if (currentTab === 'rechazados') {
-            tabMatch = g.estatus === 'Rechazado';
-        }
+// Cargar datos
+async function cargarDatos() {
+    try {
+        const params = new URLSearchParams({
+            page: currentPage,
+            per_page: perPage,
+            sort_key: sortKey,
+            sort_dir: sortDir,
+            search: document.getElementById('searchInput')?.value || '',
+            proyecto_id: document.getElementById('filterProyecto')?.value || '',
+            categoria_id: document.getElementById('filterCategoria')?.value || '',
+            estatus: getEstatusFromTab()
+        });
         
-        const searchStr = [g.folio, g.proyecto, g.categoria, g.proveedor, proyectoNames[g.proyecto] || '', g.estatus].join(' ').toLowerCase();
-        const mSrch = !q || searchStr.includes(q);
-        const mP = !fP || g.proyecto === fP;
-        const mC = !fC || catGrupo(g.categoria) === fC;
-        const mE = !fE || g.estatus === fE;
+        const response = await fetch(`${API_URL}?${params}`);
+        const result = await response.json();
         
-        return tabMatch && mSrch && mP && mC && mE;
-    }).sort((a, b) => {
-        let av = a[sortKey], bv = b[sortKey];
-        if (sortKey === 'monto') {
-            av = +av;
-            bv = +bv;
+        if (result.success) {
+            gastosData = result.data.gastos;
+            totalPages = result.data.pagination.last_page;
+            actualizarKPIs(result.data.kpis);
+            renderTabla();
+            actualizarPaginacion(result.data.pagination);
+        } else {
+            mostrarToast('Error al cargar datos', 'error');
         }
-        if (sortKey === 'fecha') {
-            av = new Date(av);
-            bv = new Date(bv);
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarToast('Error de conexión', 'error');
+    }
+}
+
+// Cargar filtros
+async function cargarFiltros() {
+    try {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        
+        if (result.success && result.data.filtros) {
+            proyectosList = result.data.filtros.proyectos || [];
+            categoriasList = result.data.filtros.categorias || [];
+            
+            const proyectoSelect = document.getElementById('filterProyecto');
+            const fProyecto = document.getElementById('fProyecto');
+            const categoriaSelect = document.getElementById('filterCategoria');
+            const fCategoria = document.getElementById('fCategoria');
+            
+            proyectoSelect.innerHTML = '<option value="">Todos los proyectos</option>';
+            fProyecto.innerHTML = '<option value="">— Seleccionar —</option>';
+            
+            proyectosList.forEach(p => {
+                proyectoSelect.innerHTML += `<option value="${p.id}">${p.codigo} - ${p.nombre}</option>`;
+                fProyecto.innerHTML += `<option value="${p.id}">${p.codigo} - ${p.nombre}</option>`;
+            });
+            
+            categoriaSelect.innerHTML = '<option value="">Todas categorías</option>';
+            fCategoria.innerHTML = '<option value="">— Seleccionar —</option>';
+            
+            categoriasList.forEach(c => {
+                categoriaSelect.innerHTML += `<option value="${c.id}">${c.nombre}</option>`;
+                fCategoria.innerHTML += `<option value="${c.id}">${c.nombre}</option>`;
+            });
         }
-        return av < bv ? -sortDir : av > bv ? sortDir : 0;
-    });
+    } catch (error) {
+        console.error('Error cargando filtros:', error);
+    }
 }
 
 // Renderizar tabla
 function renderTabla() {
-    gastosFiltrados = getFiltered();
-    const total = gastosFiltrados.length;
-    const pages = Math.ceil(total / PER_PAGE) || 1;
-    
-    if (currentPage > pages) currentPage = pages;
-    if (currentPage < 1) currentPage = 1;
-    
-    const start = (currentPage - 1) * PER_PAGE;
-    const slice = gastosFiltrados.slice(start, start + PER_PAGE);
-
-    document.getElementById('filterCount').textContent = total;
-    document.getElementById('footerInfo').textContent = `${slice.length} de ${total} registros`;
-    document.getElementById('pageNum').textContent = currentPage;
-    
-    document.getElementById('btnAnterior').disabled = currentPage === 1;
-    document.getElementById('btnSiguiente').disabled = currentPage === pages;
-
     const body = document.getElementById('tablaBody');
     
-    if (!slice.length) {
+    if (!gastosData.length) {
         body.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px;">
-            <div style="padding: 40px 20px; text-align: center;">
-                <i class="fas fa-folder-open" style="font-size: 2rem; color: #dee2e6;"></i>
-                <p style="font-size: 13px; color: #868e96; margin-top: 10px;">No se encontraron gastos</p>
-            </div>
+            <i class="fas fa-folder-open" style="font-size: 2rem; color: #dee2e6;"></i>
+            <p style="margin-top: 10px;">No se encontraron gastos</p>
         </td></tr>`;
-    } else {
-        body.innerHTML = slice.map(g => {
-            const color = proyectoColors[g.proyecto] || '#888';
-            const badgeCls = g.estatus === 'Aprobado' ? 'badge-aprobado' : 
-                            g.estatus === 'Rechazado' ? 'badge-rechazado' : 
-                            g.estatus === 'En revisión' ? 'badge-revision' : 'badge-pendiente';
-            const fillCls = g.avance >= 90 ? 'danger' : g.avance >= 70 ? 'warn' : '';
-            
-            return `<tr>
-                <td><span class="mono">${g.folio}</span></td>
-                <td>${fmtFecha(g.fecha)}</td>
-                <td>
-                    <div class="project-tag">
-                        <div class="project-dot" style="background:${color}"></div>
-                        <div>
-                            <div class="project-code">${g.proyecto}</div>
-                            <div class="project-name">${proyectoNames[g.proyecto] || ''}</div>
-                        </div>
-                    </div>
-                </td>
-                <td>${g.categoria}</td>
-                <td>${g.proveedor}</td>
-                <td class="text-right"><span class="mono" style="font-weight:700">${fmt(g.monto)}</span></td>
-                <td>
-                    <div class="progress-wrap">
-                        <div class="progress-bar-erp">
-                            <div class="progress-fill ${fillCls}" style="width:${g.avance}%"></div>
-                        </div>
-                        <span class="progress-pct">${g.avance}%</span>
-                    </div>
-                </td>
-                <td><span class="badge ${badgeCls}">${g.estatus}</span></td>
-                <td>
-                    <i class="fas fa-eye" title="Ver detalle" onclick="verDetalle(${g.id})"></i>
-                    <i class="fas fa-edit" title="Editar" onclick="editarGasto(${g.id})"></i>
-                    <i class="fas fa-trash" title="Eliminar" onclick="abrirModal(${g.id})" style="color:#dc3545;"></i>
-                </td>
-            </tr>`;
-        }).join('');
+        document.getElementById('tablaFoot').innerHTML = '';
+        document.getElementById('filterCount').textContent = '0';
+        document.getElementById('footerInfo').textContent = '0 registros';
+        return;
     }
-
-    // Totales
-    const totalMonto = gastosFiltrados.reduce((a, b) => a + b.monto, 0);
+    
+    body.innerHTML = gastosData.map(g => {
+        const fillClass = g.progress_class === 'danger' ? 'danger' : (g.progress_class === 'warn' ? 'warn' : '');
+        
+        return `<tr>
+            <td><span class="mono">${g.folio}</span></td>
+            <td>${g.fecha_lista}</td>
+            <td>
+                <div class="project-tag">
+                    <div class="project-dot" style="background:${g.proyecto_color || '#083CAE'}"></div>
+                    <div>
+                        <div class="project-code">${g.proyecto_codigo}</div>
+                        <div class="project-name">${g.proyecto_nombre}</div>
+                    </div>
+                </div>
+            </td>
+            <td>${g.categoria}</td>
+            <td>${g.proveedor}</td>
+            <td class="text-right"><span class="mono" style="font-weight:700">${g.monto_formateado}</span></td>
+            <td>
+                <div class="progress-wrap">
+                    <div class="progress-bar-erp">
+                        <div class="progress-fill ${fillClass}" style="width:${g.avance}%"></div>
+                    </div>
+                    <span class="progress-pct">${g.avance}%</span>
+                </div>
+            </td>
+            <td><span class="badge ${g.badge_class}">${g.estatus}</span></td>
+            <td>
+                <i class="fas fa-eye" onclick="verDetalle(${g.id})" title="Ver"></i>
+                <i class="fas fa-edit" onclick="editarGasto(${g.id})" title="Editar"></i>
+                <i class="fas fa-trash" onclick="abrirModal(${g.id})" style="color:#dc3545;" title="Eliminar"></i>
+            </td>
+        </td>`;
+    }).join('');
+    
+    const totalMonto = gastosData.reduce((sum, g) => sum + g.monto, 0);
     document.getElementById('tablaFoot').innerHTML = `<tr>
         <td colspan="5" style="text-align: right; font-weight:600;">Total filtrado:</td>
-        <td class="text-right"><span class="mono" style="font-weight:700">${fmt(totalMonto)}</span></td>
+        <td class="text-right"><span class="mono" style="font-weight:700">${formatMoney(totalMonto)}</span></td>
         <td colspan="3"></td>
     </tr>`;
-    
-    actualizarKPIs();
+    document.getElementById('filterCount').textContent = gastosData.length;
 }
 
 // Actualizar KPIs
-function actualizarKPIs() {
-    const total = gastos.reduce((a, b) => a + b.monto, 0);
-    const aprobados = gastos.filter(g => g.estatus === 'Aprobado').reduce((a, b) => a + b.monto, 0);
-    const pendientes = gastos.filter(g => g.estatus === 'Pendiente' || g.estatus === 'En revisión').reduce((a, b) => a + b.monto, 0);
-    const proyectos = new Set(gastos.map(g => g.proyecto)).size;
-    
-    document.getElementById('kpiTotal').textContent = fmt(total);
-    document.getElementById('kpiProyectos').textContent = proyectos;
-    document.getElementById('kpiAprobados').textContent = fmt(aprobados);
-    document.getElementById('kpiPendientes').textContent = fmt(pendientes);
+function actualizarKPIs(kpis) {
+    if (!kpis) return;
+    document.getElementById('kpiTotal').textContent = kpis.total_formateado || '$0';
+    document.getElementById('kpiProyectos').textContent = kpis.proyectos_activos || 0;
+    document.getElementById('kpiAprobados').textContent = kpis.aprobados_formateado || '$0';
+    document.getElementById('kpiPendientes').textContent = kpis.pendientes_formateado || '$0';
 }
 
-// Mostrar toast
-function mostrarToast(msg, tipo = 'success') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${tipo}`;
-    const icon = tipo === 'success' ? 'fa-check-circle' : tipo === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
-    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.animation = 'slideInRight 0.3s reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+// Actualizar paginación
+function actualizarPaginacion(pagination) {
+    if (!pagination) return;
+    document.getElementById('footerInfo').textContent = `${pagination.from || 0}-${pagination.to || 0} de ${pagination.total || 0} registros`;
+    document.getElementById('pageNum').textContent = pagination.current_page || 1;
+    document.getElementById('btnAnterior').disabled = pagination.current_page === 1;
+    document.getElementById('btnSiguiente').disabled = pagination.current_page === pagination.last_page;
+    currentPage = pagination.current_page;
+    totalPages = pagination.last_page;
+}
+
+// Obtener estatus desde el tab actual
+function getEstatusFromTab() {
+    if (currentTab === 'pendientes') return 'Pendiente';
+    if (currentTab === 'aprobados') return 'Aprobado';
+    if (currentTab === 'rechazados') return 'Rechazado';
+    return '';
 }
 
 // Filtrar
-function filtrar() { 
-    currentPage = 1; 
-    renderTabla(); 
+function filtrar() {
+    currentPage = 1;
+    cargarDatos();
+}
+
+// Debounce para búsqueda
+function debounceSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => filtrar(), 500);
+}
+
+// Cambiar página
+function cambiarPagina(dir) {
+    const newPage = currentPage + dir;
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        cargarDatos();
+    }
 }
 
 // Cambiar tab
@@ -1624,25 +1156,138 @@ function setTab(el, tab) {
     el.classList.add('active');
     currentTab = tab;
     currentPage = 1;
-    renderTabla();
+    cargarDatos();
 }
 
-// Ordenar
-function ordenar(key) { 
-    if (sortKey === key) {
-        sortDir *= -1;
-    } else {
-        sortKey = key;
-        sortDir = 1;
+// Panel nuevo gasto
+function togglePanelNuevoGasto() {
+    const panel = document.getElementById('panelNuevoGasto');
+    panel.classList.toggle('show');
+    if (panel.classList.contains('show')) {
+        document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
+        document.getElementById('fFolio').value = 'Generando...';
+        document.getElementById('fAvance').value = '0';
     }
-    renderTabla(); 
 }
 
-// Cambiar página
-function cambiarPagina(dir) { 
-    const pages = Math.ceil(getFiltered().length / PER_PAGE) || 1; 
-    currentPage = Math.max(1, Math.min(pages, currentPage + dir)); 
-    renderTabla(); 
+// Agregar gasto
+async function agregarGasto() {
+    const proyectoId = document.getElementById('fProyecto').value;
+    const fecha = document.getElementById('fFecha').value;
+    const monto = parseFloat(document.getElementById('fMonto').value);
+    const categoria = document.getElementById('fCategoria').value;
+    
+    if (!proyectoId || !fecha || !monto || !categoria) {
+        mostrarToast('❌ Completa los campos obligatorios', 'warning');
+        return;
+    }
+    
+    if (monto <= 0) {
+        mostrarToast('❌ El monto debe ser mayor a cero', 'warning');
+        return;
+    }
+    
+    const data = {
+        proyecto_id: parseInt(proyectoId),
+        fecha: fecha,
+        monto: monto,
+        categoria: categoria,
+        proveedor: document.getElementById('fProveedor').value,
+        partida: document.getElementById('fPartida').value,
+        tipo_documento: document.getElementById('fTipoDoc').value,
+        estatus: document.getElementById('fEstatus').value,
+        avance: parseInt(document.getElementById('fAvance').value) || 0,
+        notas: document.getElementById('fNotas').value
+    };
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            mostrarToast('✅ Gasto registrado correctamente', 'success');
+            togglePanelNuevoGasto();
+            limpiarFormulario();
+            cargarDatos();
+            cargarFiltros();
+        } else {
+            mostrarToast('❌ Error: ' + result.message, 'error');
+        }
+    } catch (error) {
+        mostrarToast('❌ Error de conexión', 'error');
+    }
+}
+
+// Limpiar formulario
+function limpiarFormulario() {
+    document.getElementById('fProyecto').value = '';
+    document.getElementById('fMonto').value = '';
+    document.getElementById('fCategoria').value = '';
+    document.getElementById('fProveedor').value = '';
+    document.getElementById('fPartida').value = '';
+    document.getElementById('fNotas').value = '';
+    document.getElementById('fTipoDoc').value = 'Factura';
+    document.getElementById('fEstatus').value = 'Pendiente';
+    document.getElementById('fAvance').value = '0';
+}
+
+// Ver detalle
+function verDetalle(id) {
+    const gasto = gastosData.find(g => g.id === id);
+    if (gasto) {
+        mostrarToast(`${gasto.folio} - ${gasto.categoria} - ${gasto.monto_formateado}`, 'info');
+    }
+}
+
+// Editar gasto
+function editarGasto(id) {
+    const gasto = gastosData.find(g => g.id === id);
+    if (!gasto) return;
+    
+    document.getElementById('fProyecto').value = gasto.proyecto_id;
+    document.getElementById('fFecha').value = gasto.fecha;
+    document.getElementById('fMonto').value = gasto.monto;
+    document.getElementById('fCategoria').value = gasto.categoria;
+    document.getElementById('fProveedor').value = gasto.proveedor;
+    document.getElementById('fPartida').value = gasto.partida !== '—' ? gasto.partida : '';
+    document.getElementById('fTipoDoc').value = gasto.tipo_documento;
+    document.getElementById('fEstatus').value = gasto.estatus;
+    document.getElementById('fAvance').value = gasto.avance;
+    document.getElementById('fNotas').value = gasto.notas || '';
+    
+    const panel = document.getElementById('panelNuevoGasto');
+    if (!panel.classList.contains('show')) {
+        panel.classList.add('show');
+    }
+    mostrarToast(`Editando: ${gasto.folio}`, 'info');
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+// Modal
+function abrirModal(id) { deletingId = id; document.getElementById('deleteModal').classList.add('show'); }
+function cerrarModal() { document.getElementById('deleteModal').classList.remove('show'); deletingId = null; }
+async function confirmarEliminar() {
+    if (!deletingId) return;
+    try {
+        const response = await fetch(`${API_URL}/${deletingId}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        });
+        const result = await response.json();
+        if (result.success) {
+            mostrarToast('Registro eliminado', 'warning');
+            cerrarModal();
+            cargarDatos();
+        } else {
+            mostrarToast('Error al eliminar', 'error');
+        }
+    } catch (error) {
+        mostrarToast('Error de conexión', 'error');
+    }
 }
 
 // Drag and drop
@@ -1650,29 +1295,30 @@ function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.getAttribute('data-columna'));
 }
 
-document.getElementById('grupoAgrupacion').addEventListener('dragover', function(ev) {
-    ev.preventDefault();
-    this.classList.add('drag-over');
-});
-
-document.getElementById('grupoAgrupacion').addEventListener('dragleave', function(ev) {
-    this.classList.remove('drag-over');
-});
-
-document.getElementById('grupoAgrupacion').addEventListener('drop', function(ev) {
-    ev.preventDefault();
-    this.classList.remove('drag-over');
-    const columna = ev.dataTransfer.getData("text");
-    
-    if (columna && !columnasAgrupadas.includes(columna)) {
-        columnasAgrupadas.push(columna);
-        actualizarGrupoColumnas();
-        mostrarToast(`Columna ${columna} agregada`, 'success');
-    }
-});
+const grupoAgrupacion = document.getElementById('grupoAgrupacion');
+if (grupoAgrupacion) {
+    grupoAgrupacion.addEventListener('dragover', function(ev) {
+        ev.preventDefault();
+        this.classList.add('drag-over');
+    });
+    grupoAgrupacion.addEventListener('dragleave', function() {
+        this.classList.remove('drag-over');
+    });
+    grupoAgrupacion.addEventListener('drop', function(ev) {
+        ev.preventDefault();
+        this.classList.remove('drag-over');
+        const columna = ev.dataTransfer.getData("text");
+        if (columna && !columnasAgrupadas.includes(columna)) {
+            columnasAgrupadas.push(columna);
+            actualizarGrupoColumnas();
+            mostrarToast(`Columna ${columna} agregada`, 'success');
+        }
+    });
+}
 
 function actualizarGrupoColumnas() {
     const container = document.getElementById('grupoColumnas');
+    if (!container) return;
     container.innerHTML = columnasAgrupadas.map(col => `
         <span class="columna-agrupada">
             ${col}
@@ -1686,61 +1332,22 @@ function removerColumna(columna) {
     actualizarGrupoColumnas();
 }
 
-document.getElementById('btnCrearFiltro').addEventListener('click', function() {
-    if (columnasAgrupadas.length > 0) {
-        mostrarToast(`Filtro creado por: ${columnasAgrupadas.join(', ')}`, 'success');
-    } else {
-        mostrarToast('Arrastra columnas primero', 'warning');
-    }
-});
-
-// Modal
-function abrirModal(id) { 
-    deletingId = id; 
-    document.getElementById('deleteModal').classList.add('show');
+// Toast
+function mostrarToast(msg, tipo = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    const icon = tipo === 'success' ? 'fa-check-circle' : tipo === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideInRight 0.3s reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
-function cerrarModal() {
-    document.getElementById('deleteModal').classList.remove('show');
-    deletingId = null;
-}
-
-function confirmarEliminar() { 
-    gastos = gastos.filter(g => g.id !== deletingId); 
-    cerrarModal();
-    renderTabla(); 
-    mostrarToast('Registro eliminado', 'warning'); 
-}
-
-// Ver detalle
-function verDetalle(id) { 
-    const g = gastos.find(x => x.id === id); 
-    if (g) mostrarToast(`${g.folio} - ${fmt(g.monto)} - ${g.estatus}`, 'info'); 
-}
-
-// Editar
-function editarGasto(id) {
-    const g = gastos.find(x => x.id === id); 
-    if (!g) return;
-    
-    document.getElementById('fProyecto').value = g.proyecto;
-    document.getElementById('fFolio').value = g.folio;
-    document.getElementById('fFecha').value = g.fecha;
-    document.getElementById('fMonto').value = g.monto;
-    document.getElementById('fCategoria').value = g.categoria;
-    document.getElementById('fProveedor').value = g.proveedor;
-    document.getElementById('fPartida').value = g.partida !== '—' ? g.partida : '';
-    document.getElementById('fTipoDoc').value = g.tipoDoc;
-    document.getElementById('fEstatus').value = g.estatus;
-    document.getElementById('fNotas').value = g.notas;
-    
-    const panel = document.getElementById('panelNuevoGasto');
-    if (!panel.classList.contains('show')) {
-        panel.classList.add('show');
-    }
-    
-    mostrarToast(`Editando: ${g.folio}`, 'info');
-    window.scrollTo({ top: 200, behavior: 'smooth' });
+function formatMoney(amount) {
+    return '$' + amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 // Cerrar modal al hacer clic fuera
@@ -1750,11 +1357,5 @@ window.onclick = function(event) {
         cerrarModal();
     }
 }
-
-// Inicializar
-document.addEventListener('DOMContentLoaded', function() {
-    renderTabla();
-});
 </script>
-
 @endsection

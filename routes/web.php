@@ -242,8 +242,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/trasferencia', [ChequeTransferenciaController::class, 'index'])->name('tesoreria.trasferencia');
     
     // TESORERÍA
-    // CONCILIACIÓN BANCARIA - RUTA FALTANTE
-Route::get('/conciliacion', [ConciliacionBancariaController::class, 'index'])->name('tesoreria.conciliacion');
+    Route::get('/conciliacion', [ConciliacionBancariaController::class, 'index'])->name('tesoreria.conciliacion');
     Route::get('/estadosdecuenta', function () { return view('administracion.tesoreria.estadosdecuenta'); })->name('tesoreria.estadosdecuenta');
     Route::get('/flujomensual', function () { return view('administracion.tesoreria.flujomensual'); })->name('tesoreria.flujomensual');
     Route::get('/flujos', function () { return view('administracion.tesoreria.flujos'); })->name('tesoreria.flujos');
@@ -291,6 +290,7 @@ Route::prefix('config')->group(function () {
     Route::get('/config', function () { return view('config.index'); })->name('config.index');
     Route::get('/personalizacion', function () { return view('config.topmenu.menuconfi'); })->name('config.menuconfig');
 });
+
 // ============================================
 // GRUPO CONTA
 // ============================================
@@ -304,16 +304,14 @@ Route::prefix('conta')->group(function () {
     Route::get('/unidad/data', [EstadoResultadosUnidadController::class, 'getData'])->name('conta.unidad.data');
     Route::get('/unidad/excel', [EstadoResultadosUnidadController::class, 'exportarExcel'])->name('conta.unidad.excel');
     
-    // Estado de Resultados por Unidad de Negocio - CONFIGURACIÓN
     Route::get('/unidad/config', [EstadoResultadosUnidadController::class, 'getConfiguracion'])->name('conta.unidad.config');
     Route::post('/unidad/config/guardar', [EstadoResultadosUnidadController::class, 'guardarConfiguracion'])->name('conta.unidad.config.guardar');
     Route::post('/unidad/concepto/guardar', [EstadoResultadosUnidadController::class, 'guardarConcepto'])->name('conta.unidad.concepto.guardar');
     Route::delete('/unidad/concepto/{id}', [EstadoResultadosUnidadController::class, 'eliminarConcepto'])->name('conta.unidad.concepto.eliminar');
 
     // ============================================
-    // PÓLIZAS CONTABLES - RUTAS CORREGIDAS
+    // PÓLIZAS CONTABLES
     // ============================================
-
     Route::get('/poliza/data', [PolizaController::class, 'getData']);
     Route::get('/poliza/{id}', [PolizaController::class, 'show']);
     Route::post('/poliza', [PolizaController::class, 'store']);
@@ -321,7 +319,13 @@ Route::prefix('conta')->group(function () {
     Route::delete('/poliza/{id}', [PolizaController::class, 'destroy']);
     Route::get('/poliza/excel', [PolizaController::class, 'exportExcel']);
 
-
+    // ============================================
+    // DIARIO GENERAL
+    // ============================================
+    Route::get('/diariogeneral/data', [App\Http\Controllers\DiarioGeneralController::class, 'index'])->name('conta.diario.data');
+    Route::get('/diariogeneral/exportar-excel', [App\Http\Controllers\DiarioGeneralController::class, 'exportarExcel'])->name('conta.diario.exportar');
+    Route::get('/diariogeneral/movimiento/{id}', [App\Http\Controllers\DiarioGeneralController::class, 'show'])->name('conta.diario.show');
+    Route::get('/diariogeneral/estadisticas', [App\Http\Controllers\DiarioGeneralController::class, 'estadisticas'])->name('conta.diario.estadisticas');
 
     // ============================================
     // ANÁLISIS
@@ -334,8 +338,13 @@ Route::prefix('conta')->group(function () {
     // ============================================
     // CATÁLOGO CONTABLE
     // ============================================
-    Route::get('/auxiliar', function () { return view('conta.catalogo.auxiliar'); })->name('conta.auxiliar');
-    Route::get('/centros', function () { return view('conta.catalogo.centros'); })->name('conta.centros');
+    Route::get('/auxiliar', [App\Http\Controllers\AuxiliarContableController::class, 'index'])->name('conta.auxiliar');
+    Route::get('/auxiliar/exportar-excel', [App\Http\Controllers\AuxiliarContableController::class, 'exportarExcel'])->name('conta.auxiliar.exportar');
+    Route::get('/auxiliar/datos-cuenta', [App\Http\Controllers\AuxiliarContableController::class, 'getDatosCuenta'])->name('conta.auxiliar.datos-cuenta');
+
+    Route::get('/centros', [App\Http\Controllers\ProyectoDashboardController::class, 'index'])->name('conta.centros');
+    Route::get('/centros/exportar-excel', [App\Http\Controllers\ProyectoDashboardController::class, 'exportarExcel'])->name('conta.centros.exportar');
+    
     Route::get('/configuracion', function () { return view('conta.catalogo.configuracion'); })->name('conta.configuraciones');
     Route::get('/cuentas', function () { return view('conta.catalogo.cuentas'); })->name('conta.cuentas');
     
@@ -354,11 +363,9 @@ Route::prefix('conta')->group(function () {
     Route::get('/estados/excel', [EstadoResultadosController::class, 'exportarExcel'])->name('conta.estados.excel');
     Route::get('/estados/pdf', [EstadoResultadosController::class, 'exportarPdf'])->name('conta.estados.pdf');
     
-    // BALANCE GENERAL
     Route::get('/balance', [BalanceGeneralController::class, 'index'])->name('conta.balance');
     Route::get('/balance/excel', [BalanceGeneralController::class, 'exportarExcel'])->name('conta.balance.excel');
     
-    // BALANZA DE COMPROBACIÓN
     Route::get('/comprobacion', [BalanzaComprobacionController::class, 'index'])->name('conta.comprobacion');
     Route::get('/comprobacion/excel', [BalanzaComprobacionController::class, 'exportarExcel'])->name('conta.comprobacion.excel');
     
@@ -369,19 +376,27 @@ Route::prefix('conta')->group(function () {
     // ============================================
     // FISCAL
     // ============================================
-    Route::get('/complementos', function () { return view('conta.fiscal.complementos'); })->name('conta.complementos');
+    Route::get('/complementos', [App\Http\Controllers\ComplementoPagoController::class, 'vista'])->name('conta.complementos');
+    Route::get('/complementos/exportar-excel', [App\Http\Controllers\ComplementoPagoController::class, 'exportarExcel'])->name('conta.complementos.exportar');
     Route::get('/contabilidad', function () { return view('conta.fiscal.contabilidad'); })->name('conta.contabilidad');
     Route::get('/declaraciones', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaraciones');
-    Route::get('/diot', function () { return view('conta.fiscal.diot'); })->name('conta.diot');
-    Route::get('/retenciones', function () { return view('conta.fiscal.retenciones'); })->name('conta.retenciones');
+    Route::get('/diot', [App\Http\Controllers\DiotController::class, 'vista'])->name('conta.diot');
+    Route::get('/retenciones', [App\Http\Controllers\RetencionController::class, 'vista'])->name('conta.retenciones');
     
     // ============================================
     // POR PROYECTO
     // ============================================
-    Route::get('/asignaciones', function () { return view('conta.porproyecto.asignacion'); })->name('conta.asignacion');
+    Route::get('/asignaciones', [App\Http\Controllers\GastoProyectoController::class, 'vista'])->name('conta.asignacion');
     Route::get('/cierre', function () { return view('conta.porproyecto.cierre'); })->name('conta.cierre');
-    Route::get('/costo', function () { return view('conta.porproyecto.costo'); })->name('conta.costo');
-    Route::get('/gastos', function () { return view('conta.porproyecto.gastos'); })->name('conta.gastos');
+    
+    Route::get('/costo', [App\Http\Controllers\CostoObraController::class, 'index'])->name('conta.costo');
+    Route::get('/costoobras', [App\Http\Controllers\CostoObraController::class, 'index'])->name('conta.costoobras');
+    Route::get('/costo/exportar-excel', [App\Http\Controllers\CostoObraController::class, 'exportarExcel'])->name('conta.costo.exportar');
+    Route::get('/costo/programa-suministros', [App\Http\Controllers\CostoObraController::class, 'programaSuministros'])->name('conta.costo.programa');
+
+    Route::get('/gastos', [App\Http\Controllers\GastoIndirectoController::class, 'vista'])->name('conta.gastos');
+    Route::get('/gastos/exportar-excel', [App\Http\Controllers\GastoIndirectoController::class, 'exportarExcel'])->name('conta.gastos.exportar');
+
     Route::get('/rentabilidad', function () { return view('conta.porproyecto.rentabilidad'); })->name('conta.rentabilidad');
     
     // ============================================
@@ -394,25 +409,27 @@ Route::prefix('conta')->group(function () {
     Route::get('/poliza', function () { return view('conta.registros.polizas'); })->name('conta.polizas');
     
     // ============================================
-    // ALIAS (para compatibilidad con navigation.blade.php)
+    // ALIAS
     // ============================================
-    Route::get('/centro', function () { return view('conta.catalogo.centros'); })->name('conta.centros');
-    Route::get('/costoobras', function () { return view('conta.porproyecto.costo'); })->name('conta.costo');
+    Route::get('/centro', [App\Http\Controllers\ProyectoDashboardController::class, 'index'])->name('conta.centro');
     Route::get('/asignacion', function () { return view('conta.porproyecto.asignacion'); })->name('conta.asignacion');
-    Route::get('/cobranza', function () { return view('conta.registros.auxiliar'); })->name('conta.cobranza');
+    Route::get('/asignaciones/exportar-excel', [App\Http\Controllers\GastoProyectoController::class, 'exportarExcel'])->name('conta.asignacion.exportar');
+    Route::get('/cobranza', [App\Http\Controllers\CobranzaController::class, 'index'])->name('conta.cobranza');
+    Route::get('/cobranza/exportar-excel', [App\Http\Controllers\CobranzaController::class, 'exportarExcel'])->name('conta.cobranza.exportar');
+    Route::get('/cobranza/detalle-dia', [App\Http\Controllers\CobranzaController::class, 'getDetalleDia'])->name('conta.cobranza.detalle');
     Route::get('/diariogeneral', function () { return view('conta.registros.diario'); })->name('conta.diario');
     Route::get('/mensuales', function () { return view('conta.fiscal.declaraciones'); })->name('conta.declaraciones');
     Route::get('/complemento', function () { return view('conta.fiscal.complementos'); })->name('conta.complemento');
     
 });
+
 // ============================================
-// API RUTAS PARA ESTADO DE RESULTADOS CONSTRUCCIÓN
+// API RUTAS
 // ============================================
 Route::prefix('api')->group(function () {
     Route::get('/estado-resultados/construccion/periodos', [App\Http\Controllers\Conta\EstadoResultadosConstruccionController::class, 'getPeriodos']);
     Route::get('/estado-resultados/construccion', [App\Http\Controllers\Conta\EstadoResultadosConstruccionController::class, 'getData']);
 });
-
 
 // ============================================
 // RUTAS PRINCIPALES DE RH
@@ -546,34 +563,24 @@ Route::prefix('rh')->name('rh.')->group(function () {
 });
 
 // ============================================
-// ALMACEN - GRUPO PRINCIPAL
+// ALMACEN
 // ============================================
 Route::prefix('almacen')->name('almacen.')->middleware('auth')->group(function () {
-    
-    // MOVIMIENTOS
     Route::get('/entrada', [App\Http\Controllers\MovimientoInventarioController::class, 'index'])->name('entrada');
     Route::get('/traspasos', [App\Http\Controllers\TraspasoAlmacenController::class, 'index'])->name('traspasos');
     Route::get('/vales', [App\Http\Controllers\MovimientoInventarioController::class, 'index'])->name('vales');
-    
-    // REQUISICIONES DE MATERIAL
     Route::get('/requisicion', [App\Http\Controllers\RequisicionMaterialController::class, 'index'])->name('requisicion');
-    
-    // REQUISICIONES Y DEVOLUCIONES DE EQUIPO (ACTIVOS)
     Route::get('/requisiciones-devoluciones-equipo', [App\Http\Controllers\EquipoRequisicionController::class, 'index'])->name('requisiciones_devoluciones_equipo');
-    
-    // INVENTARIO FÍSICO
     Route::get('/inventariofisico', [App\Http\Controllers\InventarioFisicoController::class, 'index'])->name('inventario');
     Route::get('/api/inventario-fisico', [App\Http\Controllers\InventarioFisicoController::class, 'getInventario'])->name('api.inventario-fisico');
     Route::get('/api/inventario-fisico/{id}', [App\Http\Controllers\InventarioFisicoController::class, 'show'])->name('api.inventario-fisico.show');
     Route::get('/api/inventario-fisico/exportar', [App\Http\Controllers\InventarioFisicoController::class, 'exportar'])->name('api.inventario-fisico.exportar');
-    
-    // CATÁLOGOS
     Route::get('/almacenes', [App\Http\Controllers\AlmacenController::class, 'index'])->name('almacen');
     Route::get('/articulos', [App\Http\Controllers\ArticuloController::class, 'index'])->name('articulo');
     Route::get('/familias', [FamiliaController::class, 'index'])->name('familias');
     Route::get('/activos', [App\Http\Controllers\ActivoController::class, 'index'])->name('activos');
     
-    // API ROUTES PARA ARTÍCULOS
+    // API ROUTES
     Route::get('/api/articulos', [App\Http\Controllers\ArticuloController::class, 'getArticulos'])->name('api.articulos');
     Route::get('/api/articulos/{id}', [App\Http\Controllers\ArticuloController::class, 'show'])->name('api.articulos.show');
     Route::post('/api/articulos', [App\Http\Controllers\ArticuloController::class, 'store'])->name('api.articulos.store');
@@ -582,7 +589,6 @@ Route::prefix('almacen')->name('almacen.')->middleware('auth')->group(function (
     Route::get('/api/articulos/exportar', [App\Http\Controllers\ArticuloController::class, 'exportar'])->name('api.articulos.exportar');
     Route::get('/api/subfamilias-por-familia/{familiaId}', [App\Http\Controllers\ArticuloController::class, 'getSubfamiliasByFamilia'])->name('api.subfamilias-por-familia');
 
-    // API ROUTES PARA ALMACENES
     Route::get('/api/almacenes', [App\Http\Controllers\AlmacenController::class, 'getAlmacenes'])->name('api.almacenes');
     Route::get('/api/almacenes/{id}', [App\Http\Controllers\AlmacenController::class, 'show'])->name('api.almacenes.show');
     Route::post('/api/almacenes', [App\Http\Controllers\AlmacenController::class, 'store'])->name('api.almacenes.store');
@@ -593,23 +599,18 @@ Route::prefix('almacen')->name('almacen.')->middleware('auth')->group(function (
     Route::get('/api/almacenes/exportar', [App\Http\Controllers\AlmacenController::class, 'exportar'])->name('api.almacenes.exportar');
     Route::get('/api/almacenes/estadisticas', [App\Http\Controllers\AlmacenController::class, 'getEstadisticas'])->name('api.almacenes.estadisticas');
 
-    // API ROUTES PARA FAMILIAS Y SUBFAMILIAS
     Route::get('/api/familias', [FamiliaController::class, 'getFamilias'])->name('api.familias');
     Route::get('/api/subfamilias', [FamiliaController::class, 'getSubfamilias'])->name('api.subfamilias');
     Route::get('/api/familias-select', [FamiliaController::class, 'getFamiliasSelect'])->name('api.familias-select');
-    
     Route::post('/api/familias', [FamiliaController::class, 'storeFamilia'])->name('api.familias.store');
     Route::put('/api/familias/{id}', [FamiliaController::class, 'updateFamilia'])->name('api.familias.update');
     Route::delete('/api/familias/{id}', [FamiliaController::class, 'destroyFamilia'])->name('api.familias.destroy');
-    
     Route::post('/api/subfamilias', [FamiliaController::class, 'storeSubfamilia'])->name('api.subfamilias.store');
     Route::put('/api/subfamilias/{id}', [FamiliaController::class, 'updateSubfamilia'])->name('api.subfamilias.update');
     Route::delete('/api/subfamilias/{id}', [FamiliaController::class, 'destroySubfamilia'])->name('api.subfamilias.destroy');
-    
     Route::get('/api/familias/exportar', [FamiliaController::class, 'exportarFamilias'])->name('api.familias.exportar');
     Route::get('/api/subfamilias/exportar', [FamiliaController::class, 'exportarSubfamilias'])->name('api.subfamilias.exportar');
 
-    // API ROUTES PARA ACTIVOS
     Route::get('/api/activos', [App\Http\Controllers\ActivoController::class, 'getActivos'])->name('api.activos');
     Route::get('/api/activos/{id}', [App\Http\Controllers\ActivoController::class, 'show'])->name('api.activos.show');
     Route::post('/api/activos', [App\Http\Controllers\ActivoController::class, 'store'])->name('api.activos.store');
@@ -619,7 +620,6 @@ Route::prefix('almacen')->name('almacen.')->middleware('auth')->group(function (
     Route::get('/api/activos/disponibles', [App\Http\Controllers\ActivoController::class, 'getDisponibles'])->name('api.activos.disponibles');
     Route::get('/api/activos/exportar', [App\Http\Controllers\ActivoController::class, 'exportar'])->name('api.activos.exportar');
 
-    // API ROUTES PARA REQUISICIONES DE ACTIVOS
     Route::get('/api/requisiciones-activos', [App\Http\Controllers\RequisicionActivoController::class, 'getRequisiciones'])->name('api.requisiciones-activos');
     Route::get('/api/requisiciones-activos/{id}', [App\Http\Controllers\RequisicionActivoController::class, 'show'])->name('api.requisiciones-activos.show');
     Route::post('/api/requisiciones-activos', [App\Http\Controllers\RequisicionActivoController::class, 'store'])->name('api.requisiciones-activos.store');
@@ -627,7 +627,6 @@ Route::prefix('almacen')->name('almacen.')->middleware('auth')->group(function (
     Route::post('/api/requisiciones-activos/{id}/rechazar', [App\Http\Controllers\RequisicionActivoController::class, 'rechazar'])->name('api.requisiciones-activos.rechazar');
     Route::delete('/api/requisiciones-activos/{id}', [App\Http\Controllers\RequisicionActivoController::class, 'destroy'])->name('api.requisiciones-activos.destroy');
 
-    // API ROUTES PARA DEVOLUCIONES/ASIGNACIONES DE ACTIVOS
     Route::get('/api/devoluciones-activos', [App\Http\Controllers\DevolucionActivoController::class, 'getDevoluciones'])->name('api.devoluciones-activos');
     Route::post('/api/devoluciones-activos/salida', [App\Http\Controllers\DevolucionActivoController::class, 'registrarSalida'])->name('api.devoluciones-activos.salida');
     Route::post('/api/devoluciones-activos/{id}/devolver', [App\Http\Controllers\DevolucionActivoController::class, 'registrarDevolucion'])->name('api.devoluciones-activos.devolver');
@@ -635,16 +634,11 @@ Route::prefix('almacen')->name('almacen.')->middleware('auth')->group(function (
 });
 
 // ============================================
-// INVENTARIO POR PROYECTO (API)
+// INVENTARIO POR PROYECTO
 // ============================================
 Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(function () {
-    
-    Route::get('/api/inventario-por-obra', [InventarioProyectoController::class, 'getInventarioPorObra'])
-        ->name('api.inventario-por-obra');
-    
-    Route::get('/api/filtros-catalogos', [InventarioProyectoController::class, 'getFiltrosCatalogos'])
-        ->name('api.filtros-catalogos');
-    
+    Route::get('/api/inventario-por-obra', [InventarioProyectoController::class, 'getInventarioPorObra'])->name('api.inventario-por-obra');
+    Route::get('/api/filtros-catalogos', [InventarioProyectoController::class, 'getFiltrosCatalogos'])->name('api.filtros-catalogos');
     Route::get('/api/movimientos', [MovimientoInventarioController::class, 'getMovimientos'])->name('api.movimientos');
     Route::post('/api/movimientos/entrada', [MovimientoInventarioController::class, 'registrarEntrada'])->name('api.movimientos.entrada');
     Route::post('/api/movimientos/salida', [MovimientoInventarioController::class, 'registrarSalida'])->name('api.movimientos.salida');
@@ -675,18 +669,14 @@ Route::prefix('inventario')->name('inventario.')->middleware(['auth'])->group(fu
     Route::post('/api/requisiciones/{id}/ejecutar-surtido', [RequisicionMaterialController::class, 'ejecutarSurtido'])->name('api.requisiciones.ejecutar-surtido');
     Route::delete('/api/requisiciones/{id}', [RequisicionMaterialController::class, 'destroy'])->name('api.requisiciones.destroy');
 
-    Route::post('/api/movimientos/recepcion-multiple', [MovimientoInventarioController::class, 'recepcionMultiple'])
-        ->name('api.movimientos.recepcion-multiple');
-
-    Route::post('/api/articulos/crear-temporal', [App\Http\Controllers\ArticuloController::class, 'crearTemporal'])
-        ->name('api.articulos.crear-temporal');
+    Route::post('/api/movimientos/recepcion-multiple', [MovimientoInventarioController::class, 'recepcionMultiple'])->name('api.movimientos.recepcion-multiple');
+    Route::post('/api/articulos/crear-temporal', [App\Http\Controllers\ArticuloController::class, 'crearTemporal'])->name('api.articulos.crear-temporal');
 });
 
 // ============================================
 // COMPRAS
 // ============================================
 Route::prefix('compras')->name('compras.')->middleware('auth')->group(function () {
-    // Vistas simples
     Route::get('/requisicion', function () { return view('compras.requisicion.requisicion'); })->name('requisicion');
     Route::get('/autorizacion', function () { return view('compras.requisicion.autorizacion'); })->name('autorizacion');
     Route::get('/autorizaciones', function () { return view('compras.compras.autorizacion'); })->name('autorizaciones');
@@ -696,7 +686,6 @@ Route::prefix('compras')->name('compras.')->middleware('auth')->group(function (
         return view('compras.almacen.almacen', compact('proyectos'));
     })->name('almacen');
 
-    // Proveedores
     Route::get('/proveedores', [ProveedorController::class, 'index'])->name('gestion');
     Route::get('/api/proveedores', [ProveedorController::class, 'getData'])->name('api.proveedores');
     Route::get('/api/proveedores/{id}', [ProveedorController::class, 'show'])->name('api.proveedores.show');
@@ -733,13 +722,10 @@ Route::prefix('compras')->name('compras.')->middleware('auth')->group(function (
         Route::get('/exportar', [AutorizacionRequisicionController::class, 'exportar'])->name('exportar');
     });
 
-    // ÓRDENES PARA COTIZAR
     Route::get('/ordenes', [CotizacionController::class, 'ordenesPendientes'])->name('ordenes');
-    
-    // AUTORIZACIÓN DE COTIZACIONES
     Route::get('/autorizacion-cotizaciones', [CotizacionController::class, 'autorizacionCotizaciones'])->name('autorizacion-cotizaciones');
     
-    // COTIZACIONES (API y vistas)
+    // COTIZACIONES
     Route::prefix('cotizaciones')->name('cotizaciones.')->group(function () {
         Route::get('/', [CotizacionController::class, 'index'])->name('index');
         Route::get('/solicitar/{requisicionId}', [CotizacionController::class, 'solicitar'])->name('solicitar');
@@ -755,10 +741,8 @@ Route::prefix('compras')->name('compras.')->middleware('auth')->group(function (
 
     // COMPRAS PENDIENTES DE RECEPCIÓN
     Route::prefix('api')->name('api.')->group(function () {
-        Route::get('/pendientes-recepcion', [CompraRecepcionController::class, 'pendientes'])
-            ->name('pendientes-recepcion');
-        Route::get('/pendientes-recepcion/{id}/detalle', [CompraRecepcionController::class, 'detalleCompra'])
-            ->name('pendientes-recepcion.detalle');
+        Route::get('/pendientes-recepcion', [CompraRecepcionController::class, 'pendientes'])->name('pendientes-recepcion');
+        Route::get('/pendientes-recepcion/{id}/detalle', [CompraRecepcionController::class, 'detalleCompra'])->name('pendientes-recepcion.detalle');
     });
 });
 
@@ -878,7 +862,6 @@ Route::get('usuarios/download-excel', [UserController::class, 'downloadExcel'])-
 // RUTAS API GENERALES
 // ============================================
 Route::prefix('api')->group(function () {
-
     Route::apiResource('roles', RolController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::post('roles/exportar-excel', [RolController::class, 'exportExcel']);
     Route::apiResource('puestos', PuestoController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
@@ -1058,7 +1041,6 @@ Route::prefix('api/dashboard')->group(function () {
 // ============================================
 // RUTAS DE FACTURACIÓN
 // ============================================
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/facturas-para-pago', [FacturaController::class, 'getFacturasParaPago']);
     
@@ -1189,7 +1171,6 @@ Route::middleware(['auth'])->group(function () {
 // ============================================
 // RUTAS PARA NOTAS DE CRÉDITO
 // ============================================
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/notas-credito', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'indexView'])->name('notas-credito.index');
     Route::get('/notas-credito/data', [App\Http\Controllers\Facturacion\NotaCreditoController::class, 'getData']);
@@ -1225,7 +1206,6 @@ Route::middleware(['auth'])->group(function () {
 // ============================================
 // RUTAS PARA CONTRARECIBOS
 // ============================================
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/contrarecibos', [ContrareciboController::class, 'indexView'])->name('contrarecibos.index');
     Route::get('/contrarecibos/data', [ContrareciboController::class, 'getData']);
@@ -1237,7 +1217,6 @@ Route::middleware(['auth'])->group(function () {
 // ============================================
 // RUTAS PARA FACTORAJE
 // ============================================
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/factoraje', [FactorajeController::class, 'indexView'])->name('factoraje');
     Route::get('/factoraje/data', [FactorajeController::class, 'getData']);
@@ -1257,7 +1236,6 @@ Route::middleware(['auth'])->group(function () {
 // ============================================
 // CUENTAS POR COBRAR Y PAGAR
 // ============================================
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/cuentas-por-cobrar', [CuentasPorCobrarController::class, 'index'])->name('cuentas-por-cobrar.index');
     Route::post('/facturas/{factura}/pagos', [CuentasPorCobrarController::class, 'registrarPago'])->name('facturas.pagos.registrar');
@@ -1275,6 +1253,49 @@ Route::prefix('api')->group(function () {
     Route::get('/cuentas-contables', [App\Http\Controllers\PolizaController::class, 'getCuentasContables']);
 });
 
+// ============================================
+// RUTAS API PARA GASTOS INDIRECTOS Y COMPLEMENTOS
+// ============================================
+Route::middleware('auth')->group(function () {
+    Route::get('/api/gastos-indirectos', [App\Http\Controllers\GastoIndirectoController::class, 'index'])->name('api.gastos-indirectos.index');
+    Route::post('/api/gastos-indirectos', [App\Http\Controllers\GastoIndirectoController::class, 'store'])->name('api.gastos-indirectos.store');
+    Route::get('/api/gastos-indirectos/{id}', [App\Http\Controllers\GastoIndirectoController::class, 'show'])->name('api.gastos-indirectos.show');
+    Route::put('/api/gastos-indirectos/{id}', [App\Http\Controllers\GastoIndirectoController::class, 'update'])->name('api.gastos-indirectos.update');
+    Route::delete('/api/gastos-indirectos/{id}', [App\Http\Controllers\GastoIndirectoController::class, 'destroy'])->name('api.gastos-indirectos.destroy');
+    Route::get('/api/gastos-indirectos/kpis', [App\Http\Controllers\GastoIndirectoController::class, 'getKPIs'])->name('api.gastos-indirectos.kpis');
+    Route::get('/api/gastos-indirectos/test', [App\Http\Controllers\GastoIndirectoController::class, 'test'])->name('api.gastos-indirectos.test');
+    
+    Route::get('/api/gastos-proyecto', [App\Http\Controllers\GastoProyectoController::class, 'index'])->name('api.gastos-proyecto.index');
+    Route::post('/api/gastos-proyecto', [App\Http\Controllers\GastoProyectoController::class, 'store'])->name('api.gastos-proyecto.store');
+    Route::get('/api/gastos-proyecto/{id}', [App\Http\Controllers\GastoProyectoController::class, 'show'])->name('api.gastos-proyecto.show');
+    Route::put('/api/gastos-proyecto/{id}', [App\Http\Controllers\GastoProyectoController::class, 'update'])->name('api.gastos-proyecto.update');
+    Route::delete('/api/gastos-proyecto/{id}', [App\Http\Controllers\GastoProyectoController::class, 'destroy'])->name('api.gastos-proyecto.destroy');
+    Route::get('/api/gastos-proyecto/kpis', [App\Http\Controllers\GastoProyectoController::class, 'getKPIs'])->name('api.gastos-proyecto.kpis');
+    Route::get('/api/gastos-proyecto/test', [App\Http\Controllers\GastoProyectoController::class, 'test'])->name('api.gastos-proyecto.test');
+    
+    Route::get('/api/diot/data', [App\Http\Controllers\DiotController::class, 'getData'])->name('api.diot.data');
+    Route::get('/api/diot/descargar', [App\Http\Controllers\DiotController::class, 'descargarTxt'])->name('api.diot.descargar');
+    Route::get('/api/diot/test', [App\Http\Controllers\DiotController::class, 'test'])->name('api.diot.test');
+    
+// COMPLEMENTOS DE PAGO
+Route::middleware('auth')->group(function () {
+    Route::get('/api/complementos-pago/clientes', [App\Http\Controllers\ComplementoPagoController::class, 'getClientes'])->name('api.complementos-pago.clientes');
+    Route::get('/api/complementos-pago/kpis', [App\Http\Controllers\ComplementoPagoController::class, 'getKPIs'])->name('api.complementos-pago.kpis');
+    Route::get('/api/complementos-pago/test', [App\Http\Controllers\ComplementoPagoController::class, 'test'])->name('api.complementos-pago.test');
+    Route::get('/api/complementos-pago', [App\Http\Controllers\ComplementoPagoController::class, 'index'])->name('api.complementos-pago.index');
+    Route::post('/api/complementos-pago', [App\Http\Controllers\ComplementoPagoController::class, 'store'])->name('api.complementos-pago.store');
+    Route::get('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'show'])->name('api.complementos-pago.show');
+    Route::put('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'update'])->name('api.complementos-pago.update');
+    Route::delete('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'destroy'])->name('api.complementos-pago.destroy');
+    Route::post('/api/complementos-pago/{id}/timbrar', [App\Http\Controllers\ComplementoPagoController::class, 'timbrar'])->name('api.complementos-pago.timbrar');
+    Route::post('/api/complementos-pago/{id}/cancelar', [App\Http\Controllers\ComplementoPagoController::class, 'cancelar'])->name('api.complementos-pago.cancelar');
 
+// ================================================================================================================
+Route::get('/api/retenciones/data', [App\Http\Controllers\RetencionController::class, 'getData'])->name('api.retenciones.data');
+Route::get('/api/retenciones/exportar', [App\Http\Controllers\RetencionController::class, 'exportarExcel'])->name('api.retenciones.exportar');
+Route::get('/api/retenciones/test', [App\Http\Controllers\RetencionController::class, 'test'])->name('api.retenciones.test');
+
+});
+});
 
 require __DIR__.'/auth.php';
