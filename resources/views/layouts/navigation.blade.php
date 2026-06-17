@@ -1928,10 +1928,10 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones Activas</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cotizaciones', 'proyectos', '{{ route('proyectos.presupuestos') }}', 'fa-file-contract')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Cotizaciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cotizaciones', 'proyectos', 'fa-file-contract', this)"></i>
-                        </div>
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Presupuestos por Proyecto', 'proyectos', '{{ route('proyectos.presupuestos') }}', 'fa-file-contract')">
+                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Presupuestos por Proyecto</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuestos por Proyecto', 'proyectos', 'fa-file-contract', this)"></i>
+                        </div> -->
                         <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '{{ route('proyectos.analisis') }}', 'fa-calculator')">
                             <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Análisis de Precios Unitarios</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>

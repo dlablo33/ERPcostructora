@@ -71,6 +71,12 @@ use App\Http\Controllers\FlujoEfectivoController;
 use App\Http\Controllers\EstadoResultadosUnidadController;
 use App\Http\Controllers\PolizaContableController;
 use App\Http\Controllers\PolizaController;
+use App\Http\Controllers\LicitacionController;
+use App\Http\Controllers\APUController;
+use App\Http\Controllers\CostoDirectoController;
+use App\Http\Controllers\CostoIndirectoController;
+use App\Http\Controllers\ReporteFotograficoController;
+use App\Http\Controllers\AsignacionPersonalController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -771,7 +777,33 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
     Route::delete('/hitos/{id}', [HitoController::class, 'destroy'])->name('hitos.destroy');
 
     Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora');
-    Route::get('/asignacion', function () { return view('proyectos.personal.asignada'); })->name('asignada');
+
+
+    Route::get('/asignacion', [AsignacionPersonalController::class, 'asignada'])->name('asignada');
+    // ============================================
+// RUTAS API PARA PERSONAL ASIGNADO
+// ============================================
+Route::prefix('personal-asignado')->name('personal-asignado.')->group(function () {
+    // Rutas para datos (API)
+    Route::get('/', [AsignacionPersonalController::class, 'index'])->name('index');
+    Route::get('/estadisticas', [AsignacionPersonalController::class, 'estadisticas'])->name('estadisticas');
+    Route::get('/exportar', [AsignacionPersonalController::class, 'exportar'])->name('exportar');
+    Route::get('/{id}', [AsignacionPersonalController::class, 'show'])->name('show');
+    
+    // Catálogos para selects
+    Route::get('/catalogos/empleados', [AsignacionPersonalController::class, 'empleados'])->name('catalogos.empleados');
+    Route::get('/catalogos/proyectos', [AsignacionPersonalController::class, 'proyectos'])->name('catalogos.proyectos');
+    Route::get('/catalogos/puestos', [AsignacionPersonalController::class, 'puestos'])->name('catalogos.puestos');
+    
+    // Rutas para operaciones (CRUD)
+    Route::post('/', [AsignacionPersonalController::class, 'store'])->name('store');
+    Route::put('/{id}', [AsignacionPersonalController::class, 'update'])->name('update');
+    Route::delete('/{id}', [AsignacionPersonalController::class, 'destroy'])->name('destroy');
+    Route::patch('/{id}/status', [AsignacionPersonalController::class, 'cambiarStatus'])->name('cambiar-status');
+    Route::post('/{id}/reasignar', [AsignacionPersonalController::class, 'reasignar'])->name('reasignar');
+});
+
+
     Route::get('/flotillas', function () { return view('proyectos.personal.flotillas'); })->name('flotillas');
     Route::get('/maquinas', function () { return view('proyectos.maquinaria.asignacion'); })->name('asignacion');
     Route::get('/control', function () { return view('proyectos.maquinaria.control'); })->name('control');
@@ -780,14 +812,146 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
     Route::get('/planos', function () { return view('proyectos.documentacion.planos'); })->name('planos');
     Route::get('/permisos', function () { return view('proyectos.documentacion.permisos'); })->name('permisos');
     Route::get('/evidencia', function () { return view('proyectos.documentacion.evidencia'); })->name('evidencia');
-    Route::get('/activas', function () { return view('proyectos.licitacion.activas'); })->name('activas');
+
+    Route::get('/activas', [LicitacionController::class, 'activas'])->name('activas');
+
+    // ============================================
+    // RUTAS API PARA LICITACIONES
+    // ============================================
+    Route::prefix('licitaciones')->name('licitaciones.')->group(function () {
+        // Rutas para datos (API)
+        Route::get('/', [LicitacionController::class, 'index'])->name('index');
+        Route::get('/clientes', [LicitacionController::class, 'clientes'])->name('clientes');
+        Route::get('/responsables', [LicitacionController::class, 'responsables'])->name('responsables');
+        Route::get('/estadisticas', [LicitacionController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [LicitacionController::class, 'exportar'])->name('exportar');
+        Route::get('/{id}', [LicitacionController::class, 'show'])->name('show');
+        
+        // Rutas para operaciones (CRUD)
+        Route::post('/', [LicitacionController::class, 'store'])->name('store');
+        Route::put('/{id}', [LicitacionController::class, 'update'])->name('update');
+        Route::delete('/{id}', [LicitacionController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/participar', [LicitacionController::class, 'participar'])->name('participar');
+        Route::delete('/{id}/documentos/{index}', [LicitacionController::class, 'eliminarDocumento'])->name('documentos.destroy');
+    });
+
     Route::get('/cotizaciones', function () { return view('proyectos.licitacion.presupuestos'); })->name('presupuestos_licitacion');
-    Route::get('/analisis', function () { return view('proyectos.licitacion.analisis'); })->name('analisis');
+
+
+    Route::get('/analisis', [APUController::class, 'analisis'])->name('analisis');
+    // ============================================
+// RUTAS API PARA ANÁLISIS DE PRECIOS UNITARIOS
+// ============================================
+Route::prefix('apu')->name('apu.')->group(function () {
+    // Rutas para datos (API)
+    Route::get('/', [APUController::class, 'index'])->name('index');
+    Route::get('/estadisticas', [APUController::class, 'estadisticas'])->name('estadisticas');
+    Route::get('/exportar', [APUController::class, 'exportar'])->name('exportar');
+    Route::get('/{id}', [APUController::class, 'show'])->name('show');
+    
+    // Catálogos para selects
+    Route::get('/catalogos/materiales', [APUController::class, 'materiales'])->name('catalogos.materiales');
+    Route::get('/catalogos/maquinaria', [APUController::class, 'maquinaria'])->name('catalogos.maquinaria');
+    Route::get('/catalogos/puestos', [APUController::class, 'puestos'])->name('catalogos.puestos');
+    Route::get('/catalogos/proveedores', [APUController::class, 'proveedores'])->name('catalogos.proveedores');
+    
+    // Rutas para operaciones (CRUD)
+    Route::post('/', [APUController::class, 'store'])->name('store');
+    Route::put('/{id}', [APUController::class, 'update'])->name('update');
+    Route::delete('/{id}', [APUController::class, 'destroy'])->name('destroy');
+    Route::post('/{id}/duplicar', [APUController::class, 'duplicar'])->name('duplicar');
+    Route::patch('/{id}/estado', [APUController::class, 'cambiarEstado'])->name('cambiar-estado');
+});
+
+
     Route::get('/analisisrentabilidad', function () { return view('proyectos.costos.rentabilidad'); })->name('rentabilidad');
-    Route::get('/indirectos', function () { return view('proyectos.costos.indirectos'); })->name('indirectos');
-    Route::get('/directos', function () { return view('proyectos.costos.directos'); })->name('directos');
+
+
+    Route::get('/indirectos', [CostoIndirectoController::class, 'indirectos'])->name('indirectos');
+    // ============================================
+// RUTAS API PARA COSTOS INDIRECTOS
+// ============================================
+Route::prefix('costos-indirectos')->name('costos-indirectos.')->group(function () {
+    // Rutas para datos (API)
+    Route::get('/', [CostoIndirectoController::class, 'index'])->name('index');
+    Route::get('/estadisticas', [CostoIndirectoController::class, 'estadisticas'])->name('estadisticas');
+    Route::get('/exportar', [CostoIndirectoController::class, 'exportar'])->name('exportar');
+    Route::get('/{id}', [CostoIndirectoController::class, 'show'])->name('show');
+    
+    // Catálogos para selects
+    Route::get('/catalogos/proyectos', [CostoIndirectoController::class, 'proyectos'])->name('catalogos.proyectos');
+    Route::get('/catalogos/proveedores', [CostoIndirectoController::class, 'proveedores'])->name('catalogos.proveedores');
+    
+    // Rutas para operaciones (CRUD)
+    Route::post('/', [CostoIndirectoController::class, 'store'])->name('store');
+    Route::put('/{id}', [CostoIndirectoController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CostoIndirectoController::class, 'destroy'])->name('destroy');
+    Route::patch('/{id}/estatus-pago', [CostoIndirectoController::class, 'cambiarEstatusPago'])->name('cambiar-estatus');
+    
+    // Rutas para documentos
+    Route::post('/{id}/documentos', [CostoIndirectoController::class, 'subirDocumento'])->name('documentos.subir');
+    Route::delete('/{id}/documentos/{documentoId}', [CostoIndirectoController::class, 'eliminarDocumento'])->name('documentos.eliminar');
+    Route::get('/{id}/documentos/{documentoId}/descargar', [CostoIndirectoController::class, 'descargarDocumento'])->name('documentos.descargar');
+});
+
+
+    Route::get('/directos', [CostoDirectoController::class, 'directos'])->name('directos');
+    // ============================================
+// RUTAS API PARA COSTOS DIRECTOS
+// ============================================
+Route::prefix('costos-directos')->name('costos-directos.')->group(function () {
+    // Rutas para datos (API)
+    Route::get('/', [CostoDirectoController::class, 'index'])->name('index');
+    Route::get('/estadisticas', [CostoDirectoController::class, 'estadisticas'])->name('estadisticas');
+    Route::get('/exportar', [CostoDirectoController::class, 'exportar'])->name('exportar');
+    Route::get('/{id}', [CostoDirectoController::class, 'show'])->name('show');
+    
+    // Catálogos para selects
+    Route::get('/catalogos/proyectos', [CostoDirectoController::class, 'proyectos'])->name('catalogos.proyectos');
+    Route::get('/catalogos/proveedores', [CostoDirectoController::class, 'proveedores'])->name('catalogos.proveedores');
+    Route::get('/catalogos/empleados', [CostoDirectoController::class, 'empleados'])->name('catalogos.empleados');
+    
+    // Rutas para operaciones (CRUD)
+    Route::post('/', [CostoDirectoController::class, 'store'])->name('store');
+    Route::put('/{id}', [CostoDirectoController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CostoDirectoController::class, 'destroy'])->name('destroy');
+    Route::patch('/{id}/estatus-pago', [CostoDirectoController::class, 'cambiarEstatusPago'])->name('cambiar-estatus');
+    
+    // Rutas para documentos
+    Route::post('/{id}/documentos', [CostoDirectoController::class, 'subirDocumento'])->name('documentos.subir');
+    Route::delete('/{id}/documentos/{documentoId}', [CostoDirectoController::class, 'eliminarDocumento'])->name('documentos.eliminar');
+    Route::get('/{id}/documentos/{documentoId}/descargar', [CostoDirectoController::class, 'descargarDocumento'])->name('documentos.descargar');
+});
+
+
     Route::get('/estimaciones', function () { return view('proyectos.avances.estimaciones'); })->name('estimaciones');
-    Route::get('/reportes', function () { return view('proyectos.avances.reportes'); })->name('reportes');
+
+
+    Route::get('/reportes', [ReporteFotograficoController::class, 'reportes'])->name('reportes');
+    // ============================================
+// RUTAS API PARA REPORTES FOTOGRÁFICOS
+// ============================================
+Route::prefix('reportes-fotograficos')->name('reportes-fotograficos.')->group(function () {
+    // Rutas para datos (API)
+    Route::get('/', [ReporteFotograficoController::class, 'index'])->name('index');
+    Route::get('/estadisticas', [ReporteFotograficoController::class, 'estadisticas'])->name('estadisticas');
+    Route::get('/exportar', [ReporteFotograficoController::class, 'exportar'])->name('exportar');
+    Route::get('/{id}', [ReporteFotograficoController::class, 'show'])->name('show');
+    Route::get('/{id}/descargar', [ReporteFotograficoController::class, 'descargar'])->name('descargar');
+    
+    // Catálogos para selects
+    Route::get('/catalogos/proyectos', [ReporteFotograficoController::class, 'proyectos'])->name('catalogos.proyectos');
+    Route::get('/catalogos/responsables', [ReporteFotograficoController::class, 'responsables'])->name('catalogos.responsables');
+    
+    // Rutas para operaciones (CRUD)
+    Route::post('/', [ReporteFotograficoController::class, 'store'])->name('store');
+    Route::put('/{id}', [ReporteFotograficoController::class, 'update'])->name('update');
+    Route::delete('/{id}', [ReporteFotograficoController::class, 'destroy'])->name('destroy');
+    Route::post('/{id}/archivar', [ReporteFotograficoController::class, 'archivar'])->name('archivar');
+    Route::post('/{id}/restaurar', [ReporteFotograficoController::class, 'restaurar'])->name('restaurar');
+});
+
+
     Route::get('/control_proyectos', function () { return view('proyectos.control.control'); })->name('control');
     Route::get('/desviaciones', function () { return view('proyectos.control.desviaciones'); })->name('desviaciones');
     
@@ -802,7 +966,6 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
     
     Route::get('/{id}', [ProyectoController::class, 'show'])->name('show');
 });
-
 // ============================================
 // BITÁCORA DE OBRA
 // ============================================

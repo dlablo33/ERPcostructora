@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-06-11 22:11:35
+Fecha: 2026-06-15 16:54:26
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 137
+Total de tablas: 138
 
 
 📋 TABLA: activos
@@ -524,6 +524,28 @@ Columnas (6):
   • comentario
   • created_at
   • updated_at
+
+📋 TABLA: complementos_pago
+----------------------------------------------------------------------
+Columnas (18):
+  • id
+  • folio
+  • cliente_id
+  • rfc
+  • fecha_pago
+  • documento_relacionado
+  • forma_pago
+  • monto
+  • estatus
+  • uuid
+  • cfdi_id
+  • poliza_contable_id
+  • pago_id
+  • contrarecibo_id
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: conciliacion_bancaria
 ----------------------------------------------------------------------
@@ -2726,4 +2748,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 137
+Total de tablas analizadas: 138
