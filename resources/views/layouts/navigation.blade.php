@@ -2012,10 +2012,10 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Mantenimiento de Equipo</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '{{ route('proyectos.bita') }}', 'fa-book')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '{{ route('proyectos.bita') }}', 'fa-book')">
                             <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'proyectos', 'fa-book', this)"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="sidebar-menu-group">

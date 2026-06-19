@@ -1,15 +1,15 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-06-15 16:54:26
+Fecha: 2026-06-18 20:10:31
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 138
+Total de tablas: 151
 
 
 📋 TABLA: activos
 ----------------------------------------------------------------------
-Columnas (29):
+Columnas (33):
   • id
   • codigo
   • nombre
@@ -39,6 +39,10 @@ Columnas (29):
   • updated_at
   • deleted_at
   • unidad_negocio_id
+  • costo_operacion_hora
+  • consumo_promedio
+  • fecha_ultimo_mantenimiento
+  • fecha_proximo_mantenimiento
 
 📋 TABLA: activos_herramientas
 ----------------------------------------------------------------------
@@ -129,6 +133,47 @@ Columnas (14):
   • updated_at
   • deleted_at
 
+📋 TABLA: analisis_precios_unitarios
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • codigo
+  • concepto
+  • categoria
+  • unidad
+  • costo_materiales
+  • costo_mano_obra
+  • costo_maquinaria
+  • costo_subcontratos
+  • costo_total
+  • estado
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: apu_componentes
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • apu_id
+  • tipo_componente
+  • material_id
+  • puesto_id
+  • maquinaria_id
+  • proveedor_id
+  • descripcion
+  • cantidad
+  • unidad
+  • costo_unitario
+  • costo_total
+  • orden
+  • observaciones
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: areas
 ----------------------------------------------------------------------
 Columnas (8):
@@ -163,7 +208,7 @@ Columnas (16):
 
 📋 TABLA: asignaciones_activos
 ----------------------------------------------------------------------
-Columnas (21):
+Columnas (26):
   • id
   • requisicion_id
   • activo_id
@@ -185,10 +230,51 @@ Columnas (21):
   • recibido_por
   • created_at
   • updated_at
+  • horas_estimadas
+  • horas_reales
+  • fecha_estimada_devolucion
+  • costo_estimado
+  • costo_real
+
+📋 TABLA: asignaciones_historial
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • asignacion_id
+  • usuario_id
+  • accion
+  • fecha
+  • detalles
+  • rol_anterior
+  • rol_nuevo
+  • proyecto_anterior_id
+  • proyecto_nuevo_id
+  • status_anterior
+  • status_nuevo
+  • created_at
+  • updated_at
+
+📋 TABLA: asignaciones_personal
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • empleado_id
+  • proyecto_id
+  • tipo_personal
+  • rol
+  • fecha_asignacion
+  • fecha_fin
+  • salario_diario
+  • status
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: asistencias
 ----------------------------------------------------------------------
-Columnas (17):
+Columnas (18):
   • id
   • folio
   • user_id
@@ -206,6 +292,7 @@ Columnas (17):
   • created_at
   • updated_at
   • deleted_at
+  • cuadrilla_id
 
 📋 TABLA: bancos
 ----------------------------------------------------------------------
@@ -515,6 +602,27 @@ Columnas (7):
   • updated_at
   • tipo
 
+📋 TABLA: combustible_activos
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • activo_id
+  • proyecto_id
+  • operador_id
+  • created_by
+  • folio
+  • fecha
+  • litros
+  • costo
+  • precio_litro
+  • horometro
+  • factura
+  • proveedor
+  • observaciones
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: comentarios_bitacora
 ----------------------------------------------------------------------
 Columnas (6):
@@ -698,6 +806,91 @@ Columnas (8):
   • created_at
   • updated_at
 
+📋 TABLA: costos_directos
+----------------------------------------------------------------------
+Columnas (24):
+  • id
+  • proyecto_id
+  • proveedor_id
+  • empleado_id
+  • categoria
+  • concepto
+  • fecha
+  • proveedor_nombre
+  • rfc
+  • factura
+  • descripcion
+  • unidad
+  • cantidad
+  • precio_unitario
+  • subtotal
+  • iva
+  • total
+  • fecha_pago
+  • estatus_pago
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: costos_directos_documentos
+----------------------------------------------------------------------
+Columnas (12):
+  • id
+  • costo_directo_id
+  • nombre_original
+  • nombre_unico
+  • ruta
+  • tipo
+  • tamanio
+  • descripcion
+  • orden
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: costos_indirectos
+----------------------------------------------------------------------
+Columnas (21):
+  • id
+  • proyecto_id
+  • proveedor_id
+  • categoria
+  • concepto
+  • fecha
+  • proveedor_nombre
+  • rfc
+  • factura
+  • descripcion
+  • subtotal
+  • iva
+  • total
+  • forma_pago
+  • fecha_pago
+  • estatus_pago
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: costos_indirectos_documentos
+----------------------------------------------------------------------
+Columnas (12):
+  • id
+  • costo_indirecto_id
+  • nombre_original
+  • nombre_unico
+  • ruta
+  • tipo
+  • tamanio
+  • descripcion
+  • orden
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: cotizacion_detalles
 ----------------------------------------------------------------------
 Columnas (11):
@@ -747,6 +940,24 @@ Columnas (11):
   • creado_por
   • created_at
   • updated_at
+
+📋 TABLA: cuadrillas
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • codigo
+  • nombre
+  • descripcion
+  • especialidad
+  • proyecto_id
+  • encargado_id
+  • integrantes
+  • estatus
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: cuentas_bancarias
 ----------------------------------------------------------------------
@@ -834,7 +1045,7 @@ Columnas (18):
 
 📋 TABLA: detalle_listas_asistencia
 ----------------------------------------------------------------------
-Columnas (14):
+Columnas (15):
   • id
   • lista_asistencia_id
   • empleado_id
@@ -849,6 +1060,7 @@ Columnas (14):
   • justificacion_id
   • created_at
   • updated_at
+  • cuadrilla_id
 
 📋 TABLA: empleado_documentos
 ----------------------------------------------------------------------
@@ -1267,6 +1479,32 @@ Columnas (17):
   • created_at
   • updated_at
 
+📋 TABLA: licitaciones
+----------------------------------------------------------------------
+Columnas (22):
+  • id
+  • no_licitacion
+  • nombre
+  • descripcion
+  • cliente_id
+  • responsable_id
+  • created_by
+  • fecha_publicacion
+  • fecha_cierre
+  • monto_estimado
+  • moneda
+  • estado
+  • participa
+  • fecha_participacion
+  • fecha_adjudicacion
+  • proyecto_id
+  • documentos
+  • historial_movimientos
+  • observaciones
+  • deleted_at
+  • created_at
+  • updated_at
+
 📋 TABLA: listas_asistencia
 ----------------------------------------------------------------------
 Columnas (14):
@@ -1284,6 +1522,29 @@ Columnas (14):
   • creado_por
   • created_at
   • updated_at
+
+📋 TABLA: mantenimientos_activos
+----------------------------------------------------------------------
+Columnas (19):
+  • id
+  • activo_id
+  • proveedor_id
+  • responsable_id
+  • created_by
+  • tipo_mantenimiento
+  • folio
+  • descripcion
+  • fecha_inicio
+  • fecha_fin
+  • costo
+  • horometro_actual
+  • horometro_proximo
+  • dias_proximo
+  • estatus
+  • observaciones
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: messages
 ----------------------------------------------------------------------
@@ -1855,7 +2116,7 @@ Columnas (9):
 
 📋 TABLA: proyectos
 ----------------------------------------------------------------------
-Columnas (44):
+Columnas (47):
   • id
   • codigo
   • nombre
@@ -1900,6 +2161,9 @@ Columnas (44):
   • cliente_metodo_pago
   • cliente_direccion
   • unidad_negocio_id
+  • costo_directo_acumulado
+  • costo_indirecto_acumulado
+  • costo_total_proyecto
 
 📋 TABLA: puestos
 ----------------------------------------------------------------------
@@ -1913,6 +2177,32 @@ Columnas (9):
   • updated_at
   • deleted_at
   • area_id
+
+📋 TABLA: reportes_fotograficos
+----------------------------------------------------------------------
+Columnas (22):
+  • id
+  • proyecto_id
+  • responsable_id
+  • empleado_id
+  • categoria
+  • titulo
+  • descripcion
+  • fecha
+  • ruta
+  • nombre_original
+  • nombre_unico
+  • tipo
+  • tamanio
+  • ancho
+  • alto
+  • exif
+  • estado
+  • observaciones
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: reportes_generados
 ----------------------------------------------------------------------
@@ -2397,7 +2687,7 @@ Columnas (11):
 🔍 TABLA: proyectos
 ----------------------------------------------------------------------
 ✓ Tabla existe
-Columnas encontradas (44):
+Columnas encontradas (47):
   • id : bigint (NOT NULL) DEFAULT nextval('proyectos_id_seq'::regclass)
   • codigo : character varying (NOT NULL)
   • nombre : character varying (NOT NULL)
@@ -2442,6 +2732,9 @@ Columnas encontradas (44):
   • cliente_metodo_pago : character varying (NULL)
   • cliente_direccion : text (NULL)
   • unidad_negocio_id : bigint (NULL)
+  • costo_directo_acumulado : numeric (NOT NULL) DEFAULT '0'::numeric
+  • costo_indirecto_acumulado : numeric (NOT NULL) DEFAULT '0'::numeric
+  • costo_total_proyecto : numeric (NOT NULL) DEFAULT '0'::numeric
 
 📊 Ejemplo de datos (primeros 3 registros):
 
@@ -2454,7 +2747,7 @@ Columnas encontradas (44):
     prioridad: alta
     ubicacion: Av. Reforma 123, CDMX
     direccion: Av. Reforma 123, Col. Centro, CDMX
-    ... y 36 campos más
+    ... y 39 campos más
 
   Registro 2:
     id: 2
@@ -2465,7 +2758,7 @@ Columnas encontradas (44):
     prioridad: alta
     ubicacion: Blvd. Miguel Alemán 456, Toluca
     direccion: Blvd. Miguel Alemán 456, Col. Centro, Toluca
-    ... y 36 campos más
+    ... y 39 campos más
 
   Registro 3:
     id: 3
@@ -2476,7 +2769,7 @@ Columnas encontradas (44):
     prioridad: media
     ubicacion: Carretera a Querétaro Km 25, Cuautitlán
     direccion: Carretera a Querétaro Km 25, Cuautitlán
-    ... y 36 campos más
+    ... y 39 campos más
 
 🔍 TABLA: nominas
 ----------------------------------------------------------------------
@@ -2748,4 +3041,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 138
+Total de tablas analizadas: 151

@@ -77,6 +77,9 @@ use App\Http\Controllers\CostoDirectoController;
 use App\Http\Controllers\CostoIndirectoController;
 use App\Http\Controllers\ReporteFotograficoController;
 use App\Http\Controllers\AsignacionPersonalController;
+use App\Http\Controllers\AsistenciaCuadrillaController;
+use App\Http\Controllers\MaquinariaController;
+use App\Http\Controllers\DesviacionController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -778,37 +781,149 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
 
     Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora');
 
-
     Route::get('/asignacion', [AsignacionPersonalController::class, 'asignada'])->name('asignada');
+
     // ============================================
-// RUTAS API PARA PERSONAL ASIGNADO
-// ============================================
-Route::prefix('personal-asignado')->name('personal-asignado.')->group(function () {
-    // Rutas para datos (API)
-    Route::get('/', [AsignacionPersonalController::class, 'index'])->name('index');
-    Route::get('/estadisticas', [AsignacionPersonalController::class, 'estadisticas'])->name('estadisticas');
-    Route::get('/exportar', [AsignacionPersonalController::class, 'exportar'])->name('exportar');
-    Route::get('/{id}', [AsignacionPersonalController::class, 'show'])->name('show');
-    
-    // Catálogos para selects
-    Route::get('/catalogos/empleados', [AsignacionPersonalController::class, 'empleados'])->name('catalogos.empleados');
-    Route::get('/catalogos/proyectos', [AsignacionPersonalController::class, 'proyectos'])->name('catalogos.proyectos');
-    Route::get('/catalogos/puestos', [AsignacionPersonalController::class, 'puestos'])->name('catalogos.puestos');
-    
-    // Rutas para operaciones (CRUD)
-    Route::post('/', [AsignacionPersonalController::class, 'store'])->name('store');
-    Route::put('/{id}', [AsignacionPersonalController::class, 'update'])->name('update');
-    Route::delete('/{id}', [AsignacionPersonalController::class, 'destroy'])->name('destroy');
-    Route::patch('/{id}/status', [AsignacionPersonalController::class, 'cambiarStatus'])->name('cambiar-status');
-    Route::post('/{id}/reasignar', [AsignacionPersonalController::class, 'reasignar'])->name('reasignar');
-});
+    // RUTAS API PARA PERSONAL ASIGNADO
+    // ============================================
+    Route::prefix('personal-asignado')->name('personal-asignado.')->group(function () {
+        Route::get('/', [AsignacionPersonalController::class, 'index'])->name('index');
+        Route::get('/estadisticas', [AsignacionPersonalController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [AsignacionPersonalController::class, 'exportar'])->name('exportar');
+        Route::get('/{id}', [AsignacionPersonalController::class, 'show'])->name('show');
+        
+        Route::get('/catalogos/empleados', [AsignacionPersonalController::class, 'empleados'])->name('catalogos.empleados');
+        Route::get('/catalogos/proyectos', [AsignacionPersonalController::class, 'proyectos'])->name('catalogos.proyectos');
+        Route::get('/catalogos/puestos', [AsignacionPersonalController::class, 'puestos'])->name('catalogos.puestos');
+        
+        Route::post('/', [AsignacionPersonalController::class, 'store'])->name('store');
+        Route::put('/{id}', [AsignacionPersonalController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AsignacionPersonalController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/status', [AsignacionPersonalController::class, 'cambiarStatus'])->name('cambiar-status');
+        Route::post('/{id}/reasignar', [AsignacionPersonalController::class, 'reasignar'])->name('reasignar');
+    });
 
+    Route::get('/flotillas', [AsistenciaCuadrillaController::class, 'flotillas'])->name('flotillas');
 
-    Route::get('/flotillas', function () { return view('proyectos.personal.flotillas'); })->name('flotillas');
-    Route::get('/maquinas', function () { return view('proyectos.maquinaria.asignacion'); })->name('asignacion');
+    // ============================================
+    // RUTAS API PARA ASISTENCIA Y CUADRILLAS
+    // ============================================
+    Route::prefix('asistencia-cuadrillas')->name('asistencia-cuadrillas.')->group(function () {
+        // Asistencias
+        Route::get('/asistencias', [AsistenciaCuadrillaController::class, 'indexAsistencia'])->name('asistencias.index');
+        Route::get('/asistencias/{id}', [AsistenciaCuadrillaController::class, 'showAsistencia'])->name('asistencias.show');
+        Route::post('/asistencias', [AsistenciaCuadrillaController::class, 'storeAsistencia'])->name('asistencias.store');
+        Route::put('/asistencias/{id}', [AsistenciaCuadrillaController::class, 'updateAsistencia'])->name('asistencias.update');
+        Route::post('/asistencias/tomar', [AsistenciaCuadrillaController::class, 'tomarAsistencia'])->name('asistencias.tomar');
+        Route::get('/asistencias/exportar', [AsistenciaCuadrillaController::class, 'exportarAsistencia'])->name('asistencias.exportar');
+        
+        // Cuadrillas
+        Route::get('/cuadrillas', [AsistenciaCuadrillaController::class, 'indexCuadrillas'])->name('cuadrillas.index');
+        Route::get('/cuadrillas/{id}', [AsistenciaCuadrillaController::class, 'showCuadrilla'])->name('cuadrillas.show');
+        Route::post('/cuadrillas', [AsistenciaCuadrillaController::class, 'storeCuadrilla'])->name('cuadrillas.store');
+        Route::put('/cuadrillas/{id}', [AsistenciaCuadrillaController::class, 'updateCuadrilla'])->name('cuadrillas.update');
+        Route::delete('/cuadrillas/{id}', [AsistenciaCuadrillaController::class, 'destroyCuadrilla'])->name('cuadrillas.destroy');
+        Route::get('/cuadrillas/{id}/personal', [AsistenciaCuadrillaController::class, 'personalPorCuadrilla'])->name('cuadrillas.personal');
+        
+        // Asignación de empleados a cuadrillas
+        Route::post('/cuadrillas/asignar', [AsistenciaCuadrillaController::class, 'asignarEmpleado'])->name('cuadrillas.asignar');
+        Route::get('/cuadrillas/asignaciones', [AsistenciaCuadrillaController::class, 'getAsignaciones'])->name('cuadrillas.asignaciones');
+        Route::delete('/cuadrillas/asignaciones/{empleadoId}', [AsistenciaCuadrillaController::class, 'removerAsignacion'])->name('cuadrillas.asignaciones.remover');
+        
+        // Estadísticas y reportes
+        Route::get('/estadisticas', [AsistenciaCuadrillaController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/reporte-mensual', [AsistenciaCuadrillaController::class, 'reporteMensual'])->name('reporte-mensual');
+        
+        // Catálogos
+        Route::get('/catalogos', [AsistenciaCuadrillaController::class, 'catalogos'])->name('catalogos');
+    });
+
+    // ============================================
+    // RUTAS DE MAQUINARIA Y MANTENIMIENTO
+    // ============================================
+    
+    // Asignación de Equipo (vista principal)
+    Route::get('/maquinas', [MaquinariaController::class, 'maquinas'])->name('asignacion');
+
+    // Grupo de rutas de maquinaria
+    Route::prefix('maquinaria')->name('maquinaria.')->group(function () {
+        // 1. PRIMERO: Todas las rutas SIN parámetros (las más específicas)
+        Route::get('/catalogos', [MaquinariaController::class, 'catalogos'])->name('catalogos');
+        Route::get('/estadisticas', [MaquinariaController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [MaquinariaController::class, 'exportar'])->name('exportar');
+        Route::get('/asignaciones/activas', [MaquinariaController::class, 'asignacionesActivas'])->name('asignaciones.activas');
+        
+        // 2. Operaciones POST
+        Route::post('/asignar', [MaquinariaController::class, 'asignar'])->name('asignar');
+        Route::post('/mantenimientos', [MaquinariaController::class, 'registrarMantenimiento'])->name('mantenimientos.store');
+        Route::post('/combustible/consumo', [MaquinariaController::class, 'registrarConsumo'])->name('combustible.consumo');
+        
+        // 3. Rutas GET con filtros
+        Route::get('/mantenimientos/list', [MaquinariaController::class, 'getMantenimientos'])->name('mantenimientos.list');
+        Route::get('/combustible/historial', [MaquinariaController::class, 'historialCombustible'])->name('combustible.historial');
+        Route::get('/combustible/estadisticas', [MaquinariaController::class, 'estadisticasCombustible'])->name('combustible.estadisticas');
+        
+        // 4. Rutas con parámetros específicos
+        Route::post('/{id}/devolver', [MaquinariaController::class, 'devolver'])->name('devolver');
+        Route::get('/{activoId}/mantenimientos', [MaquinariaController::class, 'mantenimientos'])->name('mantenimientos.index');
+        Route::get('/{activoId}/combustible', [MaquinariaController::class, 'combustible'])->name('combustible.index');
+        
+        // 5. CRUD - GET /{id} al FINAL
+        Route::get('/', [MaquinariaController::class, 'index'])->name('index');
+        Route::post('/', [MaquinariaController::class, 'store'])->name('store');
+        Route::get('/{id}', [MaquinariaController::class, 'show'])->name('show');
+        Route::put('/{id}', [MaquinariaController::class, 'update'])->name('update');
+        Route::delete('/{id}', [MaquinariaController::class, 'destroy'])->name('destroy');
+    });
+
+    // Otras rutas de maquinaria
     Route::get('/control', function () { return view('proyectos.maquinaria.control'); })->name('control');
-    Route::get('/mantenimiento', function () { return view('proyectos.maquinaria.mantenimiento'); })->name('mantenimiento');
     Route::get('/bitaherramienta', function () { return view('proyectos.maquinaria.bitacora'); })->name('bita');
+    
+    // Mantenimiento de Equipo (vista)
+    Route::get('/mantenimiento', function () {
+        return view('proyectos.maquinaria.mantenimiento');
+    })->name('mantenimiento');
+
+    // Rutas API para mantenimiento (dentro del grupo proyectos)
+    Route::prefix('maquinaria/mantenimiento')->name('maquinaria.mantenimiento.')->group(function () {
+        // Estadísticas
+        Route::get('/estadisticas', [MaquinariaController::class, 'getEstadisticasMantenimiento'])->name('estadisticas');
+        
+        // Listado con filtros
+        Route::get('/list', [MaquinariaController::class, 'getListadoMantenimientos'])->name('list');
+        
+        // Mantenimientos activos
+        Route::get('/activos', [MaquinariaController::class, 'getMantenimientosActivos'])->name('activos');
+        
+        // Mantenimientos programados
+        Route::get('/programados', [MaquinariaController::class, 'getMantenimientosProgramados'])->name('programados');
+        
+        // Historial
+        Route::get('/historial', [MaquinariaController::class, 'getHistorialMantenimientos'])->name('historial');
+        
+        // Costos
+        Route::get('/costos', [MaquinariaController::class, 'getCostosMantenimiento'])->name('costos');
+        
+        // Alertas
+        Route::get('/alertas', [MaquinariaController::class, 'getAlertasMantenimiento'])->name('alertas');
+        
+        // CRUD
+        Route::post('/registrar', [MaquinariaController::class, 'storeMantenimiento'])->name('registrar');
+        Route::post('/{id}/completar', [MaquinariaController::class, 'completarMantenimiento'])->name('completar');
+        Route::post('/{id}/iniciar', [MaquinariaController::class, 'iniciarMantenimiento'])->name('iniciar');
+        
+        // Detalle
+        Route::get('/{id}', [MaquinariaController::class, 'getDetalleMantenimiento'])->name('detalle');
+        
+        // Exportar
+        Route::get('/exportar/excel', [MaquinariaController::class, 'exportarMantenimientosExcel'])->name('exportar.excel');
+    });
+
+    // ============================================
+    // CONTINÚAN LAS RUTAS DE PROYECTOS
+    // ============================================
+    
     Route::get('/planos', function () { return view('proyectos.documentacion.planos'); })->name('planos');
     Route::get('/permisos', function () { return view('proyectos.documentacion.permisos'); })->name('permisos');
     Route::get('/evidencia', function () { return view('proyectos.documentacion.evidencia'); })->name('evidencia');
@@ -819,7 +934,6 @@ Route::prefix('personal-asignado')->name('personal-asignado.')->group(function (
     // RUTAS API PARA LICITACIONES
     // ============================================
     Route::prefix('licitaciones')->name('licitaciones.')->group(function () {
-        // Rutas para datos (API)
         Route::get('/', [LicitacionController::class, 'index'])->name('index');
         Route::get('/clientes', [LicitacionController::class, 'clientes'])->name('clientes');
         Route::get('/responsables', [LicitacionController::class, 'responsables'])->name('responsables');
@@ -827,7 +941,6 @@ Route::prefix('personal-asignado')->name('personal-asignado.')->group(function (
         Route::get('/exportar', [LicitacionController::class, 'exportar'])->name('exportar');
         Route::get('/{id}', [LicitacionController::class, 'show'])->name('show');
         
-        // Rutas para operaciones (CRUD)
         Route::post('/', [LicitacionController::class, 'store'])->name('store');
         Route::put('/{id}', [LicitacionController::class, 'update'])->name('update');
         Route::delete('/{id}', [LicitacionController::class, 'destroy'])->name('destroy');
@@ -837,123 +950,111 @@ Route::prefix('personal-asignado')->name('personal-asignado.')->group(function (
 
     Route::get('/cotizaciones', function () { return view('proyectos.licitacion.presupuestos'); })->name('presupuestos_licitacion');
 
-
     Route::get('/analisis', [APUController::class, 'analisis'])->name('analisis');
-    // ============================================
-// RUTAS API PARA ANÁLISIS DE PRECIOS UNITARIOS
-// ============================================
-Route::prefix('apu')->name('apu.')->group(function () {
-    // Rutas para datos (API)
-    Route::get('/', [APUController::class, 'index'])->name('index');
-    Route::get('/estadisticas', [APUController::class, 'estadisticas'])->name('estadisticas');
-    Route::get('/exportar', [APUController::class, 'exportar'])->name('exportar');
-    Route::get('/{id}', [APUController::class, 'show'])->name('show');
-    
-    // Catálogos para selects
-    Route::get('/catalogos/materiales', [APUController::class, 'materiales'])->name('catalogos.materiales');
-    Route::get('/catalogos/maquinaria', [APUController::class, 'maquinaria'])->name('catalogos.maquinaria');
-    Route::get('/catalogos/puestos', [APUController::class, 'puestos'])->name('catalogos.puestos');
-    Route::get('/catalogos/proveedores', [APUController::class, 'proveedores'])->name('catalogos.proveedores');
-    
-    // Rutas para operaciones (CRUD)
-    Route::post('/', [APUController::class, 'store'])->name('store');
-    Route::put('/{id}', [APUController::class, 'update'])->name('update');
-    Route::delete('/{id}', [APUController::class, 'destroy'])->name('destroy');
-    Route::post('/{id}/duplicar', [APUController::class, 'duplicar'])->name('duplicar');
-    Route::patch('/{id}/estado', [APUController::class, 'cambiarEstado'])->name('cambiar-estado');
-});
 
+    // ============================================
+    // RUTAS API PARA ANÁLISIS DE PRECIOS UNITARIOS
+    // ============================================
+    Route::prefix('apu')->name('apu.')->group(function () {
+        Route::get('/', [APUController::class, 'index'])->name('index');
+        Route::get('/estadisticas', [APUController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [APUController::class, 'exportar'])->name('exportar');
+        Route::get('/{id}', [APUController::class, 'show'])->name('show');
+        
+        Route::get('/catalogos/materiales', [APUController::class, 'materiales'])->name('catalogos.materiales');
+        Route::get('/catalogos/maquinaria', [APUController::class, 'maquinaria'])->name('catalogos.maquinaria');
+        Route::get('/catalogos/puestos', [APUController::class, 'puestos'])->name('catalogos.puestos');
+        Route::get('/catalogos/proveedores', [APUController::class, 'proveedores'])->name('catalogos.proveedores');
+        
+        Route::post('/', [APUController::class, 'store'])->name('store');
+        Route::put('/{id}', [APUController::class, 'update'])->name('update');
+        Route::delete('/{id}', [APUController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/duplicar', [APUController::class, 'duplicar'])->name('duplicar');
+        Route::patch('/{id}/estado', [APUController::class, 'cambiarEstado'])->name('cambiar-estado');
+    });
 
     Route::get('/analisisrentabilidad', function () { return view('proyectos.costos.rentabilidad'); })->name('rentabilidad');
 
-
     Route::get('/indirectos', [CostoIndirectoController::class, 'indirectos'])->name('indirectos');
-    // ============================================
-// RUTAS API PARA COSTOS INDIRECTOS
-// ============================================
-Route::prefix('costos-indirectos')->name('costos-indirectos.')->group(function () {
-    // Rutas para datos (API)
-    Route::get('/', [CostoIndirectoController::class, 'index'])->name('index');
-    Route::get('/estadisticas', [CostoIndirectoController::class, 'estadisticas'])->name('estadisticas');
-    Route::get('/exportar', [CostoIndirectoController::class, 'exportar'])->name('exportar');
-    Route::get('/{id}', [CostoIndirectoController::class, 'show'])->name('show');
-    
-    // Catálogos para selects
-    Route::get('/catalogos/proyectos', [CostoIndirectoController::class, 'proyectos'])->name('catalogos.proyectos');
-    Route::get('/catalogos/proveedores', [CostoIndirectoController::class, 'proveedores'])->name('catalogos.proveedores');
-    
-    // Rutas para operaciones (CRUD)
-    Route::post('/', [CostoIndirectoController::class, 'store'])->name('store');
-    Route::put('/{id}', [CostoIndirectoController::class, 'update'])->name('update');
-    Route::delete('/{id}', [CostoIndirectoController::class, 'destroy'])->name('destroy');
-    Route::patch('/{id}/estatus-pago', [CostoIndirectoController::class, 'cambiarEstatusPago'])->name('cambiar-estatus');
-    
-    // Rutas para documentos
-    Route::post('/{id}/documentos', [CostoIndirectoController::class, 'subirDocumento'])->name('documentos.subir');
-    Route::delete('/{id}/documentos/{documentoId}', [CostoIndirectoController::class, 'eliminarDocumento'])->name('documentos.eliminar');
-    Route::get('/{id}/documentos/{documentoId}/descargar', [CostoIndirectoController::class, 'descargarDocumento'])->name('documentos.descargar');
-});
 
+    // ============================================
+    // RUTAS API PARA COSTOS INDIRECTOS
+    // ============================================
+    Route::prefix('costos-indirectos')->name('costos-indirectos.')->group(function () {
+        Route::get('/', [CostoIndirectoController::class, 'index'])->name('index');
+        Route::get('/estadisticas', [CostoIndirectoController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [CostoIndirectoController::class, 'exportar'])->name('exportar');
+        Route::get('/{id}', [CostoIndirectoController::class, 'show'])->name('show');
+        
+        Route::get('/catalogos/proyectos', [CostoIndirectoController::class, 'proyectos'])->name('catalogos.proyectos');
+        Route::get('/catalogos/proveedores', [CostoIndirectoController::class, 'proveedores'])->name('catalogos.proveedores');
+        
+        Route::post('/', [CostoIndirectoController::class, 'store'])->name('store');
+        Route::put('/{id}', [CostoIndirectoController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CostoIndirectoController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/estatus-pago', [CostoIndirectoController::class, 'cambiarEstatusPago'])->name('cambiar-estatus');
+        
+        Route::post('/{id}/documentos', [CostoIndirectoController::class, 'subirDocumento'])->name('documentos.subir');
+        Route::delete('/{id}/documentos/{documentoId}', [CostoIndirectoController::class, 'eliminarDocumento'])->name('documentos.eliminar');
+        Route::get('/{id}/documentos/{documentoId}/descargar', [CostoIndirectoController::class, 'descargarDocumento'])->name('documentos.descargar');
+    });
 
     Route::get('/directos', [CostoDirectoController::class, 'directos'])->name('directos');
-    // ============================================
-// RUTAS API PARA COSTOS DIRECTOS
-// ============================================
-Route::prefix('costos-directos')->name('costos-directos.')->group(function () {
-    // Rutas para datos (API)
-    Route::get('/', [CostoDirectoController::class, 'index'])->name('index');
-    Route::get('/estadisticas', [CostoDirectoController::class, 'estadisticas'])->name('estadisticas');
-    Route::get('/exportar', [CostoDirectoController::class, 'exportar'])->name('exportar');
-    Route::get('/{id}', [CostoDirectoController::class, 'show'])->name('show');
-    
-    // Catálogos para selects
-    Route::get('/catalogos/proyectos', [CostoDirectoController::class, 'proyectos'])->name('catalogos.proyectos');
-    Route::get('/catalogos/proveedores', [CostoDirectoController::class, 'proveedores'])->name('catalogos.proveedores');
-    Route::get('/catalogos/empleados', [CostoDirectoController::class, 'empleados'])->name('catalogos.empleados');
-    
-    // Rutas para operaciones (CRUD)
-    Route::post('/', [CostoDirectoController::class, 'store'])->name('store');
-    Route::put('/{id}', [CostoDirectoController::class, 'update'])->name('update');
-    Route::delete('/{id}', [CostoDirectoController::class, 'destroy'])->name('destroy');
-    Route::patch('/{id}/estatus-pago', [CostoDirectoController::class, 'cambiarEstatusPago'])->name('cambiar-estatus');
-    
-    // Rutas para documentos
-    Route::post('/{id}/documentos', [CostoDirectoController::class, 'subirDocumento'])->name('documentos.subir');
-    Route::delete('/{id}/documentos/{documentoId}', [CostoDirectoController::class, 'eliminarDocumento'])->name('documentos.eliminar');
-    Route::get('/{id}/documentos/{documentoId}/descargar', [CostoDirectoController::class, 'descargarDocumento'])->name('documentos.descargar');
-});
 
+    // ============================================
+    // RUTAS API PARA COSTOS DIRECTOS
+    // ============================================
+    Route::prefix('costos-directos')->name('costos-directos.')->group(function () {
+        Route::get('/', [CostoDirectoController::class, 'index'])->name('index');
+        Route::get('/estadisticas', [CostoDirectoController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [CostoDirectoController::class, 'exportar'])->name('exportar');
+        Route::get('/{id}', [CostoDirectoController::class, 'show'])->name('show');
+        
+        Route::get('/catalogos/proyectos', [CostoDirectoController::class, 'proyectos'])->name('catalogos.proyectos');
+        Route::get('/catalogos/proveedores', [CostoDirectoController::class, 'proveedores'])->name('catalogos.proveedores');
+        Route::get('/catalogos/empleados', [CostoDirectoController::class, 'empleados'])->name('catalogos.empleados');
+        
+        Route::post('/', [CostoDirectoController::class, 'store'])->name('store');
+        Route::put('/{id}', [CostoDirectoController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CostoDirectoController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/estatus-pago', [CostoDirectoController::class, 'cambiarEstatusPago'])->name('cambiar-estatus');
+        
+        Route::post('/{id}/documentos', [CostoDirectoController::class, 'subirDocumento'])->name('documentos.subir');
+        Route::delete('/{id}/documentos/{documentoId}', [CostoDirectoController::class, 'eliminarDocumento'])->name('documentos.eliminar');
+        Route::get('/{id}/documentos/{documentoId}/descargar', [CostoDirectoController::class, 'descargarDocumento'])->name('documentos.descargar');
+    });
 
     Route::get('/estimaciones', function () { return view('proyectos.avances.estimaciones'); })->name('estimaciones');
 
-
     Route::get('/reportes', [ReporteFotograficoController::class, 'reportes'])->name('reportes');
-    // ============================================
-// RUTAS API PARA REPORTES FOTOGRÁFICOS
-// ============================================
-Route::prefix('reportes-fotograficos')->name('reportes-fotograficos.')->group(function () {
-    // Rutas para datos (API)
-    Route::get('/', [ReporteFotograficoController::class, 'index'])->name('index');
-    Route::get('/estadisticas', [ReporteFotograficoController::class, 'estadisticas'])->name('estadisticas');
-    Route::get('/exportar', [ReporteFotograficoController::class, 'exportar'])->name('exportar');
-    Route::get('/{id}', [ReporteFotograficoController::class, 'show'])->name('show');
-    Route::get('/{id}/descargar', [ReporteFotograficoController::class, 'descargar'])->name('descargar');
-    
-    // Catálogos para selects
-    Route::get('/catalogos/proyectos', [ReporteFotograficoController::class, 'proyectos'])->name('catalogos.proyectos');
-    Route::get('/catalogos/responsables', [ReporteFotograficoController::class, 'responsables'])->name('catalogos.responsables');
-    
-    // Rutas para operaciones (CRUD)
-    Route::post('/', [ReporteFotograficoController::class, 'store'])->name('store');
-    Route::put('/{id}', [ReporteFotograficoController::class, 'update'])->name('update');
-    Route::delete('/{id}', [ReporteFotograficoController::class, 'destroy'])->name('destroy');
-    Route::post('/{id}/archivar', [ReporteFotograficoController::class, 'archivar'])->name('archivar');
-    Route::post('/{id}/restaurar', [ReporteFotograficoController::class, 'restaurar'])->name('restaurar');
-});
 
+    // ============================================
+    // RUTAS API PARA REPORTES FOTOGRÁFICOS
+    // ============================================
+    Route::prefix('reportes-fotograficos')->name('reportes-fotograficos.')->group(function () {
+        Route::get('/', [ReporteFotograficoController::class, 'index'])->name('index');
+        Route::get('/estadisticas', [ReporteFotograficoController::class, 'estadisticas'])->name('estadisticas');
+        Route::get('/exportar', [ReporteFotograficoController::class, 'exportar'])->name('exportar');
+        Route::get('/{id}', [ReporteFotograficoController::class, 'show'])->name('show');
+        Route::get('/{id}/descargar', [ReporteFotograficoController::class, 'descargar'])->name('descargar');
+        
+        Route::get('/catalogos/proyectos', [ReporteFotograficoController::class, 'proyectos'])->name('catalogos.proyectos');
+        Route::get('/catalogos/responsables', [ReporteFotograficoController::class, 'responsables'])->name('catalogos.responsables');
+        
+        Route::post('/', [ReporteFotograficoController::class, 'store'])->name('store');
+        Route::put('/{id}', [ReporteFotograficoController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ReporteFotograficoController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/archivar', [ReporteFotograficoController::class, 'archivar'])->name('archivar');
+        Route::post('/{id}/restaurar', [ReporteFotograficoController::class, 'restaurar'])->name('restaurar');
+    });
 
     Route::get('/control_proyectos', function () { return view('proyectos.control.control'); })->name('control');
-    Route::get('/desviaciones', function () { return view('proyectos.control.desviaciones'); })->name('desviaciones');
+
+
+    Route::get('/desviaciones', [DesviacionController::class, 'index'])->name('desviaciones');
+    // Rutas API para el controlador de desviaciones
+
+    
     
     Route::get('/{id}/edit-data', [ProyectoController::class, 'editData'])->name('edit-data');
     Route::get('/{id}/detalle', [ProyectoController::class, 'getDetalle'])->name('detalle');
@@ -966,6 +1067,27 @@ Route::prefix('reportes-fotograficos')->name('reportes-fotograficos.')->group(fu
     
     Route::get('/{id}', [ProyectoController::class, 'show'])->name('show');
 });
+
+// ============================================
+// RUTA API PARA EMPLEADOS DISPONIBLES (FUERA DEL GRUPO PROYECTOS)
+// ============================================
+Route::get('/api/empleados-disponibles', function() {
+    $empleados = App\Models\Plantilla::where('estatus', 'Activo')
+        ->select('plantilla_id as id', 'nombre', 'apellido_paterno', 'apellido_materno')
+        ->get()
+        ->map(function($item) {
+            return [
+                'id' => $item->id,
+                'nombre_completo' => trim($item->nombre . ' ' . ($item->apellido_paterno ?? '') . ' ' . ($item->apellido_materno ?? ''))
+            ];
+        });
+    
+    return response()->json([
+        'success' => true,
+        'data' => $empleados
+    ]);
+})->middleware('auth');
+
 // ============================================
 // BITÁCORA DE OBRA
 // ============================================
@@ -1439,26 +1561,48 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/diot/data', [App\Http\Controllers\DiotController::class, 'getData'])->name('api.diot.data');
     Route::get('/api/diot/descargar', [App\Http\Controllers\DiotController::class, 'descargarTxt'])->name('api.diot.descargar');
     Route::get('/api/diot/test', [App\Http\Controllers\DiotController::class, 'test'])->name('api.diot.test');
+
     
-// COMPLEMENTOS DE PAGO
-Route::middleware('auth')->group(function () {
-    Route::get('/api/complementos-pago/clientes', [App\Http\Controllers\ComplementoPagoController::class, 'getClientes'])->name('api.complementos-pago.clientes');
-    Route::get('/api/complementos-pago/kpis', [App\Http\Controllers\ComplementoPagoController::class, 'getKPIs'])->name('api.complementos-pago.kpis');
-    Route::get('/api/complementos-pago/test', [App\Http\Controllers\ComplementoPagoController::class, 'test'])->name('api.complementos-pago.test');
-    Route::get('/api/complementos-pago', [App\Http\Controllers\ComplementoPagoController::class, 'index'])->name('api.complementos-pago.index');
-    Route::post('/api/complementos-pago', [App\Http\Controllers\ComplementoPagoController::class, 'store'])->name('api.complementos-pago.store');
-    Route::get('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'show'])->name('api.complementos-pago.show');
-    Route::put('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'update'])->name('api.complementos-pago.update');
-    Route::delete('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'destroy'])->name('api.complementos-pago.destroy');
-    Route::post('/api/complementos-pago/{id}/timbrar', [App\Http\Controllers\ComplementoPagoController::class, 'timbrar'])->name('api.complementos-pago.timbrar');
-    Route::post('/api/complementos-pago/{id}/cancelar', [App\Http\Controllers\ComplementoPagoController::class, 'cancelar'])->name('api.complementos-pago.cancelar');
+    
+    // COMPLEMENTOS DE PAGO
+    Route::middleware('auth')->group(function () {
+        Route::get('/api/complementos-pago/clientes', [App\Http\Controllers\ComplementoPagoController::class, 'getClientes'])->name('api.complementos-pago.clientes');
+        Route::get('/api/complementos-pago/kpis', [App\Http\Controllers\ComplementoPagoController::class, 'getKPIs'])->name('api.complementos-pago.kpis');
+        Route::get('/api/complementos-pago/test', [App\Http\Controllers\ComplementoPagoController::class, 'test'])->name('api.complementos-pago.test');
+        Route::get('/api/complementos-pago', [App\Http\Controllers\ComplementoPagoController::class, 'index'])->name('api.complementos-pago.index');
+        Route::post('/api/complementos-pago', [App\Http\Controllers\ComplementoPagoController::class, 'store'])->name('api.complementos-pago.store');
+        Route::get('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'show'])->name('api.complementos-pago.show');
+        Route::put('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'update'])->name('api.complementos-pago.update');
+        Route::delete('/api/complementos-pago/{id}', [App\Http\Controllers\ComplementoPagoController::class, 'destroy'])->name('api.complementos-pago.destroy');
+        Route::post('/api/complementos-pago/{id}/timbrar', [App\Http\Controllers\ComplementoPagoController::class, 'timbrar'])->name('api.complementos-pago.timbrar');
+        Route::post('/api/complementos-pago/{id}/cancelar', [App\Http\Controllers\ComplementoPagoController::class, 'cancelar'])->name('api.complementos-pago.cancelar');
 
-// ================================================================================================================
-Route::get('/api/retenciones/data', [App\Http\Controllers\RetencionController::class, 'getData'])->name('api.retenciones.data');
-Route::get('/api/retenciones/exportar', [App\Http\Controllers\RetencionController::class, 'exportarExcel'])->name('api.retenciones.exportar');
-Route::get('/api/retenciones/test', [App\Http\Controllers\RetencionController::class, 'test'])->name('api.retenciones.test');
+        Route::get('/api/retenciones/data', [App\Http\Controllers\RetencionController::class, 'getData'])->name('api.retenciones.data');
+        Route::get('/api/retenciones/exportar', [App\Http\Controllers\RetencionController::class, 'exportarExcel'])->name('api.retenciones.exportar');
+        Route::get('/api/retenciones/test', [App\Http\Controllers\RetencionController::class, 'test'])->name('api.retenciones.test');
+    });
+});
 
+// ============================================
+// RUTAS DE DESVIACIONES
+// ============================================
+Route::middleware(['auth'])->group(function () {
+    // Vista principal
+    Route::get('/desviaciones', [App\Http\Controllers\DesviacionController::class, 'index'])->name('desviaciones');
+    
+    // API Routes para desviaciones
+    Route::prefix('desviaciones-api')->group(function () {
+        Route::get('/resumen', [App\Http\Controllers\DesviacionController::class, 'resumen']);
+        Route::get('/proyectos', [App\Http\Controllers\DesviacionController::class, 'proyectos']);
+        Route::get('/costos', [App\Http\Controllers\DesviacionController::class, 'costos']);
+        Route::get('/tiempos', [App\Http\Controllers\DesviacionController::class, 'tiempos']);
+        Route::get('/graficos', [App\Http\Controllers\DesviacionController::class, 'graficos']);
+        Route::get('/proyecto/{id}', [App\Http\Controllers\DesviacionController::class, 'proyectoDetalle']);
+        Route::get('/exportar/excel', [App\Http\Controllers\DesviacionController::class, 'exportarExcel']);
+        Route::get('/reporte/pdf', [App\Http\Controllers\DesviacionController::class, 'reportePdf']);
+    });
 });
-});
+
+
 
 require __DIR__.'/auth.php';

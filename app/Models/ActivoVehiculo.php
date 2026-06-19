@@ -38,10 +38,10 @@ class ActivoVehiculo extends Model
     ];
     
     protected $casts = [
-        'kilometraje_actual' => 'decimal:1',
-        'kilometraje_compra' => 'decimal:1',
-        'kilometraje_ultimo_mantenimiento' => 'decimal:1',
-        'kilometraje_proximo_mantenimiento' => 'decimal:1',
+        'kilometraje_actual' => 'decimal:2',
+        'kilometraje_compra' => 'decimal:2',
+        'kilometraje_ultimo_mantenimiento' => 'decimal:2',
+        'kilometraje_proximo_mantenimiento' => 'decimal:2',
         'consumo_promedio' => 'decimal:2',
         'capacidad_tanque' => 'decimal:2',
         'capacidad_carga' => 'decimal:2',
@@ -50,6 +50,15 @@ class ActivoVehiculo extends Model
         'vencimiento_verificacion' => 'date',
         'ultimo_servicio_fecha' => 'date',
         'proximo_servicio_fecha' => 'date'
+    ];
+
+    protected $appends = [
+        'kilometros_restantes_mantenimiento',
+        'requiere_mantenimiento',
+        'seguro_vigente',
+        'verificacion_vigente',
+        'dias_restantes_seguro',
+        'dias_restantes_verificacion'
     ];
     
     public function activo()
@@ -81,5 +90,53 @@ class ActivoVehiculo extends Model
     public function getVerificacionVigenteAttribute()
     {
         return $this->vencimiento_verificacion && $this->vencimiento_verificacion >= now();
+    }
+
+    public function getDiasRestantesSeguroAttribute(): ?int
+    {
+        if (!$this->vencimiento_seguro) {
+            return null;
+        }
+        $dias = now()->diffInDays($this->vencimiento_seguro, false);
+        return max(0, $dias);
+    }
+
+    public function getDiasRestantesVerificacionAttribute(): ?int
+    {
+        if (!$this->vencimiento_verificacion) {
+            return null;
+        }
+        $dias = now()->diffInDays($this->vencimiento_verificacion, false);
+        return max(0, $dias);
+    }
+
+    public function scopeConSeguroVigente($query)
+    {
+        return $query->whereDate('vencimiento_seguro', '>=', now());
+    }
+
+    public function scopeConVerificacionVigente($query)
+    {
+        return $query->whereDate('vencimiento_verificacion', '>=', now());
+    }
+
+    public function actualizarKilometraje(float $km): bool
+    {
+        $this->kilometraje_actual = $km;
+        return $this->save();
+    }
+
+    public function renovarSeguro(string $nuevaPoliza, string $nuevaFecha): bool
+    {
+        $this->poliza_seguro = $nuevaPoliza;
+        $this->vencimiento_seguro = $nuevaFecha;
+        return $this->save();
+    }
+
+    public function renovarVerificacion(string $nuevaPoliza, string $nuevaFecha): bool
+    {
+        $this->poliza_verificacion = $nuevaPoliza;
+        $this->vencimiento_verificacion = $nuevaFecha;
+        return $this->save();
     }
 }

@@ -19,7 +19,7 @@
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Desviación Costo</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="desviacionCosto">+$2.4M</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="desviacionCosto">$0</div>
                         </div>
                     </div>
                     
@@ -27,7 +27,7 @@
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Desviación Tiempo</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="desviacionTiempo">+24 días</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="desviacionTiempo">0 días</div>
                         </div>
                     </div>
                     
@@ -35,7 +35,7 @@
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">CPI</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="cpi">0.89</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="cpi">1.00</div>
                         </div>
                     </div>
                     
@@ -43,7 +43,7 @@
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">SPI</div>
-                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="spi">0.92</div>
+                            <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="spi">1.00</div>
                         </div>
                     </div>
                 </div>
@@ -65,23 +65,20 @@
                         <div>
                             <select id="selectorProyecto" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 250px;">
                                 <option value="">Todos los proyectos</option>
-                                <option value="torre" selected>🏢 Torre Norte Corporativa</option>
-                                <option value="puente">🌉 Puente Vehicular Sur</option>
-                                <option value="parque">🏭 Parque Industrial Norte</option>
-                                <option value="hospital">🏥 Hospital Regional</option>
-                                <option value="planta">💧 Planta de Tratamiento</option>
-                                <option value="urbanizacion">🏘️ Urbanización Los Álamos</option>
+                                @foreach($proyectos ?? [] as $proyecto)
+                                    <option value="{{ $proyecto->id }}">{{ $proyecto->nombre }}</option>
+                                @endforeach
                             </select>
                         </div>
 
                         <!-- Date Inicio -->
                         <div>
-                            <input type="date" id="fechaInicio" value="2026-01-01" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaInicio" value="{{ date('Y-m-d', strtotime('-30 days')) }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Date Fin -->
                         <div>
-                            <input type="date" id="fechaFin" value="2026-12-31" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
                         <!-- Botón Exportar Excel -->
@@ -123,11 +120,29 @@
                     </button>
                 </div>
 
+                <!-- Loader -->
+                <div id="loaderContainer" style="text-align: center; padding: 40px 20px; display: none;">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p style="color: #6c757d; margin-top: 10px;">Cargando datos...</p>
+                </div>
+
                 <!-- Mensaje "Sin datos" centrado -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
                     <i class="fas fa-chart-line" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros de desviaciones</p>
+                </div>
+
+                <!-- Mensaje de Error -->
+                <div style="text-align: center; padding: 40px 20px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; margin: 20px 0; display: none;" id="errorMensaje">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ffc107; margin-bottom: 15px;"></i>
+                    <h3 style="color: #856404; font-size: 18px; margin: 0;">Error al cargar datos</h3>
+                    <p style="color: #856404; font-size: 14px; margin-top: 5px;" id="errorTexto">Ocurrió un error al cargar los datos</p>
+                    <button onclick="cargarTodosLosDatos()" style="margin-top: 10px; padding: 8px 20px; background-color: #ffc107; border: none; border-radius: 4px; cursor: pointer; color: #856404; font-weight: 600;">
+                        <i class="fas fa-sync-alt"></i> Reintentar
+                    </button>
                 </div>
 
                 <!-- VISTA RESUMEN DE DESVIACIONES -->
@@ -139,38 +154,11 @@
                             <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 16px;">
                                 <i class="fas fa-chart-bar"></i> Desviaciones por Proyecto
                             </h4>
-                            <div style="height: 200px; display: flex; align-items: flex-end; gap: 15px; justify-content: center;">
-                                <div style="text-align: center; width: 70px;">
-                                    <div style="height: 80px; background-color: #dc3545; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="height: 30px; background-color: #28a745; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0; margin-top: -30px;"></div>
-                                    <div style="margin-top: 5px; font-size: 11px;">Torre</div>
-                                    <div style="font-size: 10px; color: #dc3545;">+8.2%</div>
-                                </div>
-                                <div style="text-align: center; width: 70px;">
-                                    <div style="height: 45px; background-color: #ffc107; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="height: 50px; background-color: #28a745; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0; margin-top: -50px;"></div>
-                                    <div style="margin-top: 5px; font-size: 11px;">Puente</div>
-                                    <div style="font-size: 10px; color: #ffc107;">+4.5%</div>
-                                </div>
-                                <div style="text-align: center; width: 70px;">
-                                    <div style="height: 25px; background-color: #28a745; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="margin-top: 5px; font-size: 11px;">Parque</div>
-                                    <div style="font-size: 10px; color: #28a745;">-2.3%</div>
-                                </div>
-                                <div style="text-align: center; width: 70px;">
-                                    <div style="height: 95px; background-color: #dc3545; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="margin-top: 5px; font-size: 11px;">Hospital</div>
-                                    <div style="font-size: 10px; color: #dc3545;">+9.5%</div>
-                                </div>
-                                <div style="text-align: center; width: 70px;">
-                                    <div style="height: 60px; background-color: #ffc107; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="margin-top: 5px; font-size: 11px;">Planta</div>
-                                    <div style="font-size: 10px; color: #ffc107;">+6.0%</div>
-                                </div>
-                                <div style="text-align: center; width: 70px;">
-                                    <div style="height: 15px; background-color: #28a745; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0;"></div>
-                                    <div style="margin-top: 5px; font-size: 11px;">Urb.</div>
-                                    <div style="font-size: 10px; color: #28a745;">-1.5%</div>
+                            <div id="graficoDesviaciones" style="height: 200px; display: flex; align-items: flex-end; gap: 15px; justify-content: center; padding: 10px 0;">
+                                <!-- Los gráficos se generarán dinámicamente -->
+                                <div style="text-align: center; color: #6c757d; width: 100%;">
+                                    <i class="fas fa-chart-bar" style="font-size: 32px;"></i>
+                                    <p style="font-size: 14px; margin-top: 5px;">Cargando gráficos...</p>
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: center; gap: 30px; margin-top: 15px;">
@@ -185,40 +173,42 @@
                             <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 16px;">
                                 <i class="fas fa-chart-line"></i> Indicadores Clave
                             </h4>
-                            <div style="margin-bottom: 15px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <span style="font-size: 13px;">Costo Total Presupuestado</span>
-                                    <span style="font-size: 13px; font-weight: 600;">$156.8M</span>
+                            <div id="kpisContainer">
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span style="font-size: 13px;">Costo Total Presupuestado</span>
+                                        <span style="font-size: 13px; font-weight: 600;" id="kpiPresupuesto">$0</span>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                        <div id="barraPresupuesto" style="width: 0%; height: 8px; background-color: #2378e1; border-radius: 4px;"></div>
+                                    </div>
                                 </div>
-                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                    <div style="width: 100%; height: 8px; background-color: #2378e1; border-radius: 4px;"></div>
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span style="font-size: 13px;">Costo Real</span>
+                                        <span style="font-size: 13px; font-weight: 600;" id="kpiReal">$0</span>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                        <div id="barraReal" style="width: 0%; height: 8px; background-color: #dc3545; border-radius: 4px;"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div style="margin-bottom: 15px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <span style="font-size: 13px;">Costo Real</span>
-                                    <span style="font-size: 13px; font-weight: 600;">$159.2M</span>
+                                <div style="margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span style="font-size: 13px;">Plazo Planificado</span>
+                                        <span style="font-size: 13px; font-weight: 600;" id="kpiPlazoPlan">0 días</span>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                        <div id="barraPlazoPlan" style="width: 0%; height: 8px; background-color: #2378e1; border-radius: 4px;"></div>
+                                    </div>
                                 </div>
-                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                    <div style="width: 101.5%; height: 8px; background-color: #dc3545; border-radius: 4px;"></div>
-                                </div>
-                            </div>
-                            <div style="margin-bottom: 15px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <span style="font-size: 13px;">Plazo Planificado</span>
-                                    <span style="font-size: 13px; font-weight: 600;">292 días</span>
-                                </div>
-                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                    <div style="width: 100%; height: 8px; background-color: #2378e1; border-radius: 4px;"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <span style="font-size: 13px;">Plazo Real Estimado</span>
-                                    <span style="font-size: 13px; font-weight: 600;">316 días</span>
-                                </div>
-                                <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
-                                    <div style="width: 108%; height: 8px; background-color: #ffc107; border-radius: 4px;"></div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                        <span style="font-size: 13px;">Plazo Real Estimado</span>
+                                        <span style="font-size: 13px; font-weight: 600;" id="kpiPlazoReal">0 días</span>
+                                    </div>
+                                    <div style="width: 100%; height: 8px; background-color: #e9ecef; border-radius: 4px;">
+                                        <div id="barraPlazoReal" style="width: 0%; height: 8px; background-color: #ffc107; border-radius: 4px;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -241,78 +231,12 @@
                                     <th style="padding: 12px; text-align: center;">SPI</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tablaResumenBody">
+                                <!-- Las filas se insertarán dinámicamente -->
                                 <tr>
-                                    <td style="padding: 12px;"><strong>Torre Norte Corporativa</strong></td>
-                                    <td style="padding: 12px; text-align: right;">$45,500,000</td>
-                                    <td style="padding: 12px; text-align: right;">$49,200,000</td>
-                                    <td style="padding: 12px; text-align: right; color: #dc3545;">+$3,700,000</td>
-                                    <td style="padding: 12px; text-align: center;"><span style="color: #dc3545;">+8.2%</span></td>
-                                    <td style="padding: 12px; text-align: right;">335</td>
-                                    <td style="padding: 12px; text-align: right;">355</td>
-                                    <td style="padding: 12px; text-align: center; color: #dc3545;">+20 días</td>
-                                    <td style="padding: 12px; text-align: center; color: #dc3545;">0.92</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">0.94</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px;"><strong>Puente Vehicular Sur</strong></td>
-                                    <td style="padding: 12px; text-align: right;">$28,750,000</td>
-                                    <td style="padding: 12px; text-align: right;">$30,050,000</td>
-                                    <td style="padding: 12px; text-align: right; color: #ffc107;">+$1,300,000</td>
-                                    <td style="padding: 12px; text-align: center;"><span style="color: #ffc107;">+4.5%</span></td>
-                                    <td style="padding: 12px; text-align: right;">303</td>
-                                    <td style="padding: 12px; text-align: right;">315</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">+12 días</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">0.96</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">0.96</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px;"><strong>Parque Industrial Norte</strong></td>
-                                    <td style="padding: 12px; text-align: right;">$52,300,000</td>
-                                    <td style="padding: 12px; text-align: right;">$51,100,000</td>
-                                    <td style="padding: 12px; text-align: right; color: #28a745;">-$1,200,000</td>
-                                    <td style="padding: 12px; text-align: center;"><span style="color: #28a745;">-2.3%</span></td>
-                                    <td style="padding: 12px; text-align: right;">365</td>
-                                    <td style="padding: 12px; text-align: right;">350</td>
-                                    <td style="padding: 12px; text-align: center; color: #28a745;">-15 días</td>
-                                    <td style="padding: 12px; text-align: center; color: #28a745;">1.02</td>
-                                    <td style="padding: 12px; text-align: center; color: #28a745;">1.04</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px;"><strong>Hospital Regional</strong></td>
-                                    <td style="padding: 12px; text-align: right;">$78,900,000</td>
-                                    <td style="padding: 12px; text-align: right;">$86,400,000</td>
-                                    <td style="padding: 12px; text-align: right; color: #dc3545;">+$7,500,000</td>
-                                    <td style="padding: 12px; text-align: center;"><span style="color: #dc3545;">+9.5%</span></td>
-                                    <td style="padding: 12px; text-align: right;">242</td>
-                                    <td style="padding: 12px; text-align: right;">265</td>
-                                    <td style="padding: 12px; text-align: center; color: #dc3545;">+23 días</td>
-                                    <td style="padding: 12px; text-align: center; color: #dc3545;">0.91</td>
-                                    <td style="padding: 12px; text-align: center; color: #dc3545;">0.91</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px;"><strong>Planta de Tratamiento</strong></td>
-                                    <td style="padding: 12px; text-align: right;">$34,200,000</td>
-                                    <td style="padding: 12px; text-align: right;">$36,250,000</td>
-                                    <td style="padding: 12px; text-align: right; color: #ffc107;">+$2,050,000</td>
-                                    <td style="padding: 12px; text-align: center;"><span style="color: #ffc107;">+6.0%</span></td>
-                                    <td style="padding: 12px; text-align: right;">274</td>
-                                    <td style="padding: 12px; text-align: right;">285</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">+11 días</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">0.94</td>
-                                    <td style="padding: 12px; text-align: center; color: #ffc107;">0.96</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 12px;"><strong>Urbanización Los Álamos</strong></td>
-                                    <td style="padding: 12px; text-align: right;">$67,800,000</td>
-                                    <td style="padding: 12px; text-align: right;">$66,800,000</td>
-                                    <td style="padding: 12px; text-align: right; color: #28a745;">-$1,000,000</td>
-                                    <td style="padding: 12px; text-align: center;"><span style="color: #28a745;">-1.5%</span></td>
-                                    <td style="padding: 12px; text-align: right;">547</td>
-                                    <td style="padding: 12px; text-align: right;">540</td>
-                                    <td style="padding: 12px; text-align: center; color: #28a745;">-7 días</td>
-                                    <td style="padding: 12px; text-align: center; color: #28a745;">1.01</td>
-                                    <td style="padding: 12px; text-align: center; color: #28a745;">1.01</td>
+                                    <td colspan="10" style="text-align: center; padding: 30px; color: #6c757d;">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -383,6 +307,11 @@
                             </thead>
                             <tbody id="tablaBodyCostos">
                                 <!-- Las filas se insertarán dinámicamente con JavaScript -->
+                                <tr>
+                                    <td colspan="9" style="text-align: center; padding: 30px; color: #6c757d;">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+                                    </td>
+                                </tr>
                             </tbody>
                             <tfoot id="tablaFootCostos" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                                 <tr>
@@ -456,6 +385,11 @@
                             </thead>
                             <tbody id="tablaBodyTiempo">
                                 <!-- Las filas se insertarán dinámicamente con JavaScript -->
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 30px; color: #6c757d;">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -486,7 +420,7 @@
                         <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
                             <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
                         </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-10 de 24 registros</span>
+                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 0-0 de 0 registros</span>
                     </div>
                 </div>
             </div>
@@ -510,21 +444,21 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <div>
                     <div style="font-size: 12px; color: #6c757d;">Proyecto / Partida</div>
-                    <div style="font-size: 18px; font-weight: 600;" id="detalleConcepto">Torre Norte - Cimentación</div>
+                    <div style="font-size: 18px; font-weight: 600;" id="detalleConcepto">-</div>
                 </div>
                 <div>
-                    <span style="background-color: #dc3545; color: white; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: 600;" id="detalleTipo">Sobrecosto</span>
+                    <span style="background-color: #dc3545; color: white; padding: 6px 15px; border-radius: 20px; font-size: 14px; font-weight: 600;" id="detalleTipo">-</span>
                 </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                 <div>
                     <div style="color: #6c757d; font-size: 12px;">Presupuestado</div>
-                    <div style="font-size: 20px; font-weight: 700;" id="detallePresupuestado">$1,250,000</div>
+                    <div style="font-size: 20px; font-weight: 700;" id="detallePresupuestado">$0</div>
                 </div>
                 <div>
                     <div style="color: #6c757d; font-size: 12px;">Real</div>
-                    <div style="font-size: 20px; font-weight: 700;" id="detalleReal">$1,450,000</div>
+                    <div style="font-size: 20px; font-weight: 700;" id="detalleReal">$0</div>
                 </div>
             </div>
 
@@ -532,11 +466,11 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <div style="color: #6c757d; font-size: 11px;">Desviación</div>
-                        <div style="font-size: 24px; font-weight: 700; color: #dc3545;" id="detalleDesviacion">+$200,000</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #dc3545;" id="detalleDesviacion">$0</div>
                     </div>
                     <div>
                         <div style="color: #6c757d; font-size: 11px;">Porcentaje</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #dc3545;" id="detallePorcentaje">+16%</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #dc3545;" id="detallePorcentaje">0%</div>
                     </div>
                 </div>
             </div>
@@ -544,19 +478,19 @@
             <div style="margin-bottom: 15px;">
                 <div style="color: #6c757d; font-size: 12px;">Causa Principal</div>
                 <div style="font-size: 14px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;" id="detalleCausa">
-                    Incremento en precio del acero (15% por encima del estimado) y mayores tiempos de cimentación por condiciones del suelo.
+                    Sin información
                 </div>
             </div>
 
             <div style="margin-bottom: 15px;">
                 <div style="color: #6c757d; font-size: 12px;">Impacto en Proyecto</div>
-                <div style="font-size: 14px;" id="detalleImpacto">Retraso de 5 días en cronograma general</div>
+                <div style="font-size: 14px;" id="detalleImpacto">Sin información</div>
             </div>
 
             <div style="margin-bottom: 20px;">
                 <div style="color: #6c757d; font-size: 12px;">Acciones Correctivas</div>
                 <div style="font-size: 14px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;" id="detalleAcciones">
-                    Se negociaron precios con proveedores alternativos. Se incrementó personal para recuperar tiempo perdido.
+                    Sin acciones registradas
                 </div>
             </div>
 
@@ -593,7 +527,6 @@
         border-color: #083CAE !important;
     }
     
-    /* Estilos de tabla */
     .table th {
         white-space: nowrap;
         font-size: 12px;
@@ -610,23 +543,24 @@
         color: #000000 !important;
     }
     
-    /* Estilo para las filas alternadas */
     #tablaBodyCostos tr:nth-child(odd),
-    #tablaBodyTiempo tr:nth-child(odd) {
+    #tablaBodyTiempo tr:nth-child(odd),
+    #tablaResumenBody tr:nth-child(odd) {
         background-color: #ffffff;
     }
     
     #tablaBodyCostos tr:nth-child(even),
-    #tablaBodyTiempo tr:nth-child(even) {
+    #tablaBodyTiempo tr:nth-child(even),
+    #tablaResumenBody tr:nth-child(even) {
         background-color: #f2f2f2;
     }
     
     #tablaBodyCostos tr:hover,
-    #tablaBodyTiempo tr:hover {
+    #tablaBodyTiempo tr:hover,
+    #tablaResumenBody tr:hover {
         background-color: #e0e0e0;
     }
     
-    /* Estilo para los iconos de acción */
     #tablaBodyCostos td i,
     #tablaBodyTiempo td i {
         transition: transform 0.2s;
@@ -639,7 +573,6 @@
         transform: scale(1.2);
     }
     
-    /* Estilo para el filtro en encabezados */
     .table th i {
         opacity: 0.7;
         transition: opacity 0.2s;
@@ -650,7 +583,6 @@
         opacity: 1;
     }
     
-    /* Columna de acciones fija */
     #tablaBodyCostos td:last-child,
     #tablaBodyTiempo td:last-child {
         background-color: white;
@@ -660,7 +592,6 @@
         z-index: 15;
     }
     
-    /* Badges para desviaciones */
     .badge-desviacion {
         font-size: 11px;
         padding: 4px 8px;
@@ -684,7 +615,6 @@
         color: #856404;
     }
     
-    /* Badges para impacto */
     .badge-impacto {
         font-size: 11px;
         padding: 4px 8px;
@@ -708,7 +638,6 @@
         color: white;
     }
     
-    /* Estilo para el pie de tabla (totales) */
     tfoot td {
         font-weight: bold;
         background-color: #e9ecef !important;
@@ -716,7 +645,6 @@
         color: #000000 !important;
     }
     
-    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
     #paginacionContainer {
         background: transparent !important;
         background-color: transparent !important;
@@ -724,18 +652,15 @@
         box-shadow: none !important;
     }
     
-    /* Todos los elementos dentro del contenedor también sin fondo */
     #paginacionContainer * {
         background: transparent !important;
         background-color: transparent !important;
     }
     
-    /* Excepción para los spans que deben tener fondo azul */
     #paginacionContainer span[style*="background-color"] {
         background-color: #2378e1 !important;
     }
     
-    /* Estilos para los botones de paginación */
     #paginacionContainer button {
         background: transparent !important;
         border: none !important;
@@ -751,7 +676,6 @@
         color: #2378e1 !important;
     }
     
-    /* Estilo específico para btnCrearFiltro */
     #btnCrearFiltro,
     #btnCrearFiltro:hover,
     #btnCrearFiltro:focus,
@@ -772,7 +696,6 @@
         color: #2378e1 !important;
     }
     
-    /* Estilos para agrupación de columnas */
     [draggable="true"] {
         cursor: grab;
     }
@@ -815,7 +738,6 @@
         opacity: 0.7;
     }
     
-    /* Estilo para filas de grupo */
     .fila-grupo {
         background-color: #f0f7ff !important;
         font-weight: 500;
@@ -847,13 +769,11 @@
         padding-left: 30px !important;
     }
     
-    /* Estilo cuando se está arrastrando sobre el área de grupo */
     .drag-over #grupoColumnas {
         background-color: rgba(35, 120, 225, 0.1);
         border-radius: 4px;
     }
     
-    /* Pestañas */
     .vista-tab {
         transition: all 0.3s ease;
     }
@@ -877,7 +797,21 @@
         to { opacity: 1; }
     }
     
-    /* Responsive */
+    .spinner-border {
+        display: inline-block;
+        width: 3rem;
+        height: 3rem;
+        vertical-align: text-bottom;
+        border: 0.25em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spinner-border .75s linear infinite;
+    }
+    
+    @keyframes spinner-border {
+        to { transform: rotate(360deg); }
+    }
+    
     @media (max-width: 768px) {
         div[style*="justify-content: flex-end"] {
             justify-content: center !important;
@@ -916,739 +850,515 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Desviaciones');
+    // ════════════════════════════════════════════════════════════════
+    // VARIABLES GLOBALES
+    // ════════════════════════════════════════════════════════════════
+    let columnasAgrupadas = [];
+    let expandedGroups = new Set();
+    let datosOriginalesCostos = [];
+    let datosOriginalesTiempo = [];
+    let currentPage = 1;
+    let rowsPerPage = 10;
+    let totalRegistros = 0;
+
+    // ════════════════════════════════════════════════════════════════
+    // FUNCIONES DE CARGA DE DATOS
+    // ════════════════════════════════════════════════════════════════
+
+    /**
+     * Carga todos los datos necesarios para el dashboard
+     */
+    async function cargarTodosLosDatos() {
+        mostrarLoader(true);
+        ocultarErrores();
         
-        // Variables para agrupación
-        let columnasAgrupadas = [];
-        let expandedGroups = new Set();
-        let datosOriginalesCostos = [];
-        let datosOriginalesTiempo = [];
-        let currentPage = 1;
-        let rowsPerPage = 10;
-        
-        // Datos de ejemplo para Desviaciones en Costo - MÁS DATOS FICTICIOS
-        const datosCostos = [
-            // Torre Norte (6 registros)
-            {
-                proyecto: 'Torre Norte',
-                partida: 'Cimentación',
-                categoria: 'Materiales',
-                presupuestado: 1250000,
-                real: 1450000,
-                desviacion: 200000,
-                porcentaje: 16.0,
-                causa: 'Incremento en precio del acero'
-            },
-            {
-                proyecto: 'Torre Norte',
-                partida: 'Estructura',
-                categoria: 'Mano de Obra',
-                presupuestado: 2380000,
-                real: 2620000,
-                desviacion: 240000,
-                porcentaje: 10.1,
-                causa: 'Menor rendimiento de cuadrillas'
-            },
-            {
-                proyecto: 'Torre Norte',
-                partida: 'Acabados',
-                categoria: 'Materiales',
-                presupuestado: 1850000,
-                real: 1650000,
-                desviacion: -200000,
-                porcentaje: -10.8,
-                causa: 'Compra por volumen con descuento'
-            },
-            {
-                proyecto: 'Torre Norte',
-                partida: 'Instalaciones Eléctricas',
-                categoria: 'Subcontratos',
-                presupuestado: 980000,
-                real: 1150000,
-                desviacion: 170000,
-                porcentaje: 17.3,
-                causa: 'Cambios en especificaciones técnicas'
-            },
-            {
-                proyecto: 'Torre Norte',
-                partida: 'Hidrosanitarias',
-                categoria: 'Materiales',
-                presupuestado: 650000,
-                real: 720000,
-                desviacion: 70000,
-                porcentaje: 10.8,
-                causa: 'Materiales de mayor calidad requeridos'
-            },
-            {
-                proyecto: 'Torre Norte',
-                partida: 'Fachada',
-                categoria: 'Materiales',
-                presupuestado: 2100000,
-                real: 1950000,
-                desviacion: -150000,
-                porcentaje: -7.1,
-                causa: 'Optimización en diseño'
-            },
+        try {
+            await Promise.all([
+                cargarResumen(),
+                cargarProyectos(),
+                cargarCostos(),
+                cargarTiempos(),
+                cargarGraficos()
+            ]);
             
-            // Puente Sur (5 registros)
-            {
-                proyecto: 'Puente Sur',
-                partida: 'Pilotaje',
-                categoria: 'Subcontratos',
-                presupuestado: 3200000,
-                real: 3560000,
-                desviacion: 360000,
-                porcentaje: 11.3,
-                causa: 'Condiciones del suelo no previstas'
-            },
-            {
-                proyecto: 'Puente Sur',
-                partida: 'Superestructura',
-                categoria: 'Materiales',
-                presupuestado: 2850000,
-                real: 2950000,
-                desviacion: 100000,
-                porcentaje: 3.5,
-                causa: 'Ajuste en especificaciones'
-            },
-            {
-                proyecto: 'Puente Sur',
-                partida: 'Estribos',
-                categoria: 'Concreto',
-                presupuestado: 1450000,
-                real: 1680000,
-                desviacion: 230000,
-                porcentaje: 15.9,
-                causa: 'Mayor volumen de concreto requerido'
-            },
-            {
-                proyecto: 'Puente Sur',
-                partida: 'Acero de Refuerzo',
-                categoria: 'Materiales',
-                presupuestado: 2100000,
-                real: 2350000,
-                desviacion: 250000,
-                porcentaje: 11.9,
-                causa: 'Incremento en precio del acero'
-            },
-            {
-                proyecto: 'Puente Sur',
-                partida: 'Pavimento',
-                categoria: 'Materiales',
-                presupuestado: 890000,
-                real: 820000,
-                desviacion: -70000,
-                porcentaje: -7.9,
-                causa: 'Optimización de mezcla asfáltica'
-            },
-            
-            // Parque Industrial (5 registros)
-            {
-                proyecto: 'Parque Industrial',
-                partida: 'Nivelación',
-                categoria: 'Maquinaria',
-                presupuestado: 980000,
-                real: 850000,
-                desviacion: -130000,
-                porcentaje: -13.3,
-                causa: 'Mayor eficiencia de equipos'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                partida: 'Red de agua',
-                categoria: 'Subcontratos',
-                presupuestado: 1200000,
-                real: 1280000,
-                desviacion: 80000,
-                porcentaje: 6.7,
-                causa: 'Materiales adicionales'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                partida: 'Pavimentos',
-                categoria: 'Materiales',
-                presupuestado: 2150000,
-                real: 1980000,
-                desviacion: -170000,
-                porcentaje: -7.9,
-                causa: 'Menor espesor requerido'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                partida: 'Naves - Estructura',
-                categoria: 'Acero',
-                presupuestado: 3450000,
-                real: 3620000,
-                desviacion: 170000,
-                porcentaje: 4.9,
-                causa: 'Ajustes por normativa sísmica'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                partida: 'Oficinas',
-                categoria: 'Acabados',
-                presupuestado: 980000,
-                real: 890000,
-                desviacion: -90000,
-                porcentaje: -9.2,
-                causa: 'Simplificación de acabados'
-            },
-            
-            // Hospital Regional (6 registros)
-            {
-                proyecto: 'Hospital Regional',
-                partida: 'Instalación eléctrica',
-                categoria: 'Subcontratos',
-                presupuestado: 2450000,
-                real: 2850000,
-                desviacion: 400000,
-                porcentaje: 16.3,
-                causa: 'Cambios en diseño'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                partida: 'Acabados',
-                categoria: 'Materiales',
-                presupuestado: 1850000,
-                real: 2100000,
-                desviacion: 250000,
-                porcentaje: 13.5,
-                causa: 'Especificaciones de mayor calidad'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                partida: 'Cimentación',
-                categoria: 'Concreto',
-                presupuestado: 3200000,
-                real: 3850000,
-                desviacion: 650000,
-                porcentaje: 20.3,
-                causa: 'Problemas de suelo - pilotes más profundos'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                partida: 'Equipamiento Médico',
-                categoria: 'Subcontratos',
-                presupuestado: 5600000,
-                real: 5950000,
-                desviacion: 350000,
-                porcentaje: 6.3,
-                causa: 'Actualización de equipos'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                partida: 'Gases Medicinales',
-                categoria: 'Instalaciones',
-                presupuestado: 980000,
-                real: 1250000,
-                desviacion: 270000,
-                porcentaje: 27.6,
-                causa: 'Normativa más estricta'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                partida: 'Aire Acondicionado',
-                categoria: 'Equipos',
-                presupuestado: 1750000,
-                real: 1920000,
-                desviacion: 170000,
-                porcentaje: 9.7,
-                causa: 'Mayor capacidad requerida'
-            },
-            
-            // Planta de Tratamiento (5 registros)
-            {
-                proyecto: 'Planta de Tratamiento',
-                partida: 'Obra Civil',
-                categoria: 'Concreto',
-                presupuestado: 2850000,
-                real: 3120000,
-                desviacion: 270000,
-                porcentaje: 9.5,
-                causa: 'Mayor volumen de concreto'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                partida: 'Equipos de Bombeo',
-                categoria: 'Maquinaria',
-                presupuestado: 1750000,
-                real: 1980000,
-                desviacion: 230000,
-                porcentaje: 13.1,
-                causa: 'Equipos de mayor eficiencia'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                partida: 'Tuberías',
-                categoria: 'Materiales',
-                presupuestado: 1450000,
-                real: 1280000,
-                desviacion: -170000,
-                porcentaje: -11.7,
-                causa: 'Optimización de diámetros'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                partida: 'Sistema Eléctrico',
-                categoria: 'Instalaciones',
-                presupuestado: 890000,
-                real: 1020000,
-                desviacion: 130000,
-                porcentaje: 14.6,
-                causa: 'Mayor automatización'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                partida: 'Pruebas y Puesta en Marcha',
-                categoria: 'Servicios',
-                presupuestado: 450000,
-                real: 580000,
-                desviacion: 130000,
-                porcentaje: 28.9,
-                causa: 'Más pruebas requeridas'
-            },
-            
-            // Urbanización Los Álamos (5 registros)
-            {
-                proyecto: 'Urbanización Los Álamos',
-                partida: 'Red de Agua Potable',
-                categoria: 'Materiales',
-                presupuestado: 1850000,
-                real: 1620000,
-                desviacion: -230000,
-                porcentaje: -12.4,
-                causa: 'Mejores precios de proveedores'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                partida: 'Red de Alcantarillado',
-                categoria: 'Materiales',
-                presupuestado: 2100000,
-                real: 1950000,
-                desviacion: -150000,
-                porcentaje: -7.1,
-                causa: 'Optimización de trazado'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                partida: 'Pavimentación',
-                categoria: 'Materiales',
-                presupuestado: 3250000,
-                real: 3120000,
-                desviacion: -130000,
-                porcentaje: -4.0,
-                causa: 'Menor espesor autorizado'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                partida: 'Alumbrado Público',
-                categoria: 'Instalaciones',
-                presupuestado: 980000,
-                real: 1050000,
-                desviacion: 70000,
-                porcentaje: 7.1,
-                causa: 'Luminarias LED de mayor calidad'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                partida: 'Áreas Verdes',
-                categoria: 'Paisajismo',
-                presupuestado: 750000,
-                real: 620000,
-                desviacion: -130000,
-                porcentaje: -17.3,
-                causa: 'Reducción de áreas verdes'
-            }
-        ];
-        
-        // Datos de ejemplo para Desviaciones en Tiempo - MÁS DATOS FICTICIOS
-        const datosTiempo = [
-            // Torre Norte (5 registros)
-            {
-                proyecto: 'Torre Norte',
-                actividad: 'Cimentación',
-                fecha_plan: '2026-02-15',
-                fecha_real: '2026-02-25',
-                desviacion: 10,
-                impacto: 'Alto',
-                causa: 'Problemas con el suelo'
-            },
-            {
-                proyecto: 'Torre Norte',
-                actividad: 'Estructura - Nivel 1',
-                fecha_plan: '2026-03-10',
-                fecha_real: '2026-03-15',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Retraso en entrega de acero'
-            },
-            {
-                proyecto: 'Torre Norte',
-                actividad: 'Estructura - Nivel 2',
-                fecha_plan: '2026-03-25',
-                fecha_real: '2026-03-28',
-                desviacion: 3,
-                impacto: 'Bajo',
-                causa: 'Ajustes en programación'
-            },
-            {
-                proyecto: 'Torre Norte',
-                actividad: 'Instalaciones Eléctricas',
-                fecha_plan: '2026-04-15',
-                fecha_real: '2026-04-20',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Coordinación de gremios'
-            },
-            {
-                proyecto: 'Torre Norte',
-                actividad: 'Fachada',
-                fecha_plan: '2026-05-01',
-                fecha_real: '2026-04-28',
-                desviacion: -3,
-                impacto: 'Bajo',
-                causa: 'Adelanto por buen clima'
-            },
-            
-            // Puente Sur (4 registros)
-            {
-                proyecto: 'Puente Sur',
-                actividad: 'Pilotaje',
-                fecha_plan: '2026-02-28',
-                fecha_real: '2026-03-15',
-                desviacion: 15,
-                impacto: 'Alto',
-                causa: 'Condiciones geotécnicas adversas'
-            },
-            {
-                proyecto: 'Puente Sur',
-                actividad: 'Montaje de trabes',
-                fecha_plan: '2026-03-20',
-                fecha_real: '2026-03-25',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Problemas logísticos'
-            },
-            {
-                proyecto: 'Puente Sur',
-                actividad: 'Colocación de losa',
-                fecha_plan: '2026-04-01',
-                fecha_real: '2026-04-10',
-                desviacion: 9,
-                impacto: 'Medio',
-                causa: 'Retraso acumulado'
-            },
-            {
-                proyecto: 'Puente Sur',
-                actividad: 'Acabados',
-                fecha_plan: '2026-04-20',
-                fecha_real: '2026-04-18',
-                desviacion: -2,
-                impacto: 'Bajo',
-                causa: 'Optimización de trabajos'
-            },
-            
-            // Parque Industrial (4 registros)
-            {
-                proyecto: 'Parque Industrial',
-                actividad: 'Nivelación',
-                fecha_plan: '2026-02-10',
-                fecha_real: '2026-02-05',
-                desviacion: -5,
-                impacto: 'Bajo',
-                causa: 'Se adelantó por buen clima'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                actividad: 'Cimentación',
-                fecha_plan: '2026-03-01',
-                fecha_real: '2026-02-28',
-                desviacion: -1,
-                impacto: 'Bajo',
-                causa: 'Buena productividad'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                actividad: 'Estructura Metálica',
-                fecha_plan: '2026-03-20',
-                fecha_real: '2026-03-25',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Retraso en fabricación'
-            },
-            {
-                proyecto: 'Parque Industrial',
-                actividad: 'Cubiertas',
-                fecha_plan: '2026-04-10',
-                fecha_real: '2026-04-12',
-                desviacion: 2,
-                impacto: 'Bajo',
-                causa: 'Condiciones climáticas'
-            },
-            
-            // Hospital Regional (5 registros)
-            {
-                proyecto: 'Hospital Regional',
-                actividad: 'Cimentación',
-                fecha_plan: '2026-01-15',
-                fecha_real: '2026-02-05',
-                desviacion: 21,
-                impacto: 'Alto',
-                causa: 'Problemas con el estudio de suelo'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                actividad: 'Estructura',
-                fecha_plan: '2026-02-15',
-                fecha_real: '2026-03-10',
-                desviacion: 23,
-                impacto: 'Alto',
-                causa: 'Retraso acumulado de cimentación'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                actividad: 'Instalaciones',
-                fecha_plan: '2026-03-20',
-                fecha_real: '2026-04-05',
-                desviacion: 16,
-                impacto: 'Alto',
-                causa: 'Complejidad técnica'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                actividad: 'Acabados',
-                fecha_plan: '2026-04-15',
-                fecha_real: '2026-04-20',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Ajustes en especificaciones'
-            },
-            {
-                proyecto: 'Hospital Regional',
-                actividad: 'Equipamiento',
-                fecha_plan: '2026-05-01',
-                fecha_real: '2026-05-15',
-                desviacion: 14,
-                impacto: 'Alto',
-                causa: 'Retraso en importación'
-            },
-            
-            // Planta de Tratamiento (4 registros)
-            {
-                proyecto: 'Planta de Tratamiento',
-                actividad: 'Obra Civil',
-                fecha_plan: '2026-02-01',
-                fecha_real: '2026-02-15',
-                desviacion: 14,
-                impacto: 'Alto',
-                causa: 'Condiciones climáticas'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                actividad: 'Instalación de Equipos',
-                fecha_plan: '2026-03-10',
-                fecha_real: '2026-03-18',
-                desviacion: 8,
-                impacto: 'Medio',
-                causa: 'Retraso en fabricación'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                actividad: 'Conexiones Hidráulicas',
-                fecha_plan: '2026-03-25',
-                fecha_real: '2026-03-28',
-                desviacion: 3,
-                impacto: 'Bajo',
-                causa: 'Ajustes menores'
-            },
-            {
-                proyecto: 'Planta de Tratamiento',
-                actividad: 'Pruebas',
-                fecha_plan: '2026-04-15',
-                fecha_real: '2026-04-20',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Más pruebas requeridas'
-            },
-            
-            // Urbanización Los Álamos (4 registros)
-            {
-                proyecto: 'Urbanización Los Álamos',
-                actividad: 'Red de Agua',
-                fecha_plan: '2026-02-10',
-                fecha_real: '2026-02-05',
-                desviacion: -5,
-                impacto: 'Bajo',
-                causa: 'Avance por buen clima'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                actividad: 'Red de Alcantarillado',
-                fecha_plan: '2026-02-20',
-                fecha_real: '2026-02-18',
-                desviacion: -2,
-                impacto: 'Bajo',
-                causa: 'Buena productividad'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                actividad: 'Pavimentación',
-                fecha_plan: '2026-03-15',
-                fecha_real: '2026-03-20',
-                desviacion: 5,
-                impacto: 'Medio',
-                causa: 'Lluvias'
-            },
-            {
-                proyecto: 'Urbanización Los Álamos',
-                actividad: 'Áreas Verdes',
-                fecha_plan: '2026-04-01',
-                fecha_real: '2026-03-28',
-                desviacion: -3,
-                impacto: 'Bajo',
-                causa: 'Adelanto por condiciones óptimas'
-            }
-        ];
-        
-        datosOriginalesCostos = [...datosCostos];
-        datosOriginalesTiempo = [...datosTiempo];
-        
-        // Función para formatear moneda
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+            mostrarLoader(false);
+        } catch (error) {
+            console.error('Error al cargar datos:', error);
+            mostrarError('Error al cargar los datos: ' + error.message);
+            mostrarLoader(false);
         }
-        
-        // Función para formatear fecha
-        function formatDate(dateString) {
-            if (!dateString || dateString === '-') return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX');
-        }
-        
-        // Función para obtener clase de badge según desviación
-        function getDesviacionBadgeClass(desviacion) {
-            if (desviacion > 0) return 'badge-negativa';
-            if (desviacion < 0) return 'badge-positiva';
-            return 'badge-neutra';
-        }
-        
-        // Función para obtener clase de badge según impacto
-        function getImpactoBadgeClass(impacto) {
-            switch(impacto) {
-                case 'Alto': return 'badge-alto';
-                case 'Medio': return 'badge-medio';
-                case 'Bajo': return 'badge-bajo';
-                default: return 'badge-medio';
-            }
-        }
-        
-        // Función para cargar datos en tabla de costos
-        function cargarTablaCostos(datos) {
-            const tablaBody = document.getElementById('tablaBodyCostos');
-            if (!tablaBody) return;
+    }
+
+    /**
+     * Carga el resumen general de desviaciones
+     */
+    async function cargarResumen() {
+        try {
+            const response = await fetch('/desviaciones-api/resumen');
+            if (!response.ok) throw new Error('Error al cargar resumen');
             
-            tablaBody.innerHTML = '';
+            const data = await response.json();
             
-            if (datos.length === 0) {
-                document.getElementById('sinDatosMensaje').style.display = 'block';
-                document.getElementById('tablaContainerCostos').style.display = 'none';
+            document.getElementById('desviacionCosto').textContent = data.desviacion_costo || '$0';
+            document.getElementById('desviacionTiempo').textContent = data.desviacion_tiempo || '0 días';
+            document.getElementById('cpi').textContent = data.cpi || '1.00';
+            document.getElementById('spi').textContent = data.spi || '1.00';
+            
+        } catch (error) {
+            console.error('Error en resumen:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Carga la tabla resumen de proyectos
+     */
+    async function cargarProyectos() {
+        try {
+            const response = await fetch('/desviaciones-api/proyectos');
+            if (!response.ok) throw new Error('Error al cargar proyectos');
+            
+            const data = await response.json();
+            const tbody = document.getElementById('tablaResumenBody');
+            
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 30px; color: #6c757d;">
+                            <i class="fas fa-inbox"></i> No hay proyectos registrados
+                        </td>
+                    </tr>
+                `;
                 return;
             }
             
-            document.getElementById('sinDatosMensaje').style.display = 'none';
-            document.getElementById('tablaContainerCostos').style.display = 'block';
-            
-            const pageData = datos.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
-            
-            pageData.forEach(item => {
-                const row = document.createElement('tr');
-                let badgeClass = getDesviacionBadgeClass(item.desviacion);
+            let html = '';
+            data.forEach(proyecto => {
+                const colorDesviacion = proyecto.desviacion_monto > 0 ? '#dc3545' : 
+                                       proyecto.desviacion_monto < 0 ? '#28a745' : '#ffc107';
+                const colorTiempo = proyecto.desviacion_tiempo > 0 ? '#dc3545' : 
+                                   proyecto.desviacion_tiempo < 0 ? '#28a745' : '#ffc107';
+                const colorCPI = proyecto.cpi < 1 ? '#dc3545' : 
+                                proyecto.cpi > 1 ? '#28a745' : '#ffc107';
+                const colorSPI = proyecto.spi < 1 ? '#dc3545' : 
+                                proyecto.spi > 1 ? '#28a745' : '#ffc107';
                 
-                row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proyecto}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.partida}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.categoria}</td>
+                html += `
+                    <tr>
+                        <td style="padding: 12px;"><strong>${proyecto.proyecto}</strong></td>
+                        <td style="padding: 12px; text-align: right;">${formatCurrency(proyecto.presupuesto)}</td>
+                        <td style="padding: 12px; text-align: right;">${formatCurrency(proyecto.costo_real)}</td>
+                        <td style="padding: 12px; text-align: right; color: ${colorDesviacion};">${formatCurrency(proyecto.desviacion_monto)}</td>
+                        <td style="padding: 12px; text-align: center;">
+                            <span class="badge-desviacion ${getDesviacionBadgeClass(proyecto.desviacion_monto)}">
+                                ${proyecto.desviacion_porcentaje > 0 ? '+' : ''}${proyecto.desviacion_porcentaje}%
+                            </span>
+                        </td>
+                        <td style="padding: 12px; text-align: right;">${proyecto.plazo_plan}</td>
+                        <td style="padding: 12px; text-align: right;">${proyecto.plazo_real}</td>
+                        <td style="padding: 12px; text-align: center; color: ${colorTiempo};">${proyecto.desviacion_tiempo > 0 ? '+' : ''}${proyecto.desviacion_tiempo} días</td>
+                        <td style="padding: 12px; text-align: center; color: ${colorCPI};">${proyecto.cpi}</td>
+                        <td style="padding: 12px; text-align: center; color: ${colorSPI};">${proyecto.spi}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+            
+        } catch (error) {
+            console.error('Error en proyectos:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Carga las desviaciones en costo
+     */
+    async function cargarCostos(params = {}) {
+        try {
+            const proyectoId = document.getElementById('selectorProyecto').value;
+            const search = document.getElementById('buscador').value;
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+            
+            let url = `/desviaciones-api/costos?per_page=${rowsPerPage}&page=${currentPage}`;
+            if (proyectoId) url += `&proyecto_id=${proyectoId}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
+            if (fechaFin) url += `&fecha_fin=${fechaFin}`;
+            
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Error al cargar costos');
+            
+            const data = await response.json();
+            datosOriginalesCostos = data.data || [];
+            totalRegistros = data.pagination?.total || 0;
+            
+            renderizarTablaCostos(datosOriginalesCostos);
+            actualizarPaginacion(data.pagination);
+            
+        } catch (error) {
+            console.error('Error en costos:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Carga las desviaciones en tiempo
+     */
+    async function cargarTiempos(params = {}) {
+        try {
+            const proyectoId = document.getElementById('selectorProyecto').value;
+            const search = document.getElementById('buscador').value;
+            const fechaInicio = document.getElementById('fechaInicio').value;
+            const fechaFin = document.getElementById('fechaFin').value;
+            
+            let url = `/desviaciones-api/tiempos?per_page=${rowsPerPage}&page=${currentPage}`;
+            if (proyectoId) url += `&proyecto_id=${proyectoId}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
+            if (fechaFin) url += `&fecha_fin=${fechaFin}`;
+            
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Error al cargar tiempos');
+            
+            const data = await response.json();
+            datosOriginalesTiempo = data.data || [];
+            
+            renderizarTablaTiempo(datosOriginalesTiempo);
+            
+        } catch (error) {
+            console.error('Error en tiempos:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Carga los datos para gráficos y KPIs
+     */
+    async function cargarGraficos() {
+        try {
+            const response = await fetch('/desviaciones-api/graficos');
+            if (!response.ok) throw new Error('Error al cargar gráficos');
+            
+            const data = await response.json();
+            
+            if (data.kpis) {
+                document.getElementById('kpiPresupuesto').textContent = formatCurrency(data.kpis.costo_presupuestado || 0);
+                document.getElementById('kpiReal').textContent = formatCurrency(data.kpis.costo_real || 0);
+                document.getElementById('kpiPlazoPlan').textContent = (data.kpis.plazo_plan || 0) + ' días';
+                document.getElementById('kpiPlazoReal').textContent = (data.kpis.plazo_real || 0) + ' días';
+                
+                const maxCosto = Math.max(data.kpis.costo_presupuestado || 1, data.kpis.costo_real || 1);
+                const maxPlazo = Math.max(data.kpis.plazo_plan || 1, data.kpis.plazo_real || 1);
+                
+                document.getElementById('barraPresupuesto').style.width = ((data.kpis.costo_presupuestado || 0) / maxCosto * 100) + '%';
+                document.getElementById('barraReal').style.width = ((data.kpis.costo_real || 0) / maxCosto * 100) + '%';
+                document.getElementById('barraPlazoPlan').style.width = ((data.kpis.plazo_plan || 0) / maxPlazo * 100) + '%';
+                document.getElementById('barraPlazoReal').style.width = ((data.kpis.plazo_real || 0) / maxPlazo * 100) + '%';
+            }
+            
+            if (data.por_proyecto && data.por_proyecto.length > 0) {
+                renderizarGraficoDesviaciones(data.por_proyecto);
+            }
+            
+        } catch (error) {
+            console.error('Error en gráficos:', error);
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // FUNCIONES DE RENDERIZADO
+    // ════════════════════════════════════════════════════════════════
+
+    function renderizarTablaCostos(datos) {
+        const tablaBody = document.getElementById('tablaBodyCostos');
+        if (!tablaBody) return;
+        
+        if (!datos || datos.length === 0) {
+            tablaBody.innerHTML = `
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 30px; color: #6c757d;">
+                        <i class="fas fa-inbox"></i> No hay registros de desviaciones en costo
+                    </td>
+                </tr>
+            `;
+            actualizarTotalesCostos([]);
+            return;
+        }
+        
+        let html = '';
+        let totalPresupuesto = 0;
+        let totalReal = 0;
+        let totalDesviacion = 0;
+        
+        datos.forEach(item => {
+            const badgeClass = getDesviacionBadgeClass(item.desviacion);
+            const colorDesviacion = item.desviacion > 0 ? '#dc3545' : item.desviacion < 0 ? '#28a745' : '#ffc107';
+            
+            totalPresupuesto += item.presupuestado || 0;
+            totalReal += item.real || 0;
+            totalDesviacion += item.desviacion || 0;
+            
+            html += `
+                <tr>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proyecto || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.partida || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.categoria || 'General'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.presupuestado)}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right;">${formatCurrency(item.real)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: ${item.desviacion > 0 ? '#dc3545' : '#28a745'};">${item.desviacion > 0 ? '+' : ''}${formatCurrency(item.desviacion)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;"><span class="badge-desviacion ${badgeClass}">${item.desviacion > 0 ? '+' : ''}${item.porcentaje}%</span></td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.causa}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: ${colorDesviacion};">${formatCurrency(item.desviacion)}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">
+                        <span class="badge-desviacion ${badgeClass}">
+                            ${item.desviacion > 0 ? '+' : ''}${item.porcentaje}%
+                        </span>
+                    </td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.causa || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetalle('${item.proyecto} - ${item.partida}')"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetalle('${item.proyecto} - ${item.partida}', 'costo', ${JSON.stringify(item).replace(/"/g, '&quot;')})"></i>
                             <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;"></i>
                         </div>
                     </td>
-                `;
-                
-                tablaBody.appendChild(row);
-            });
-            
-            // Actualizar totales
-            let totalPresupuesto = 0, totalReal = 0, totalDesviacion = 0;
-            datos.forEach(item => {
-                totalPresupuesto += item.presupuestado;
-                totalReal += item.real;
-                totalDesviacion += item.desviacion;
-            });
-            
-            document.getElementById('totalPresupuesto').textContent = formatCurrency(totalPresupuesto);
-            document.getElementById('totalReal').textContent = formatCurrency(totalReal);
-            document.getElementById('totalDesviacion').textContent = (totalDesviacion > 0 ? '+' : '') + formatCurrency(totalDesviacion);
-            
-            let promedioPorcentaje = totalPresupuesto > 0 ? (totalDesviacion / totalPresupuesto * 100) : 0;
-            document.getElementById('promDesviacion').textContent = (promedioPorcentaje > 0 ? '+' : '') + promedioPorcentaje.toFixed(1) + '%';
-            
-            document.getElementById('paginacionInfo').textContent = `Mostrando 1-${Math.min(rowsPerPage, datos.length)} de ${datos.length} registros`;
+                </tr>
+            `;
+        });
+        
+        tablaBody.innerHTML = html;
+        actualizarTotalesCostos({ totalPresupuesto, totalReal, totalDesviacion });
+    }
+
+    function renderizarTablaTiempo(datos) {
+        const tablaBody = document.getElementById('tablaBodyTiempo');
+        if (!tablaBody) return;
+        
+        if (!datos || datos.length === 0) {
+            tablaBody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 30px; color: #6c757d;">
+                        <i class="fas fa-inbox"></i> No hay registros de desviaciones en tiempo
+                    </td>
+                </tr>
+            `;
+            return;
         }
         
-        // Función para cargar datos en tabla de tiempo
-        function cargarTablaTiempo(datos) {
-            const tablaBody = document.getElementById('tablaBodyTiempo');
-            if (!tablaBody) return;
+        let html = '';
+        datos.forEach(item => {
+            const badgeClass = getDesviacionBadgeClass(item.desviacion);
+            const impactoBadge = getImpactoBadgeClass(item.impacto);
+            const colorDesviacion = item.desviacion > 0 ? '#dc3545' : item.desviacion < 0 ? '#28a745' : '#ffc107';
             
-            tablaBody.innerHTML = '';
+            html += `
+                <tr>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proyecto || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.actividad || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${item.fecha_plan || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${item.fecha_real || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: ${colorDesviacion};">${item.desviacion > 0 ? '+' : ''}${item.desviacion} días</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">
+                        <span class="badge-impacto ${impactoBadge}">${item.impacto || 'Medio'}</span>
+                    </td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.causa || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetalle('${item.proyecto} - ${item.actividad}', 'tiempo', ${JSON.stringify(item).replace(/"/g, '&quot;')})"></i>
+                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;"></i>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tablaBody.innerHTML = html;
+    }
+
+    function renderizarGraficoDesviaciones(datos) {
+        const container = document.getElementById('graficoDesviaciones');
+        if (!container) return;
+        
+        if (!datos || datos.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; color: #6c757d; width: 100%;">
+                    <i class="fas fa-chart-bar" style="font-size: 32px;"></i>
+                    <p style="font-size: 14px; margin-top: 5px;">No hay datos para mostrar</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const maxAbs = Math.max(...datos.map(d => Math.abs(d.desviacion || 0)));
+        const maxHeight = 150;
+        
+        let html = '';
+        const colores = {
+            'sobrecosto': '#dc3545',
+            'ahorro': '#28a745',
+            'neutro': '#ffc107'
+        };
+        
+        datos.forEach(item => {
+            const valor = item.desviacion || 0;
+            const altura = maxAbs > 0 ? (Math.abs(valor) / maxAbs) * maxHeight : 0;
+            const color = colores[item.tipo] || '#6c757d';
+            const signo = valor > 0 ? '+' : '';
             
-            if (datos.length === 0) {
-                document.getElementById('sinDatosMensaje').style.display = 'block';
-                document.getElementById('tablaContainerTiempo').style.display = 'none';
-                return;
+            html += `
+                <div style="text-align: center; width: 70px;">
+                    <div style="height: ${Math.max(altura, 5)}px; background-color: ${color}; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0; transition: height 0.5s;"></div>
+                    <div style="margin-top: 5px; font-size: 11px;">${item.nombre}</div>
+                    <div style="font-size: 10px; color: ${color};">${signo}${valor}%</div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    function actualizarTotalesCostos(totales) {
+        document.getElementById('totalPresupuesto').textContent = formatCurrency(totales.totalPresupuesto || 0);
+        document.getElementById('totalReal').textContent = formatCurrency(totales.totalReal || 0);
+        document.getElementById('totalDesviacion').textContent = formatCurrency(totales.totalDesviacion || 0);
+        
+        const promedio = (totales.totalPresupuesto || 0) > 0 
+            ? ((totales.totalDesviacion || 0) / (totales.totalPresupuesto || 1)) * 100 
+            : 0;
+        document.getElementById('promDesviacion').textContent = (promedio > 0 ? '+' : '') + promedio.toFixed(1) + '%';
+    }
+
+    function actualizarPaginacion(pagination) {
+        if (!pagination) return;
+        
+        const total = pagination.total || 0;
+        const perPage = pagination.per_page || 10;
+        const current = pagination.current_page || 1;
+        const last = pagination.last_page || 1;
+        
+        const inicio = ((current - 1) * perPage) + 1;
+        const fin = Math.min(current * perPage, total);
+        
+        document.getElementById('paginaActual').textContent = current;
+        document.getElementById('paginacionInfo').textContent = 
+            total > 0 ? `Mostrando ${inicio}-${fin} de ${total} registros` : 'Mostrando 0-0 de 0 registros';
+        
+        const pageButtons = document.querySelectorAll('.pagina-btn');
+        pageButtons.forEach(btn => {
+            const page = parseInt(btn.dataset.pagina);
+            btn.style.backgroundColor = page === current ? '#2378e1' : 'transparent';
+            btn.style.color = page === current ? 'white' : '#2378e1';
+        });
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // FUNCIONES DE UTILIDAD
+    // ════════════════════════════════════════════════════════════════
+
+    function formatCurrency(amount) {
+        if (amount === undefined || amount === null) return '$0';
+        const sign = amount >= 0 ? '' : '-';
+        return sign + '$' + Math.abs(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+
+    function getDesviacionBadgeClass(desviacion) {
+        if (desviacion > 0) return 'badge-negativa';
+        if (desviacion < 0) return 'badge-positiva';
+        return 'badge-neutra';
+    }
+
+    function getImpactoBadgeClass(impacto) {
+        switch(impacto) {
+            case 'Alto': return 'badge-alto';
+            case 'Medio': return 'badge-medio';
+            case 'Bajo': return 'badge-bajo';
+            default: return 'badge-medio';
+        }
+    }
+
+    function mostrarLoader(mostrar) {
+        const loader = document.getElementById('loaderContainer');
+        if (loader) {
+            loader.style.display = mostrar ? 'block' : 'none';
+        }
+    }
+
+    function mostrarError(mensaje) {
+        const errorDiv = document.getElementById('errorMensaje');
+        const errorText = document.getElementById('errorTexto');
+        if (errorDiv && errorText) {
+            errorText.textContent = mensaje || 'Ocurrió un error al cargar los datos';
+            errorDiv.style.display = 'block';
+        }
+    }
+
+    function ocultarErrores() {
+        const errorDiv = document.getElementById('errorMensaje');
+        if (errorDiv) {
+            errorDiv.style.display = 'none';
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // FUNCIONES DEL MODAL
+    // ════════════════════════════════════════════════════════════════
+
+    window.verDetalle = function(concepto, tipo, data) {
+        const modal = document.getElementById('modalVerDetalle');
+        if (!modal) return;
+        
+        try {
+            const item = typeof data === 'string' ? JSON.parse(data) : data;
+            
+            document.getElementById('detalleConcepto').textContent = concepto || 'Sin información';
+            document.getElementById('detallePresupuestado').textContent = formatCurrency(item.presupuestado || 0);
+            document.getElementById('detalleReal').textContent = formatCurrency(item.real || 0);
+            document.getElementById('detalleDesviacion').textContent = formatCurrency(item.desviacion || 0);
+            document.getElementById('detallePorcentaje').textContent = (item.porcentaje || 0) + '%';
+            document.getElementById('detalleCausa').textContent = item.causa || 'Sin información';
+            document.getElementById('detalleImpacto').textContent = item.impacto || 'Sin información';
+            document.getElementById('detalleAcciones').textContent = 'Se recomienda revisar la causa y tomar acciones correctivas.';
+            
+            const tipoElement = document.getElementById('detalleTipo');
+            if (item.desviacion > 0) {
+                tipoElement.textContent = tipo === 'costo' ? 'Sobrecosto' : 'Atraso';
+                tipoElement.style.backgroundColor = '#dc3545';
+            } else if (item.desviacion < 0) {
+                tipoElement.textContent = tipo === 'costo' ? 'Ahorro' : 'Adelanto';
+                tipoElement.style.backgroundColor = '#28a745';
+            } else {
+                tipoElement.textContent = 'Neutro';
+                tipoElement.style.backgroundColor = '#ffc107';
+                tipoElement.style.color = '#856404';
             }
             
-            document.getElementById('sinDatosMensaje').style.display = 'none';
-            document.getElementById('tablaContainerTiempo').style.display = 'block';
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
             
-            const pageData = datos.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
-            
-            pageData.forEach(item => {
-                const row = document.createElement('tr');
-                let badgeClass = getDesviacionBadgeClass(item.desviacion);
-                let impactoBadge = getImpactoBadgeClass(item.impacto);
-                
-                row.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proyecto}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.actividad}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${formatDate(item.fecha_plan)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${formatDate(item.fecha_real)}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: ${item.desviacion > 0 ? '#dc3545' : '#28a745'};">${item.desviacion > 0 ? '+' : ''}${item.desviacion} días</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;"><span class="badge-impacto ${impactoBadge}">${item.impacto}</span></td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.causa}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                        <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetalle('${item.proyecto} - ${item.actividad}')"></i>
-                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;"></i>
-                        </div>
-                    </td>
-                `;
-                
-                tablaBody.appendChild(row);
-            });
-            
-            document.getElementById('paginacionInfo').textContent = `Mostrando 1-${Math.min(rowsPerPage, datos.length)} de ${datos.length} registros`;
+        } catch (e) {
+            console.error('Error al mostrar detalle:', e);
         }
+    };
+
+    window.cerrarModalDetalle = function() {
+        const modal = document.getElementById('modalVerDetalle');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    };
+
+    window.editarDesviacion = function() {
+        alert('Editar desviación - Funcionalidad en desarrollo');
+    };
+
+    // ════════════════════════════════════════════════════════════════
+    // EVENT LISTENERS
+    // ════════════════════════════════════════════════════════════════
+
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM cargado - Iniciando carga de datos...');
         
-        // Pestañas
+        cargarTodosLosDatos();
+        
         const vistaTabs = document.querySelectorAll('.vista-tab');
         const vistaContents = document.querySelectorAll('.vista-content');
         
@@ -1667,61 +1377,113 @@
                 vistaContents.forEach(content => content.style.display = 'none');
                 vistaContents[index].style.display = 'block';
                 
-                // Recargar datos según la vista
-                if (index === 0) {
-                    // Resumen - no necesita recarga
-                } else if (index === 1) {
-                    cargarTablaCostos(datosOriginalesCostos);
+                if (index === 1) {
+                    cargarCostos();
                 } else if (index === 2) {
-                    cargarTablaTiempo(datosOriginalesTiempo);
+                    cargarTiempos();
                 }
             });
         });
         
-        // Botones
+        document.getElementById('selectorProyecto')?.addEventListener('change', function() {
+            currentPage = 1;
+            cargarCostos();
+            cargarTiempos();
+        });
+        
+        let searchTimeout;
+        document.getElementById('buscador')?.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentPage = 1;
+                cargarCostos();
+                cargarTiempos();
+            }, 500);
+        });
+        
+        document.getElementById('fechaInicio')?.addEventListener('change', function() {
+            currentPage = 1;
+            cargarCostos();
+            cargarTiempos();
+        });
+        
+        document.getElementById('fechaFin')?.addEventListener('change', function() {
+            currentPage = 1;
+            cargarCostos();
+            cargarTiempos();
+        });
+        
+        document.getElementById('btnPrimera')?.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage = 1;
+                cargarCostos();
+            }
+        });
+        
+        document.getElementById('btnAnterior')?.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                cargarCostos();
+            }
+        });
+        
+        document.getElementById('btnSiguiente')?.addEventListener('click', function() {
+            currentPage++;
+            cargarCostos();
+        });
+        
+        document.getElementById('btnUltima')?.addEventListener('click', function() {
+            const total = totalRegistros;
+            const lastPage = Math.ceil(total / rowsPerPage);
+            if (currentPage < lastPage) {
+                currentPage = lastPage;
+                cargarCostos();
+            }
+        });
+        
+        document.querySelectorAll('.pagina-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const page = parseInt(this.dataset.pagina);
+                if (page !== currentPage) {
+                    currentPage = page;
+                    cargarCostos();
+                }
+            });
+        });
+        
         document.getElementById('btnExcel')?.addEventListener('click', function() {
-            alert('Exportando a Excel...');
+            const params = new URLSearchParams({
+                proyecto_id: document.getElementById('selectorProyecto').value,
+                fecha_inicio: document.getElementById('fechaInicio').value,
+                fecha_fin: document.getElementById('fechaFin').value
+            });
+            window.open(`/desviaciones-api/exportar/excel?${params.toString()}`, '_blank');
         });
         
         document.getElementById('btnReporte')?.addEventListener('click', function() {
-            alert('Generando reporte de desviaciones...');
+            const params = new URLSearchParams({
+                proyecto_id: document.getElementById('selectorProyecto').value,
+                fecha_inicio: document.getElementById('fechaInicio').value,
+                fecha_fin: document.getElementById('fechaFin').value
+            });
+            window.open(`/desviaciones-api/reporte/pdf?${params.toString()}`, '_blank');
         });
         
         document.getElementById('btnCrearFiltro')?.addEventListener('click', function() {
             alert('Crear filtro - Funcionalidad en desarrollo');
         });
         
-        // Modal
-        window.verDetalle = function(concepto) {
-            document.getElementById('modalVerDetalle').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            // Aquí podrías cargar datos específicos según el concepto
-            document.getElementById('detalleConcepto').textContent = concepto;
-        };
-        
-        window.editarDesviacion = function() {
-            alert('Editar desviación - Funcionalidad en desarrollo');
-        };
-        
-        function cerrarModalDetalle() {
-            document.getElementById('modalVerDetalle').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        window.cerrarModalDetalle = cerrarModalDetalle;
-        
-        document.getElementById('btnCerrarDetalle')?.addEventListener('click', cerrarModalDetalle);
+        document.getElementById('btnCerrarDetalle')?.addEventListener('click', window.cerrarModalDetalle);
         
         window.addEventListener('click', function(event) {
             if (event.target === document.getElementById('modalVerDetalle')) {
-                cerrarModalDetalle();
+                window.cerrarModalDetalle();
             }
         });
-        
-        // Cargar datos iniciales
-        cargarTablaCostos(datosOriginalesCostos);
-        cargarTablaTiempo(datosOriginalesTiempo);
     });
+
+    window.cargarTodosLosDatos = cargarTodosLosDatos;
+    window.cargarCostos = cargarCostos;
+    window.cargarTiempos = cargarTiempos;
 </script>
 @endsection
