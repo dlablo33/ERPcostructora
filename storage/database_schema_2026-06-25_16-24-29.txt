@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-06-18 20:10:31
+Fecha: 2026-06-25 16:24:25
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 151
+Total de tablas: 162
 
 
 📋 TABLA: activos
@@ -511,6 +511,36 @@ Columnas (8):
   • updated_at
   • deleted_at
 
+📋 TABLA: categorias_documentos
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • codigo
+  • nombre
+  • tipo
+  • descripcion
+  • activo
+  • parent_id
+  • orden
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: categorias_evidencia
+----------------------------------------------------------------------
+Columnas (11):
+  • id
+  • codigo
+  • nombre
+  • descripcion
+  • icono
+  • color
+  • orden
+  • activo
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: categorias_gastos
 ----------------------------------------------------------------------
 Columnas (7):
@@ -794,6 +824,44 @@ Columnas (17):
   • updated_at
   • deleted_at
 
+📋 TABLA: contratos
+----------------------------------------------------------------------
+Columnas (34):
+  • id
+  • no_contrato
+  • proyecto_id
+  • cliente_id
+  • proveedor_id
+  • fecha_firma
+  • fecha_inicio
+  • fecha_fin
+  • monto_total
+  • anticipo_porcentaje
+  • anticipo_monto
+  • saldo_restante
+  • estado
+  • version
+  • descripcion
+  • forma_pago
+  • plazo_pago
+  • penalizaciones
+  • garantias
+  • responsable_contratante
+  • cargo_contratante
+  • email_contratante
+  • rfc_cliente
+  • responsable_contratista
+  • cargo_contratista
+  • email_contratista
+  • documento_path
+  • documento_nombre
+  • documento_tamanio
+  • created_by
+  • updated_by
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: conversations
 ----------------------------------------------------------------------
 Columnas (8):
@@ -1062,6 +1130,25 @@ Columnas (15):
   • updated_at
   • cuadrilla_id
 
+📋 TABLA: documentos_versiones
+----------------------------------------------------------------------
+Columnas (15):
+  • id
+  • documento_tipo
+  • documento_id
+  • version
+  • nombre_version
+  • fecha_version
+  • usuario_id
+  • cambios
+  • documento_path
+  • documento_nombre
+  • tamanio_bytes
+  • es_actual
+  • created_by
+  • created_at
+  • updated_at
+
 📋 TABLA: empleado_documentos
 ----------------------------------------------------------------------
 Columnas (8):
@@ -1103,6 +1190,33 @@ Columnas (9):
   • descripcion
   • created_at
   • updated_at
+
+📋 TABLA: evidencias
+----------------------------------------------------------------------
+Columnas (23):
+  • id
+  • tipo
+  • nombre
+  • descripcion
+  • proyecto_id
+  • categoria_id
+  • categoria_nombre
+  • fecha
+  • subido_por
+  • archivo_path
+  • archivo_nombre
+  • tamanio_bytes
+  • tipo_archivo
+  • miniatura_path
+  • metadatos
+  • ancho
+  • alto
+  • estado
+  • created_by
+  • updated_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: factoraje_facturas
 ----------------------------------------------------------------------
@@ -1410,6 +1524,23 @@ Columnas (14):
   • updated_at
   • deleted_at
 
+📋 TABLA: indicadores_calidad
+----------------------------------------------------------------------
+Columnas (13):
+  • id
+  • proyecto_id
+  • total_pruebas
+  • aprobadas
+  • rechazadas
+  • porcentaje_aprobacion
+  • indice_calidad
+  • eficiencia_inspeccion
+  • cumplimiento_normativo
+  • tiempo_respuesta
+  • fecha_actualizacion
+  • created_at
+  • updated_at
+
 📋 TABLA: inventario_almacen_proyecto
 ----------------------------------------------------------------------
 Columnas (10):
@@ -1670,6 +1801,29 @@ Columnas (9):
   • updated_at
   • deleted_at
 
+📋 TABLA: no_conformidades
+----------------------------------------------------------------------
+Columnas (19):
+  • id
+  • no_nc
+  • proyecto_id
+  • descripcion
+  • fecha_deteccion
+  • fecha_limite
+  • gravedad
+  • responsable_id
+  • estado
+  • acciones_tomadas
+  • causa_raiz
+  • prueba_id
+  • documento_path
+  • created_by
+  • cerrado_por
+  • fecha_cierre
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: nomina
 ----------------------------------------------------------------------
 Columnas (39):
@@ -1808,6 +1962,34 @@ Columnas (10):
   • expires_at
   • created_at
   • updated_at
+
+📋 TABLA: planos
+----------------------------------------------------------------------
+Columnas (24):
+  • id
+  • no_plano
+  • nombre
+  • proyecto_id
+  • disciplina
+  • subdisciplina
+  • revision
+  • estado
+  • fecha
+  • fecha_aprobacion
+  • formato
+  • escala
+  • tamanio_bytes
+  • descripcion
+  • documento_path
+  • documento_nombre
+  • miniatura_path
+  • ultima_revision_por
+  • aprobado_por
+  • created_by
+  • updated_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: plantillas
 ----------------------------------------------------------------------
@@ -2164,6 +2346,28 @@ Columnas (47):
   • costo_directo_acumulado
   • costo_indirecto_acumulado
   • costo_total_proyecto
+
+📋 TABLA: pruebas_calidad
+----------------------------------------------------------------------
+Columnas (18):
+  • id
+  • no_prueba
+  • proyecto_id
+  • tipo_prueba
+  • elemento
+  • fecha
+  • resultado
+  • responsable_id
+  • laboratorio
+  • valor
+  • especificacion
+  • norma
+  • observaciones
+  • certificado_path
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: puestos
 ----------------------------------------------------------------------
@@ -2679,6 +2883,33 @@ Columnas (11):
   • updated_at
   • deleted_at
 
+📋 TABLA: workflow_logs
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • workflow_task_id
+  • user_id
+  • action
+  • comments
+  • created_at
+  • updated_at
+
+📋 TABLA: workflow_tasks
+----------------------------------------------------------------------
+Columnas (12):
+  • id
+  • module
+  • record_id
+  • title
+  • description
+  • created_by
+  • assigned_to
+  • status
+  • priority
+  • due_date
+  • created_at
+  • updated_at
+
 
 ======================================================================
 === TABLAS IMPORTANTES (DETALLE COMPLETO) ===
@@ -3041,4 +3272,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 151
+Total de tablas analizadas: 162

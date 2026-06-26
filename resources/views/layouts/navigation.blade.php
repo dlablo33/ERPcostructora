@@ -1390,7 +1390,19 @@ console.log('User ID:', window.userId);
                                 </div>
                                 <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil</a>
                                 <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración</a>
-                                <a href="{{ route('tareas.index') }}" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-book mr-3 text-blue-600 w-4 text-center"></i> Tareas</a>
+                                
+                                <button onclick="navigateTo('Tareas', 'tareas', '{{ route('tareas.index') }}', 'fa-book')" 
+                                    class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 flex items-center">
+                                    <i class="fas fa-book mr-3 text-blue-600 w-4 text-center"></i> Tareas
+                                </button>
+
+                                <button onclick="navigateTo('Soporte Técnico', 'soporte', '{{ route('soporte.index') }}', 'fa-headset')" 
+        class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-50 flex items-center border-l-2 border-yellow-400">
+    <i class="fas fa-headset mr-3 text-yellow-600 w-4 text-center"></i> 
+    <span class="text-yellow-700 font-medium">Soporte Técnico</span>
+    <span class="ml-auto text-xs bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full animate-pulse">Nuevo</span>
+</button>
+
                                 <hr class="my-1 border-gray-200">
                                 <button onclick="confirmLogout()" class="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600">
                                     <i class="fas fa-sign-out-alt mr-3 w-4 text-center"></i> Cerrar Sesión
@@ -2044,10 +2056,10 @@ console.log('User ID:', window.userId);
                             <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Contratos y Planos</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
                         </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '{{ route('proyectos.permisos') }}', 'fa-file-alt')">
+                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '{{ route('proyectos.permisos') }}', 'fa-file-alt')">
                             <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Permisos</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'proyectos', 'fa-file-alt', this)"></i>
-                        </div>
+                        </div> -->
                         <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '{{ route('proyectos.evidencia') }}', 'fa-camera')">
                             <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Evidencias (Fotos, Actas)</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'proyectos', 'fa-camera', this)"></i>
@@ -2150,7 +2162,7 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-menu-group">
+                <!-- <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-unidades')">
                         <span><i class="fas fa-car"></i> Unidades y Flotilla</span>
                         <i class="fas fa-chevron-right"></i>
@@ -2173,7 +2185,7 @@ console.log('User ID:', window.userId);
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'rrhh', 'fa-book', this)"></i>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-catalogos')">
                         <span><i class="fas fa-list"></i> Catálogos</span>

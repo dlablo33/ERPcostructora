@@ -80,6 +80,8 @@ use App\Http\Controllers\AsignacionPersonalController;
 use App\Http\Controllers\AsistenciaCuadrillaController;
 use App\Http\Controllers\MaquinariaController;
 use App\Http\Controllers\DesviacionController;
+use App\Http\Controllers\EvidenciaController;
+use App\Http\Controllers\WorkflowController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -91,6 +93,25 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 })->middleware(['auth'])->name('home');
+
+/*
+|--------------------------------------------------------------------------
+| RUTAS PARA SOPORTE TÉCNICO
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->prefix('soporte')->name('soporte.')->group(function () {
+    // Página principal de soporte (FAQ/Tutorial)
+    Route::get('/', [App\Http\Controllers\SoporteController::class, 'index'])->name('index');
+    Route::get('/faq', [App\Http\Controllers\SoporteController::class, 'faq'])->name('faq');
+    
+    // Tickets para clientes
+    Route::get('/tickets', [App\Http\Controllers\ClienteTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [App\Http\Controllers\ClienteTicketController::class, 'create'])->name('tickets.create');
+    Route::post('/tickets', [App\Http\Controllers\ClienteTicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{id}', [App\Http\Controllers\ClienteTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{id}/comment', [App\Http\Controllers\ClienteTicketController::class, 'addComment'])->name('tickets.comment');
+});
 
 // ============================================
 // RUTAS CON AUTENTICACIÓN
@@ -138,9 +159,99 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/tareas', function () {
-    return view('tareas.index');
-})->name('tareas.index')->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| WORKFLOW - TAREAS Y FLUJOS DE TRABAJO
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->prefix('workflow')->name('workflow.')->group(function () {
+
+    
+
+    // ============================================
+    // RUTAS PRINCIPALES DE TAREAS
+    // ============================================
+    
+    // Panel principal de tareas
+    Route::get('/tareas', [WorkflowController::class, 'index'])
+        ->name('tareas.index');
+    
+    // Vista de detalle de una tarea
+    Route::get('/tareas/{id}', [WorkflowController::class, 'show'])
+        ->name('tareas.show');
+    
+    // ============================================
+    // ACCIONES SOBRE TAREAS
+    // ============================================
+    
+    // Marcar tarea como completada
+    Route::post('/tareas/{id}/complete', [WorkflowController::class, 'complete'])
+        ->name('tareas.complete');
+    
+    // Marcar tarea como en progreso
+    Route::post('/tareas/{id}/start', [WorkflowController::class, 'start'])
+        ->name('tareas.start');
+    
+    // Reasignar tarea a otro usuario
+    Route::put('/tareas/{id}/reassign', [WorkflowController::class, 'reassign'])
+        ->name('tareas.reassign');
+    
+    // Cambiar prioridad de tarea
+    Route::put('/tareas/{id}/priority', [WorkflowController::class, 'updatePriority'])
+        ->name('tareas.priority');
+    
+    // Eliminar tarea
+    Route::delete('/tareas/{id}', [WorkflowController::class, 'destroy'])
+        ->name('tareas.destroy');
+    
+    // ============================================
+    // RUTAS DE APROBACIÓN (Compatibilidad con rutas existentes)
+    // ============================================
+    
+    // Aprobar tarea (redirige a completar o lógica de aprobación)
+    Route::post('/{id}/approve', [WorkflowController::class, 'approve'])
+        ->name('approve');
+    
+    // Rechazar tarea
+    Route::post('/{id}/reject', [WorkflowController::class, 'reject'])
+        ->name('reject');
+    
+    // ============================================
+    // HISTORIAL Y LOGS
+    // ============================================
+    
+    // Ver historial de una tarea
+    Route::get('/{id}/history', [WorkflowController::class, 'history'])
+        ->name('history');
+    
+    // ============================================
+    // API - DATOS EN FORMATO JSON
+    // ============================================
+    
+    // Obtener tareas en JSON (para datatables o ajax)
+    Route::get('/api/tasks', [WorkflowController::class, 'getTasksJson'])
+        ->name('api.tasks');
+    
+    // Obtener tareas con filtros avanzados
+    Route::get('/api/tasks/filtered', [WorkflowController::class, 'getFilteredTasks'])
+        ->name('api.tasks.filtered');
+    
+    // Obtener conteo de tareas pendientes (para badge)
+    Route::get('/api/pending-count', [WorkflowController::class, 'getPendingCount'])
+        ->name('api.pending-count');
+    
+    // Obtener usuarios disponibles para asignar
+    Route::get('/api/users', [WorkflowController::class, 'getAvailableUsers'])
+        ->name('api.users');
+});
+
+// ============================================
+// RUTA DIRECTA PARA TAREAS (SIN PREFIJO WORKFLOW)
+// ============================================
+// Esta ruta mantiene compatibilidad con tu vista anterior
+Route::middleware('auth')->get('/tareas', [WorkflowController::class, 'index'])
+    ->name('tareas.index');
 
 // ============================================
 // GRUPO BI
@@ -924,9 +1035,89 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
     // CONTINÚAN LAS RUTAS DE PROYECTOS
     // ============================================
     
-    Route::get('/planos', function () { return view('proyectos.documentacion.planos'); })->name('planos');
+    // ============================================
+// RUTAS DE CONTRATOS Y PLANOS
+// ============================================
+Route::middleware(['auth'])->group(function () {
+    // Vista principal (ya existe)
+    // Route::get('/planos', [DocumentosController::class, 'index'])->name('planos');
+    
+    // Si tu ruta actual es '/planos' pero quieres usar el controlador:
+    Route::get('/planos', [App\Http\Controllers\DocumentosController::class, 'index'])->name('planos');
+    
+    // API Routes para Documentos
+    Route::prefix('documentos-api')->group(function () {
+        // Resumen (KPIs)
+        Route::get('/resumen', [App\Http\Controllers\DocumentosController::class, 'resumen']);
+        
+        // Contratos
+        Route::get('/contratos', [App\Http\Controllers\DocumentosController::class, 'contratos']);
+        Route::get('/contrato/{id}', [App\Http\Controllers\DocumentosController::class, 'contratoDetalle']);
+        Route::post('/contrato', [App\Http\Controllers\DocumentosController::class, 'storeContrato']);
+        Route::put('/contrato/{id}', [App\Http\Controllers\DocumentosController::class, 'updateContrato']);
+        Route::delete('/contrato/{id}', [App\Http\Controllers\DocumentosController::class, 'deleteContrato']);
+        
+        // Planos
+        Route::get('/planos', [App\Http\Controllers\DocumentosController::class, 'planos']);
+        Route::get('/plano/{id}', [App\Http\Controllers\DocumentosController::class, 'planoDetalle']);
+        Route::post('/plano', [App\Http\Controllers\DocumentosController::class, 'storePlano']);
+        Route::put('/plano/{id}', [App\Http\Controllers\DocumentosController::class, 'updatePlano']);
+        Route::delete('/plano/{id}', [App\Http\Controllers\DocumentosController::class, 'deletePlano']);
+        
+        // Versiones
+        Route::get('/versiones', [App\Http\Controllers\DocumentosController::class, 'historialVersiones']);
+        Route::get('/version/{id}/descargar', [App\Http\Controllers\DocumentosController::class, 'descargarVersion']);
+        
+        // Documentos
+        Route::post('/subir', [App\Http\Controllers\DocumentosController::class, 'subirDocumento']);
+        Route::get('/descargar/{id}', [App\Http\Controllers\DocumentosController::class, 'descargarDocumento']);
+        
+        // Exportaciones
+        Route::get('/exportar/excel', [App\Http\Controllers\DocumentosController::class, 'exportarExcel']);
+        Route::get('/reporte/pdf', [App\Http\Controllers\DocumentosController::class, 'reportePdf']);
+    });
+});
+
+
     Route::get('/permisos', function () { return view('proyectos.documentacion.permisos'); })->name('permisos');
-    Route::get('/evidencia', function () { return view('proyectos.documentacion.evidencia'); })->name('evidencia');
+
+
+    // ============================================
+// RUTAS DE EVIDENCIAS (DENTRO DEL GRUPO PROYECTOS)
+// ============================================
+
+// Vista principal (ya existe)
+Route::get('/evidencia', [EvidenciaController::class, 'index'])->name('evidencia');
+
+// API Routes para Evidencias
+Route::prefix('evidencias-api')->group(function () {
+    // Resumen (KPIs)
+    Route::get('/resumen', [EvidenciaController::class, 'resumen']);
+    
+    // Lista de evidencias
+    Route::get('/listar', [EvidenciaController::class, 'listar']);
+    
+    // Galería
+    Route::get('/galeria', [EvidenciaController::class, 'galeria']);
+    
+    // Detalle
+    Route::get('/{id}', [EvidenciaController::class, 'detalle']);
+    
+    // Subir
+    Route::post('/subir', [EvidenciaController::class, 'subir']);
+    
+    // Eliminar
+    Route::delete('/{id}', [EvidenciaController::class, 'eliminar']);
+    
+    // Descargar
+    Route::get('/descargar/{id}', [EvidenciaController::class, 'descargar']);
+    
+    // Categorías
+    Route::get('/categorias', [EvidenciaController::class, 'categorias']);
+    
+    // Exportar
+    Route::get('/exportar/excel', [EvidenciaController::class, 'exportarExcel']);
+});
 
     Route::get('/activas', [LicitacionController::class, 'activas'])->name('activas');
 
@@ -1048,7 +1239,37 @@ Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(func
         Route::post('/{id}/restaurar', [ReporteFotograficoController::class, 'restaurar'])->name('restaurar');
     });
 
-    Route::get('/control_proyectos', function () { return view('proyectos.control.control'); })->name('control');
+    // ============================================
+// RUTAS DE CONTROL DE CALIDAD
+// ============================================
+Route::middleware(['auth'])->group(function () {
+    // Vista principal de Control de Calidad
+    Route::get('/control_proyectos', [App\Http\Controllers\CalidadController::class, 'index'])->name('control');
+    
+    // API Routes para Control de Calidad
+    Route::prefix('calidad-api')->group(function () {
+        // Resumen (4 KPIs)
+        Route::get('/resumen', [App\Http\Controllers\CalidadController::class, 'resumen']);
+        
+        // Pruebas de calidad
+        Route::get('/pruebas', [App\Http\Controllers\CalidadController::class, 'pruebas']);
+        Route::get('/prueba/{noPrueba}', [App\Http\Controllers\CalidadController::class, 'pruebaDetalle']);
+        Route::post('/prueba', [App\Http\Controllers\CalidadController::class, 'storePrueba']);
+        
+        // Indicadores de calidad por proyecto
+        Route::get('/indicadores', [App\Http\Controllers\CalidadController::class, 'indicadores']);
+        
+        // No conformidades
+        Route::get('/no-conformidades', [App\Http\Controllers\CalidadController::class, 'noConformidades']);
+        Route::get('/nc/{noNc}', [App\Http\Controllers\CalidadController::class, 'ncDetalle']);
+        Route::post('/nc', [App\Http\Controllers\CalidadController::class, 'storeNC']);
+        Route::post('/nc/{noNc}/cerrar', [App\Http\Controllers\CalidadController::class, 'cerrarNC']);
+        
+        // Exportaciones
+        Route::get('/exportar/excel', [App\Http\Controllers\CalidadController::class, 'exportarExcel']);
+        Route::get('/reporte/pdf', [App\Http\Controllers\CalidadController::class, 'reportePdf']);
+    });
+});
 
 
     Route::get('/desviaciones', [DesviacionController::class, 'index'])->name('desviaciones');
@@ -1435,6 +1656,41 @@ Route::middleware(['auth'])->group(function () {
             ]);
         }
     });
+
+
+    // ============================================
+// RUTA DE PRUEBA PARA VERIFICAR EMPLEADOS
+// ============================================
+Route::get('/test-empleados', function() {
+    try {
+        $empleados = App\Models\Plantilla::where('estatus', 'Activo')
+            ->orderBy('nombre')
+            ->orderBy('apellido_paterno')
+            ->get();
+        
+        return response()->json([
+            'success' => true,
+            'total' => $empleados->count(),
+            'empleados' => $empleados->map(function($emp) {
+                return [
+                    'id' => $emp->plantilla_id ?? $emp->id,
+                    'nombre' => $emp->nombre,
+                    'apellido_paterno' => $emp->apellido_paterno,
+                    'apellido_materno' => $emp->apellido_materno,
+                    'nombre_completo' => trim($emp->nombre . ' ' . $emp->apellido_paterno . ' ' . $emp->apellido_materno),
+                    'estatus' => $emp->estatus,
+                    'sueldo' => $emp->sueldo,
+                    'sueldo_diario' => $emp->sueldo_diario
+                ];
+            })
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
     
     Route::get('/api/v2/sat/metodos-pago', function() {
         try {
@@ -1604,5 +1860,63 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| RUTAS PARA DESARROLLADORES (ÁREA EXTERNA)
+|--------------------------------------------------------------------------
+*/
+
+// Rutas de autenticación para desarrolladores
+Route::prefix('dev')->name('dev.')->group(function () {
+    // Login - Sin middleware
+    Route::get('/login', [App\Http\Controllers\Dev\DevAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Dev\DevAuthController::class, 'login'])->name('login.post');
+    Route::post('/logout', [App\Http\Controllers\Dev\DevAuthController::class, 'logout'])->name('logout');
+});
+
+// Rutas protegidas para desarrolladores (con middleware)
+Route::prefix('dev')->middleware('dev.auth')->name('dev.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Dev\DevTicketController::class, 'dashboard'])->name('dashboard');
+    Route::get('/tickets', [App\Http\Controllers\Dev\DevTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{id}', [App\Http\Controllers\Dev\DevTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{id}/start', [App\Http\Controllers\Dev\DevTicketController::class, 'start'])->name('tickets.start');
+    Route::post('/tickets/{id}/complete', [App\Http\Controllers\Dev\DevTicketController::class, 'complete'])->name('tickets.complete');
+    Route::post('/tickets/{id}/comment', [App\Http\Controllers\Dev\DevTicketController::class, 'addComment'])->name('tickets.comment');
+    Route::get('/api/stats', [App\Http\Controllers\Dev\DevTicketController::class, 'getStats'])->name('api.stats');
+});
+
+/*
+|--------------------------------------------------------------------------
+| RUTAS PARA CLIENTES
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'role:cliente'])->prefix('cliente')->name('cliente.')->group(function () {
+    Route::get('/tickets', [App\Http\Controllers\ClienteTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [App\Http\Controllers\ClienteTicketController::class, 'create'])->name('tickets.create');
+    Route::post('/tickets', [App\Http\Controllers\ClienteTicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{id}', [App\Http\Controllers\ClienteTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{id}/comment', [App\Http\Controllers\ClienteTicketController::class, 'addComment'])->name('tickets.comment');
+    Route::post('/tickets/{id}/close', [App\Http\Controllers\ClienteTicketController::class, 'close'])->name('tickets.close');
+});
+
+/*
+|--------------------------------------------------------------------------
+| RUTAS PARA SOPORTE TÉCNICO
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth'])->prefix('soporte')->name('soporte.')->group(function () {
+    // Página principal de soporte (FAQ/Tutorial)
+    Route::get('/', [App\Http\Controllers\SoporteController::class, 'index'])->name('index');
+    Route::get('/faq', [App\Http\Controllers\SoporteController::class, 'faq'])->name('faq');
+    
+    // Tickets - Sin restricción de rol
+    Route::get('/tickets', [App\Http\Controllers\ClienteTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [App\Http\Controllers\ClienteTicketController::class, 'create'])->name('tickets.create');
+    Route::post('/tickets', [App\Http\Controllers\ClienteTicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{id}', [App\Http\Controllers\ClienteTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{id}/comment', [App\Http\Controllers\ClienteTicketController::class, 'addComment'])->name('tickets.comment');
+});
 
 require __DIR__.'/auth.php';

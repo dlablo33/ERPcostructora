@@ -15,23 +15,42 @@
                         <div>
                             <h1 class="text-4xl font-bold text-gray-900">Gestión de Tareas</h1>
                             <div class="flex items-center gap-2 mt-2">
-                                <span class="text-lg text-gray-600">Bienvenido, <span class="font-semibold text-blue-800">{{ Auth::user()->name ?? 'Ing. Juan Martínez' }}</span></span>
-                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Gerente de Proyectos</span>
+                                <span class="text-lg text-gray-600">Bienvenido, <span class="font-semibold text-blue-800">{{ Auth::user()->name }}</span></span>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                    {{ $stats['total'] }} tareas asignadas
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <p class="text-gray-600 max-w-3xl text-base">Gestión de tareas personales, asignaciones y seguimiento de productividad</p>
+                    <p class="text-gray-600 max-w-3xl text-base">
+                        Gestiona tus tareas asignadas y da seguimiento a las actividades del sistema.
+                        @if($stats['pending'] > 0)
+                            <span class="text-yellow-600 font-medium">Tienes {{ $stats['pending'] }} tareas pendientes.</span>
+                        @endif
+                    </p>
                 </div>
                 
                 <div class="flex flex-col sm:flex-row gap-4">
                     <div class="flex gap-3">
                         <div class="relative">
-                            <select class="appearance-none bg-white border border-gray-300 rounded-lg py-3 pl-4 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 shadow-sm text-base">
-                                <option>Hoy</option>
-                                <option>Esta semana</option>
-                                <option>Este mes</option>
-                                <option>Todos</option>
-                                <option>Vencidos</option>
+                            <select id="filterSelect" class="appearance-none bg-white border border-gray-300 rounded-lg py-3 pl-4 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 shadow-sm text-base" onchange="applyFilters()">
+                                <option value="all">Todas</option>
+                                <option value="pending">Pendientes</option>
+                                <option value="in_progress">En Progreso</option>
+                                <option value="completed">Completadas</option>
+                                <option value="overdue">Vencidas</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="relative">
+                            <select id="priorityFilter" class="appearance-none bg-white border border-gray-300 rounded-lg py-3 pl-4 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 shadow-sm text-base" onchange="applyFilters()">
+                                <option value="">Todas las prioridades</option>
+                                <option value="high">Alta</option>
+                                <option value="medium">Media</option>
+                                <option value="low">Baja</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                 <i class="fas fa-chevron-down"></i>
@@ -42,494 +61,383 @@
                             <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg flex items-center transition-all duration-200 shadow-md hover:shadow-lg text-base" onclick="openNewTaskModal()">
                                 <i class="fas fa-plus mr-2"></i> Nueva Tarea
                             </button>
-
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Quick Stats Tareas -->
-            <div class="mt-8 flex flex-wrap gap-3">
-                <div class="flex-1 min-w-[200px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+            <div id="taskStats" class="mt-8 flex flex-wrap gap-3">
+                <div class="flex-1 min-w-[120px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-500 text-sm font-medium">Tareas Pendientes</p>
-                            <p class="text-2xl font-bold text-gray-900">12</p>
-                            <div class="flex items-center mt-1">
-                                <span class="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">+2 desde ayer</span>
-                            </div>
+                            <p class="text-gray-500 text-sm font-medium">Total</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</p>
                         </div>
-                        <i class="fas fa-clock text-3xl text-blue-600 opacity-70"></i>
+                        <i class="fas fa-list text-3xl text-blue-600 opacity-70"></i>
                     </div>
                 </div>
                 
-                <div class="flex-1 min-w-[200px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+                <div class="flex-1 min-w-[120px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-500 text-sm font-medium">Completadas Hoy</p>
-                            <p class="text-2xl font-bold text-gray-900">8</p>
-                            <div class="flex items-center mt-1">
-                                <span class="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">+3% productividad</span>
-                            </div>
+                            <p class="text-gray-500 text-sm font-medium">Pendientes</p>
+                            <p class="text-2xl font-bold text-yellow-600">{{ $stats['pending'] }}</p>
+                        </div>
+                        <i class="fas fa-clock text-3xl text-yellow-500 opacity-70"></i>
+                    </div>
+                </div>
+                
+                <div class="flex-1 min-w-[120px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">En Progreso</p>
+                            <p class="text-2xl font-bold text-blue-600">{{ $stats['in_progress'] }}</p>
+                        </div>
+                        <i class="fas fa-spinner text-3xl text-blue-500 opacity-70"></i>
+                    </div>
+                </div>
+                
+                <div class="flex-1 min-w-[120px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Completadas</p>
+                            <p class="text-2xl font-bold text-green-600">{{ $stats['completed'] }}</p>
                         </div>
                         <i class="fas fa-check-circle text-3xl text-green-500 opacity-70"></i>
                     </div>
                 </div>
                 
-                <div class="flex-1 min-w-[200px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+                <div class="flex-1 min-w-[120px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-500 text-sm font-medium">Tiempo Promedio</p>
-                            <p class="text-2xl font-bold text-gray-900">2.5h</p>
-                            <div class="flex items-center mt-1">
-                                <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">-15 min vs ayer</span>
-                            </div>
+                            <p class="text-gray-500 text-sm font-medium">Vencidas</p>
+                            <p class="text-2xl font-bold text-red-600">{{ $stats['overdue'] }}</p>
                         </div>
-                        <i class="fas fa-stopwatch text-3xl text-purple-500 opacity-70"></i>
-                    </div>
-                </div>
-                
-                <div class="flex-1 min-w-[200px] bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500 text-sm font-medium">Productividad</p>
-                            <p class="text-2xl font-bold text-gray-900">78%</p>
-                            <div class="flex items-center mt-1">
-                                <span class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Meta: 85%</span>
-                            </div>
-                        </div>
-                        <i class="fas fa-chart-line text-3xl text-orange-500 opacity-70"></i>
+                        <i class="fas fa-exclamation-circle text-3xl text-red-500 opacity-70"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sección Principal: Tareas y Productividad -->
+        <!-- Sección Principal: Tareas -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-            <!-- Columna 1: Tareas Pendientes -->
+            <!-- Columna 1: Lista de Tareas -->
             <div class="lg:col-span-2 space-y-8">
-                <!-- Lista de Tareas Pendientes -->
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-gray-50">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center flex-wrap gap-2">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-900">Tareas Pendientes</h3>
-                                <p class="text-gray-600 text-sm">12 tareas pendientes • 4 vencidas</p>
+                                <h3 class="text-xl font-bold text-gray-900">Mis Tareas</h3>
+                                <p id="taskCounter" class="text-gray-600 text-sm">
+                                    {{ $stats['pending'] }} tarea{{ $stats['pending'] != 1 ? 's' : '' }} pendiente{{ $stats['pending'] != 1 ? 's' : '' }}
+                                </p>
                             </div>
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 flex-wrap">
                                 <button class="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors duration-200" onclick="filterTasks('all')">
                                     Todas
                                 </button>
-                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200" onclick="filterTasks('high')">
-                                    Alta Prioridad
+                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200" onclick="filterTasks('pending')">
+                                    Pendientes
                                 </button>
-                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200" onclick="filterTasks('today')">
-                                    Para Hoy
+                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200" onclick="filterTasks('in_progress')">
+                                    En Progreso
+                                </button>
+                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200" onclick="filterTasks('completed')">
+                                    Completadas
                                 </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="divide-y divide-gray-200 max-h-[500px] overflow-y-auto">
-                        @php
-                            $pendingTasks = [
-                                [
-                                    'id' => 1,
-                                    'title' => 'Revisar presupuesto proyecto Torre Norte',
-                                    'description' => 'Analizar desviaciones presupuestarias y proponer ajustes',
-                                    'priority' => 'high',
-                                    'due_date' => 'Hoy, 14:00',
-                                    'project' => 'Torre Norte',
-                                    'assigner' => 'Director General',
-                                    'status' => 'pending',
-                                    'time_estimate' => '2 horas',
-                                    'tags' => ['Presupuesto', 'Análisis']
-                                ],
-                                [
-                                    'id' => 2,
-                                    'title' => 'Firmar contrato con proveedor de acero',
-                                    'description' => 'Revisar cláusulas y firmar contrato por $850,000',
-                                    'priority' => 'medium',
-                                    'due_date' => 'Mañana, 10:00',
-                                    'project' => 'Plaza Central',
-                                    'assigner' => 'Compras',
-                                    'status' => 'pending',
-                                    'time_estimate' => '1 hora',
-                                    'tags' => ['Legal', 'Contratos']
-                                ],
-                                [
-                                    'id' => 3,
-                                    'title' => 'Revisión de avance con equipo de construcción',
-                                    'description' => 'Reunión semanal para revisar avances y problemas',
-                                    'priority' => 'high',
-                                    'due_date' => 'Hoy, 16:30',
-                                    'project' => 'Todos',
-                                    'assigner' => 'Auto-asignada',
-                                    'status' => 'in_progress',
-                                    'time_estimate' => '1.5 horas',
-                                    'tags' => ['Reunión', 'Seguimiento']
-                                ],
-                                [
-                                    'id' => 4,
-                                    'title' => 'Preparar reporte ejecutivo mensual',
-                                    'description' => 'Consolidar métricas y preparar presentación para junta directiva',
-                                    'priority' => 'medium',
-                                    'due_date' => 'Vencido (Ayer)',
-                                    'project' => 'Administración',
-                                    'assigner' => 'Junta Directiva',
-                                    'status' => 'overdue',
-                                    'time_estimate' => '3 horas',
-                                    'tags' => ['Reporte', 'Ejecutivo']
-                                ],
-                                [
-                                    'id' => 5,
-                                    'title' => 'Visita a obra en Santa Catarina',
-                                    'description' => 'Inspección de calidad y revisión de cronograma',
-                                    'priority' => 'low',
-                                    'due_date' => '15 Mar, 09:00',
-                                    'project' => 'Villas del Norte',
-                                    'assigner' => 'Supervisor',
-                                    'status' => 'pending',
-                                    'time_estimate' => '4 horas',
-                                    'tags' => ['Visita', 'Calidad']
-                                ],
-                                [
-                                    'id' => 6,
-                                    'title' => 'Capacitación equipo nuevo software',
-                                    'description' => 'Entrenar al equipo en uso de nuevo sistema de gestión',
-                                    'priority' => 'medium',
-                                    'due_date' => '18 Mar, 11:00',
-                                    'project' => 'Sistemas',
-                                    'assigner' => 'TI',
-                                    'status' => 'pending',
-                                    'time_estimate' => '2 horas',
-                                    'tags' => ['Capacitación', 'Sistemas']
-                                ],
-                            ];
-                        @endphp
-                        
-                        @foreach($pendingTasks as $task)
-                        <div class="p-6 hover:bg-gray-50 transition-colors duration-150 task-item" data-priority="{{ $task['priority'] }}" data-status="{{ $task['status'] }}">
+                    <div id="taskList" class="divide-y divide-gray-200 max-h-[600px] overflow-y-auto">
+                        <!-- Las tareas se renderizan desde el backend -->
+                        @forelse($tasks as $task)
+                        <div class="p-6 hover:bg-gray-50 transition-colors duration-150 task-item" 
+                             data-id="{{ $task->id }}" 
+                             data-status="{{ $task->status }}"
+                             data-priority="{{ $task->priority }}"
+                             data-module="{{ $task->module }}">
                             <div class="flex items-start justify-between">
                                 <div class="flex items-start space-x-3 flex-1">
                                     <div class="mt-1">
-                                        <input type="checkbox" class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500" onchange="completeTask({{ $task['id'] }})">
+                                        <input type="checkbox" 
+                                               class="h-5 w-5 text-blue-600 rounded focus:ring-blue-500 task-checkbox" 
+                                               {{ $task->status == 'completed' ? 'checked' : '' }} 
+                                               onchange="toggleTask({{ $task->id }})"
+                                               {{ $task->status == 'completed' ? 'disabled' : '' }}>
                                     </div>
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between">
-                                            <div>
-                                                <h4 class="font-medium text-gray-900 text-base">{{ $task['title'] }}</h4>
-                                                <p class="text-sm text-gray-600 mt-1">{{ $task['description'] }}</p>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between flex-wrap gap-2">
+                                            <div class="flex-1 min-w-0">
+                                                <h4 class="font-medium text-gray-900 text-base {{ $task->status == 'completed' ? 'line-through text-gray-400' : '' }}">
+                                                    {{ $task->title }}
+                                                    @if($task->module == 'requisiciones')
+                                                        <span class="ml-2 text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full inline-block">
+                                                            <i class="fas fa-file-invoice mr-1"></i> Requisición
+                                                        </span>
+                                                    @elseif($task->module == 'cotizaciones')
+                                                        <span class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full inline-block">
+                                                            <i class="fas fa-file-pdf mr-1"></i> Cotización
+                                                        </span>
+                                                    @elseif($task->module == 'orden_compra')
+                                                        <span class="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full inline-block">
+                                                            <i class="fas fa-shopping-cart mr-1"></i> Orden Compra
+                                                        </span>
+                                                    @endif
+                                                </h4>
+                                                <p class="text-sm text-gray-600 mt-1 line-clamp-2">{{ Str::limit($task->description ?? 'Sin descripción', 150) }}</p>
                                             </div>
-                                            <div class="flex items-center space-x-2">
-                                                @if($task['priority'] == 'high')
-                                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Alta</span>
-                                                @elseif($task['priority'] == 'medium')
-                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Media</span>
-                                                @else
-                                                <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Baja</span>
-                                                @endif
-                                                
-                                                @if($task['status'] == 'overdue')
-                                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Vencido</span>
-                                                @endif
+                                            <div class="flex items-center space-x-2 flex-shrink-0">
+                                                <span class="px-2 py-1 {{ $task->status == 'completed' ? 'bg-green-100 text-green-800' : ($task->status == 'in_progress' ? 'bg-blue-100 text-blue-800' : ($task->status == 'overdue' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800')) }} rounded-full text-xs font-medium">
+                                                    {{ ucfirst(str_replace('_', ' ', $task->status)) }}
+                                                </span>
+                                                <span class="px-2 py-1 {{ $task->priority == 'high' ? 'bg-red-100 text-red-800' : ($task->priority == 'medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }} rounded-full text-xs font-medium">
+                                                    {{ ucfirst($task->priority) }}
+                                                </span>
                                             </div>
                                         </div>
                                         
-                                        <div class="flex items-center mt-3 space-x-4">
+                                        <div class="flex items-center mt-3 space-x-4 flex-wrap">
+                                            @if($task->due_date)
                                             <div class="flex items-center text-sm text-gray-500">
                                                 <i class="fas fa-calendar-day mr-1 text-blue-500"></i>
-                                                <span class="{{ $task['status'] == 'overdue' ? 'text-red-600 font-medium' : '' }}">{{ $task['due_date'] }}</span>
+                                                <span class="{{ $task->due_date < now() && $task->status != 'completed' ? 'text-red-600 font-medium' : '' }}">
+                                                    {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
+                                                    @if($task->due_date < now() && $task->status != 'completed')
+                                                        <span class="text-red-600 ml-1">(Vencida)</span>
+                                                    @endif
+                                                </span>
                                             </div>
+                                            @endif
+                                            
                                             <div class="flex items-center text-sm text-gray-500">
-                                                <i class="fas fa-clock mr-1 text-purple-500"></i>
-                                                <span>{{ $task['time_estimate'] }}</span>
+                                                <i class="fas fa-user mr-1 text-gray-400"></i>
+                                                <span>Asignada a: {{ $task->assignedUser->name ?? 'N/A' }}</span>
                                             </div>
+                                            
+                                            @if($task->created_at)
                                             <div class="flex items-center text-sm text-gray-500">
-                                                <i class="fas fa-project-diagram mr-1 text-green-500"></i>
-                                                <span>{{ $task['project'] }}</span>
+                                                <i class="fas fa-clock mr-1 text-gray-400"></i>
+                                                <span>Creada: {{ \Carbon\Carbon::parse($task->created_at)->diffForHumans() }}</span>
                                             </div>
-                                            <div class="flex items-center text-sm text-gray-500">
-                                                <i class="fas fa-user-tie mr-1 text-orange-500"></i>
-                                                <span>{{ $task['assigner'] }}</span>
-                                            </div>
+                                            @endif
                                         </div>
                                         
-                                        <div class="flex items-center mt-3">
-                                            @foreach($task['tags'] as $tag)
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded mr-2">{{ $tag }}</span>
-                                            @endforeach
-                                        </div>
+                                        <!-- Acción requerida si es de requisición -->
+                                        @if($task->metadata && isset($task->metadata['tipo']))
+                                            @php $metadata = $task->metadata; @endphp
+                                            @if($metadata['tipo'] == 'orden_compra' || $metadata['tipo'] == 'requisicion_creada')
+                                            <div class="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                                <div class="flex items-center text-sm text-blue-800">
+                                                    <i class="fas fa-info-circle mr-2"></i>
+                                                    <span>
+                                                        <strong>Acción requerida:</strong> 
+                                                        @if($metadata['tipo'] == 'orden_compra')
+                                                            Crear Orden de Compra
+                                                            @if(isset($metadata['folio_requisicion']))
+                                                                para requisición {{ $metadata['folio_requisicion'] }}
+                                                            @endif
+                                                        @else
+                                                            Revisar requisición
+                                                            @if(isset($metadata['folio']))
+                                                                {{ $metadata['folio'] }}
+                                                            @endif
+                                                        @endif
+                                                        @if(isset($metadata['requisicion_id']))
+                                                            <a href="{{ route('compras.requisiciones.show', $metadata['requisicion_id']) }}" 
+                                                               class="text-blue-600 hover:underline ml-2">
+                                                                <i class="fas fa-external-link-alt"></i> Ver detalles
+                                                            </a>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
                                 
-                                <div class="ml-4 flex items-center space-x-2">
-                                    <button class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors duration-200" title="Editar" onclick="editTask({{ $task['id'] }})">
-                                        <i class="fas fa-edit"></i>
+                                <div class="ml-4 flex items-center space-x-2 flex-shrink-0">
+                                    @if($task->status != 'completed')
+                                    <button class="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg transition-colors duration-200" 
+                                            title="Marcar como completada" 
+                                            onclick="completeTask({{ $task->id }})">
+                                        <i class="fas fa-check"></i>
                                     </button>
-                                    <button class="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg transition-colors duration-200" title="Comenzar" onclick="startTask({{ $task['id'] }})">
+                                    <button class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors duration-200" 
+                                            title="Iniciar tarea" 
+                                            onclick="startTask({{ $task->id }})">
                                         <i class="fas fa-play"></i>
                                     </button>
-                                    <button class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors duration-200" title="Eliminar" onclick="deleteTask({{ $task['id'] }})">
+                                    @endif
+                                    <button class="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors duration-200" 
+                                            title="Eliminar" 
+                                            onclick="confirmDelete({{ $task->id }})">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
+                        @empty
+                        <div class="p-8 text-center">
+                            <div class="text-gray-400 text-6xl mb-4">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-gray-600 mb-2">No hay tareas asignadas</h3>
+                            <p class="text-gray-500">Las tareas se generan automáticamente desde requisiciones, cotizaciones y otros módulos.</p>
+                            <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" onclick="openNewTaskModal()">
+                                <i class="fas fa-plus mr-2"></i> Crear tarea manual
+                            </button>
+                        </div>
+                        @endforelse
                     </div>
                     
                     <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Mostrando {{ count($pendingTasks) }} de 12 tareas pendientes</span>
-                            <button class="text-sm text-blue-800 hover:text-blue-900 font-medium" onclick="loadMoreTasks()">
-                                <i class="fas fa-redo mr-1"></i> Cargar más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Tareas Completadas Recientemente -->
-                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-gray-50">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-900">Completadas Hoy</h3>
-                                <p class="text-gray-600 text-sm">8 tareas completadas • 14 horas productivas</p>
-                            </div>
-                            <button class="px-3 py-1 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600 transition-colors duration-200" onclick="showCompletedTasks()">
-                                Ver Todas
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="divide-y divide-gray-200 max-h-[300px] overflow-y-auto">
-                        @php
-                            $completedTasks = [
-                                [
-                                    'title' => 'Revisar reporte de seguridad',
-                                    'time' => '2.5 horas',
-                                    'completed_at' => 'Hoy, 09:30',
-                                    'efficiency' => '95%'
-                                ],
-                                [
-                                    'title' => 'Llamada con cliente Corporación Urbana',
-                                    'time' => '1 hora',
-                                    'completed_at' => 'Hoy, 11:00',
-                                    'efficiency' => '88%'
-                                ],
-                                [
-                                    'title' => 'Aprobar órdenes de compra',
-                                    'time' => '1.5 horas',
-                                    'completed_at' => 'Hoy, 12:45',
-                                    'efficiency' => '92%'
-                                ],
-                                [
-                                    'title' => 'Actualizar cronograma proyecto',
-                                    'time' => '3 horas',
-                                    'completed_at' => 'Hoy, 15:20',
-                                    'efficiency' => '85%'
-                                ],
-                            ];
-                        @endphp
-                        
-                        @foreach($completedTasks as $task)
-                        <div class="p-4 hover:bg-gray-50 transition-colors duration-150">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                                        <i class="fas fa-check text-green-600 text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900 text-sm">{{ $task['title'] }}</h4>
-                                        <div class="flex items-center space-x-3 mt-1">
-                                            <span class="text-xs text-gray-500">
-                                                <i class="fas fa-clock mr-1"></i>{{ $task['time'] }}
-                                            </span>
-                                            <span class="text-xs text-gray-500">
-                                                <i class="fas fa-calendar-check mr-1"></i>{{ $task['completed_at'] }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-sm font-bold text-green-600">{{ $task['efficiency'] }}</span>
-                                    <p class="text-xs text-gray-500">Eficiencia</p>
-                                </div>
+                        <div class="flex justify-between items-center flex-wrap gap-2">
+                            <span id="taskCountDisplay" class="text-sm text-gray-600">
+                                Mostrando {{ $tasks->count() }} tarea{{ $tasks->count() != 1 ? 's' : '' }}
+                                de {{ $stats['total'] }} totales
+                            </span>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-sm text-blue-800 hover:text-blue-900 font-medium" onclick="loadMoreTasks()">
+                                    <i class="fas fa-redo mr-1"></i> Recargar
+                                </button>
+                                @if($tasks->hasPages())
+                                    {{ $tasks->links() }}
+                                @endif
                             </div>
                         </div>
-                        @endforeach
                     </div>
                 </div>
             </div>
             
-            <!-- Columna 2: Estado de Productividad y Asignaciones -->
+            <!-- Columna 2: Panel de Control -->
             <div class="space-y-8">
                 <!-- Estado de Productividad -->
-                
-                
-                <!-- Asignaciones Recibidas -->
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-gray-50">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-900">Asignaciones Recibidas</h3>
-                                <p class="text-gray-600 text-sm">Tareas asignadas por otros usuarios</p>
-                            </div>
-                            <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-medium">3 nuevas</span>
-                        </div>
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-teal-50 to-gray-50">
+                        <h3 class="text-xl font-bold text-gray-900">Estado de Productividad</h3>
                     </div>
-                    
-                    <div class="divide-y divide-gray-200 max-h-[300px] overflow-y-auto">
-                        @php
-                            $assignments = [
-                                [
-                                    'title' => 'Aprobar diseño estructural',
-                                    'assigner' => 'Arq. Laura Martínez',
-                                    'time' => '2 horas',
-                                    'priority' => 'Alta',
-                                    'status' => 'Pendiente'
-                                ],
-                                [
-                                    'title' => 'Revisar propuesta comercial',
-                                    'assigner' => 'Director Comercial',
-                                    'time' => '1.5 horas',
-                                    'priority' => 'Media',
-                                    'status' => 'Nueva'
-                                ],
-                                [
-                                    'title' => 'Validar cronograma de obra',
-                                    'assigner' => 'Ing. Carlos Ruiz',
-                                    'time' => '3 horas',
-                                    'priority' => 'Alta',
-                                    'status' => 'Nueva'
-                                ],
-                                [
-                                    'title' => 'Firmar autorización de pagos',
-                                    'assigner' => 'Contralor',
-                                    'time' => '1 hora',
-                                    'priority' => 'Media',
-                                    'status' => 'Nueva'
-                                ],
-                            ];
-                        @endphp
-                        
-                        @foreach($assignments as $assignment)
-                        <div class="p-4 hover:bg-gray-50 transition-colors duration-150">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-medium text-gray-900 text-sm">{{ $assignment['title'] }}</h4>
-                                    <div class="flex items-center space-x-3 mt-2">
-                                        <span class="text-xs text-gray-500">
-                                            <i class="fas fa-user-tie mr-1"></i>{{ $assignment['assigner'] }}
-                                        </span>
-                                        <span class="text-xs text-gray-500">
-                                            <i class="fas fa-clock mr-1"></i>{{ $assignment['time'] }}
-                                        </span>
+                    <div class="p-6">
+                        <div id="productivityStats">
+                            <div class="mb-6">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-gray-700">Progreso General</span>
+                                    <span class="text-sm font-bold text-gray-900">
+                                        {{ $stats['total'] > 0 ? round(($stats['completed'] / $stats['total']) * 100) : 0 }}%
+                                    </span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-3">
+                                    <div class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500" 
+                                         style="width: {{ $stats['total'] > 0 ? round(($stats['completed'] / $stats['total']) * 100) : 0 }}%">
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">{{ $assignment['priority'] }}</span>
-                                    @if($assignment['status'] == 'Nueva')
-                                    <span class="block mt-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">{{ $assignment['status'] }}</span>
-                                    @endif
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <p class="text-xs text-gray-500">Pendientes</p>
+                                    <p class="text-2xl font-bold text-yellow-600">{{ $stats['pending'] }}</p>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <p class="text-xs text-gray-500">En Progreso</p>
+                                    <p class="text-2xl font-bold text-blue-600">{{ $stats['in_progress'] }}</p>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <p class="text-xs text-gray-500">Completadas</p>
+                                    <p class="text-2xl font-bold text-green-600">{{ $stats['completed'] }}</p>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <p class="text-xs text-gray-500">Vencidas</p>
+                                    <p class="text-2xl font-bold text-red-600">{{ $stats['overdue'] }}</p>
                                 </div>
                             </div>
-                            <div class="flex justify-end mt-3 space-x-2">
-                                <button class="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200" onclick="acceptAssignment('{{ $assignment['title'] }}')">
-                                    Aceptar
-                                </button>
-                                <button class="text-xs px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors duration-200" onclick="declineAssignment('{{ $assignment['title'] }}')">
-                                    Rechazar
-                                </button>
+                            
+                            <div class="mt-4 text-center text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                {{ $stats['total'] }} tarea{{ $stats['total'] != 1 ? 's' : '' }} en total
                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tareas por Módulo -->
+                @if(!empty($stats['by_module']))
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-gray-50">
+                        <h3 class="text-xl font-bold text-gray-900">Tareas por Módulo</h3>
+                    </div>
+                    <div class="p-4 divide-y divide-gray-200">
+                        @foreach($stats['by_module'] as $module => $count)
+                        <div class="py-2 flex justify-between items-center">
+                            <span class="text-sm text-gray-700">
+                                <i class="fas {{ $module == 'requisiciones' ? 'fa-file-invoice' : ($module == 'cotizaciones' ? 'fa-file-pdf' : 'fa-tasks') }} mr-2 text-gray-400"></i>
+                                {{ ucfirst($module) }}
+                            </span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">{{ $count }}</span>
                         </div>
                         @endforeach
                     </div>
                 </div>
+                @endif
                 
-                <!-- Notificaciones que Generan Tareas -->
+                <!-- Notificaciones -->
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-gray-50">
                         <div class="flex justify-between items-center">
                             <div>
                                 <h3 class="text-xl font-bold text-gray-900">Notificaciones</h3>
-                                <p class="text-gray-600 text-sm">Pueden convertirse en tareas</p>
+                                <p class="text-gray-600 text-sm">Tareas recientes</p>
                             </div>
-                            <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">5 sin leer</span>
+                            <span id="notificationBadge" class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">
+                                {{ $tasks->where('status', 'pending')->count() }}
+                            </span>
                         </div>
                     </div>
                     
-                    <div class="divide-y divide-gray-200 max-h-[300px] overflow-y-auto">
+                    <div id="notificationsContainer" class="divide-y divide-gray-200 max-h-[300px] overflow-y-auto">
                         @php
-                            $notifications = [
-                                [
-                                    'title' => 'Alerta: Retraso en entrega de materiales',
-                                    'message' => 'Proveedor reporta retraso de 3 días en acero',
-                                    'time' => 'Hace 15 min',
-                                    'type' => 'alert',
-                                    'can_create_task' => true
-                                ],
-                                [
-                                    'title' => 'Nuevo comentario en proyecto',
-                                    'message' => 'Cliente realizó 3 observaciones en planos',
-                                    'time' => 'Hace 1 hora',
-                                    'type' => 'comment',
-                                    'can_create_task' => true
-                                ],
-                                [
-                                    'title' => 'Recordatorio: Reunión trimestral',
-                                    'message' => 'Mañana a las 10:00 en sala de juntas',
-                                    'time' => 'Hace 2 horas',
-                                    'type' => 'reminder',
-                                    'can_create_task' => true
-                                ],
-                                [
-                                    'title' => 'Sistema: Actualización completada',
-                                    'message' => 'Sistema de gestión actualizado a versión 3.2',
-                                    'time' => 'Hace 5 horas',
-                                    'type' => 'system',
-                                    'can_create_task' => false
-                                ],
-                            ];
+                            $recentTasks = $tasks->where('status', '!=', 'completed')->take(5);
                         @endphp
                         
-                        @foreach($notifications as $notification)
+                        @forelse($recentTasks as $task)
                         <div class="p-4 hover:bg-gray-50 transition-colors duration-150">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-start space-x-3">
-                                    <div class="mt-1">
-                                        @if($notification['type'] == 'alert')
-                                        <i class="fas fa-exclamation-triangle text-red-500"></i>
-                                        @elseif($notification['type'] == 'comment')
-                                        <i class="fas fa-comment text-blue-500"></i>
-                                        @elseif($notification['type'] == 'reminder')
-                                        <i class="fas fa-bell text-yellow-500"></i>
-                                        @else
-                                        <i class="fas fa-cog text-gray-500"></i>
-                                        @endif
-                                    </div>
-                                    <div>
-                                        <h4 class="font-medium text-gray-900 text-sm">{{ $notification['title'] }}</h4>
-                                        <p class="text-sm text-gray-600 mt-1">{{ $notification['message'] }}</p>
-                                        <span class="text-xs text-gray-500 mt-1 block">{{ $notification['time'] }}</span>
-                                    </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="mt-1">
+                                    <i class="fas {{ $task->priority == 'high' ? 'fa-exclamation-triangle text-red-500' : 'fa-info-circle text-blue-500' }}"></i>
                                 </div>
-                                @if($notification['can_create_task'])
-                                <button class="text-xs px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors duration-200" onclick="createTaskFromNotification('{{ $notification['title'] }}', '{{ $notification['message'] }}')">
-                                    Crear Tarea
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="font-medium text-gray-900 text-sm">{{ Str::limit($task->title, 50) }}</h4>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        {{ \Carbon\Carbon::parse($task->created_at)->diffForHumans() }}
+                                    </p>
+                                    @if($task->due_date)
+                                    <p class="text-xs {{ $task->due_date < now() ? 'text-red-600' : 'text-gray-500' }} mt-1">
+                                        <i class="fas fa-calendar mr-1"></i>
+                                        Vence: {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
+                                    </p>
+                                    @endif
+                                </div>
+                                @if($task->status != 'completed')
+                                <button class="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors" 
+                                        onclick="completeTask({{ $task->id }})">
+                                    Completar
                                 </button>
                                 @endif
                             </div>
                         </div>
-                        @endforeach
+                        @empty
+                        <div class="p-4 text-center text-gray-500">
+                            <i class="fas fa-check-circle text-green-500 text-2xl mb-2 block"></i>
+                            <p class="text-sm">No hay notificaciones pendientes</p>
+                        </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
         </div>
-
-
-
 
     </main>
 </div>
@@ -538,91 +446,54 @@
 <div id="newTaskModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold text-gray-900">Crear Nueva Tarea</h3>
+            <h3 class="text-xl font-bold text-gray-900" id="modalTitle">Crear Nueva Tarea</h3>
             <button onclick="closeNewTaskModal()" class="text-gray-500 hover:text-gray-700">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         
-        <form id="taskForm" class="space-y-6">
+        <form id="taskForm" class="space-y-6" onsubmit="saveTask(event)">
+            <input type="hidden" id="taskId" value="">
+            
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Título de la Tarea</label>
-                <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" placeholder="¿Qué necesita hacer?" required>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Título de la Tarea *</label>
+                <input type="text" id="taskTitle" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" placeholder="¿Qué necesita hacer?" required>
             </div>
             
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
-                <textarea class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" rows="3" placeholder="Describa la tarea en detalle..."></textarea>
+                <textarea id="taskDescription" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" rows="3" placeholder="Describa la tarea en detalle..."></textarea>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Proyecto Asociado</label>
-                    <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
-                        <option value="">Seleccionar proyecto</option>
-                        <option value="torre-norte">Torre Norte</option>
-                        <option value="plaza-central">Plaza Central</option>
-                        <option value="villas-norte">Villas del Norte</option>
-                        <option value="parque-industrial">Parque Industrial Norte</option>
-                        <option value="administracion">Administración</option>
-                        <option value="otros">Otros</option>
-                    </select>
-                </div>
-                
-                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Prioridad</label>
-                    <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
+                    <select id="taskPriority" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
                         <option value="low">Baja</option>
                         <option value="medium" selected>Media</option>
                         <option value="high">Alta</option>
-                        <option value="urgent">Urgente</option>
                     </select>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Límite</label>
-                    <input type="datetime-local" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tiempo Estimado</label>
-                    <div class="flex space-x-2">
-                        <input type="number" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" placeholder="Horas" min="0.5" step="0.5">
-                        <select class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
-                            <option value="hours">Horas</option>
-                            <option value="days">Días</option>
-                            <option value="weeks">Semanas</option>
-                        </select>
-                    </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Límite</label>
+                    <input type="date" id="taskDueDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
                 </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Módulo (opcional)</label>
+                <select id="taskModule" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
+                    <option value="">Sin módulo específico</option>
+                    <option value="requisiciones">Requisiciones</option>
+                    <option value="cotizaciones">Cotizaciones</option>
+                    <option value="proyectos">Proyectos</option>
+                </select>
             </div>
             
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Etiquetas</label>
-                <div class="flex flex-wrap gap-2">
-                    <input type="text" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" placeholder="Añadir etiquetas (presiona Enter)">
-                </div>
-                <div class="mt-2">
-                    <span class="text-xs text-gray-500">Etiquetas sugeridas: Revisión, Análisis, Reunión, Reporte, Presupuesto</span>
-                </div>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Asignar a</label>
-                <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base">
-                    <option value="">Auto-asignar</option>
-                    <option value="team">Equipo de Construcción</option>
-                    <option value="design">Equipo de Diseño</option>
-                    <option value="purchasing">Equipo de Compras</option>
-                    <option value="supervision">Equipo de Supervisión</option>
-                </select>
-            </div>
-            
-            <div class="flex items-center">
-                <input type="checkbox" id="notification" class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
-                <label for="notification" class="ml-2 text-sm text-gray-700">Crear recordatorio de notificación</label>
+                <input type="text" id="taskTags" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 text-base" placeholder="Ej: Desarrollo, Revisión, Urgente">
             </div>
             
             <div class="pt-6 border-t border-gray-200 flex justify-end space-x-3">
@@ -630,17 +501,291 @@
                     Cancelar
                 </button>
                 <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-base">
-                    <i class="fas fa-plus mr-2"></i> Crear Tarea
+                    <i class="fas fa-save mr-2"></i> <span id="submitButtonText">Crear Tarea</span>
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Scripts -->
+<!-- Modal de Confirmación -->
+<div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+        <div class="text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">¿Estás seguro?</h3>
+            <p id="confirmMessage" class="text-gray-600 mb-6">Esta acción no se puede deshacer.</p>
+            <div class="flex justify-center space-x-3">
+                <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                    Cancelar
+                </button>
+                <button id="confirmActionBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-// Funciones para el modal de nueva tarea
+// ============================================
+// CONFIGURACIÓN - CSRF Token
+// ============================================
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+// ============================================
+// FUNCIONES DE API
+// ============================================
+
+/**
+ * Completa una tarea
+ */
+function completeTask(taskId) {
+    if (!confirm('¿Marcar esta tarea como completada?')) return;
+    
+    fetch(`/workflow/tareas/${taskId}/complete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('✅ Tarea completada exitosamente', 'success');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('❌ ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('❌ Error al completar la tarea', 'error');
+        console.error('Error:', error);
+    });
+}
+
+/**
+ * Inicia una tarea (marca como en progreso)
+ */
+function startTask(taskId) {
+    if (!confirm('¿Comenzar a trabajar en esta tarea?')) return;
+    
+    fetch(`/workflow/tareas/${taskId}/start`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('▶️ Tarea iniciada', 'info');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('❌ ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('❌ Error al iniciar la tarea', 'error');
+        console.error('Error:', error);
+    });
+}
+
+/**
+ * Elimina una tarea
+ */
+function deleteTask(id) {
+    fetch(`/workflow/tareas/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('🗑️ Tarea eliminada', 'info');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('❌ ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('❌ Error al eliminar la tarea', 'error');
+        console.error('Error:', error);
+    });
+}
+
+/**
+ * Guarda una tarea nueva o actualizada
+ */
+function saveTask(event) {
+    event.preventDefault();
+    
+    const id = document.getElementById('taskId').value;
+    const title = document.getElementById('taskTitle').value.trim();
+    
+    if (!title) {
+        showNotification('⚠️ El título es obligatorio', 'warning');
+        return;
+    }
+    
+    const taskData = {
+        title: title,
+        description: document.getElementById('taskDescription').value.trim(),
+        priority: document.getElementById('taskPriority').value,
+        due_date: document.getElementById('taskDueDate').value,
+        module: document.getElementById('taskModule').value,
+        tags: document.getElementById('taskTags').value.split(',').map(t => t.trim()).filter(t => t)
+    };
+    
+    const url = id ? `/workflow/tareas/${id}` : '/workflow/tareas';
+    const method = id ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(taskData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(id ? '✅ Tarea actualizada' : '✅ Tarea creada', 'success');
+            closeNewTaskModal();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('❌ ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('❌ Error al guardar la tarea', 'error');
+        console.error('Error:', error);
+    });
+}
+
+/**
+ * Filtra tareas por estado
+ */
+function filterTasks(filter) {
+    const taskItems = document.querySelectorAll('.task-item');
+    let visibleCount = 0;
+    
+    taskItems.forEach(item => {
+        const status = item.dataset.status;
+        if (filter === 'all' || status === filter) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Actualizar contador
+    document.getElementById('taskCountDisplay').textContent = 
+        `Mostrando ${visibleCount} tarea${visibleCount !== 1 ? 's' : ''}`;
+}
+
+/**
+ * Aplica filtros combinados (estado + prioridad)
+ */
+function applyFilters() {
+    const statusFilter = document.getElementById('filterSelect').value;
+    const priorityFilter = document.getElementById('priorityFilter').value;
+    const taskItems = document.querySelectorAll('.task-item');
+    let visibleCount = 0;
+    
+    taskItems.forEach(item => {
+        const status = item.dataset.status;
+        const priority = item.dataset.priority;
+        let show = true;
+        
+        if (statusFilter !== 'all' && status !== statusFilter) {
+            show = false;
+        }
+        
+        if (priorityFilter && priority !== priorityFilter) {
+            show = false;
+        }
+        
+        if (show) {
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('taskCountDisplay').textContent = 
+        `Mostrando ${visibleCount} tarea${visibleCount !== 1 ? 's' : ''}`;
+}
+
+/**
+ * Recarga las tareas
+ */
+function loadMoreTasks() {
+    location.reload();
+}
+
+// ============================================
+// NOTIFICACIONES
+// ============================================
+
+function showNotification(message, type = 'info') {
+    const colors = {
+        success: 'bg-green-500',
+        info: 'bg-blue-500',
+        warning: 'bg-yellow-500',
+        error: 'bg-red-500'
+    };
+    
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 ${colors[type] || 'bg-gray-500'} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full max-w-md`;
+    notification.innerHTML = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 100);
+    
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 4000);
+}
+
+// ============================================
+// Toggle de Tarea (checkbox)
+// ============================================
+
+function toggleTask(taskId) {
+    // Esta función maneja el checkbox, pero la acción real se hace con completeTask
+    const checkbox = event.target;
+    if (checkbox.checked) {
+        completeTask(taskId);
+    }
+}
+
+// ============================================
+// MODALES
+// ============================================
+
 function openNewTaskModal() {
+    document.getElementById('modalTitle').textContent = 'Crear Nueva Tarea';
+    document.getElementById('submitButtonText').textContent = 'Crear Tarea';
+    document.getElementById('taskId').value = '';
+    document.getElementById('taskForm').reset();
+    document.getElementById('taskDueDate').value = new Date().toISOString().split('T')[0];
+    
     const modal = document.getElementById('newTaskModal');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
@@ -652,120 +797,49 @@ function closeNewTaskModal() {
     modal.classList.add('hidden');
 }
 
-// Funciones para filtrado de tareas
-function filterTasks(filterType) {
-    const taskItems = document.querySelectorAll('.task-item');
+function closeConfirmModal() {
+    const modal = document.getElementById('confirmModal');
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+}
+
+function confirmDelete(id) {
+    const taskItem = document.querySelector(`.task-item[data-id="${id}"]`);
+    const title = taskItem?.querySelector('h4')?.textContent?.trim() || 'esta tarea';
     
-    taskItems.forEach(item => {
-        switch(filterType) {
-            case 'all':
-                item.style.display = 'block';
-                break;
-            case 'high':
-                if (item.dataset.priority === 'high') {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-                break;
-            case 'today':
-                if (item.dataset.status === 'overdue' || item.dataset.status === 'in_progress') {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-                break;
-        }
-    });
+    document.getElementById('confirmMessage').textContent = `¿Estás seguro de eliminar la tarea "${title}"? Esta acción no se puede deshacer.`;
+    document.getElementById('confirmActionBtn').onclick = function() {
+        deleteTask(id);
+        closeConfirmModal();
+    };
+    document.getElementById('confirmModal').classList.remove('hidden');
+    document.getElementById('confirmModal').classList.add('flex');
 }
 
-// Funciones de acciones de tareas
-function completeTask(taskId) {
-    if (confirm('¿Marcar esta tarea como completada?')) {
-        alert(`Tarea ${taskId} marcada como completada.`);
-        // Aquí iría la lógica para actualizar el estado en el backend
-    }
-}
+// ============================================
+// INICIALIZACIÓN
+// ============================================
 
-function editTask(taskId) {
-    alert(`Editando tarea ${taskId}...`);
-    openNewTaskModal();
-    // Aquí se cargarían los datos de la tarea en el modal
-}
-
-function startTask(taskId) {
-    if (confirm('¿Comenzar a trabajar en esta tarea?')) {
-        alert(`Tarea ${taskId} iniciada. Se iniciará el temporizador.`);
-        // Aquí iría la lógica para iniciar el temporizador
-    }
-}
-
-function deleteTask(taskId) {
-    if (confirm('¿Está seguro de eliminar esta tarea?')) {
-        alert(`Tarea ${taskId} eliminada.`);
-        // Aquí iría la lógica para eliminar la tarea
-    }
-}
-
-function loadMoreTasks() {
-    alert('Cargando más tareas...');
-    // Aquí iría la lógica para cargar más tareas
-}
-
-function showCompletedTasks() {
-    alert('Mostrando todas las tareas completadas...');
-    // Aquí iría la lógica para mostrar todas las completadas
-}
-
-// Funciones para asignaciones
-function acceptAssignment(title) {
-    if (confirm(`¿Aceptar la asignación "${title}"?`)) {
-        alert(`Asignación "${title}" aceptada y agregada a sus tareas.`);
-        // Aquí iría la lógica para aceptar la asignación
-    }
-}
-
-function declineAssignment(title) {
-    if (confirm(`¿Rechazar la asignación "${title}"?`)) {
-        alert(`Asignación "${title}" rechazada.`);
-        // Aquí iría la lógica para rechazar la asignación
-    }
-}
-
-// Funciones para notificaciones
-function createTaskFromNotification(title, message) {
-    alert(`Creando tarea desde notificación: ${title}`);
-    openNewTaskModal();
-    // Aquí se pre-llenaría el formulario con los datos de la notificación
-}
-
-// Manejo del formulario de nueva tarea
-document.getElementById('taskForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    alert('Tarea creada exitosamente');
-    closeNewTaskModal();
-    // Aquí iría la lógica para enviar el formulario al backend
-});
-
-// Simulación de actualización en tiempo real
-function updateLiveData() {
-    const timeElements = document.querySelectorAll('.real-time-data');
-    timeElements.forEach(el => {
-        const current = parseFloat(el.textContent);
-        if (!isNaN(current)) {
-            const change = (Math.random() - 0.5) * 0.1;
-            const newValue = Math.max(0, current + change);
-            el.textContent = newValue.toFixed(1);
-        }
-    });
-}
-
-// Actualizar cada 60 segundos
-setInterval(updateLiveData, 60000);
-
-// Inicialización
 document.addEventListener('DOMContentLoaded', function() {
-    // Aquí se pueden inicializar más funciones si es necesario
+    // Cerrar modales con ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeNewTaskModal();
+            closeConfirmModal();
+        }
+    });
+    
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('newTaskModal').addEventListener('click', function(e) {
+        if (e.target === this) closeNewTaskModal();
+    });
+    
+    document.getElementById('confirmModal').addEventListener('click', function(e) {
+        if (e.target === this) closeConfirmModal();
+    });
+    
+    console.log('✅ Panel de tareas cargado exitosamente');
+    console.log(`📋 ${document.querySelectorAll('.task-item').length} tareas mostradas`);
 });
 </script>
 
@@ -781,21 +855,21 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 /* Scrollbar personalizado */
-.max-h-\[500px\]::-webkit-scrollbar {
+.max-h-\[600px\]::-webkit-scrollbar {
     width: 6px;
 }
 
-.max-h-\[500px\]::-webkit-scrollbar-track {
+.max-h-\[600px\]::-webkit-scrollbar-track {
     background: #f1f5f9;
     border-radius: 3px;
 }
 
-.max-h-\[500px\]::-webkit-scrollbar-thumb {
+.max-h-\[600px\]::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
 }
 
-.max-h-\[500px\]::-webkit-scrollbar-thumb:hover {
+.max-h-\[600px\]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
@@ -805,65 +879,28 @@ document.addEventListener('DOMContentLoaded', function() {
     to { opacity: 1; transform: translateY(0); }
 }
 
-#newTaskModal {
+#newTaskModal, #confirmModal {
     animation: fadeIn 0.3s ease;
-}
-
-/* Estilos para estados de tareas */
-.task-status-pending {
-    border-left: 4px solid #f59e0b;
-}
-
-.task-status-in_progress {
-    border-left: 4px solid #3b82f6;
-}
-
-.task-status-overdue {
-    border-left: 4px solid #ef4444;
-}
-
-.task-status-completed {
-    border-left: 4px solid #10b981;
-}
-
-/* Efecto de completado */
-input[type="checkbox"]:checked + .task-title {
-    text-decoration: line-through;
-    color: #9ca3af;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .task-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .task-info {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-}
-
-/* Estilo para notificaciones */
-.notification-alert {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-/* Mejoras de accesibilidad */
-:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
 }
 
 /* Transiciones suaves */
 button, a {
     transition: all 0.2s ease;
+}
+
+/* Línea de texto truncada */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Badge de módulo */
+.task-item .bg-purple-100,
+.task-item .bg-blue-100,
+.task-item .bg-green-100 {
+    display: inline-block;
 }
 </style>
 @endsection

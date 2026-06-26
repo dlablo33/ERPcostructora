@@ -148,85 +148,114 @@ class RequisicionController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+{
+    try {
+        $request->validate([
+            'fecha_requerimiento' => 'required|date',
+            'solicitante' => 'required|string|max:100',
+            'area_id' => 'required|exists:areas,id',
+            'proyecto_id' => 'nullable|exists:proyectos,id',
+            'observaciones' => 'nullable|string',
+            'articulos' => 'required|array|min:1',
+            'articulos.*.codigo' => 'nullable|string|max:50',
+            'articulos.*.cantidad' => 'required|numeric|min:0.001',
+            'articulos.*.unidad_medida' => 'required|string|max:20',
+            'articulos.*.descripcion' => 'required|string|max:500',
+            'articulos.*.observacion' => 'nullable|string',
+            'articulos.*.pendiente' => 'boolean',
+        ]);
+        
+        DB::beginTransaction();
+        
+        // Generar folio
+        $ultima = Requisicion::withTrashed()->orderBy('id', 'desc')->first();
+        $numero = $ultima ? intval(substr($ultima->folio, 4)) + 1 : 1;
+        $folio = 'REQ-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+        
+        // Obtener el nombre del área
+        $area = Area::find($request->area_id);
+        
+        // Crear requisición
+        $requisicion = Requisicion::create([
+            'folio' => $folio,
+            'fecha_requerimiento' => $request->fecha_requerimiento,
+            'estatus' => $request->estatus ?? 'Pendiente',
+            'solicitante' => $request->solicitante,
+            'area' => $area ? $area->nombre : null,
+            'area_id' => $request->area_id,
+            'proyecto_id' => $request->proyecto_id,
+            'cotizadas' => 0,
+            'observaciones' => $request->observaciones,
+            'creado_por' => Auth::id(),
+        ]);
+        
+        // Crear artículos
+        foreach ($request->articulos as $articulo) {
+            RequisicionArticulo::create([
+                'requisicion_id' => $requisicion->id,
+                'codigo' => $articulo['codigo'] ?? null,
+                'cantidad' => $articulo['cantidad'],
+                'unidad_medida' => $articulo['unidad_medida'],
+                'descripcion' => $articulo['descripcion'],
+                'observacion' => $articulo['observacion'] ?? null,
+                'pendiente' => $articulo['pendiente'] ?? true,
+                'cantidad_surtida' => 0,
+            ]);
+        }
+        
+        // ⭐⭐⭐ GENERAR TAREA AUTOMÁTICAMENTE ⭐⭐⭐
         try {
-            $request->validate([
-                'fecha_requerimiento' => 'required|date',
-                'solicitante' => 'required|string|max:100',
-                'area_id' => 'required|exists:areas,id',
-                'proyecto_id' => 'nullable|exists:proyectos,id',
-                'observaciones' => 'nullable|string',
-                'articulos' => 'required|array|min:1',
-                'articulos.*.codigo' => 'nullable|string|max:50',
-                'articulos.*.cantidad' => 'required|numeric|min:0.001',
-                'articulos.*.unidad_medida' => 'required|string|max:20',
-                'articulos.*.descripcion' => 'required|string|max:500',
-                'articulos.*.observacion' => 'nullable|string',
-                'articulos.*.pendiente' => 'boolean',
+            Log::info('🔄 Intentando generar tarea para requisición', [
+                'requisicion_id' => $requisicion->id,
+                'folio' => $requisicion->folio
             ]);
             
-            DB::beginTransaction();
+            $tarea = $requisicion->generarTareaDesdeRequisicion();
             
-            // Generar folio
-            $ultima = Requisicion::withTrashed()->orderBy('id', 'desc')->first();
-            $numero = $ultima ? intval(substr($ultima->folio, 4)) + 1 : 1;
-            $folio = 'REQ-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
-            
-            // Obtener el nombre del área para la columna 'area' (texto)
-            $area = Area::find($request->area_id);
-            
-            // Crear requisición
-            $requisicion = Requisicion::create([
-                'folio' => $folio,
-                'fecha_requerimiento' => $request->fecha_requerimiento,
-                'estatus' => $request->estatus ?? 'Pendiente',
-                'solicitante' => $request->solicitante,
-                'area' => $area ? $area->nombre : null,
-                'area_id' => $request->area_id,
-                'proyecto_id' => $request->proyecto_id,
-                'cotizadas' => 0,
-                'observaciones' => $request->observaciones,
-                'creado_por' => Auth::id(),
-            ]);
-            
-            // Crear artículos
-            foreach ($request->articulos as $articulo) {
-                RequisicionArticulo::create([
+            if ($tarea) {
+                Log::info('✅ Tarea generada exitosamente desde el controlador', [
                     'requisicion_id' => $requisicion->id,
-                    'codigo' => $articulo['codigo'] ?? null,
-                    'cantidad' => $articulo['cantidad'],
-                    'unidad_medida' => $articulo['unidad_medida'],
-                    'descripcion' => $articulo['descripcion'],
-                    'observacion' => $articulo['observacion'] ?? null,
-                    'pendiente' => $articulo['pendiente'] ?? true,
-                    'cantidad_surtida' => 0,
+                    'tarea_id' => $tarea->id,
+                    'tarea_titulo' => $tarea->title
+                ]);
+            } else {
+                Log::warning('⚠️ No se pudo generar la tarea (retornó null)', [
+                    'requisicion_id' => $requisicion->id
                 ]);
             }
-            
-            DB::commit();
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Requisición creada exitosamente',
-                'data' => $requisicion->load('articulos', 'area', 'proyecto')
-            ]);
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error de validación',
-                'errors' => $e->errors()
-            ], 422);
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error al crear requisición: ' . $e->getMessage());
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al crear la requisición: ' . $e->getMessage()
-            ], 500);
+            Log::error('❌ Error al generar tarea en store(): ' . $e->getMessage(), [
+                'requisicion_id' => $requisicion->id,
+                'trace' => $e->getTraceAsString()
+            ]);
         }
+        // ⭐⭐⭐ FIN DE GENERACIÓN DE TAREA ⭐⭐⭐
+        
+        DB::commit();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Requisición creada exitosamente',
+            'data' => $requisicion->load('articulos', 'area', 'proyecto'),
+            'tarea_generada' => isset($tarea) && $tarea ? true : false
+        ]);
+        
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error de validación',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error al crear requisición: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al crear la requisición: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * Display the specified resource.
@@ -352,27 +381,48 @@ class RequisicionController extends Controller
      * Aprobar requisición
      */
     public function aprobar($id)
-    {
+{
+    try {
+        $requisicion = Requisicion::findOrFail($id);
+        
+        $requisicion->update([
+            'estatus' => 'Activo',
+            'aprobado_por' => Auth::id(),
+            'fecha_aprobacion' => now(),
+        ]);
+        
+        // ⭐ Actualizar tarea si existe
         try {
-            $requisicion = Requisicion::findOrFail($id);
+            $tarea = \App\Models\WorkflowTask::where('module', 'requisiciones')
+                ->where('record_id', $requisicion->id)
+                ->first();
             
-            $requisicion->update([
-                'estatus' => 'Activo',
-                'aprobado_por' => Auth::id(),
-                'fecha_aprobacion' => now(),
-            ]);
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Requisición aprobada exitosamente'
-            ]);
+            if ($tarea) {
+                $tarea->update([
+                    'status' => 'in_progress',
+                    'title' => "✅ Requisición Aprobada: " . $requisicion->folio
+                ]);
+                
+                Log::info('📝 Tarea actualizada por aprobación', [
+                    'requisicion_id' => $requisicion->id,
+                    'tarea_id' => $tarea->id
+                ]);
+            }
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al aprobar: ' . $e->getMessage()
-            ], 500);
+            Log::error('Error al actualizar tarea en aprobación: ' . $e->getMessage());
         }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Requisición aprobada exitosamente'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al aprobar: ' . $e->getMessage()
+        ], 500);
     }
+}
     
     /**
      * Rechazar requisición
@@ -423,4 +473,6 @@ class RequisicionController extends Controller
             ], 500);
         }
     }
+
+    
 }
