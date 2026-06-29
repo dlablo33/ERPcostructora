@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Plantilla extends Model
 {
@@ -142,13 +146,13 @@ class Plantilla extends Model
     // RELACIONES
     // ============================================
 
-    // Relación con Área
+    // ✅ Usar cat_area_id con id
     public function area()
     {
         return $this->belongsTo(Area::class, 'cat_area_id', 'id');
     }
 
-    // Relación con Puesto
+    // ✅ Usar cat_puesto_id con id
     public function puesto()
     {
         return $this->belongsTo(Puesto::class, 'cat_puesto_id', 'id');
@@ -157,16 +161,16 @@ class Plantilla extends Model
     // Relación con Tipo de Operador
     public function tipoOperador()
     {
-        return $this->belongsTo(CatTipoOperador::class, 'cat_tipo_operador_id');
+        return $this->belongsTo(CatTipoOperador::class, 'cat_tipo_operador_id', 'id');
     }
 
     // Relación con Tipo de Licencia
     public function tipoLicencia()
     {
-        return $this->belongsTo(CatTipoLicencia::class, 'cat_tipo_licencia_id');
+        return $this->belongsTo(CatTipoLicencia::class, 'cat_tipo_licencia_id', 'id');
     }
 
-    // Relación con Banco (corregida)
+    // Relación con Banco
     public function banco()
     {
         return $this->belongsTo(CatBanco::class, 'cat_bancos_clave', 'clave');
@@ -175,7 +179,7 @@ class Plantilla extends Model
     // Relación con Tipo de Cuenta
     public function tipoCuenta()
     {
-        return $this->belongsTo(CatTipoCuenta::class, 'cat_tipo_cuenta_id');
+        return $this->belongsTo(CatTipoCuenta::class, 'cat_tipo_cuenta_id', 'id');
     }
 
     // Relación con País
@@ -244,22 +248,162 @@ class Plantilla extends Model
         return $this->belongsTo(SatcatFiguraTransporte::class, 'satcat_figura_transporte_clave', 'clave');
     }
 
-    // Relación con Coordinador (otro empleado)
+    // ✅ Relación con Coordinador usando plantilla_id
     public function coordinador()
     {
         return $this->belongsTo(Plantilla::class, 'coordinador_plantilla_id', 'plantilla_id');
     }
 
-    // Relación inversa con coordinados
+    // ✅ Relación inversa con coordinados
     public function coordinados()
     {
         return $this->hasMany(Plantilla::class, 'coordinador_plantilla_id', 'plantilla_id');
+    }
+
+    // ✅ Relación con Nóminas
+    public function nominas(): HasMany
+    {
+        return $this->hasMany(Nomina::class, 'empleado_id', 'plantilla_id');
+    }
+
+    // ✅ Relación con Nóminas pagadas
+    public function nominasPagadas(): HasMany
+    {
+        return $this->hasMany(Nomina::class, 'empleado_id', 'plantilla_id')
+                    ->where('estatus', 'Pagada');
+    }
+
+    // ✅ Relación con Nóminas calculadas
+    public function nominasCalculadas(): HasMany
+    {
+        return $this->hasMany(Nomina::class, 'empleado_id', 'plantilla_id')
+                    ->where('estatus', 'Calculada');
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // ✅ RELACIONES CON PROYECTOS
+    // ════════════════════════════════════════════════════════════
+
+    /**
+     * Relación con Proyectos a través de la tabla asignacion_personal
+     * Un empleado puede estar asignado a múltiples proyectos
+     */
+    public function proyectos(): BelongsToMany
+    {
+        return $this->belongsToMany(Proyecto::class, 'asignacion_personal', 'plantilla_id', 'proyecto_id')
+                    ->withPivot('id', 'fecha_inicio', 'fecha_fin', 'estatus', 'puesto_id', 'sueldo_asignado', 'observaciones')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Relación con Proyectos activos actuales
+     * Filtra solo asignaciones activas y sin fecha de fin o con fecha de fin futura
+     */
+    public function proyectosActivos(): BelongsToMany
+    {
+        return $this->belongsToMany(Proyecto::class, 'asignacion_personal', 'plantilla_id', 'proyecto_id')
+                    ->wherePivot('estatus', 'activo')
+                    ->where(function($q) {
+                        $q->whereNull('pivot.fecha_fin')
+                          ->orWhere('pivot.fecha_fin', '>=', now()->toDateString());
+                    })
+                    ->withPivot('id', 'fecha_inicio', 'fecha_fin', 'estatus', 'puesto_id', 'sueldo_asignado')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Obtener el proyecto actual del empleado (el más reciente activo)
+     */
+    public function getProyectoActualAttribute()
+    {
+        return $this->proyectosActivos()
+                    ->latest('pivot.fecha_inicio')
+                    ->first();
+    }
+
+    /**
+     * Verificar si el empleado está asignado a un proyecto específico
+     */
+    public function estaAsignadoAProyecto($proyectoId): bool
+    {
+        return $this->proyectosActivos()
+                    ->where('proyectos.id', $proyectoId)
+                    ->exists();
+    }
+
+    /**
+     * Obtener todos los proyectos donde el empleado ha estado asignado (historial completo)
+     */
+    public function historialProyectos(): BelongsToMany
+    {
+        return $this->belongsToMany(Proyecto::class, 'asignacion_personal', 'plantilla_id', 'proyecto_id')
+                    ->withPivot('id', 'fecha_inicio', 'fecha_fin', 'estatus', 'puesto_id', 'sueldo_asignado', 'observaciones')
+                    ->withTimestamps()
+                    ->orderBy('pivot.fecha_inicio', 'desc');
+    }
+
+    /**
+     * Obtener el proyecto principal (el que más tiempo ha estado asignado)
+     */
+    public function getProyectoPrincipalAttribute()
+    {
+        return $this->proyectos()
+                    ->withPivot('fecha_inicio', 'fecha_fin')
+                    ->get()
+                    ->sortByDesc(function($proyecto) {
+                        $inicio = $proyecto->pivot->fecha_inicio;
+                        $fin = $proyecto->pivot->fecha_fin ?? now();
+                        return $inicio->diffInDays($fin);
+                    })
+                    ->first();
+    }
+
+    /**
+     * Obtener lista de proyectos del empleado como string (para mostrar)
+     * ✅ CON MANEJO DE ERRORES
+     */
+    public function getProyectosListaAttribute()
+    {
+        try {
+            $proyectos = $this->proyectosActivos;
+            if ($proyectos && $proyectos->count() > 0) {
+                return $proyectos->pluck('nombre')->implode(', ');
+            }
+            return 'Sin proyectos activos';
+        } catch (\Exception $e) {
+            Log::warning('Error al obtener proyectos para empleado ' . $this->plantilla_id . ': ' . $e->getMessage());
+            return 'No disponible';
+        }
+    }
+
+    /**
+     * Obtener IDs de proyectos activos como array
+     */
+    public function getProyectosActivosIdsAttribute()
+    {
+        try {
+            return $this->proyectosActivos->pluck('id')->toArray();
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     // Relación con Documentos
     public function documentos()
     {
         return $this->hasMany(EmpleadoDocumento::class, 'plantilla_id', 'plantilla_id');
+    }
+
+    // Relación con User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    // Relación con Asistencias
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class, 'plantilla_id', 'plantilla_id');
     }
 
     // ============================================
@@ -294,14 +438,14 @@ class Plantilla extends Model
     {
         if ($termino) {
             return $query->where(function($q) use ($termino) {
-                $q->where('plantillas.nombre', 'ILIKE', "%{$termino}%")
-                  ->orWhere('plantillas.apellido_paterno', 'ILIKE', "%{$termino}%")
-                  ->orWhere('plantillas.apellido_materno', 'ILIKE', "%{$termino}%")
-                  ->orWhere('plantillas.rfc', 'ILIKE', "%{$termino}%")
-                  ->orWhere('plantillas.curp', 'ILIKE', "%{$termino}%")
-                  ->orWhere('plantillas.numero_empleado_interno', 'ILIKE', "%{$termino}%")
-                  ->orWhere('plantillas.correo', 'ILIKE', "%{$termino}%")
-                  ->orWhereRaw("CONCAT(plantillas.nombre, ' ', COALESCE(plantillas.apellido_paterno, ''), ' ', COALESCE(plantillas.apellido_materno, '')) ILIKE ?", ["%{$termino}%"]);
+                $q->where('plantillas.nombre', 'LIKE', "%{$termino}%")
+                  ->orWhere('plantillas.apellido_paterno', 'LIKE', "%{$termino}%")
+                  ->orWhere('plantillas.apellido_materno', 'LIKE', "%{$termino}%")
+                  ->orWhere('plantillas.rfc', 'LIKE', "%{$termino}%")
+                  ->orWhere('plantillas.curp', 'LIKE', "%{$termino}%")
+                  ->orWhere('plantillas.numero_empleado_interno', 'LIKE', "%{$termino}%")
+                  ->orWhere('plantillas.correo', 'LIKE', "%{$termino}%")
+                  ->orWhereRaw("CONCAT(plantillas.nombre, ' ', COALESCE(plantillas.apellido_paterno, ''), ' ', COALESCE(plantillas.apellido_materno, '')) LIKE ?", ["%{$termino}%"]);
             });
         }
         return $query;
@@ -367,6 +511,44 @@ class Plantilla extends Model
         return $query;
     }
 
+    // ✅ Scope para filtrar por estatus de nómina
+    public function scopeConNominas($query, $estatus = null)
+    {
+        return $query->with(['nominas' => function($q) use ($estatus) {
+            if ($estatus) {
+                $q->where('estatus', $estatus);
+            }
+        }]);
+    }
+
+    // ✅ Scope para filtrar empleados por proyecto
+    public function scopePorProyecto($query, $proyectoId)
+    {
+        if ($proyectoId) {
+            return $query->whereHas('proyectosActivos', function($q) use ($proyectoId) {
+                $q->where('proyecto_id', $proyectoId);
+            });
+        }
+        return $query;
+    }
+
+    // ✅ Scope para filtrar empleados que NO están en ningún proyecto
+    public function scopeSinProyecto($query)
+    {
+        return $query->whereDoesntHave('proyectosActivos');
+    }
+
+    // ✅ Scope para filtrar empleados por múltiples proyectos
+    public function scopePorProyectos($query, $proyectosIds)
+    {
+        if (is_array($proyectosIds) && count($proyectosIds) > 0) {
+            return $query->whereHas('proyectosActivos', function($q) use ($proyectosIds) {
+                $q->whereIn('proyecto_id', $proyectosIds);
+            });
+        }
+        return $query;
+    }
+
     // ============================================
     // ACCESORES
     // ============================================
@@ -375,6 +557,22 @@ class Plantilla extends Model
     public function getNombreCompletoAttribute()
     {
         return trim($this->nombre . ' ' . $this->apellido_paterno . ' ' . $this->apellido_materno);
+    }
+
+    // Obtener nombre corto
+    public function getNombreCortoAttribute()
+    {
+        return trim($this->nombre . ' ' . $this->apellido_paterno);
+    }
+
+    // Obtener iniciales
+    public function getInicialesAttribute()
+    {
+        $iniciales = '';
+        if ($this->nombre) $iniciales .= $this->nombre[0];
+        if ($this->apellido_paterno) $iniciales .= $this->apellido_paterno[0];
+        if ($this->apellido_materno) $iniciales .= $this->apellido_materno[0];
+        return strtoupper($iniciales);
     }
 
     // Obtener edad
@@ -446,6 +644,30 @@ class Plantilla extends Model
         return $this->coordinador ? $this->coordinador->nombre_completo : '-';
     }
 
+    // Obtener sueldo diario calculado
+    public function getSueldoDiarioCalculadoAttribute()
+    {
+        if ($this->sueldo_diario && $this->sueldo_diario > 0) {
+            return $this->sueldo_diario;
+        }
+        if ($this->sueldo && $this->sueldo > 0) {
+            return $this->sueldo / 30;
+        }
+        return 0;
+    }
+
+    // Obtener sueldo mensual calculado
+    public function getSueldoMensualCalculadoAttribute()
+    {
+        if ($this->sueldo && $this->sueldo > 0) {
+            return $this->sueldo;
+        }
+        if ($this->sueldo_diario && $this->sueldo_diario > 0) {
+            return $this->sueldo_diario * 30;
+        }
+        return 0;
+    }
+
     // ============================================
     // MUTADORES
     // ============================================
@@ -480,19 +702,177 @@ class Plantilla extends Model
         $this->attributes['correo'] = $value ? strtolower(trim($value)) : null;
     }
 
-        // ============================================
-    // RELACIONES ADICIONALES
-    // ============================================
-
-    // Relación con User (usuario del sistema asociado)
-    public function user()
+    // Asegurar que el nombre esté capitalizado
+    public function setNombreAttribute($value)
     {
-        return $this->belongsTo(User::class, 'user_id');
+        $this->attributes['nombre'] = $value ? ucwords(strtolower(trim($value))) : null;
     }
 
-    // Relación con Asistencias
-    public function asistencias()
+    // Asegurar que los apellidos estén capitalizados
+    public function setApellidoPaternoAttribute($value)
     {
-        return $this->hasMany(\App\Models\Asistencia::class, 'plantilla_id', 'plantilla_id');
+        $this->attributes['apellido_paterno'] = $value ? ucwords(strtolower(trim($value))) : null;
+    }
+
+    public function setApellidoMaternoAttribute($value)
+    {
+        $this->attributes['apellido_materno'] = $value ? ucwords(strtolower(trim($value))) : null;
+    }
+
+    // ============================================
+    // MÉTODOS ÚTILES
+    // ============================================
+
+    /**
+     * Verificar si el empleado está activo
+     */
+    public function isActivo(): bool
+    {
+        return in_array($this->estatus, ['1', 'Activo']);
+    }
+
+    /**
+     * Verificar si el empleado es operador
+     */
+    public function isOperador(): bool
+    {
+        return (bool) $this->operador;
+    }
+
+    /**
+     * Verificar si el empleado es propietario
+     */
+    public function isPropietario(): bool
+    {
+        return (bool) $this->propietario;
+    }
+
+    /**
+     * Verificar si tiene licencia vigente
+     */
+    public function tieneLicenciaVigente(): bool
+    {
+        if (!$this->vencimiento_licencia) return false;
+        return $this->vencimiento_licencia->isFuture();
+    }
+
+    /**
+     * Generar número de empleado automático
+     */
+    public static function generarNumeroEmpleado()
+    {
+        $ultimo = self::orderBy('numero_empleado_interno', 'desc')
+            ->whereNotNull('numero_empleado_interno')
+            ->first();
+        
+        if (!$ultimo || !$ultimo->numero_empleado_interno) {
+            return 'EMP-0001';
+        }
+        
+        $numero = intval(substr($ultimo->numero_empleado_interno, 4)) + 1;
+        return 'EMP-' . str_pad($numero, 4, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Calcular total de nóminas del empleado
+     */
+    public function getTotalNominasAttribute()
+    {
+        return $this->nominas()->count();
+    }
+
+    /**
+     * Calcular total pagado al empleado
+     */
+    public function getTotalPagadoAttribute()
+    {
+        return $this->nominasPagadas()->sum('neto_pagar');
+    }
+
+    /**
+     * Asignar el empleado a un proyecto
+     */
+    public function asignarAProyecto($proyectoId, $data = [])
+    {
+        $defaultData = [
+            'fecha_inicio' => now()->toDateString(),
+            'estatus' => 'activo',
+            'puesto_id' => $this->cat_puesto_id,
+            'sueldo_asignado' => $this->sueldo_diario,
+            'observaciones' => null,
+        ];
+
+        $data = array_merge($defaultData, $data);
+
+        return $this->proyectos()->attach($proyectoId, $data);
+    }
+
+    /**
+     * Desasignar el empleado de un proyecto
+     */
+    public function desasignarDeProyecto($proyectoId, $fechaFin = null)
+    {
+        $fechaFin = $fechaFin ?? now()->toDateString();
+        
+        return $this->proyectos()
+                    ->wherePivot('proyecto_id', $proyectoId)
+                    ->updateExistingPivot($proyectoId, [
+                        'fecha_fin' => $fechaFin,
+                        'estatus' => 'inactivo'
+                    ]);
+    }
+
+    /**
+     * Reactivar el empleado en un proyecto
+     */
+    public function reactivarEnProyecto($proyectoId, $data = [])
+    {
+        $defaultData = [
+            'fecha_fin' => null,
+            'estatus' => 'activo',
+        ];
+
+        $data = array_merge($defaultData, $data);
+
+        return $this->proyectos()
+                    ->wherePivot('proyecto_id', $proyectoId)
+                    ->updateExistingPivot($proyectoId, $data);
+    }
+
+    /**
+     * Obtener el ID del proyecto actual (si solo puede estar en uno)
+     */
+    public function getProyectoActualIdAttribute()
+    {
+        $proyecto = $this->proyecto_actual;
+        return $proyecto ? $proyecto->id : null;
+    }
+
+    // ============================================
+    // BOOT
+    // ============================================
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // Generar número de empleado si no tiene
+            if (empty($model->numero_empleado_interno)) {
+                $model->numero_empleado_interno = self::generarNumeroEmpleado();
+            }
+            
+            // Establecer estatus por defecto
+            if (empty($model->estatus)) {
+                $model->estatus = 'Activo';
+            }
+        });
+
+        static::updating(function ($model) {
+            // Si se cambia el estatus a Baja, registrar fecha de baja
+            if ($model->isDirty('estatus') && $model->estatus === 'Baja' && empty($model->fecha_baja)) {
+                $model->fecha_baja = now();
+            }
+        });
     }
 }

@@ -82,6 +82,7 @@ use App\Http\Controllers\MaquinariaController;
 use App\Http\Controllers\DesviacionController;
 use App\Http\Controllers\EvidenciaController;
 use App\Http\Controllers\WorkflowController;
+use App\Http\Controllers\ReciboNominaController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -591,11 +592,93 @@ Route::prefix('rh')->name('rh.')->group(function () {
     Route::delete('/control/{id}', [ControlHorariosController::class, 'destroy']);
     Route::get('/control/resumen', [ControlHorariosController::class, 'getResumen']);
     
-    // NOMINA
-    Route::get('/calculo', function () { return view('rh.nomina.calculo'); })->name('calculo');
-    Route::get('/historial-nomina', function () { return view('rh.nomina.historial'); })->name('historial_nomina');
-    Route::get('/pagos', function () { return view('rh.nomina.pagos'); })->name('pagos');
-    Route::get('/recibos', function () { return view('rh.nomina.recibos'); })->name('recibos');
+    // ============================================
+    // NÓMINA - RUTAS CORREGIDAS
+    // ============================================
+   
+   // ============================================
+// RECIBOS DE NÓMINA (TIMBRADOS)
+// ============================================
+
+// ✅ 1. RUTAS ESPECÍFICAS (SIN PARÁMETROS) - VAN PRIMERO
+
+// Ruta principal
+Route::get('/recibos', [ReciboNominaController::class, 'index'])->name('recibos');
+
+// Estadísticas
+Route::get('/recibos/estadisticas', [ReciboNominaController::class, 'getEstadisticas'])->name('recibos.estadisticas');
+
+// Exportar a Excel
+Route::get('/recibos/exportar', [ReciboNominaController::class, 'exportarExcel'])->name('recibos.exportar');
+
+// Nóminas disponibles para generar recibos
+Route::get('/recibos/nominas-disponibles', [ReciboNominaController::class, 'getNominasDisponibles'])->name('recibos.nominas');
+
+// Resumen por estatus
+Route::get('/recibos/resumen-estatus', [ReciboNominaController::class, 'getResumenEstatus'])->name('recibos.resumen');
+
+// ✅ 2. RUTAS CON PARÁMETROS ESPECÍFICOS
+Route::get('/recibos/empleado/{empleadoId}', [ReciboNominaController::class, 'getRecibosEmpleado'])->name('recibos.empleado');
+
+// ✅ 3. RUTAS CON {ID} - VAN AL FINAL
+Route::get('/recibos/{id}', [ReciboNominaController::class, 'show'])->name('recibos.show');
+Route::get('/recibos/{id}/pdf', [ReciboNominaController::class, 'descargarPdf'])->name('recibos.pdf');
+
+// ✅ 4. RUTAS POST (PUEDEN IR EN CUALQUIER ORDEN)
+Route::post('/recibos/generar', [ReciboNominaController::class, 'generarDesdeNomina'])->name('recibos.generar');
+Route::post('/recibos/timbrar', [ReciboNominaController::class, 'timbrar'])->name('recibos.timbrar');
+Route::post('/recibos/{id}/retimbrar', [ReciboNominaController::class, 'retimbrar'])->name('recibos.retimbrar');
+Route::post('/recibos/{id}/cancelar', [ReciboNominaController::class, 'cancelarTimbrado'])->name('recibos.cancelar');
+Route::post('/recibos/{id}/enviar', [ReciboNominaController::class, 'enviarCorreo'])->name('recibos.enviar');
+
+// ✅ 5. RUTAS PUT/DELETE
+Route::put('/recibos/{id}', [ReciboNominaController::class, 'update'])->name('recibos.update');
+Route::patch('/recibos/{id}', [ReciboNominaController::class, 'update'])->name('recibos.update.patch');
+Route::delete('/recibos/{id}', [ReciboNominaController::class, 'destroy'])->name('recibos.destroy');
+
+    
+    // ============================================
+// NÓMINA - RUTAS COMPLETAS Y CORREGIDAS
+// ============================================
+
+// ✅ RUTA PRINCIPAL (INDEX) - ¡LA QUE FALTABA!
+Route::get('/nomina', [NominaController::class, 'index'])->name('nomina.index');
+
+// ✅ RUTAS DE CÁLCULO DE NÓMINA
+Route::get('/calculo', [NominaController::class, 'indexView'])->name('calculo');
+Route::post('/calcular', [NominaController::class, 'calcular'])->name('calcular');
+Route::put('/{id}/estatus', [NominaController::class, 'actualizarEstatus'])->name('estatus');
+Route::delete('/{id}/cancelar', [NominaController::class, 'cancelar'])->name('cancelar');
+Route::put('/{id}/recalcular', [NominaController::class, 'recalcular'])->name('recalcular');
+Route::post('/exportar', [NominaController::class, 'exportar'])->name('exportar');
+Route::get('/resumen', [NominaController::class, 'resumen'])->name('resumen');
+Route::get('/empleados/disponibles', [NominaController::class, 'getEmpleadosDisponibles'])->name('empleados.disponibles');
+
+// ✅ RUTAS DE PAGOS (VISTA PRINCIPAL)
+Route::get('/pagos', [NominaController::class, 'pagosIndex'])->name('pagos');
+Route::get('/pagos/datatable', [NominaController::class, 'pagosDatatable'])->name('pagos.datatable');
+
+// ✅ CRUD DE PAGOS (API)
+Route::prefix('pagos-api')->name('pagos.')->group(function () {
+    Route::post('/', [NominaController::class, 'storePago'])->name('store');
+    Route::put('/{id}', [NominaController::class, 'updatePago'])->name('update');
+    Route::patch('/{id}', [NominaController::class, 'updatePago'])->name('update.patch');
+    Route::delete('/{id}', [NominaController::class, 'destroyPago'])->name('destroy');
+    Route::get('/{id}/pdf', [NominaController::class, 'generarPdfPago'])->name('pdf');
+    Route::get('/{id}', [NominaController::class, 'show'])->name('show');
+});
+
+// ✅ RUTAS CON PARÁMETROS FIJOS
+Route::get('/{id}/print', [NominaController::class, 'imprimirRecibo'])->name('print');
+Route::get('/{id}/pdf', [NominaController::class, 'generarPDF'])->name('pdf');
+
+// ✅ RUTA CATCH-ALL CON {id} (AL FINAL - MUY IMPORTANTE)
+Route::get('/{id}', [NominaController::class, 'show'])->name('show');
+
+// ✅ OBTENER EMPLEADOS POR PROYECTO
+Route::get('/empleados-por-proyecto/{proyectoId}', [NominaController::class, 'getEmpleadosPorProyecto'])
+    ->name('empleados.por-proyecto');
+    
     
     // TABLA DE SUELDOS
     Route::prefix('nomina/sueldos')->name('nomina.sueldos.')->group(function () {

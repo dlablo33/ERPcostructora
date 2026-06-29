@@ -6,10 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class Nomina extends Model
 {
     use HasFactory;
+
+    // ============================================
+    // CONSTANTES
+    // ============================================
+    
+    // Estatus de nómina
+    const ESTATUS_PENDIENTE = 'Pendiente';
+    const ESTATUS_CALCULADA = 'Calculada';
+    const ESTATUS_PAGADA = 'Pagada';
+    const ESTATUS_CANCELADA = 'Cancelada';
+
+    // Tipos de período
+    const PERIODO_QUINCENAL = 'quincenal';
+    const PERIODO_SEMANAL = 'semanal';
+    const PERIODO_MENSUAL = 'mensual';
 
     /**
      * The table associated with the model.
@@ -17,6 +31,13 @@ class Nomina extends Model
      * @var string
      */
     protected $table = 'nomina';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -109,7 +130,7 @@ class Nomina extends Model
      */
     public function calculadoPor(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'calculado_por');
+        return $this->belongsTo(User::class, 'calculado_por', 'id');
     }
 
     /**
@@ -150,7 +171,7 @@ class Nomina extends Model
      */
     public function isPagada(): bool
     {
-        return $this->estatus === 'Pagada';
+        return $this->estatus === self::ESTATUS_PAGADA;
     }
 
     /**
@@ -158,7 +179,7 @@ class Nomina extends Model
      */
     public function isCalculada(): bool
     {
-        return $this->estatus === 'Calculada';
+        return $this->estatus === self::ESTATUS_CALCULADA;
     }
 
     /**
@@ -166,7 +187,7 @@ class Nomina extends Model
      */
     public function isPendiente(): bool
     {
-        return $this->estatus === 'Pendiente';
+        return $this->estatus === self::ESTATUS_PENDIENTE;
     }
 
     /**
@@ -174,7 +195,7 @@ class Nomina extends Model
      */
     public function isCancelada(): bool
     {
-        return $this->estatus === 'Cancelada';
+        return $this->estatus === self::ESTATUS_CANCELADA;
     }
 
     /**
@@ -183,10 +204,10 @@ class Nomina extends Model
     public function getEstatusBadgeClass(): string
     {
         return match ($this->estatus) {
-            'Pagada' => 'badge-pagada',
-            'Calculada' => 'badge-calculada',
-            'Pendiente' => 'badge-pendiente',
-            'Cancelada' => 'badge-cancelada',
+            self::ESTATUS_PAGADA => 'badge-pagada',
+            self::ESTATUS_CALCULADA => 'badge-calculada',
+            self::ESTATUS_PENDIENTE => 'badge-pendiente',
+            self::ESTATUS_CANCELADA => 'badge-cancelada',
             default => 'badge-pendiente',
         };
     }
@@ -231,7 +252,7 @@ class Nomina extends Model
     public function getDiasFormateadoAttribute(): string
     {
         $dias = $this->dias_trabajados ?? 0;
-        $total = $this->periodo_tipo === 'semanal' ? 7 : 15;
+        $total = $this->periodo_tipo === self::PERIODO_SEMANAL ? 7 : 15;
         return "{$dias}/{$total}";
     }
 
@@ -242,7 +263,7 @@ class Nomina extends Model
     {
         $fechaInicio = date('Ymd', strtotime($inicio));
         $fechaFin = date('Ymd', strtotime($fin));
-        $tipo = $periodoTipo === 'semanal' ? 'S' : 'Q';
+        $tipo = $periodoTipo === self::PERIODO_SEMANAL ? 'S' : ($periodoTipo === self::PERIODO_MENSUAL ? 'M' : 'Q');
         
         // Contar nóminas existentes en el mismo período
         $count = self::where('periodo_inicio', $inicio)
@@ -277,4 +298,18 @@ class Nomina extends Model
             }
         });
     }
+
+        public function recibo()
+    {
+        return $this->hasOne(ReciboNomina::class, 'nomina_id', 'id');
+    }
+
+    /**
+     * Verificar si la nómina ya tiene recibo
+     */
+    public function tieneRecibo()
+    {
+        return $this->recibo()->exists();
+    }
+
 }

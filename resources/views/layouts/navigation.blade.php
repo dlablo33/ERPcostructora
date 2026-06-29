@@ -2206,18 +2206,18 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-menu-group">
+                <!-- <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-reportes')">
                         <span><i class="fas fa-chart-bar"></i> Reportes</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
-                    <div id="rrhh-reportes" class="sidebar-submenu">
+                     <div id="rrhh-reportes" class="sidebar-submenu">
                         <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto', 'rrhh', '{{ route ('rh.costos') }}', 'fa-money-bill-wave')">
                             <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos de Nómina por Proyecto</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Nómina por Proyecto', 'rrhh', 'fa-money-bill-wave', this)"></i>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
