@@ -1101,7 +1101,7 @@
             <div style="height: 100%;">
                 <!-- Panel izquierdo - Imagen de fondo -->
                 <div class="login_img">
-                    <div class="login_overlay"></div>
+                    <div ></div>
                 </div>
 
                 <!-- Panel derecho - Formulario -->

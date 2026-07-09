@@ -79,7 +79,7 @@ console.log('User ID:', window.userId);
 
     /* ========== NAVBAR SUPERIOR ========== */
     nav.bg-construction-dark {
-        z-index: 1050 !important;
+        z-index: 2500 !important;
         position: fixed !important;
         top: 0;
         left: 0;
@@ -131,7 +131,7 @@ console.log('User ID:', window.userId);
         top: var(--navbar-height);
         left: 0;
         right: 0;
-        z-index: 10000 !important;
+        z-index: 1000 ;
         transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border-bottom: 2px solid #FF0000 !important;
         pointer-events: auto !important;
@@ -1170,7 +1170,7 @@ console.log('User ID:', window.userId);
         @vite(['resources/js/app.js'])
         
         <!-- TOP NAVIGATION BAR -->
-        <nav x-data="{ mobileMenuOpen: false }" class="bg-construction-dark text-white shadow-lg fixed top-0 left-0 right-0 z-50">
+        <nav x-data="{ mobileMenuOpen: false }" class="bg-construction-dark text-white shadow-lg fixed top-0 left-0 right-0 z-[25000]">
             <div class="max-w-8xl mx-auto px-4">
                 <div class="flex justify-between items-center h-16">
                     <div class="flex items-center space-x-4">
@@ -1397,11 +1397,11 @@ console.log('User ID:', window.userId);
                                 </button>
 
                                 <button onclick="navigateTo('Soporte Técnico', 'soporte', '{{ route('soporte.index') }}', 'fa-headset')" 
-        class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-50 flex items-center border-l-2 border-yellow-400">
-    <i class="fas fa-headset mr-3 text-yellow-600 w-4 text-center"></i> 
-    <span class="text-yellow-700 font-medium">Soporte Técnico</span>
-    <span class="ml-auto text-xs bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full animate-pulse">Nuevo</span>
-</button>
+                                        class="w-full text-left px-4 py-2 text-sm hover:bg-yellow-50 flex items-center border-l-2 border-yellow-400">
+                                    <i class="fas fa-headset mr-3 text-yellow-600 w-4 text-center"></i> 
+                                    <span class="text-yellow-700 font-medium">Soporte Técnico</span>
+                                    <span class="ml-auto text-xs bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded-full animate-pulse">Nuevo</span>
+                                </button>
 
                                 <hr class="my-1 border-gray-200">
                                 <button onclick="confirmLogout()" class="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600">
@@ -2007,6 +2007,10 @@ console.log('User ID:', window.userId);
                         <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '{{ route('proyectos.flotillas') }}', 'fa-users')">
                             <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Asistencia y Cuadrillas</span></div>
                             <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
+                        </div>
+                        <div class="sidebar-submenu-item" onclick="navigateTo('Contratistas', 'proyectos', '{{ route('proyectos.contratistas.index') }}', 'fa-users')">
+                            <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Contratistas</span></div>
+                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratistas', 'proyectos', 'fa-users', this)"></i>
                         </div>
                     </div>
                 </div>

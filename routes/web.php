@@ -83,6 +83,7 @@ use App\Http\Controllers\DesviacionController;
 use App\Http\Controllers\EvidenciaController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\ReciboNominaController;
+use App\Http\Controllers\ContratistaController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -258,7 +259,9 @@ Route::middleware('auth')->get('/tareas', [WorkflowController::class, 'index'])
 // GRUPO BI
 // ============================================
 Route::prefix('bi')->group(function () {
-    Route::get('/dashboard', function () { return view('bi.dashboard.dashboard'); })->name('bi.dashboard');
+    // Dashboard - Vista principal
+     Route::get('/dashboard', [DashboardController::class, 'index'])->name('bi.dashboard');
+    // ================================================================================
     Route::get('/licitaciones', function () { return view('bi.dashboard.licitaciones'); })->name('bi.licitaciones');
     Route::get('/finanzas', function () { return view('bi.dashboard.finanzas'); })->name('bi.finanzas');
     Route::get('/papeline', function () { return view('bi.ventas.papeline'); })->name('ventas.papeline');
@@ -375,6 +378,65 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/credito', function () { return view('administracion.operaciones.credito'); })->name('operaciones.credito');
     Route::get('/prepago', function () { return view('administracion.operaciones.prepago'); })->name('operaciones.prepago');
     Route::get('/cuentasavanzadas', function () { return view('administracion.cuentasavanzadas.cuentasavanzadas'); })->name('cuentasavanzadas.cuentasavanzadas');
+
+    // ============================================
+// RUTAS PARA CHEQUES/TRANSFERENCIAS - FUNCIONALIDAD EXTRA
+// ============================================
+
+// Obtener facturas pendientes de un cliente (para aplicar depósitos)
+Route::get('/api/clientes/{clienteId}/facturas-pendientes', [ChequeTransferenciaController::class, 'getFacturasCliente'])
+    ->name('api.clientes.facturas-pendientes');
+
+// Obtener códigos SAT por tipo (ingreso/egreso)
+Route::get('/api/codigos-sat', [ChequeTransferenciaController::class, 'getCodigosSat'])
+    ->name('api.codigos-sat');
+
+// Obtener estadísticas del módulo
+Route::get('/api/cheques-transferencias-estadisticas', [ChequeTransferenciaController::class, 'getEstadisticas'])
+    ->name('api.cheques-transferencias.estadisticas');
+
+// Obtener lista de clientes para el select
+Route::get('/api/clientes-lista', [ChequeTransferenciaController::class, 'getClientes'])
+    ->name('api.clientes.lista');
+
+    // Agregar en routes/web.php dentro del grupo admin
+
+// Obtener facturas pendientes de un proveedor
+Route::get('/api/proveedores/{proveedorId}/facturas-pendientes', [ChequeTransferenciaController::class, 'getFacturasProveedor'])
+    ->name('api.proveedores.facturas-pendientes');
+
+// Obtener lista de proveedores
+Route::get('/api/proveedores-lista', [ChequeTransferenciaController::class, 'getProveedores'])
+    ->name('api.proveedores.lista');
+
+// Estadísticas de pagos a proveedores
+Route::get('/api/pagos-proveedores-estadisticas', [ChequeTransferenciaController::class, 'getEstadisticas'])
+    ->name('api.pagos-proveedores.estadisticas');
+    // Agregar en routes/web.php dentro del grupo admin
+
+// Obtener facturas/pagos pendientes de un proveedor
+Route::get('/api/proveedores/{proveedorId}/facturas-pendientes', [ChequeTransferenciaController::class, 'getFacturasProveedor'])
+    ->name('api.proveedores.facturas-pendientes');
+
+// Obtener lista de proveedores
+Route::get('/api/proveedores-lista', [ChequeTransferenciaController::class, 'getProveedores'])
+    ->name('api.proveedores.lista');
+
+    // =====================================================
+
+    // Dentro del grupo admin
+Route::get('/api/clientes/{clienteId}/facturas-pendientes', [DepositoController::class, 'getFacturasCliente'])
+    ->name('api.clientes.facturas-pendientes');
+
+Route::get('/api/depositos', [DepositoController::class, 'getData']);
+Route::post('/api/depositos', [DepositoController::class, 'store']);
+Route::get('/api/depositos/{id}', [DepositoController::class, 'show']);
+Route::put('/api/depositos/{id}', [DepositoController::class, 'update']);
+Route::delete('/api/depositos/{id}', [DepositoController::class, 'destroy']);
+Route::post('/api/depositos/{id}/aplicar', [DepositoController::class, 'aplicar']);
+
+
+    // ====================================================
 
     // PROGRAMACIÓN DE PAGOS
     Route::get('/programacion', [App\Http\Controllers\ProgramacionPagoController::class, 'index'])->name('tesoreria.programacion');
@@ -953,6 +1015,77 @@ Route::prefix('compras')->name('compras.')->middleware('auth')->group(function (
 // PROYECTOS
 // ============================================
 Route::prefix('proyectos')->name('proyectos.')->middleware(['auth'])->group(function () {
+
+    // =====================================================================================
+    // ============================================
+    // RUTAS DE CONTRATISTAS - VISTAS
+    // ============================================
+    Route::get('/contratistas', [App\Http\Controllers\ContratistaController::class, 'indexContratistasView'])->name('contratistas.index');
+    Route::get('/contratistas/create', [App\Http\Controllers\ContratistaController::class, 'create'])->name('contratistas.create');
+    Route::get('/contratistas/{id}/edit', [App\Http\Controllers\ContratistaController::class, 'edit'])->name('contratistas.edit');
+    Route::get('/contratistas/{id}', [App\Http\Controllers\ContratistaController::class, 'showContratistaView'])->name('contratistas.show');
+    Route::get('/contratistas/dashboard', [App\Http\Controllers\ContratistaController::class, 'dashboardView'])->name('contratistas.dashboard');
+    Route::get('/contratistas/asignaciones', [App\Http\Controllers\ContratistaController::class, 'asignacionesView'])->name('contratistas.asignaciones');
+    Route::get('/contratistas/gastos', [App\Http\Controllers\ContratistaController::class, 'gastosView'])->name('contratistas.gastos');
+    Route::get('/contratistas/pagos', [App\Http\Controllers\ContratistaController::class, 'pagosView'])->name('contratistas.pagos');
+
+    // ============================================
+    // RUTAS API DE CONTRATISTAS
+    // ============================================
+    Route::prefix('api')->group(function () {
+
+        // CONTRATISTAS CRUD
+        Route::get('/contratistas', [App\Http\Controllers\ContratistaController::class, 'indexContratistas'])->name('api.contratistas.index');
+        Route::post('/contratistas', [App\Http\Controllers\ContratistaController::class, 'storeContratista'])->name('api.contratistas.store');
+        Route::get('/contratistas/{id}', [App\Http\Controllers\ContratistaController::class, 'showContratista'])->name('api.contratistas.show');
+        Route::put('/contratistas/{id}', [App\Http\Controllers\ContratistaController::class, 'updateContratista'])->name('api.contratistas.update');
+        Route::delete('/contratistas/{id}', [App\Http\Controllers\ContratistaController::class, 'destroyContratista'])->name('api.contratistas.destroy');
+
+        // ESTADÍSTICAS
+        Route::get('/contratistas/estadisticas', [App\Http\Controllers\ContratistaController::class, 'estadisticasGlobales'])->name('api.contratistas.estadisticas');
+        Route::get('/contratistas/dashboard', [App\Http\Controllers\ContratistaController::class, 'dashboard'])->name('api.contratistas.dashboard');
+        Route::get('/contratistas/top', [App\Http\Controllers\ContratistaController::class, 'topContratistas'])->name('api.contratistas.top');
+
+        // ASIGNACIONES
+        Route::get('/asignaciones', [App\Http\Controllers\ContratistaController::class, 'indexAsignaciones'])->name('api.asignaciones.index');
+        Route::post('/asignaciones', [App\Http\Controllers\ContratistaController::class, 'storeAsignacion'])->name('api.asignaciones.store');
+        Route::get('/asignaciones/{id}', [App\Http\Controllers\ContratistaController::class, 'showAsignacion'])->name('api.asignaciones.show');
+        Route::put('/asignaciones/{id}', [App\Http\Controllers\ContratistaController::class, 'updateAsignacion'])->name('api.asignaciones.update');
+        Route::delete('/asignaciones/{id}', [App\Http\Controllers\ContratistaController::class, 'destroyAsignacion'])->name('api.asignaciones.destroy');
+
+        // GASTOS
+        Route::get('/gastos', [App\Http\Controllers\ContratistaController::class, 'indexGastos'])->name('api.gastos.index');
+        Route::post('/gastos', [App\Http\Controllers\ContratistaController::class, 'storeGasto'])->name('api.gastos.store');
+        Route::get('/gastos/{id}', [App\Http\Controllers\ContratistaController::class, 'showGasto'])->name('api.gastos.show');
+        Route::put('/gastos/{id}', [App\Http\Controllers\ContratistaController::class, 'updateGasto'])->name('api.gastos.update');
+        Route::delete('/gastos/{id}', [App\Http\Controllers\ContratistaController::class, 'destroyGasto'])->name('api.gastos.destroy');
+        Route::post('/gastos/{id}/pagar', [App\Http\Controllers\ContratistaController::class, 'marcarGastoPagado'])->name('api.gastos.pagar');
+
+        // PAGOS
+        Route::get('/pagos', [App\Http\Controllers\ContratistaController::class, 'indexPagos'])->name('api.pagos.index');
+        Route::post('/pagos', [App\Http\Controllers\ContratistaController::class, 'storePago'])->name('api.pagos.store');
+        Route::get('/pagos/{id}', [App\Http\Controllers\ContratistaController::class, 'showPago'])->name('api.pagos.show');
+        Route::delete('/pagos/{id}', [App\Http\Controllers\ContratistaController::class, 'destroyPago'])->name('api.pagos.destroy');
+
+        // ALERTAS
+        Route::get('/alertas', [App\Http\Controllers\ContratistaController::class, 'indexAlertas'])->name('api.alertas.index');
+        Route::post('/alertas/{id}/leer', [App\Http\Controllers\ContratistaController::class, 'marcarAlertaLeida'])->name('api.alertas.leer');
+        Route::post('/alertas/leer-todas', [App\Http\Controllers\ContratistaController::class, 'marcarTodasAlertasLeidas'])->name('api.alertas.leer-todas');
+
+        // ============================================
+        // ✅ CATÁLOGOS - RUTAS FALTANTES
+        // ============================================
+        Route::get('/catalogos/proyectos', [App\Http\Controllers\ContratistaController::class, 'proyectosDisponibles'])->name('api.catalogos.proyectos');
+        Route::get('/catalogos/proyectos/{id}/partidas', [App\Http\Controllers\ContratistaController::class, 'partidasProyecto'])->name('api.catalogos.partidas');
+
+        // DOCUMENTOS
+        Route::get('/contratistas/{id}/documentos', [App\Http\Controllers\ContratistaController::class, 'getDocumentos'])->name('api.contratistas.documentos');
+        Route::delete('/documentos-contratista/{id}', [App\Http\Controllers\ContratistaController::class, 'eliminarDocumento'])->name('api.documentos-contratista.eliminar');
+        Route::get('/documentos-contratista/{id}/descargar', [App\Http\Controllers\ContratistaController::class, 'descargarDocumento'])->name('api.documentos-contratista.descargar');
+    });
+
+    // =====================================================================================
+
     Route::get('/cartera', [ProyectoController::class, 'index'])->name('cartera');
     Route::get('/dashboard', [ProyectoController::class, 'dashboard'])->name('dashboard');
     Route::get('/alta', [ProyectoController::class, 'create'])->name('alta');
@@ -2001,5 +2134,103 @@ Route::middleware(['auth'])->prefix('soporte')->name('soporte.')->group(function
     Route::get('/tickets/{id}', [App\Http\Controllers\ClienteTicketController::class, 'show'])->name('tickets.show');
     Route::post('/tickets/{id}/comment', [App\Http\Controllers\ClienteTicketController::class, 'addComment'])->name('tickets.comment');
 });
+
+// ============================================
+// RUTAS PARA PARTIDAS DE PROYECTOS (CONTRATISTAS)
+// ============================================
+Route::middleware(['auth'])->group(function () {
+    // Ruta específica para el select de contratistas (usando DB::table directamente)
+    Route::get('/api/proyectos/{id}/partidas-select', function($id) {
+        try {
+            $partidas = DB::table('proyecto_partidas')
+                ->where('proyecto_id', $id)
+                ->where('activa', true)
+                ->orderBy('orden', 'asc')
+                ->orderBy('codigo', 'asc')
+                ->select('id', 'codigo', 'nombre', 'seccion', 'categoria', 'unidad', 'cantidad', 'precio_unitario')
+                ->get();
+
+            $partidasTransformadas = $partidas->map(function($partida) {
+                $partida->importe = $partida->cantidad * $partida->precio_unitario;
+                return $partida;
+            });
+
+            return response()->json([
+                'success' => true,
+                'data' => $partidasTransformadas,
+                'total' => $partidasTransformadas->count()
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    });
+    
+    // Ruta original para el presupuesto (usando el controlador)
+    Route::get('/api/proyectos/{proyecto}/presupuesto', [PresupuestoProyectoController::class, 'getPresupuesto']);
+    Route::get('/api/proyectos/{proyecto}/partidas', [PresupuestoProyectoController::class, 'getPartidas']);
+});
+
+// ============================================
+// DASHBOARD COMPLETO - API
+// ============================================
+Route::middleware('auth')->prefix('api/dashboard')->group(function () {
+    // General
+    // ========== GENERAL ==========
+    Route::get('/completo', [DashboardController::class, 'getDashboardCompleto']);
+    Route::get('/kpis', [DashboardController::class, 'getKPIGenerales']);
+    Route::get('/alertas', [DashboardController::class, 'getAlertasSistemaApi']);
+    
+    // ========== PROYECTOS ==========
+    Route::get('/proyectos-list', [DashboardController::class, 'getProyectosList']);
+    Route::get('/proyectos/resumen', [DashboardController::class, 'getResumenProyectosApi']);
+    Route::get('/proyectos/tendencia', [DashboardController::class, 'getProyectosTendencia']);
+    
+    // ========== CONTRATISTAS ==========
+    Route::get('/contratistas/resumen', [DashboardController::class, 'getResumenContratistasApi']);
+    Route::get('/contratistas/asignaciones', [DashboardController::class, 'getAsignacionesContratistas']);
+    Route::get('/contratistas/gastos', [DashboardController::class, 'getGastosContratistas']);
+    
+    // ========== VENTAS ==========
+    Route::get('/ventas/tendencia', [DashboardController::class, 'getVentasTendencia']);
+    Route::get('/ventas/proyecto', [DashboardController::class, 'getVentasProyecto']);
+    Route::get('/ventas/facturacion', [DashboardController::class, 'getFacturacionDiaria']);
+    
+    // ========== FINANZAS ==========
+    Route::get('/finanzas/cuentas-pagar', [DashboardController::class, 'getCuentasPagar']);
+    Route::get('/finanzas/cuentas-cobrar', [DashboardController::class, 'getCuentasCobrar']);
+    Route::get('/finanzas/rentabilidad', [DashboardController::class, 'getRentabilidad']);
+    Route::get('/finanzas/estado-resultados', [DashboardController::class, 'getEstadoResultados']);
+    Route::get('/finanzas/flujo-efectivo', [DashboardController::class, 'getFlujoEfectivo']);
+    
+    // ========== RRHH ==========
+    Route::get('/rrhh/nomina', [DashboardController::class, 'getNominaResumenApi']);
+    Route::get('/rrhh/nomina-proyectos', [DashboardController::class, 'getNominaProyectos']);
+    Route::get('/rrhh/asistencia', [DashboardController::class, 'getAsistenciaResumen']);
+    
+    // ========== MAQUINARIA ==========
+    Route::get('/maquinaria/estado', [DashboardController::class, 'getMaquinariaEstadoApi']);
+    Route::get('/maquinaria/costos', [DashboardController::class, 'getMaquinariaCostos']);
+    
+    // ========== INVENTARIO ==========
+    Route::get('/inventario/resumen', [DashboardController::class, 'getResumenInventarioApi']);
+    
+    // ========== BITÁCORA ==========
+    Route::get('/bitacora/resumen', [DashboardController::class, 'getResumenBitacoraApi']);
+    
+    // ========== LICITACIONES ==========
+    Route::get('/licitaciones/resumen', [DashboardController::class, 'getResumenLicitaciones']);
+    
+    // ========== SEGUIMIENTO ==========
+    Route::get('/seguimiento-obra', [DashboardController::class, 'getSeguimientoObra']);
+    
+    // ========== CONCILIACIÓN ==========
+    Route::get('/conciliacion/resumen', [DashboardController::class, 'getResumenConciliacion']);
+    
+});
+
 
 require __DIR__.'/auth.php';
