@@ -97,6 +97,53 @@ Route::get('/home', function () {
 })->middleware(['auth'])->name('home');
 
 /*
+|-------------------------------------------------------------------------
+prefile
+|-------------------------------------------------------------------------
+*/
+// ========== PERFIL DE USUARIO ==========
+Route::prefix('profile')->middleware(['auth'])->group(function () {
+    // Vista principal
+    Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
+    
+    // Editar perfil (compatible con Breeze)
+    Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Seguridad
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    
+    // Preferencias
+    Route::put('/preferences', [ProfileController::class, 'updatePreferences'])->name('profile.preferences.update');
+    
+    // Notificaciones
+    Route::get('/notifications', [ProfileController::class, 'getNotifications'])->name('profile.notifications');
+    Route::put('/notifications/{id}/read', [ProfileController::class, 'markNotificationRead'])->name('profile.notifications.read');
+    Route::put('/notifications/read-all', [ProfileController::class, 'markAllNotificationsRead'])->name('profile.notifications.read-all');
+    Route::delete('/notifications/{id}', [ProfileController::class, 'dismissNotification'])->name('profile.notifications.dismiss');
+    
+    // Sesiones
+    Route::get('/sessions', [ProfileController::class, 'getSessions'])->name('profile.sessions');
+    Route::delete('/sessions/{id}', [ProfileController::class, 'terminateSession'])->name('profile.sessions.terminate');
+    Route::delete('/sessions/terminate-all', [ProfileController::class, 'terminateAllSessions'])->name('profile.sessions.terminate-all');
+    
+    // API Tokens
+    Route::get('/api-tokens', [ProfileController::class, 'getApiTokens'])->name('profile.api-tokens');
+    Route::post('/api-tokens', [ProfileController::class, 'createApiToken'])->name('profile.api-tokens.create');
+    Route::delete('/api-tokens/{id}', [ProfileController::class, 'revokeApiToken'])->name('profile.api-tokens.revoke');
+    
+    // Actividad
+    Route::get('/activity', [ProfileController::class, 'getActivity'])->name('profile.activity');
+    
+    // Proyectos
+    Route::get('/projects', [ProfileController::class, 'getProjects'])->name('profile.projects');
+    
+    // Tareas
+    Route::get('/tasks', [ProfileController::class, 'getTasks'])->name('profile.tasks');
+});
+
+/*
 |--------------------------------------------------------------------------
 | RUTAS PARA SOPORTE TÉCNICO
 |--------------------------------------------------------------------------
@@ -119,9 +166,7 @@ Route::middleware(['auth'])->prefix('soporte')->name('soporte.')->group(function
 // RUTAS CON AUTENTICACIÓN
 // ============================================
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+ 
     
     // ==========================================
     // RUTAS API PARA PRESUPUESTO DE PROYECTOS

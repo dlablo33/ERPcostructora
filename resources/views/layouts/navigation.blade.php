@@ -1388,7 +1388,12 @@ console.log('User ID:', window.userId);
                                     <div class="font-semibold text-sm">{{ Auth::user()->name ?? 'Usuario' }}</div>
                                     <div class="text-xs text-gray-500 truncate">{{ Auth::user()->email ?? 'usuario@sistema.com' }}</div>
                                 </div>
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil</a>
+
+                                <button onclick="navigateTo('Perfil', 'profile', '{{ route('profile.index') }}', 'fa-user')" 
+                                    class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 flex items-center">
+                                    <i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil
+                                </button>
+
                                 <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración</a>
                                 
                                 <button onclick="navigateTo('Tareas', 'tareas', '{{ route('tareas.index') }}', 'fa-book')" 
