@@ -1377,11 +1377,28 @@ console.log('User ID:', window.userId);
                         
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-800">
-                                <div class="w-9 h-9 bg-white rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user text-blue-600 text-sm"></i>
-                                </div>
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </button>
+    <div class="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden bg-white">
+       @php
+    $avatarPath = Auth::check() ? Auth::user()->avatar_path : null;
+@endphp
+        
+        @if($avatarPath)
+            @php
+                if (strpos($avatarPath, 'data:') === 0) {
+                    $avatarSrc = $avatarPath;
+                } else {
+                    $avatarSrc = asset('storage/' . ltrim($avatarPath, '/'));
+                }
+            @endphp
+            <img src="{{ $avatarSrc }}" alt="{{ Auth::user()->name }}" 
+                 class="w-full h-full object-cover"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-user text-blue-600 text-sm\'></i>';">
+        @else
+            <i class="fas fa-user text-blue-600 text-sm"></i>
+        @endif
+    </div>
+    <i class="fas fa-chevron-down text-xs text-white"></i>
+</button>
                             
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-[199999999] !important py-2 ">
                                 <div class="px-4 py-2 border-b border-gray-100">
@@ -1394,7 +1411,17 @@ console.log('User ID:', window.userId);
                                     <i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil
                                 </button>
 
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-50"><i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración</a>
+
+                                @php
+    $user = Auth::user();
+    $isAdmin = $user && in_array($user->rol, ['Administrador', 'admin', 'super_admin']);
+@endphp
+                                @if($isAdmin)
+                                    <button onclick="navigateTo('Configuración', 'config', '{{ route('config.index') }}', 'fa-cog')"
+                                        class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 flex items-center">
+                                        <i class="fas fa-cog mr-3 text-blue-600 w-4 text-center"></i> Configuración
+                                    </button>
+                                @endif
                                 
                                 <button onclick="navigateTo('Tareas', 'tareas', '{{ route('tareas.index') }}', 'fa-book')" 
                                     class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 flex items-center">

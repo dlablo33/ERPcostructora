@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
     'dev.auth' => \App\Http\Middleware\DevAuthMiddleware::class,
     'role' => \App\Http\Middleware\RoleMiddleware::class,
     'ticket.owner' => \App\Http\Middleware\CheckTicketOwner::class,
+    'admin' => \App\Http\Middleware\AdminMiddleware::class,
 ];
 }

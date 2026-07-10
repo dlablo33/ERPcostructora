@@ -84,6 +84,7 @@ use App\Http\Controllers\EvidenciaController;
 use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\ReciboNominaController;
 use App\Http\Controllers\ContratistaController;
+use App\Http\Controllers\ConfigController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -514,9 +515,32 @@ Route::post('/api/depositos/{id}/aplicar', [DepositoController::class, 'aplicar'
 // ============================================
 // GRUPO CONFIG
 // ============================================
-Route::prefix('config')->group(function () {
-    Route::get('/config', function () { return view('config.index'); })->name('config.index');
-    Route::get('/personalizacion', function () { return view('config.topmenu.menuconfi'); })->name('config.menuconfig');
+
+// ============================================
+// CONFIGURACIÓN DEL SISTEMA
+// ============================================
+Route::prefix('config')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [ConfigController::class, 'index'])->name('config.index');
+    Route::get('/general', [ConfigController::class, 'general'])->name('config.general');
+    Route::put('/general', [ConfigController::class, 'updateGeneral'])->name('config.general.update');
+    Route::get('/company', [ConfigController::class, 'company'])->name('config.company');
+    Route::put('/company', [ConfigController::class, 'updateCompany'])->name('config.company.update');
+    Route::get('/email', [ConfigController::class, 'email'])->name('config.email');
+    Route::put('/email', [ConfigController::class, 'updateEmail'])->name('config.email.update');
+    Route::post('/email/test', [ConfigController::class, 'testEmail'])->name('config.email.test');
+    Route::get('/security', [ConfigController::class, 'security'])->name('config.security');
+    Route::put('/security', [ConfigController::class, 'updateSecurity'])->name('config.security.update');
+    Route::get('/modules', [ConfigController::class, 'modules'])->name('config.modules');
+    Route::post('/modules/{id}/toggle', [ConfigController::class, 'toggleModule'])->name('config.modules.toggle');
+    Route::put('/modules/order', [ConfigController::class, 'updateModuleOrder'])->name('config.modules.order');
+    Route::get('/templates', [ConfigController::class, 'templates'])->name('config.templates');
+    Route::put('/templates/{id}', [ConfigController::class, 'updateTemplate'])->name('config.templates.update');
+    Route::get('/audit', [ConfigController::class, 'audit'])->name('config.audit');
+    Route::delete('/audit/clear', [ConfigController::class, 'clearAudit'])->name('config.audit.clear');
+    Route::get('/backups', [ConfigController::class, 'backups'])->name('config.backups');
+    Route::post('/backups', [ConfigController::class, 'createBackup'])->name('config.backups.create');
+    Route::get('/backups/{id}/download', [ConfigController::class, 'downloadBackup'])->name('config.backups.download');
+    Route::delete('/backups/{id}', [ConfigController::class, 'deleteBackup'])->name('config.backups.delete');
 });
 
 // ============================================

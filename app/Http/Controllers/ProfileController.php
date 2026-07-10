@@ -68,7 +68,6 @@ class ProfileController extends Controller
 
     /**
      * Display the user's profile form (edit).
-     * 🔥 Este método mantiene compatibilidad con el antiguo edit de Laravel Breeze
      */
     public function edit(Request $request): View
     {
@@ -83,14 +82,13 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile information.
-     * 🔥 Este método mantiene compatibilidad con el antiguo update de Laravel Breeze
      */
     public function update(Request $request)
     {
         $user = Auth::user();
 
         // Si la request viene con validación de ProfileUpdateRequest (Breeze)
-        if ($request->has('name') && $request->has('email')) {
+        if ($request->has('name') && $request->has('email') && !$request->hasFile('avatar')) {
             return $this->updateProfileBreeze($request);
         }
 
@@ -121,11 +119,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        // Log activity
-        $this->logActivity($user->id, 'update_profile', [
-            'description' => 'Actualizó su información personal',
-        ]);
-
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
@@ -153,9 +146,11 @@ class ProfileController extends Controller
         }
 
         try {
+            // Actualizar campos básicos
             $user->name = $request->name;
             $user->email = $request->email;
             
+            // Actualizar campos adicionales SOLO si existen en la tabla
             if ($request->has('phone')) {
                 $user->phone = $request->phone;
             }
@@ -166,6 +161,7 @@ class ProfileController extends Controller
                 $user->department = $request->department;
             }
 
+            // Manejar avatar
             if ($request->hasFile('avatar')) {
                 $avatarPath = $this->uploadAvatar($request->file('avatar'), $user->id);
                 $user->avatar_path = $avatarPath;
@@ -177,15 +173,7 @@ class ProfileController extends Controller
 
             $user->save();
 
-            $this->logActivity($user->id, 'update_profile', [
-                'description' => 'Actualizó su información personal',
-                'metadata' => [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                ]
-            ]);
-
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Perfil actualizado correctamente',
@@ -196,7 +184,9 @@ class ProfileController extends Controller
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
 
         } catch (\Exception $e) {
-            if ($request->expectsJson()) {
+            \Log::error('Error en updateProfileFull: ' . $e->getMessage());
+            
+            if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Error al actualizar el perfil: ' . $e->getMessage()
@@ -209,7 +199,6 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
-     * 🔥 Este método mantiene compatibilidad con el antiguo destroy de Laravel Breeze
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -268,10 +257,6 @@ class ProfileController extends Controller
             $user->password = Hash::make($request->new_password);
             $user->password_changed_at = now();
             $user->save();
-
-            $this->logActivity($user->id, 'change_password', [
-                'description' => 'Cambió su contraseña'
-            ]);
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -337,13 +322,6 @@ class ProfileController extends Controller
                     'notifications_whatsapp' => $request->notifications_whatsapp ?? false,
                 ]
             );
-
-            $this->logActivity($user->id, 'update_preferences', [
-                'description' => 'Actualizó sus preferencias',
-                'metadata' => $request->only([
-                    'theme', 'language', 'timezone', 'date_format', 'currency'
-                ])
-            ]);
 
             return response()->json([
                 'success' => true,
@@ -529,14 +507,6 @@ class ProfileController extends Controller
 
             $session->terminate();
 
-            $this->logActivity(Auth::id(), 'terminate_session', [
-                'description' => 'Cerró sesión en otro dispositivo',
-                'metadata' => [
-                    'device' => $session->device_type,
-                    'browser' => $session->browser,
-                ]
-            ]);
-
             return response()->json([
                 'success' => true,
                 'message' => 'Sesión terminada correctamente'
@@ -563,10 +533,6 @@ class ProfileController extends Controller
             UserSession::where('user_id', Auth::id())
                 ->where('session_id', '!=', $currentSessionId)
                 ->update(['is_active' => false]);
-
-            $this->logActivity(Auth::id(), 'terminate_all_sessions', [
-                'description' => 'Cerró sesión en todos los dispositivos'
-            ]);
 
             return response()->json([
                 'success' => true,
@@ -634,10 +600,6 @@ class ProfileController extends Controller
                 $request->expires_in_days ?? 30
             );
 
-            $this->logActivity(Auth::id(), 'create_api_token', [
-                'description' => 'Creó un token API: ' . $request->name
-            ]);
-
             return response()->json([
                 'success' => true,
                 'message' => 'Token creado correctamente',
@@ -666,10 +628,6 @@ class ProfileController extends Controller
 
             $tokenName = $token->name;
             $token->revoke();
-
-            $this->logActivity(Auth::id(), 'revoke_api_token', [
-                'description' => 'Revocó el token API: ' . $tokenName
-            ]);
 
             return response()->json([
                 'success' => true,
@@ -800,15 +758,24 @@ class ProfileController extends Controller
      *
      * @param  \Illuminate\Http\UploadedFile  $file
      * @param  int  $userId
-     * @return string
+     * @return string|null
      */
     protected function uploadAvatar($file, $userId)
     {
-        $extension = $file->getClientOriginalExtension();
-        $filename = 'avatar_' . $userId . '_' . time() . '.' . $extension;
-        $path = $file->storeAs('avatars', $filename, 'public');
-        
-        return $path;
+        try {
+            if (!$file->isValid()) {
+                throw new \Exception('El archivo no es válido');
+            }
+
+            $extension = $file->getClientOriginalExtension();
+            $filename = 'avatar_' . $userId . '_' . time() . '.' . $extension;
+            $path = $file->storeAs('avatars', $filename, 'public');
+            
+            return $path;
+        } catch (\Exception $e) {
+            \Log::error('Error al subir avatar: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
@@ -864,18 +831,5 @@ class ProfileController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();
-    }
-
-    /**
-     * Log user activity.
-     *
-     * @param  int  $userId
-     * @param  string  $action
-     * @param  array  $data
-     * @return \App\Models\Profile\UserActivityLog
-     */
-    protected function logActivity($userId, $action, $data = [])
-    {
-        return UserActivityLog::log($userId, $action, $data);
     }
 }

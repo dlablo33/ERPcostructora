@@ -1107,14 +1107,23 @@
                 <!-- Panel derecho - Formulario -->
                 <div class="div_col1">
                     <!-- LOGOS EN FILA CON BOOTSTRAP - NO BLOQUEAN -->
-                    <div class="row h-25 row-logos">
-                        <div class="col-6">
-                            <div class="img_logo_a"></div>
-                        </div>
-                        <div class="col-6">
-                            <div class="img_logo_b"></div>
-                        </div>
-                    </div>
+                   @php
+    $company = App\Models\Config\CompanyInfo::first();
+    $loginLogo = ($company && $company->login_logo_path) 
+        ? asset('storage/' . $company->login_logo_path) 
+        : asset('img/login/logo_local.png');
+@endphp
+
+<div class="row h-25 row-logos">
+    <!-- Logo A - Configurable (empresa) -->
+    <div class="col-6">
+        <div class="img_logo_a" style="background-image: url('{{ $loginLogo }}');"></div>
+    </div>
+    <!-- Logo B - Fijo (sistema) -->
+    <div class="col-6">
+        <div class="img_logo_b"></div>
+    </div>
+</div>
                     
                     <p class="login_subtitle" style="color: #083CAE; font-size: 24px; margin-top: 10px;">
                         Líder en Rentabilidad de Construcción

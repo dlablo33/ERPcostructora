@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-07-02 21:13:24
+Fecha: 2026-07-09 23:15:15
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 177
+Total de tablas: 190
 
 
 📋 TABLA: activos
@@ -332,6 +332,24 @@ Columnas (18):
   • deleted_at
   • cuadrilla_id
 
+📋 TABLA: audit_log
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • user_id
+  • action
+  • module
+  • section
+  • subsection
+  • old_values
+  • new_values
+  • metadata
+  • ip_address
+  • user_agent
+  • session_id
+  • created_at
+  • updated_at
+
 📋 TABLA: bancos
 ----------------------------------------------------------------------
 Columnas (6):
@@ -631,7 +649,7 @@ Columnas (7):
 
 📋 TABLA: cheques_transferencias
 ----------------------------------------------------------------------
-Columnas (26):
+Columnas (34):
   • id
   • folio
   • estatus
@@ -658,6 +676,14 @@ Columnas (26):
   • created_at
   • updated_at
   • deleted_at
+  • proveedor_id
+  • contacto_id
+  • cliente_id
+  • codigo_sat_id
+  • tipo_aplicacion
+  • facturas_aplicadas
+  • monto_aplicado
+  • tipo_operacion
 
 📋 TABLA: client_tickets
 ----------------------------------------------------------------------
@@ -725,6 +751,50 @@ Columnas (6):
   • comentario
   • created_at
   • updated_at
+
+📋 TABLA: company_info
+----------------------------------------------------------------------
+Columnas (40):
+  • id
+  • razon_social
+  • nombre_comercial
+  • rfc
+  • regimen_fiscal
+  • telefono
+  • email
+  • email_facturacion
+  • website
+  • calle
+  • num_exterior
+  • num_interior
+  • colonia
+  • codigo_postal
+  • municipio
+  • estado
+  • pais
+  • satcat_regimen_fiscal_clave
+  • satcat_uso_cfdi_clave
+  • certificado_cer
+  • certificado_key
+  • certificado_password
+  • certificado_no_serie
+  • certificado_vigencia_desde
+  • certificado_vigencia_hasta
+  • logo_path
+  • logo_small_path
+  • favicon_path
+  • serie_default
+  • folio_actual
+  • folio_siguiente
+  • autotimbrado
+  • mensaje_factura
+  • terminos_condiciones
+  • politica_privacidad
+  • created_by
+  • updated_by
+  • created_at
+  • updated_at
+  • deleted_at
 
 📋 TABLA: complementos_pago
 ----------------------------------------------------------------------
@@ -1256,6 +1326,13 @@ Columnas (15):
   • tamanio_bytes
   • es_actual
   • created_by
+  • created_at
+  • updated_at
+
+📋 TABLA: email_config
+----------------------------------------------------------------------
+Columnas (3):
+  • id
   • created_at
   • updated_at
 
@@ -1875,6 +1952,25 @@ Columnas (3):
   • migration
   • batch
 
+📋 TABLA: module_config
+----------------------------------------------------------------------
+Columnas (15):
+  • id
+  • name
+  • display_name
+  • icon
+  • route
+  • is_enabled
+  • is_visible
+  • order
+  • required_roles
+  • settings
+  • created_by
+  • updated_by
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: monedas
 ----------------------------------------------------------------------
 Columnas (7):
@@ -2074,6 +2170,26 @@ Columnas (12):
   • tipo_percepcion
   • fecha_aplicacion
   • borrado_logico
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: notification_templates
+----------------------------------------------------------------------
+Columnas (16):
+  • id
+  • code
+  • name
+  • type
+  • category
+  • subject
+  • body
+  • html_body
+  • available_variables
+  • is_active
+  • is_default
+  • created_by
+  • updated_by
   • created_at
   • updated_at
   • deleted_at
@@ -2980,6 +3096,37 @@ Columnas (6):
   • created_at
   • updated_at
 
+📋 TABLA: security_config
+----------------------------------------------------------------------
+Columnas (27):
+  • id
+  • password_min_length
+  • password_max_length
+  • password_require_uppercase
+  • password_require_lowercase
+  • password_require_numbers
+  • password_require_special
+  • password_expiration_days
+  • password_history_count
+  • two_factor_enabled
+  • two_factor_method
+  • max_login_attempts
+  • lockout_time_minutes
+  • session_timeout_enabled
+  • session_timeout_minutes
+  • single_session_per_user
+  • ip_restriction_enabled
+  • allowed_ips
+  • user_agent_restriction_enabled
+  • audit_enabled
+  • audit_retention_days
+  • is_active
+  • created_by
+  • updated_by
+  • created_at
+  • updated_at
+  • deleted_at
+
 📋 TABLA: solicitudes_factoraje
 ----------------------------------------------------------------------
 Columnas (24):
@@ -3018,6 +3165,44 @@ Columnas (10):
   • descripcion
   • cuenta_contable
   • estatus
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: system_backups
+----------------------------------------------------------------------
+Columnas (15):
+  • id
+  • name
+  • type
+  • file_path
+  • file_name
+  • file_size
+  • metadata
+  • description
+  • status
+  • completed_at
+  • error_message
+  • created_by
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: system_config
+----------------------------------------------------------------------
+Columnas (15):
+  • id
+  • key
+  • value
+  • group
+  • type
+  • label
+  • description
+  • order
+  • is_editable
+  • is_visible
+  • created_by
+  • updated_by
   • created_at
   • updated_at
   • deleted_at
@@ -3139,6 +3324,115 @@ Columnas (22):
   • created_at
   • updated_at
   • deleted_at
+
+📋 TABLA: user_activity_log
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • user_id
+  • action
+  • module
+  • description
+  • subjectable_type
+  • subjectable_id
+  • old_values
+  • new_values
+  • metadata
+  • ip_address
+  • user_agent
+  • created_at
+  • updated_at
+
+📋 TABLA: user_api_tokens
+----------------------------------------------------------------------
+Columnas (14):
+  • id
+  • user_id
+  • name
+  • token
+  • abilities
+  • client_name
+  • client_ip
+  • client_user_agent
+  • is_active
+  • last_used_at
+  • expires_at
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: user_notifications
+----------------------------------------------------------------------
+Columnas (25):
+  • id
+  • user_id
+  • type
+  • category
+  • module
+  • reference_id
+  • title
+  • message
+  • link
+  • icon
+  • color
+  • action_text
+  • action_url
+  • action_data
+  • is_read
+  • read_at
+  • is_dismissed
+  • dismissed_at
+  • sent_email
+  • sent_email_at
+  • sent_push
+  • sent_push_at
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: user_preferences
+----------------------------------------------------------------------
+Columnas (19):
+  • id
+  • user_id
+  • theme
+  • language
+  • timezone
+  • date_format
+  • time_format
+  • currency
+  • number_format
+  • notifications_email
+  • notifications_system
+  • notifications_whatsapp
+  • dashboard_widgets
+  • favorite_menus
+  • signature_path
+  • default_document_config
+  • created_at
+  • updated_at
+  • deleted_at
+
+📋 TABLA: user_sessions
+----------------------------------------------------------------------
+Columnas (17):
+  • id
+  • user_id
+  • session_id
+  • ip_address
+  • user_agent
+  • device_type
+  • browser
+  • browser_version
+  • platform
+  • country
+  • city
+  • is_active
+  • is_current
+  • last_activity
+  • expires_at
+  • created_at
+  • updated_at
 
 📋 TABLA: users
 ----------------------------------------------------------------------
@@ -3566,4 +3860,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 177
+Total de tablas analizadas: 190
