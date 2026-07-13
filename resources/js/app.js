@@ -6,4 +6,11 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-console.log('✅ App.js cargado correctamente');
+// Silenciar advertencia de Tailwind CDN en producción
+const originalWarn = console.warn;
+console.warn = function(...args) {
+    if (args[0] && args[0].includes('cdn.tailwindcss.com should not be used in production')) {
+        return; // Ignora esta advertencia específica
+    }
+    originalWarn.apply(console, args);
+};

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 
- <script>
+<script>
 @auth
     window.userId = {{ Auth::id() }};
     window.userName = '{{ Auth::user()->name }}';
@@ -11,12 +11,9 @@
     window.userId = null;
     window.userName = '';
     window.isAuthenticated = false;
-    // Redirigir automáticamente al login si la sesión expiró
     window.location.href = '{{ route("login") }}';
 @endauth
 window.baseUrl = '{{ url('/') }}';
-console.log('Base URL:', window.baseUrl);
-console.log('User ID:', window.userId);
 </script>
 
     <meta charset="UTF-8">
@@ -1305,20 +1302,21 @@ console.log('User ID:', window.userId);
                                 </div>
 
                                 <div x-show="selectedUser" class="chat-conversation">
-                                    <div class="chat-conversation-header">
-                                        <div class="flex items-center gap-2">
-                                            <button @click="backToList()" class="chat-back-btn">
-                                                <i class="fas fa-arrow-left"></i>
-                                                <span>Volver</span>
-                                            </button>
-                                            <div>
-                                                <h4 x-text="selectedUser.name"></h4>
-                                            </div>
-                                        </div>
-                                        <button @click="closeConversation()" title="Cerrar conversación">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
+    <div class="chat-conversation-header">
+        <div class="flex items-center gap-2">
+            <button @click="backToList()" class="chat-back-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Volver</span>
+            </button>
+            <div>
+                <h4 x-text="selectedUser?.name || 'Cargando...'"></h4>
+            </div>
+        </div>
+        <button @click="closeConversation()" title="Cerrar conversación">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
 
                                     <div class="chat-messages-area" x-ref="messagesContainer">
                                         <template x-for="msg in messages" :key="msg.id">
@@ -3300,7 +3298,7 @@ console.log('User ID:', window.userId);
                 pollingInterval: null,
                 
                 initChat() { 
-                    console.log('🟢 Inicializando chat para usuario:', window.userId); 
+                    
                     this.fetchUsers(); 
                     this.pollingInterval = setInterval(() => { 
                         if(this.selectedUser && this.isOpen) this.loadConversation(this.selectedUser.id); 
@@ -3316,7 +3314,7 @@ console.log('User ID:', window.userId);
                         const setupListener = () => { 
                             if(window.Echo.connector.socket && window.Echo.connector.socket.readyState === 1) { 
                                 window.Echo.private(`user.${window.userId}`).listen('MessageSent', (e) => { 
-                                    console.log('📨 Mensaje en tiempo real:', e); 
+                                    
                                     this.handleIncomingMessage(e.message, e.fromUser); 
                                 }); 
                                 console.log('✅ Listener configurado en canal user.' + window.userId); 
@@ -3326,7 +3324,7 @@ console.log('User ID:', window.userId);
                         }; 
                         setupListener(); 
                     } else { 
-                        console.warn('⚠️ Echo no disponible, usando solo polling'); 
+                         
                     } 
                 },
                 
@@ -3486,7 +3484,7 @@ console.log('User ID:', window.userId);
         return response.json();
     })
     .then(data => {
-        console.log('Respuesta del servidor:', data);
+        
         
         if (data.success) {
             // Actualizar ID del mensaje temporal si existe
@@ -3498,7 +3496,7 @@ console.log('User ID:', window.userId);
             
             // SI ES RESPUESTA DE IA: agregar el mensaje de la IA
             if (data.is_ai_response === true && data.ai_response) {
-                console.log('✅ Respuesta IA recibida:', data.ai_response.message);
+                
                 
                 const aiMsg = {
                     id: data.ai_response.id || Date.now() + 1,
@@ -3570,7 +3568,7 @@ showTemporaryError(message) {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('Mensajes marcados como leídos:', data);
+                        
                         // Actualizar el contador local
                         const userInList = this.users.find(u => u.id === userId);
                         if (userInList) userInList.unread = 0;

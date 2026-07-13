@@ -22,7 +22,7 @@ try {
         reconnectDelay: 1000,
     });
     
-    console.log('✅ Echo initialized');
+    
     
     // Esperar a que la conexión esté lista
     setTimeout(() => {
@@ -39,7 +39,7 @@ try {
                 console.log('❌ Desconectado:', reason);
             });
         } else {
-            console.warn('⚠️ Echo no pudo conectar, usando modo polling');
+            
         }
     }, 1000);
     
