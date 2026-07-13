@@ -85,6 +85,7 @@ use App\Http\Controllers\WorkflowController;
 use App\Http\Controllers\ReciboNominaController;
 use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\ModuleController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -2301,5 +2302,39 @@ Route::middleware('auth')->prefix('api/dashboard')->group(function () {
     
 });
 
+
+
+Route::middleware(['auth'])->group(function () {
+    
+    // ==========================================
+    // RUTAS PARA MÓDULOS DEL SISTEMA
+    // ==========================================
+    
+    // Mostrar la vista de módulos (desde el botón de Configuración)
+    Route::get('/modules', [ModuleController::class, 'index'])->name('modules.index');
+    
+    // API para activar/desactivar módulo
+    Route::post('/modules/toggle/{id}', [ModuleController::class, 'toggle'])->name('modules.toggle');
+    
+    // API para actualizar el orden de un módulo
+    Route::post('/modules/update-order/{id}', [ModuleController::class, 'updateOrder'])->name('modules.update-order');
+    
+    // API para mover módulo (arriba/abajo)
+    Route::post('/modules/move/{id}/{direction}', [ModuleController::class, 'move'])->name('modules.move');
+    
+    // API para obtener todos los módulos
+    Route::get('/modules/all', [ModuleController::class, 'getAll'])->name('modules.all');
+    
+    // API para obtener módulos por sección
+    Route::get('/modules/section/{section}', [ModuleController::class, 'getBySection'])->name('modules.by-section');
+    
+    // API para obtener módulos activos por sección
+    Route::get('/modules/section/{section}/active', [ModuleController::class, 'getActiveBySection'])->name('modules.active-by-section');
+    
+    // CRUD completo (opcional)
+    Route::post('/modules', [ModuleController::class, 'store'])->name('modules.store');
+    Route::put('/modules/{id}', [ModuleController::class, 'update'])->name('modules.update');
+    Route::delete('/modules/{id}', [ModuleController::class, 'destroy'])->name('modules.destroy');
+});
 
 require __DIR__.'/auth.php';

@@ -466,7 +466,7 @@ console.log('User ID:', window.userId);
         height: calc(100vh - var(--navbar-height));
         background: #083CAE;
         box-shadow: -5px 0 15px rgba(0,0,0,0.15);
-        z-index: 20000 !important; /* Aumentado para estar sobre la barra verde */
+        z-index: 20000 !important;
         transition: right 0.3s ease-in-out;
         overflow-y: auto;
         display: flex;
@@ -1161,6 +1161,16 @@ console.log('User ID:', window.userId);
             padding: 0 5px;
         }
     }
+
+    /* ========== ESTILOS PARA MÓDULOS DESACTIVADOS ========== */
+    .module-disabled {
+        opacity: 0.4 !important;
+        pointer-events: none !important;
+        cursor: not-allowed !important;
+    }
+    .module-disabled:hover {
+        background: transparent !important;
+    }
 </style>
     
 </head>
@@ -1186,34 +1196,66 @@ console.log('User ID:', window.userId);
                     </div>
 
                     <div class="desktop-menu hidden md:flex items-center justify-center flex-1 space-x-1">
-                        <button onclick="toggleSectionSidebar('bi')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-chart-line"></i>
-                            <span>BI</span>
-                        </button>
-                        <button onclick="toggleSectionSidebar('administracion')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <span>Administración</span>
-                        </button>
-                        <button onclick="toggleSectionSidebar('contabilidad')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-calculator"></i>
-                            <span>Contabilidad</span>
-                        </button>
-                        <button onclick="toggleSectionSidebar('proyectos')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-project-diagram"></i>
-                            <span>Proyectos</span>
-                        </button>
-                        <button onclick="toggleSectionSidebar('rrhh')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-users"></i>
-                            <span>RRHH</span>
-                        </button>
-                        <button onclick="toggleSectionSidebar('inventarios')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-boxes"></i>
-                            <span>Almacen</span>
-                        </button>
-                        <button onclick="toggleSectionSidebar('compras')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Compras</span>
-                        </button>
+                        @php
+                            use App\Models\ModuleConfig;
+                            
+                            $hasBI = ModuleConfig::where('section', 'bi')->where('is_enabled', true)->exists();
+                            $hasAdmin = ModuleConfig::where('section', 'administracion')->where('is_enabled', true)->exists();
+                            $hasContabilidad = ModuleConfig::where('section', 'contabilidad')->where('is_enabled', true)->exists();
+                            $hasProyectos = ModuleConfig::where('section', 'proyectos')->where('is_enabled', true)->exists();
+                            $hasRRHH = ModuleConfig::where('section', 'rrhh')->where('is_enabled', true)->exists();
+                            $hasInventarios = ModuleConfig::where('section', 'inventarios')->where('is_enabled', true)->exists();
+                            $hasCompras = ModuleConfig::where('section', 'compras')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($hasBI)
+                            <button onclick="toggleSectionSidebar('bi')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-chart-line"></i>
+                                <span>BI</span>
+                            </button>
+                        @endif
+
+                        @if($hasAdmin)
+                            <button onclick="toggleSectionSidebar('administracion')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Administración</span>
+                            </button>
+                        @endif
+
+                        @if($hasContabilidad)
+                            <button onclick="toggleSectionSidebar('contabilidad')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-calculator"></i>
+                                <span>Contabilidad</span>
+                            </button>
+                        @endif
+
+                        @if($hasProyectos)
+                            <button onclick="toggleSectionSidebar('proyectos')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-project-diagram"></i>
+                                <span>Proyectos</span>
+                            </button>
+                        @endif
+
+                        @if($hasRRHH)
+                            <button onclick="toggleSectionSidebar('rrhh')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-users"></i>
+                                <span>RRHH</span>
+                            </button>
+                        @endif
+
+                        @if($hasInventarios)
+                            <button onclick="toggleSectionSidebar('inventarios')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-boxes"></i>
+                                <span>Almacen</span>
+                            </button>
+                        @endif
+
+                        @if($hasCompras)
+                            <button onclick="toggleSectionSidebar('compras')" class="px-4 py-2 rounded-lg hover:bg-blue-800 transition flex items-center space-x-2">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Compras</span>
+                            </button>
+                        @endif
                     </div>
 
                     <div class="flex items-center space-x-2 ml-auto">
@@ -1465,34 +1507,58 @@ console.log('User ID:', window.userId);
                 </button>
             </div>
             <div class="mobile-menu-items">
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('bi')">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Business Intelligence</span>
-                </div>
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('administracion')">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Administración</span>
-                </div>
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('contabilidad')">
-                    <i class="fas fa-calculator"></i>
-                    <span>Contabilidad</span>
-                </div>
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('proyectos')">
-                    <i class="fas fa-project-diagram"></i>
-                    <span>Proyectos</span>
-                </div>
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('rrhh')">
-                    <i class="fas fa-users"></i>
-                    <span>Recursos Humanos</span>
-                </div>
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('inventarios')">
-                    <i class="fas fa-boxes"></i>
-                    <span>Almacen</span>
-                </div>
-                <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('compras')">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Compras</span>
-                </div>
+                @php
+                    $hasBI = ModuleConfig::where('section', 'bi')->where('is_enabled', true)->exists();
+                    $hasAdmin = ModuleConfig::where('section', 'administracion')->where('is_enabled', true)->exists();
+                    $hasContabilidad = ModuleConfig::where('section', 'contabilidad')->where('is_enabled', true)->exists();
+                    $hasProyectos = ModuleConfig::where('section', 'proyectos')->where('is_enabled', true)->exists();
+                    $hasRRHH = ModuleConfig::where('section', 'rrhh')->where('is_enabled', true)->exists();
+                    $hasInventarios = ModuleConfig::where('section', 'inventarios')->where('is_enabled', true)->exists();
+                    $hasCompras = ModuleConfig::where('section', 'compras')->where('is_enabled', true)->exists();
+                @endphp
+
+                @if($hasBI)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('bi')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Business Intelligence</span>
+                    </div>
+                @endif
+                @if($hasAdmin)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('administracion')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Administración</span>
+                    </div>
+                @endif
+                @if($hasContabilidad)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('contabilidad')">
+                        <i class="fas fa-calculator"></i>
+                        <span>Contabilidad</span>
+                    </div>
+                @endif
+                @if($hasProyectos)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('proyectos')">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Proyectos</span>
+                    </div>
+                @endif
+                @if($hasRRHH)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('rrhh')">
+                        <i class="fas fa-users"></i>
+                        <span>Recursos Humanos</span>
+                    </div>
+                @endif
+                @if($hasInventarios)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('inventarios')">
+                        <i class="fas fa-boxes"></i>
+                        <span>Almacen</span>
+                    </div>
+                @endif
+                @if($hasCompras)
+                    <div class="mobile-menu-item" onclick="toggleMobileSectionSidebar('compras')">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Compras</span>
+                    </div>
+                @endif
                 <div class="mobile-menu-item" onclick="toggleQuickSidebar()">
                     <i class="fas fa-star"></i>
                     <span>Accesos Rápidos</span>
@@ -1503,6 +1569,10 @@ console.log('User ID:', window.userId);
         <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
 
         <!-- ==================== SIDEBAR DE BI ==================== -->
+        @php
+            $hasBIModules = ModuleConfig::where('section', 'bi')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasBIModules)
         <div id="sidebar-bi" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -1515,78 +1585,146 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasDashboard = ModuleConfig::where('name', 'bi_dashboard')->where('is_enabled', true)->exists();
+                    $hasVentas = ModuleConfig::where('name', 'bi_ventas')->where('is_enabled', true)->exists() || 
+                                  ModuleConfig::where('name', 'bi_propuestas')->where('is_enabled', true)->exists() ||
+                                  ModuleConfig::where('name', 'bi_analisis_ventas')->where('is_enabled', true)->exists();
+                    $hasFacturacion = ModuleConfig::where('name', 'bi_facturacion')->where('is_enabled', true)->exists() ||
+                                      ModuleConfig::where('name', 'bi_pendiente')->where('is_enabled', true)->exists() ||
+                                      ModuleConfig::where('name', 'bi_facturado')->where('is_enabled', true)->exists();
+                    $hasCobranza = ModuleConfig::where('name', 'bi_cobranza')->where('is_enabled', true)->exists() ||
+                                   ModuleConfig::where('name', 'bi_proyecciones')->where('is_enabled', true)->exists() ||
+                                   ModuleConfig::where('name', 'bi_historial')->where('is_enabled', true)->exists();
+                @endphp
+
+                @if($hasDashboard)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-dashboard')">
                         <span><i class="fas fa-tachometer-alt"></i> Dashboard</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="bi-dashboard" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Directivo', 'bi', '{{ route('bi.dashboard') }}', 'fa-user-tie')">
-                            <div class="flex items-center flex-1"><i class="fas fa-user-tie"></i><span>Directivo</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Directivo', 'bi', 'fa-user-tie', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Finanzas', 'bi', '{{ route('bi.finanzas') }}', 'fa-chart-pie')">
-                            <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Finanzas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finanzas', 'bi', 'fa-chart-pie', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones', 'bi', '{{ route('bi.licitaciones') }}', 'fa-gavel')">
-                            <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones', 'bi', 'fa-gavel', this)"></i>
-                        </div>
+                        @php
+                            $biDashboard = ModuleConfig::where('name', 'bi_dashboard')->where('is_enabled', true)->exists();
+                            $biFinanzas = ModuleConfig::where('name', 'bi_finanzas')->where('is_enabled', true)->exists();
+                            $biLicitaciones = ModuleConfig::where('name', 'bi_licitaciones')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($biDashboard)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Directivo', 'bi', '{{ route('bi.dashboard') }}', 'fa-user-tie')">
+                                <div class="flex items-center flex-1"><i class="fas fa-user-tie"></i><span>Directivo</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Directivo', 'bi', 'fa-user-tie', this)"></i>
+                            </div>
+                        @endif
+                        @if($biFinanzas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Finanzas', 'bi', '{{ route('bi.finanzas') }}', 'fa-chart-pie')">
+                                <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Finanzas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finanzas', 'bi', 'fa-chart-pie', this)"></i>
+                            </div>
+                        @endif
+                        @if($biLicitaciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones', 'bi', '{{ route('bi.licitaciones') }}', 'fa-gavel')">
+                                <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones', 'bi', 'fa-gavel', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasVentas)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-ventas')">
                         <span><i class="fas fa-chart-bar"></i> Ventas</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="bi-ventas" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones', 'bi', '{{ route('ventas.propuestas') }}', 'fa-file-contract')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Propuestas y Cotizaciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'bi', 'fa-file-contract', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Ventas', 'bi', '{{ route('ventas.analisis') }}', 'fa-chart-line')">
-                            <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Análisis de Ventas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Ventas', 'bi', 'fa-chart-line', this)"></i>
-                        </div>
+                        @php
+                            $biPropuestas = ModuleConfig::where('name', 'bi_propuestas')->where('is_enabled', true)->exists();
+                            $biAnalisisVentas = ModuleConfig::where('name', 'bi_analisis_ventas')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($biPropuestas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Propuestas y Cotizaciones', 'bi', '{{ route('ventas.propuestas') }}', 'fa-file-contract')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Propuestas y Cotizaciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Propuestas y Cotizaciones', 'bi', 'fa-file-contract', this)"></i>
+                            </div>
+                        @endif
+                        @if($biAnalisisVentas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Ventas', 'bi', '{{ route('ventas.analisis') }}', 'fa-chart-line')">
+                                <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Análisis de Ventas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Ventas', 'bi', 'fa-chart-line', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasFacturacion)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-facturacion')">
                         <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="bi-facturacion" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Pendiente de Facturación', 'bi', '{{ route('facturacion.pendiente') }}', 'fa-clock')">
-                            <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Pendiente de Facturación</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pendiente de Facturación', 'bi', 'fa-clock', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Facturado', 'bi', '{{ route('facturacion.facturacion') }}', 'fa-check-circle')">
-                            <div class="flex items-center flex-1"><i class="fas fa-check-circle"></i><span>Facturado</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturado', 'bi', 'fa-check-circle', this)"></i>
-                        </div>
+                        @php
+                            $biPendiente = ModuleConfig::where('name', 'bi_pendiente')->where('is_enabled', true)->exists();
+                            $biFacturado = ModuleConfig::where('name', 'bi_facturado')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($biPendiente)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Pendiente de Facturación', 'bi', '{{ route('facturacion.pendiente') }}', 'fa-clock')">
+                                <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Pendiente de Facturación</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pendiente de Facturación', 'bi', 'fa-clock', this)"></i>
+                            </div>
+                        @endif
+                        @if($biFacturado)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Facturado', 'bi', '{{ route('facturacion.facturacion') }}', 'fa-check-circle')">
+                                <div class="flex items-center flex-1"><i class="fas fa-check-circle"></i><span>Facturado</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturado', 'bi', 'fa-check-circle', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasCobranza)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('bi-cobranza')">
                         <span><i class="fas fa-hand-holding-usd"></i> Cobranza</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="bi-cobranza" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Proyecciones de Flujo', 'bi', '{{ route('cobranza.proyecciones') }}', 'fa-chart-line')">
-                            <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Proyecciones de Flujo</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proyecciones de Flujo', 'bi', 'fa-chart-line', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Historial de Pagos', 'bi', '{{ route('cobranza.historial') }}', 'fa-history')">
-                            <div class="flex items-center flex-1"><i class="fas fa-history"></i><span>Historial de Pagos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial de Pagos', 'bi', 'fa-history', this)"></i>
-                        </div>
+                        @php
+                            $biProyecciones = ModuleConfig::where('name', 'bi_proyecciones')->where('is_enabled', true)->exists();
+                            $biHistorial = ModuleConfig::where('name', 'bi_historial')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($biProyecciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Proyecciones de Flujo', 'bi', '{{ route('cobranza.proyecciones') }}', 'fa-chart-line')">
+                                <div class="flex items-center flex-1"><i class="fas fa-chart-line"></i><span>Proyecciones de Flujo</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Proyecciones de Flujo', 'bi', 'fa-chart-line', this)"></i>
+                            </div>
+                        @endif
+                        @if($biHistorial)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Historial de Pagos', 'bi', '{{ route('cobranza.historial') }}', 'fa-history')">
+                                <div class="flex items-center flex-1"><i class="fas fa-history"></i><span>Historial de Pagos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Historial de Pagos', 'bi', 'fa-history', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- ==================== SIDEBAR DE ADMINISTRACIÓN ==================== -->
+        @php
+            $hasAdminModules = ModuleConfig::where('section', 'administracion')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasAdminModules)
         <div id="sidebar-administracion" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -1599,46 +1737,90 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasAdminFacturacion = ModuleConfig::where('section', 'administracion')
+                        ->whereIn('name', ['admin_facturacion', 'admin_cfdi', 'admin_notas_credito', 'admin_ventas', 'admin_contrarecibo', 'admin_factoraje'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasAdminCXC = ModuleConfig::where('name', 'admin_cxc')->where('is_enabled', true)->exists();
+                    $hasAdminCXP = ModuleConfig::where('name', 'admin_cxp')->where('is_enabled', true)->exists();
+                    $hasAdminTesoreria = ModuleConfig::where('section', 'administracion')
+                        ->whereIn('name', ['admin_tesoreria', 'admin_depositos', 'admin_trasferencia', 'admin_pagos', 'admin_traspasos', 
+                                        'admin_estados_cuenta', 'admin_conciliacion', 'admin_flujo', 'admin_flujo_mensual', 'admin_programacion'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasAdminPresupuestos = ModuleConfig::where('section', 'administracion')
+                        ->whereIn('name', ['admin_presupuestos', 'admin_facturacion_proveedores', 'admin_presupuesto_mensual', 
+                                        'admin_reasignacion', 'admin_gastos_fijos'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasAdminOperaciones = ModuleConfig::where('section', 'administracion')
+                        ->whereIn('name', ['admin_operaciones', 'admin_prepago', 'admin_anticipos', 'admin_credito'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasAdminCuentasAvanzadas = ModuleConfig::where('section', 'administracion')
+                        ->whereIn('name', ['admin_cuentas_avanzadas', 'admin_registro_cuentas', 'admin_cuentas_bancarias'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                @endphp
+
+                @if($hasAdminFacturacion)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-facturacion')">
                         <span><i class="fas fa-file-invoice-dollar"></i> Facturación</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="admin-facturacion" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Facturación', 'administracion', '{{ route('admin.facturacion') }}', 'fa-file-invoice')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-invoice"></i><span>Facturación</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación', 'administracion', 'fa-file-invoice', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('C F D I', 'administracion', '{{ route('admin.cfdi') }}', 'fa-solid fa-file-contract')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-file-contract"></i><span>CFDI</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('C F D I', 'administracion', 'fa-solid fa-file-contract', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Crédito', 'administracion', '{{ route('admin.nota') }}', 'fa-undo-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-undo-alt"></i><span>Notas de Crédito</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'administracion', 'fa-undo-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas', 'administracion', '{{ route('admin.ventas') }}', 'fa-sticky-note')">
-                            <div class="flex items-center flex-1"><i class="fas fa-sticky-note"></i><span>Notas de Ventas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'administracion', 'fa-sticky-note', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos', 'administracion', '{{ route('admin.contrarecibo') }}', 'fa-receipt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-receipt"></i><span>Contrarecibos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'administracion', 'fa-receipt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje', 'administracion', '{{ route('admin.factoraje') }}', 'fa-handshake')">
-                            <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Factoraje</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora', 'administracion', '{{ route('admin.bitacora') }}', 'fa-book')">
-                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora', 'administracion', 'fa-book', this)"></i>
-                        </div> -->
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Comisiones', 'administracion', '{{ route('admin.comiciones') }}', 'fa-percentage')">
-                            <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Comisiones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Comisiones', 'administracion', 'fa-percentage', this)"></i>
-                        </div> -->
+                        @php
+                            $adminFacturacion = ModuleConfig::where('name', 'admin_facturacion')->where('is_enabled', true)->exists();
+                            $adminCfdi = ModuleConfig::where('name', 'admin_cfdi')->where('is_enabled', true)->exists();
+                            $adminNotasCredito = ModuleConfig::where('name', 'admin_notas_credito')->where('is_enabled', true)->exists();
+                            $adminVentas = ModuleConfig::where('name', 'admin_ventas')->where('is_enabled', true)->exists();
+                            $adminContrarecibo = ModuleConfig::where('name', 'admin_contrarecibo')->where('is_enabled', true)->exists();
+                            $adminFactoraje = ModuleConfig::where('name', 'admin_factoraje')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($adminFacturacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Facturación', 'administracion', '{{ route('admin.facturacion') }}', 'fa-file-invoice')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-invoice"></i><span>Facturación</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturación', 'administracion', 'fa-file-invoice', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminCfdi)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('C F D I', 'administracion', '{{ route('admin.cfdi') }}', 'fa-solid fa-file-contract')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-file-contract"></i><span>CFDI</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('C F D I', 'administracion', 'fa-solid fa-file-contract', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminNotasCredito)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Crédito', 'administracion', '{{ route('admin.nota') }}', 'fa-undo-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-undo-alt"></i><span>Notas de Crédito</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Crédito', 'administracion', 'fa-undo-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminVentas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Notas de Ventas', 'administracion', '{{ route('admin.ventas') }}', 'fa-sticky-note')">
+                                <div class="flex items-center flex-1"><i class="fas fa-sticky-note"></i><span>Notas de Ventas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Notas de Ventas', 'administracion', 'fa-sticky-note', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminContrarecibo)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Contrarecibos', 'administracion', '{{ route('admin.contrarecibo') }}', 'fa-receipt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-receipt"></i><span>Contrarecibos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contrarecibos', 'administracion', 'fa-receipt', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminFactoraje)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Factoraje', 'administracion', '{{ route('admin.factoraje') }}', 'fa-handshake')">
+                                <div class="flex items-center flex-1"><i class="fas fa-handshake"></i><span>Factoraje</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Factoraje', 'administracion', 'fa-handshake', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasAdminCXC)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxc')">
                         <span><i class="fas fa-hand-holding-usd"></i> Cuentas por Cobrar</span>
@@ -1651,6 +1833,9 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
+                @endif
+
+                @if($hasAdminCXP)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cxp')">
                         <span><i class="fa-solid fa-money-check-dollar"></i> Cuentas por Pagar</span>
@@ -1663,121 +1848,206 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
+                @endif
+
+                @if($hasAdminTesoreria)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-tesoreria')">
                         <span><i class="fas fa-university"></i> Tesorería</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="admin-tesoreria" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos', 'administracion', '{{ route('depositos.index') }}', 'fa-money-check-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Depósitos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'administracion', 'fa-money-check-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Trasferencia', 'administracion', '{{ route('tesoreria.trasferencia') }}', 'fa-money-bill-trend-up')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-money-bill-trend-up"></i><span>Trasferencia</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Trasferencia', 'administracion', 'fa-money-bill-trend-up', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Pagos', 'administracion', '{{ route('pagos.index') }}', 'fa-file-invoice-dollar')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-file-invoice-dollar"></i><span>Pagos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos', 'administracion', 'fa-file-invoice-dollar', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos', 'administracion', '{{ route('traspasos.index') }}', 'fa-exchange-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Traspasos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos', 'administracion', 'fa-exchange-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios', 'administracion', '{{ route('tesoreria.estadosdecuenta') }}', 'fa-file-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Estados de Cuenta Bancarios</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'administracion', 'fa-file-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria', 'administracion', '{{ route('tesoreria.conciliacion') }}', 'fa-balance-scale')">
-                            <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Conciliación Bancaria</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'administracion', 'fa-balance-scale', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero', 'administracion', '{{ route('tesoreria.flujos') }}', 'fa-wave-square')">
-                            <div class="flex items-center flex-1"><i class="fas fa-wave-square"></i><span>Flujo de Dinero</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'administracion', 'fa-wave-square', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual', 'administracion', '{{ route('tesoreria.flujomensual') }}', 'fa-calendar-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Flujo Mensual</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'administracion', 'fa-calendar-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos', 'administracion', '{{ route('tesoreria.programacion') }}', 'fa-calendar-check')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calendar-check"></i><span>Programación de Pagos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'administracion', 'fa-calendar-check', this)"></i>
-                        </div>
+                        @php
+                            $adminDepositos = ModuleConfig::where('name', 'admin_depositos')->where('is_enabled', true)->exists();
+                            $adminTrasferencia = ModuleConfig::where('name', 'admin_trasferencia')->where('is_enabled', true)->exists();
+                            $adminPagos = ModuleConfig::where('name', 'admin_pagos')->where('is_enabled', true)->exists();
+                            $adminTraspasos = ModuleConfig::where('name', 'admin_traspasos')->where('is_enabled', true)->exists();
+                            $adminEstadosCuenta = ModuleConfig::where('name', 'admin_estados_cuenta')->where('is_enabled', true)->exists();
+                            $adminConciliacion = ModuleConfig::where('name', 'admin_conciliacion')->where('is_enabled', true)->exists();
+                            $adminFlujo = ModuleConfig::where('name', 'admin_flujo')->where('is_enabled', true)->exists();
+                            $adminFlujoMensual = ModuleConfig::where('name', 'admin_flujo_mensual')->where('is_enabled', true)->exists();
+                            $adminProgramacion = ModuleConfig::where('name', 'admin_programacion')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($adminDepositos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Depósitos', 'administracion', '{{ route('depositos.index') }}', 'fa-money-check-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Depósitos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Depósitos', 'administracion', 'fa-money-check-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminTrasferencia)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Trasferencia', 'administracion', '{{ route('tesoreria.trasferencia') }}', 'fa-money-bill-trend-up')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-money-bill-trend-up"></i><span>Trasferencia</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Trasferencia', 'administracion', 'fa-money-bill-trend-up', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminPagos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Pagos', 'administracion', '{{ route('pagos.index') }}', 'fa-file-invoice-dollar')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-file-invoice-dollar"></i><span>Pagos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos', 'administracion', 'fa-file-invoice-dollar', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminTraspasos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos', 'administracion', '{{ route('traspasos.index') }}', 'fa-exchange-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Traspasos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos', 'administracion', 'fa-exchange-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminEstadosCuenta)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Estados de Cuenta Bancarios', 'administracion', '{{ route('tesoreria.estadosdecuenta') }}', 'fa-file-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Estados de Cuenta Bancarios</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estados de Cuenta Bancarios', 'administracion', 'fa-file-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminConciliacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Conciliación Bancaria', 'administracion', '{{ route('tesoreria.conciliacion') }}', 'fa-balance-scale')">
+                                <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Conciliación Bancaria</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Conciliación Bancaria', 'administracion', 'fa-balance-scale', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminFlujo)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Flujo de Dinero', 'administracion', '{{ route('tesoreria.flujos') }}', 'fa-wave-square')">
+                                <div class="flex items-center flex-1"><i class="fas fa-wave-square"></i><span>Flujo de Dinero</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo de Dinero', 'administracion', 'fa-wave-square', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminFlujoMensual)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Flujo Mensual', 'administracion', '{{ route('tesoreria.flujomensual') }}', 'fa-calendar-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Flujo Mensual</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Flujo Mensual', 'administracion', 'fa-calendar-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminProgramacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Programación de Pagos', 'administracion', '{{ route('tesoreria.programacion') }}', 'fa-calendar-check')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calendar-check"></i><span>Programación de Pagos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Programación de Pagos', 'administracion', 'fa-calendar-check', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasAdminPresupuestos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-presupuestos')">
                         <span><i class="fas fa-chart-pie"></i> Presupuestos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="admin-presupuestos" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Facturacion Proveedores', 'administracion', '{{ route('presupuestos.facturacion') }}', 'fa-chart-pie')">
-                            <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Facturacion Proveedores</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturacion Proveedores', 'administracion', 'fa-chart-pie', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual', 'administracion', '{{ route('presupuestos.mensual') }}', 'fa-calendar')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calendar"></i><span>Presupuesto Mensual</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'administracion', 'fa-calendar', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos', 'administracion', '{{ route('presupuestos.reasignacion') }}', 'fa-random')">
-                            <div class="flex items-center flex-1"><i class="fas fa-random"></i><span>Reasignación de Gastos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'administracion', 'fa-random', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos', 'administracion', '{{ route('presupuestos.gastos') }}', 'fa-home')">
-                            <div class="flex items-center flex-1"><i class="fas fa-home"></i><span>Gastos Fijos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Fijos', 'administracion', 'fa-home', this)"></i>
-                        </div>
+                        @php
+                            $adminFacturacionProveedores = ModuleConfig::where('name', 'admin_facturacion_proveedores')->where('is_enabled', true)->exists();
+                            $adminPresupuestoMensual = ModuleConfig::where('name', 'admin_presupuesto_mensual')->where('is_enabled', true)->exists();
+                            $adminReasignacion = ModuleConfig::where('name', 'admin_reasignacion')->where('is_enabled', true)->exists();
+                            $adminGastosFijos = ModuleConfig::where('name', 'admin_gastos_fijos')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($adminFacturacionProveedores)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Facturacion Proveedores', 'administracion', '{{ route('presupuestos.facturacion') }}', 'fa-chart-pie')">
+                                <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Facturacion Proveedores</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Facturacion Proveedores', 'administracion', 'fa-chart-pie', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminPresupuestoMensual)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto Mensual', 'administracion', '{{ route('presupuestos.mensual') }}', 'fa-calendar')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calendar"></i><span>Presupuesto Mensual</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto Mensual', 'administracion', 'fa-calendar', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminReasignacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Reasignación de Gastos', 'administracion', '{{ route('presupuestos.reasignacion') }}', 'fa-random')">
+                                <div class="flex items-center flex-1"><i class="fas fa-random"></i><span>Reasignación de Gastos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reasignación de Gastos', 'administracion', 'fa-random', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminGastosFijos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Fijos', 'administracion', '{{ route('presupuestos.gastos') }}', 'fa-home')">
+                                <div class="flex items-center flex-1"><i class="fas fa-home"></i><span>Gastos Fijos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Fijos', 'administracion', 'fa-home', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasAdminOperaciones)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-operaciones')">
                         <span><i class="fas fa-exchange-alt"></i> Operaciones</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="admin-operaciones" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Prepago', 'administracion', '{{ route('operaciones.prepago') }}', 'fa-forward')">
-                            <div class="flex items-center flex-1"><i class="fas fa-forward"></i><span>Prepago</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'administracion', 'fa-forward', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos', 'administracion', '{{ route('operaciones.anticipo') }}', 'fa-hand-holding-usd')">
-                            <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Anticipos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'administracion', 'fa-hand-holding-usd', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Crédito', 'administracion', '{{ route('operaciones.credito') }}', 'fa-credit-card')">
-                            <div class="flex items-center flex-1"><i class="fas fa-credit-card"></i><span>Crédito</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Crédito', 'administracion', 'fa-credit-card', this)"></i>
-                        </div>
+                        @php
+                            $adminPrepago = ModuleConfig::where('name', 'admin_prepago')->where('is_enabled', true)->exists();
+                            $adminAnticipos = ModuleConfig::where('name', 'admin_anticipos')->where('is_enabled', true)->exists();
+                            $adminCredito = ModuleConfig::where('name', 'admin_credito')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($adminPrepago)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Prepago', 'administracion', '{{ route('operaciones.prepago') }}', 'fa-forward')">
+                                <div class="flex items-center flex-1"><i class="fas fa-forward"></i><span>Prepago</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Prepago', 'administracion', 'fa-forward', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminAnticipos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Anticipos', 'administracion', '{{ route('operaciones.anticipo') }}', 'fa-hand-holding-usd')">
+                                <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Anticipos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Anticipos', 'administracion', 'fa-hand-holding-usd', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminCredito)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Crédito', 'administracion', '{{ route('operaciones.credito') }}', 'fa-credit-card')">
+                                <div class="flex items-center flex-1"><i class="fas fa-credit-card"></i><span>Crédito</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Crédito', 'administracion', 'fa-credit-card', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasAdminCuentasAvanzadas)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('admin-cuentas-avanzadas')">
                         <span><i class="fas fa-cogs"></i> Cuentas Avanzadas</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="admin-cuentas-avanzadas" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas', 'administracion', '{{ route('cuentasavanzadas.cuentasavanzadas') }}', 'fa-cogs')">
-                            <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Cuentas Avanzadas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Avanzadas', 'administracion', 'fa-cogs', this)"></i>
-                        </div>
-                       
-                            <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Cuentas Contables', 'administracion', '{{ route('registro.cuentas') }}', 'fa-cogs')">
-                            <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Registro de Cuentas Contables</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Cuentas Contables', 'administracion', 'fa-cogs', this)"></i>
-                            </div>
+                        @php
+                            $adminCuentasAvanzadas = ModuleConfig::where('name', 'admin_cuentas_avanzadas')->where('is_enabled', true)->exists();
+                            $adminRegistroCuentas = ModuleConfig::where('name', 'admin_registro_cuentas')->where('is_enabled', true)->exists();
+                            $adminCuentasBancarias = ModuleConfig::where('name', 'admin_cuentas_bancarias')->where('is_enabled', true)->exists();
+                        @endphp
 
-                            <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Cuentas Bancarias', 'administracion', '{{ route('cuentas.bancarias') }}', 'fa-university')">
-                            <div class="flex items-center flex-1">
-                            <i class="fas fa-university"></i><span>Registro de Cuentas Bancarias</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Cuentas Bancarias', 'administracion', 'fa-university', this)"></i>
+                        @if($adminCuentasAvanzadas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Avanzadas', 'administracion', '{{ route('cuentasavanzadas.cuentasavanzadas') }}', 'fa-cogs')">
+                                <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Cuentas Avanzadas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Avanzadas', 'administracion', 'fa-cogs', this)"></i>
                             </div>
+                        @endif
+                        @if($adminRegistroCuentas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Cuentas Contables', 'administracion', '{{ route('registro.cuentas') }}', 'fa-cogs')">
+                                <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Registro de Cuentas Contables</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Cuentas Contables', 'administracion', 'fa-cogs', this)"></i>
+                            </div>
+                        @endif
+                        @if($adminCuentasBancarias)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Registro de Cuentas Bancarias', 'administracion', '{{ route('cuentas.bancarias') }}', 'fa-university')">
+                                <div class="flex items-center flex-1">
+                                <i class="fas fa-university"></i><span>Registro de Cuentas Bancarias</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Registro de Cuentas Bancarias', 'administracion', 'fa-university', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- ==================== SIDEBAR DE CONTABILIDAD ==================== -->
+        @php
+            $hasContaModules = ModuleConfig::where('section', 'contabilidad')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasContaModules)
         <div id="sidebar-contabilidad" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -1790,142 +2060,226 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasContaEstados = ModuleConfig::where('section', 'contabilidad')
+                        ->whereIn('name', ['conta_estados', 'conta_balance', 'conta_comprobacion', 'conta_flujo', 'conta_presupuesto', 'conta_unidad'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasContaRegistro = ModuleConfig::where('section', 'contabilidad')
+                        ->whereIn('name', ['conta_polizas', 'conta_diario', 'conta_cobranza'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasContaCatalogo = ModuleConfig::where('section', 'contabilidad')
+                        ->whereIn('name', ['conta_auxiliar', 'conta_centros'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasContaProyecto = ModuleConfig::where('section', 'contabilidad')
+                        ->whereIn('name', ['conta_costo', 'conta_gastos', 'conta_asignacion'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasContaFiscal = ModuleConfig::where('section', 'contabilidad')
+                        ->whereIn('name', ['conta_diot', 'conta_retenciones', 'conta_complemento'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                @endphp
+
+                @if($hasContaEstados)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-estados')">
                         <span><i class="fas fa-chart-line"></i> Estados Financieros</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="contabilidad-estados" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados', 'contabilidad', '{{ route('conta.estados') }}', 'fa-chart-pie')">
-                            <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Estado de Resultados</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'contabilidad', 'fa-chart-pie', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Balance General', 'contabilidad', '{{ route('conta.balance') }}', 'fa-balance-scale')">
-                            <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Balance General</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'contabilidad', 'fa-balance-scale', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación', 'contabilidad', '{{ route('conta.comprobacion') }}', 'fa-check-double')">
-                            <div class="flex items-center flex-1"><i class="fas fa-check-double"></i><span>Balance de Comprobación</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'contabilidad', 'fa-check-double', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo', 'contabilidad', '{{ route('conta.flujo') }}', 'fa-money-bill-wave')">
-                            <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Estado de Flujo de Efectivo</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'contabilidad', 'fa-money-bill-wave', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto', 'contabilidad', '{{ route('conta.capital') }}', 'fa-exchange-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Presupuesto</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto', 'contabilidad', 'fa-exchange-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Unidad de Negocio', 'contabilidad', '{{ route('conta.unidad') }}', 'fa-chart-column')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-chart-column"></i><span>Estado de Resultado Unidad de Negocio</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Unidad de Negocio', 'contabilidad', 'fa-chart-column', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado Liquidacion', 'contabilidad', '{{ route('conta.liquidacion') }}', 'fa-chart-pie')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-chart-pie"></i><span>Estado de Resultados Liquidacion</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado Liquidacion', 'contabilidad', 'fa-chart-pie', this)"></i>
-                        </div> -->
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultado General', 'contabilidad', '{{ route('conta.general') }}', 'fa-newspaper')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-newspaper"></i><span>Estado de Resultado General</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultado General', 'contabilidad', 'fa-newspaper', this)"></i>
-                        </div> -->
+                        @php
+                            $contaEstados = ModuleConfig::where('name', 'conta_estados')->where('is_enabled', true)->exists();
+                            $contaBalance = ModuleConfig::where('name', 'conta_balance')->where('is_enabled', true)->exists();
+                            $contaComprobacion = ModuleConfig::where('name', 'conta_comprobacion')->where('is_enabled', true)->exists();
+                            $contaFlujo = ModuleConfig::where('name', 'conta_flujo')->where('is_enabled', true)->exists();
+                            $contaPresupuesto = ModuleConfig::where('name', 'conta_presupuesto')->where('is_enabled', true)->exists();
+                            $contaUnidad = ModuleConfig::where('name', 'conta_unidad')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($contaEstados)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Resultados', 'contabilidad', '{{ route('conta.estados') }}', 'fa-chart-pie')">
+                                <div class="flex items-center flex-1"><i class="fas fa-chart-pie"></i><span>Estado de Resultados</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Resultados', 'contabilidad', 'fa-chart-pie', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaBalance)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Balance General', 'contabilidad', '{{ route('conta.balance') }}', 'fa-balance-scale')">
+                                <div class="flex items-center flex-1"><i class="fas fa-balance-scale"></i><span>Balance General</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance General', 'contabilidad', 'fa-balance-scale', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaComprobacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Balance de Comprobación', 'contabilidad', '{{ route('conta.comprobacion') }}', 'fa-check-double')">
+                                <div class="flex items-center flex-1"><i class="fas fa-check-double"></i><span>Balance de Comprobación</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Balance de Comprobación', 'contabilidad', 'fa-check-double', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaFlujo)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Estado de Flujo de Efectivo', 'contabilidad', '{{ route('conta.flujo') }}', 'fa-money-bill-wave')">
+                                <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Estado de Flujo de Efectivo</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estado de Flujo de Efectivo', 'contabilidad', 'fa-money-bill-wave', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaPresupuesto)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Presupuesto', 'contabilidad', '{{ route('conta.capital') }}', 'fa-exchange-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Presupuesto</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuesto', 'contabilidad', 'fa-exchange-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaUnidad)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Unidad de Negocio', 'contabilidad', '{{ route('conta.unidad') }}', 'fa-chart-column')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-chart-column"></i><span>Estado de Resultado Unidad de Negocio</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Unidad de Negocio', 'contabilidad', 'fa-chart-column', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasContaRegistro)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-registro')">
                         <span><i class="fas fa-book"></i> Registro Contable</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="contabilidad-registro" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables', 'contabilidad', '{{ route('conta.polizas') }}', 'fa-file-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Pólizas Contables</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'contabilidad', 'fa-file-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Diario General', 'contabilidad', '{{ route('conta.diario') }}', 'fa-book')">
-                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Diario General</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'contabilidad', 'fa-book', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cobranza', 'contabilidad', '{{ route('conta.cobranza') }}', 'fa-columns')">
-                            <div class="flex items-center flex-1"><i class="fas fa-columns"></i><span>Cobranza</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cobranza', 'contabilidad', 'fa-columns', this)"></i>
-                        </div>
+                        @php
+                            $contaPolizas = ModuleConfig::where('name', 'conta_polizas')->where('is_enabled', true)->exists();
+                            $contaDiario = ModuleConfig::where('name', 'conta_diario')->where('is_enabled', true)->exists();
+                            $contaCobranza = ModuleConfig::where('name', 'conta_cobranza')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($contaPolizas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Pólizas Contables', 'contabilidad', '{{ route('conta.polizas') }}', 'fa-file-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Pólizas Contables</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pólizas Contables', 'contabilidad', 'fa-file-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaDiario)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Diario General', 'contabilidad', '{{ route('conta.diario') }}', 'fa-book')">
+                                <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Diario General</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Diario General', 'contabilidad', 'fa-book', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaCobranza)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Cobranza', 'contabilidad', '{{ route('conta.cobranza') }}', 'fa-columns')">
+                                <div class="flex items-center flex-1"><i class="fas fa-columns"></i><span>Cobranza</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cobranza', 'contabilidad', 'fa-columns', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasContaCatalogo)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-catalogo')">
                         <span><i class="fas fa-list-alt"></i> Catálogo Contable</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="contabilidad-catalogo" class="sidebar-submenu">
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Cuentas Contables', 'contabilidad', '{{ route('conta.cuentas') }}', 'fa-list')">
-                            <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Cuentas Contables</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cuentas Contables', 'contabilidad', 'fa-list', this)"></i>
-                        </div> -->
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '{{ route('conta.auxiliar') }}', 'fa-indent')">
-                            <div class="flex items-center flex-1"><i class="fas fa-indent"></i><span>Auxiliar de Cuentas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos', 'contabilidad', '{{ route('conta.centros') }}', 'fa-sitemap')">
-                            <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Centros de Costos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Configuración Contable', 'contabilidad', '{{ route('conta.configuraciones') }}', 'fa-cogs')">
-                            <div class="flex items-center flex-1"><i class="fas fa-cogs"></i><span>Configuración Contable</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Configuración Contable', 'contabilidad', 'fa-cogs', this)"></i>
-                        </div> -->
+                        @php
+                            $contaAuxiliar = ModuleConfig::where('name', 'conta_auxiliar')->where('is_enabled', true)->exists();
+                            $contaCentros = ModuleConfig::where('name', 'conta_centros')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($contaAuxiliar)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Auxiliar de Cuentas', 'contabilidad', '{{ route('conta.auxiliar') }}', 'fa-indent')">
+                                <div class="flex items-center flex-1"><i class="fas fa-indent"></i><span>Auxiliar de Cuentas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Auxiliar de Cuentas', 'contabilidad', 'fa-indent', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaCentros)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Centros de Costos', 'contabilidad', '{{ route('conta.centros') }}', 'fa-sitemap')">
+                                <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Centros de Costos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Centros de Costos', 'contabilidad', 'fa-sitemap', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasContaProyecto)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-proyecto')">
                         <span><i class="fas fa-project-diagram"></i> Contabilidad por Proyecto</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="contabilidad-proyecto" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra', 'contabilidad', '{{ route('conta.costo') }}', 'fa-hard-hat')">
-                            <div class="flex items-center flex-1"><i class="fas fa-hard-hat"></i><span>Costos por Obra</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'contabilidad', 'fa-hard-hat', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra', 'contabilidad', '{{ route('conta.gastos') }}', 'fa-tools')">
-                            <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Gastos Indirectos de Obra</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'contabilidad', 'fa-tools', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto', 'contabilidad', '{{ route('conta.asignacion') }}', 'fa-project-diagram')">
-                            <div class="flex items-center flex-1"><i class="fas fa-project-diagram"></i><span>Asignación de Gastos por Proyecto</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Cierre de Proyectos', 'contabilidad', '{{ route('conta.cierre') }}', 'fa-lock')">
-                            <div class="flex items-center flex-1"><i class="fas fa-lock"></i><span>Cierre de Proyectos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cierre de Proyectos', 'contabilidad', 'fa-lock', this)"></i>
-                        </div> -->
+                        @php
+                            $contaCosto = ModuleConfig::where('name', 'conta_costo')->where('is_enabled', true)->exists();
+                            $contaGastos = ModuleConfig::where('name', 'conta_gastos')->where('is_enabled', true)->exists();
+                            $contaAsignacion = ModuleConfig::where('name', 'conta_asignacion')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($contaCosto)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Costos por Obra', 'contabilidad', '{{ route('conta.costo') }}', 'fa-hard-hat')">
+                                <div class="flex items-center flex-1"><i class="fas fa-hard-hat"></i><span>Costos por Obra</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos por Obra', 'contabilidad', 'fa-hard-hat', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaGastos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Gastos Indirectos de Obra', 'contabilidad', '{{ route('conta.gastos') }}', 'fa-tools')">
+                                <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Gastos Indirectos de Obra</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Gastos Indirectos de Obra', 'contabilidad', 'fa-tools', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaAsignacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Gastos por Proyecto', 'contabilidad', '{{ route('conta.asignacion') }}', 'fa-project-diagram')">
+                                <div class="flex items-center flex-1"><i class="fas fa-project-diagram"></i><span>Asignación de Gastos por Proyecto</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Gastos por Proyecto', 'contabilidad', 'fa-project-diagram', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasContaFiscal)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('contabilidad-fiscal')">
                         <span><i class="fas fa-file-contract"></i> Fiscal</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="contabilidad-fiscal" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('DIOT', 'contabilidad', '{{ route('conta.diot') }}', 'fa-file-export')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-export"></i><span>DIOT</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Declaraciones Mensuales', 'contabilidad', '{{ route('conta.declaraciones') }}', 'fa-calendar-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Declaraciones Mensuales</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Declaraciones Mensuales', 'contabilidad', 'fa-calendar-alt', this)"></i>
-                        </div> -->
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '{{ route('conta.retenciones') }}', 'fa-percentage')">
-                            <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Retenciones (ISR, IVA)</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos', 'contabilidad', '{{ route('conta.complemento') }}', 'fa-money-check-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Complemento de Pagos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'contabilidad', 'fa-money-check-alt', this)"></i>
-                        </div>
+                        @php
+                            $contaDiot = ModuleConfig::where('name', 'conta_diot')->where('is_enabled', true)->exists();
+                            $contaRetenciones = ModuleConfig::where('name', 'conta_retenciones')->where('is_enabled', true)->exists();
+                            $contaComplemento = ModuleConfig::where('name', 'conta_complemento')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($contaDiot)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('DIOT', 'contabilidad', '{{ route('conta.diot') }}', 'fa-file-export')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-export"></i><span>DIOT</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('DIOT', 'contabilidad', 'fa-file-export', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaRetenciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Retenciones (ISR, IVA)', 'contabilidad', '{{ route('conta.retenciones') }}', 'fa-percentage')">
+                                <div class="flex items-center flex-1"><i class="fas fa-percentage"></i><span>Retenciones (ISR, IVA)</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Retenciones (ISR, IVA)', 'contabilidad', 'fa-percentage', this)"></i>
+                            </div>
+                        @endif
+                        @if($contaComplemento)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Complemento de Pagos', 'contabilidad', '{{ route('conta.complemento') }}', 'fa-money-check-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Complemento de Pagos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Complemento de Pagos', 'contabilidad', 'fa-money-check-alt', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- ==================== SIDEBAR DE PROYECTOS ==================== -->
+        @php
+            $hasProyectosModules = ModuleConfig::where('section', 'proyectos')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasProyectosModules)
         <div id="sidebar-proyectos" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -1938,50 +2292,113 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasProyectosGestion = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_cartera', 'proyectos_alta', 'proyectos_hitos', 'proyectos_bitacora'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosLicitaciones = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_licitaciones', 'proyectos_activas', 'proyectos_analisis'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosPresupuestos = ModuleConfig::where('name', 'proyectos_presupuesto_proyecto')->where('is_enabled', true)->exists();
+                    $hasProyectosCostos = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_directos', 'proyectos_indirectos'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosAvances = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_estimaciones', 'proyectos_reportes'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosPersonal = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_asignada', 'proyectos_flotillas', 'proyectos_contratistas'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosMaquinaria = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_asignacion_equipo', 'proyectos_mantenimiento'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosRiesgos = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_desviaciones', 'proyectos_control'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasProyectosDocumentacion = ModuleConfig::where('section', 'proyectos')
+                        ->whereIn('name', ['proyectos_planos', 'proyectos_evidencia'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                @endphp
+
+                @if($hasProyectosGestion)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-gestion')">
                         <span><i class="fas fa-tasks"></i> Gestión de Proyectos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-gestion" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos', 'proyectos', '{{ route('proyectos.cartera') }}', 'fa-briefcase')">
-                            <div class="flex items-center flex-1"><i class="fas fa-briefcase"></i><span>Cartera de Proyectos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'proyectos', 'fa-briefcase', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto', 'proyectos', '{{ route('proyectos.alta') }}', 'fa-plus-circle')">
-                            <div class="flex items-center flex-1"><i class="fas fa-plus-circle"></i><span>Alta de Proyecto</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'proyectos', 'fa-plus-circle', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos', 'proyectos', '{{route ('proyectos.hitos') }}', 'fa-calendar-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Cronograma y Hitos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'proyectos', 'fa-calendar-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra', 'proyectos', '{{ route('proyectos.bitacora') }}', 'fa-book')">
-                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Obra</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'proyectos', 'fa-book', this)"></i>
-                        </div>
+                        @php
+                            $proyectosCartera = ModuleConfig::where('name', 'proyectos_cartera')->where('is_enabled', true)->exists();
+                            $proyectosAlta = ModuleConfig::where('name', 'proyectos_alta')->where('is_enabled', true)->exists();
+                            $proyectosHitos = ModuleConfig::where('name', 'proyectos_hitos')->where('is_enabled', true)->exists();
+                            $proyectosBitacora = ModuleConfig::where('name', 'proyectos_bitacora')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosCartera)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Cartera de Proyectos', 'proyectos', '{{ route('proyectos.cartera') }}', 'fa-briefcase')">
+                                <div class="flex items-center flex-1"><i class="fas fa-briefcase"></i><span>Cartera de Proyectos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cartera de Proyectos', 'proyectos', 'fa-briefcase', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosAlta)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Alta de Proyecto', 'proyectos', '{{ route('proyectos.alta') }}', 'fa-plus-circle')">
+                                <div class="flex items-center flex-1"><i class="fas fa-plus-circle"></i><span>Alta de Proyecto</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Alta de Proyecto', 'proyectos', 'fa-plus-circle', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosHitos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Cronograma y Hitos', 'proyectos', '{{route ('proyectos.hitos') }}', 'fa-calendar-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calendar-alt"></i><span>Cronograma y Hitos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cronograma y Hitos', 'proyectos', 'fa-calendar-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosBitacora)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Obra', 'proyectos', '{{ route('proyectos.bitacora') }}', 'fa-book')">
+                                <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Obra</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Obra', 'proyectos', 'fa-book', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosLicitaciones)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-licitaciones')">
                         <span><i class="fas fa-gavel"></i> Licitaciones</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-licitaciones" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas', 'proyectos', '{{ route('proyectos.activas') }}', 'fa-gavel')">
-                            <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones Activas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Presupuestos por Proyecto', 'proyectos', '{{ route('proyectos.presupuestos') }}', 'fa-file-contract')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Presupuestos por Proyecto</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Presupuestos por Proyecto', 'proyectos', 'fa-file-contract', this)"></i>
-                        </div> -->
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '{{ route('proyectos.analisis') }}', 'fa-calculator')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Análisis de Precios Unitarios</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>
-                        </div>
+                        @php
+                            $proyectosActivas = ModuleConfig::where('name', 'proyectos_activas')->where('is_enabled', true)->exists();
+                            $proyectosAnalisis = ModuleConfig::where('name', 'proyectos_analisis')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosActivas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Licitaciones Activas', 'proyectos', '{{ route('proyectos.activas') }}', 'fa-gavel')">
+                                <div class="flex items-center flex-1"><i class="fas fa-gavel"></i><span>Licitaciones Activas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Licitaciones Activas', 'proyectos', 'fa-gavel', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosAnalisis)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Análisis de Precios Unitarios', 'proyectos', '{{ route('proyectos.analisis') }}', 'fa-calculator')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Análisis de Precios Unitarios</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Análisis de Precios Unitarios', 'proyectos', 'fa-calculator', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosPresupuestos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-presupuestos')">
                         <span><i class="fas fa-file-invoice-dollar"></i> Presupuestos</span>
@@ -1994,118 +2411,191 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosCostos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-costos')">
                         <span><i class="fas fa-money-bill-wave"></i> Costos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-costos" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos', 'proyectos', '{{ route('proyectos.directos') }}', 'fa-money-bill-wave')">
-                            <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos Directos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'proyectos', 'fa-money-bill-wave', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos', 'proyectos', '{{ route('proyectos.indirectos') }}', 'fa-tools')">
-                            <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Costos Indirectos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'proyectos', 'fa-tools', this)"></i>
-                        </div>
+                        @php
+                            $proyectosDirectos = ModuleConfig::where('name', 'proyectos_directos')->where('is_enabled', true)->exists();
+                            $proyectosIndirectos = ModuleConfig::where('name', 'proyectos_indirectos')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosDirectos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Costos Directos', 'proyectos', '{{ route('proyectos.directos') }}', 'fa-money-bill-wave')">
+                                <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos Directos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Directos', 'proyectos', 'fa-money-bill-wave', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosIndirectos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Costos Indirectos', 'proyectos', '{{ route('proyectos.indirectos') }}', 'fa-tools')">
+                                <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Costos Indirectos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos Indirectos', 'proyectos', 'fa-tools', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosAvances)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-avances')">
                         <span><i class="fas fa-hard-hat"></i> Avances de Obra</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-avances" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones', 'proyectos', '{{ route('proyectos.estimaciones') }}', 'fa-calculator')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Estimaciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'proyectos', 'fa-calculator', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico', 'proyectos', '{{ route('proyectos.reportes') }}', 'fa-camera')">
-                            <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Reporte Fotográfico</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reporte Fotográfico', 'proyectos', 'fa-camera', this)"></i>
-                        </div>
+                        @php
+                            $proyectosEstimaciones = ModuleConfig::where('name', 'proyectos_estimaciones')->where('is_enabled', true)->exists();
+                            $proyectosReportes = ModuleConfig::where('name', 'proyectos_reportes')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosEstimaciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Estimaciones', 'proyectos', '{{ route('proyectos.estimaciones') }}', 'fa-calculator')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Estimaciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Estimaciones', 'proyectos', 'fa-calculator', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosReportes)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Reporte Fotográfico', 'proyectos', '{{ route('proyectos.reportes') }}', 'fa-camera')">
+                                <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Reporte Fotográfico</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Reporte Fotográfico', 'proyectos', 'fa-camera', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosPersonal)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-personal')">
                         <span><i class="fas fa-users"></i> Personal</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-personal" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos', 'proyectos', '{{ route('proyectos.asignada') }}', 'fa-user-check')">
-                            <div class="flex items-center flex-1"><i class="fas fa-user-check"></i><span>Asignación a Proyectos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'proyectos', 'fa-user-check', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '{{ route('proyectos.flotillas') }}', 'fa-users')">
-                            <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Asistencia y Cuadrillas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Contratistas', 'proyectos', '{{ route('proyectos.contratistas.index') }}', 'fa-users')">
-                            <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Contratistas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratistas', 'proyectos', 'fa-users', this)"></i>
-                        </div>
+                        @php
+                            $proyectosAsignada = ModuleConfig::where('name', 'proyectos_asignada')->where('is_enabled', true)->exists();
+                            $proyectosFlotillas = ModuleConfig::where('name', 'proyectos_flotillas')->where('is_enabled', true)->exists();
+                            $proyectosContratistas = ModuleConfig::where('name', 'proyectos_contratistas')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosAsignada)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Asignación a Proyectos', 'proyectos', '{{ route('proyectos.asignada') }}', 'fa-user-check')">
+                                <div class="flex items-center flex-1"><i class="fas fa-user-check"></i><span>Asignación a Proyectos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación a Proyectos', 'proyectos', 'fa-user-check', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosFlotillas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia y Cuadrillas', 'proyectos', '{{ route('proyectos.flotillas') }}', 'fa-users')">
+                                <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Asistencia y Cuadrillas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia y Cuadrillas', 'proyectos', 'fa-users', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosContratistas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Contratistas', 'proyectos', '{{ route('proyectos.contratistas.index') }}', 'fa-users')">
+                                <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Contratistas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratistas', 'proyectos', 'fa-users', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosMaquinaria)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-maquinaria')">
                         <span><i class="fas fa-tractor"></i> Maquinaria y Equipo</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-maquinaria" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo', 'proyectos', '{{ route('proyectos.asignacion') }}', 'fa-tractor')">
-                            <div class="flex items-center flex-1"><i class="fas fa-tractor"></i><span>Asignación de Equipo</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'proyectos', 'fa-tractor', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo', 'proyectos', '{{ route('proyectos.mantenimiento') }}', 'fa-tools')">
-                            <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Mantenimiento de Equipo</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'proyectos', '{{ route('proyectos.bita') }}', 'fa-book')">
-                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'proyectos', 'fa-book', this)"></i>
-                        </div> -->
+                        @php
+                            $proyectosAsignacionEquipo = ModuleConfig::where('name', 'proyectos_asignacion_equipo')->where('is_enabled', true)->exists();
+                            $proyectosMantenimiento = ModuleConfig::where('name', 'proyectos_mantenimiento')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosAsignacionEquipo)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Equipo', 'proyectos', '{{ route('proyectos.asignacion') }}', 'fa-tractor')">
+                                <div class="flex items-center flex-1"><i class="fas fa-tractor"></i><span>Asignación de Equipo</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Equipo', 'proyectos', 'fa-tractor', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosMantenimiento)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Mantenimiento de Equipo', 'proyectos', '{{ route('proyectos.mantenimiento') }}', 'fa-tools')">
+                                <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Mantenimiento de Equipo</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Mantenimiento de Equipo', 'proyectos', 'fa-tools', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosRiesgos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-riesgos')">
                         <span><i class="fas fa-exclamation-triangle"></i> Control de Riesgos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-riesgos" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)', 'proyectos', '{{ route('proyectos.desviaciones') }}', 'fa-exclamation-triangle')">
-                            <div class="flex items-center flex-1"><i class="fas fa-exclamation-triangle"></i><span>Desviaciones (Costo y Tiempo)</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'proyectos', 'fa-exclamation-triangle', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad', 'proyectos', '{{ route('proyectos.control') }}', 'fa-clipboard-check')">
-                            <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Control de Calidad</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Calidad', 'proyectos', 'fa-clipboard-check', this)"></i>
-                        </div>
+                        @php
+                            $proyectosDesviaciones = ModuleConfig::where('name', 'proyectos_desviaciones')->where('is_enabled', true)->exists();
+                            $proyectosControl = ModuleConfig::where('name', 'proyectos_control')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosDesviaciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Desviaciones (Costo y Tiempo)', 'proyectos', '{{ route('proyectos.desviaciones') }}', 'fa-exclamation-triangle')">
+                                <div class="flex items-center flex-1"><i class="fas fa-exclamation-triangle"></i><span>Desviaciones (Costo y Tiempo)</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Desviaciones (Costo y Tiempo)', 'proyectos', 'fa-exclamation-triangle', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosControl)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Control de Calidad', 'proyectos', '{{ route('proyectos.control') }}', 'fa-clipboard-check')">
+                                <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Control de Calidad</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Calidad', 'proyectos', 'fa-clipboard-check', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasProyectosDocumentacion)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('proyectos-documentacion')">
                         <span><i class="fas fa-folder"></i> Documentación</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="proyectos-documentacion" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos', 'proyectos', '{{ route('proyectos.planos') }}', 'fa-file-contract')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Contratos y Planos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Permisos', 'proyectos', '{{ route('proyectos.permisos') }}', 'fa-file-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Permisos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Permisos', 'proyectos', 'fa-file-alt', this)"></i>
-                        </div> -->
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '{{ route('proyectos.evidencia') }}', 'fa-camera')">
-                            <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Evidencias (Fotos, Actas)</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'proyectos', 'fa-camera', this)"></i>
-                        </div>
+                        @php
+                            $proyectosPlanos = ModuleConfig::where('name', 'proyectos_planos')->where('is_enabled', true)->exists();
+                            $proyectosEvidencia = ModuleConfig::where('name', 'proyectos_evidencia')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($proyectosPlanos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Contratos y Planos', 'proyectos', '{{ route('proyectos.planos') }}', 'fa-file-contract')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Contratos y Planos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Contratos y Planos', 'proyectos', 'fa-file-contract', this)"></i>
+                            </div>
+                        @endif
+                        @if($proyectosEvidencia)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Evidencias (Fotos, Actas)', 'proyectos', '{{ route('proyectos.evidencia') }}', 'fa-camera')">
+                                <div class="flex items-center flex-1"><i class="fas fa-camera"></i><span>Evidencias (Fotos, Actas)</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Evidencias (Fotos, Actas)', 'proyectos', 'fa-camera', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- ==================== SIDEBAR DE RECURSOS HUMANOS ==================== -->
+        @php
+            $hasRRHHModules = ModuleConfig::where('section', 'rrhh')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasRRHHModules)
         <div id="sidebar-rrhh" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -2118,146 +2608,212 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasRRHHPersonal = ModuleConfig::where('section', 'rrhh')
+                        ->whereIn('name', ['rrhh_plantilla', 'rrhh_incidencias'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasRRHHAsistencia = ModuleConfig::where('section', 'rrhh')
+                        ->whereIn('name', ['rrhh_asistencia', 'rrhh_lista', 'rrhh_justificantes', 'rrhh_control_horarios'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasRRHHNomina = ModuleConfig::where('section', 'rrhh')
+                        ->whereIn('name', ['rrhh_calculo', 'rrhh_pagos', 'rrhh_recibos'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasRRHHPrestaciones = ModuleConfig::where('section', 'rrhh')
+                        ->whereIn('name', ['rrhh_prestamos', 'rrhh_vacaciones', 'rrhh_finiquitos'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasRRHHCatalogos = ModuleConfig::where('section', 'rrhh')
+                        ->whereIn('name', ['rrhh_roles', 'rrhh_areas', 'rrhh_usuarios'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                @endphp
+
+                @if($hasRRHHPersonal)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-personal')">
                         <span><i class="fas fa-user-tie"></i> Gestión de Personal</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="rrhh-personal" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados', 'rrhh', '{{ route('rh.plantilla') }}', 'fa-users')">
-                            <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Plantilla de Empleados</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'rrhh', 'fa-users', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital', 'rrhh', '{{ route('rh.expediente') }}', 'fa-folder')">
-                            <div class="flex items-center flex-1"><i class="fas fa-folder"></i><span>Incidencias</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
-                        </div>
+                        @php
+                            $rrhhPlantilla = ModuleConfig::where('name', 'rrhh_plantilla')->where('is_enabled', true)->exists();
+                            $rrhhIncidencias = ModuleConfig::where('name', 'rrhh_incidencias')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($rrhhPlantilla)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Plantilla de Empleados', 'rrhh', '{{ route('rh.plantilla') }}', 'fa-users')">
+                                <div class="flex items-center flex-1"><i class="fas fa-users"></i><span>Plantilla de Empleados</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Plantilla de Empleados', 'rrhh', 'fa-users', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhIncidencias)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Expediente Digital', 'rrhh', '{{ route('rh.expediente') }}', 'fa-folder')">
+                                <div class="flex items-center flex-1"><i class="fas fa-folder"></i><span>Incidencias</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Expediente Digital', 'rrhh', 'fa-folder', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasRRHHAsistencia)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-asistencia')">
                         <span><i class="fas fa-user-clock"></i> Asistencia y Control</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="rrhh-asistencia" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia', 'rrhh', '{{ route('rh.asistencia') }}', 'fa-user-clock')">
-                            <div class="flex items-center flex-1"><i class="fas fa-user-clock"></i><span>Asistencia</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'rrhh', 'fa-user-clock', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia', 'rrhh', '{{ route('rh.lista') }}', 'fa-list')">
-                            <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Lista de Asistencia</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'rrhh', 'fa-list', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos', 'rrhh', '{{ route ('rh.justificantes') }}', 'fa-file-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Justificantes y Permisos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'rrhh', 'fa-file-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios', 'rrhh', '{{ route('rh.control') }}', 'fa-clock')">
-                            <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Control de Horarios</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Horarios', 'rrhh', 'fa-clock', this)"></i>
-                        </div>
+                        @php
+                            $rrhhAsistencia = ModuleConfig::where('name', 'rrhh_asistencia')->where('is_enabled', true)->exists();
+                            $rrhhLista = ModuleConfig::where('name', 'rrhh_lista')->where('is_enabled', true)->exists();
+                            $rrhhJustificantes = ModuleConfig::where('name', 'rrhh_justificantes')->where('is_enabled', true)->exists();
+                            $rrhhControlHorarios = ModuleConfig::where('name', 'rrhh_control_horarios')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($rrhhAsistencia)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Asistencia', 'rrhh', '{{ route('rh.asistencia') }}', 'fa-user-clock')">
+                                <div class="flex items-center flex-1"><i class="fas fa-user-clock"></i><span>Asistencia</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asistencia', 'rrhh', 'fa-user-clock', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhLista)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Lista de Asistencia', 'rrhh', '{{ route('rh.lista') }}', 'fa-list')">
+                                <div class="flex items-center flex-1"><i class="fas fa-list"></i><span>Lista de Asistencia</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Lista de Asistencia', 'rrhh', 'fa-list', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhJustificantes)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Justificantes y Permisos', 'rrhh', '{{ route ('rh.justificantes') }}', 'fa-file-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-alt"></i><span>Justificantes y Permisos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Justificantes y Permisos', 'rrhh', 'fa-file-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhControlHorarios)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Control de Horarios', 'rrhh', '{{ route('rh.control') }}', 'fa-clock')">
+                                <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Control de Horarios</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Horarios', 'rrhh', 'fa-clock', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasRRHHNomina)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-nomina')">
                         <span><i class="fas fa-money-check-alt"></i> Nómina</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="rrhh-nomina" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina', 'rrhh', '{{ route('rh.calculo') }}', 'fa-calculator')">
-                            <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Cálculo de Nómina</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'rrhh', 'fa-calculator', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina', 'rrhh', '{{ route('rh.pagos') }}', 'fa-money-check-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Pagos de Nómina</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'rrhh', 'fa-money-check-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)', 'rrhh', '{{ route('rh.recibos') }}', 'fa-file-invoice-dollar')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-invoice-dollar"></i><span>Recibos de Nómina (Timbrado)</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'rrhh', 'fa-file-invoice-dollar', this)"></i>
-                        </div>
+                        @php
+                            $rrhhCalculo = ModuleConfig::where('name', 'rrhh_calculo')->where('is_enabled', true)->exists();
+                            $rrhhPagos = ModuleConfig::where('name', 'rrhh_pagos')->where('is_enabled', true)->exists();
+                            $rrhhRecibos = ModuleConfig::where('name', 'rrhh_recibos')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($rrhhCalculo)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Cálculo de Nómina', 'rrhh', '{{ route('rh.calculo') }}', 'fa-calculator')">
+                                <div class="flex items-center flex-1"><i class="fas fa-calculator"></i><span>Cálculo de Nómina</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Cálculo de Nómina', 'rrhh', 'fa-calculator', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhPagos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Pagos de Nómina', 'rrhh', '{{ route('rh.pagos') }}', 'fa-money-check-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-money-check-alt"></i><span>Pagos de Nómina</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Pagos de Nómina', 'rrhh', 'fa-money-check-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhRecibos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Recibos de Nómina (Timbrado)', 'rrhh', '{{ route('rh.recibos') }}', 'fa-file-invoice-dollar')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-invoice-dollar"></i><span>Recibos de Nómina (Timbrado)</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Recibos de Nómina (Timbrado)', 'rrhh', 'fa-file-invoice-dollar', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasRRHHPrestaciones)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-prestaciones')">
                         <span><i class="fas fa-hand-holding-usd"></i> Prestaciones y Descuentos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="rrhh-prestaciones" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos', 'rrhh', '{{ route('rh.prestamos.index') }}', 'fa-hand-holding-usd')">
-                            <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Préstamos y Descuentos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'rrhh', 'fa-hand-holding-usd', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones', 'rrhh', '{{ route('rh.vacaciones.index') }}', 'fa-umbrella-beach')">
-                            <div class="flex items-center flex-1"><i class="fas fa-umbrella-beach"></i><span>Vacaciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'rrhh', 'fa-umbrella-beach', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones', 'rrhh', '{{ route('rh.finiquito.index') }}', 'fa-file-contract')">
-                            <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Finiquitos y Liquidaciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finiquitos y Liquidaciones', 'rrhh', 'fa-file-contract', this)"></i>
-                        </div>
+                        @php
+                            $rrhhPrestamos = ModuleConfig::where('name', 'rrhh_prestamos')->where('is_enabled', true)->exists();
+                            $rrhhVacaciones = ModuleConfig::where('name', 'rrhh_vacaciones')->where('is_enabled', true)->exists();
+                            $rrhhFiniquitos = ModuleConfig::where('name', 'rrhh_finiquitos')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($rrhhPrestamos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Préstamos', 'rrhh', '{{ route('rh.prestamos.index') }}', 'fa-hand-holding-usd')">
+                                <div class="flex items-center flex-1"><i class="fas fa-hand-holding-usd"></i><span>Préstamos y Descuentos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Préstamos', 'rrhh', 'fa-hand-holding-usd', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhVacaciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Vacaciones', 'rrhh', '{{ route('rh.vacaciones.index') }}', 'fa-umbrella-beach')">
+                                <div class="flex items-center flex-1"><i class="fas fa-umbrella-beach"></i><span>Vacaciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vacaciones', 'rrhh', 'fa-umbrella-beach', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhFiniquitos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Finiquitos y Liquidaciones', 'rrhh', '{{ route('rh.finiquito.index') }}', 'fa-file-contract')">
+                                <div class="flex items-center flex-1"><i class="fas fa-file-contract"></i><span>Finiquitos y Liquidaciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Finiquitos y Liquidaciones', 'rrhh', 'fa-file-contract', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
-                <!-- <div class="sidebar-menu-group">
-                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-unidades')">
-                        <span><i class="fas fa-car"></i> Unidades y Flotilla</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                    <div id="rrhh-unidades" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Semáforo de Documentos de Unidades', 'rrhh', '{{ route('rh.semaforos_unidades') }}', 'fa-traffic-light')">
-                            <div class="flex items-center flex-1"><i class="fas fa-traffic-light"></i><span>Semáforo de Documentos de Unidades</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Semáforo de Documentos de Unidades', 'rrhh', 'fa-traffic-light', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Asignación de Flotilla', 'rrhh', '{{ route('rh.flotillas') }}', 'fa-car')">
-                            <div class="flex items-center flex-1"><i class="fas fa-car"></i><span>Asignación de Flotilla</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Asignación de Flotilla', 'rrhh', 'fa-car', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Control de Vehículos', 'rrhh', '{{ route('rh.carros') }}', 'fa-tachometer-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-tachometer-alt"></i><span>Control de Vehículos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Control de Vehículos', 'rrhh', 'fa-tachometer-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Bitácora de Uso', 'rrhh', '{{ route('rh.bitacora') }}', 'fa-book')">
-                            <div class="flex items-center flex-1"><i class="fas fa-book"></i><span>Bitácora de Uso</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Bitácora de Uso', 'rrhh', 'fa-book', this)"></i>
-                        </div>
-                    </div>
-                </div> -->
+                @endif
+
+                @if($hasRRHHCatalogos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-catalogos')">
                         <span><i class="fas fa-list"></i> Catálogos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="rrhh-catalogos" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos', 'rrhh', '{{ route('rh.roles') }}', 'fa-user-tag')">
-                            <div class="flex items-center flex-1"><i class="fas fa-user-tag"></i><span>Roles y Puestos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'rrhh', 'fa-user-tag', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos', 'rrhh', '{{ route('rh.areas') }}', 'fa-sitemap')">
-                            <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Áreas y Departamentos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'rrhh', 'fa-sitemap', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Usuarios', 'rrhh', '{{ route('rh.turnos') }}', 'fa-clock')">
-                            <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Usuarios</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Usuarios', 'rrhh', 'fa-clock', this)"></i>
-                        </div>
+                        @php
+                            $rrhhRoles = ModuleConfig::where('name', 'rrhh_roles')->where('is_enabled', true)->exists();
+                            $rrhhAreas = ModuleConfig::where('name', 'rrhh_areas')->where('is_enabled', true)->exists();
+                            $rrhhUsuarios = ModuleConfig::where('name', 'rrhh_usuarios')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($rrhhRoles)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Roles y Puestos', 'rrhh', '{{ route('rh.roles') }}', 'fa-user-tag')">
+                                <div class="flex items-center flex-1"><i class="fas fa-user-tag"></i><span>Roles y Puestos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Roles y Puestos', 'rrhh', 'fa-user-tag', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhAreas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Áreas y Departamentos', 'rrhh', '{{ route('rh.areas') }}', 'fa-sitemap')">
+                                <div class="flex items-center flex-1"><i class="fas fa-sitemap"></i><span>Áreas y Departamentos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Áreas y Departamentos', 'rrhh', 'fa-sitemap', this)"></i>
+                            </div>
+                        @endif
+                        @if($rrhhUsuarios)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Usuarios', 'rrhh', '{{ route('rh.turnos') }}', 'fa-clock')">
+                                <div class="flex items-center flex-1"><i class="fas fa-clock"></i><span>Usuarios</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Usuarios', 'rrhh', 'fa-clock', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
-                <!-- <div class="sidebar-menu-group">
-                    <div class="sidebar-menu-title" onclick="toggleSubmenu('rrhh-reportes')">
-                        <span><i class="fas fa-chart-bar"></i> Reportes</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                     <div id="rrhh-reportes" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Costos de Nómina por Proyecto', 'rrhh', '{{ route ('rh.costos') }}', 'fa-money-bill-wave')">
-                            <div class="flex items-center flex-1"><i class="fas fa-money-bill-wave"></i><span>Costos de Nómina por Proyecto</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Costos de Nómina por Proyecto', 'rrhh', 'fa-money-bill-wave', this)"></i>
-                        </div>
-                    </div>
-                </div> -->
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- ==================== SIDEBAR DE INVENTARIOS ==================== -->
+        @php
+            $hasInventariosModules = ModuleConfig::where('section', 'inventarios')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasInventariosModules)
         <div id="sidebar-inventarios" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -2270,81 +2826,134 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasInvCatalogos = ModuleConfig::where('section', 'inventarios')
+                        ->whereIn('name', ['inv_almacenes', 'inv_materiales', 'inv_activos', 'inv_familias'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasInvExistencias = ModuleConfig::where('section', 'inventarios')
+                        ->whereIn('name', ['inv_existencias', 'inv_requisicion'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasInvMovimientos = ModuleConfig::where('section', 'inventarios')
+                        ->whereIn('name', ['inv_entradas', 'inv_traspasos', 'inv_devoluciones'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                @endphp
+
+                @if($hasInvCatalogos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-catalogos')">
                         <span><i class="fas fa-warehouse"></i> Catálogos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="inventarios-catalogos" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes', 'inventarios', '{{ route('almacen.almacen') }}', 'fa-warehouse')">
-                            <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Catálogo de Almacenes</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'inventarios', 'fa-warehouse', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '{{ route('almacen.articulo') }}', 'fa-box')">
-                            <div class="flex items-center flex-1"><i class="fas fa-box"></i><span>Catálogo de Articulos</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
-                        </div>
-                        <!-- ======================================================================================== -->
+                        @php
+                            $invAlmacenes = ModuleConfig::where('name', 'inv_almacenes')->where('is_enabled', true)->exists();
+                            $invMateriales = ModuleConfig::where('name', 'inv_materiales')->where('is_enabled', true)->exists();
+                            $invActivos = ModuleConfig::where('name', 'inv_activos')->where('is_enabled', true)->exists();
+                            $invFamilias = ModuleConfig::where('name', 'inv_familias')->where('is_enabled', true)->exists();
+                        @endphp
 
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Activos', 'almacen', '{{ route('almacen.activos') }}', 'fa-tools')">
+                        @if($invAlmacenes)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Almacenes', 'inventarios', '{{ route('almacen.almacen') }}', 'fa-warehouse')">
+                                <div class="flex items-center flex-1"><i class="fas fa-warehouse"></i><span>Catálogo de Almacenes</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Almacenes', 'inventarios', 'fa-warehouse', this)"></i>
+                            </div>
+                        @endif
+                        @if($invMateriales)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Materiales', 'inventarios', '{{ route('almacen.articulo') }}', 'fa-box')">
+                                <div class="flex items-center flex-1"><i class="fas fa-box"></i><span>Catálogo de Articulos</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Materiales', 'inventarios', 'fa-box', this)"></i>
+                            </div>
+                        @endif
+                        @if($invActivos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Activos', 'almacen', '{{ route('almacen.activos') }}', 'fa-tools')">
                                 <div class="flex items-center flex-1"><i class="fas fa-tools"></i><span>Catálogo de Activos</span></div>
                                 <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Activos', 'almacen', 'fa-tools', this)"></i>
-                        </div>
-
-                        <!-- ========================================================================================== -->
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familias') }}', 'fa-book-open-reader')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-book-open-reader"></i><span>Catálogo de Familias</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
-                        </div>
+                            </div>
+                        @endif
+                        @if($invFamilias)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Catálogo de Familias', 'inventarios', '{{ route('almacen.familias') }}', 'fa-book-open-reader')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-book-open-reader"></i><span>Catálogo de Familias</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Catálogo de Familias', 'inventarios', 'fa-book-open-reader', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasInvExistencias)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-existencias')">
                         <span><i class="fas fa-clipboard-list"></i> Existencias</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="inventarios-existencias" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén', 'inventarios', '{{ route('almacen.inventario') }}', 'fa-clipboard-list')">
-                            <div class="flex items-center flex-1"><i class="fas fa-clipboard-list"></i><span>Existencias por Almacén</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'inventarios', 'fa-clipboard-list', this)"></i>
-                        </div>
+                        @php
+                            $invExistencias = ModuleConfig::where('name', 'inv_existencias')->where('is_enabled', true)->exists();
+                            $invRequisicion = ModuleConfig::where('name', 'inv_requisicion')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($invExistencias)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Existencias por Almacén', 'inventarios', '{{ route('almacen.inventario') }}', 'fa-clipboard-list')">
+                                <div class="flex items-center flex-1"><i class="fas fa-clipboard-list"></i><span>Existencias por Almacén</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Existencias por Almacén', 'inventarios', 'fa-clipboard-list', this)"></i>
+                            </div>
+                        @endif
+                        @if($invRequisicion)
                             <div class="sidebar-submenu-item" onclick="navigateTo('Requisición', 'inventarios', '{{ route('almacen.requisicion') }}', 'fa-truck-fast')">
                                 <div class="flex items-center flex-1"><i class="fa-solid fa-truck-fast"></i><span>Requisición</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisición', 'inventarios', 'fa-truck-fast', this)"></i>
-                        </div>
-                        <!-- <div class="sidebar-submenu-item" onclick="navigateTo('Vales de Equipo', 'inventarios', '{{ route('almacen.vales') }}', 'fa-stream')">
-                            <div class="flex items-center flex-1"><i class="fas fa-stream"></i><span>Vales de equipo</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Vales de Equipo', 'inventarios', 'fa-stream', this)"></i>
-                        </div> -->
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisición', 'inventarios', 'fa-truck-fast', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
 
-
-
+                @if($hasInvMovimientos)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('inventarios-movimientos')">
                         <span><i class="fas fa-exchange-alt"></i> Movimientos</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="inventarios-movimientos" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas', 'inventarios', '{{ route('almacen.entrada') }}', 'fa-exchange-alt')">
-                            <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Entradas y Salidas</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'inventarios', 'fa-exchange-alt', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
-                            <div class="flex items-center flex-1"><i class="fas fa-truck-moving"></i><span>Traspasos entre Almacenes</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'inventarios', 'fa-truck-moving', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisiciones_devoluciones_equipo') }}', 'fa-adjust')">
-                            <div class="flex items-center flex-1"><i class="fas fa-adjust"></i><span>Requisiciones de equipo y Devoluciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones y Devoluciones', 'inventarios', 'fa-adjust', this)"></i>
-                        </div>
+                        @php
+                            $invEntradas = ModuleConfig::where('name', 'inv_entradas')->where('is_enabled', true)->exists();
+                            $invTraspasos = ModuleConfig::where('name', 'inv_traspasos')->where('is_enabled', true)->exists();
+                            $invDevoluciones = ModuleConfig::where('name', 'inv_devoluciones')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($invEntradas)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Entradas y Salidas', 'inventarios', '{{ route('almacen.entrada') }}', 'fa-exchange-alt')">
+                                <div class="flex items-center flex-1"><i class="fas fa-exchange-alt"></i><span>Entradas y Salidas</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Entradas y Salidas', 'inventarios', 'fa-exchange-alt', this)"></i>
+                            </div>
+                        @endif
+                        @if($invTraspasos)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Traspasos entre Almacenes', 'inventarios', '{{ route('almacen.traspasos') }}', 'fa-truck-moving')">
+                                <div class="flex items-center flex-1"><i class="fas fa-truck-moving"></i><span>Traspasos entre Almacenes</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Traspasos entre Almacenes', 'inventarios', 'fa-truck-moving', this)"></i>
+                            </div>
+                        @endif
+                        @if($invDevoluciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones y Devoluciones', 'inventarios', '{{ route('almacen.requisiciones_devoluciones_equipo') }}', 'fa-adjust')">
+                                <div class="flex items-center flex-1"><i class="fas fa-adjust"></i><span>Requisiciones de equipo y Devoluciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones y Devoluciones', 'inventarios', 'fa-adjust', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- ==================== SIDEBAR DE COMPRAS ==================== -->
+        @php
+            $hasComprasModules = ModuleConfig::where('section', 'compras')->where('is_enabled', true)->exists();
+        @endphp
+        @if($hasComprasModules)
         <div id="sidebar-compras" class="section-sidebar">
             <div class="section-sidebar-header">
                 <div class="section-sidebar-title">
@@ -2357,38 +2966,76 @@ console.log('User ID:', window.userId);
             </div>
             
             <div class="section-sidebar-content">
+                @php
+                    $hasComprasRequisiciones = ModuleConfig::where('section', 'compras')
+                        ->whereIn('name', ['compras_requisiciones', 'compras_autorizacion'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasComprasOrdenes = ModuleConfig::where('section', 'compras')
+                        ->whereIn('name', ['compras_ordenes', 'compras_autorizacion_ordenes'])
+                        ->where('is_enabled', true)
+                        ->exists();
+                    $hasComprasProveedores = ModuleConfig::where('name', 'compras_proveedores')->where('is_enabled', true)->exists();
+                    $hasComprasAlmacen = ModuleConfig::where('name', 'compras_almacen')->where('is_enabled', true)->exists();
+                @endphp
+
+                @if($hasComprasRequisiciones)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-requisiciones')">
                         <span><i class="fas fa-clipboard-check"></i> Requisiciones</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="compras-requisiciones" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones', 'compras', '{{ route('compras.requisicion') }}', 'fa-clipboard-check')">
-                            <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Requisiciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'compras', 'fa-clipboard-check', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Requisiciones', 'compras', '{{ route('compras.autorizacion') }}', 'fa-square-check')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-square-check"></i><span>Autorizacion de Requisiciones</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Requisiciones', 'compras', 'fa-square-check', this)"></i>
-                        </div>
+                        @php
+                            $comprasRequisiciones = ModuleConfig::where('name', 'compras_requisiciones')->where('is_enabled', true)->exists();
+                            $comprasAutorizacion = ModuleConfig::where('name', 'compras_autorizacion')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($comprasRequisiciones)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Requisiciones', 'compras', '{{ route('compras.requisicion') }}', 'fa-clipboard-check')">
+                                <div class="flex items-center flex-1"><i class="fas fa-clipboard-check"></i><span>Requisiciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Requisiciones', 'compras', 'fa-clipboard-check', this)"></i>
+                            </div>
+                        @endif
+                        @if($comprasAutorizacion)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Requisiciones', 'compras', '{{ route('compras.autorizacion') }}', 'fa-square-check')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-square-check"></i><span>Autorizacion de Requisiciones</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Requisiciones', 'compras', 'fa-square-check', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasComprasOrdenes)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-ordenes')">
                         <span><i class="fas fa-shopping-cart"></i> Órdenes de Compra</span>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div id="compras-ordenes" class="sidebar-submenu">
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra', 'compras', '{{ route('compras.ordenes') }}', 'fa-shopping-cart')">
-                            <div class="flex items-center flex-1"><i class="fas fa-shopping-cart"></i><span>Órdenes de Compra</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'compras', 'fa-shopping-cart', this)"></i>
-                        </div>
-                        <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizacion-cotizaciones') }}', 'fa-circle-check')">
-                            <div class="flex items-center flex-1"><i class="fa-solid fa-circle-check"></i><span>Autorizacion de Órdenes de Compra</span></div>
-                            <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Órdenes de Compra', 'compras', 'fa-circle-check', this)"></i>
-                        </div>
+                        @php
+                            $comprasOrdenes = ModuleConfig::where('name', 'compras_ordenes')->where('is_enabled', true)->exists();
+                            $comprasAutorizacionOrdenes = ModuleConfig::where('name', 'compras_autorizacion_ordenes')->where('is_enabled', true)->exists();
+                        @endphp
+
+                        @if($comprasOrdenes)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Órdenes de Compra', 'compras', '{{ route('compras.ordenes') }}', 'fa-shopping-cart')">
+                                <div class="flex items-center flex-1"><i class="fas fa-shopping-cart"></i><span>Órdenes de Compra</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Órdenes de Compra', 'compras', 'fa-shopping-cart', this)"></i>
+                            </div>
+                        @endif
+                        @if($comprasAutorizacionOrdenes)
+                            <div class="sidebar-submenu-item" onclick="navigateTo('Autorizacion de Órdenes de Compra', 'compras', '{{ route('compras.autorizacion-cotizaciones') }}', 'fa-circle-check')">
+                                <div class="flex items-center flex-1"><i class="fa-solid fa-circle-check"></i><span>Autorizacion de Órdenes de Compra</span></div>
+                                <i class="fas fa-star favorite-star" onclick="event.stopPropagation(); toggleFavorite('Autorizacion de Órdenes de Compra', 'compras', 'fa-circle-check', this)"></i>
+                            </div>
+                        @endif
                     </div>
                 </div>
+                @endif
+
+                @if($hasComprasProveedores)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-subcontratistas')">
                         <span><i class="fas fa-handshake"></i> Proveedores</span>
@@ -2401,6 +3048,9 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
+                @endif
+
+                @if($hasComprasAlmacen)
                 <div class="sidebar-menu-group">
                     <div class="sidebar-menu-title" onclick="toggleSubmenu('compras-almacen')">
                         <span><i class="fas fa-warehouse"></i> Almacén por Obra</span>
@@ -2413,8 +3063,10 @@ console.log('User ID:', window.userId);
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
+        @endif
 
         <!-- BARRA LATERAL DE FAVORITOS -->
         <div class="quick-sidebar" id="quick-sidebar">
@@ -2961,6 +3613,192 @@ showTemporaryError(message) {
                 } 
             }); 
         });
+
+        // ============================================
+// FUNCIONES PARA MÓDULOS
+// ============================================
+
+/**
+ * Activar/Desactivar un módulo
+ */
+function toggleModule(moduleId) {
+    const button = event.target.closest('button');
+    const originalHtml = button.innerHTML;
+    
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    
+    fetch(`/modules/toggle/${moduleId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message);
+            // Recargar la página para actualizar la tabla
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showAlert('modulesAlert', 'error', data.message);
+            button.disabled = false;
+            button.innerHTML = originalHtml;
+        }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al procesar la solicitud');
+        button.disabled = false;
+        button.innerHTML = originalHtml;
+    });
+}
+
+/**
+ * Actualizar el orden de un módulo (desde el input numérico)
+ */
+function updateModuleOrder(moduleId, newOrder) {
+    if (parseInt(newOrder) < 0) {
+        showAlert('modulesAlert', 'error', 'El orden no puede ser negativo');
+        return;
+    }
+    
+    const input = event.target;
+    const originalValue = input.value;
+    input.disabled = true;
+    
+    fetch(`/modules/update-order/${moduleId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ order: parseInt(newOrder) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message);
+            // Recargar para actualizar la tabla correctamente
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showAlert('modulesAlert', 'error', data.message);
+            input.value = originalValue;
+            input.disabled = false;
+        }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
+        input.value = originalValue;
+        input.disabled = false;
+    });
+}
+
+/**
+ * Mover un módulo hacia arriba o abajo
+ */
+function moveModule(moduleId, direction) {
+    const row = document.querySelector(`tr[data-id="${moduleId}"]`);
+    if (!row) return;
+    
+    const buttons = row.querySelectorAll('button');
+    buttons.forEach(btn => btn.disabled = true);
+    
+    fetch(`/modules/move/${moduleId}/${direction}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message);
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showAlert('modulesAlert', 'error', data.message);
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al mover el módulo');
+        buttons.forEach(btn => btn.disabled = false);
+    });
+}
+
+/**
+ * Mostrar alerta en el contenedor de módulos
+ */
+function showAlert(containerId, type, message) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const types = {
+        success: { icon: 'fa-check-circle', color: '#155724', bg: '#d4edda', border: '#c3e6cb' },
+        error: { icon: 'fa-exclamation-circle', color: '#721c24', bg: '#f8d7da', border: '#f5c6cb' },
+        warning: { icon: 'fa-exclamation-triangle', color: '#856404', bg: '#fff3cd', border: '#ffeaa7' },
+        info: { icon: 'fa-info-circle', color: '#0c5460', bg: '#d1ecf1', border: '#bee5eb' }
+    };
+
+    const t = types[type] || types.info;
+
+    container.style.display = 'block';
+    container.className = 'alert-custom ' + type;
+    container.innerHTML = `<i class="fas ${t.icon}"></i> ${message}`;
+    container.style.color = t.color;
+    container.style.background = t.bg;
+    container.style.borderColor = t.border;
+
+    // Ocultar después de 5 segundos
+    if (window.alertTimeout) {
+        clearTimeout(window.alertTimeout);
+    }
+    window.alertTimeout = setTimeout(() => {
+        container.style.display = 'none';
+    }, 5000);
+}
+
+/**
+ * Actualizar el orden de todos los módulos (desde drag & drop)
+ */
+function updateAllModuleOrders() {
+    const rows = document.querySelectorAll('#modulesTable tbody tr');
+    const modules = [];
+    
+    rows.forEach((row, index) => {
+        const id = row.dataset.id;
+        const orderInput = row.querySelector('input[type="number"]');
+        if (orderInput) {
+            orderInput.value = index;
+            modules.push({ id: id, order: index });
+        }
+    });
+    
+    fetch('{{ route("config.modules.order") }}', {
+        method: 'PUT',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ modules: modules })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message);
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showAlert('modulesAlert', 'error', data.message);
+        }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
+    });
+}
     </script>
     
     <!-- Modal de confirmación de cierre de sesión -->

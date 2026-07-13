@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/ConfigController.php
 
 namespace App\Http\Controllers;
 
@@ -6,7 +7,7 @@ use App\Models\Config\SystemConfig;
 use App\Models\Config\CompanyInfo;
 use App\Models\Config\EmailConfig;
 use App\Models\Config\SecurityConfig;
-use App\Models\Config\ModuleConfig;
+use App\Models\ModuleConfig; // ✅ Import correcto (sin "Config/")
 use App\Models\Config\NotificationTemplate;
 use App\Models\Config\AuditLog;
 use App\Models\Config\SystemBackup;
@@ -38,6 +39,8 @@ class ConfigController extends Controller
      */
     public function index()
     {
+
+;
         $user = auth()->user();
         $isSuperAdmin = $user->rol === 'super_admin';
         
@@ -55,7 +58,7 @@ class ConfigController extends Controller
         $company = CompanyInfo::first();
         $emailConfig = EmailConfig::first();
         $securityConfig = SecurityConfig::first();
-        $modules = ModuleConfig::ordered()->get();
+        $modules = ModuleConfig::ordered(); // Si ordered() ya retorna una Collection // Esto está bien si ordered() devuelve un Builder
         $templates = NotificationTemplate::active()->get();
         $backups = SystemBackup::orderBy('created_at', 'desc')->get();
         
@@ -157,101 +160,101 @@ class ConfigController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function updateCompany(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'razon_social' => 'required|string|max:255',
-        'rfc' => 'required|string|max:13|unique:company_info,rfc,' . ($request->id ?? 'NULL') . ',id',
-        'nombre_comercial' => 'nullable|string|max:255',
-        'regimen_fiscal' => 'nullable|string|max:100',
-        'telefono' => 'nullable|string|max:20',
-        'email' => 'nullable|email|max:255',
-        'email_facturacion' => 'nullable|email|max:255',
-        'website' => 'nullable|url|max:255',
-        'calle' => 'nullable|string|max:255',
-        'num_exterior' => 'nullable|string|max:50',
-        'num_interior' => 'nullable|string|max:50',
-        'colonia' => 'nullable|string|max:255',
-        'codigo_postal' => 'nullable|string|max:10',
-        'municipio' => 'nullable|string|max:100',
-        'estado' => 'nullable|string|max:100',
-        'pais' => 'nullable|string|max:100',
-        'serie_default' => 'nullable|string|max:10',
-        'logo' => 'nullable|image|max:2048',
-        'login_logo' => 'nullable|image|max:2048', // 🔥 NUEVO
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'errors' => $validator->errors()
-        ], 422);
-    }
-
-    try {
-        DB::beginTransaction();
-
-        $company = CompanyInfo::first();
-        $oldValues = $company ? $company->toArray() : null;
-
-        $data = $request->except(['id', 'logo', 'login_logo', '_token', '_method']);
-
-        // Handle logo upload (empresa)
-        if ($request->hasFile('logo')) {
-            $logoPath = $this->uploadLogo($request->file('logo'));
-            $data['logo_path'] = $logoPath;
-        }
-
-        // 🔥 Handle login logo upload
-        if ($request->hasFile('login_logo')) {
-            $loginLogoPath = $this->uploadLoginLogo($request->file('login_logo'));
-            $data['login_logo_path'] = $loginLogoPath;
-        }
-
-        if ($company) {
-            $company->update($data);
-            $message = 'Información de la empresa actualizada correctamente';
-        } else {
-            $company = CompanyInfo::create($data);
-            $message = 'Información de la empresa creada correctamente';
-        }
-
-        $this->logAudit('config_update', 'company_info', [
-            'section' => 'company',
-            'old_values' => $oldValues,
-            'new_values' => $company->toArray(),
+    {
+        $validator = Validator::make($request->all(), [
+            'razon_social' => 'required|string|max:255',
+            'rfc' => 'required|string|max:13|unique:company_info,rfc,' . ($request->id ?? 'NULL') . ',id',
+            'nombre_comercial' => 'nullable|string|max:255',
+            'regimen_fiscal' => 'nullable|string|max:100',
+            'telefono' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'email_facturacion' => 'nullable|email|max:255',
+            'website' => 'nullable|url|max:255',
+            'calle' => 'nullable|string|max:255',
+            'num_exterior' => 'nullable|string|max:50',
+            'num_interior' => 'nullable|string|max:50',
+            'colonia' => 'nullable|string|max:255',
+            'codigo_postal' => 'nullable|string|max:10',
+            'municipio' => 'nullable|string|max:100',
+            'estado' => 'nullable|string|max:100',
+            'pais' => 'nullable|string|max:100',
+            'serie_default' => 'nullable|string|max:10',
+            'logo' => 'nullable|image|max:2048',
+            'login_logo' => 'nullable|image|max:2048',
         ]);
 
-        DB::commit();
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
 
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $company
-        ]);
+        try {
+            DB::beginTransaction();
 
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Error al actualizar información de la empresa: ' . $e->getMessage());
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar la información: ' . $e->getMessage()
-        ], 500);
+            $company = CompanyInfo::first();
+            $oldValues = $company ? $company->toArray() : null;
+
+            $data = $request->except(['id', 'logo', 'login_logo', '_token', '_method']);
+
+            // Handle logo upload (empresa)
+            if ($request->hasFile('logo')) {
+                $logoPath = $this->uploadLogo($request->file('logo'));
+                $data['logo_path'] = $logoPath;
+            }
+
+            // Handle login logo upload
+            if ($request->hasFile('login_logo')) {
+                $loginLogoPath = $this->uploadLoginLogo($request->file('login_logo'));
+                $data['login_logo_path'] = $loginLogoPath;
+            }
+
+            if ($company) {
+                $company->update($data);
+                $message = 'Información de la empresa actualizada correctamente';
+            } else {
+                $company = CompanyInfo::create($data);
+                $message = 'Información de la empresa creada correctamente';
+            }
+
+            $this->logAudit('config_update', 'company_info', [
+                'section' => 'company',
+                'old_values' => $oldValues,
+                'new_values' => $company->toArray(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $company
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al actualizar información de la empresa: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar la información: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
 
-/**
- * Upload login logo.
- *
- * @param  \Illuminate\Http\UploadedFile  $file
- * @return string
- */
-private function uploadLoginLogo($file)
-{
-    $filename = 'login_logo_' . time() . '.' . $file->getClientOriginalExtension();
-    $path = $file->storeAs('company', $filename, 'public');
-    return $path;
-}
+    /**
+     * Upload login logo.
+     *
+     * @param  \Illuminate\Http\UploadedFile  $file
+     * @return string
+     */
+    private function uploadLoginLogo($file)
+    {
+        $filename = 'login_logo_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('company', $filename, 'public');
+        return $path;
+    }
 
     // ============================================
     // CONFIGURACIÓN DE CORREO
@@ -522,6 +525,58 @@ private function uploadLoginLogo($file)
     }
 
     /**
+     * Move module up or down.
+     *
+     * @param  int  $id
+     * @param  string  $direction
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function moveModule($id, $direction)
+    {
+        try {
+            $module = ModuleConfig::findOrFail($id);
+            $currentOrder = $module->order;
+
+            if ($direction === 'up') {
+                $swapModule = ModuleConfig::where('order', '<', $currentOrder)
+                    ->orderBy('order', 'desc')
+                    ->first();
+            } else {
+                $swapModule = ModuleConfig::where('order', '>', $currentOrder)
+                    ->orderBy('order', 'asc')
+                    ->first();
+            }
+
+            if ($swapModule) {
+                $tempOrder = $currentOrder;
+                $module->order = $swapModule->order;
+                $swapModule->order = $tempOrder;
+                $module->save();
+                $swapModule->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Módulo movido correctamente',
+                    'modules' => ModuleConfig::ordered()->get()
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No se puede mover el módulo en esa dirección'
+            ], 400);
+
+        } catch (\Exception $e) {
+            Log::error('Error al mover módulo: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al mover el módulo: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Update module order.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -531,7 +586,7 @@ private function uploadLoginLogo($file)
     {
         $validator = Validator::make($request->all(), [
             'modules' => 'required|array',
-            'modules.*.id' => 'required|exists:module_config,id',
+            'modules.*.id' => 'required|exists:module_configs,id',
             'modules.*.order' => 'required|integer|min:0',
         ]);
 

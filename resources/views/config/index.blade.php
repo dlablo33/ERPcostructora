@@ -5,7 +5,7 @@
     use App\Models\Config\CompanyInfo;
     use App\Models\Config\EmailConfig;
     use App\Models\Config\SecurityConfig;
-    use App\Models\Config\ModuleConfig;
+    use App\Models\ModuleConfig;
     use App\Models\Config\NotificationTemplate;
     use App\Models\Config\AuditLog;
     use App\Models\Config\SystemBackup;
@@ -123,6 +123,12 @@
     .btn-config-sm {
         padding: 6px 14px;
         font-size: 12px;
+    }
+
+    .btn-config:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
     }
 
     /* ===== LAYOUT ===== */
@@ -432,6 +438,12 @@
         align-items: center;
         gap: 12px;
         font-size: 14px;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .alert-custom.success {
@@ -604,6 +616,214 @@
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
+
+    /* ===== ESTILOS PARA ACORDEÓN DE MÓDULOS ===== */
+    .accordion-section {
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .accordion-section .accordion-header {
+        background: #f8f9fa;
+        padding: 14px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+
+    .accordion-section .accordion-header:hover {
+        background: #f1f3f5;
+    }
+
+    .accordion-section .accordion-header .header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .accordion-section .accordion-header .header-left .section-icon {
+        font-size: 18px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: #083CAE;
+        color: white;
+    }
+
+    .accordion-section .accordion-header .header-left .section-name {
+        font-weight: 600;
+        font-size: 15px;
+        color: #212529;
+    }
+
+    .accordion-section .accordion-header .header-left .section-count {
+        font-size: 12px;
+        color: #6c757d;
+        background: #e9ecef;
+        padding: 2px 10px;
+        border-radius: 12px;
+    }
+
+    .accordion-section .accordion-header .header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .accordion-section .accordion-header .header-right .section-status {
+        font-size: 12px;
+        padding: 3px 12px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .accordion-section .accordion-header .header-right .section-status.all-active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .accordion-section .accordion-header .header-right .section-status.all-inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .accordion-section .accordion-header .header-right .section-status.partial {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .accordion-section .accordion-header .header-right .accordion-arrow {
+        transition: transform 0.3s ease;
+        color: #6c757d;
+    }
+
+    .accordion-section .accordion-header .header-right .accordion-arrow.open {
+        transform: rotate(180deg);
+    }
+
+    .accordion-section .accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        background: white;
+    }
+
+    .accordion-section .accordion-body.open {
+        max-height: 5000px;
+    }
+
+    .accordion-section .accordion-body .body-content {
+        padding: 16px 20px;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .accordion-section .accordion-body .body-content table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    .accordion-section .accordion-body .body-content table thead th {
+        background: #f8f9fa;
+        padding: 10px 14px;
+        text-align: left;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #dee2e6;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .accordion-section .accordion-body .body-content table tbody td {
+        padding: 10px 14px;
+        border-bottom: 1px solid #e9ecef;
+        color: #212529;
+        vertical-align: middle;
+    }
+
+    .accordion-section .accordion-body .body-content table tbody tr:hover td {
+        background: #f8f9fa;
+    }
+
+    .accordion-section .accordion-body .body-content .module-icon-sm {
+        font-size: 16px;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+    }
+
+    .accordion-section .accordion-body .body-content .module-icon-sm.active-icon {
+        color: #083CAE;
+        background: #e8f0fe;
+        border-color: #b3cff5;
+    }
+
+    .accordion-section .accordion-body .body-content .module-icon-sm.inactive-icon {
+        color: #adb5bd;
+        background: #f8f9fa;
+        border-color: #dee2e6;
+        opacity: 0.6;
+    }
+
+    .btn-toggle-section {
+        padding: 6px 16px;
+        font-size: 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-toggle-section.btn-toggle-all-active {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-toggle-section.btn-toggle-all-active:hover {
+        background: #218838;
+    }
+
+    .btn-toggle-section.btn-toggle-all-inactive {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-toggle-section.btn-toggle-all-inactive:hover {
+        background: #c82333;
+    }
+
+    .section-badge {
+        font-size: 10px;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .section-badge.bi { background: #e8d5f5; color: #6c2bd9; }
+    .section-badge.administracion { background: #d4edda; color: #155724; }
+    .section-badge.contabilidad { background: #d1ecf1; color: #0c5460; }
+    .section-badge.proyectos { background: #fff3cd; color: #856404; }
+    .section-badge.rrhh { background: #f8d7da; color: #721c24; }
+    .section-badge.inventarios { background: #e8f0fe; color: #083CAE; }
+    .section-badge.compras { background: #fce4ec; color: #c62828; }
 </style>
 
 <div class="config-container">
@@ -649,6 +869,11 @@
             </button>
             <button class="nav-item" data-tab="modules" onclick="showTab('modules')">
                 <i class="fas fa-cubes"></i> Módulos
+                @if(isset($modules) && $modules->count() > 0)
+                    <span class="badge-status info" style="font-size:9px;margin-left:auto;padding:1px 8px;">{{ $modules->count() }}</span>
+                @else
+                    <span class="badge-status inactive" style="font-size:9px;margin-left:auto;padding:1px 8px;">0</span>
+                @endif
             </button>
             <button class="nav-item" data-tab="templates" onclick="showTab('templates')">
                 <i class="fas fa-file-alt"></i> Plantillas
@@ -714,15 +939,6 @@
                             </select>
                         </div>
                     </div>
-
-                    <!-- <div class="toggle-container">
-                        <label class="toggle-switch">
-                            <input type="checkbox" name="configs[maintenance_mode][value]" 
-                                   value="true" {{ SystemConfig::getValue('maintenance_mode') == 'true' ? 'checked' : '' }}>
-                            <span class="slider"></span>
-                        </label>
-                        <span class="toggle-label">Modo Mantenimiento</span> 
-                    </div> -->
 
                     <button type="submit" class="btn-config btn-config-primary" id="saveGeneralBtn">
                         <i class="fas fa-save"></i> Guardar Configuración
@@ -843,40 +1059,39 @@
                     </div>
 
                     <div class="form-row">
-    <div class="form-group">
-        <label>Serie Predeterminada</label>
-        <input type="text" name="serie_default" class="form-control" 
-               value="{{ $company->serie_default ?? 'A' }}">
-    </div>
-    <div class="form-group">
-        <label>Logo de la Empresa</label>
-        <input type="file" name="logo" class="form-control form-control-file" accept="image/*">
-        <div class="help-text">Formatos: JPG, PNG, SVG. Máx: 2MB</div>
-        @if(isset($company) && $company->logo_path)
-            <div style="margin-top:8px;">
-                <img src="{{ asset('storage/' . $company->logo_path) }}" 
-                     alt="Logo actual" style="max-height:60px; border:1px solid #dee2e6; padding:4px; border-radius:4px;">
-            </div>
-        @endif
-    </div>
-</div>
+                        <div class="form-group">
+                            <label>Serie Predeterminada</label>
+                            <input type="text" name="serie_default" class="form-control" 
+                                   value="{{ $company->serie_default ?? 'A' }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Logo de la Empresa</label>
+                            <input type="file" name="logo" class="form-control form-control-file" accept="image/*">
+                            <div class="help-text">Formatos: JPG, PNG, SVG. Máx: 2MB</div>
+                            @if(isset($company) && $company->logo_path)
+                                <div style="margin-top:8px;">
+                                    <img src="{{ asset('storage/' . $company->logo_path) }}" 
+                                         alt="Logo actual" style="max-height:60px; border:1px solid #dee2e6; padding:4px; border-radius:4px;">
+                                </div>
+                            @endif
+                        </div>
+                    </div>
 
-<!-- 🔥 NUEVA SECCIÓN: LOGO DE LOGIN -->
-<div class="form-row" style="margin-top:16px; border-top:1px solid #e9ecef; padding-top:16px;">
-    <div class="form-group">
-        <label>Logo de Login / Pantalla de Inicio</label>
-        <input type="file" name="login_logo" class="form-control form-control-file" accept="image/*">
-        <div class="help-text">Formatos: JPG, PNG, SVG. Máx: 2MB. Este logo aparecerá en la pantalla de inicio de sesión.</div>
-        @if(isset($company) && $company->login_logo_path)
-            <div style="margin-top:8px;">
-                <img src="{{ asset('storage/' . $company->login_logo_path) }}" 
-                     alt="Logo de login actual" style="max-height:80px; border:1px solid #dee2e6; padding:4px; border-radius:4px;">
-                <br>
-                <small style="color:#6c757d;">Logo actual</small>
-            </div>
-        @endif
-    </div>
-</div>
+                    <div class="form-row" style="margin-top:16px; border-top:1px solid #e9ecef; padding-top:16px;">
+                        <div class="form-group">
+                            <label>Logo de Login / Pantalla de Inicio</label>
+                            <input type="file" name="login_logo" class="form-control form-control-file" accept="image/*">
+                            <div class="help-text">Formatos: JPG, PNG, SVG. Máx: 2MB. Este logo aparecerá en la pantalla de inicio de sesión.</div>
+                            @if(isset($company) && $company->login_logo_path)
+                                <div style="margin-top:8px;">
+                                    <img src="{{ asset('storage/' . $company->login_logo_path) }}" 
+                                         alt="Logo de login actual" style="max-height:80px; border:1px solid #dee2e6; padding:4px; border-radius:4px;">
+                                    <br>
+                                    <small style="color:#6c757d;">Logo actual</small>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
 
                     <button type="submit" class="btn-config btn-config-primary" id="saveCompanyBtn">
                         <i class="fas fa-save"></i> Guardar Información
@@ -1055,42 +1270,6 @@
 
                     <hr style="margin:20px 0;border-color:#e9ecef;">
 
-                    <!-- <h4 style="font-weight:600;color:#212529;font-size:15px;margin-bottom:12px;">Autenticación y Sesiones</h4>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Intentos Máximos de Login</label>
-                            <input type="number" name="max_login_attempts" class="form-control" 
-                                   value="{{ $securityConfig->max_login_attempts ?? 5 }}" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Tiempo de Bloqueo (minutos)</label>
-                            <input type="number" name="lockout_time_minutes" class="form-control" 
-                                   value="{{ $securityConfig->lockout_time_minutes ?? 15 }}" min="1">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="toggle-container">
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="two_factor_enabled" 
-                                       value="true" {{ ($securityConfig->two_factor_enabled ?? false) ? 'checked' : '' }}>
-                                <span class="slider"></span>
-                            </label>
-                            <span class="toggle-label">Autenticación de Dos Factores (2FA)</span>
-                        </div>
-                        <div class="toggle-container">
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="session_timeout_enabled" 
-                                       value="true" {{ ($securityConfig->session_timeout_enabled ?? true) ? 'checked' : '' }}>
-                                <span class="slider"></span>
-                            </label>
-                            <span class="toggle-label">Timeout de Sesión</span>
-                        </div>
-                    </div> -->
-
-                    <hr style="margin:20px 0;border-color:#e9ecef;">
-
                     <h4 style="font-weight:600;color:#212529;font-size:15px;margin-bottom:12px;">Auditoría</h4>
 
                     <div class="form-row">
@@ -1116,76 +1295,153 @@
             </div>
 
             <!-- ==========================================
-            TAB: MÓDULOS
+            TAB: MÓDULOS - ACORDEÓN
             ========================================== -->
             <div id="tab-modules" class="tab-panel">
                 <div class="section-title">
                     <i class="fas fa-cubes"></i> Módulos del Sistema
                 </div>
                 <div class="section-description">
-                    Activa, desactiva y ordena los módulos del sistema.
+                    Activa, desactiva y ordena los módulos del sistema. Haz clic en una sección para expandirla y ver sus módulos.
                 </div>
 
                 <div id="modulesAlert" style="display:none;"></div>
 
-                <div class="table-container" id="modulesList">
-                    @php $modules = ModuleConfig::ordered()->get(); @endphp
-                    @if($modules->count() > 0)
-                        <table class="table-custom" id="modulesTable">
-                            <thead>
-                                <tr>
-                                    <th style="width:40px;">#</th>
-                                    <th>Módulo</th>
-                                    <th>Icono</th>
-                                    <th>Estado</th>
-                                    <th style="width:120px;">Orden</th>
-                                    <th style="width:120px;">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($modules as $module)
-                                    <tr data-id="{{ $module->id }}">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            <strong>{{ $module->display_name }}</strong>
-                                            <div style="font-size:12px;color:#6c757d;">{{ $module->name }}</div>
-                                        </td>
-                                        <td><i class="fas {{ $module->icon ?? 'fa-cube' }}"></i></td>
-                                        <td>
-                                            <span class="badge-status {{ $module->is_enabled ? 'active' : 'inactive' }}">
-                                                {{ $module->is_enabled ? 'Activo' : 'Inactivo' }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div style="display:flex;gap:4px;align-items:center;">
-                                                <button type="button" class="btn-config btn-config-outline btn-config-sm" onclick="moveModule({{ $module->id }}, 'up')">
-                                                    <i class="fas fa-chevron-up"></i>
-                                                </button>
-                                                <input type="number" class="form-control" style="width:60px;padding:4px 6px;font-size:12px;text-align:center;" 
-                                                       value="{{ $module->order }}" min="0" 
-                                                       onchange="updateModuleOrder({{ $module->id }}, this.value)">
-                                                <button type="button" class="btn-config btn-config-outline btn-config-sm" onclick="moveModule({{ $module->id }}, 'down')">
-                                                    <i class="fas fa-chevron-down"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn-config {{ $module->is_enabled ? 'btn-config-danger' : 'btn-config-success' }} btn-config-sm" 
-                                                    onclick="toggleModule({{ $module->id }})">
-                                                <i class="fas {{ $module->is_enabled ? 'fa-times' : 'fa-check' }}"></i>
-                                                {{ $module->is_enabled ? 'Desactivar' : 'Activar' }}
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div style="text-align:center;padding:40px;color:#adb5bd;">
-                            <i class="fas fa-cubes" style="font-size:36px;margin-bottom:12px;display:block;"></i>
-                            <p>No hay módulos configurados</p>
-                        </div>
-                    @endif
+                <div class="modules-accordion" id="modulesAccordion">
+                    @php
+                        // Agrupar módulos por sección
+                        $sections = [
+                            'bi' => ['icon' => 'fa-chart-line', 'label' => 'Business Intelligence'],
+                            'administracion' => ['icon' => 'fa-money-bill-wave', 'label' => 'Administración'],
+                            'contabilidad' => ['icon' => 'fa-calculator', 'label' => 'Contabilidad'],
+                            'proyectos' => ['icon' => 'fa-project-diagram', 'label' => 'Proyectos'],
+                            'rrhh' => ['icon' => 'fa-users', 'label' => 'Recursos Humanos'],
+                            'inventarios' => ['icon' => 'fa-boxes', 'label' => 'Almacén / Inventarios'],
+                            'compras' => ['icon' => 'fa-shopping-cart', 'label' => 'Compras'],
+                        ];
+                        
+                        $groupedModules = [];
+                        foreach ($modules as $module) {
+                            if (!isset($groupedModules[$module->section])) {
+                                $groupedModules[$module->section] = [];
+                            }
+                            $groupedModules[$module->section][] = $module;
+                        }
+                    @endphp
+
+                    @foreach($sections as $sectionKey => $sectionInfo)
+                        @if(isset($groupedModules[$sectionKey]) && count($groupedModules[$sectionKey]) > 0)
+                            @php
+                                $sectionModules = $groupedModules[$sectionKey];
+                                $totalModules = count($sectionModules);
+                                $activeModules = 0;
+                                foreach ($sectionModules as $mod) {
+                                    if ($mod->is_enabled) $activeModules++;
+                                }
+                                $allActive = $totalModules === $activeModules;
+                                $allInactive = $activeModules === 0;
+                                $sectionStatus = $allActive ? 'all-active' : ($allInactive ? 'all-inactive' : 'partial');
+                                $sectionStatusLabel = $allActive ? 'Todos activos' : ($allInactive ? 'Todos inactivos' : $activeModules . '/' . $totalModules . ' activos');
+                            @endphp
+                            <div class="accordion-section" id="section-{{ $sectionKey }}">
+                                <div class="accordion-header" onclick="toggleSection('{{ $sectionKey }}')">
+                                    <div class="header-left">
+                                        <div class="section-icon">
+                                            <i class="fas {{ $sectionInfo['icon'] }}"></i>
+                                        </div>
+                                        <span class="section-name">{{ $sectionInfo['label'] }}</span>
+                                        <span class="section-count">{{ $totalModules }} módulos</span>
+                                        <span class="section-badge {{ $sectionKey }}">{{ $sectionKey }}</span>
+                                    </div>
+                                    <div class="header-right">
+                                        <span class="section-status {{ $sectionStatus }}">
+                                            {{ $sectionStatusLabel }}
+                                        </span>
+                                        <button class="btn-toggle-section btn-toggle-{{ $allActive ? 'all-inactive' : 'all-active' }}" 
+                                                onclick="event.stopPropagation(); toggleAllModules('{{ $sectionKey }}', {{ $allActive ? 'false' : 'true' }})">
+                                            <i class="fas {{ $allActive ? 'fa-times' : 'fa-check' }}"></i>
+                                            {{ $allActive ? 'Desactivar todo' : 'Activar todo' }}
+                                        </button>
+                                        <i class="fas fa-chevron-down accordion-arrow" id="arrow-{{ $sectionKey }}"></i>
+                                    </div>
+                                </div>
+                                <div class="accordion-body" id="body-{{ $sectionKey }}">
+                                    <div class="body-content">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:40px;">#</th>
+                                                    <th>Módulo</th>
+                                                    <th style="width:60px;">Icono</th>
+                                                    <th style="width:100px;">Estado</th>
+                                                    <!-- <th style="width:150px;">Orden</th> -->
+                                                    <th style="width:130px;">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($sectionModules as $module)
+                                                    <tr data-id="{{ $module->id }}">
+                                                        <td style="text-align:center;font-weight:600;color:#6c757d;">{{ $loop->iteration }}</td>
+                                                        <td>
+                                                            <div style="display:flex;flex-direction:column;">
+                                                                <strong style="color:#212529;font-size:14px;">{{ $module->display_name }}</strong>
+                                                                <span style="font-size:11px;color:#6c757d;font-family:monospace;">{{ $module->name }}</span>
+                                                                @if($module->route)
+                                                                    <span style="font-size:10px;color:#083CAE;">{{ $module->route }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="module-icon-sm {{ $module->is_enabled ? 'active-icon' : 'inactive-icon' }}">
+                                                                <i class="fas {{ $module->icon ?? 'fa-cube' }}"></i>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge-status {{ $module->is_enabled ? 'active' : 'inactive' }}" 
+                                                                  style="font-size:11px;padding:3px 12px;">
+                                                                <i class="fas {{ $module->is_enabled ? 'fa-check-circle' : 'fa-times-circle' }}" 
+                                                                   style="font-size:10px;margin-right:4px;"></i>
+                                                                {{ $module->is_enabled ? 'Activo' : 'Inactivo' }}
+                                                            </span>
+                                                        </td>
+                                                        <!-- <td>
+                                                            <div style="display:flex;gap:4px;align-items:center;">
+                                                                <button type="button" class="btn-config btn-config-outline btn-config-sm" 
+                                                                        onclick="moveModule({{ $module->id }}, 'up')"
+                                                                        {{ $loop->first ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : '' }}
+                                                                        title="Mover arriba">
+                                                                    <i class="fas fa-chevron-up"></i>
+                                                                </button>
+                                                                <input type="number" class="form-control" 
+                                                                       style="width:55px;padding:3px 4px;font-size:11px;text-align:center;border-color:#ced4da;" 
+                                                                       value="{{ $module->order }}" min="0" 
+                                                                       onchange="updateModuleOrder({{ $module->id }}, this.value)"
+                                                                       title="Número de orden">
+                                                                <button type="button" class="btn-config btn-config-outline btn-config-sm" 
+                                                                        onclick="moveModule({{ $module->id }}, 'down')"
+                                                                        {{ $loop->last ? 'disabled style="opacity:0.4;cursor:not-allowed;"' : '' }}
+                                                                        title="Mover abajo">
+                                                                    <i class="fas fa-chevron-down"></i>
+                                                                </button>
+                                                            </div>
+                                                        </td> -->
+                                                        <td>
+                                                            <button type="button" class="btn-config {{ $module->is_enabled ? 'btn-config-danger' : 'btn-config-success' }} btn-config-sm" 
+                                                                    onclick="toggleModule({{ $module->id }})"
+                                                                    title="{{ $module->is_enabled ? 'Desactivar módulo' : 'Activar módulo' }}">
+                                                                <i class="fas {{ $module->is_enabled ? 'fa-times' : 'fa-check' }}"></i>
+                                                                {{ $module->is_enabled ? 'Desactivar' : 'Activar' }}
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
             </div>
 
@@ -1436,7 +1692,6 @@ SCRIPTS
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-    // Inicializar tab activo
     showTab('general');
 });
 
@@ -1444,19 +1699,16 @@ $(document).ready(function() {
 // NAVEGACIÓN DE TABS
 // ============================================
 function showTab(tab) {
-    // Ocultar todos los tabs
     document.querySelectorAll('.tab-panel').forEach(el => {
         el.classList.remove('active');
     });
 
-    // Mostrar el tab seleccionado
     const tabId = 'tab-' + tab;
     const tabElement = document.getElementById(tabId);
     if (tabElement) {
         tabElement.classList.add('active');
     }
 
-    // Actualizar sidebar
     document.querySelectorAll('.config-sidebar .nav-item').forEach(el => {
         el.classList.remove('active');
         if (el.dataset.tab === tab) {
@@ -1466,252 +1718,266 @@ function showTab(tab) {
 }
 
 // ============================================
-// GUARDAR CONFIGURACIÓN GENERAL
+// ACORDEÓN - TOGGLE SECCIÓN
 // ============================================
-$('#generalForm').on('submit', function(e) {
-    e.preventDefault();
-    const formData = $(this).serializeArray();
-    const configs = {};
+function toggleSection(sectionKey) {
+    const body = document.getElementById('body-' + sectionKey);
+    const arrow = document.getElementById('arrow-' + sectionKey);
     
-    formData.forEach(item => {
-        if (item.name.startsWith('configs[')) {
-            const key = item.name.replace('configs[', '').replace('][value]', '');
-            configs[key] = item.value;
-        }
-    });
-
-    $('#saveGeneralBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Guardando...');
-
-    $.ajax({
-        url: '{{ route("config.general.update") }}',
-        type: 'PUT',
-        data: { configs: configs },
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            showAlert('generalAlert', 'success', response.message);
-        },
-        error: function(xhr) {
-            const msg = xhr.responseJSON?.message || 'Error al guardar';
-            showAlert('generalAlert', 'error', msg);
-        },
-        complete: function() {
-            $('#saveGeneralBtn').prop('disabled', false).html('<i class="fas fa-save"></i> Guardar Configuración');
-        }
-    });
-});
-
-// ============================================
-// GUARDAR INFORMACIÓN DE EMPRESA
-// ============================================
-$('#companyForm').on('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-
-    $('#saveCompanyBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Guardando...');
-
-    $.ajax({
-        url: '{{ route("config.company.update") }}',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            showAlert('companyAlert', 'success', response.message);
-        },
-        error: function(xhr) {
-            const errors = xhr.responseJSON?.errors || {};
-            const msg = Object.values(errors).flat()[0] || 'Error al guardar';
-            showAlert('companyAlert', 'error', msg);
-        },
-        complete: function() {
-            $('#saveCompanyBtn').prop('disabled', false).html('<i class="fas fa-save"></i> Guardar Información');
-        }
-    });
-});
-
-// ============================================
-// GUARDAR CONFIGURACIÓN DE CORREO
-// ============================================
-$('#emailForm').on('submit', function(e) {
-    e.preventDefault();
-
-    $('#saveEmailBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Guardando...');
-
-    $.ajax({
-        url: '{{ route("config.email.update") }}',
-        type: 'PUT',
-        data: $(this).serialize(),
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            showAlert('emailAlert', 'success', response.message);
-        },
-        error: function(xhr) {
-            const msg = xhr.responseJSON?.message || 'Error al guardar';
-            showAlert('emailAlert', 'error', msg);
-        },
-        complete: function() {
-            $('#saveEmailBtn').prop('disabled', false).html('<i class="fas fa-save"></i> Guardar Configuración');
-        }
-    });
-});
-
-// ============================================
-// PROBAR CORREO
-// ============================================
-function testEmail() {
-    const to = document.getElementById('testEmailInput').value;
-    
-    if (!to) {
-        Swal.fire({ icon: 'warning', title: 'Error', text: 'Ingresa un correo para la prueba' });
-        return;
+    if (body) {
+        body.classList.toggle('open');
     }
-
-    Swal.fire({
-        title: 'Probando correo...',
-        text: 'Enviando correo de prueba a ' + to,
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
-
-    $.ajax({
-        url: '{{ route("config.email.test") }}',
-        type: 'POST',
-        data: { to: to },
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            if (response.success) {
-                Swal.fire({ icon: 'success', title: '¡Éxito!', text: response.message });
-            } else {
-                Swal.fire({ icon: 'error', title: 'Error', text: response.message });
-            }
-        },
-        error: function(xhr) {
-            const msg = xhr.responseJSON?.message || 'Error al enviar correo';
-            Swal.fire({ icon: 'error', title: 'Error', text: msg });
-        }
-    });
+    if (arrow) {
+        arrow.classList.toggle('open');
+    }
 }
 
 // ============================================
-// GUARDAR CONFIGURACIÓN DE SEGURIDAD
+// ACTIVAR/DESACTIVAR TODOS LOS MÓDULOS DE UNA SECCIÓN
 // ============================================
-$('#securityForm').on('submit', function(e) {
-    e.preventDefault();
-
-    $('#saveSecurityBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Guardando...');
-
-    $.ajax({
-        url: '{{ route("config.security.update") }}',
-        type: 'PUT',
-        data: $(this).serialize(),
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            showAlert('securityAlert', 'success', response.message);
-        },
-        error: function(xhr) {
-            const msg = xhr.responseJSON?.message || 'Error al guardar';
-            showAlert('securityAlert', 'error', msg);
-        },
-        complete: function() {
-            $('#saveSecurityBtn').prop('disabled', false).html('<i class="fas fa-save"></i> Guardar Configuración');
+function toggleAllModules(sectionKey, enable) {
+    const sectionModules = document.querySelectorAll('#section-' + sectionKey + ' tbody tr');
+    const moduleIds = [];
+    
+    sectionModules.forEach(row => {
+        const id = row.dataset.id;
+        if (id) {
+            moduleIds.push(id);
         }
     });
-});
-
-// ============================================
-// MÓDULOS - TOGGLE
-// ============================================
-function toggleModule(id) {
+    
+    if (moduleIds.length === 0) return;
+    
+    const status = enable ? 'activar' : 'desactivar';
+    const confirmMsg = enable ? '¿Activar todos los módulos de esta sección?' : '¿Desactivar todos los módulos de esta sección?';
+    
     Swal.fire({
-        title: '¿Cambiar estado del módulo?',
+        title: confirmMsg,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#083CAE',
-        cancelButtonColor: '#dc3545',
-        confirmButtonText: 'Sí, cambiar',
+        confirmButtonColor: enable ? '#28a745' : '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: enable ? 'Sí, activar todos' : 'Sí, desactivar todos',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.ajax({
-                url: '{{ route("config.modules.toggle", "") }}/' + id,
-                type: 'POST',
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                success: function(response) {
-                    Swal.fire({ icon: 'success', title: '¡Éxito!', text: response.message, timer: 1500, showConfirmButton: false });
-                    setTimeout(() => location.reload(), 1500);
-                },
-                error: function() {
-                    Swal.fire({ icon: 'error', title: 'Error', text: 'Error al cambiar el estado del módulo' });
-                }
+            // Procesar cada módulo de la sección
+            let processed = 0;
+            let total = moduleIds.length;
+            
+            moduleIds.forEach(id => {
+                fetch(`/modules/toggle/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    processed++;
+                    if (data.success) {
+                        // Actualizar visualmente el módulo
+                        const row = document.querySelector(`tr[data-id="${id}"]`);
+                        if (row) {
+                            const statusBadge = row.querySelector('.badge-status');
+                            const iconDiv = row.querySelector('.module-icon-sm');
+                            const button = row.querySelector('.btn-config');
+                            
+                            if (statusBadge) {
+                                statusBadge.className = `badge-status ${enable ? 'active' : 'inactive'}`;
+                                statusBadge.innerHTML = `<i class="fas ${enable ? 'fa-check-circle' : 'fa-times-circle'}" style="font-size:10px;margin-right:4px;"></i> ${enable ? 'Activo' : 'Inactivo'}`;
+                            }
+                            if (iconDiv) {
+                                iconDiv.className = `module-icon-sm ${enable ? 'active-icon' : 'inactive-icon'}`;
+                            }
+                            if (button) {
+                                button.className = `btn-config ${enable ? 'btn-config-danger' : 'btn-config-success'} btn-config-sm`;
+                                button.innerHTML = `<i class="fas ${enable ? 'fa-times' : 'fa-check'}"></i> ${enable ? 'Desactivar' : 'Activar'}`;
+                            }
+                        }
+                    }
+                    
+                    if (processed === total) {
+                        // Recargar la página después de procesar todos
+                        setTimeout(() => location.reload(), 1500);
+                    }
+                })
+                .catch(error => {
+                    processed++;
+                    showAlert('modulesAlert', 'error', 'Error al procesar algunos módulos');
+                    if (processed === total) {
+                        setTimeout(() => location.reload(), 1500);
+                    }
+                });
             });
         }
     });
 }
 
 // ============================================
-// MÓDULOS - ORDEN
+// FUNCIONES PARA MÓDULOS
 // ============================================
-function moveModule(id, direction) {
-    const rows = document.querySelectorAll('#modulesTable tbody tr');
-    let currentIndex = -1;
+function toggleModule(moduleId) {
+    const button = event.target.closest('button');
+    const originalHtml = button.innerHTML;
+    const row = button.closest('tr');
+    const statusBadge = row.querySelector('.badge-status');
+    const iconDiv = row.querySelector('.module-icon-sm');
     
-    rows.forEach((row, index) => {
-        if (row.dataset.id == id) {
-            currentIndex = index;
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    
+    fetch(`/modules/toggle/${moduleId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message || 'Módulo actualizado correctamente');
+            
+            if (data.data) {
+                const isEnabled = data.data.is_enabled;
+                
+                statusBadge.className = `badge-status ${isEnabled ? 'active' : 'inactive'}`;
+                statusBadge.innerHTML = `<i class="fas ${isEnabled ? 'fa-check-circle' : 'fa-times-circle'}" style="font-size:10px;margin-right:4px;"></i> ${isEnabled ? 'Activo' : 'Inactivo'}`;
+                
+                iconDiv.className = `module-icon-sm ${isEnabled ? 'active-icon' : 'inactive-icon'}`;
+                
+                button.className = `btn-config ${isEnabled ? 'btn-config-danger' : 'btn-config-success'} btn-config-sm`;
+                button.innerHTML = `<i class="fas ${isEnabled ? 'fa-times' : 'fa-check'}"></i> ${isEnabled ? 'Desactivar' : 'Activar'}`;
+                button.disabled = false;
+                button.title = isEnabled ? 'Desactivar módulo' : 'Activar módulo';
+            }
+            
+            // Actualizar el estado de la sección
+            updateSectionStatus();
+            
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            showAlert('modulesAlert', 'error', data.message || 'Error al cambiar el estado del módulo');
+            button.disabled = false;
+            button.innerHTML = originalHtml;
+        }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al procesar la solicitud: ' + error.message);
+        button.disabled = false;
+        button.innerHTML = originalHtml;
     });
-    
-    if (currentIndex === -1) return;
-    
-    let newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-    if (newIndex < 0 || newIndex >= rows.length) return;
-    
-    const parent = rows[currentIndex].parentNode;
-    if (direction === 'up') {
-        parent.insertBefore(rows[currentIndex], rows[newIndex]);
-    } else {
-        parent.insertBefore(rows[newIndex + 1], rows[currentIndex]);
+}
+
+function updateSectionStatus() {
+    // Esta función se ejecutará después de recargar
+    // La recarga actualizará todo automáticamente
+}
+
+function updateModuleOrder(moduleId, newOrder) {
+    if (parseInt(newOrder) < 0) {
+        showAlert('modulesAlert', 'error', 'El orden no puede ser negativo');
+        return;
     }
     
-    updateAllOrders();
-}
-
-function updateModuleOrder(id, value) {
-    updateAllOrders();
-}
-
-function updateAllOrders() {
-    const rows = document.querySelectorAll('#modulesTable tbody tr');
-    const modules = [];
+    const input = event.target;
+    const originalValue = input.value;
+    input.disabled = true;
     
-    rows.forEach((row, index) => {
-        const id = row.dataset.id;
-        const orderInput = row.querySelector('input[type="number"]');
-        if (orderInput) {
-            orderInput.value = index;
-            modules.push({ id: id, order: index });
-        }
-    });
-    
-    $.ajax({
-        url: '{{ route("config.modules.order") }}',
-        type: 'PUT',
-        data: { modules: modules },
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-        success: function(response) {
-            showAlert('modulesAlert', 'success', response.message);
+    fetch(`/modules/update-order/${moduleId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        error: function() {
-            showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
+        body: JSON.stringify({ order: parseInt(newOrder) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message || 'Orden actualizado correctamente');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showAlert('modulesAlert', 'error', data.message || 'Error al actualizar el orden');
+            input.value = originalValue;
+            input.disabled = false;
         }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
+        input.value = originalValue;
+        input.disabled = false;
+    });
+}
+
+function moveModule(moduleId, direction) {
+    const row = document.querySelector(`tr[data-id="${moduleId}"]`);
+    if (!row) return;
+    
+    const buttons = row.querySelectorAll('button');
+    buttons.forEach(btn => btn.disabled = true);
+    
+    fetch(`/modules/move/${moduleId}/${direction}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('modulesAlert', 'success', data.message || 'Módulo movido correctamente');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showAlert('modulesAlert', 'error', data.message || 'Error al mover el módulo');
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    })
+    .catch(error => {
+        showAlert('modulesAlert', 'error', 'Error al mover el módulo');
+        buttons.forEach(btn => btn.disabled = false);
     });
 }
 
 // ============================================
-// PLANTILLAS - EDITAR
+// ALERTAS
+// ============================================
+function showAlert(containerId, type, message) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const types = {
+        success: { icon: 'fa-check-circle', color: '#155724', bg: '#d4edda', border: '#c3e6cb' },
+        error: { icon: 'fa-exclamation-circle', color: '#721c24', bg: '#f8d7da', border: '#f5c6cb' },
+        warning: { icon: 'fa-exclamation-triangle', color: '#856404', bg: '#fff3cd', border: '#ffeaa7' },
+        info: { icon: 'fa-info-circle', color: '#0c5460', bg: '#d1ecf1', border: '#bee5eb' }
+    };
+
+    const t = types[type] || types.info;
+
+    container.style.display = 'block';
+    container.className = 'alert-custom ' + type;
+    container.innerHTML = `<i class="fas ${t.icon}"></i> ${message}`;
+    container.style.color = t.color;
+    container.style.background = t.bg;
+    container.style.borderColor = t.border;
+
+    if (window.alertTimeout) {
+        clearTimeout(window.alertTimeout);
+    }
+    window.alertTimeout = setTimeout(() => {
+        container.style.display = 'none';
+    }, 5000);
+}
+
+// ============================================
+// OTRAS FUNCIONES (Plantillas, Auditoría, Backups)
 // ============================================
 function editTemplate(id) {
     document.getElementById('templateEdit_' + id).style.display = 'block';
@@ -1743,9 +2009,6 @@ function updateTemplate(event, id) {
     });
 }
 
-// ============================================
-// AUDITORÍA - FILTROS
-// ============================================
 function filterAudit() {
     const module = document.getElementById('auditModule').value;
     const action = document.getElementById('auditAction').value;
@@ -1789,9 +2052,6 @@ function clearAudit() {
     });
 }
 
-// ============================================
-// BACKUPS
-// ============================================
 function createBackup(type) {
     const labels = {
         database: 'Base de Datos',
@@ -1865,9 +2125,6 @@ function deleteBackup(id) {
     });
 }
 
-// ============================================
-// GUARDAR TODO
-// ============================================
 function saveAllConfigs() {
     Swal.fire({
         title: 'Guardar todas las configuraciones',
@@ -1880,7 +2137,6 @@ function saveAllConfigs() {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Disparar todos los submits de formularios
             document.getElementById('generalForm').dispatchEvent(new Event('submit'));
             document.getElementById('companyForm').dispatchEvent(new Event('submit'));
             document.getElementById('emailForm').dispatchEvent(new Event('submit'));
@@ -1897,9 +2153,6 @@ function saveAllConfigs() {
     });
 }
 
-// ============================================
-// UTILIDADES
-// ============================================
 function showAlert(containerId, type, message) {
     const container = document.getElementById(containerId);
     if (!container) return;

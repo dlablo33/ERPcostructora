@@ -1107,18 +1107,18 @@
                     <i class="fas fa-shield-alt" style="color:#fd7e14;"></i> Seguridad
                 </div>
 
-                <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-bottom:20px;">
+                <!-- <div style="background:#f8f9fa;border-radius:12px;padding:20px;margin-bottom:20px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-                        <div>
+                         <div>
                             <h4 style="font-weight:600;color:#212529;margin:0;font-size:15px;">Autenticación de Dos Factores (2FA)</h4>
                             <p style="color:#6c757d;font-size:13px;margin:4px 0 0 0;">Añade una capa extra de seguridad a tu cuenta</p>
-                        </div>
-                        <label class="toggle-switch">
+                        </div> -->
+                        <!-- <label class="toggle-switch">
                             <input type="checkbox" id="twoFactorToggle" {{ auth()->user()->two_factor_enabled ?? false ? 'checked' : '' }}>
                             <span class="slider"></span>
-                        </label>
+                        </label> 
                     </div>
-                </div>
+                </div> -->
 
                 <div style="background:#f8f9fa;border-radius:12px;padding:20px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
@@ -1223,10 +1223,10 @@
                                 <input type="checkbox" name="notifications_system" value="1" {{ ($preferences->notifications_system ?? true) ? 'checked' : '' }}>
                                 Sistema
                             </label>
-                            <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#495057;cursor:pointer;">
+                           <!-- <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:#495057;cursor:pointer;">
                                 <input type="checkbox" name="notifications_whatsapp" value="1" {{ ($preferences->notifications_whatsapp ?? false) ? 'checked' : '' }}>
                                 WhatsApp
-                            </label>
+                            </label> -->
                         </div>
                     </div>
 
