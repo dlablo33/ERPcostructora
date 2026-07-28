@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('type')->default('info'); // info, success, warning, danger, chat, system
+            $table->string('title');
+            $table->text('body');
+            $table->json('data')->nullable(); // datos adicionales (url, action, etc.)
+            $table->timestamp('read_at')->nullable();
+            $table->timestamp('sent_at')->nullable();
+            $table->timestamps();
+            
+            // Índices para búsqueda rápida
+            $table->index(['user_id', 'read_at']);
+            $table->index(['user_id', 'created_at']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('notifications');
+    }
+};

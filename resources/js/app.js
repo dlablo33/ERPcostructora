@@ -1,16 +1,23 @@
 import './bootstrap';
 
+// Silenciar advertencias específicas
+(function() {
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+        const message = args.join(' ');
+        // Ignora advertencias de Tailwind CDN y Echo
+        if (message.includes('cdn.tailwindcss.com') || 
+            message.includes('Echo no pudo conectar')) {
+            return;
+        }
+        originalWarn.apply(console, args);
+    };
+})();
+
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
-// Silenciar advertencia de Tailwind CDN en producción
-const originalWarn = console.warn;
-console.warn = function(...args) {
-    if (args[0] && args[0].includes('cdn.tailwindcss.com should not be used in production')) {
-        return; // Ignora esta advertencia específica
-    }
-    originalWarn.apply(console, args);
-};
+

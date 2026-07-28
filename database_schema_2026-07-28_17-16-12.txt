@@ -1,10 +1,10 @@
 === BASES DE DATOS Y TABLAS ===
 
-Fecha: 2026-07-13 20:38:03
+Fecha: 2026-07-28 17:16:04
 Conexión: mejorasoft
 
 === TABLAS ENCONTRADAS ===
-Total de tablas: 191
+Total de tablas: 193
 
 
 📋 TABLA: activos
@@ -2209,6 +2209,20 @@ Columnas (16):
   • updated_at
   • deleted_at
 
+📋 TABLA: notifications
+----------------------------------------------------------------------
+Columnas (10):
+  • id
+  • user_id
+  • type
+  • title
+  • body
+  • data
+  • read_at
+  • sent_at
+  • created_at
+  • updated_at
+
 📋 TABLA: ordenes_trabajo_contratista
 ----------------------------------------------------------------------
 Columnas (16):
@@ -2717,6 +2731,17 @@ Columnas (9):
   • updated_at
   • deleted_at
   • area_id
+
+📋 TABLA: push_subscriptions
+----------------------------------------------------------------------
+Columnas (7):
+  • id
+  • user_id
+  • endpoint
+  • keys
+  • expiration_time
+  • created_at
+  • updated_at
 
 📋 TABLA: recibos_nomina
 ----------------------------------------------------------------------
@@ -3880,4 +3905,4 @@ Columnas encontradas (16):
 
 ======================================================================
 ✅ Script completado exitosamente
-Total de tablas analizadas: 191
+Total de tablas analizadas: 193

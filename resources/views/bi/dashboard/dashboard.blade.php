@@ -2487,15 +2487,7 @@
         // ============================================
         // INDICADOR DE DATOS DE EJEMPLO
         // ============================================
-        if (data.es_ejemplo) {
-            html += '<div style="text-align:center;padding:10px;margin-top:10px;background:#fff3cd;border-radius:8px;border:1px solid #ffc107;">';
-            html += '  <i class="fas fa-info-circle" style="color:#856404;"></i> ';
-            html += '  <span style="color:#856404;font-size:12px;">⚠️ Mostrando datos de ejemplo. Conecta tu base de datos para ver datos reales.</span>';
-            if (data.error) {
-                html += '  <div style="font-size:10px;color:#721c24;margin-top:4px;">Error: ' + data.error.substring(0, 150) + '...</div>';
-            }
-            html += '</div>';
-        }
+        
         
         return html;
     }

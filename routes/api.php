@@ -201,4 +201,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/api/cheques-transferencias/{id}', [ChequeTransferenciaController::class, 'destroy']);
     Route::post('/api/cheques-transferencias/{id}/aplicar', [ChequeTransferenciaController::class, 'aplicar']);
     Route::get('/cheques-transferencias', [ChequeTransferenciaController::class, 'index'])->name('cheques.transferencias');
+
+     Route::prefix('notifications')->group(function () {
+        Route::get('/unread', [App\Http\Controllers\NotificationController::class, 'unread']);
+        Route::get('/', [App\Http\Controllers\NotificationController::class, 'index']);
+        Route::post('/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
+        Route::post('/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllRead']);
+        Route::delete('/clear-all', [App\Http\Controllers\NotificationController::class, 'clearAll']);
+        Route::delete('/{id}', [App\Http\Controllers\NotificationController::class, 'destroy']);
+    });
+
 });

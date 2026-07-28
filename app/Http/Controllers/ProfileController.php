@@ -34,37 +34,43 @@ class ProfileController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-    {
-        $user = Auth::user();
-        $preferences = $this->getUserPreferences($user->id);
-        $notifications = $this->getUserNotifications($user->id, 5);
-        $unreadCount = UserNotification::where('user_id', $user->id)
-            ->where('is_read', false)
-            ->where('is_dismissed', false)
-            ->count();
-
-        $pendingTasks = \DB::table('tareas')
-            ->where('usuario_asignado_id', $user->id)
-            ->where('estado', 'pendiente')
-            ->count();
-
-        $projectsCount = \DB::table('asignaciones_personal')
-            ->where('empleado_id', $user->id)
-            ->where('status', 'activo')
-            ->count();
-
-        $sessions = $this->getUserSessions($user->id);
-
-        return view('profile.index', compact(
-            'user',
-            'preferences',
-            'notifications',
-            'unreadCount',
-            'pendingTasks',
-            'projectsCount',
-            'sessions'
-        ));
+{
+    $user = Auth::user();
+    $userId = optional($user)->id;
+    
+    if (!$userId) {
+        return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder a tu perfil.');
     }
+    
+    $preferences = $this->getUserPreferences($userId);
+    $notifications = $this->getUserNotifications($userId, 5);
+    $unreadCount = UserNotification::where('user_id', $userId)
+        ->where('is_read', false)
+        ->where('is_dismissed', false)
+        ->count();
+
+    $pendingTasks = \DB::table('tareas')
+        ->where('usuario_asignado_id', $userId)
+        ->where('estado', 'pendiente')
+        ->count();
+
+    $projectsCount = \DB::table('asignaciones_personal')
+        ->where('empleado_id', $userId)
+        ->where('status', 'activo')
+        ->count();
+
+    $sessions = $this->getUserSessions($userId);
+
+    return view('profile.index', compact(
+        'user',
+        'preferences',
+        'notifications',
+        'unreadCount',
+        'pendingTasks',
+        'projectsCount',
+        'sessions'
+    ));
+}
 
     /**
      * Display the user's profile form (edit).

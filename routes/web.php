@@ -86,6 +86,8 @@ use App\Http\Controllers\ReciboNominaController;
 use App\Http\Controllers\ContratistaController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Api\PushController;
 
 // ============================================
 // RUTAS PÚBLICAS
@@ -2335,6 +2337,40 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/modules', [ModuleController::class, 'store'])->name('modules.store');
     Route::put('/modules/{id}', [ModuleController::class, 'update'])->name('modules.update');
     Route::delete('/modules/{id}', [ModuleController::class, 'destroy'])->name('modules.destroy');
+});
+
+// ============================================
+// ============================================
+// ===== NOTIFICACIONES UNIFICADAS =====
+// ============================================
+// ============================================
+
+// NOTIFICACIONES - RUTAS WEB (para vistas y redirecciones)
+Route::middleware(['auth'])->group(function () {
+    // Demo
+    Route::get('/notification/demo', [NotificationController::class, 'demo'])->name('notification.demo');
+});
+
+// NOTIFICACIONES - RUTAS API (para el frontend)
+// Estas rutas ya están definidas arriba en el grupo 'api'
+// Pero las mantenemos aquí para que sean fáciles de encontrar
+Route::prefix('api')->middleware(['auth'])->group(function () {
+    
+    // Notificaciones
+    Route::prefix('notifications')->group(function () {
+        Route::get('/unread', [NotificationController::class, 'unread'])->name('api.notifications.unread');
+        Route::get('/', [NotificationController::class, 'index'])->name('api.notifications.index');
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notifications.mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllRead'])->name('api.notifications.mark-all-read');
+        Route::delete('/clear-all', [NotificationController::class, 'clearAll'])->name('api.notifications.clear-all');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
+    });
+
+    // Push Subscriptions
+    Route::prefix('push')->group(function () {
+        Route::post('/subscribe', [App\Http\Controllers\Api\PushController::class, 'subscribe'])->name('api.push.subscribe');
+        Route::post('/unsubscribe', [App\Http\Controllers\Api\PushController::class, 'unsubscribe'])->name('api.push.unsubscribe');
+    });
 });
 
 require __DIR__.'/auth.php';

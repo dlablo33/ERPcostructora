@@ -1,0 +1,48 @@
+{
+  "name": "MejoraSoft ERP",
+  "short_name": "ERPMejorasoft",
+  "description": "Sistema ERP para construcción y proyectos",
+  "start_url": "/home",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#083CAE",
+  "theme_color": "#083CAE",
+  "categories": ["business", "finance", "construction"],
+  "lang": "es-MX",
+  "dir": "ltr",
+  "icons": [
+    { "src": "/images/icons/icon-72x72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-96x96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-128x128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-144x144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-152x152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-256x256.png", "sizes": "256x256", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/images/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "screenshots": [
+    { "src": "/images/screenshots/dashboard-1.png", "sizes": "1080x1920", "type": "image/png" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Ver panel principal",
+      "url": "/dashboard",
+      "icons": [{ "src": "/images/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Proyectos",
+      "short_name": "Proyectos",
+      "description": "Ver todos los proyectos",
+      "url": "/proyectos",
+      "icons": [{ "src": "/images/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "display_override": ["standalone", "minimal-ui"],
+  "prefer_related_applications": false,
+  "apple": {
+    "statusBarStyle": "black-translucent"
+  }
+}

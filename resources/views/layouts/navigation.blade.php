@@ -15,7 +15,29 @@
 @endauth
 window.baseUrl = '{{ url('/') }}';
 </script>
+    
+     <!-- ===== PWA META TAGS ===== -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#083CAE">
+    
+    <!-- iOS / Apple específico -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ERP Dash">
+    
+    <!-- Íconos para iOS (Apple Touch Icons) -->
+    <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/icons/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="/images/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="/images/icons/icon-128x128.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/icons/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="/images/icons/icon-256x256.png">
+    <link rel="apple-touch-icon" sizes="384x384" href="/images/icons/icon-384x384.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/icons/icon-512x512.png">
 
+    
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1168,11 +1190,129 @@ window.baseUrl = '{{ url('/') }}';
     .module-disabled:hover {
         background: transparent !important;
     }
+
+    /* ===== TOAST ANIMATIONS ===== */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.3s ease forwards;
+    }
+
+    .custom-toast {
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        border-left: 4px solid rgba(255,255,255,0.3);
+        backdrop-filter: blur(10px);
+    }
+
+    /* Notificación estilo iOS */
+    .custom-toast .fa-comment-dots {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    /* ==================================================================== */
+    /* ===== BANNER PERMISO NOTIFICACIONES ===== */
+.notification-permission-banner {
+    background: linear-gradient(135deg, #083CAE, #1a4fc3);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(8, 60, 174, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 99999;
+    max-width: 320px;
+    backdrop-filter: blur(10px);
+}
+
+.notification-permission-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(8, 60, 174, 0.4);
+}
+
+.notification-permission-banner .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.notification-permission-banner .close-btn:hover {
+    color: white;
+}
+
+/* ===== TOAST ===== */
+.custom-toast {
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    border-left: 4px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 </style>
     
 </head>
 
 <body class="bg-gray-50">
+
+    <!-- ===== NOTIFICACIONES PUSH - CONFIGURACIÓN INICIAL ===== -->
+    <script>
+    // Solicitar permisos de notificaciones al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Solicitar permisos para notificaciones web
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().then(function(permission) {
+                console.log('✅ Permiso de notificaciones:', permission);
+                if (permission === 'granted') {
+                    // Mostrar notificación de bienvenida
+                    setTimeout(function() {
+                        new Notification('✅ Notificaciones activadas', {
+                            body: 'Recibirás alertas en tiempo real del sistema',
+                            icon: '/images/icons/icon-192x192.png',
+                            badge: '/images/icons/icon-72x72.png',
+                            silent: false,
+                            requireInteraction: true
+                        });
+                    }, 2000);
+                }
+            });
+        }
+    });
+    </script>
+    <!-- ===== FIN NOTIFICACIONES PUSH ===== -->
+
     <div class="app-wrapper">
         @vite(['resources/js/app.js'])
         
@@ -1302,21 +1442,21 @@ window.baseUrl = '{{ url('/') }}';
                                 </div>
 
                                 <div x-show="selectedUser" class="chat-conversation">
-    <div class="chat-conversation-header">
-        <div class="flex items-center gap-2">
-            <button @click="backToList()" class="chat-back-btn">
-                <i class="fas fa-arrow-left"></i>
-                <span>Volver</span>
-            </button>
-            <div>
-                <h4 x-text="selectedUser?.name || 'Cargando...'"></h4>
-            </div>
-        </div>
-        <button @click="closeConversation()" title="Cerrar conversación">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-    
+                                    <div class="chat-conversation-header">
+                                        <div class="flex items-center gap-2">
+                                            <button @click="backToList()" class="chat-back-btn">
+                                                <i class="fas fa-arrow-left"></i>
+                                                <span>Volver</span>
+                                            </button>
+                                            <div>
+                                                <h4 x-text="selectedUser?.name || 'Cargando...'"></h4>
+                                            </div>
+                                        </div>
+                                        <button @click="closeConversation()" title="Cerrar conversación">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    
 
                                     <div class="chat-messages-area" x-ref="messagesContainer">
                                         <template x-for="msg in messages" :key="msg.id">
@@ -1347,66 +1487,92 @@ window.baseUrl = '{{ url('/') }}';
                         </div>
 
                         <!-- NOTIFICACIONES -->
-                        <div x-data="notifications()" x-init="initNotifications()" class="relative">
-                            <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
-                                <i class="fas fa-bell" style="color: #eaf512;"></i>
-                                <span x-show="unreadCount > 0" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                                <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-xs rounded-full flex items-center justify-center px-1"></span>
-                            </button>
-                            
-                            <div x-show="isOpen" @click.away="isOpen = false" 
-                                 x-transition:enter="transition ease-out duration-200"
-                                 x-transition:enter-start="opacity-0 transform scale-95"
-                                 x-transition:enter-end="opacity-100 transform scale-100"
-                                 x-transition:leave="transition ease-in duration-150"
-                                 x-transition:leave-start="opacity-100 transform scale-100"
-                                 x-transition:leave-end="opacity-0 transform scale-95"
-                                 class="notifications-menu">
-                                
-                                <div class="notifications-header">
-                                    <div class="flex justify-between items-center">
-                                        <div>
-                                            <h3 class="font-bold text-lg"><i class="fas fa-bell"></i> Notificaciones</h3>
-                                            <p class="text-blue-100 text-xs mt-1">Tus alertas y mensajes</p>
-                                        </div>
-                                        <div class="flex space-x-2">
-                                            <button @click="markAllAsRead()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
-                                                <i class="fas fa-check-double text-white"></i>
-                                            </button>
-                                            <button @click="clearAll()" class="p-1.5 rounded-lg hover:bg-blue-700 transition">
-                                                <i class="fas fa-trash-alt text-white"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="max-h-96 overflow-y-auto">
-                                    <div x-show="filteredNotifications.length === 0" class="text-center py-10 text-gray-500">
-                                        <i class="fas fa-bell-slash text-4xl mb-3 opacity-30"></i>
-                                        <p class="font-medium">No hay notificaciones</p>
-                                    </div>
-                                    
-                                    <template x-for="notification in filteredNotifications" :key="notification.id">
-                                        <div :class="notification.read ? 'bg-white' : 'bg-blue-50'" class="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer" @click="markAsRead(notification.id)">
-                                            <div class="flex items-start space-x-3">
-                                                <div :class="notification.type" class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <i :class="getTypeIcon(notification.type)"></i>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <div class="flex justify-between">
-                                                        <h4 class="font-semibold text-gray-800 text-sm" x-text="notification.title"></h4>
-                                                        <span class="text-xs text-gray-500" x-text="formatTime(notification.timestamp)"></span>
-                                                    </div>
-                                                    <p class="text-xs text-gray-600 mt-1" x-text="notification.message"></p>
-                                                </div>
-                                                <div x-show="!notification.read" class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                </div>
+                        <!-- ============================================= -->
+<!-- NOTIFICACIONES CON PUSH INTEGRADO -->
+<!-- ============================================= -->
+<div x-data="notificationWidget()" x-init="initNotificationWidget()" class="relative">
+    <!-- Botón campanita -->
+    <button @click="toggleNotifications()" class="px-3 py-2 rounded-lg hover:bg-blue-800 transition relative">
+        <i class="fas fa-bell text-xl" style="color: #eaf512;"></i>
+        <span x-show="unreadCount > 0" 
+              x-text="unreadCount" 
+              class="absolute -top-2 -right-2 min-w-[20px] h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center px-1 font-bold"></span>
+    </button>
+    
+    <!-- Dropdown de notificaciones -->
+    <div x-show="isOpen" 
+         @click.away="isOpen = false" 
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 transform scale-95"
+         x-transition:enter-end="opacity-100 transform scale-100"
+         class="notifications-menu">
+        
+        <!-- Header -->
+        <div class="notifications-header">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-lg"><i class="fas fa-bell"></i> Notificaciones</h3>
+                    <p class="text-blue-100 text-xs mt-1">Tus alertas y mensajes</p>
+                </div>
+                <div class="flex space-x-2">
+                     <button @click="testNotification()" 
+            class="p-1.5 rounded-lg hover:bg-green-600 transition" 
+            title="Enviar notificación de prueba">
+        <i class="fas fa-bell text-white"></i>
+    </button>
+                    <button @click="markAllAsRead()" class="p-1.5 rounded-lg hover:bg-blue-700 transition" title="Marcar todas como leídas">
+                        <i class="fas fa-check-double text-white"></i>
+                    </button>
+                    <button @click="clearAll()" class="p-1.5 rounded-lg hover:bg-blue-700 transition" title="Eliminar todas">
+                        <i class="fas fa-trash-alt text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lista de notificaciones -->
+        <div class="max-h-96 overflow-y-auto">
+            <!-- Empty state -->
+            <div x-show="notifications.length === 0" class="text-center py-10 text-gray-500">
+                <i class="fas fa-bell-slash text-4xl mb-3 opacity-30"></i>
+                <p class="font-medium">No hay notificaciones</p>
+                <p class="text-xs mt-1">Las notificaciones aparecerán aquí</p>
+            </div>
+            
+            <!-- Lista -->
+            <template x-for="notification in notifications" :key="notification.id">
+                <div :class="notification.read ? 'bg-white' : 'bg-blue-50'" 
+                     class="border-b border-gray-100 p-4 hover:bg-gray-50 cursor-pointer transition"
+                     @click="handleNotificationClick(notification)">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i :class="getTypeIcon(notification.type)" class="text-lg"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-semibold text-gray-800 text-sm" x-text="notification.title"></h4>
+                                <span class="text-xs text-gray-500 ml-2 whitespace-nowrap" x-text="formatTime(notification.timestamp)"></span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1 line-clamp-2" x-text="notification.message"></p>
+                            <div x-show="notification.data?.url" class="mt-1">
+                                <a :href="notification.data.url" class="text-xs text-blue-600 hover:underline" @click.stop>Ver más →</a>
                             </div>
                         </div>
+                        <div x-show="!notification.read" class="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
                     </div>
+                </div>
+            </template>
+        </div>
+        
+        <!-- Footer -->
+        <div class="border-t border-gray-100 p-2 text-center">
+            <button @click="loadMore()" x-show="hasMore" class="text-xs text-blue-600 hover:underline">
+                Cargar más
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ===== FIN NOTIFICACIONES ===== -->
 
                     <!-- User menu -->
                     <div class="flex items-center space-x-4">
@@ -1417,28 +1583,28 @@ window.baseUrl = '{{ url('/') }}';
                         
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = !open" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-800">
-    <div class="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden bg-white">
-       @php
-    $avatarPath = Auth::check() ? Auth::user()->avatar_path : null;
-@endphp
-        
-        @if($avatarPath)
-            @php
-                if (strpos($avatarPath, 'data:') === 0) {
-                    $avatarSrc = $avatarPath;
-                } else {
-                    $avatarSrc = asset('storage/' . ltrim($avatarPath, '/'));
-                }
-            @endphp
-            <img src="{{ $avatarSrc }}" alt="{{ Auth::user()->name }}" 
-                 class="w-full h-full object-cover"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-user text-blue-600 text-sm\'></i>';">
-        @else
-            <i class="fas fa-user text-blue-600 text-sm"></i>
-        @endif
-    </div>
-    <i class="fas fa-chevron-down text-xs text-white"></i>
-</button>
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden bg-white">
+                                    @php
+                                        $avatarPath = Auth::check() ? Auth::user()->avatar_path : null;
+                                    @endphp
+                                    
+                                    @if($avatarPath)
+                                        @php
+                                            if (strpos($avatarPath, 'data:') === 0) {
+                                                $avatarSrc = $avatarPath;
+                                            } else {
+                                                $avatarSrc = asset('storage/' . ltrim($avatarPath, '/'));
+                                            }
+                                        @endphp
+                                        <img src="{{ $avatarSrc }}" alt="{{ Auth::user()->name }}" 
+                                             class="w-full h-full object-cover"
+                                             onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-user text-blue-600 text-sm\'></i>';">
+                                    @else
+                                        <i class="fas fa-user text-blue-600 text-sm"></i>
+                                    @endif
+                                </div>
+                                <i class="fas fa-chevron-down text-xs text-white"></i>
+                            </button>
                             
                             <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl z-[199999999] !important py-2 ">
                                 <div class="px-4 py-2 border-b border-gray-100">
@@ -1451,11 +1617,10 @@ window.baseUrl = '{{ url('/') }}';
                                     <i class="fas fa-user mr-3 text-blue-600 w-4 text-center"></i> Mi Perfil
                                 </button>
 
-
                                 @php
-    $user = Auth::user();
-    $isAdmin = $user && in_array($user->rol, ['Administrador', 'admin', 'super_admin']);
-@endphp
+                                    $user = Auth::user();
+                                    $isAdmin = $user && in_array($user->rol, ['Administrador', 'admin', 'super_admin']);
+                                @endphp
                                 @if($isAdmin)
                                     <button onclick="navigateTo('Configuración', 'config', '{{ route('config.index') }}', 'fa-cog')"
                                         class="w-full text-left px-4 py-2 text-sm hover:bg-blue-50 flex items-center">
@@ -3298,34 +3463,184 @@ window.baseUrl = '{{ url('/') }}';
                 pollingInterval: null,
                 
                 initChat() { 
-                    
                     this.fetchUsers(); 
+                    
+                    // Configurar WebSocket para mensajes y notificaciones
+                    if (window.Echo) {
+                        // Listener para mensajes
+                        window.Echo.private(`user.${window.userId}`)
+                            .listen('MessageSent', (e) => {
+                                console.log('📩 Nuevo mensaje recibido:', e);
+                                this.handleIncomingMessage(e.message, e);
+                                
+                                // 🔔 NOTIFICACIÓN PUSH CUANDO LLEGA UN MENSAJE
+                                this.sendPushNotification(
+                                    '💬 Nuevo mensaje de ' + (e.fromUser?.name || 'Usuario'),
+                                    e.message || 'Tienes un nuevo mensaje'
+                                );
+                            })
+                            .listen('PushNotificationEvent', (e) => {
+                                console.log('🔔 Notificación push recibida:', e);
+                                this.handlePushNotification(e);
+                            });
+                    }
+                    
                     this.pollingInterval = setInterval(() => { 
-                        if(this.selectedUser && this.isOpen) this.loadConversation(this.selectedUser.id); 
+                        if(this.selectedUser && this.isOpen) {
+                            this.loadConversation(this.selectedUser.id); 
+                        }
                         this.fetchUsers(); 
-                    }, 3000); 
+                        this.updateGlobalUnreadCount();
+                    }, 5000);
+                },
+                
+                /**
+                 * Enviar notificación push nativa
+                 */
+                sendPushNotification(title, body) {
+                    // 1. Notificación nativa del navegador
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        const notification = new Notification(title, {
+                            body: body,
+                            icon: '/images/icons/icon-192x192.png',
+                            badge: '/images/icons/icon-72x72.png',
+                            vibrate: [200, 100, 200],
+                            requireInteraction: true,
+                            tag: 'chat_' + Date.now(),
+                            data: {
+                                url: '/dashboard',
+                                type: 'chat'
+                            }
+                        });
+                        
+                        notification.onclick = function() {
+                            window.focus();
+                            if (this.data.url) {
+                                window.location.href = this.data.url;
+                            }
+                            this.close();
+                        };
+                        
+                        // Cerrar automáticamente después de 15 segundos
+                        setTimeout(() => {
+                            if (notification) notification.close();
+                        }, 15000);
+                    }
                     
-                    // Actualizar contador global periódicamente
-                    this.updateGlobalUnreadCount();
-                    setInterval(() => this.updateGlobalUnreadCount(), 5000);
+                    // 2. Mostrar toast en la interfaz
+                    this.showToast(title, body, 'chat');
                     
-                    if(window.Echo && window.Echo.connector) { 
-                        console.log('✅ Configurando listener WebSocket'); 
-                        const setupListener = () => { 
-                            if(window.Echo.connector.socket && window.Echo.connector.socket.readyState === 1) { 
-                                window.Echo.private(`user.${window.userId}`).listen('MessageSent', (e) => { 
-                                    
-                                    this.handleIncomingMessage(e.message, e.fromUser); 
-                                }); 
-                                console.log('✅ Listener configurado en canal user.' + window.userId); 
-                            } else { 
-                                setTimeout(setupListener, 500); 
-                            } 
-                        }; 
-                        setupListener(); 
-                    } else { 
-                         
-                    } 
+                    // 3. Incrementar contador
+                    this.unreadMessagesCount++;
+                    
+                    // 4. Reproducir sonido (opcional)
+                    try {
+                        const audio = new Audio('/sounds/notification.mp3');
+                        audio.play().catch(() => {});
+                    } catch(e) {}
+                },
+                
+                /**
+                 * Manejar notificación push del servidor
+                 */
+                handlePushNotification(data) {
+                    const title = data.notification?.title || data.title || '🔔 Nueva notificación';
+                    const message = data.notification?.message || data.message || 'Tienes una nueva notificación';
+                    const type = data.notification?.type || data.type || 'info';
+                    const url = data.notification?.url || data.url || '/dashboard';
+                    const fromUser = data.notification?.from_user || data.from_user || 'Sistema';
+                    
+                    // Mostrar notificación nativa
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        const notification = new Notification(title, {
+                            body: message + (fromUser ? `\nDe: ${fromUser}` : ''),
+                            icon: '/images/icons/icon-192x192.png',
+                            badge: '/images/icons/icon-72x72.png',
+                            vibrate: [200, 100, 200],
+                            requireInteraction: true,
+                            tag: 'push_' + Date.now(),
+                            data: {
+                                url: url,
+                                type: type
+                            }
+                        });
+                        
+                        notification.onclick = function() {
+                            window.focus();
+                            if (this.data.url) {
+                                window.location.href = this.data.url;
+                            }
+                            this.close();
+                        };
+                        
+                        setTimeout(() => {
+                            if (notification) notification.close();
+                        }, 15000);
+                    }
+                    
+                    // Mostrar toast
+                    this.showToast(title, message, type);
+                    
+                    // Incrementar contador
+                    this.unreadMessagesCount++;
+                },
+                
+                /**
+                 * Mostrar toast en la interfaz
+                 */
+                showToast(title, message, type = 'info') {
+                    const colors = {
+                        info: 'bg-blue-600',
+                        success: 'bg-green-600',
+                        warning: 'bg-yellow-600',
+                        danger: 'bg-red-600',
+                        chat: 'bg-purple-600',
+                        demo: 'bg-indigo-600'
+                    };
+                    
+                    const icons = {
+                        info: 'fa-info-circle',
+                        success: 'fa-check-circle',
+                        warning: 'fa-exclamation-triangle',
+                        danger: 'fa-times-circle',
+                        chat: 'fa-comment-dots',
+                        demo: 'fa-bell'
+                    };
+                    
+                    const bgColor = colors[type] || colors.info;
+                    const icon = icons[type] || icons.info;
+                    
+                    // Remover toasts anteriores
+                    document.querySelectorAll('.custom-toast').forEach(el => el.remove());
+                    
+                    const toast = document.createElement('div');
+                    toast.className = `custom-toast fixed top-20 right-4 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-[99999] max-w-sm animate-slide-in`;
+                    toast.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <i class="fas ${icon} mt-1 text-xl"></i>
+                            <div class="flex-1">
+                                <div class="font-bold text-sm">${title}</div>
+                                <div class="text-xs opacity-90 mt-1">${message}</div>
+                            </div>
+                            <button onclick="this.parentElement.parentElement.remove()" class="opacity-50 hover:opacity-100">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(toast);
+                    
+                    // Auto-cerrar después de 8 segundos
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.style.opacity = '0';
+                            toast.style.transform = 'translateX(100px)';
+                            toast.style.transition = 'all 0.3s ease';
+                            setTimeout(() => {
+                                if (toast.parentNode) toast.remove();
+                            }, 300);
+                        }
+                    }, 8000);
                 },
                 
                 updateGlobalUnreadCount() {
@@ -3362,7 +3677,6 @@ window.baseUrl = '{{ url('/') }}';
                             unread: user.unread_count || 0
                         }));
                         
-                        // Actualizar contador global
                         const totalUnread = this.users.reduce((sum, user) => sum + (user.unread || 0), 0);
                         this.unreadMessagesCount = totalUnread;
                     })
@@ -3436,107 +3750,76 @@ window.baseUrl = '{{ url('/') }}';
                 },
                 
                 sendMessage() { 
-    if (!this.newMessage || !this.newMessage.trim() || !this.selectedUser) return;
-    
-    const messageText = this.newMessage.trim();
-    const messageData = {
-        recipient_id: this.selectedUser.id,
-        message: messageText
-    };
-    
-    // Guardar para posible reintento
-    const sentMessage = messageText;
-    const recipientId = this.selectedUser.id;
-    
-    // LIMPIAR INPUT INMEDIATAMENTE
-    this.newMessage = '';
-    
-    // Agregar mensaje localmente (optimista)
-    const tempMsg = {
-        id: Date.now(),
-        text: sentMessage,
-        user_id: window.userId,
-        recipient_id: recipientId,
-        isOwn: true,
-        created_at: new Date().toISOString()
-    };
-    this.messages.push(tempMsg);
-    
-    this.$nextTick(() => {
-        const container = this.$refs.messagesContainer;
-        if (container) container.scrollTop = container.scrollHeight;
-    });
-    
-    // Enviar al servidor
-    fetch('/chat/send', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify(messageData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        
-        
-        if (data.success) {
-            // Actualizar ID del mensaje temporal si existe
-            if (data.user_message && data.user_message.id) {
-                tempMsg.id = data.user_message.id;
-            } else if (data.id) {
-                tempMsg.id = data.id;
-            }
-            
-            // SI ES RESPUESTA DE IA: agregar el mensaje de la IA
-            if (data.is_ai_response === true && data.ai_response) {
+                    if (!this.newMessage || !this.newMessage.trim() || !this.selectedUser) return;
+                    
+                    const messageText = this.newMessage.trim();
+                    const messageData = {
+                        recipient_id: this.selectedUser.id,
+                        message: messageText
+                    };
+                    
+                    const sentMessage = messageText;
+                    const recipientId = this.selectedUser.id;
+                    
+                    this.newMessage = '';
+                    
+                    const tempMsg = {
+                        id: Date.now(),
+                        text: sentMessage,
+                        user_id: window.userId,
+                        recipient_id: recipientId,
+                        isOwn: true,
+                        created_at: new Date().toISOString()
+                    };
+                    this.messages.push(tempMsg);
+                    
+                    this.$nextTick(() => {
+                        const container = this.$refs.messagesContainer;
+                        if (container) container.scrollTop = container.scrollHeight;
+                    });
+                    
+                    fetch('/chat/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify(messageData)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (data.user_message && data.user_message.id) {
+                                tempMsg.id = data.user_message.id;
+                            } else if (data.id) {
+                                tempMsg.id = data.id;
+                            }
+                            
+                            this.fetchUsers();
+                            this.updateGlobalUnreadCount();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al enviar mensaje:', error);
+                        this.showTemporaryError('Error al enviar mensaje: ' + error.message);
+                    });
+                },
                 
-                
-                const aiMsg = {
-                    id: data.ai_response.id || Date.now() + 1,
-                    text: data.ai_response.message,
-                    user_id: data.ai_response.user_id,
-                    recipient_id: data.ai_response.recipient_id,
-                    isOwn: false,
-                    created_at: data.ai_response.created_at || new Date().toISOString()
-                };
-                this.messages.push(aiMsg);
-                
-                this.$nextTick(() => {
-                    const container = this.$refs.messagesContainer;
-                    if (container) container.scrollTop = container.scrollHeight;
-                });
-            }
-            
-            // Actualizar listas de usuarios y contadores
-            this.fetchUsers();
-            this.updateGlobalUnreadCount();
-        }
-    })
-    .catch(error => {
-        console.error('Error al enviar mensaje:', error);
-        // Mensaje de error visible al usuario
-        this.showTemporaryError('Error al enviar mensaje: ' + error.message);
-    });
-},
-
-// Agregar este método helper para mostrar errores
-showTemporaryError(message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'fixed bottom-20 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-[9999] text-sm';
-    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i>' + message;
-    document.body.appendChild(errorDiv);
-    setTimeout(() => errorDiv.remove(), 4000);
-},
+                showTemporaryError(message) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'fixed bottom-20 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-[9999] text-sm';
+                    errorDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-2"></i>' + message;
+                    document.body.appendChild(errorDiv);
+                    setTimeout(() => errorDiv.remove(), 4000);
+                },
                 
                 handleIncomingMessage(message, fromUser) { 
-                    // Actualizar contador de no leídos
                     this.updateGlobalUnreadCount();
                     this.fetchUsers();
                     
@@ -3554,7 +3837,6 @@ showTemporaryError(message) {
                             const container = this.$refs.messagesContainer; 
                             if(container) container.scrollTop = container.scrollHeight;
                         });
-                        // Marcar como leídos si la conversación está abierta
                         this.markMessagesAsRead(fromUser.id);
                     }
                 },
@@ -3568,8 +3850,6 @@ showTemporaryError(message) {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        
-                        // Actualizar el contador local
                         const userInList = this.users.find(u => u.id === userId);
                         if (userInList) userInList.unread = 0;
                         this.updateGlobalUnreadCount();
@@ -3613,190 +3893,172 @@ showTemporaryError(message) {
         });
 
         // ============================================
-// FUNCIONES PARA MÓDULOS
-// ============================================
+        // FUNCIONES PARA MÓDULOS
+        // ============================================
 
-/**
- * Activar/Desactivar un módulo
- */
-function toggleModule(moduleId) {
-    const button = event.target.closest('button');
-    const originalHtml = button.innerHTML;
-    
-    button.disabled = true;
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-    
-    fetch(`/modules/toggle/${moduleId}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+        function toggleModule(moduleId) {
+            const button = event.target.closest('button');
+            const originalHtml = button.innerHTML;
+            
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            
+            fetch(`/modules/toggle/${moduleId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('modulesAlert', 'success', data.message);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showAlert('modulesAlert', 'error', data.message);
+                    button.disabled = false;
+                    button.innerHTML = originalHtml;
+                }
+            })
+            .catch(error => {
+                showAlert('modulesAlert', 'error', 'Error al procesar la solicitud');
+                button.disabled = false;
+                button.innerHTML = originalHtml;
+            });
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('modulesAlert', 'success', data.message);
-            // Recargar la página para actualizar la tabla
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showAlert('modulesAlert', 'error', data.message);
-            button.disabled = false;
-            button.innerHTML = originalHtml;
+
+        function updateModuleOrder(moduleId, newOrder) {
+            if (parseInt(newOrder) < 0) {
+                showAlert('modulesAlert', 'error', 'El orden no puede ser negativo');
+                return;
+            }
+            
+            const input = event.target;
+            const originalValue = input.value;
+            input.disabled = true;
+            
+            fetch(`/modules/update-order/${moduleId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ order: parseInt(newOrder) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('modulesAlert', 'success', data.message);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showAlert('modulesAlert', 'error', data.message);
+                    input.value = originalValue;
+                    input.disabled = false;
+                }
+            })
+            .catch(error => {
+                showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
+                input.value = originalValue;
+                input.disabled = false;
+            });
         }
-    })
-    .catch(error => {
-        showAlert('modulesAlert', 'error', 'Error al procesar la solicitud');
-        button.disabled = false;
-        button.innerHTML = originalHtml;
-    });
-}
 
-/**
- * Actualizar el orden de un módulo (desde el input numérico)
- */
-function updateModuleOrder(moduleId, newOrder) {
-    if (parseInt(newOrder) < 0) {
-        showAlert('modulesAlert', 'error', 'El orden no puede ser negativo');
-        return;
-    }
-    
-    const input = event.target;
-    const originalValue = input.value;
-    input.disabled = true;
-    
-    fetch(`/modules/update-order/${moduleId}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ order: parseInt(newOrder) })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('modulesAlert', 'success', data.message);
-            // Recargar para actualizar la tabla correctamente
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showAlert('modulesAlert', 'error', data.message);
-            input.value = originalValue;
-            input.disabled = false;
+        function moveModule(moduleId, direction) {
+            const row = document.querySelector(`tr[data-id="${moduleId}"]`);
+            if (!row) return;
+            
+            const buttons = row.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = true);
+            
+            fetch(`/modules/move/${moduleId}/${direction}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('modulesAlert', 'success', data.message);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showAlert('modulesAlert', 'error', data.message);
+                    buttons.forEach(btn => btn.disabled = false);
+                }
+            })
+            .catch(error => {
+                showAlert('modulesAlert', 'error', 'Error al mover el módulo');
+                buttons.forEach(btn => btn.disabled = false);
+            });
         }
-    })
-    .catch(error => {
-        showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
-        input.value = originalValue;
-        input.disabled = false;
-    });
-}
 
-/**
- * Mover un módulo hacia arriba o abajo
- */
-function moveModule(moduleId, direction) {
-    const row = document.querySelector(`tr[data-id="${moduleId}"]`);
-    if (!row) return;
-    
-    const buttons = row.querySelectorAll('button');
-    buttons.forEach(btn => btn.disabled = true);
-    
-    fetch(`/modules/move/${moduleId}/${direction}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
+        function showAlert(containerId, type, message) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const types = {
+                success: { icon: 'fa-check-circle', color: '#155724', bg: '#d4edda', border: '#c3e6cb' },
+                error: { icon: 'fa-exclamation-circle', color: '#721c24', bg: '#f8d7da', border: '#f5c6cb' },
+                warning: { icon: 'fa-exclamation-triangle', color: '#856404', bg: '#fff3cd', border: '#ffeaa7' },
+                info: { icon: 'fa-info-circle', color: '#0c5460', bg: '#d1ecf1', border: '#bee5eb' }
+            };
+
+            const t = types[type] || types.info;
+
+            container.style.display = 'block';
+            container.className = 'alert-custom ' + type;
+            container.innerHTML = `<i class="fas ${t.icon}"></i> ${message}`;
+            container.style.color = t.color;
+            container.style.background = t.bg;
+            container.style.borderColor = t.border;
+
+            if (window.alertTimeout) {
+                clearTimeout(window.alertTimeout);
+            }
+            window.alertTimeout = setTimeout(() => {
+                container.style.display = 'none';
+            }, 5000);
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('modulesAlert', 'success', data.message);
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showAlert('modulesAlert', 'error', data.message);
-            buttons.forEach(btn => btn.disabled = false);
+
+        function updateAllModuleOrders() {
+            const rows = document.querySelectorAll('#modulesTable tbody tr');
+            const modules = [];
+            
+            rows.forEach((row, index) => {
+                const id = row.dataset.id;
+                const orderInput = row.querySelector('input[type="number"]');
+                if (orderInput) {
+                    orderInput.value = index;
+                    modules.push({ id: id, order: index });
+                }
+            });
+            
+            fetch('{{ route("config.modules.order") }}', {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ modules: modules })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('modulesAlert', 'success', data.message);
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showAlert('modulesAlert', 'error', data.message);
+                }
+            })
+            .catch(error => {
+                showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
+            });
         }
-    })
-    .catch(error => {
-        showAlert('modulesAlert', 'error', 'Error al mover el módulo');
-        buttons.forEach(btn => btn.disabled = false);
-    });
-}
-
-/**
- * Mostrar alerta en el contenedor de módulos
- */
-function showAlert(containerId, type, message) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const types = {
-        success: { icon: 'fa-check-circle', color: '#155724', bg: '#d4edda', border: '#c3e6cb' },
-        error: { icon: 'fa-exclamation-circle', color: '#721c24', bg: '#f8d7da', border: '#f5c6cb' },
-        warning: { icon: 'fa-exclamation-triangle', color: '#856404', bg: '#fff3cd', border: '#ffeaa7' },
-        info: { icon: 'fa-info-circle', color: '#0c5460', bg: '#d1ecf1', border: '#bee5eb' }
-    };
-
-    const t = types[type] || types.info;
-
-    container.style.display = 'block';
-    container.className = 'alert-custom ' + type;
-    container.innerHTML = `<i class="fas ${t.icon}"></i> ${message}`;
-    container.style.color = t.color;
-    container.style.background = t.bg;
-    container.style.borderColor = t.border;
-
-    // Ocultar después de 5 segundos
-    if (window.alertTimeout) {
-        clearTimeout(window.alertTimeout);
-    }
-    window.alertTimeout = setTimeout(() => {
-        container.style.display = 'none';
-    }, 5000);
-}
-
-/**
- * Actualizar el orden de todos los módulos (desde drag & drop)
- */
-function updateAllModuleOrders() {
-    const rows = document.querySelectorAll('#modulesTable tbody tr');
-    const modules = [];
-    
-    rows.forEach((row, index) => {
-        const id = row.dataset.id;
-        const orderInput = row.querySelector('input[type="number"]');
-        if (orderInput) {
-            orderInput.value = index;
-            modules.push({ id: id, order: index });
-        }
-    });
-    
-    fetch('{{ route("config.modules.order") }}', {
-        method: 'PUT',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ modules: modules })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            showAlert('modulesAlert', 'success', data.message);
-            setTimeout(() => location.reload(), 1000);
-        } else {
-            showAlert('modulesAlert', 'error', data.message);
-        }
-    })
-    .catch(error => {
-        showAlert('modulesAlert', 'error', 'Error al actualizar el orden');
-    });
-}
     </script>
     
     <!-- Modal de confirmación de cierre de sesión -->
@@ -3809,7 +4071,7 @@ function updateAllModuleOrders() {
                     </div>
                     <div>
                         <h3 class="font-bold text-gray-800">Cerrar Sesión</h3>
-                        <p class="text-sm text-gray-600">¿Estás seguro de que deseas  salir?</p>
+                        <p class="text-sm text-gray-600">¿Estás seguro de que deseas salir?</p>
                     </div>
                 </div>
                 <div class="mt-4 flex justify-end space-x-2">
@@ -3819,5 +4081,603 @@ function updateAllModuleOrders() {
             </div>
         </div>
     </div>
+    
+    <!-- ===== SERVICE WORKER REGISTRATION ===== -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function(registration) {
+                        console.log('✅ Service Worker registrado exitosamente:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('❌ Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+        
+        // Detectar si la app está instalada como PWA
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('📱 App ejecutándose en modo standalone (PWA)');
+            document.body.classList.add('pwa-mode');
+        }
+        
+        // Para iOS
+        if (window.navigator.standalone === true) {
+            console.log('📱 App ejecutándose en modo standalone en iOS');
+            document.body.classList.add('pwa-mode');
+        }
+
+        // ============================================
+// NOTIFICATION WIDGET CON PUSH INTEGRADO
+// ============================================
+function notificationWidget() {
+    return {
+        isOpen: false,
+        unreadCount: 0,
+        notifications: [],
+        page: 1,
+        hasMore: false,
+        loading: false,
+        pollingInterval: null,
+
+        initNotificationWidget() {
+            console.log('🔔 Inicializando widget de notificaciones...');
+            this.loadNotifications();
+            this.setupRealtimeListeners();
+            this.setupServiceWorkerMessages();
+            
+            // Polling cada 30 segundos (fallback)
+            this.pollingInterval = setInterval(() => {
+                this.loadNotifications();
+            }, 30000);
+        },
+
+        // ===== CARGAR NOTIFICACIONES =====
+        loadNotifications() {
+            this.loading = true;
+            fetch('/api/notifications/unread', {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.notifications = data.notifications || [];
+                    this.unreadCount = data.unread || 0;
+                    this.hasMore = this.notifications.length > 0;
+                    console.log('✅ Notificaciones cargadas:', this.notifications.length);
+                }
+                this.loading = false;
+            })
+            .catch(error => {
+                console.error('❌ Error cargando notificaciones:', error);
+                this.loading = false;
+            });
+        },
+
+        // ===== ALTERNAR PANEL =====
+        toggleNotifications() {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen) {
+                this.loadNotifications();
+            }
+        },
+
+        // ===== ESCUCHAR EVENTOS EN TIEMPO REAL =====
+        setupRealtimeListeners() {
+            if (window.Echo && window.userId) {
+                try {
+                    window.Echo.private(`user.${window.userId}`)
+                        .listen('PushNotificationEvent', (e) => {
+                            console.log('🔔 Notificación en tiempo real:', e);
+                            this.handleNewNotification(e.notification);
+                        });
+                    console.log('✅ Escuchando eventos en tiempo real');
+                } catch (error) {
+                    console.warn('⚠️ Error configurando Echo:', error);
+                }
+            } else {
+                console.warn('⚠️ Echo no disponible o usuario no autenticado');
+            }
+        },
+
+        // ===== ESCUCHAR MENSAJES DEL SERVICE WORKER =====
+        setupServiceWorkerMessages() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'PUSH_NOTIFICATION_RECEIVED') {
+                        console.log('📩 Mensaje del Service Worker:', event.data);
+                        this.handleNewNotification(event.data.data);
+                    }
+                });
+            }
+        },
+
+        // ===== MANEJAR NUEVA NOTIFICACIÓN =====
+        handleNewNotification(notification) {
+            // Verificar si ya existe
+            const exists = this.notifications.some(n => n.id === notification.id);
+            if (exists) return;
+            
+            // Agregar al inicio
+            this.notifications.unshift({
+                id: notification.id || Date.now(),
+                title: notification.title || '🔔 Nueva notificación',
+                message: notification.message || notification.body || '',
+                type: notification.type || 'info',
+                read: false,
+                timestamp: new Date().toISOString(),
+                data: notification.data || notification
+            });
+            
+            this.unreadCount++;
+            
+            // Mostrar toast en la interfaz
+            this.showToast(
+                notification.title || '🔔 Nueva notificación',
+                notification.message || notification.body || '',
+                notification.type || 'info'
+            );
+            
+            // Reproducir sonido si existe
+            this.playNotificationSound();
+        },
+
+        // ===== MOSTRAR TOAST =====
+        showToast(title, message, type = 'info') {
+            const colors = {
+                info: 'bg-blue-600',
+                success: 'bg-green-600',
+                warning: 'bg-yellow-600',
+                danger: 'bg-red-600',
+                chat: 'bg-purple-600'
+            };
+            
+            const icons = {
+                info: 'fa-info-circle',
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                danger: 'fa-times-circle',
+                chat: 'fa-comment-dots'
+            };
+            
+            // Remover toasts anteriores
+            document.querySelectorAll('.custom-toast').forEach(el => el.remove());
+            
+            const toast = document.createElement('div');
+            const bgColor = colors[type] || colors.info;
+            const icon = icons[type] || icons.info;
+            
+            toast.className = `custom-toast fixed top-20 right-4 ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg z-[99999] max-w-sm animate-slide-in`;
+            toast.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <i class="fas ${icon} mt-1 text-xl"></i>
+                    <div class="flex-1">
+                        <div class="font-bold text-sm">${title}</div>
+                        <div class="text-xs opacity-90 mt-1">${message}</div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="opacity-50 hover:opacity-100">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Auto-cerrar después de 6 segundos
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(100px)';
+                    toast.style.transition = 'all 0.3s ease';
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                    }, 300);
+                }
+            }, 6000);
+        },
+
+        // ===== REPRODUCIR SONIDO =====
+        playNotificationSound() {
+            try {
+                const audio = new Audio('/sounds/notification.mp3');
+                audio.volume = 0.5;
+                audio.play().catch(() => {});
+            } catch (e) {
+                // Silencioso si no hay sonido
+            }
+        },
+
+        // ===== 🔥 ENVIAR NOTIFICACIÓN DE PRUEBA 🔥 =====
+        testNotification() {
+            console.log('🔔 Enviando notificación de prueba...');
+            
+            // Mostrar loading en el botón
+            const btn = document.querySelector('[title="Enviar notificación de prueba"]');
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin text-white"></i>';
+                btn.disabled = true;
+            }
+            
+            fetch('/notification/demo', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Notificación de prueba enviada:', data);
+                
+                if (data.success) {
+                    // Mostrar toast de éxito
+                    this.showToast('✅ Notificación enviada', 'La notificación de prueba se envió correctamente', 'success');
+                    
+                    // Recargar notificaciones después de 1 segundo
+                    setTimeout(() => {
+                        this.loadNotifications();
+                    }, 1000);
+                } else {
+                    this.showToast('❌ Error', data.message || 'Error al enviar notificación', 'danger');
+                }
+                
+                // Restaurar botón
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-bell text-white"></i>';
+                    btn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                this.showToast('❌ Error', 'Error al enviar la notificación de prueba', 'danger');
+                
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-bell text-white"></i>';
+                    btn.disabled = false;
+                }
+            });
+        },
+
+        // ===== MARCAR COMO LEÍDA =====
+        markAsRead(id) {
+            fetch(`/api/notifications/${id}/read`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': window.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const notification = this.notifications.find(n => n.id === id);
+                    if (notification) {
+                        notification.read = true;
+                        this.unreadCount = Math.max(0, this.unreadCount - 1);
+                    }
+                }
+            })
+            .catch(error => console.error('Error marcando como leída:', error));
+        },
+
+        // ===== MARCAR TODAS COMO LEÍDAS =====
+        markAllAsRead() {
+            if (this.unreadCount === 0) return;
+            
+            fetch('/api/notifications/mark-all-read', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': window.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.notifications.forEach(n => n.read = true);
+                    this.unreadCount = 0;
+                    this.showToast('✅ Todas leídas', 'Has marcado todas las notificaciones como leídas', 'success');
+                }
+            })
+            .catch(error => console.error('Error marcando todas como leídas:', error));
+        },
+
+        // ===== ELIMINAR TODAS =====
+        clearAll() {
+            if (this.notifications.length === 0) return;
+            
+            if (!confirm('¿Eliminar todas las notificaciones?')) return;
+            
+            fetch('/api/notifications/clear-all', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': window.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.notifications = [];
+                    this.unreadCount = 0;
+                    this.showToast('🗑️ Limpiado', 'Todas las notificaciones han sido eliminadas', 'warning');
+                }
+            })
+            .catch(error => console.error('Error limpiando notificaciones:', error));
+        },
+
+        // ===== MANEJAR CLICK EN NOTIFICACIÓN =====
+        handleNotificationClick(notification) {
+            if (!notification.read) {
+                this.markAsRead(notification.id);
+            }
+            
+            if (notification.data?.url) {
+                window.location.href = notification.data.url;
+            }
+        },
+
+        // ===== CARGAR MÁS =====
+        loadMore() {
+            this.page++;
+            this.loadNotifications();
+        },
+
+        // ===== OBTENER ÍCONO POR TIPO =====
+        getTypeIcon(type) {
+            const icons = {
+                success: 'fas fa-check-circle text-green-500',
+                error: 'fas fa-exclamation-circle text-red-500',
+                warning: 'fas fa-exclamation-triangle text-yellow-500',
+                danger: 'fas fa-times-circle text-red-500',
+                info: 'fas fa-info-circle text-blue-500',
+                chat: 'fas fa-comment-dots text-purple-500',
+                demo: 'fas fa-bell text-indigo-500'
+            };
+            return icons[type] || icons.info;
+        },
+
+        // ===== FORMATEAR TIEMPO =====
+        formatTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 60000);
+            
+            if (diff < 1) return 'Ahora';
+            if (diff < 60) return `Hace ${diff} min`;
+            if (diff < 1440) return `Hace ${Math.floor(diff / 60)} h`;
+            if (diff < 43200) return `Hace ${Math.floor(diff / 1440)} d`;
+            return date.toLocaleDateString();
+        }
+    };
+}
+
+// ============================================
+// SERVICE WORKER REGISTRATION
+// ============================================
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.log('❌ Service Workers no soportados');
+        return;
+    }
+
+    navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+        .then(registration => {
+            console.log('✅ Service Worker registrado:', registration.scope);
+            
+            // Si ya tenemos permiso, suscribirnos a push
+            if ('Notification' in window && Notification.permission === 'granted') {
+                subscribeToPush(registration);
+            }
+        })
+        .catch(error => {
+            console.log('❌ Error registrando Service Worker:', error);
+        });
+}
+
+// ============================================
+// SUSCRIBIRSE A PUSH NOTIFICATIONS
+// ============================================
+function subscribeToPush(registration) {
+    if (!('PushManager' in window)) {
+        console.log('❌ Push Manager no soportado');
+        return;
+    }
+
+    // Verificar que tenemos la clave VAPID
+    const vapidKey = window.vapidPublicKey || '{{ env('VAPID_PUBLIC_KEY') }}';
+    if (!vapidKey) {
+        console.warn('⚠️ Clave VAPID no configurada');
+        return;
+    }
+
+    const applicationServerKey = urlBase64ToUint8Array(vapidKey);
+    if (!applicationServerKey || applicationServerKey.length === 0) {
+        console.warn('⚠️ Clave VAPID inválida');
+        return;
+    }
+
+    registration.pushManager.getSubscription()
+        .then(subscription => {
+            if (subscription) {
+                console.log('✅ Ya suscrito a push');
+                return subscription;
+            }
+
+            // Crear nueva suscripción
+            return registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            });
+        })
+        .then(subscription => {
+            // Enviar suscripción al servidor
+            return fetch('/api/push/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': window.csrfToken || document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(subscription.toJSON())
+            });
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('✅ Suscripción push guardada en el servidor');
+            } else {
+                console.error('❌ Error guardando suscripción:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error en suscripción push:', error);
+        });
+}
+
+// ============================================
+// UTILIDAD: Convertir VAPID Key
+// ============================================
+function urlBase64ToUint8Array(base64String) {
+    if (!base64String) return new Uint8Array(0);
+    
+    try {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    } catch (e) {
+        console.error('❌ Error decodificando VAPID key:', e);
+        return new Uint8Array(0);
+    }
+}
+
+// ============================================
+// SOLICITAR PERMISO DE NOTIFICACIONES
+// ============================================
+function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+        alert('Este navegador no soporta notificaciones');
+        return;
+    }
+
+    Notification.requestPermission()
+        .then(permission => {
+            console.log('📱 Permiso de notificaciones:', permission);
+            
+            if (permission === 'granted') {
+                // Remover banner si existe
+                document.querySelectorAll('.notification-permission-banner').forEach(el => el.remove());
+                
+                // Suscribirse a push
+                navigator.serviceWorker.ready.then(registration => {
+                    subscribeToPush(registration);
+                });
+                
+                // Mostrar notificación de bienvenida
+                setTimeout(() => {
+                    if (window.notificationWidget) {
+                        // Usar el widget para mostrar toast
+                        document.querySelector('[x-data="notificationWidget()"]')?.__x?.showToast(
+                            '✅ Notificaciones activadas',
+                            'Recibirás alertas en tiempo real del sistema',
+                            'success'
+                        );
+                    }
+                }, 500);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Error solicitando permiso:', error);
+        });
+}
+
+// ============================================
+// BANNER PARA SOLICITAR PERMISO
+// ============================================
+function showPermissionBanner() {
+    // No mostrar si ya está concedido o denegado
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'default') return;
+    
+    // Remover banners existentes
+    document.querySelectorAll('.notification-permission-banner').forEach(el => el.remove());
+
+    const banner = document.createElement('div');
+    banner.className = 'notification-permission-banner';
+    banner.innerHTML = `
+        <button class="close-btn" onclick="this.parentElement.remove()">✕</button>
+        <div class="flex items-center gap-3">
+            <i class="fas fa-bell text-2xl"></i>
+            <div class="flex-1">
+                <strong>🔔 Activa las notificaciones</strong>
+                <p class="text-xs opacity-80 mt-1">Recibe alertas en tiempo real</p>
+            </div>
+            <button onclick="requestNotificationPermission()" 
+                    class="px-4 py-2 bg-white text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-50 transition">
+                Activar
+            </button>
+        </div>
+    `;
+    document.body.appendChild(banner);
+}
+
+// ============================================
+// INICIALIZAR AL CARGAR LA PÁGINA
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicializando sistema de notificaciones...');
+    
+    // 1. Registrar Service Worker
+    registerServiceWorker();
+    
+    // 2. Mostrar banner de permisos si es necesario
+    setTimeout(showPermissionBanner, 3000);
+    
+    // 3. Inicializar resto del sistema (Tab Manager, Favoritos, etc.)
+    if (window.tabManager) {
+        window.tabManager = new TabManager();
+    }
+    
+    if (typeof updateFavoritesUI === 'function') {
+        updateFavoritesUI();
+        updateFavoriteStars();
+    }
+    
+    // 4. Cerrar menús con Escape
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('logout-confirm-modal');
+            if (modal && modal.classList.contains('flex')) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            if (typeof closeSectionSidebar === 'function') closeSectionSidebar();
+            if (typeof closeQuickSidebar === 'function') closeQuickSidebar();
+            if (typeof closeMobileMenu === 'function') closeMobileMenu();
+        }
+    });
+    
+    console.log('✅ Sistema de notificaciones inicializado');
+});
+
+// ============================================
+// FUNCIONES DE FALLBACK PARA MÓDULOS
+// ============================================
+// (Mantén aquí todas tus funciones existentes)
+// toggleSectionSidebar, closeSectionSidebar, toggleMobileMenu, etc.
+// ============================================
+    </script>
+    <!-- ===== FIN SERVICE WORKER ===== -->
 </body>
 </html>
