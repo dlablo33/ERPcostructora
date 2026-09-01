@@ -631,7 +631,7 @@ class NominaController extends Controller
                     'message' => 'Error al obtener nómina: ' . $e->getMessage()
                 ], 500);
             }
-            return redirect()->route('nomina.index')->with('error', 'Error al obtener nómina');
+            return redirect()->back()->with('error', 'Nómina no encontrada');
         }
     }
     

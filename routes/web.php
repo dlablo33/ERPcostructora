@@ -92,9 +92,6 @@ use App\Http\Controllers\Api\PushController;
 // ============================================
 // RUTAS PÚBLICAS
 // ============================================
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/home', function () {
     return view('home');
@@ -807,7 +804,8 @@ Route::get('/{id}/print', [NominaController::class, 'imprimirRecibo'])->name('pr
 Route::get('/{id}/pdf', [NominaController::class, 'generarPDF'])->name('pdf');
 
 // ✅ RUTA CATCH-ALL CON {id} (AL FINAL - MUY IMPORTANTE)
-Route::get('/{id}', [NominaController::class, 'show'])->name('show');
+// ✅ RUTA PARA VER DETALLE DE NÓMINA
+Route::get('/nomina/{id}', [NominaController::class, 'show'])->name('nomina.show');
 
 // ✅ OBTENER EMPLEADOS POR PROYECTO
 Route::get('/empleados-por-proyecto/{proyectoId}', [NominaController::class, 'getEmpleadosPorProyecto'])
@@ -2015,12 +2013,50 @@ Route::middleware(['auth'])->group(function () {
 // ============================================
 // RUTAS PARA CFDI
 // ============================================
-Route::middleware(['auth'])->group(function () {
-    Route::get('/cfdi', [App\Http\Controllers\Facturacion\CFDIController::class, 'indexView'])->name('cfdi.index');
-    Route::get('/cfdi/data', [App\Http\Controllers\Facturacion\CFDIController::class, 'getData']);
-    Route::get('/cfdi/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'show']);
-    Route::get('/cfdi/{id}/pdf', [App\Http\Controllers\Facturacion\CFDIController::class, 'pdf']);
-    Route::get('/cfdi/{id}/xml', [App\Http\Controllers\Facturacion\CFDIController::class, 'xml']);
+// ============================================
+// RUTAS PARA CFDI - TIMBRADO Y CANCELACIÓN
+// ============================================
+Route::middleware(['auth'])->prefix('cfdi')->name('cfdi.')->group(function () {
+    // ==========================================
+    // RUTAS EXISTENTES
+    // ==========================================
+    Route::get('/', [App\Http\Controllers\Facturacion\CFDIController::class, 'indexView'])->name('index');
+    Route::get('/data', [App\Http\Controllers\Facturacion\CFDIController::class, 'getData']);
+    Route::get('/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'show']);
+    Route::get('/{id}/pdf', [App\Http\Controllers\Facturacion\CFDIController::class, 'pdf']);
+    Route::get('/{id}/xml', [App\Http\Controllers\Facturacion\CFDIController::class, 'xml']);
+    
+    // ==========================================
+    // 🆕 NUEVAS RUTAS PARA TIMBRADO Y CANCELACIÓN
+    // ==========================================
+    
+    // ✅ GENERAR XML DE PRUEBA (para testing - SIN autenticación para pruebas)
+    Route::get('/generar-xml-prueba', [App\Http\Controllers\Facturacion\CFDIController::class, 'generarXMLPrueba'])
+        ->name('generar-xml-prueba');
+    
+    // ✅ TIMBRAR un CFDI desde una factura
+    Route::post('/timbrar/{facturaId}', [App\Http\Controllers\Facturacion\CFDIController::class, 'timbrar'])
+        ->name('timbrar');
+    
+    // ✅ CANCELAR un CFDI por ID
+    Route::post('/cancelar/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'cancelar'])
+        ->name('cancelar');
+    
+    // ✅ CONSULTAR ESTADO de un CFDI
+    Route::get('/consultar-estado/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'consultarEstado'])
+        ->name('consultar-estado');
+    
+    // ✅ RE-TIMBRAR un CFDI (si falló el timbrado anterior)
+    Route::post('/retimbrar/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'retimbrar'])
+        ->name('retimbrar');
+    
+    // ✅ ENVIAR CFDI POR CORREO
+    Route::post('/enviar-correo/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'enviarCorreo'])
+        ->name('enviar-correo');
+    
+    // ✅ LISTAR CFDI disponibles (para selects)
+    Route::get('/listar-disponibles', [App\Http\Controllers\Facturacion\CFDIController::class, 'listarDisponibles'])
+        ->name('listar-disponibles');
 });
 
 // ============================================
@@ -2372,5 +2408,61 @@ Route::prefix('api')->middleware(['auth'])->group(function () {
         Route::post('/unsubscribe', [App\Http\Controllers\Api\PushController::class, 'unsubscribe'])->name('api.push.unsubscribe');
     });
 });
+
+
+// RUTA DE PRUEBA DEFINITIVA
+Route::get('/ping', function() {
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'Servidor funcionando',
+        'timestamp' => date('Y-m-d H:i:s')
+    ]);
+});
+
+// ============================================
+// RUTAS DE PRUEBA - CFDI (AGREGADAS MANUALMENTE)
+// ============================================
+
+Route::get('/cfdi-test', function() {
+    return response()->json([
+        'message' => '✅ Ruta CFDI funcionando correctamente',
+        'timestamp' => date('Y-m-d H:i:s')
+    ]);
+});
+
+Route::get('/cfdi-xml', function() {
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" Version="4.0" Serie="A" Folio="0001" Fecha="' . date('Y-m-d\TH:i:s') . '" SubTotal="100.00" Total="116.00" TipoDeComprobante="I" MetodoPago="PUE" FormaPago="01" Moneda="MXN" LugarExpedicion="45100" Exportacion="01">';
+    $xml .= '<cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"/>';
+    $xml .= '<cfdi:Receptor Rfc="XAXX010101000" Nombre="PUBLICO EN GENERAL" UsoCFDI="G01" DomicilioFiscalReceptor="64000" RegimenFiscalReceptor="616"/>';
+    $xml .= '<cfdi:Conceptos><cfdi:Concepto ClaveProdServ="01010101" Cantidad="1" ClaveUnidad="ACT" Descripcion="Producto de prueba" ValorUnitario="100.00" Importe="100.00" ObjetoImp="02"><cfdi:Traslados><cfdi:Traslado Base="100.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="16.00"/></cfdi:Traslados></cfdi:Concepto></cfdi:Conceptos>';
+    $xml .= '<cfdi:Impuestos><cfdi:Traslados><cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="16.00"/></cfdi:Traslados></cfdi:Impuestos>';
+    $xml .= '</cfdi:Comprobante>';
+    
+    return response($xml, 200)
+        ->header('Content-Type', 'application/xml')
+        ->header('Content-Disposition', 'inline; filename="cfdi_prueba.xml"');
+});
+
+// RUTAS CFDI CON CONTROLADOR (para timbrar)
+Route::middleware(['auth'])->prefix('cfdi')->group(function () {
+    Route::get('/', [App\Http\Controllers\Facturacion\CFDIController::class, 'indexView'])->name('cfdi.index');
+    Route::get('/data', [App\Http\Controllers\Facturacion\CFDIController::class, 'getData']);
+    Route::get('/{id}', [App\Http\Controllers\Facturacion\CFDIController::class, 'show']);
+    Route::get('/{id}/pdf', [App\Http\Controllers\Facturacion\CFDIController::class, 'pdf']);
+    Route::get('/{id}/xml', [App\Http\Controllers\Facturacion\CFDIController::class, 'xml']);
+});
+
+// RUTAS PARA VER LOGS
+Route::middleware(['auth'])->prefix('logs')->name('logs.')->group(function () {
+    Route::get('/', [App\Http\Controllers\LogViewerController::class, 'index'])->name('index');
+    Route::get('/clear', [App\Http\Controllers\LogViewerController::class, 'clear'])->name('clear');
+    Route::get('/download', [App\Http\Controllers\LogViewerController::class, 'download'])->name('download');
+});
+
+// ========== LANDING PAGE ==========
+Route::get('/', function () {
+    return view('page.index');
+})->name('landing');
 
 require __DIR__.'/auth.php';
