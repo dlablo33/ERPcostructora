@@ -20,21 +20,21 @@
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalDirectos">$0</div>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Materiales</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalMateriales">$0</div>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Mano de Obra</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalManoObra">$0</div>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Maquinaria</div>
@@ -50,7 +50,7 @@
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
                     </div>
-                    
+
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <!-- Filtro de Proyectos - Dropdown con checkboxes -->
                         <div style="position: relative; min-width: 220px;" id="proyectoFilterContainer">
@@ -58,7 +58,7 @@
                                 <span id="filtroProyectosLabel">Todos los proyectos</span>
                                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 12px;"></i>
                             </button>
-                            
+
                             <div id="filtroProyectosDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ced4da; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; max-height: 280px; overflow: hidden; padding: 8px 0; margin-top: 2px;">
                                 <div style="padding: 0 12px 8px 12px; border-bottom: 1px solid #e9ecef;">
                                     <input type="text" id="filtroProyectosBuscar" placeholder="Buscar proyecto..." style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
@@ -153,7 +153,7 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <!-- Paginación -->
                 <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px;">
                     <div style="visibility: hidden;"></div>
@@ -183,7 +183,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div style="padding: 20px;">
             <form id="formAgregarCosto">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
@@ -209,14 +209,14 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Concepto <span style="color: #dc3545;">*</span>
                     </label>
                     <input type="text" id="campoConcepto" name="concepto" required placeholder="Ej. Concreto premezclado, Armado de acero, etc." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -233,7 +233,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -248,14 +248,14 @@
                         <input type="text" id="campoFactura" name="factura" placeholder="Número de factura o recibo" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Descripción
                     </label>
                     <textarea id="campoDescripcion" name="descripcion" rows="2" placeholder="Descripción detallada del concepto" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -288,7 +288,7 @@
                         <input type="number" id="campoPrecioUnitario" name="precio_unitario" step="0.01" min="0" value="0.00" required style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -309,7 +309,7 @@
                         <input type="number" id="campoTotal" step="0.01" min="0" value="0.00" readonly style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #e9ecef;">
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -323,25 +323,27 @@
                         </label>
                         <select id="campoEstatusPago" name="estatus_pago" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="pagado">Pagado</option>
-                            <option value="pendiente" selected> Pendiente</option>
+                            <option value="pendiente" selected>Pendiente</option>
                             <option value="programado">Programado</option>
-                            <option value="vencido"> Vencido</option>
+                            <option value="vencido">Vencido</option>
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Observaciones
                     </label>
                     <textarea id="campoObservaciones" name="observaciones" rows="2" placeholder="Observaciones adicionales" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
+                <div id="erroresAgregar" style="display: none; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px 15px; margin-bottom: 15px; color: #721c24; font-size: 13px;"></div>
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
                     <button type="button" id="btnCancelarAgregar" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
                         Cancelar
                     </button>
-                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                    <button type="submit" id="btnGuardarAgregar" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                         <i class="fas fa-save"></i> Guardar Costo
                     </button>
                 </div>
@@ -361,7 +363,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div style="padding: 20px;">
             <form id="formEditarCosto">
                 <input type="hidden" id="editId">
@@ -380,22 +382,22 @@
                         </label>
                         <select id="editCategoria" name="categoria" required style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="">Seleccionar categoría</option>
-                            <option value="materiales"> Materiales</option>
-                            <option value="mano_obra"> Mano de Obra</option>
-                            <option value="maquinaria"> Maquinaria</option>
-                            <option value="subcontratos"> Subcontratos</option>
-                            <option value="equipos"> Equipos</option>
+                            <option value="materiales">Materiales</option>
+                            <option value="mano_obra">Mano de Obra</option>
+                            <option value="maquinaria">Maquinaria</option>
+                            <option value="subcontratos">Subcontratos</option>
+                            <option value="equipos">Equipos</option>
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Concepto <span style="color: #dc3545;">*</span>
                     </label>
                     <input type="text" id="editConcepto" name="concepto" required placeholder="Ej. Concreto premezclado, Armado de acero, etc." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -412,7 +414,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -427,14 +429,14 @@
                         <input type="text" id="editFactura" name="factura" placeholder="Número de factura o recibo" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Descripción
                     </label>
                     <textarea id="editDescripcion" name="descripcion" rows="2" placeholder="Descripción detallada del concepto" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -467,7 +469,7 @@
                         <input type="number" id="editPrecioUnitario" name="precio_unitario" step="0.01" min="0" required style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -488,7 +490,7 @@
                         <input type="number" id="editTotal" step="0.01" min="0" readonly style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #e9ecef;">
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -501,21 +503,23 @@
                             Estatus de Pago
                         </label>
                         <select id="editEstatusPago" name="estatus_pago" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
-                            <option value="pagado"> Pagado</option>
-                            <option value="pendiente"> Pendiente</option>
-                            <option value="programado"> Programado</option>
+                            <option value="pagado">Pagado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="programado">Programado</option>
                             <option value="vencido">Vencido</option>
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Observaciones
                     </label>
                     <textarea id="editObservaciones" name="observaciones" rows="2" placeholder="Observaciones adicionales" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
+                <div id="erroresEditar" style="display: none; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; padding: 10px 15px; margin-bottom: 15px; color: #721c24; font-size: 13px;"></div>
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
                     <button type="button" id="btnCancelarEditar" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
                         Cancelar
@@ -554,22 +558,22 @@
     #tablaBody tr:nth-child(odd) { background-color: #ffffff; }
     #tablaBody tr:nth-child(even) { background-color: #f2f2f2; }
     #tablaBody tr:hover { background-color: #e0e0e0; }
-    
+
     .badge { font-size: 11px; font-weight: 600; padding: 4px 8px; display: inline-block; border-radius: 3px; }
     .badge-pagado { background-color: #28a745; color: white; }
     .badge-pendiente { background-color: #ffc107; color: black; }
     .badge-programado { background-color: #17a2b8; color: white; }
     .badge-vencido { background-color: #dc3545; color: white; }
-    
+
     tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #083CAE; color: #000000 !important; }
-    
+
     .toast-notification { position: fixed; bottom: 20px; right: 20px; z-index: 100000; animation: slideIn 0.3s ease; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 14px; }
     .toast-notification.success { background-color: #28a745; color: white; }
     .toast-notification.error { background-color: #dc3545; color: white; }
     .toast-notification.warning { background-color: #ffc107; color: #333; }
-    
+
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    
+
     /* Estilos para agrupación de columnas */
     [draggable="true"] { cursor: grab; }
     [draggable="true"]:active { cursor: grabbing; opacity: 0.7; }
@@ -584,7 +588,7 @@
     .fila-detalle td { border-top: none !important; }
     .fila-detalle td:first-child { padding-left: 30px !important; }
     .drag-over #grupoColumnas { background-color: rgba(35, 120, 225, 0.1); border-radius: 4px; }
-    
+
     /* Estilo para el dropdown de proyectos */
     #filtroProyectosDropdown {
         min-width: 250px;
@@ -609,7 +613,7 @@
         font-size: 11px;
         margin-left: auto;
     }
-    
+
     @media (max-width: 768px) {
         input[type="date"] { width: 100% !important; }
         input#buscador { width: 100% !important; }
@@ -633,7 +637,11 @@
     let columnasAgrupadas = [];
     let expandedGroups = new Set();
     let proyectosLista = [];
-    
+
+    // Cache del último set de datos para re-render sin re-fetch
+    let ultimosDatos = [];
+    let ultimaPaginacion = null;
+
     let currentFilters = {
         busqueda: '',
         proyecto_id: [],
@@ -646,26 +654,40 @@
     };
 
     // ============================================
+    // HELPERS DE FECHA (evitan bugs de UTC)
+    // ============================================
+    function fechaLocalISO(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    function getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    }
+
+    // ============================================
     // FUNCIONES PRINCIPALES
     // ============================================
 
     async function cargarCostos() {
         mostrarLoading(true);
-        
+
         try {
             if (!currentFilters.fecha_inicio) {
                 const hoy = new Date();
                 const seisMesesAtras = new Date();
                 seisMesesAtras.setMonth(hoy.getMonth() - 6);
-                currentFilters.fecha_inicio = seisMesesAtras.toISOString().split('T')[0];
-                currentFilters.fecha_fin = hoy.toISOString().split('T')[0];
+                currentFilters.fecha_inicio = fechaLocalISO(seisMesesAtras);
+                currentFilters.fecha_fin = fechaLocalISO(hoy);
                 document.getElementById('fechaInicio').value = currentFilters.fecha_inicio;
                 document.getElementById('fechaFin').value = currentFilters.fecha_fin;
             }
-            
+
             const proyectosSeleccionados = getProyectosSeleccionados();
             currentFilters.proyecto_id = proyectosSeleccionados;
-            
+
             const params = new URLSearchParams();
             params.append('busqueda', currentFilters.busqueda || '');
             params.append('categoria', currentFilters.categoria || 'todos');
@@ -674,48 +696,53 @@
             params.append('fecha_fin', currentFilters.fecha_fin || '');
             params.append('page', currentFilters.page || 1);
             params.append('per_page', currentFilters.per_page || 10);
-            
+
             if (proyectosSeleccionados.length > 0) {
                 proyectosSeleccionados.forEach(id => {
                     params.append('proyecto_id[]', id);
                 });
             }
-            
+
             const url = `${API_BASE}?${params.toString()}`;
-            console.log('Cargando desde:', url);
-            
+            console.log('[CostosDirectos] GET:', url);
+
             const response = await fetch(url, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                }
+                    'X-CSRF-TOKEN': getCSRFToken()
+                },
+                credentials: 'same-origin',
+                cache: 'no-store'
             });
-            
+
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
             }
-            
+
             const result = await response.json();
-            console.log('Resultado:', result);
-            
+            console.log('[CostosDirectos] Respuesta:', result);
+
             if (result.success) {
                 const data = result.data.data || [];
                 const pagination = result.data;
-                
+
+                ultimosDatos = data;
+                ultimaPaginacion = pagination;
+
                 actualizarEstadisticas(result.estadisticas);
                 renderizarTabla(data);
                 calcularTotales(data);
                 actualizarPaginacion(pagination);
-                
+
                 currentPage = pagination.current_page || 1;
                 totalPages = pagination.last_page || 1;
             } else {
                 mostrarNotificacion(result.message || 'Error al cargar datos', 'error');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('[CostosDirectos] Error:', error);
             mostrarNotificacion('Error al cargar los costos: ' + error.message, 'error');
         } finally {
             mostrarLoading(false);
@@ -730,9 +757,7 @@
         const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked');
         const selected = [];
         checkboxes.forEach(cb => {
-            if (cb.value) {
-                selected.push(cb.value);
-            }
+            if (cb.value) selected.push(cb.value);
         });
         return selected;
     }
@@ -741,14 +766,11 @@
         const total = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').length;
         const selected = getProyectosSeleccionados().length;
         const label = document.getElementById('filtroProyectosLabel');
-        
-        if (selected === 0) {
-            label.textContent = 'Todos los proyectos';
-        } else if (selected === total) {
+
+        if (selected === 0 || selected === total) {
             label.textContent = 'Todos los proyectos';
         } else {
-            const count = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked').length;
-            label.textContent = `${count} proyecto${count > 1 ? 's' : ''} seleccionado${count > 1 ? 's' : ''}`;
+            label.textContent = `${selected} proyecto${selected > 1 ? 's' : ''} seleccionado${selected > 1 ? 's' : ''}`;
         }
     }
 
@@ -761,19 +783,19 @@
         document.getElementById('filtroProyectosDropdown').style.display = 'none';
     }
 
-    function renderizarCheckboxesProyectos(proyectos) {
+    function renderizarCheckboxesProyectos(proyectos, preservarSeleccion = true) {
         const lista = document.getElementById('filtroProyectosLista');
+        const seleccionadosPrevios = preservarSeleccion ? getProyectosSeleccionados() : [];
+
         lista.innerHTML = '';
-        
+
         if (!proyectos || proyectos.length === 0) {
             lista.innerHTML = '<div style="padding: 8px 12px; color: #6c757d; font-size: 13px;">No hay proyectos disponibles</div>';
             return;
         }
-        
-        const selected = getProyectosSeleccionados();
-        
+
         proyectos.forEach(proyecto => {
-            const checked = selected.includes(String(proyecto.id)) ? 'checked' : '';
+            const checked = seleccionadosPrevios.includes(String(proyecto.id)) ? 'checked' : '';
             const label = document.createElement('label');
             label.innerHTML = `
                 <input type="checkbox" value="${proyecto.id}" ${checked}>
@@ -781,14 +803,14 @@
             `;
             lista.appendChild(label);
         });
-        
+
         actualizarLabelProyectos();
     }
 
     function filtrarProyectosLista(busqueda) {
         const labels = document.querySelectorAll('#filtroProyectosLista label');
         const term = busqueda.toLowerCase().trim();
-        
+
         labels.forEach(label => {
             const text = label.textContent.toLowerCase();
             label.style.display = text.includes(term) ? 'flex' : 'none';
@@ -796,16 +818,11 @@
     }
 
     function seleccionarTodosProyectos() {
-        const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]');
-        const visibles = document.querySelectorAll('#filtroProyectosLista label[style*="display: none"]');
-        const todosVisibles = document.querySelectorAll('#filtroProyectosLista label:not([style*="display: none"])');
-        
-        // Seleccionar solo los visibles
-        todosVisibles.forEach(label => {
+        const labelsVisibles = document.querySelectorAll('#filtroProyectosLista label:not([style*="display: none"])');
+        labelsVisibles.forEach(label => {
             const cb = label.querySelector('input[type="checkbox"]');
             if (cb) cb.checked = true;
         });
-        
         actualizarLabelProyectos();
         aplicarFiltroProyectos();
     }
@@ -829,40 +846,43 @@
     async function cargarCatalogos() {
         try {
             const proyectosResp = await fetch(`${API_BASE}/catalogos/proyectos`, {
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': getCSRFToken() },
+                credentials: 'same-origin',
+                cache: 'no-store'
             });
             const proyectosResult = await proyectosResp.json();
-            
+
             if (proyectosResult.success) {
                 const selectAgregar = document.getElementById('campoProyecto');
                 const selectEditar = document.getElementById('editProyecto');
-                const options = proyectosResult.data.map(p => 
+                const options = proyectosResult.data.map(p =>
                     `<option value="${p.id}">${p.nombre}</option>`
                 ).join('');
                 selectAgregar.innerHTML = `<option value="">Seleccionar proyecto</option>${options}`;
                 selectEditar.innerHTML = `<option value="">Seleccionar proyecto</option>${options}`;
-                
-                // Guardar lista para el filtro
+
                 proyectosLista = proyectosResult.data;
-                renderizarCheckboxesProyectos(proyectosLista);
+                renderizarCheckboxesProyectos(proyectosLista, true);
             }
-            
+
             const proveedoresResp = await fetch(`${API_BASE}/catalogos/proveedores`, {
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': getCSRFToken() },
+                credentials: 'same-origin',
+                cache: 'no-store'
             });
             const proveedoresResult = await proveedoresResp.json();
-            
+
             if (proveedoresResult.success) {
                 const selectAgregar = document.getElementById('campoProveedor');
                 const selectEditar = document.getElementById('editProveedor');
-                const options = proveedoresResult.data.map(p => 
+                const options = proveedoresResult.data.map(p =>
                     `<option value="${p.id}">${p.nombre} ${p.rfc ? '- ' + p.rfc : ''}</option>`
                 ).join('');
                 selectAgregar.innerHTML = `<option value="">Seleccionar proveedor</option>${options}`;
                 selectEditar.innerHTML = `<option value="">Seleccionar proveedor</option>${options}`;
             }
         } catch (error) {
-            console.error('Error cargando catálogos:', error);
+            console.error('[CostosDirectos] Error cargando catálogos:', error);
         }
     }
 
@@ -875,40 +895,40 @@
         const sinDatos = document.getElementById('sinDatosMensaje');
         const tablaContainer = document.getElementById('tablaContainer');
         const textoAgrupar = document.getElementById('textoAgrupar');
-        
+
         if (!tbody) return;
-        
+
         if (textoAgrupar) {
             textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
         }
-        
+
         const { grupos } = agruparDatos(costos, columnasAgrupadas);
         const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-        
+
         tbody.innerHTML = '';
-        
+
         if (!costos || costos.length === 0) {
             sinDatos.style.display = 'block';
             tablaContainer.style.display = 'none';
             document.getElementById('tablaFoot').style.display = 'none';
             return;
         }
-        
+
         sinDatos.style.display = 'none';
         tablaContainer.style.display = 'block';
-        
+
         if (hayGrupos) {
             document.getElementById('tablaFoot').style.display = 'none';
-            
+
             grupos.forEach(grupo => {
                 const grupoRow = document.createElement('tr');
                 grupoRow.className = 'fila-grupo';
                 grupoRow.dataset.grupoId = grupo.id;
-                
+
                 if (expandedGroups.has(grupo.id)) {
                     grupoRow.classList.add('expandido');
                 }
-                
+
                 grupoRow.innerHTML = `
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;" colspan="18">
                         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -923,7 +943,7 @@
                     </td>
                 `;
                 tbody.appendChild(grupoRow);
-                
+
                 if (expandedGroups.has(grupo.id)) {
                     grupo.items.forEach(item => {
                         tbody.appendChild(crearFilaDetalle(item));
@@ -932,7 +952,7 @@
             });
         } else {
             document.getElementById('tablaFoot').style.display = 'table-footer-group';
-            
+
             costos.forEach(item => {
                 tbody.appendChild(crearFila(item));
             });
@@ -942,13 +962,13 @@
     function crearFila(item) {
         const row = document.createElement('tr');
         const badgeClass = getEstatusBadge(item.estatus_pago);
-        
+
         const cantidad = parseFloat(item.cantidad) || 0;
         const precioUnitario = parseFloat(item.precio_unitario) || 0;
         const subtotal = parseFloat(item.subtotal) || 0;
         const iva = parseFloat(item.iva) || 0;
         const total = parseFloat(item.total) || 0;
-        
+
         row.innerHTML = `
             <td style="padding: 10px 4px;">${item.proyecto?.nombre || '-'}</td>
             <td style="padding: 10px 4px;">${item.categoria_nombre || '-'}</td>
@@ -982,13 +1002,13 @@
         const row = document.createElement('tr');
         row.className = 'fila-detalle';
         const badgeClass = getEstatusBadge(item.estatus_pago);
-        
+
         const cantidad = parseFloat(item.cantidad) || 0;
         const precioUnitario = parseFloat(item.precio_unitario) || 0;
         const subtotal = parseFloat(item.subtotal) || 0;
         const iva = parseFloat(item.iva) || 0;
         const total = parseFloat(item.total) || 0;
-        
+
         row.innerHTML = `
             <td style="padding: 10px 4px; padding-left: 30px;">${item.proyecto?.nombre || '-'}</td>
             <td style="padding: 10px 4px;">${item.categoria_nombre || '-'}</td>
@@ -1042,7 +1062,7 @@
         if (!pagination) return;
         document.getElementById('paginaActual').textContent = pagination.current_page || 1;
         document.getElementById('totalPaginas').textContent = `de ${pagination.last_page || 1}`;
-        document.getElementById('paginacionInfo').textContent = 
+        document.getElementById('paginacionInfo').textContent =
             `Mostrando ${pagination.from || 0}-${pagination.to || 0} de ${pagination.total || 0} registros`;
     }
 
@@ -1057,6 +1077,12 @@
     function formatDate(dateString) {
         if (!dateString) return '-';
         try {
+            // Si viene como 'YYYY-MM-DD' o 'YYYY-MM-DD HH:MM:SS', parseo manual para evitar UTC shift
+            const match = String(dateString).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (match) {
+                const [_, y, m, d] = match;
+                return `${d}/${m}/${y}`;
+            }
             const date = new Date(dateString);
             return date.toLocaleDateString('es-MX');
         } catch {
@@ -1084,7 +1110,23 @@
         const icono = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
         notificacion.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
         document.body.appendChild(notificacion);
-        setTimeout(() => notificacion.remove(), 3000);
+        setTimeout(() => notificacion.remove(), 3500);
+    }
+
+    function mostrarErroresValidacion(containerId, errors) {
+        const box = document.getElementById(containerId);
+        if (!box) return;
+        const mensajes = [];
+        Object.keys(errors || {}).forEach(k => {
+            (errors[k] || []).forEach(m => mensajes.push(`• ${m}`));
+        });
+        if (mensajes.length === 0) {
+            box.style.display = 'none';
+            box.innerHTML = '';
+            return;
+        }
+        box.innerHTML = `<strong>Corrige los siguientes errores:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;">${mensajes.map(m => `<li>${m}</li>`).join('')}</ul>`;
+        box.style.display = 'block';
     }
 
     // ============================================
@@ -1104,12 +1146,12 @@
 
     function agruparDatos(datos, columnas) {
         if (columnas.length === 0 || !datos) return { grupos: [], items: datos || [] };
-        
+
         const gruposMap = new Map();
-        
+
         datos.forEach(item => {
             const grupoId = generarGrupoId(item, columnas);
-            
+
             if (!gruposMap.has(grupoId)) {
                 const valorGrupo = columnas.map(col => {
                     switch(col) {
@@ -1119,7 +1161,7 @@
                         default: return '';
                     }
                 }).join(' - ');
-                
+
                 gruposMap.set(grupoId, {
                     id: grupoId,
                     valor: valorGrupo,
@@ -1132,7 +1174,7 @@
                 grupo.totalGeneral += parseFloat(item.total || 0);
             }
         });
-        
+
         return {
             grupos: Array.from(gruposMap.values()),
             items: []
@@ -1142,48 +1184,50 @@
     function actualizarGrupoColumnas() {
         const grupoContainer = document.getElementById('grupoColumnas');
         const textoAgrupar = document.getElementById('textoAgrupar');
-        
+
         if (!grupoContainer) return;
         grupoContainer.innerHTML = '';
-        
+
         if (columnasAgrupadas.length === 0) {
             if (textoAgrupar) textoAgrupar.style.display = 'inline';
         } else {
             if (textoAgrupar) textoAgrupar.style.display = 'none';
-            
+
             columnasAgrupadas.forEach(col => {
                 const nombreColumna = {
                     'proyecto': 'Proyecto',
                     'categoria': 'Categoría',
                     'estatus_pago': 'Estatus Pago'
                 }[col] || col;
-                
+
                 const chip = document.createElement('span');
                 chip.className = 'columna-agrupada';
                 chip.innerHTML = `${nombreColumna} <span class="remover" data-columna="${col}">&times;</span>`;
                 grupoContainer.appendChild(chip);
             });
         }
-        
+
         expandedGroups.clear();
-        cargarCostos();
+        // Re-render local, sin HTTP
+        renderizarTabla(ultimosDatos);
+        calcularTotales(ultimosDatos);
     }
 
     function setupDragAndDrop() {
         const encabezados = document.querySelectorAll('th[draggable="true"]');
         const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-        
+
         encabezados.forEach(th => {
             th.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', th.dataset.columna);
                 e.dataTransfer.effectAllowed = 'copy';
                 th.style.opacity = '0.5';
             });
-            th.addEventListener('dragend', (e) => {
+            th.addEventListener('dragend', () => {
                 th.style.opacity = '1';
             });
         });
-        
+
         if (grupoAgrupacion) {
             grupoAgrupacion.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -1203,7 +1247,7 @@
                 }
             });
         }
-        
+
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('remover')) {
                 const columna = e.target.dataset.columna;
@@ -1220,16 +1264,18 @@
     window.verDetalle = async function(id) {
         try {
             const response = await fetch(`${API_BASE}/${id}`, {
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': getCSRFToken() },
+                credentials: 'same-origin',
+                cache: 'no-store'
             });
             const result = await response.json();
-            
+
             if (result.success) {
                 const item = result.data;
                 const badgeClass = getEstatusBadge(item.estatus_pago);
-                
+
                 document.getElementById('modalTitulo').textContent = `${item.concepto} - ${item.proyecto?.nombre || 'Sin proyecto'}`;
-                
+
                 const contenido = `
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div>
@@ -1249,7 +1295,7 @@
                             <div style="font-size: 16px;">${formatDate(item.fecha)}</div>
                         </div>
                     </div>
-                    
+
                     <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                             <div>
@@ -1278,7 +1324,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Proveedor</div>
@@ -1297,27 +1343,26 @@
                             <div style="font-size: 14px;">${formatDate(item.fecha_pago)}</div>
                         </div>
                     </div>
-                    
+
                     ${item.descripcion ? `
                     <div style="margin-bottom: 15px;">
                         <div style="color: #6c757d; font-size: 12px;">Descripción</div>
                         <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${item.descripcion}</div>
                     </div>` : ''}
-                    
+
                     ${item.observaciones ? `
                     <div style="margin-bottom: 15px;">
                         <div style="color: #6c757d; font-size: 12px;">Observaciones</div>
                         <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${item.observaciones}</div>
                     </div>` : ''}
-                    
+
                     <div style="border-top: 1px solid #dee2e6; padding-top: 15px; margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
                         <button onclick="cerrarModalDetalle()" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
                     </div>
                 `;
-                
+
                 document.getElementById('modalContenidoDetalle').innerHTML = contenido;
-                document.getElementById('modalVerDetalle').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
+                abrirModal('modalVerDetalle');
             }
         } catch (error) {
             mostrarNotificacion('Error al cargar el detalle', 'error');
@@ -1327,13 +1372,15 @@
     window.editarCosto = async function(id) {
         try {
             const response = await fetch(`${API_BASE}/${id}`, {
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': getCSRFToken() },
+                credentials: 'same-origin',
+                cache: 'no-store'
             });
             const result = await response.json();
-            
+
             if (result.success) {
                 const item = result.data;
-                
+
                 document.getElementById('editId').value = item.id;
                 document.getElementById('editProyecto').value = item.proyecto_id || '';
                 document.getElementById('editCategoria').value = item.categoria || '';
@@ -1352,9 +1399,10 @@
                 document.getElementById('editFechaPago').value = item.fecha_pago || '';
                 document.getElementById('editEstatusPago').value = item.estatus_pago || 'pendiente';
                 document.getElementById('editObservaciones').value = item.observaciones || '';
-                
-                document.getElementById('modalEditarCosto').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
+
+                document.getElementById('erroresEditar').style.display = 'none';
+
+                abrirModal('modalEditarCosto');
             }
         } catch (error) {
             mostrarNotificacion('Error al cargar el costo para editar', 'error');
@@ -1363,18 +1411,20 @@
 
     window.eliminarCosto = function(id) {
         if (!confirm('¿Está seguro de eliminar este costo directo?')) return;
-        
+
         fetch(`${API_BASE}/${id}`, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                'X-CSRF-TOKEN': getCSRFToken(),
                 'Accept': 'application/json'
-            }
+            },
+            credentials: 'same-origin'
         })
         .then(response => response.json())
         .then(result => {
             if (result.success) {
                 mostrarNotificacion(result.message, 'success');
+                currentFilters.page = 1;
                 cargarCostos();
             } else {
                 mostrarNotificacion(result.message || 'Error al eliminar', 'error');
@@ -1385,45 +1435,53 @@
         });
     };
 
-    function cerrarModalDetalle() {
-        document.getElementById('modalVerDetalle').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
+    window.cerrarModalDetalle = function() {
+        cerrarModal('modalVerDetalle');
+    };
 
     async function exportarExcel() {
         try {
             const proyectosSeleccionados = getProyectosSeleccionados();
-            
+
             const params = new URLSearchParams();
             params.append('busqueda', currentFilters.busqueda || '');
             params.append('categoria', currentFilters.categoria || 'todos');
             params.append('estatus_pago', currentFilters.estatus_pago || '');
             params.append('fecha_inicio', currentFilters.fecha_inicio || '');
             params.append('fecha_fin', currentFilters.fecha_fin || '');
-            
+
             if (proyectosSeleccionados.length > 0) {
                 proyectosSeleccionados.forEach(id => {
                     params.append('proyecto_id[]', id);
                 });
             }
-            
-            const response = await fetch(`${API_BASE}/exportar?${params.toString()}`);
+
+            const response = await fetch(`${API_BASE}/exportar?${params.toString()}`, {
+                headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': getCSRFToken() },
+                credentials: 'same-origin',
+                cache: 'no-store'
+            });
             const result = await response.json();
-            
+
             if (result.success && result.data) {
                 const headers = result.data.headers || [];
                 const rows = result.data.rows || [];
-                
+
                 if (headers.length === 0 || rows.length === 0) {
                     mostrarNotificacion('No hay datos para exportar', 'warning');
                     return;
                 }
-                
-                const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+
+                const escape = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+                const csvContent = [
+                    headers.map(escape).join(','),
+                    ...rows.map(row => row.map(escape).join(','))
+                ].join('\n');
+
                 const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `CostosDirectos_${new Date().toISOString().split('T')[0]}.csv`;
+                link.download = `CostosDirectos_${fechaLocalISO(new Date())}.csv`;
                 link.click();
                 URL.revokeObjectURL(link.href);
                 mostrarNotificacion('Exportación completada', 'success');
@@ -1437,19 +1495,18 @@
     // FORMULARIO - CREAR/EDITAR COSTO
     // ============================================
 
-    function calcularSubtotal(campoCantidad, campoPrecio, campoSubtotal) {
-        const cantidad = parseFloat(document.getElementById(campoCantidad).value) || 0;
-        const precio = parseFloat(document.getElementById(campoPrecio).value) || 0;
+    function calcularSubtotal() {
+        const cantidad = parseFloat(document.getElementById('campoCantidad').value) || 0;
+        const precio = parseFloat(document.getElementById('campoPrecioUnitario').value) || 0;
         const subtotal = cantidad * precio;
-        document.getElementById(campoSubtotal).value = subtotal.toFixed(2);
-        calcularTotal(campoSubtotal, 'campoIva', 'campoTotal');
+        document.getElementById('campoSubtotal').value = subtotal.toFixed(2);
+        calcularTotal();
     }
 
-    function calcularTotal(campoSubtotal, campoIva, campoTotal) {
-        const subtotal = parseFloat(document.getElementById(campoSubtotal).value) || 0;
-        const iva = parseFloat(document.getElementById(campoIva).value) || 0;
-        const total = subtotal + iva;
-        document.getElementById(campoTotal).value = total.toFixed(2);
+    function calcularTotal() {
+        const subtotal = parseFloat(document.getElementById('campoSubtotal').value) || 0;
+        const iva = parseFloat(document.getElementById('campoIva').value) || 0;
+        document.getElementById('campoTotal').value = (subtotal + iva).toFixed(2);
     }
 
     function calcularSubtotalEditar() {
@@ -1463,123 +1520,239 @@
     function calcularTotalEditar() {
         const subtotal = parseFloat(document.getElementById('editSubtotal').value) || 0;
         const iva = parseFloat(document.getElementById('editIva').value) || 0;
-        const total = subtotal + iva;
-        document.getElementById('editTotal').value = total.toFixed(2);
+        document.getElementById('editTotal').value = (subtotal + iva).toFixed(2);
+    }
+
+    // ============================================
+    // MANEJO DE MODALES (evita romper scroll)
+    // ============================================
+    function abrirModal(id) {
+        document.getElementById(id).style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModal(id) {
+        document.getElementById(id).style.display = 'none';
+        // Solo restaura scroll si no hay otro modal abierto
+        const abiertos = ['modalAgregarCosto', 'modalEditarCosto', 'modalVerDetalle']
+            .some(mid => document.getElementById(mid).style.display === 'flex');
+        if (!abiertos) document.body.style.overflow = 'auto';
     }
 
     function abrirModalAgregar() {
-        document.getElementById('modalAgregarCosto').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
         document.getElementById('formAgregarCosto').reset();
+        document.getElementById('erroresAgregar').style.display = 'none';
         document.getElementById('campoSubtotal').value = '0.00';
         document.getElementById('campoIva').value = '0.00';
         document.getElementById('campoTotal').value = '0.00';
         document.getElementById('campoCantidad').value = '1.00';
         document.getElementById('campoPrecioUnitario').value = '0.00';
-        
+
         const hoy = new Date();
-        document.getElementById('campoFecha').value = hoy.toISOString().split('T')[0];
-        document.getElementById('campoFechaPago').value = hoy.toISOString().split('T')[0];
+        const hoyISO = fechaLocalISO(hoy);
+        document.getElementById('campoFecha').value = hoyISO;
+        document.getElementById('campoFechaPago').value = hoyISO;
+
+        abrirModal('modalAgregarCosto');
     }
 
-    function cerrarModalAgregar() {
-        document.getElementById('modalAgregarCosto').style.display = 'none';
-        document.body.style.overflow = 'auto';
+    function cerrarModalAgregar() { cerrarModal('modalAgregarCosto'); }
+    function cerrarModalEditar()  { cerrarModal('modalEditarCosto'); }
+
+    // ============================================
+    // ENVÍO DE FORMULARIOS
+    // ============================================
+
+    async function enviarFormularioAgregar(e) {
+        e.preventDefault();
+        const form = e.target;
+        const btn = document.getElementById('btnGuardarAgregar');
+        const btnOriginal = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        document.getElementById('erroresAgregar').style.display = 'none';
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch(API_BASE, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': getCSRFToken(),
+                    'Accept': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: formData
+            });
+
+            const result = await response.json().catch(() => ({}));
+
+            if (response.status === 422) {
+                mostrarErroresValidacion('erroresAgregar', result.errors || {});
+                mostrarNotificacion(result.message || 'Errores de validación', 'error');
+                return;
+            }
+
+            if (response.ok && result.success) {
+                mostrarNotificacion(result.message || 'Costo creado', 'success');
+                cerrarModalAgregar();
+                currentFilters.page = 1; // ← clave: ir a pág 1 para ver el recién creado
+                await cargarCostos();
+            } else {
+                mostrarNotificacion(result.message || 'Error al guardar', 'error');
+            }
+        } catch (error) {
+            console.error('[CostosDirectos] Error al guardar:', error);
+            mostrarNotificacion('Error al guardar el costo: ' + error.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = btnOriginal;
+        }
     }
 
-    function cerrarModalEditar() {
-        document.getElementById('modalEditarCosto').style.display = 'none';
-        document.body.style.overflow = 'auto';
+    async function enviarFormularioEditar(e) {
+        e.preventDefault();
+        const form = e.target;
+        const id = document.getElementById('editId').value;
+        const btn = form.querySelector('button[type="submit"]');
+        const btnOriginal = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+        document.getElementById('erroresEditar').style.display = 'none';
+
+        try {
+            const formData = new FormData(form);
+            // Laravel necesita _method=PUT para update si envías multipart
+            formData.append('_method', 'PUT');
+
+            const response = await fetch(`${API_BASE}/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': getCSRFToken(),
+                    'Accept': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: formData
+            });
+
+            const result = await response.json().catch(() => ({}));
+
+            if (response.status === 422) {
+                mostrarErroresValidacion('erroresEditar', result.errors || {});
+                mostrarNotificacion(result.message || 'Errores de validación', 'error');
+                return;
+            }
+
+            if (response.ok && result.success) {
+                mostrarNotificacion(result.message || 'Costo actualizado', 'success');
+                cerrarModalEditar();
+                await cargarCostos();
+            } else {
+                mostrarNotificacion(result.message || 'Error al actualizar', 'error');
+            }
+        } catch (error) {
+            console.error('[CostosDirectos] Error al actualizar:', error);
+            mostrarNotificacion('Error al actualizar el costo: ' + error.message, 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = btnOriginal;
+        }
     }
 
     // ============================================
     // EVENTOS E INICIALIZACIÓN
     // ============================================
 
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM cargado - API_BASE:', API_BASE);
-        
+    document.addEventListener('DOMContentLoaded', async function() {
+        console.log('[CostosDirectos] DOM cargado. API_BASE =', API_BASE);
+
+        // Fechas por defecto (últimos 6 meses, en hora LOCAL)
         const hoy = new Date();
         const seisMesesAtras = new Date();
         seisMesesAtras.setMonth(hoy.getMonth() - 6);
-        document.getElementById('fechaInicio').value = seisMesesAtras.toISOString().split('T')[0];
-        document.getElementById('fechaFin').value = hoy.toISOString().split('T')[0];
+        document.getElementById('fechaInicio').value = fechaLocalISO(seisMesesAtras);
+        document.getElementById('fechaFin').value = fechaLocalISO(hoy);
         currentFilters.fecha_inicio = document.getElementById('fechaInicio').value;
         currentFilters.fecha_fin = document.getElementById('fechaFin').value;
-        
+
         setupDragAndDrop();
-        cargarCatalogos();
-        cargarCostos();
-        
-        // Eventos del dropdown de proyectos
+
+        // Primero catálogos (para que el dropdown de proyectos esté listo),
+        // luego la tabla. Así evitamos que un filtro se aplique sin opciones.
+        await cargarCatalogos();
+        await cargarCostos();
+
+        // --- Dropdown de proyectos ---
         document.getElementById('btnFiltroProyectos')?.addEventListener('click', function(e) {
             e.stopPropagation();
             toggleDropdown();
         });
-        
+
         document.getElementById('btnCerrarFiltro')?.addEventListener('click', function(e) {
             e.stopPropagation();
             cerrarDropdown();
         });
-        
+
         document.getElementById('btnSeleccionarTodos')?.addEventListener('click', function(e) {
             e.stopPropagation();
             seleccionarTodosProyectos();
         });
-        
+
         document.getElementById('btnDeseleccionarTodos')?.addEventListener('click', function(e) {
             e.stopPropagation();
             deseleccionarTodosProyectos();
         });
-        
+
         document.getElementById('filtroProyectosBuscar')?.addEventListener('input', function(e) {
             e.stopPropagation();
             filtrarProyectosLista(this.value);
         });
-        
-        // Delegación de eventos para checkboxes
+
         document.getElementById('filtroProyectosLista')?.addEventListener('change', function(e) {
             if (e.target.type === 'checkbox') {
                 actualizarLabelProyectos();
                 aplicarFiltroProyectos();
             }
         });
-        
-        // Cerrar dropdown al hacer clic fuera
+
         document.addEventListener('click', function(e) {
             const container = document.getElementById('proyectoFilterContainer');
             if (container && !container.contains(e.target)) {
                 cerrarDropdown();
             }
         });
-        
-        // Eventos de búsqueda y filtros
+
+        // --- Filtros ---
+        let buscadorTimeout;
         document.getElementById('buscador')?.addEventListener('input', (e) => {
-            currentFilters.busqueda = e.target.value;
-            currentFilters.page = 1;
-            cargarCostos();
+            clearTimeout(buscadorTimeout);
+            const valor = e.target.value;
+            buscadorTimeout = setTimeout(() => {
+                currentFilters.busqueda = valor;
+                currentFilters.page = 1;
+                cargarCostos();
+            }, 300);
         });
-        
+
         document.getElementById('fechaInicio')?.addEventListener('change', (e) => {
             currentFilters.fecha_inicio = e.target.value;
             currentFilters.page = 1;
             cargarCostos();
         });
-        
+
         document.getElementById('fechaFin')?.addEventListener('change', (e) => {
             currentFilters.fecha_fin = e.target.value;
             currentFilters.page = 1;
             cargarCostos();
         });
-        
-        // Botones principales
+
+        // --- Botones principales ---
         document.getElementById('btnAgregarCosto')?.addEventListener('click', abrirModalAgregar);
         document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
         document.getElementById('btnColumnas')?.addEventListener('click', () => {
             mostrarNotificacion('Selector de columnas en desarrollo', 'warning');
         });
-        
-        // Paginación
+
+        // --- Paginación ---
         document.getElementById('btnPrimera')?.addEventListener('click', () => {
             if (currentPage > 1) { currentFilters.page = 1; cargarCostos(); }
         });
@@ -1592,115 +1765,50 @@
         document.getElementById('btnUltima')?.addEventListener('click', () => {
             if (currentPage < totalPages) { currentFilters.page = totalPages; cargarCostos(); }
         });
-        
-        // Modales
+
+        // --- Modales: cerrar ---
         document.getElementById('btnCerrarModalAgregar')?.addEventListener('click', cerrarModalAgregar);
         document.getElementById('btnCancelarAgregar')?.addEventListener('click', cerrarModalAgregar);
         document.getElementById('btnCerrarModalEditar')?.addEventListener('click', cerrarModalEditar);
         document.getElementById('btnCancelarEditar')?.addEventListener('click', cerrarModalEditar);
         document.getElementById('btnCerrarModalDetalle')?.addEventListener('click', cerrarModalDetalle);
-        
-        // Cálculo automático
-        document.getElementById('campoCantidad')?.addEventListener('input', function() {
-            calcularSubtotal('campoCantidad', 'campoPrecioUnitario', 'campoSubtotal');
-        });
-        document.getElementById('campoPrecioUnitario')?.addEventListener('input', function() {
-            calcularSubtotal('campoCantidad', 'campoPrecioUnitario', 'campoSubtotal');
-        });
-        document.getElementById('campoIva')?.addEventListener('input', function() {
-            calcularTotal('campoSubtotal', 'campoIva', 'campoTotal');
-        });
-        
+
+        // --- Cálculos automáticos ---
+        document.getElementById('campoCantidad')?.addEventListener('input', calcularSubtotal);
+        document.getElementById('campoPrecioUnitario')?.addEventListener('input', calcularSubtotal);
+        document.getElementById('campoIva')?.addEventListener('input', calcularTotal);
+
         document.getElementById('editCantidad')?.addEventListener('input', calcularSubtotalEditar);
         document.getElementById('editPrecioUnitario')?.addEventListener('input', calcularSubtotalEditar);
         document.getElementById('editIva')?.addEventListener('input', calcularTotalEditar);
-        
-        // Submit forms
-        document.getElementById('formAgregarCosto')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            fetch(API_BASE, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalAgregar();
-                    cargarCostos();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al guardar', 'error');
-                }
-            })
-            .catch(error => {
-                mostrarNotificacion('Error al guardar el costo', 'error');
-            });
-        });
-        
-        document.getElementById('formEditarCosto')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('editId').value;
-            const formData = new FormData(this);
-            
-            fetch(`${API_BASE}/${id}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json',
-                    'X-HTTP-Method-Override': 'PUT'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalEditar();
-                    cargarCostos();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al actualizar', 'error');
-                }
-            })
-            .catch(error => {
-                mostrarNotificacion('Error al actualizar el costo', 'error');
-            });
-        });
-        
-        // Cerrar modales al hacer clic fuera
+
+        // --- Submit forms ---
+        document.getElementById('formAgregarCosto')?.addEventListener('submit', enviarFormularioAgregar);
+        document.getElementById('formEditarCosto')?.addEventListener('submit', enviarFormularioEditar);
+
+        // --- Cerrar modales al click fuera ---
         window.addEventListener('click', (event) => {
-            const modalAgregar = document.getElementById('modalAgregarCosto');
-            const modalEditar = document.getElementById('modalEditarCosto');
-            const modalVer = document.getElementById('modalVerDetalle');
-            
-            if (event.target === modalAgregar) cerrarModalAgregar();
-            if (event.target === modalEditar) cerrarModalEditar();
-            if (event.target === modalVer) cerrarModalDetalle();
+            if (event.target === document.getElementById('modalAgregarCosto')) cerrarModalAgregar();
+            if (event.target === document.getElementById('modalEditarCosto')) cerrarModalEditar();
+            if (event.target === document.getElementById('modalVerDetalle')) cerrarModalDetalle();
         });
-        
-        // Expandir/colapsar grupos
-        document.addEventListener('click', function(e) {
+
+        // --- Expandir/colapsar grupos (SIN recargar del servidor) ---
+        document.getElementById('tablaBody')?.addEventListener('click', function(e) {
             const filaGrupo = e.target.closest('.fila-grupo');
-            if (filaGrupo) {
-                const grupoId = filaGrupo.dataset.grupoId;
-                const icono = filaGrupo.querySelector('i');
-                
-                if (expandedGroups.has(grupoId)) {
-                    expandedGroups.delete(grupoId);
-                    filaGrupo.classList.remove('expandido');
-                    if (icono) icono.className = 'fas fa-caret-right';
-                } else {
-                    expandedGroups.add(grupoId);
-                    filaGrupo.classList.add('expandido');
-                    if (icono) icono.className = 'fas fa-caret-down';
-                }
-                cargarCostos();
+            if (!filaGrupo) return;
+
+            const grupoId = filaGrupo.dataset.grupoId;
+
+            if (expandedGroups.has(grupoId)) {
+                expandedGroups.delete(grupoId);
+                filaGrupo.classList.remove('expandido');
+            } else {
+                expandedGroups.add(grupoId);
+                filaGrupo.classList.add('expandido');
             }
+            // Re-render con los datos que ya tenemos en memoria
+            renderizarTabla(ultimosDatos);
         });
     });
 </script>

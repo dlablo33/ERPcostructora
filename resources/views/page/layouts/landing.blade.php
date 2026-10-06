@@ -707,12 +707,12 @@
     <nav class="navbar" id="navbar">
         <div class="container">
             <a href="{{ route('landing') }}" class="navbar-brand">
-                <img src="{{ asset('img/page/logopage.png') }}" alt="MejoraSoft ERP">
+                <img src="{{ asset('img/page/logoblanco.png') }}" alt="MejoraSoft ERP">
             </a>
 
             <ul class="navbar-links" id="navbarLinks">
-                <li><a href="#features">Módulos</a></li>
-                <li><a href="#modules">Características</a></li>
+                <li><a href="#features">Características</a></li>
+                <li><a href="#modules">Módulos</a></li>
                 <li><a href="#testimonials">Servicios</a></li>
                 <li><a href="#contact">Contacto</a></li>
             </ul>
@@ -770,9 +770,9 @@
                 <div>
                     <h4>Contacto</h4>
                     <ul>
-                        <li><i class="fas fa-phone"></i> +52 (33) 1234-5678</li>
-                        <li><i class="fas fa-envelope"></i> info@mejorasoft.com</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Guadalajara, Jalisco</li>
+                        <li><i class="fas fa-phone"></i> 813-241-0008</li>
+                        <li><i class="fas fa-envelope"></i> comercial@mejorasoft.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Av Eugenio Garza Sada 3720, Col Villa los Pinos, Monterrey, Nuevo León</li>
                     </ul>
                 </div>
             </div>
