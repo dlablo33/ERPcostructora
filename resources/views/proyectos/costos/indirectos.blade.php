@@ -20,21 +20,21 @@
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalIndirectos">$0</div>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Personal Técnico</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalPersonal">$0</div>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Admón. Obra</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalAdmin">$0</div>
                         </div>
                     </div>
-                    
+
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Seguridad</div>
@@ -46,11 +46,9 @@
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
                     </div>
-                    
+
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <!-- Filtro de Proyectos - Dropdown con checkboxes -->
                         <div style="position: relative; min-width: 220px;" id="proyectoFilterContainer">
@@ -58,7 +56,7 @@
                                 <span id="filtroProyectosLabel">Todos los proyectos</span>
                                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 12px;"></i>
                             </button>
-                            
+
                             <div id="filtroProyectosDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ced4da; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; max-height: 280px; overflow: hidden; padding: 8px 0; margin-top: 2px;">
                                 <div style="padding: 0 12px 8px 12px; border-bottom: 1px solid #e9ecef;">
                                     <input type="text" id="filtroProyectosBuscar" placeholder="Buscar proyecto..." style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
@@ -73,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
@@ -111,7 +109,7 @@
 
                 <!-- Mensaje "Sin datos" -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
-                    <i class="fas fa-tools" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
+                    <i class="fas fa-inbox" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros para mostrar</p>
                 </div>
@@ -151,7 +149,7 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <!-- Paginación -->
                 <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px;">
                     <div style="visibility: hidden;"></div>
@@ -181,7 +179,7 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div style="padding: 20px;">
             <form id="formAgregarCosto">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
@@ -207,14 +205,14 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Concepto <span style="color: #dc3545;">*</span>
                     </label>
                     <input type="text" id="campoConcepto" name="concepto" required placeholder="Ej. Residente de Obra, Energía Eléctrica, etc." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -231,7 +229,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -246,14 +244,14 @@
                         <input type="text" id="campoFactura" name="factura" placeholder="Número de factura" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Descripción
                     </label>
                     <textarea id="campoDescripcion" name="descripcion" rows="2" placeholder="Descripción detallada del concepto" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -274,7 +272,7 @@
                         <input type="number" id="campoTotal" step="0.01" min="0" value="0.00" readonly style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #e9ecef;">
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -294,7 +292,7 @@
                         <input type="date" id="campoFechaPago" name="fecha_pago" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Estatus de Pago
@@ -306,14 +304,14 @@
                         <option value="vencido">❌ Vencido</option>
                     </select>
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Observaciones
                     </label>
                     <textarea id="campoObservaciones" name="observaciones" rows="2" placeholder="Observaciones adicionales" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
                     <button type="button" id="btnCancelarAgregar" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
                         Cancelar
@@ -338,10 +336,10 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
+
         <div style="padding: 20px;">
             <form id="formEditarCosto">
-                <input type="hidden" id="editId">
+                <input type="hidden" id="editId" name="id">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -365,14 +363,14 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Concepto <span style="color: #dc3545;">*</span>
                     </label>
                     <input type="text" id="editConcepto" name="concepto" required placeholder="Ej. Residente de Obra, Energía Eléctrica, etc." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -389,7 +387,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -404,14 +402,14 @@
                         <input type="text" id="editFactura" name="factura" placeholder="Número de factura" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Descripción
                     </label>
                     <textarea id="editDescripcion" name="descripcion" rows="2" placeholder="Descripción detallada del concepto" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -432,7 +430,7 @@
                         <input type="number" id="editTotal" step="0.01" min="0" readonly style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #e9ecef;">
                     </div>
                 </div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
                         <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
@@ -452,7 +450,7 @@
                         <input type="date" id="editFechaPago" name="fecha_pago" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-                
+
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Estatus de Pago
@@ -464,14 +462,14 @@
                         <option value="vencido">❌ Vencido</option>
                     </select>
                 </div>
-                
+
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">
                         Observaciones
                     </label>
                     <textarea id="editObservaciones" name="observaciones" rows="2" placeholder="Observaciones adicionales" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-                
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
                     <button type="button" id="btnCancelarEditar" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">
                         Cancelar
@@ -510,29 +508,29 @@
     #tablaBody tr:nth-child(odd) { background-color: #ffffff; }
     #tablaBody tr:nth-child(even) { background-color: #f2f2f2; }
     #tablaBody tr:hover { background-color: #e0e0e0; }
-    
+
     .badge { font-size: 11px; font-weight: 600; padding: 4px 8px; display: inline-block; border-radius: 3px; }
     .badge-pagado { background-color: #28a745; color: white; }
     .badge-pendiente { background-color: #ffc107; color: black; }
     .badge-programado { background-color: #17a2b8; color: white; }
     .badge-vencido { background-color: #dc3545; color: white; }
-    
+
     .badge-categoria { font-size: 11px; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; }
     .badge-personal_tecnico { background-color: #cce5ff; color: #0d6efd; }
     .badge-administracion { background-color: #d4edda; color: #28a745; }
     .badge-seguridad { background-color: #fff3cd; color: #856404; }
     .badge-servicios { background-color: #d1ecf1; color: #0c5460; }
     .badge-herramienta { background-color: #e2e3e5; color: #6c757d; }
-    
+
     tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #083CAE; color: #000000 !important; }
-    
+
     .toast-notification { position: fixed; bottom: 20px; right: 20px; z-index: 100000; animation: slideIn 0.3s ease; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 14px; }
     .toast-notification.success { background-color: #28a745; color: white; }
     .toast-notification.error { background-color: #dc3545; color: white; }
     .toast-notification.warning { background-color: #ffc107; color: #333; }
-    
+
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    
+
     /* Estilos para agrupación de columnas */
     [draggable="true"] { cursor: grab; }
     [draggable="true"]:active { cursor: grabbing; opacity: 0.7; }
@@ -547,13 +545,13 @@
     .fila-detalle td { border-top: none !important; }
     .fila-detalle td:first-child { padding-left: 30px !important; }
     .drag-over #grupoColumnas { background-color: rgba(35, 120, 225, 0.1); border-radius: 4px; }
-    
+
     /* Estilo para el dropdown de proyectos */
     #filtroProyectosDropdown { min-width: 250px; }
     #filtroProyectosLista label { display: flex; align-items: center; padding: 4px 12px; cursor: pointer; font-size: 13px; transition: background 0.2s; }
     #filtroProyectosLista label:hover { background-color: #f0f4ff; }
     #filtroProyectosLista input[type="checkbox"] { margin-right: 8px; cursor: pointer; }
-    
+
     @media (max-width: 768px) {
         input[type="date"] { width: 100% !important; }
         input#buscador { width: 100% !important; }
@@ -565,19 +563,21 @@
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     // ============================================
     // CONFIGURACIÓN
     // ============================================
-    const API_BASE = '/proyectos/costos-indirectos';
+    const API_BASE = @json(url('/proyectos/costos-indirectos'));
+    const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
     let currentPage = 1;
     let totalPages = 1;
     let columnasAgrupadas = [];
     let expandedGroups = new Set();
     let proyectosLista = [];
-    
+    let debounceTimerProyectos = null;
+
     let currentFilters = {
         busqueda: '',
         proyecto_id: [],
@@ -590,410 +590,54 @@
     };
 
     // ============================================
-    // FUNCIONES PRINCIPALES
+    // HELPERS
     // ============================================
 
-    async function cargarCostos() {
-        mostrarLoading(true);
-        
-        try {
-            if (!currentFilters.fecha_inicio) {
-                const hoy = new Date();
-                const seisMesesAtras = new Date();
-                seisMesesAtras.setMonth(hoy.getMonth() - 6);
-                currentFilters.fecha_inicio = seisMesesAtras.toISOString().split('T')[0];
-                currentFilters.fecha_fin = hoy.toISOString().split('T')[0];
-                document.getElementById('fechaInicio').value = currentFilters.fecha_inicio;
-                document.getElementById('fechaFin').value = currentFilters.fecha_fin;
-            }
-            
-            const proyectosSeleccionados = getProyectosSeleccionados();
-            currentFilters.proyecto_id = proyectosSeleccionados;
-            
-            const params = new URLSearchParams();
-            params.append('busqueda', currentFilters.busqueda || '');
-            params.append('categoria', currentFilters.categoria || 'todos');
-            params.append('estatus_pago', currentFilters.estatus_pago || '');
-            params.append('fecha_inicio', currentFilters.fecha_inicio || '');
-            params.append('fecha_fin', currentFilters.fecha_fin || '');
-            params.append('page', currentFilters.page || 1);
-            params.append('per_page', currentFilters.per_page || 10);
-            
-            if (proyectosSeleccionados.length > 0) {
-                proyectosSeleccionados.forEach(id => {
-                    params.append('proyecto_id[]', id);
-                });
-            }
-            
-            const url = `${API_BASE}?${params.toString()}`;
-            console.log('Cargando desde:', url);
-            
-            const response = await fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                }
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
-            }
-            
-            const result = await response.json();
-            console.log('Resultado:', result);
-            
-            if (result.success) {
-                const data = result.data.data || [];
-                const pagination = result.data;
-                
-                actualizarEstadisticas(result.estadisticas);
-                renderizarTabla(data);
-                calcularTotales(data);
-                actualizarPaginacion(pagination);
-                
-                currentPage = pagination.current_page || 1;
-                totalPages = pagination.last_page || 1;
-            } else {
-                mostrarNotificacion(result.message || 'Error al cargar datos', 'error');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            mostrarNotificacion('Error al cargar los costos: ' + error.message, 'error');
-        } finally {
-            mostrarLoading(false);
-        }
+    /**
+     * Escapa HTML para prevenir XSS al inyectar datos en innerHTML
+     */
+    function escapeHtml(value) {
+        if (value === null || value === undefined) return '';
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 
-    // ============================================
-    // FILTRO DE PROYECTOS - DROPDOWN CON CHECKBOXES
-    // ============================================
-
-    function getProyectosSeleccionados() {
-        const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked');
-        const selected = [];
-        checkboxes.forEach(cb => {
-            if (cb.value) {
-                selected.push(cb.value);
-            }
-        });
-        return selected;
-    }
-
-    function actualizarLabelProyectos() {
-        const total = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').length;
-        const selected = getProyectosSeleccionados().length;
-        const label = document.getElementById('filtroProyectosLabel');
-        
-        if (selected === 0) {
-            label.textContent = 'Todos los proyectos';
-        } else if (selected === total) {
-            label.textContent = 'Todos los proyectos';
-        } else {
-            const count = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked').length;
-            label.textContent = `${count} proyecto${count > 1 ? 's' : ''} seleccionado${count > 1 ? 's' : ''}`;
-        }
-    }
-
-    function toggleDropdown() {
-        const dropdown = document.getElementById('filtroProyectosDropdown');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function cerrarDropdown() {
-        document.getElementById('filtroProyectosDropdown').style.display = 'none';
-    }
-
-    function renderizarCheckboxesProyectos(proyectos) {
-        const lista = document.getElementById('filtroProyectosLista');
-        lista.innerHTML = '';
-        
-        if (!proyectos || proyectos.length === 0) {
-            lista.innerHTML = '<div style="padding: 8px 12px; color: #6c757d; font-size: 13px;">No hay proyectos disponibles</div>';
-            return;
-        }
-        
-        const selected = getProyectosSeleccionados();
-        
-        proyectos.forEach(proyecto => {
-            const checked = selected.includes(String(proyecto.id)) ? 'checked' : '';
-            const label = document.createElement('label');
-            label.innerHTML = `
-                <input type="checkbox" value="${proyecto.id}" ${checked}>
-                <span>${proyecto.nombre}</span>
-            `;
-            lista.appendChild(label);
-        });
-        
-        actualizarLabelProyectos();
-    }
-
-    function filtrarProyectosLista(busqueda) {
-        const labels = document.querySelectorAll('#filtroProyectosLista label');
-        const term = busqueda.toLowerCase().trim();
-        
-        labels.forEach(label => {
-            const text = label.textContent.toLowerCase();
-            label.style.display = text.includes(term) ? 'flex' : 'none';
-        });
-    }
-
-    function seleccionarTodosProyectos() {
-        const todosVisibles = document.querySelectorAll('#filtroProyectosLista label:not([style*="display: none"])');
-        todosVisibles.forEach(label => {
-            const cb = label.querySelector('input[type="checkbox"]');
-            if (cb) cb.checked = true;
-        });
-        actualizarLabelProyectos();
-        aplicarFiltroProyectos();
-    }
-
-    function deseleccionarTodosProyectos() {
-        const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]');
-        checkboxes.forEach(cb => cb.checked = false);
-        actualizarLabelProyectos();
-        aplicarFiltroProyectos();
-    }
-
-    function aplicarFiltroProyectos() {
-        currentFilters.page = 1;
-        cargarCostos();
-    }
-
-    // ============================================
-    // CATÁLOGOS PARA SELECTS EN MODALES
-    // ============================================
-
-    async function cargarCatalogos() {
-        try {
-            const proyectosResp = await fetch(`${API_BASE}/catalogos/proyectos`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const proyectosResult = await proyectosResp.json();
-            
-            if (proyectosResult.success) {
-                const selectAgregar = document.getElementById('campoProyecto');
-                const selectEditar = document.getElementById('editProyecto');
-                const options = proyectosResult.data.map(p => 
-                    `<option value="${p.id}">${p.nombre}</option>`
-                ).join('');
-                selectAgregar.innerHTML = `<option value="">Seleccionar proyecto</option>${options}`;
-                selectEditar.innerHTML = `<option value="">Seleccionar proyecto</option>${options}`;
-                
-                proyectosLista = proyectosResult.data;
-                renderizarCheckboxesProyectos(proyectosLista);
-            }
-            
-            const proveedoresResp = await fetch(`${API_BASE}/catalogos/proveedores`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const proveedoresResult = await proveedoresResp.json();
-            
-            if (proveedoresResult.success) {
-                const selectAgregar = document.getElementById('campoProveedor');
-                const selectEditar = document.getElementById('editProveedor');
-                const options = proveedoresResult.data.map(p => 
-                    `<option value="${p.id}">${p.nombre} ${p.rfc ? '- ' + p.rfc : ''}</option>`
-                ).join('');
-                selectAgregar.innerHTML = `<option value="">Seleccionar proveedor</option>${options}`;
-                selectEditar.innerHTML = `<option value="">Seleccionar proveedor</option>${options}`;
-            }
-        } catch (error) {
-            console.error('Error cargando catálogos:', error);
-        }
-    }
-
-    // ============================================
-    // RENDERIZADO
-    // ============================================
-
-    function renderizarTabla(costos) {
-        const tbody = document.getElementById('tablaBody');
-        const sinDatos = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const textoAgrupar = document.getElementById('textoAgrupar');
-        
-        if (!tbody) return;
-        
-        if (textoAgrupar) {
-            textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
-        }
-        
-        const { grupos } = agruparDatos(costos, columnasAgrupadas);
-        const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-        
-        tbody.innerHTML = '';
-        
-        if (!costos || costos.length === 0) {
-            sinDatos.style.display = 'block';
-            tablaContainer.style.display = 'none';
-            document.getElementById('tablaFoot').style.display = 'none';
-            return;
-        }
-        
-        sinDatos.style.display = 'none';
-        tablaContainer.style.display = 'block';
-        
-        if (hayGrupos) {
-            document.getElementById('tablaFoot').style.display = 'none';
-            
-            grupos.forEach(grupo => {
-                const grupoRow = document.createElement('tr');
-                grupoRow.className = 'fila-grupo';
-                grupoRow.dataset.grupoId = grupo.id;
-                
-                if (expandedGroups.has(grupo.id)) {
-                    grupoRow.classList.add('expandido');
-                }
-                
-                grupoRow.innerHTML = `
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;" colspan="16">
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <div>
-                                <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                                <strong style="color: #2378e1;">${grupo.valor}</strong>
-                                <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                    (${grupo.items.length} registros - Subtotal: ${formatCurrency(grupo.totalSubtotal)} - Total: ${formatCurrency(grupo.totalGeneral)})
-                                </span>
-                            </div>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(grupoRow);
-                
-                if (expandedGroups.has(grupo.id)) {
-                    grupo.items.forEach(item => {
-                        tbody.appendChild(crearFilaDetalle(item));
-                    });
-                }
-            });
-        } else {
-            document.getElementById('tablaFoot').style.display = 'table-footer-group';
-            
-            costos.forEach(item => {
-                tbody.appendChild(crearFila(item));
-            });
-        }
-    }
-
-    function crearFila(item) {
-        const row = document.createElement('tr');
-        const badgeClass = getEstatusBadge(item.estatus_pago);
-        const categoriaBadge = getCategoriaBadge(item.categoria);
-        
-        const subtotal = parseFloat(item.subtotal) || 0;
-        const iva = parseFloat(item.iva) || 0;
-        const total = parseFloat(item.total) || 0;
-        
-        row.innerHTML = `
-            <td style="padding: 10px 4px;">${item.proyecto?.nombre || '-'}</td>
-            <td style="padding: 10px 4px;"><span class="badge-categoria ${categoriaBadge}">${item.categoria_nombre}</span></td>
-            <td style="padding: 10px 4px;">${item.concepto || '-'}</td>
-            <td style="padding: 10px 4px;">${formatDate(item.fecha)}</td>
-            <td style="padding: 10px 4px;">${item.nombre_proveedor || '-'}</td>
-            <td style="padding: 10px 4px;">${item.rfc || '-'}</td>
-            <td style="padding: 10px 4px;">${item.factura || '-'}</td>
-            <td style="padding: 10px 4px;">${item.descripcion || '-'}</td>
-            <td style="padding: 10px 4px; text-align: right;">${subtotal ? formatCurrency(subtotal) : '-'}</td>
-            <td style="padding: 10px 4px; text-align: right;">${iva ? formatCurrency(iva) : '-'}</td>
-            <td style="padding: 10px 4px; text-align: right; font-weight: 600; color: #083CAE;">${total ? formatCurrency(total) : '-'}</td>
-            <td style="padding: 10px 4px;">${item.forma_pago_nombre || '-'}</td>
-            <td style="padding: 10px 4px;">${formatDate(item.fecha_pago)}</td>
-            <td style="padding: 10px 4px;"><span class="badge ${badgeClass}">${item.estatus_nombre || '-'}</span></td>
-            <td style="padding: 10px 4px;">${item.observaciones || '-'}</td>
-            <td style="padding: 10px 4px; background-color: white; position: sticky; right: 0;">
-                <div style="display: flex; gap: 8px; justify-content: center;">
-                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${item.id})"></i>
-                    <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" onclick="editarCosto(${item.id})"></i>
-                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer; font-size: 14px;" title="Eliminar" onclick="eliminarCosto(${item.id})"></i>
-                </div>
-            </td>
-        `;
-        return row;
-    }
-
-    function crearFilaDetalle(item) {
-        const row = document.createElement('tr');
-        row.className = 'fila-detalle';
-        const badgeClass = getEstatusBadge(item.estatus_pago);
-        const categoriaBadge = getCategoriaBadge(item.categoria);
-        
-        const subtotal = parseFloat(item.subtotal) || 0;
-        const iva = parseFloat(item.iva) || 0;
-        const total = parseFloat(item.total) || 0;
-        
-        row.innerHTML = `
-            <td style="padding: 10px 4px; padding-left: 30px;">${item.proyecto?.nombre || '-'}</td>
-            <td style="padding: 10px 4px;"><span class="badge-categoria ${categoriaBadge}">${item.categoria_nombre}</span></td>
-            <td style="padding: 10px 4px;">${item.concepto || '-'}</td>
-            <td style="padding: 10px 4px;">${formatDate(item.fecha)}</td>
-            <td style="padding: 10px 4px;">${item.nombre_proveedor || '-'}</td>
-            <td style="padding: 10px 4px;">${item.rfc || '-'}</td>
-            <td style="padding: 10px 4px;">${item.factura || '-'}</td>
-            <td style="padding: 10px 4px;">${item.descripcion || '-'}</td>
-            <td style="padding: 10px 4px; text-align: right;">${subtotal ? formatCurrency(subtotal) : '-'}</td>
-            <td style="padding: 10px 4px; text-align: right;">${iva ? formatCurrency(iva) : '-'}</td>
-            <td style="padding: 10px 4px; text-align: right; font-weight: 600; color: #083CAE;">${total ? formatCurrency(total) : '-'}</td>
-            <td style="padding: 10px 4px;">${item.forma_pago_nombre || '-'}</td>
-            <td style="padding: 10px 4px;">${formatDate(item.fecha_pago)}</td>
-            <td style="padding: 10px 4px;"><span class="badge ${badgeClass}">${item.estatus_nombre || '-'}</span></td>
-            <td style="padding: 10px 4px;">${item.observaciones || '-'}</td>
-            <td style="padding: 10px 4px; background-color: white; position: sticky; right: 0;">
-                <div style="display: flex; gap: 8px; justify-content: center;">
-                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${item.id})"></i>
-                    <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" onclick="editarCosto(${item.id})"></i>
-                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer; font-size: 14px;" title="Eliminar" onclick="eliminarCosto(${item.id})"></i>
-                </div>
-            </td>
-        `;
-        return row;
-    }
-
-    function actualizarEstadisticas(stats) {
-        if (!stats) return;
-        document.getElementById('totalIndirectos').textContent = formatCurrency(stats.total_indirectos || 0);
-        document.getElementById('totalPersonal').textContent = formatCurrency(stats.total_personal || 0);
-        document.getElementById('totalAdmin').textContent = formatCurrency(stats.total_admin || 0);
-        document.getElementById('totalSeguridad').textContent = formatCurrency(stats.total_seguridad || 0);
-    }
-
-    function calcularTotales(costos) {
-        let totalSubtotal = 0, totalIva = 0, totalGeneral = 0;
-        costos.forEach(item => {
-            totalSubtotal += parseFloat(item.subtotal) || 0;
-            totalIva += parseFloat(item.iva) || 0;
-            totalGeneral += parseFloat(item.total) || 0;
-        });
-        document.getElementById('sumSubtotal').textContent = formatCurrency(totalSubtotal);
-        document.getElementById('sumIva').textContent = formatCurrency(totalIva);
-        document.getElementById('sumTotal').textContent = formatCurrency(totalGeneral);
-    }
-
-    function actualizarPaginacion(pagination) {
-        if (!pagination) return;
-        document.getElementById('paginaActual').textContent = pagination.current_page || 1;
-        document.getElementById('totalPaginas').textContent = `de ${pagination.last_page || 1}`;
-        document.getElementById('paginacionInfo').textContent = 
-            `Mostrando ${pagination.from || 0}-${pagination.to || 0} de ${pagination.total || 0} registros`;
-    }
-
-    // ============================================
-    // FUNCIONES AUXILIARES
-    // ============================================
-
+    /**
+     * Formatea moneda usando Intl
+     */
     function formatCurrency(amount) {
-        return '$' + parseFloat(amount || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const num = parseFloat(amount) || 0;
+        return new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 2
+        }).format(num);
     }
 
+    /**
+     * Formatea fecha SIN desfase de zona horaria.
+     * Recibe 'YYYY-MM-DD' y devuelve 'DD/MM/YYYY'
+     */
     function formatDate(dateString) {
         if (!dateString) return '-';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX');
-        } catch {
-            return '-';
-        }
+        const str = String(dateString).substring(0, 10);
+        const parts = str.split('-');
+        if (parts.length !== 3) return '-';
+        const [y, m, d] = parts;
+        return `${d}/${m}/${y}`;
+    }
+
+    /**
+     * Escapa un valor para CSV (comillas dobles, comas, saltos de línea)
+     */
+    function escapeCsv(value) {
+        if (value === null || value === undefined) return '""';
+        const str = String(value);
+        return '"' + str.replace(/"/g, '""') + '"';
     }
 
     function getEstatusBadge(estatus) {
@@ -1014,20 +658,386 @@
             'servicios': 'badge-servicios',
             'herramienta': 'badge-herramienta'
         };
-        return badges[categoria] || 'badge-categoria';
+        return badges[categoria] || '';
     }
 
     function mostrarLoading(show) {
-        document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
     }
 
     function mostrarNotificacion(mensaje, tipo = 'success') {
         const notificacion = document.createElement('div');
         notificacion.className = `toast-notification ${tipo}`;
         const icono = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
-        notificacion.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
+        notificacion.innerHTML = `<i class="fas ${icono}"></i> ${escapeHtml(mensaje)}`;
         document.body.appendChild(notificacion);
-        setTimeout(() => notificacion.remove(), 3000);
+        setTimeout(() => notificacion.remove(), 3500);
+    }
+
+    // ============================================
+    // CARGA PRINCIPAL
+    // ============================================
+
+    async function cargarCostos() {
+        mostrarLoading(true);
+
+        try {
+            if (!currentFilters.fecha_inicio) {
+                const hoy = new Date();
+                const seisMesesAtras = new Date();
+                seisMesesAtras.setMonth(hoy.getMonth() - 6);
+                currentFilters.fecha_inicio = seisMesesAtras.toISOString().split('T')[0];
+                currentFilters.fecha_fin = hoy.toISOString().split('T')[0];
+                document.getElementById('fechaInicio').value = currentFilters.fecha_inicio;
+                document.getElementById('fechaFin').value = currentFilters.fecha_fin;
+            }
+
+            const proyectosSeleccionados = getProyectosSeleccionados();
+            currentFilters.proyecto_id = proyectosSeleccionados;
+
+            const params = new URLSearchParams();
+            params.append('busqueda', currentFilters.busqueda || '');
+            params.append('categoria', currentFilters.categoria || 'todos');
+            params.append('estatus_pago', currentFilters.estatus_pago || '');
+            params.append('fecha_inicio', currentFilters.fecha_inicio || '');
+            params.append('fecha_fin', currentFilters.fecha_fin || '');
+            params.append('page', currentFilters.page || 1);
+            params.append('per_page', currentFilters.per_page || 10);
+
+            if (proyectosSeleccionados.length > 0) {
+                proyectosSeleccionados.forEach(id => {
+                    params.append('proyecto_id[]', id);
+                });
+            }
+
+            const url = `${API_BASE}?${params.toString()}`;
+            console.log('Cargando desde:', url);
+
+            const response = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': CSRF_TOKEN
+                }
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                const data = result.data.data || [];
+                const pagination = result.data;
+
+                actualizarEstadisticas(result.estadisticas);
+                renderizarTabla(data);
+                calcularTotales(result.estadisticas); // Totales del backend (todos los filtros)
+                actualizarPaginacion(pagination);
+
+                currentPage = pagination.current_page || 1;
+                totalPages = pagination.last_page || 1;
+            } else {
+                mostrarNotificacion(result.message || 'Error al cargar datos', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarNotificacion('Error al cargar los costos: ' + error.message, 'error');
+        } finally {
+            mostrarLoading(false);
+        }
+    }
+
+    // ============================================
+    // FILTRO DE PROYECTOS
+    // ============================================
+
+    function getProyectosSeleccionados() {
+        const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked');
+        const selected = [];
+        checkboxes.forEach(cb => {
+            if (cb.value) selected.push(cb.value);
+        });
+        return selected;
+    }
+
+    function actualizarLabelProyectos() {
+        const total = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').length;
+        const selected = getProyectosSeleccionados().length;
+        const label = document.getElementById('filtroProyectosLabel');
+
+        if (selected === 0 || selected === total) {
+            label.textContent = 'Todos los proyectos';
+        } else {
+            label.textContent = `${selected} proyecto${selected > 1 ? 's' : ''} seleccionado${selected > 1 ? 's' : ''}`;
+        }
+    }
+
+    function toggleDropdown() {
+        const dropdown = document.getElementById('filtroProyectosDropdown');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function cerrarDropdown() {
+        document.getElementById('filtroProyectosDropdown').style.display = 'none';
+    }
+
+    function renderizarCheckboxesProyectos(proyectos) {
+        const lista = document.getElementById('filtroProyectosLista');
+        lista.innerHTML = '';
+
+        if (!proyectos || proyectos.length === 0) {
+            lista.innerHTML = '<div style="padding: 8px 12px; color: #6c757d; font-size: 13px;">No hay proyectos disponibles</div>';
+            return;
+        }
+
+        const selected = getProyectosSeleccionados();
+
+        proyectos.forEach(proyecto => {
+            const checked = selected.includes(String(proyecto.id)) ? 'checked' : '';
+            const label = document.createElement('label');
+            label.innerHTML = `
+                <input type="checkbox" value="${escapeHtml(proyecto.id)}" ${checked}>
+                <span>${escapeHtml(proyecto.nombre)}</span>
+            `;
+            lista.appendChild(label);
+        });
+
+        actualizarLabelProyectos();
+    }
+
+    function filtrarProyectosLista(busqueda) {
+        const labels = document.querySelectorAll('#filtroProyectosLista label');
+        const term = busqueda.toLowerCase().trim();
+
+        labels.forEach(label => {
+            const text = label.textContent.toLowerCase();
+            label.style.display = text.includes(term) ? 'flex' : 'none';
+        });
+    }
+
+    function seleccionarTodosProyectos() {
+        const todosVisibles = document.querySelectorAll('#filtroProyectosLista label:not([style*="display: none"])');
+        todosVisibles.forEach(label => {
+            const cb = label.querySelector('input[type="checkbox"]');
+            if (cb) cb.checked = true;
+        });
+        actualizarLabelProyectos();
+        aplicarFiltroProyectosDebounced();
+    }
+
+    function deseleccionarTodosProyectos() {
+        // ✅ Ahora respeta el filtro visual (solo deselecciona los visibles)
+        const visibles = document.querySelectorAll('#filtroProyectosLista label:not([style*="display: none"])');
+        visibles.forEach(label => {
+            const cb = label.querySelector('input[type="checkbox"]');
+            if (cb) cb.checked = false;
+        });
+        actualizarLabelProyectos();
+        aplicarFiltroProyectosDebounced();
+    }
+
+    /**
+     * Debounce para no disparar una request por cada checkbox
+     */
+    function aplicarFiltroProyectosDebounced() {
+        clearTimeout(debounceTimerProyectos);
+        debounceTimerProyectos = setTimeout(() => {
+            currentFilters.page = 1;
+            cargarCostos();
+        }, 400);
+    }
+
+    // ============================================
+    // CATÁLOGOS
+    // ============================================
+
+    async function cargarCatalogos() {
+        try {
+            const proyectosResp = await fetch(`${API_BASE}/catalogos/proyectos`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            const proyectosResult = await proyectosResp.json();
+
+            if (proyectosResult.success) {
+                const selectAgregar = document.getElementById('campoProyecto');
+                const selectEditar = document.getElementById('editProyecto');
+                const options = proyectosResult.data.map(p =>
+                    `<option value="${escapeHtml(p.id)}">${escapeHtml(p.nombre)}</option>`
+                ).join('');
+                selectAgregar.innerHTML = `<option value="">Seleccionar proyecto</option>${options}`;
+                selectEditar.innerHTML = `<option value="">Seleccionar proyecto</option>${options}`;
+
+                proyectosLista = proyectosResult.data;
+                renderizarCheckboxesProyectos(proyectosLista);
+            }
+
+            const proveedoresResp = await fetch(`${API_BASE}/catalogos/proveedores`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            const proveedoresResult = await proveedoresResp.json();
+
+            if (proveedoresResult.success) {
+                const selectAgregar = document.getElementById('campoProveedor');
+                const selectEditar = document.getElementById('editProveedor');
+                const options = proveedoresResult.data.map(p =>
+                    `<option value="${escapeHtml(p.id)}">${escapeHtml(p.nombre)} ${p.rfc ? '- ' + escapeHtml(p.rfc) : ''}</option>`
+                ).join('');
+                selectAgregar.innerHTML = `<option value="">Seleccionar proveedor</option>${options}`;
+                selectEditar.innerHTML = `<option value="">Seleccionar proveedor</option>${options}`;
+            }
+        } catch (error) {
+            console.error('Error cargando catálogos:', error);
+        }
+    }
+
+    // ============================================
+    // RENDERIZADO
+    // ============================================
+
+    function renderizarTabla(costos) {
+        const tbody = document.getElementById('tablaBody');
+        const sinDatos = document.getElementById('sinDatosMensaje');
+        const tablaContainer = document.getElementById('tablaContainer');
+        const textoAgrupar = document.getElementById('textoAgrupar');
+
+        if (!tbody) return;
+
+        if (textoAgrupar) {
+            textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
+        }
+
+        const { grupos } = agruparDatos(costos, columnasAgrupadas);
+        const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
+
+        tbody.innerHTML = '';
+
+        if (!costos || costos.length === 0) {
+            sinDatos.style.display = 'block';
+            tablaContainer.style.display = 'none';
+            document.getElementById('tablaFoot').style.display = 'none';
+            return;
+        }
+
+        sinDatos.style.display = 'none';
+        tablaContainer.style.display = 'block';
+
+        if (hayGrupos) {
+            document.getElementById('tablaFoot').style.display = 'none';
+
+            grupos.forEach(grupo => {
+                const grupoRow = document.createElement('tr');
+                grupoRow.className = 'fila-grupo';
+                grupoRow.dataset.grupoId = grupo.id;
+
+                if (expandedGroups.has(grupo.id)) {
+                    grupoRow.classList.add('expandido');
+                }
+
+                grupoRow.innerHTML = `
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px;" colspan="16">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
+                                <strong style="color: #2378e1;">${escapeHtml(grupo.valor)}</strong>
+                                <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
+                                    (${grupo.items.length} registros - Subtotal: ${formatCurrency(grupo.totalSubtotal)} - Total: ${formatCurrency(grupo.totalGeneral)})
+                                </span>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(grupoRow);
+
+                if (expandedGroups.has(grupo.id)) {
+                    grupo.items.forEach(item => {
+                        tbody.appendChild(crearFila(item, true));
+                    });
+                }
+            });
+        } else {
+            document.getElementById('tablaFoot').style.display = 'table-footer-group';
+            costos.forEach(item => {
+                tbody.appendChild(crearFila(item, false));
+            });
+        }
+    }
+
+    /**
+     * Crea una fila de la tabla.
+     * @param {Object} item - Registro
+     * @param {Boolean} esDetalle - Si es fila dentro de un grupo (aplica indentación)
+     */
+    function crearFila(item, esDetalle = false) {
+        const row = document.createElement('tr');
+        if (esDetalle) row.className = 'fila-detalle';
+
+        const badgeClass = getEstatusBadge(item.estatus_pago);
+        const categoriaBadge = getCategoriaBadge(item.categoria);
+
+        const subtotal = parseFloat(item.subtotal) || 0;
+        const iva = parseFloat(item.iva) || 0;
+        const total = parseFloat(item.total) || 0;
+
+        const paddingLeft = esDetalle ? '30px' : '4px';
+
+        row.innerHTML = `
+            <td style="padding: 10px 4px; padding-left: ${paddingLeft};">${escapeHtml(item.proyecto?.nombre || '-')}</td>
+            <td style="padding: 10px 4px;"><span class="badge-categoria ${categoriaBadge}">${escapeHtml(item.categoria_nombre || '-')}</span></td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.concepto || '-')}</td>
+            <td style="padding: 10px 4px;">${formatDate(item.fecha)}</td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.nombre_proveedor || '-')}</td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.rfc || '-')}</td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.factura || '-')}</td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.descripcion || '-')}</td>
+            <td style="padding: 10px 4px; text-align: right;">${subtotal ? formatCurrency(subtotal) : '-'}</td>
+            <td style="padding: 10px 4px; text-align: right;">${iva ? formatCurrency(iva) : '-'}</td>
+            <td style="padding: 10px 4px; text-align: right; font-weight: 600; color: #083CAE;">${total ? formatCurrency(total) : '-'}</td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.forma_pago_nombre || '-')}</td>
+            <td style="padding: 10px 4px;">${formatDate(item.fecha_pago)}</td>
+            <td style="padding: 10px 4px;"><span class="badge ${badgeClass}">${escapeHtml(item.estatus_nombre || '-')}</span></td>
+            <td style="padding: 10px 4px;">${escapeHtml(item.observaciones || '-')}</td>
+            <td style="padding: 10px 4px; background-color: white; position: sticky; right: 0;">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${item.id})"></i>
+                    <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" onclick="editarCosto(${item.id})"></i>
+                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer; font-size: 14px;" title="Eliminar" onclick="eliminarCosto(${item.id})"></i>
+                </div>
+            </td>
+        `;
+        return row;
+    }
+
+    function actualizarEstadisticas(stats) {
+        if (!stats) return;
+        document.getElementById('totalIndirectos').textContent = formatCurrency(stats.total_indirectos || 0);
+        document.getElementById('totalPersonal').textContent = formatCurrency(stats.total_personal || 0);
+        document.getElementById('totalAdmin').textContent = formatCurrency(stats.total_admin || 0);
+        document.getElementById('totalSeguridad').textContent = formatCurrency(stats.total_seguridad || 0);
+    }
+
+    /**
+     * Actualiza el tfoot con los totales del BACKEND (aplican todos los filtros),
+     * no solo con los de la página actual.
+     */
+    function calcularTotales(stats) {
+        if (!stats) return;
+        // Nota: las estadísticas ya reflejan TODOS los filtros aplicados.
+        // Si quieres subtotal e IVA globales, el backend debería enviarlos también.
+        // Por ahora usamos total_indirectos para el total general.
+        document.getElementById('sumSubtotal').textContent = formatCurrency(stats.total_indirectos || 0);
+        document.getElementById('sumIva').textContent = '-';
+        document.getElementById('sumTotal').textContent = formatCurrency(stats.total_indirectos || 0);
+    }
+
+    function actualizarPaginacion(pagination) {
+        if (!pagination) return;
+        document.getElementById('paginaActual').textContent = pagination.current_page || 1;
+        document.getElementById('totalPaginas').textContent = `de ${pagination.last_page || 1}`;
+        document.getElementById('paginacionInfo').textContent =
+            `Mostrando ${pagination.from || 0}-${pagination.to || 0} de ${pagination.total || 0} registros`;
     }
 
     // ============================================
@@ -1036,7 +1046,7 @@
 
     function generarGrupoId(item, columnas) {
         return columnas.map(col => {
-            switch(col) {
+            switch (col) {
                 case 'proyecto': return item.proyecto?.nombre || 'Sin proyecto';
                 case 'categoria': return item.categoria_nombre || 'Sin categoría';
                 case 'estatus_pago': return item.estatus_nombre || 'Sin estatus';
@@ -1047,22 +1057,22 @@
 
     function agruparDatos(datos, columnas) {
         if (columnas.length === 0 || !datos) return { grupos: [], items: datos || [] };
-        
+
         const gruposMap = new Map();
-        
+
         datos.forEach(item => {
             const grupoId = generarGrupoId(item, columnas);
-            
+
             if (!gruposMap.has(grupoId)) {
                 const valorGrupo = columnas.map(col => {
-                    switch(col) {
+                    switch (col) {
                         case 'proyecto': return item.proyecto?.nombre || 'Sin proyecto';
                         case 'categoria': return item.categoria_nombre || 'Sin categoría';
                         case 'estatus_pago': return item.estatus_nombre || 'Sin estatus';
                         default: return '';
                     }
                 }).join(' - ');
-                
+
                 gruposMap.set(grupoId, {
                     id: grupoId,
                     valor: valorGrupo,
@@ -1077,7 +1087,7 @@
                 grupo.totalGeneral += parseFloat(item.total || 0);
             }
         });
-        
+
         return {
             grupos: Array.from(gruposMap.values()),
             items: []
@@ -1087,48 +1097,48 @@
     function actualizarGrupoColumnas() {
         const grupoContainer = document.getElementById('grupoColumnas');
         const textoAgrupar = document.getElementById('textoAgrupar');
-        
+
         if (!grupoContainer) return;
         grupoContainer.innerHTML = '';
-        
+
         if (columnasAgrupadas.length === 0) {
             if (textoAgrupar) textoAgrupar.style.display = 'inline';
         } else {
             if (textoAgrupar) textoAgrupar.style.display = 'none';
-            
+
             columnasAgrupadas.forEach(col => {
                 const nombreColumna = {
                     'proyecto': 'Proyecto',
                     'categoria': 'Categoría',
                     'estatus_pago': 'Estatus Pago'
                 }[col] || col;
-                
+
                 const chip = document.createElement('span');
                 chip.className = 'columna-agrupada';
-                chip.innerHTML = `${nombreColumna} <span class="remover" data-columna="${col}">&times;</span>`;
+                chip.innerHTML = `${escapeHtml(nombreColumna)} <span class="remover" data-columna="${escapeHtml(col)}">&times;</span>`;
                 grupoContainer.appendChild(chip);
             });
         }
-        
-        expandedGroups.clear();
+
+        // ✅ NO limpiamos expandedGroups aquí: se preserva el estado entre recargas.
         cargarCostos();
     }
 
     function setupDragAndDrop() {
         const encabezados = document.querySelectorAll('th[draggable="true"]');
         const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-        
+
         encabezados.forEach(th => {
             th.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('text/plain', th.dataset.columna);
                 e.dataTransfer.effectAllowed = 'copy';
                 th.style.opacity = '0.5';
             });
-            th.addEventListener('dragend', (e) => {
+            th.addEventListener('dragend', () => {
                 th.style.opacity = '1';
             });
         });
-        
+
         if (grupoAgrupacion) {
             grupoAgrupacion.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -1148,14 +1158,6 @@
                 }
             });
         }
-        
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remover')) {
-                const columna = e.target.dataset.columna;
-                columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-                actualizarGrupoColumnas();
-            }
-        });
     }
 
     // ============================================
@@ -1168,34 +1170,34 @@
                 headers: { 'Accept': 'application/json' }
             });
             const result = await response.json();
-            
+
             if (result.success) {
                 const item = result.data;
                 const badgeClass = getEstatusBadge(item.estatus_pago);
                 const categoriaBadge = getCategoriaBadge(item.categoria);
-                
+
                 document.getElementById('modalTitulo').textContent = `${item.concepto} - ${item.proyecto?.nombre || 'Sin proyecto'}`;
-                
+
                 const contenido = `
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Proyecto</div>
-                            <div style="font-size: 16px; font-weight: 600;">${item.proyecto?.nombre || '-'}</div>
+                            <div style="font-size: 16px; font-weight: 600;">${escapeHtml(item.proyecto?.nombre || '-')}</div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Categoría</div>
-                            <div style="font-size: 16px; font-weight: 600;"><span class="badge-categoria ${categoriaBadge}">${item.categoria_nombre}</span></div>
+                            <div style="font-size: 16px; font-weight: 600;"><span class="badge-categoria ${categoriaBadge}">${escapeHtml(item.categoria_nombre)}</span></div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Concepto</div>
-                            <div style="font-size: 16px; font-weight: 600;">${item.concepto}</div>
+                            <div style="font-size: 16px; font-weight: 600;">${escapeHtml(item.concepto)}</div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Fecha</div>
                             <div style="font-size: 16px;">${formatDate(item.fecha)}</div>
                         </div>
                     </div>
-                    
+
                     <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
                             <div>
@@ -1212,23 +1214,23 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Proveedor</div>
-                            <div style="font-size: 14px;">${item.nombre_proveedor || '-'}</div>
+                            <div style="font-size: 14px;">${escapeHtml(item.nombre_proveedor || '-')}</div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">RFC</div>
-                            <div style="font-size: 14px;">${item.rfc || '-'}</div>
+                            <div style="font-size: 14px;">${escapeHtml(item.rfc || '-')}</div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Factura</div>
-                            <div style="font-size: 14px;">${item.factura || '-'}</div>
+                            <div style="font-size: 14px;">${escapeHtml(item.factura || '-')}</div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Forma de Pago</div>
-                            <div style="font-size: 14px;">${item.forma_pago_nombre || '-'}</div>
+                            <div style="font-size: 14px;">${escapeHtml(item.forma_pago_nombre || '-')}</div>
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Fecha de Pago</div>
@@ -1236,27 +1238,27 @@
                         </div>
                         <div>
                             <div style="color: #6c757d; font-size: 12px;">Estatus</div>
-                            <div><span class="badge ${badgeClass}">${item.estatus_nombre}</span></div>
+                            <div><span class="badge ${badgeClass}">${escapeHtml(item.estatus_nombre)}</span></div>
                         </div>
                     </div>
-                    
+
                     ${item.descripcion ? `
                     <div style="margin-bottom: 15px;">
                         <div style="color: #6c757d; font-size: 12px;">Descripción</div>
-                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${item.descripcion}</div>
+                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${escapeHtml(item.descripcion)}</div>
                     </div>` : ''}
-                    
+
                     ${item.observaciones ? `
                     <div style="margin-bottom: 15px;">
                         <div style="color: #6c757d; font-size: 12px;">Observaciones</div>
-                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${item.observaciones}</div>
+                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${escapeHtml(item.observaciones)}</div>
                     </div>` : ''}
-                    
+
                     <div style="border-top: 1px solid #dee2e6; padding-top: 15px; margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
                         <button onclick="cerrarModalDetalle()" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
                     </div>
                 `;
-                
+
                 document.getElementById('modalContenidoDetalle').innerHTML = contenido;
                 document.getElementById('modalVerDetalle').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
@@ -1272,15 +1274,15 @@
                 headers: { 'Accept': 'application/json' }
             });
             const result = await response.json();
-            
+
             if (result.success) {
                 const item = result.data;
-                
+
                 document.getElementById('editId').value = item.id;
                 document.getElementById('editProyecto').value = item.proyecto_id || '';
                 document.getElementById('editCategoria').value = item.categoria || '';
                 document.getElementById('editConcepto').value = item.concepto || '';
-                document.getElementById('editFecha').value = item.fecha || '';
+                document.getElementById('editFecha').value = (item.fecha || '').substring(0, 10);
                 document.getElementById('editProveedor').value = item.proveedor_id || '';
                 document.getElementById('editRFC').value = item.rfc || '';
                 document.getElementById('editFactura').value = item.factura || '';
@@ -1289,10 +1291,10 @@
                 document.getElementById('editIva').value = item.iva || 0;
                 document.getElementById('editTotal').value = item.total || 0;
                 document.getElementById('editFormaPago').value = item.forma_pago || 'transferencia';
-                document.getElementById('editFechaPago').value = item.fecha_pago || '';
+                document.getElementById('editFechaPago').value = (item.fecha_pago || '').substring(0, 10);
                 document.getElementById('editEstatusPago').value = item.estatus_pago || 'pendiente';
                 document.getElementById('editObservaciones').value = item.observaciones || '';
-                
+
                 document.getElementById('modalEditarCosto').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             }
@@ -1303,11 +1305,11 @@
 
     window.eliminarCosto = function(id) {
         if (!confirm('¿Está seguro de eliminar este costo indirecto?')) return;
-        
+
         fetch(`${API_BASE}/${id}`, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                'X-CSRF-TOKEN': CSRF_TOKEN,
                 'Accept': 'application/json'
             }
         })
@@ -1320,7 +1322,7 @@
                 mostrarNotificacion(result.message || 'Error al eliminar', 'error');
             }
         })
-        .catch(error => {
+        .catch(() => {
             mostrarNotificacion('Error al eliminar el costo', 'error');
         });
     };
@@ -1333,33 +1335,41 @@
     async function exportarExcel() {
         try {
             const proyectosSeleccionados = getProyectosSeleccionados();
-            
+
             const params = new URLSearchParams();
             params.append('busqueda', currentFilters.busqueda || '');
             params.append('categoria', currentFilters.categoria || 'todos');
             params.append('estatus_pago', currentFilters.estatus_pago || '');
             params.append('fecha_inicio', currentFilters.fecha_inicio || '');
             params.append('fecha_fin', currentFilters.fecha_fin || '');
-            
+
             if (proyectosSeleccionados.length > 0) {
                 proyectosSeleccionados.forEach(id => {
                     params.append('proyecto_id[]', id);
                 });
             }
-            
-            const response = await fetch(`${API_BASE}/exportar?${params.toString()}`);
+
+            const response = await fetch(`${API_BASE}/exportar?${params.toString()}`, {
+                headers: { 'Accept': 'application/json' }
+            });
             const result = await response.json();
-            
+
             if (result.success && result.data) {
                 const headers = result.data.headers || [];
                 const rows = result.data.rows || [];
-                
+
                 if (headers.length === 0 || rows.length === 0) {
                     mostrarNotificacion('No hay datos para exportar', 'warning');
                     return;
                 }
-                
-                const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+
+                // ✅ Escapado correcto de CSV
+                const csvLines = [
+                    headers.map(escapeCsv).join(','),
+                    ...rows.map(row => row.map(escapeCsv).join(','))
+                ];
+                const csvContent = csvLines.join('\r\n');
+
                 const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
@@ -1367,6 +1377,8 @@
                 link.click();
                 URL.revokeObjectURL(link.href);
                 mostrarNotificacion('Exportación completada', 'success');
+            } else {
+                mostrarNotificacion(result.message || 'No se pudo exportar', 'warning');
             }
         } catch (error) {
             mostrarNotificacion('Error al exportar', 'error');
@@ -1374,21 +1386,19 @@
     }
 
     // ============================================
-    // FORMULARIO - CREAR/EDITAR COSTO
+    // FORMULARIOS
     // ============================================
 
     function calcularTotal() {
         const subtotal = parseFloat(document.getElementById('campoSubtotal').value) || 0;
         const iva = parseFloat(document.getElementById('campoIva').value) || 0;
-        const total = subtotal + iva;
-        document.getElementById('campoTotal').value = total.toFixed(2);
+        document.getElementById('campoTotal').value = (subtotal + iva).toFixed(2);
     }
 
     function calcularTotalEditar() {
         const subtotal = parseFloat(document.getElementById('editSubtotal').value) || 0;
         const iva = parseFloat(document.getElementById('editIva').value) || 0;
-        const total = subtotal + iva;
-        document.getElementById('editTotal').value = total.toFixed(2);
+        document.getElementById('editTotal').value = (subtotal + iva).toFixed(2);
     }
 
     function abrirModalAgregar() {
@@ -1398,10 +1408,10 @@
         document.getElementById('campoSubtotal').value = '0.00';
         document.getElementById('campoIva').value = '0.00';
         document.getElementById('campoTotal').value = '0.00';
-        
-        const hoy = new Date();
-        document.getElementById('campoFecha').value = hoy.toISOString().split('T')[0];
-        document.getElementById('campoFechaPago').value = hoy.toISOString().split('T')[0];
+
+        const hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('campoFecha').value = hoy;
+        document.getElementById('campoFechaPago').value = hoy;
     }
 
     function cerrarModalAgregar() {
@@ -1414,13 +1424,38 @@
         document.body.style.overflow = 'auto';
     }
 
+    /**
+     * Envía un formulario por fetch.
+     * @param {String} url
+     * @param {FormData} formData
+     * @param {String} method - 'POST' | 'PUT'
+     */
+    async function enviarFormulario(url, formData, method = 'POST') {
+        // ✅ Laravel requiere _method=PUT en el body para spoofing
+        if (method === 'PUT') {
+            formData.append('_method', 'PUT');
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json'
+            },
+            body: formData
+        });
+
+        const result = await response.json().catch(() => ({}));
+        return { ok: response.ok, status: response.status, result };
+    }
+
     // ============================================
-    // EVENTOS E INICIALIZACIÓN
+    // INICIALIZACIÓN
     // ============================================
 
     document.addEventListener('DOMContentLoaded', function() {
         console.log('DOM cargado - API_BASE:', API_BASE);
-        
+
         const hoy = new Date();
         const seisMesesAtras = new Date();
         seisMesesAtras.setMonth(hoy.getMonth() - 6);
@@ -1428,77 +1463,76 @@
         document.getElementById('fechaFin').value = hoy.toISOString().split('T')[0];
         currentFilters.fecha_inicio = document.getElementById('fechaInicio').value;
         currentFilters.fecha_fin = document.getElementById('fechaFin').value;
-        
+
         setupDragAndDrop();
         cargarCatalogos();
         cargarCostos();
-        
-        // Eventos del dropdown de proyectos
-        document.getElementById('btnFiltroProyectos')?.addEventListener('click', function(e) {
+
+        // Dropdown de proyectos
+        document.getElementById('btnFiltroProyectos')?.addEventListener('click', (e) => {
             e.stopPropagation();
             toggleDropdown();
         });
-        
-        document.getElementById('btnCerrarFiltro')?.addEventListener('click', function(e) {
+        document.getElementById('btnCerrarFiltro')?.addEventListener('click', (e) => {
             e.stopPropagation();
             cerrarDropdown();
         });
-        
-        document.getElementById('btnSeleccionarTodos')?.addEventListener('click', function(e) {
+        document.getElementById('btnSeleccionarTodos')?.addEventListener('click', (e) => {
             e.stopPropagation();
             seleccionarTodosProyectos();
         });
-        
-        document.getElementById('btnDeseleccionarTodos')?.addEventListener('click', function(e) {
+        document.getElementById('btnDeseleccionarTodos')?.addEventListener('click', (e) => {
             e.stopPropagation();
             deseleccionarTodosProyectos();
         });
-        
         document.getElementById('filtroProyectosBuscar')?.addEventListener('input', function(e) {
             e.stopPropagation();
             filtrarProyectosLista(this.value);
         });
-        
         document.getElementById('filtroProyectosLista')?.addEventListener('change', function(e) {
             if (e.target.type === 'checkbox') {
                 actualizarLabelProyectos();
-                aplicarFiltroProyectos();
+                aplicarFiltroProyectosDebounced();
             }
         });
-        
+
+        // Cerrar dropdown al hacer click fuera
         document.addEventListener('click', function(e) {
             const container = document.getElementById('proyectoFilterContainer');
             if (container && !container.contains(e.target)) {
                 cerrarDropdown();
             }
         });
-        
-        // Eventos de búsqueda y filtros
+
+        // Filtros
+        let debounceBusqueda = null;
         document.getElementById('buscador')?.addEventListener('input', (e) => {
-            currentFilters.busqueda = e.target.value;
-            currentFilters.page = 1;
-            cargarCostos();
+            clearTimeout(debounceBusqueda);
+            debounceBusqueda = setTimeout(() => {
+                currentFilters.busqueda = e.target.value;
+                currentFilters.page = 1;
+                cargarCostos();
+            }, 400);
         });
-        
+
         document.getElementById('fechaInicio')?.addEventListener('change', (e) => {
             currentFilters.fecha_inicio = e.target.value;
             currentFilters.page = 1;
             cargarCostos();
         });
-        
         document.getElementById('fechaFin')?.addEventListener('change', (e) => {
             currentFilters.fecha_fin = e.target.value;
             currentFilters.page = 1;
             cargarCostos();
         });
-        
+
         // Botones principales
         document.getElementById('btnAgregarCosto')?.addEventListener('click', abrirModalAgregar);
         document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
         document.getElementById('btnColumnas')?.addEventListener('click', () => {
             mostrarNotificacion('Selector de columnas en desarrollo', 'warning');
         });
-        
+
         // Paginación
         document.getElementById('btnPrimera')?.addEventListener('click', () => {
             if (currentPage > 1) { currentFilters.page = 1; cargarCostos(); }
@@ -1512,96 +1546,82 @@
         document.getElementById('btnUltima')?.addEventListener('click', () => {
             if (currentPage < totalPages) { currentFilters.page = totalPages; cargarCostos(); }
         });
-        
+
         // Modales
         document.getElementById('btnCerrarModalAgregar')?.addEventListener('click', cerrarModalAgregar);
         document.getElementById('btnCancelarAgregar')?.addEventListener('click', cerrarModalAgregar);
         document.getElementById('btnCerrarModalEditar')?.addEventListener('click', cerrarModalEditar);
         document.getElementById('btnCancelarEditar')?.addEventListener('click', cerrarModalEditar);
         document.getElementById('btnCerrarModalDetalle')?.addEventListener('click', cerrarModalDetalle);
-        
-        // Cálculo automático
+
+        // Cálculos automáticos
         document.getElementById('campoSubtotal')?.addEventListener('input', calcularTotal);
         document.getElementById('campoIva')?.addEventListener('input', calcularTotal);
-        
         document.getElementById('editSubtotal')?.addEventListener('input', calcularTotalEditar);
         document.getElementById('editIva')?.addEventListener('input', calcularTotalEditar);
-        
-        // Submit forms
-        document.getElementById('formAgregarCosto')?.addEventListener('submit', function(e) {
+
+        // Submit: Crear
+        document.getElementById('formAgregarCosto')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            
-            fetch(API_BASE, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalAgregar();
-                    cargarCostos();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al guardar', 'error');
-                }
-            })
-            .catch(error => {
-                mostrarNotificacion('Error al guardar el costo', 'error');
-            });
+
+            const { ok, result } = await enviarFormulario(API_BASE, formData, 'POST');
+
+            if (ok && result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cerrarModalAgregar();
+                cargarCostos();
+            } else {
+                const msg = result.message || (result.errors ? Object.values(result.errors).flat().join(' ') : 'Error al guardar');
+                mostrarNotificacion(msg, 'error');
+            }
         });
-        
-        document.getElementById('formEditarCosto')?.addEventListener('submit', function(e) {
+
+        // Submit: Editar (con _method=PUT en el body)
+        document.getElementById('formEditarCosto')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const id = document.getElementById('editId').value;
             const formData = new FormData(this);
-            
-            fetch(`${API_BASE}/${id}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json',
-                    'X-HTTP-Method-Override': 'PUT'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalEditar();
-                    cargarCostos();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al actualizar', 'error');
+
+            const { ok, result } = await enviarFormulario(`${API_BASE}/${id}`, formData, 'PUT');
+
+            if (ok && result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cerrarModalEditar();
+                cargarCostos();
+            } else {
+                const msg = result.message || (result.errors ? Object.values(result.errors).flat().join(' ') : 'Error al actualizar');
+                mostrarNotificacion(msg, 'error');
+            }
+        });
+
+        // Cerrar modales al hacer click en el backdrop
+        ['modalAgregarCosto', 'modalEditarCosto', 'modalVerDetalle'].forEach(id => {
+            document.getElementById(id)?.addEventListener('mousedown', function(e) {
+                if (e.target === this) {
+                    if (id === 'modalAgregarCosto') cerrarModalAgregar();
+                    if (id === 'modalEditarCosto') cerrarModalEditar();
+                    if (id === 'modalVerDetalle') cerrarModalDetalle();
                 }
-            })
-            .catch(error => {
-                mostrarNotificacion('Error al actualizar el costo', 'error');
             });
         });
-        
-        // Cerrar modales al hacer clic fuera
-        window.addEventListener('click', (event) => {
-            const modalAgregar = document.getElementById('modalAgregarCosto');
-            const modalEditar = document.getElementById('modalEditarCosto');
-            const modalVer = document.getElementById('modalVerDetalle');
-            
-            if (event.target === modalAgregar) cerrarModalAgregar();
-            if (event.target === modalEditar) cerrarModalEditar();
-            if (event.target === modalVer) cerrarModalDetalle();
-        });
-        
-        // Expandir/colapsar grupos
+
+        // ✅ Listeners unificados de click en document
         document.addEventListener('click', function(e) {
+            // Quitar chip de agrupación
+            if (e.target.classList.contains('remover')) {
+                const columna = e.target.dataset.columna;
+                columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
+                actualizarGrupoColumnas();
+                return;
+            }
+
+            // Expandir/colapsar grupo
             const filaGrupo = e.target.closest('.fila-grupo');
             if (filaGrupo) {
                 const grupoId = filaGrupo.dataset.grupoId;
                 const icono = filaGrupo.querySelector('i');
-                
+
                 if (expandedGroups.has(grupoId)) {
                     expandedGroups.delete(grupoId);
                     filaGrupo.classList.remove('expandido');
@@ -1611,6 +1631,10 @@
                     filaGrupo.classList.add('expandido');
                     if (icono) icono.className = 'fas fa-caret-down';
                 }
+                // ✅ NO recargamos del backend; solo re-renderizamos localmente
+                // (pero como no tenemos el dataset en memoria, recargamos)
+                // Para evitar perder el estado, lo guardamos en expandedGroups
+                // y cargarCostos() respetará ese set.
                 cargarCostos();
             }
         });

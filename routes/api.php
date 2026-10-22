@@ -211,4 +211,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [App\Http\Controllers\NotificationController::class, 'destroy']);
     });
 
+    
 });

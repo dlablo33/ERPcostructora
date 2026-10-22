@@ -152,7 +152,7 @@
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Código</label>
-                    <input type="text" id="modalCodigoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" readonly placeholder="Autogenerado">
+                    <input type="text" id="modalCodigoArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; background-color: #e9ecef;" readonly placeholder="Autogenerado">
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Familia</label>
@@ -213,14 +213,22 @@
                         <option value="Bulto">Bulto</option>
                     </select>
                 </div>
+                {{-- ✅ TICKET 1: Cuenta Contable ahora es un SELECT en lugar de input abierto --}}
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Cuenta contable">
+                    <select id="modalCuentaArticulo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Seleccionar cuenta contable</option>
+                        @isset($cuentasContables)
+                            @foreach($cuentasContables as $codigoCuenta => $nombreCuenta)
+                                <option value="{{ $codigoCuenta }}">{{ $nombreCuenta }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
                 </div>
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalArticulo()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="guardarArticulo()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
+                <button onclick="guardarArticulo()" id="btnGuardarArticulo" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
             </div>
         </div>
     </div>
@@ -277,7 +285,8 @@ function cargarSubfamiliasPorFamilia() {
                                 subfamiliaSelect.innerHTML += `<option value="${sub.id}">${sub.codigo} - ${sub.nombre}</option>`;
                             });
                         }
-                    });
+                    })
+                    .catch(error => console.error('Error al cargar subfamilias:', error));
             } else {
                 subfamiliaSelect.innerHTML = '<option value="">Primero seleccione una familia</option>';
             }
@@ -406,6 +415,7 @@ window.abrirModalArticulo = function() {
     document.getElementById('modalMaximoArticulo').value = 0;
     document.getElementById('modalReordenArticulo').value = 0;
     document.getElementById('modalUnidadArticulo').value = '';
+    // ✅ TICKET 1: Resetear el select de cuenta contable
     document.getElementById('modalCuentaArticulo').value = '';
     document.getElementById('modalArticulo').style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -430,6 +440,8 @@ window.editarArticulo = function(id) {
                 document.getElementById('modalMaximoArticulo').value = art.maximo;
                 document.getElementById('modalReordenArticulo').value = art.punto_reorden;
                 document.getElementById('modalUnidadArticulo').value = art.unidad_medida || '';
+                // ✅ TICKET 1: Asignar valor al SELECT de cuenta contable
+                // Si el valor existe en las opciones, se seleccionará; si no, quedará vacío
                 document.getElementById('modalCuentaArticulo').value = art.cuenta_contable || '';
                 
                 if (art.familia_id) {
@@ -449,7 +461,8 @@ window.editarArticulo = function(id) {
                 document.getElementById('modalArticulo').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             }
-        });
+        })
+        .catch(error => console.error('Error al cargar artículo:', error));
 };
 
 window.guardarArticulo = function() {
@@ -458,6 +471,11 @@ window.guardarArticulo = function() {
         alert('La descripción es obligatoria');
         return;
     }
+    
+    const btnGuardar = document.getElementById('btnGuardarArticulo');
+    const textoOriginal = btnGuardar.textContent;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
     
     const data = {
         descripcion: descripcion,
@@ -480,23 +498,33 @@ window.guardarArticulo = function() {
         method: method,
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(response => {
-        if (response.success) {
-            alert(response.message);
+    .then(response => response.json().then(json => ({ status: response.status, body: json })))
+    .then(({ status, body }) => {
+        if (body.success) {
+            alert(body.message);
             cerrarModalArticulo();
             cargarArticulos();
         } else {
-            alert('Error: ' + response.message);
+            // Mostrar errores de validación si existen
+            let mensaje = body.message || 'Error desconocido';
+            if (body.errors) {
+                mensaje = Object.values(body.errors).flat().join('\n');
+            }
+            alert('Error: ' + mensaje);
         }
     })
     .catch(error => {
         console.error('Error:', error);
         alert('Error al guardar el artículo');
+    })
+    .finally(() => {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
     });
 };
 
@@ -504,7 +532,10 @@ window.eliminarArticulo = function(id, codigo) {
     if (confirm(`¿Eliminar el artículo ${codigo}?`)) {
         fetch(`{{ route('almacen.api.articulos.destroy', '') }}/${id}`, {
             method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            headers: { 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
         })
         .then(response => response.json())
         .then(response => {
@@ -514,6 +545,10 @@ window.eliminarArticulo = function(id, codigo) {
             } else {
                 alert('Error: ' + response.message);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el artículo');
         });
     }
 };

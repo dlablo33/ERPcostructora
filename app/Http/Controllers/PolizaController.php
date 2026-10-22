@@ -360,25 +360,19 @@ class PolizaController extends Controller
      * Get list of cuentas contables.
      */
     public function getCuentasContables()
-    {
-        try {
-            $cuentas = CuentaContable::select('id', 'codigo', 'nombre')
-                ->orderBy('codigo')
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'data' => $cuentas
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('ERROR en getCuentasContables: ' . $e->getMessage());
-            return response()->json([
-                'success' => true,
-                'data' => []
-            ]);
-        }
+{
+    try {
+        // ✅ Devuelve TODAS las columnas para que sirva tanto a Pólizas como a Cuentas Contables
+        $cuentas = CuentaContable::orderBy('codigo')->get();
+        return response()->json([
+            'success' => true,
+            'data'    => $cuentas
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error getCuentasContables: ' . $e->getMessage());
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
+}
 
     /**
      * Export polizas to Excel.

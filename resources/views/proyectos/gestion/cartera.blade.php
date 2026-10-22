@@ -12,10 +12,59 @@
 
             <div class="card-body p-4">
                 <!-- Botón para nuevo proyecto -->
-                <div style="text-align: right; margin-bottom: 20px;">
-                    <button onclick="mostrarFormularioCreacion()" class="btn btn-primary" style="background-color: #083CAE; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-                        <i class="fas fa-plus"></i> Nuevo Proyecto
-                    </button>
+                
+
+                <!-- BARRA DE FILTROS Y BÚSQUEDA -->
+                <div class="card mb-3" style="border: 1px solid #dee2e6; border-radius: 8px;">
+                    <div class="card-body" style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end;">
+                            <!-- Buscador general -->
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; color: #555;">Buscar</label>
+                                <input type="text" id="filtroBusqueda" class="form-control" placeholder="Código, proyecto, cliente..." style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                            </div>
+                            <!-- Filtro por estado -->
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; color: #555;">Estado</label>
+                                <select id="filtroEstado" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                                    <option value="">Todos</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="borrador">Borrador</option>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="finalizado">Finalizado</option>
+                                    <option value="cancelado">Cancelado</option>
+                                </select>
+                            </div>
+                            <!-- Filtro por prioridad -->
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; color: #555;">Prioridad</label>
+                                <select id="filtroPrioridad" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                                    <option value="">Todas</option>
+                                    <option value="alta">Alta</option>
+                                    <option value="media">Media</option>
+                                    <option value="baja">Baja</option>
+                                </select>
+                            </div>
+                            <!-- Rango de fechas -->
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; color: #555;">Fecha Inicio (desde)</label>
+                                <input type="date" id="filtroFechaInicio" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 12px; font-weight: 600; color: #555;">Fecha Inicio (hasta)</label>
+                                <input type="date" id="filtroFechaFin" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                            </div>
+                            <!-- Botones -->
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="limpiarFiltros()" class="btn btn-secondary" style="background-color: #6c757d; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+                                    <i class="fas fa-eraser"></i> Limpiar
+                                </button>
+                                <button onclick="exportarExcel()" class="btn btn-success" style="background-color: #28a745; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- FORMULARIO DE ALTA/EDICIÓN (oculto por defecto) -->
@@ -136,7 +185,7 @@
 
                 <!-- TABLA DE PROYECTOS -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; overflow-x: auto;">
-                    <table class="table table-bordered" style="width: 100%; font-size: 13px;">
+                    <table class="table table-bordered" id="tablaProyectos" style="width: 100%; font-size: 13px;">
                         <thead style="background-color: #2378e1; color: white;">
                             <tr>
                                 <th style="padding: 10px;">Código</th>
@@ -154,8 +203,22 @@
                             @forelse($proyectos as $proyecto)
                             @php
                                 $ejecutado = ($proyecto->costos->materiales ?? 0) + ($proyecto->costos->mano_obra ?? 0) + ($proyecto->costos->maquinaria ?? 0) + ($proyecto->costos->gastos_indirectos ?? 0);
+                                // Normalizar fecha a YYYY-MM-DD para el filtro (mismo formato que input type=date)
+                                $fechaFiltro = '';
+                                if (!empty($proyecto->fecha_inicio)) {
+                                    try {
+                                        $fechaFiltro = \Carbon\Carbon::parse($proyecto->fecha_inicio)->format('Y-m-d');
+                                    } catch (\Exception $e) {
+                                        $fechaFiltro = '';
+                                    }
+                                }
                             @endphp
-                            <tr>
+                            <tr data-codigo="{{ $proyecto->codigo }}" 
+                                data-nombre="{{ strtolower($proyecto->nombre) }}" 
+                                data-cliente="{{ strtolower($proyecto->cliente_nombre) }}"
+                                data-estado="{{ strtolower($proyecto->status ?? 'pendiente') }}"
+                                data-prioridad="{{ strtolower($proyecto->prioridad ?? 'media') }}"
+                                data-fecha-inicio="{{ $fechaFiltro }}">
                                 <td style="padding: 8px;"><strong>{{ $proyecto->codigo }}</strong></td>
                                 <td style="padding: 8px;">{{ $proyecto->nombre }}</td>
                                 <td style="padding: 8px;">{{ $proyecto->cliente_nombre }}</td>
@@ -187,12 +250,17 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr>
+                            <tr id="filaVacia">
                                 <td colspan="9" style="text-align: center; padding: 40px;">No hay proyectos registrados</td>
                             </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    <!-- Mensaje cuando no hay resultados de filtro -->
+                    <div id="sinResultados" style="display: none; text-align: center; padding: 30px; color: #6c757d;">
+                        <i class="fas fa-search" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>No se encontraron proyectos con los filtros aplicados.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -223,6 +291,185 @@
 let editMode = false;
 let currentProyectoId = null;
 
+// ---------------------------------------------------------
+// FUNCIONES DE FILTRO Y BÚSQUEDA
+// ---------------------------------------------------------
+
+// Aplicar filtros a la tabla
+function aplicarFiltros() {
+    const busqueda = document.getElementById('filtroBusqueda').value.toLowerCase().trim();
+    const estado = document.getElementById('filtroEstado').value.toLowerCase();
+    const prioridad = document.getElementById('filtroPrioridad').value.toLowerCase();
+    const fechaInicioDesde = document.getElementById('filtroFechaInicio').value; // YYYY-MM-DD
+    const fechaInicioHasta = document.getElementById('filtroFechaFin').value;   // YYYY-MM-DD
+
+    const filas = document.querySelectorAll('#tablaBody tr[data-codigo]');
+    let visibles = 0;
+
+    filas.forEach(fila => {
+        const codigo = (fila.dataset.codigo || '').toLowerCase();
+        const nombre = (fila.dataset.nombre || '').toLowerCase();
+        const cliente = (fila.dataset.cliente || '').toLowerCase();
+        const estadoFila = (fila.dataset.estado || '').toLowerCase();
+        const prioridadFila = (fila.dataset.prioridad || '').toLowerCase();
+        const fechaFila = (fila.dataset.fechaInicio || '').trim(); // YYYY-MM-DD
+
+        // Filtro de búsqueda general
+        let coincideBusqueda = true;
+        if (busqueda) {
+            coincideBusqueda = codigo.includes(busqueda) || 
+                              nombre.includes(busqueda) || 
+                              cliente.includes(busqueda);
+        }
+
+        // Filtro de estado
+        let coincideEstado = true;
+        if (estado) {
+            coincideEstado = estadoFila === estado;
+        }
+
+        // Filtro de prioridad
+        let coincidePrioridad = true;
+        if (prioridad) {
+            coincidePrioridad = prioridadFila === prioridad;
+        }
+
+        // Filtro de rango de fechas (comparación directa de strings YYYY-MM-DD)
+        let coincideFecha = true;
+        if (fechaInicioDesde || fechaInicioHasta) {
+            if (!fechaFila) {
+                coincideFecha = false;
+            } else {
+                if (fechaInicioDesde && fechaFila < fechaInicioDesde) {
+                    coincideFecha = false;
+                }
+                if (fechaInicioHasta && fechaFila > fechaInicioHasta) {
+                    coincideFecha = false;
+                }
+            }
+        }
+
+        if (coincideBusqueda && coincideEstado && coincidePrioridad && coincideFecha) {
+            fila.style.display = '';
+            visibles++;
+        } else {
+            fila.style.display = 'none';
+        }
+    });
+
+    // Mostrar mensaje si no hay resultados
+    const sinResultados = document.getElementById('sinResultados');
+    const filaVacia = document.getElementById('filaVacia');
+    if (visibles === 0 && filas.length > 0) {
+        sinResultados.style.display = 'block';
+        if (filaVacia) filaVacia.style.display = 'none';
+    } else {
+        sinResultados.style.display = 'none';
+        if (filaVacia) filaVacia.style.display = '';
+    }
+}
+
+// Limpiar filtros
+function limpiarFiltros() {
+    document.getElementById('filtroBusqueda').value = '';
+    document.getElementById('filtroEstado').value = '';
+    document.getElementById('filtroPrioridad').value = '';
+    document.getElementById('filtroFechaInicio').value = '';
+    document.getElementById('filtroFechaFin').value = '';
+    aplicarFiltros();
+}
+
+// ---------------------------------------------------------
+// EXPORTAR A EXCEL (solo filas visibles)
+// ---------------------------------------------------------
+function exportarExcel() {
+    const filas = document.querySelectorAll('#tablaBody tr[data-codigo]');
+    const filasVisibles = Array.from(filas).filter(f => f.style.display !== 'none');
+
+    if (filasVisibles.length === 0) {
+        mostrarNotificacion('No hay datos para exportar con los filtros actuales', 'error');
+        return;
+    }
+
+    let html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+              xmlns:x="urn:schemas-microsoft-com:office:excel" 
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 12px; }
+                th { background-color: #2378e1; color: white; padding: 8px; border: 1px solid #ccc; text-align: left; }
+                td { padding: 6px; border: 1px solid #ccc; }
+            </style>
+        </head>
+        <body>
+            <h3>Cartera de Proyectos</h3>
+            <p>Generado: ${new Date().toLocaleString()}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Proyecto</th>
+                        <th>Cliente</th>
+                        <th>Responsable</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th>Fecha Inicio</th>
+                        <th>Presupuesto</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    filasVisibles.forEach(fila => {
+        const celdas = fila.querySelectorAll('td');
+        const codigo = celdas[0]?.innerText.trim() || '';
+        const proyecto = celdas[1]?.innerText.trim() || '';
+        const cliente = celdas[2]?.innerText.trim() || '';
+        const responsable = celdas[3]?.innerText.trim() || '';
+        const estado = celdas[4]?.innerText.trim() || '';
+        const prioridad = celdas[5]?.innerText.trim() || '';
+        const fecha = celdas[6]?.innerText.trim() || '';
+        const presupuesto = celdas[7]?.innerText.trim() || '';
+
+        html += `
+            <tr>
+                <td>${codigo}</td>
+                <td>${proyecto}</td>
+                <td>${cliente}</td>
+                <td>${responsable}</td>
+                <td>${estado}</td>
+                <td>${prioridad}</td>
+                <td>${fecha}</td>
+                <td>${presupuesto}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `;
+
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cartera_proyectos_${new Date().toISOString().slice(0,10)}.xls`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    mostrarNotificacion('Excel exportado correctamente', 'success');
+}
+
+// ---------------------------------------------------------
+// FUNCIONES EXISTENTES (crear, editar, ver, eliminar)
+// ---------------------------------------------------------
+
 // Mostrar formulario de creación
 function mostrarFormularioCreacion() {
     editMode = false;
@@ -248,7 +495,6 @@ function editarProyecto(id) {
     editMode = true;
     currentProyectoId = id;
     
-    // Cargar datos del proyecto via AJAX
     fetch(`/proyectos/${id}/edit-data`)
         .then(response => response.json())
         .then(data => {
@@ -407,5 +653,16 @@ function mostrarNotificacion(mensaje, tipo) {
     document.body.appendChild(notificacion);
     setTimeout(() => notificacion.remove(), 3000);
 }
+
+// ---------------------------------------------------------
+// INICIALIZACIÓN: Eventos de filtro
+// ---------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('filtroBusqueda').addEventListener('input', aplicarFiltros);
+    document.getElementById('filtroEstado').addEventListener('change', aplicarFiltros);
+    document.getElementById('filtroPrioridad').addEventListener('change', aplicarFiltros);
+    document.getElementById('filtroFechaInicio').addEventListener('change', aplicarFiltros);
+    document.getElementById('filtroFechaFin').addEventListener('change', aplicarFiltros);
+});
 </script>
 @endsection

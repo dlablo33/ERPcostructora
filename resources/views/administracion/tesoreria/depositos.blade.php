@@ -63,37 +63,49 @@
                     <table class="table table-bordered" id="tablaDepositos" style="width: 100%; font-size: 12px;">
                         <thead style="background-color: #2378e1; color: white;">
                             <tr>
-                                <th draggable="true" data-columna="folio">Folio</th>
-                                <th draggable="true" data-columna="fecha">Fecha</th>
-                                <th draggable="true" data-columna="banco">Banco</th>
-                                <th draggable="true" data-columna="cuenta">Cuenta</th>
-                                <th draggable="true" data-columna="monto">Monto</th>
-                                <th draggable="true" data-columna="concepto">Concepto</th>
-                                <th draggable="true" data-columna="tipo_ingreso">Tipo Ingreso</th>
-                                <th draggable="true" data-columna="estatus">Estatus</th>
+                                <th draggable="true" data-columna="folio" class="col-folio">Folio</th>
+                                <th draggable="true" data-columna="fecha" class="col-fecha">Fecha</th>
+                                <th draggable="true" data-columna="banco" class="col-banco">Banco</th>
+                                <th draggable="true" data-columna="cuenta" class="col-cuenta">Cuenta</th>
+                                <th draggable="true" data-columna="monto" class="col-monto">Monto</th>
+                                <th draggable="true" data-columna="concepto" class="col-concepto">Concepto</th>
+                                <th draggable="true" data-columna="tipo_ingreso" class="col-tipo_ingreso">Tipo Ingreso</th>
+                                <th draggable="true" data-columna="estatus" class="col-estatus">Estatus</th>
                                 <th style="position: sticky; right: 0; background-color: #2378e1;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
                             <tr><td colspan="9" style="text-align: center;">Cargando...</td></tr>
                         </tbody>
-                        <tfoot style="background-color: #e9ecef; font-weight: bold;">
-                            <tr><td colspan="4" style="text-align: center;">Totales:</td><td style="text-align: right;" id="sumMonto">$0.00</td><td colspan="3"></td>
+                        <tfoot style="background-color: #e9ecef; font-weight: bold;" id="tablaFooter">
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Totales:</td>
+                                <td style="text-align: right;" id="sumMonto">$0.00</td>
+                                <td colspan="4"></td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
                 
                 <!-- Paginación -->
-                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; flex-wrap: wrap; gap: 10px;">
                     <button id="btnCrearFiltro" style="background: transparent; border: none; color: #2378e1;"><i class="fas fa-filter"></i> Crear filtro</button>
-                    <div style="display: flex; align-items: center; gap: 5px;">
+                    <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
                         <button id="btnPrimera" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-double-left"></i></button>
                         <button id="btnAnterior" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-left"></i></button>
                         <span id="paginaActual" style="background-color: #2378e1; color: white; padding: 5px 10px; border-radius: 4px;">1</span>
                         <button id="btnSiguiente" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-right"></i></button>
                         <button id="btnUltima" style="background: none; border: none; color: #2378e1;"><i class="fas fa-angle-double-right"></i></button>
                         <span id="paginacionInfo" style="color: #2378e1; margin-left: 10px;">Mostrando 0-0 de 0 registros</span>
+                        <select id="rowsPerPage" onchange="cambiarFilasPorPagina(this.value)" 
+                                style="margin-left: 10px; padding: 4px 8px; border: 1px solid #2378e1; border-radius: 4px; color: #2378e1; background: white;">
+                            <option value="5">5 por página</option>
+                            <option value="10" selected>10 por página</option>
+                            <option value="15">15 por página</option>
+                            <option value="20">20 por página</option>
+                            <option value="50">50 por página</option>
+                            <option value="100">100 por página</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -126,10 +138,9 @@
             <div class="modal-body payment-modal-body">
                 <form id="formDeposito">
                     <input type="hidden" id="deposito_id">
+                    <input type="hidden" id="facturas_aplicadas_json" value="[]">
                     
-                    <!-- ======================================== -->
                     <!-- SECCIÓN 1: DATOS DEL DEPÓSITO -->
-                    <!-- ======================================== -->
                     <div class="payment-section">
                         <div class="section-header">
                             <i class="fas fa-credit-card section-icon"></i>
@@ -164,9 +175,7 @@
                         </div>
                     </div>
                     
-                    <!-- ======================================== -->
                     <!-- SECCIÓN 2: ORIGEN DEL INGRESO -->
-                    <!-- ======================================== -->
                     <div class="payment-section">
                         <div class="section-header">
                             <i class="fas fa-building section-icon"></i>
@@ -238,16 +247,13 @@
                         </div>
                     </div>
                     
-                    <!-- ======================================== -->
                     <!-- SECCIÓN 3: APLICACIÓN DEL DEPÓSITO -->
-                    <!-- ======================================== -->
                     <div class="payment-section">
                         <div class="section-header">
                             <i class="fas fa-receipt section-icon"></i>
                             <span class="section-title">Aplicación del Depósito</span>
                         </div>
                         <div class="section-body">
-                            <!-- Tarjetas de resumen -->
                             <div class="summary-cards">
                                 <div class="summary-card">
                                     <div class="summary-card-header">
@@ -290,7 +296,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Tabla de facturas (preview) -->
                             <div class="payment-table-wrapper">
                                 <div class="payment-table-header">
                                     <span class="payment-table-title">Facturas del Cliente</span>
@@ -321,7 +326,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Totales de aplicación -->
                             <div class="application-totals">
                                 <div class="application-total-item">
                                     <span class="application-total-label">Monto del depósito</span>
@@ -339,9 +343,7 @@
                         </div>
                     </div>
                     
-                    <!-- ======================================== -->
                     <!-- SECCIÓN 4: DETALLE ADICIONAL -->
-                    <!-- ======================================== -->
                     <div class="payment-section payment-section-last">
                         <div class="section-header">
                             <i class="fas fa-pen section-icon"></i>
@@ -395,7 +397,6 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content payment-modal-content">
             
-            <!-- ========== HEADER ========== -->
             <div class="modal-header payment-modal-header">
                 <div class="payment-header-left">
                     <div class="payment-header-icon">
@@ -409,9 +410,7 @@
                 <button type="button" class="btn-close payment-btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <!-- ========== BODY ========== -->
             <div class="modal-body payment-modal-body">
-                <!-- Tarjetas de resumen -->
                 <div class="summary-cards summary-cards-apply">
                     <div class="summary-card summary-card-cliente">
                         <div class="summary-card-header">
@@ -456,7 +455,6 @@
                     </div>
                 </div>
                 
-                <!-- Tabla de facturas -->
                 <div class="payment-table-wrapper">
                     <div class="payment-table-header">
                         <span class="payment-table-title">Facturas del Cliente</span>
@@ -505,7 +503,6 @@
                 </div>
             </div>
             
-            <!-- ========== FOOTER ========== -->
             <div class="modal-footer payment-modal-footer">
                 <button type="button" class="btn btn-secondary btn-payment-cancel" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary btn-payment-save" onclick="confirmarAplicacionFacturas()">
@@ -521,7 +518,6 @@
 /* ESTILOS DEL MODAL - REDISEÑO PROFESIONAL */
 /* ============================================ */
 
-/* ----- MODAL PRINCIPAL ----- */
 .payment-modal-content {
     border: none;
     border-radius: 18px;
@@ -530,7 +526,6 @@
     overflow: hidden;
 }
 
-/* ----- HEADER ----- */
 .payment-modal-header {
     background: #FFFFFF;
     border-bottom: 1px solid #E9ECF0;
@@ -586,13 +581,11 @@
     transform: rotate(90deg);
 }
 
-/* ----- BODY ----- */
 .payment-modal-body {
     padding: 24px 32px 8px 32px;
     background: #F5F7FB;
 }
 
-/* ----- SECCIONES ----- */
 .payment-section {
     background: #FFFFFF;
     border-radius: 16px;
@@ -640,7 +633,6 @@
     padding: 20px 24px;
 }
 
-/* ----- ROWS Y FIELDS ----- */
 .payment-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -731,7 +723,6 @@
     margin-right: 4px;
 }
 
-/* ----- SWITCH ----- */
 .payment-switch-container {
     display: flex;
     align-items: center;
@@ -804,7 +795,6 @@
     width: 100%;
 }
 
-/* ----- TARJETAS DE RESUMEN ----- */
 .summary-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -875,21 +865,11 @@
     letter-spacing: -0.3px;
 }
 
-.summary-value-danger {
-    color: #DC3545;
-}
-.summary-value-warning {
-    color: #F59E0B;
-}
-.summary-value-primary {
-    color: #083CAE;
-}
-.summary-value-success {
-    color: #28A745;
-}
-.summary-value-info {
-    color: #17A2B8;
-}
+.summary-value-danger { color: #DC3545; }
+.summary-value-warning { color: #F59E0B; }
+.summary-value-primary { color: #083CAE; }
+.summary-value-success { color: #28A745; }
+.summary-value-info { color: #17A2B8; }
 
 .summary-card-actions .summary-card-body {
     display: flex;
@@ -943,7 +923,6 @@
     color: #083CAE;
 }
 
-/* ----- TABLA DE FACTURAS ----- */
 .payment-table-wrapper {
     margin-top: 4px;
 }
@@ -1069,7 +1048,6 @@
     background: #FFEBEE;
 }
 
-/* ----- TOTALES DE APLICACIÓN ----- */
 .application-totals {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -1100,7 +1078,6 @@
     color: #1A2332;
 }
 
-/* ----- FOOTER ----- */
 .payment-modal-footer {
     background: #FFFFFF;
     border-top: 1px solid #E9ECF0;
@@ -1152,113 +1129,40 @@
     transform: none !important;
 }
 
-/* ----- RESPONSIVE ----- */
 @media (max-width: 992px) {
-    .payment-modal-header {
-        padding: 18px 20px;
-        flex-wrap: wrap;
-    }
-    .payment-modal-body {
-        padding: 16px 16px 4px 16px;
-    }
-    .payment-row {
-        grid-template-columns: 1fr 1fr;
-    }
-    .summary-cards {
-        grid-template-columns: 1fr;
-    }
-    .summary-card-body {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-    .application-totals {
-        grid-template-columns: 1fr 1fr;
-    }
-    .payment-modal-footer {
-        padding: 12px 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .btn-payment-cancel,
-    .btn-payment-save {
-        flex: 1;
-        justify-content: center;
-        min-width: 120px;
-    }
+    .payment-modal-header { padding: 18px 20px; flex-wrap: wrap; }
+    .payment-modal-body { padding: 16px 16px 4px 16px; }
+    .payment-row { grid-template-columns: 1fr 1fr; }
+    .summary-cards { grid-template-columns: 1fr; }
+    .summary-card-body { grid-template-columns: 1fr 1fr 1fr; }
+    .application-totals { grid-template-columns: 1fr 1fr; }
+    .payment-modal-footer { padding: 12px 20px; flex-wrap: wrap; justify-content: center; }
+    .btn-payment-cancel, .btn-payment-save { flex: 1; justify-content: center; min-width: 120px; }
 }
 
 @media (max-width: 768px) {
-    .payment-header-left {
-        flex-wrap: wrap;
-    }
-    .payment-modal-title {
-        font-size: 18px;
-    }
-    .payment-subtitle {
-        font-size: 13px;
-    }
-    .payment-row {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    .summary-card-body {
-        grid-template-columns: 1fr 1fr;
-    }
-    .application-totals {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    .section-body {
-        padding: 14px 16px;
-    }
-    .payment-input,
-    .payment-select {
-        height: 44px;
-        font-size: 13px;
-    }
-    .payment-table thead th,
-    .payment-table tbody td {
-        padding: 8px 10px;
-        font-size: 12px;
-    }
-    .payment-table-container {
-        max-height: 180px;
-    }
-    .payment-modal-content .modal-dialog {
-        margin: 8px;
-    }
+    .payment-header-left { flex-wrap: wrap; }
+    .payment-modal-title { font-size: 18px; }
+    .payment-subtitle { font-size: 13px; }
+    .payment-row { grid-template-columns: 1fr; gap: 10px; }
+    .summary-card-body { grid-template-columns: 1fr 1fr; }
+    .application-totals { grid-template-columns: 1fr; gap: 8px; }
+    .section-body { padding: 14px 16px; }
+    .payment-input, .payment-select { height: 44px; font-size: 13px; }
+    .payment-table thead th, .payment-table tbody td { padding: 8px 10px; font-size: 12px; }
+    .payment-table-container { max-height: 180px; }
 }
 
 @media (max-width: 576px) {
-    .payment-header-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-    .summary-card-body {
-        grid-template-columns: 1fr;
-        gap: 6px;
-    }
-    .summary-value {
-        font-size: 18px;
-    }
-    .payment-table-actions {
-        flex-wrap: wrap;
-    }
-    .btn-table-action {
-        font-size: 11px;
-        padding: 4px 10px;
-    }
-    .payment-modal-footer {
-        flex-direction: column-reverse;
-    }
-    .btn-payment-cancel,
-    .btn-payment-save {
-        width: 100%;
-        justify-content: center;
-    }
+    .payment-header-icon { width: 40px; height: 40px; font-size: 16px; }
+    .summary-card-body { grid-template-columns: 1fr; gap: 6px; }
+    .summary-value { font-size: 18px; }
+    .payment-table-actions { flex-wrap: wrap; }
+    .btn-table-action { font-size: 11px; padding: 4px 10px; }
+    .payment-modal-footer { flex-direction: column-reverse; }
+    .btn-payment-cancel, .btn-payment-save { width: 100%; justify-content: center; }
 }
 
-/* Override para select2 dentro del modal */
 .select2-container--default .select2-selection--single {
     height: 48px !important;
     border: 2px solid #E2E6EA !important;
@@ -1289,7 +1193,6 @@
     color: #083CAE !important;
 }
 
-/* Estilos para inputs de monto en tabla */
 .monto-aplicar-input {
     height: 36px !important;
     padding: 0 10px !important;
@@ -1306,7 +1209,6 @@
     box-shadow: 0 0 0 3px rgba(8,60,174,0.08) !important;
 }
 
-/* Badge de vencida en tabla */
 .badge.bg-danger {
     background: #DC3545 !important;
     color: white !important;
@@ -1329,7 +1231,9 @@
 .badge-pendiente { background-color: #fd7e14; color: white; }
 .badge-rechazado { background-color: #dc3545; color: white; }
 .badge-proceso { background-color: #17a2b8; color: white; }
-.action-icons i { font-size: 14px; cursor: pointer; margin: 0 3px; }
+.action-icons i { font-size: 14px; cursor: pointer; margin: 0 3px; transition: transform 0.15s; }
+.action-icons i:hover { transform: scale(1.2); }
+.fa-eye { color: #17a2b8; }
 .fa-edit { color: #ffc107; }
 .fa-trash-alt { color: #dc3545; }
 .fa-check-circle { color: #28a745; }
@@ -1354,11 +1258,27 @@ tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 
 <script>
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '<?php echo csrf_token(); ?>';
 
+// ============================================
+// VARIABLES GLOBALES
+// ============================================
 let columnasAgrupadas = [];
 let expandedGroups = new Set();
 let datosOriginales = [];
 let currentPage = 1;
-let rowsPerPage = 5;
+let rowsPerPage = 10;
+
+// Columnas disponibles y visibles
+const todasLasColumnas = [
+    { key: 'folio', label: 'Folio' },
+    { key: 'fecha', label: 'Fecha' },
+    { key: 'banco', label: 'Banco' },
+    { key: 'cuenta', label: 'Cuenta' },
+    { key: 'monto', label: 'Monto' },
+    { key: 'concepto', label: 'Concepto' },
+    { key: 'tipo_ingreso', label: 'Tipo Ingreso' },
+    { key: 'estatus', label: 'Estatus' }
+];
+let columnasVisibles = todasLasColumnas.map(c => c.key);
 
 // Variables para aplicación de facturas
 let facturasCliente = [];
@@ -1370,14 +1290,16 @@ let aplicacionesFacturas = {};
 // FUNCIONES DE FORMATO
 // ============================================
 function formatCurrency(amount) {
-    if (amount === undefined || amount === null) amount = 0;
-    return '$' + Number(amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    const num = parseFloat(amount);
+    if (isNaN(num)) return '$0.00';
+    return '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function formatDate(dateString) {
     if (!dateString) return '-';
     try {
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '-';
         return date.toLocaleDateString('es-MX');
     } catch (e) {
         return dateString;
@@ -1424,9 +1346,186 @@ $(document).ready(function() {
         width: '100%'
     });
     
+    // Aplicar columnas visibles al inicio
+    aplicarVisibilidadColumnas();
+    
+    // ✅ Inicializar rango de fechas por defecto (mes actual)
+    inicializarRangoFechas();
+    
     debugLog('Select2 inicializado');
     cargarDepositos();
 });
+
+// ============================================
+// RANGO DE FECHAS POR DEFECTO
+// ============================================
+function inicializarRangoFechas() {
+    const fechaInicioInput = document.getElementById('fechaInicio');
+    const fechaFinInput = document.getElementById('fechaFin');
+    
+    // Si ya tienen valor (ej. recarga con parámetros), respetarlos
+    if (fechaInicioInput?.value && fechaFinInput?.value) {
+        debugLog('Rango de fechas ya definido:', { 
+            inicio: fechaInicioInput.value, 
+            fin: fechaFinInput.value 
+        });
+        return;
+    }
+    
+    const hoy = new Date();
+    
+    // Opción A: Mes actual (recomendado para contabilidad)
+    const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+    const ultimoDiaMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+    
+    // Opción B (alternativa): Últimos 30 días
+    // const hace30Dias = new Date(hoy);
+    // hace30Dias.setDate(hoy.getDate() - 30);
+    
+    const formatYMD = (d) => {
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    };
+    
+    if (fechaInicioInput) fechaInicioInput.value = formatYMD(primerDiaMes);
+    if (fechaFinInput)    fechaFinInput.value    = formatYMD(ultimoDiaMes);
+    
+    debugLog('Rango de fechas inicializado:', {
+        inicio: fechaInicioInput?.value,
+        fin: fechaFinInput?.value
+    });
+}
+
+// ============================================
+// VISIBILIDAD DE COLUMNAS
+// ============================================
+function aplicarVisibilidadColumnas() {
+    // Crear o actualizar el <style> dinámico
+    let styleEl = document.getElementById('columnasVisibilityStyle');
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'columnasVisibilityStyle';
+        document.head.appendChild(styleEl);
+    }
+    
+    // Todas las columnas disponibles
+    const todasKeys = todasLasColumnas.map(c => c.key);
+    
+    // Generar reglas CSS para ocultar las columnas NO visibles (th y td)
+    let css = '';
+    todasKeys.forEach(key => {
+        if (!columnasVisibles.includes(key)) {
+            css += `#tablaDepositos th.col-${key}, #tablaDepositos td.col-${key} { display: none !important; }\n`;
+        }
+    });
+    styleEl.innerHTML = css;
+    
+    // Actualizar colspans del footer
+    actualizarFooterColspan();
+}
+
+function actualizarFooterColspan() {
+    const tfoot = document.getElementById('tablaFooter');
+    if (!tfoot) return;
+    
+    const tr = tfoot.querySelector('tr');
+    if (!tr) return;
+    
+    const montoActual = document.getElementById('sumMonto')?.textContent || '$0.00';
+    
+    // Columnas del orden de la tabla
+    const ordenColumnas = ['folio', 'fecha', 'banco', 'cuenta', 'monto', 'concepto', 'tipo_ingreso', 'estatus'];
+    const indexMonto = ordenColumnas.indexOf('monto');
+    
+    // Contar visibles antes y después de monto
+    const visiblesAntes = ordenColumnas.slice(0, indexMonto).filter(c => columnasVisibles.includes(c)).length;
+    const visiblesDespues = ordenColumnas.slice(indexMonto + 1).filter(c => columnasVisibles.includes(c)).length;
+    
+    // Reconstruir footer
+    tr.innerHTML = `
+        <td colspan="${visiblesAntes}" style="text-align: center;">Totales:</td>
+        <td style="text-align: right;" id="sumMonto">${montoActual}</td>
+        <td colspan="${visiblesDespues}"></td>
+    `;
+}
+
+function abrirModalColumnas() {
+    const html = `
+        <div class="modal fade" id="modalColumnas" tabindex="-1" style="z-index: 100001;">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-radius: 16px; border: none;">
+                    <div class="modal-header" style="background: #083CAE; color: white; border-radius: 16px 16px 0 0;">
+                        <h5 class="modal-title"><i class="fas fa-columns"></i> Seleccionar Columnas</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" style="padding: 24px;">
+                        <p class="text-muted" style="font-size: 13px;">Selecciona las columnas que deseas mostrar en la tabla.</p>
+                        <div class="form-check mb-3 pb-3" style="border-bottom: 1px solid #E9ECF0;">
+                            <input class="form-check-input" type="checkbox" id="checkTodasColumnas" ${columnasVisibles.length === todasLasColumnas.length ? 'checked' : ''}>
+                            <label class="form-check-label fw-bold" for="checkTodasColumnas" style="cursor: pointer;">
+                                Seleccionar todas
+                            </label>
+                        </div>
+                        ${todasLasColumnas.map(col => `
+                            <div class="form-check mb-2">
+                                <input class="form-check-input columna-check" type="checkbox" 
+                                       value="${col.key}" id="col_${col.key}"
+                                       ${columnasVisibles.includes(col.key) ? 'checked' : ''}
+                                       style="cursor: pointer;">
+                                <label class="form-check-label" for="col_${col.key}" style="cursor: pointer;">
+                                    ${col.label}
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="modal-footer" style="border-top: 1px solid #E9ECF0;">
+                        <button type="button" class="btn btn-secondary btn-payment-cancel" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary btn-payment-save" onclick="aplicarColumnasSeleccionadas()">
+                            <i class="fas fa-check"></i> Aplicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalColumnas')?.remove();
+    document.body.insertAdjacentHTML('beforeend', html);
+    
+    const modal = new bootstrap.Modal(document.getElementById('modalColumnas'));
+    modal.show();
+    
+    document.getElementById('checkTodasColumnas')?.addEventListener('change', function() {
+        document.querySelectorAll('.columna-check').forEach(cb => {
+            cb.checked = this.checked;
+        });
+    });
+}
+
+function aplicarColumnasSeleccionadas() {
+    const seleccionadas = [];
+    document.querySelectorAll('.columna-check:checked').forEach(cb => {
+        seleccionadas.push(cb.value);
+    });
+    
+    if (seleccionadas.length === 0) {
+        mostrarNotificacion('Debe seleccionar al menos una columna', 'warning');
+        return;
+    }
+    
+    columnasVisibles = seleccionadas;
+    
+    // Aplicar CSS (th y td)
+    aplicarVisibilidadColumnas();
+    
+    // Re-renderizar tabla para asegurar que el tbody use las clases correctas
+    cargarTabla(datosOriginales);
+    
+    bootstrap.Modal.getInstance(document.getElementById('modalColumnas'))?.hide();
+    mostrarNotificacion('Columnas actualizadas correctamente', 'success');
+}
 
 // ============================================
 // CARGA DE DATOS
@@ -1460,7 +1559,7 @@ function cargarDepositos() {
             fecha: d.fecha,
             banco: d.cuenta_bancaria?.banco?.nombre || '-',
             cuenta: d.cuenta_bancaria?.numero_cuenta || '-',
-            monto: d.monto,
+            monto: parseFloat(d.monto) || 0,
             concepto: d.concepto,
             tipo_ingreso: d.tipo_ingreso?.nombre || '-',
             estatus: d.estatus
@@ -1491,11 +1590,16 @@ function agruparDatos(datos, columnas) {
     datos.forEach(item => {
         const grupoId = generarGrupoId(item, columnas);
         if (!gruposMap.has(grupoId)) {
-            gruposMap.set(grupoId, { id: grupoId, valor: columnas.map(col => item[col] || 'Sin dato').join(' - '), items: [item], totalMonto: item.monto || 0 });
+            gruposMap.set(grupoId, { 
+                id: grupoId, 
+                valor: columnas.map(col => item[col] || 'Sin dato').join(' - '), 
+                items: [item], 
+                totalMonto: parseFloat(item.monto) || 0 
+            });
         } else {
             const grupo = gruposMap.get(grupoId);
             grupo.items.push(item);
-            grupo.totalMonto += item.monto || 0;
+            grupo.totalMonto += parseFloat(item.monto) || 0;
         }
     });
     return { grupos: Array.from(gruposMap.values()), items: [] };
@@ -1507,20 +1611,35 @@ function getCurrentPageData(datos) {
 }
 
 function actualizarPaginacion(total) {
-    const totalPages = Math.ceil(total / rowsPerPage);
+    const totalPages = Math.ceil(total / rowsPerPage) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    
     document.getElementById('paginaActual').textContent = currentPage;
-    document.getElementById('paginacionInfo').textContent = `Mostrando ${Math.min((currentPage - 1) * rowsPerPage + 1, total)}-${Math.min(currentPage * rowsPerPage, total)} de ${total} registros`;
+    const inicio = total === 0 ? 0 : Math.min((currentPage - 1) * rowsPerPage + 1, total);
+    const fin = Math.min(currentPage * rowsPerPage, total);
+    document.getElementById('paginacionInfo').textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
 }
 
 function calcularTotales(datos) {
     let totalMonto = 0;
-    datos.forEach(item => totalMonto += item.monto || 0);
-    document.getElementById('sumMonto').textContent = formatCurrency(totalMonto);
+    datos.forEach(item => {
+        const monto = parseFloat(item.monto);
+        if (!isNaN(monto)) {
+            totalMonto += monto;
+        }
+    });
+    const sumMontoEl = document.getElementById('sumMonto');
+    if (sumMontoEl) {
+        sumMontoEl.textContent = formatCurrency(totalMonto);
+    }
 }
 
 function cargarTabla(datos) {
     const tablaBody = document.getElementById('tablaBody');
     const textoAgrupar = document.getElementById('textoAgrupar');
+    
+    // Aplicar visibilidad de columnas (CSS dinámico)
+    aplicarVisibilidadColumnas();
     
     actualizarContadores(datos);
     if (textoAgrupar) textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
@@ -1542,7 +1661,7 @@ function cargarTabla(datos) {
             grupoRow.className = 'fila-grupo';
             grupoRow.dataset.grupoId = grupo.id;
             if (expandedGroups.has(grupo.id)) grupoRow.classList.add('expandido');
-            grupoRow.innerHTML = `<td colspan="9"><div style="display: flex; justify-content: space-between;"><div><i class="fas fa-caret-right"></i> <strong>${grupo.valor}</strong> <span style="color:#6c757d;">(${grupo.items.length} registros - Total: ${formatCurrency(grupo.totalMonto)})</span></div></div></td>`;
+            grupoRow.innerHTML = `<td colspan="9"><div style="display: flex; justify-content: space-between;"><div><i class="fas fa-caret-${expandedGroups.has(grupo.id) ? 'down' : 'right'}"></i> <strong>${grupo.valor}</strong> <span style="color:#6c757d;">(${grupo.items.length} registros - Total: ${formatCurrency(grupo.totalMonto)})</span></div></div></td>`;
             tablaBody.appendChild(grupoRow);
             
             if (expandedGroups.has(grupo.id)) {
@@ -1550,20 +1669,21 @@ function cargarTabla(datos) {
                     const detalleRow = document.createElement('tr');
                     detalleRow.className = 'fila-detalle';
                     detalleRow.innerHTML = `
-                        <td style="padding-left:30px;">${item.folio || '-'}</td>
-                        <td>${formatDate(item.fecha)}</td>
-                        <td>${item.banco || '-'}</td>
-                        <td>${item.cuenta || '-'}</td>
-                        <td style="text-align:right;">${formatCurrency(item.monto)}</td>
-                        <td>${item.concepto || '-'}</td>
-                        <td>${item.tipo_ingreso || '-'}</td>
-                        <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
+                        <td class="col-folio" style="padding-left:30px;">${item.folio || '-'}</td>
+                        <td class="col-fecha">${formatDate(item.fecha)}</td>
+                        <td class="col-banco">${item.banco || '-'}</td>
+                        <td class="col-cuenta">${item.cuenta || '-'}</td>
+                        <td class="col-monto" style="text-align:right;">${formatCurrency(item.monto)}</td>
+                        <td class="col-concepto">${item.concepto || '-'}</td>
+                        <td class="col-tipo_ingreso">${item.tipo_ingreso || '-'}</td>
+                        <td class="col-estatus"><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
                         <td style="position:sticky;right:0;background:white;">
                             <div class="action-icons">
+                                <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle"></i>
                                 <i class="fas fa-edit" onclick="editarDeposito(${item.id})" title="Editar"></i>
                                 <i class="fas fa-trash-alt" onclick="eliminarDeposito(${item.id})" title="Eliminar"></i>
                                 ${item.estatus === 'pendiente' ? `<i class="fas fa-check-circle" onclick="aplicarDeposito(${item.id})" title="Aplicar"></i>` : ''}
-                                <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="PDF"></i>
+                                <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="Generar PDF"></i>
                             </div>
                         </td>
                     `;
@@ -1576,20 +1696,21 @@ function cargarTabla(datos) {
         pageData.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${item.folio || '-'}</td>
-                <td>${formatDate(item.fecha)}</td>
-                <td>${item.banco || '-'}</td>
-                <td>${item.cuenta || '-'}</td>
-                <td style="text-align:right;">${formatCurrency(item.monto)}</td>
-                <td>${item.concepto || '-'}</td>
-                <td>${item.tipo_ingreso || '-'}</td>
-                <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
+                <td class="col-folio">${item.folio || '-'}</td>
+                <td class="col-fecha">${formatDate(item.fecha)}</td>
+                <td class="col-banco">${item.banco || '-'}</td>
+                <td class="col-cuenta">${item.cuenta || '-'}</td>
+                <td class="col-monto" style="text-align:right;">${formatCurrency(item.monto)}</td>
+                <td class="col-concepto">${item.concepto || '-'}</td>
+                <td class="col-tipo_ingreso">${item.tipo_ingreso || '-'}</td>
+                <td class="col-estatus"><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
                 <td style="position:sticky;right:0;background:white;">
                     <div class="action-icons">
+                        <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle"></i>
                         <i class="fas fa-edit" onclick="editarDeposito(${item.id})" title="Editar"></i>
                         <i class="fas fa-trash-alt" onclick="eliminarDeposito(${item.id})" title="Eliminar"></i>
                         ${item.estatus === 'pendiente' ? `<i class="fas fa-check-circle" onclick="aplicarDeposito(${item.id})" title="Aplicar"></i>` : ''}
-                        <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="PDF"></i>
+                        <i class="fas fa-file-pdf" onclick="generarPDF(${item.id})" title="Generar PDF"></i>
                     </div>
                 </td>
             `;
@@ -1624,15 +1745,17 @@ function setupDragAndDrop() {
         th.addEventListener('dragend', e => th.style.opacity = '1');
     });
     const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-    grupoAgrupacion.addEventListener('dragover', e => e.preventDefault());
-    grupoAgrupacion.addEventListener('drop', e => {
-        e.preventDefault();
-        const columna = e.dataTransfer.getData('text/plain');
-        if (columna && !columnasAgrupadas.includes(columna)) {
-            columnasAgrupadas.push(columna);
-            actualizarGrupoColumnas();
-        }
-    });
+    if (grupoAgrupacion) {
+        grupoAgrupacion.addEventListener('dragover', e => e.preventDefault());
+        grupoAgrupacion.addEventListener('drop', e => {
+            e.preventDefault();
+            const columna = e.dataTransfer.getData('text/plain');
+            if (columna && !columnasAgrupadas.includes(columna)) {
+                columnasAgrupadas.push(columna);
+                actualizarGrupoColumnas();
+            }
+        });
+    }
     document.addEventListener('click', e => {
         if (e.target.classList.contains('remover')) {
             columnasAgrupadas = columnasAgrupadas.filter(c => c !== e.target.dataset.columna);
@@ -1657,7 +1780,6 @@ document.addEventListener('click', e => {
 function abrirModalDeposito() {
     debugLog('Abriendo modal de depósito');
     
-    // Verificar que el modal existe
     const modal = document.getElementById('modalDeposito');
     if (!modal) {
         console.error('Modal no encontrado');
@@ -1665,7 +1787,6 @@ function abrirModalDeposito() {
         return;
     }
     
-    // Limpiar campos
     document.getElementById('deposito_id').value = '';
     document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
     document.getElementById('cuenta_bancaria_id').value = '';
@@ -1676,20 +1797,19 @@ function abrirModalDeposito() {
     document.getElementById('concepto').value = '';
     document.getElementById('observaciones').value = '';
     document.getElementById('aplicar_ahora').checked = true;
+    document.getElementById('facturas_aplicadas_json').value = '[]';
     
-    // Limpiar cliente
     const clienteSelect = document.getElementById('cliente_select');
     if (clienteSelect) {
         clienteSelect.value = '';
-        if (clienteSelect.select2) {
-            clienteSelect.select2('val', '');
+        if ($(clienteSelect).data('select2')) {
+            $(clienteSelect).val('').trigger('change');
         }
     }
     document.getElementById('cliente_nombre').value = '';
     document.getElementById('cliente_rfc').value = '';
-    
-    // Limpiar código SAT
     document.getElementById('codigo_sat_id').value = '';
+    
     const infoSpan = document.getElementById('codigo_sat_info');
     if (infoSpan) {
         infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Selecciona el código SAT que corresponde a este ingreso';
@@ -1697,7 +1817,6 @@ function abrirModalDeposito() {
         infoSpan.classList.add('text-muted');
     }
     
-    // Limpiar tabla de preview
     const previewBody = document.getElementById('tablaFacturasPreviewBody');
     if (previewBody) {
         previewBody.innerHTML = 
@@ -1707,28 +1826,20 @@ function abrirModalDeposito() {
             </td></tr>`;
     }
     
-    // Reiniciar totales de aplicación
-    const appTotalPago = document.getElementById('appTotalPago');
-    const appTotalAplicado = document.getElementById('appTotalAplicado');
-    const appDiferencia = document.getElementById('appDiferencia');
-    const summaryVencido = document.getElementById('summaryVencido');
-    const summaryPorVencer = document.getElementById('summaryPorVencer');
-    const summaryTotal = document.getElementById('summaryTotal');
+    ['appTotalPago', 'appTotalAplicado', 'appDiferencia', 'summaryVencido', 'summaryPorVencer', 'summaryTotal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '$0.00';
+    });
     
-    if (appTotalPago) appTotalPago.textContent = '$0.00';
-    if (appTotalAplicado) appTotalAplicado.textContent = '$0.00';
-    if (appDiferencia) appDiferencia.textContent = '$0.00';
-    if (summaryVencido) summaryVencido.textContent = '$0.00';
-    if (summaryPorVencer) summaryPorVencer.textContent = '$0.00';
-    if (summaryTotal) summaryTotal.textContent = '$0.00';
-    
-    // Ocultar resumen de facturas
     const resumenDiv = document.getElementById('resumenFacturasAplicadas');
     if (resumenDiv) resumenDiv.style.display = 'none';
     
-    // Abrir el modal usando Bootstrap
-    const modalInstance = new bootstrap.Modal(modal);
-    modalInstance.show();
+    // Reiniciar variables
+    facturasCliente = [];
+    aplicacionesFacturas = {};
+    montoDepositoActual = 0;
+    
+    new bootstrap.Modal(modal).show();
 }
 
 function cargarCliente() {
@@ -1775,11 +1886,15 @@ function editarDeposito(id) {
         document.getElementById('concepto').value = deposito.concepto;
         document.getElementById('observaciones').value = deposito.observaciones || '';
         document.getElementById('aplicar_ahora').checked = false;
-        
-        // Cargar código SAT
         document.getElementById('codigo_sat_id').value = deposito.codigo_sat_id || '';
         
-        // Actualizar info del código SAT
+        // Cargar cliente si existe
+        if (deposito.contacto_id) {
+            const clienteSelect = document.getElementById('cliente_select');
+            $(clienteSelect).val(deposito.contacto_id).trigger('change');
+            cargarCliente();
+        }
+        
         const codigoSatSelect = document.getElementById('codigo_sat_id');
         const selectedOption = codigoSatSelect.options[codigoSatSelect.selectedIndex];
         const infoSpan = document.getElementById('codigo_sat_info');
@@ -1789,19 +1904,23 @@ function editarDeposito(id) {
             infoSpan.innerHTML = `<i class="fas fa-check-circle text-success"></i> Código SAT seleccionado: ${codigo} - ${nombre}`;
             infoSpan.classList.remove('text-muted');
             infoSpan.classList.add('text-success');
-        } else {
-            infoSpan.innerHTML = '<i class="fas fa-info-circle"></i> Selecciona un código SAT para este ingreso';
         }
         
-        // Si hay facturas aplicadas, mostrarlas
+        // Cargar facturas aplicadas si existen
         if (deposito.facturas_aplicadas && Object.keys(deposito.facturas_aplicadas).length > 0) {
             const resumenDiv = document.getElementById('resumenFacturasAplicadas');
             if (resumenDiv) {
                 resumenDiv.style.display = 'block';
-                const totalAplicado = Object.values(deposito.facturas_aplicadas).reduce((a, b) => a + b, 0);
+                const totalAplicado = Object.values(deposito.facturas_aplicadas).reduce((a, b) => a + parseFloat(b), 0);
                 document.getElementById('resumenFacturasTexto').innerHTML = 
                     `<strong>${Object.keys(deposito.facturas_aplicadas).length} factura(s) aplicadas. Total: ${formatCurrency(totalAplicado)}</strong>`;
             }
+            
+            const facturasArray = Object.entries(deposito.facturas_aplicadas).map(([id, monto]) => ({
+                factura_id: parseInt(id),
+                monto: parseFloat(monto)
+            }));
+            document.getElementById('facturas_aplicadas_json').value = JSON.stringify(facturasArray);
         }
         
         const modal = document.getElementById('modalDeposito');
@@ -1811,7 +1930,6 @@ function editarDeposito(id) {
     })
     .catch(error => {
         console.error('Error:', error);
-        debugLog('ERROR al editar: ' + error.message);
         mostrarNotificacion('Error al cargar datos para editar', 'danger');
     });
 }
@@ -1820,21 +1938,16 @@ function guardarDeposito() {
     const id = document.getElementById('deposito_id').value;
     const codigoSatId = document.getElementById('codigo_sat_id').value;
     
-    debugLog('Guardando depósito... ID: ' + id);
-    
-    // Validar código SAT
     if (!codigoSatId) {
         mostrarNotificacion('Por favor seleccione un código SAT', 'warning');
         return;
     }
     
-    // Obtener facturas aplicadas
     let facturasAplicadas = [];
     try {
         const jsonValue = document.getElementById('facturas_aplicadas_json')?.value;
         if (jsonValue && jsonValue !== '[]') {
             facturasAplicadas = JSON.parse(jsonValue);
-            debugLog('Facturas aplicadas: ' + facturasAplicadas.length);
         }
     } catch (e) {
         facturasAplicadas = [];
@@ -1854,8 +1967,6 @@ function guardarDeposito() {
         cliente_id: document.getElementById('cliente_select').value || null,
         facturas_aplicadas: facturasAplicadas
     };
-    
-    debugLog('Datos a guardar:', data);
     
     const url = id ? `/admin/api/depositos/${id}` : '/admin/api/depositos';
     const method = id ? 'PUT' : 'POST';
@@ -1882,8 +1993,6 @@ function guardarDeposito() {
             btn.innerHTML = originalText;
             btn.disabled = false;
             
-            debugLog('Respuesta del servidor:', result);
-            
             if (result.success) {
                 mostrarNotificacion(result.message, 'success');
                 const modal = document.getElementById('modalDeposito');
@@ -1899,7 +2008,6 @@ function guardarDeposito() {
             btn.innerHTML = originalText;
             btn.disabled = false;
             console.error('Error:', error);
-            debugLog('ERROR: ' + error.message);
             mostrarNotificacion('Error al guardar: ' + error.message, 'danger');
         });
     }
@@ -1907,8 +2015,6 @@ function guardarDeposito() {
 
 function eliminarDeposito(id) {
     if (confirm('¿Eliminar este depósito?')) {
-        debugLog('Eliminando depósito ID: ' + id);
-        
         fetch(`/admin/api/depositos/${id}`, {
             method: 'DELETE',
             headers: {
@@ -1932,8 +2038,6 @@ function eliminarDeposito(id) {
 
 function aplicarDeposito(id) {
     if (confirm('¿Aplicar este depósito? Se creará un movimiento bancario.')) {
-        debugLog('Aplicando depósito ID: ' + id);
-        
         fetch(`/admin/api/depositos/${id}/aplicar`, {
             method: 'POST',
             headers: {
@@ -1955,17 +2059,376 @@ function aplicarDeposito(id) {
     }
 }
 
+// ============================================
+// VER DETALLE DEL DEPÓSITO
+// ============================================
+function verDetalle(id) {
+    fetch(`/admin/api/depositos/${id}/detalle`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            const d = result.data.deposito;
+            const facturas = result.data.facturas || [];
+            const mov = result.data.movimiento_bancario;
+            
+            let facturasHtml = '';
+            if (facturas.length > 0) {
+                facturasHtml = `
+                    <h6 style="margin-top: 20px; color: #083CAE; font-weight: 600;">
+                        <i class="fas fa-receipt"></i> Facturas Aplicadas (${facturas.length})
+                    </h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered" style="font-size: 12px; margin-top: 10px;">
+                            <thead style="background: #083CAE; color: white;">
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Fecha</th>
+                                    <th>Vencimiento</th>
+                                    <th class="text-end">Total</th>
+                                    <th class="text-end">Saldo</th>
+                                    <th class="text-end">Aplicado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${facturas.map(f => `
+                                    <tr>
+                                        <td>${f.folio || 'F-' + f.factura_id}</td>
+                                        <td>${formatDate(f.fecha)}</td>
+                                        <td>${formatDate(f.fecha_vencimiento)}</td>
+                                        <td class="text-end">${formatCurrency(f.total)}</td>
+                                        <td class="text-end">${formatCurrency(f.saldo_disponible)}</td>
+                                        <td class="text-end" style="color: #28A745; font-weight: 600;">${formatCurrency(f.monto_aplicado)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            const modalHtml = `
+                <div class="modal fade" id="modalDetalleDeposito" tabindex="-1" style="z-index: 100002;">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content" style="border-radius: 16px; border: none;">
+                            <div class="modal-header" style="background: #083CAE; color: white; border-radius: 16px 16px 0 0; padding: 20px 24px;">
+                                <h5 class="modal-title"><i class="fas fa-info-circle"></i> Detalle del Depósito ${d.folio}</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" style="padding: 24px;">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Folio</small>
+                                            <strong style="font-size: 16px;">${d.folio}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Estatus</small>
+                                            <span class="badge ${getBadgeClass(d.estatus)}">${getEstatusTexto(d.estatus)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Fecha</small>
+                                            <strong>${formatDate(d.fecha)}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #E8F0FE; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Monto</small>
+                                            <strong style="font-size: 22px; color: #083CAE;">${formatCurrency(d.monto)}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Monto Aplicado</small>
+                                            <strong style="font-size: 18px; color: #28A745;">${formatCurrency(d.monto_aplicado)}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Banco / Cuenta</small>
+                                            <strong>${d.cuenta_bancaria?.banco || 'N/A'}</strong>
+                                            <small class="text-muted d-block">${d.cuenta_bancaria?.numero_cuenta || 'N/A'}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Cliente</small>
+                                            <strong>${d.contacto?.razon_social || 'N/A'}</strong>
+                                            <small class="text-muted d-block">RFC: ${d.contacto?.rfc || 'N/A'}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Tipo Ingreso</small>
+                                            <strong>${d.tipo_ingreso?.nombre || 'N/A'}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Código SAT</small>
+                                            <strong>${d.codigo_sat?.codigo_agrupador || 'N/A'}</strong>
+                                            <small class="text-muted d-block">${d.codigo_sat?.nombre_cuenta || ''}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Proyecto</small>
+                                            <strong>${d.proyecto?.nombre || 'N/A'}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Concepto</small>
+                                            <strong>${d.concepto}</strong>
+                                        </div>
+                                    </div>
+                                    ${d.observaciones ? `
+                                    <div class="col-12">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Observaciones</small>
+                                            <span>${d.observaciones}</span>
+                                        </div>
+                                    </div>
+                                    ` : ''}
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Referencia</small>
+                                            <strong>${d.referencia || 'N/A'}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3" style="background: #F5F7FB; border-radius: 10px;">
+                                            <small class="text-muted d-block" style="font-size: 11px; text-transform: uppercase; font-weight: 600;">Creado por</small>
+                                            <strong>${d.creador?.name || 'Sistema'}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                ${facturasHtml}
+                                ${mov ? `
+                                    <div class="alert alert-info mt-3" style="font-size: 13px; border-radius: 10px;">
+                                        <i class="fas fa-exchange-alt"></i> <strong>Movimiento Bancario Asociado:</strong> 
+                                        ID #${mov.id} - ${formatCurrency(mov.monto)} - ${formatDate(mov.fecha)}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="modal-footer" style="border-top: 1px solid #E9ECF0;">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" onclick="generarPDF(${d.id})">
+                                    <i class="fas fa-file-pdf"></i> Generar PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalDetalleDeposito')?.remove();
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            new bootstrap.Modal(document.getElementById('modalDetalleDeposito')).show();
+        } else {
+            mostrarNotificacion(result.message || 'Error al cargar detalle', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion('Error al cargar detalle: ' + error.message, 'danger');
+    });
+}
+
+// ============================================
+// GENERAR PDF
+// ============================================
 function generarPDF(id) {
     mostrarNotificacion('Generando PDF...', 'info');
+    
+    fetch(`/admin/api/depositos/${id}/pdf`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            const d = result.data;
+            
+            let facturasHtml = '';
+            if (d.facturas && d.facturas.length > 0) {
+                const totalAplicado = d.facturas.reduce((sum, f) => sum + parseFloat(f.monto_aplicado || 0), 0);
+                facturasHtml = `
+                    <h3 style="margin-top: 30px; color: #083CAE; border-bottom: 2px solid #083CAE; padding-bottom: 8px;">Facturas Aplicadas</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #083CAE; color: white;">
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Folio</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Fecha</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Vencimiento</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Total</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Saldo</th>
+                                <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Aplicado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${d.facturas.map(f => `
+                                <tr>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">${f.folio || 'F-' + f.factura_id}</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">${formatDate(f.fecha)}</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;">${formatDate(f.fecha_vencimiento)}</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">${formatCurrency(f.total)}</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">${formatCurrency(f.saldo_disponible)}</td>
+                                    <td style="padding: 8px; border: 1px solid #ddd; text-align: right; color: #28A745; font-weight: 600;">${formatCurrency(f.monto_aplicado)}</td>
+                                </tr>
+                            `).join('')}
+                            <tr style="background: #F5F7FB; font-weight: bold;">
+                                <td colspan="5" style="padding: 10px; border: 1px solid #ddd; text-align: right;">Total Aplicado:</td>
+                                <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color: #28A745;">${formatCurrency(totalAplicado)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            }
+            
+            const ventana = window.open('', '_blank');
+            ventana.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Depósito ${d.folio}</title>
+                    <style>
+                        * { box-sizing: border-box; }
+                        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; color: #333; margin: 0; }
+                        .header { text-align: center; border-bottom: 3px solid #083CAE; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { color: #083CAE; margin: 0; font-size: 28px; }
+                        .header p { color: #6B7A8F; margin: 5px 0 0 0; }
+                        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+                        .info-item { padding: 12px; background: #F5F7FB; border-radius: 8px; border-left: 3px solid #083CAE; }
+                        .info-label { font-size: 11px; color: #6B7A8F; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+                        .info-value { font-size: 14px; font-weight: 600; color: #1A2332; margin-top: 4px; }
+                        .monto-total { font-size: 32px; font-weight: 700; color: #083CAE; text-align: center; padding: 24px; background: #E8F0FE; border-radius: 10px; margin: 20px 0; }
+                        .footer { margin-top: 50px; text-align: center; font-size: 11px; color: #8A9AAE; border-top: 1px solid #ddd; padding-top: 15px; }
+                        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+                        .badge-aplicado { background: #28a745; color: white; }
+                        .badge-pendiente { background: #fd7e14; color: white; }
+                        @media print {
+                            body { padding: 20px; }
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Comprobante de Depósito</h1>
+                        <p>Folio: <strong>${d.folio}</strong></p>
+                    </div>
+                    
+                    <div class="monto-total">
+                        ${d.moneda || 'MXN'} ${formatCurrency(d.monto)}
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Fecha</div>
+                            <div class="info-value">${formatDate(d.fecha)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Estatus</div>
+                            <div class="info-value"><span class="badge badge-${d.estatus}">${d.estatus.toUpperCase()}</span></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Banco</div>
+                            <div class="info-value">${d.banco}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Cuenta</div>
+                            <div class="info-value">${d.numero_cuenta}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Cliente</div>
+                            <div class="info-value">${d.cliente}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">RFC</div>
+                            <div class="info-value">${d.rfc}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo de Ingreso</div>
+                            <div class="info-value">${d.tipo_ingreso}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Código SAT</div>
+                            <div class="info-value">${d.codigo_sat}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Proyecto</div>
+                            <div class="info-value">${d.proyecto}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Referencia</div>
+                            <div class="info-value">${d.referencia || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div class="info-label">Concepto</div>
+                        <div style="padding: 12px; background: #F5F7FB; border-radius: 8px; margin-top: 6px; border-left: 3px solid #083CAE;">${d.concepto}</div>
+                    </div>
+                    
+                    ${d.observaciones ? `
+                    <div style="margin-bottom: 20px;">
+                        <div class="info-label">Observaciones</div>
+                        <div style="padding: 12px; background: #F5F7FB; border-radius: 8px; margin-top: 6px;">${d.observaciones}</div>
+                    </div>
+                    ` : ''}
+                    
+                    ${facturasHtml}
+                    
+                    <div class="footer">
+                        Generado por <strong>${d.creado_por}</strong> el ${formatDate(d.fecha_creacion)}<br>
+                        Este documento es un comprobante interno de depósito.
+                    </div>
+                    
+                    <div class="no-print" style="text-align: center; margin-top: 30px;">
+                        <button onclick="window.print()" style="background: #083CAE; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                            🖨️ Imprimir / Guardar PDF
+                        </button>
+                    </div>
+                </body>
+                </html>
+            `);
+            ventana.document.close();
+            
+            setTimeout(() => {
+                ventana.focus();
+            }, 500);
+        } else {
+            mostrarNotificacion(result.message || 'Error al generar PDF', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion('Error al generar PDF: ' + error.message, 'danger');
+    });
 }
 
 function mostrarNotificacion(mensaje, tipo) {
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${tipo} position-fixed top-0 end-0 m-3`;
-    alertDiv.style.zIndex = '99999';
+    alertDiv.style.zIndex = '999999';
     alertDiv.style.minWidth = '300px';
     alertDiv.style.maxWidth = '500px';
     alertDiv.style.whiteSpace = 'pre-line';
+    alertDiv.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
     alertDiv.innerHTML = `${mensaje}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
     document.body.appendChild(alertDiv);
     setTimeout(() => alertDiv.remove(), 5000);
@@ -1975,7 +2438,7 @@ function exportarExcel() {
     const tabla = document.getElementById('tablaDepositos').cloneNode(true);
     const link = document.createElement('a');
     link.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(tabla.outerHTML);
-    link.download = 'depositos.xls';
+    link.download = 'depositos_' + new Date().toISOString().split('T')[0] + '.xls';
     link.click();
 }
 
@@ -1983,8 +2446,6 @@ function exportarExcel() {
 // APLICACIÓN A FACTURAS DE CLIENTE
 // ============================================
 function abrirAplicacionFacturas() {
-    debugLog('Abriendo modal de aplicación a facturas de cliente');
-    
     const clienteSelect = document.getElementById('cliente_select');
     if (!clienteSelect || !clienteSelect.value) {
         mostrarNotificacion('Por favor seleccione un cliente primero', 'warning');
@@ -1993,7 +2454,6 @@ function abrirAplicacionFacturas() {
     
     const selectedOption = clienteSelect.options[clienteSelect.selectedIndex];
     const clienteId = clienteSelect.value;
-    const clienteNombre = selectedOption?.getAttribute('data-nombre') || 'Cliente';
     const monto = parseFloat(document.getElementById('monto')?.value) || 0;
     
     if (monto <= 0) {
@@ -2005,15 +2465,16 @@ function abrirAplicacionFacturas() {
     aplicacionesFacturas = {};
     clienteSeleccionadoId = clienteId;
     
-    const clienteNombreFacturas = document.getElementById('clienteNombreFacturas');
     const montoDepositoFacturas = document.getElementById('montoDepositoFacturas');
     const totalAplicadoFacturas = document.getElementById('totalAplicadoFacturas');
     const diferenciaFacturas = document.getElementById('diferenciaFacturas');
     
-    if (clienteNombreFacturas) clienteNombreFacturas.textContent = clienteNombre;
     if (montoDepositoFacturas) montoDepositoFacturas.textContent = formatCurrency(monto);
-    if (totalAplicadoFacturas) totalAplicadoFacturas.textContent = 'Aplicado: $0.00';
-    if (diferenciaFacturas) diferenciaFacturas.textContent = `Diferencia: ${formatCurrency(monto)}`;
+    if (totalAplicadoFacturas) totalAplicadoFacturas.textContent = '$0.00';
+    if (diferenciaFacturas) {
+        diferenciaFacturas.textContent = formatCurrency(monto);
+        diferenciaFacturas.className = 'summary-value';
+    }
     
     const tablaBody = document.getElementById('tablaFacturasBody');
     if (tablaBody) {
@@ -2029,8 +2490,6 @@ function abrirAplicacionFacturas() {
 }
 
 function cargarFacturasCliente(clienteId) {
-    debugLog('Cargando facturas del cliente ID: ' + clienteId);
-    
     if (!clienteId) {
         const tablaBody = document.getElementById('tablaFacturasBody');
         if (tablaBody) {
@@ -2039,7 +2498,7 @@ function cargarFacturasCliente(clienteId) {
         return;
     }
     
-    fetch(`/admin/api/clientes/${clienteId}/facturas-pendientes`, {
+    fetch(`/admin/api/depositos/clientes/${clienteId}/facturas-pendientes`, {
         headers: {
             'Accept': 'application/json',
             'X-CSRF-TOKEN': csrfToken
@@ -2047,30 +2506,23 @@ function cargarFacturasCliente(clienteId) {
     })
     .then(response => response.json())
     .then(result => {
-        debugLog('Facturas recibidas:', result);
-        
         if (result.success) {
             facturasCliente = result.data || [];
             const totales = result.totales || { vencido: 0, por_vencer: 0, total: 0 };
             
-            const saldoVencido = document.getElementById('saldoVencido');
-            const saldoPorVencer = document.getElementById('saldoPorVencer');
-            const saldoTotal = document.getElementById('saldoTotal');
+            ['saldoVencido', 'summaryVencido'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = formatCurrency(totales.vencido);
+            });
+            ['saldoPorVencer', 'summaryPorVencer'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = formatCurrency(totales.por_vencer);
+            });
+            ['saldoTotal', 'summaryTotal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = formatCurrency(totales.total);
+            });
             
-            if (saldoVencido) saldoVencido.textContent = formatCurrency(totales.vencido);
-            if (saldoPorVencer) saldoPorVencer.textContent = formatCurrency(totales.por_vencer);
-            if (saldoTotal) saldoTotal.textContent = formatCurrency(totales.total);
-            
-            // Actualizar tarjetas de resumen en el modal principal
-            const summaryVencido = document.getElementById('summaryVencido');
-            const summaryPorVencer = document.getElementById('summaryPorVencer');
-            const summaryTotal = document.getElementById('summaryTotal');
-            
-            if (summaryVencido) summaryVencido.textContent = formatCurrency(totales.vencido);
-            if (summaryPorVencer) summaryPorVencer.textContent = formatCurrency(totales.por_vencer);
-            if (summaryTotal) summaryTotal.textContent = formatCurrency(totales.total);
-            
-            // Actualizar preview de facturas en el modal principal
             renderizarPreviewFacturas();
             renderizarTablaFacturas();
         } else {
@@ -2079,7 +2531,6 @@ function cargarFacturasCliente(clienteId) {
     })
     .catch(error => {
         console.error('Error cargando facturas:', error);
-        debugLog('ERROR cargando facturas: ' + error.message);
         const tablaBody = document.getElementById('tablaFacturasBody');
         if (tablaBody) {
             tablaBody.innerHTML = '<tr><td colspan="8" style="color:red; text-align:center;">Error al cargar facturas</td></tr>';
@@ -2119,7 +2570,7 @@ function renderizarPreviewFacturas() {
     });
     
     if (facturasCliente.length > 5) {
-        html += `<tr><td colspan="7" style="text-align: center; color: #8A9AAE; font-size: 12px;">
+        html += `<tr><td colspan="7" style="text-align: center; color: #8A9AAE; font-size: 12px; padding: 10px;">
             <i class="fas fa-ellipsis-h"></i> Y ${facturasCliente.length - 5} factura(s) más. Haz clic en "Seleccionar Facturas" para ver todas.
         </td></tr>`;
     }
@@ -2190,21 +2641,20 @@ function renderizarTablaFacturas() {
     
     const diffFinal = montoDepositoActual - totalAplicado;
     if (diferenciaFacturas) {
-        diferenciaFacturas.textContent = `Diferencia: ${formatCurrency(diffFinal)}`;
+        diferenciaFacturas.textContent = formatCurrency(diffFinal);
         if (Math.abs(diffFinal) < 0.01) {
-            diferenciaFacturas.className = 'badge bg-success';
+            diferenciaFacturas.className = 'summary-value summary-value-success';
         } else if (diffFinal > 0) {
-            diferenciaFacturas.className = 'badge bg-warning';
+            diferenciaFacturas.className = 'summary-value summary-value-warning';
         } else {
-            diferenciaFacturas.className = 'badge bg-danger';
+            diferenciaFacturas.className = 'summary-value summary-value-danger';
         }
     }
     
-    if (totalAplicadoFacturas) totalAplicadoFacturas.textContent = `Aplicado: ${formatCurrency(totalAplicado)}`;
+    if (totalAplicadoFacturas) totalAplicadoFacturas.textContent = formatCurrency(totalAplicado);
     if (appTotalAplicado) appTotalAplicado.textContent = formatCurrency(totalAplicado);
     if (appDiferencia) appDiferencia.textContent = formatCurrency(diffFinal);
     
-    // Actualizar preview
     renderizarPreviewFacturas();
 }
 
@@ -2247,8 +2697,6 @@ function aplicarTotalFactura(facturaId) {
 }
 
 function aplicarAutomatico() {
-    debugLog('Aplicando automáticamente...');
-    
     if (!facturasCliente || facturasCliente.length === 0) {
         mostrarNotificacion('No hay facturas para aplicar', 'warning');
         return;
@@ -2281,8 +2729,6 @@ function aplicarAutomatico() {
 }
 
 function aplicarTodo() {
-    debugLog('Aplicando todo...');
-    
     if (!facturasCliente || facturasCliente.length === 0) {
         mostrarNotificacion('No hay facturas para aplicar', 'warning');
         return;
@@ -2313,15 +2759,12 @@ function aplicarTodo() {
 }
 
 function limpiarAplicaciones() {
-    debugLog('Limpiando aplicaciones');
     aplicacionesFacturas = {};
     renderizarTablaFacturas();
 }
 
 function confirmarAplicacionFacturas() {
     const totalAplicado = Object.values(aplicacionesFacturas).reduce((a, b) => a + b, 0);
-    
-    debugLog('Confirmando aplicación: ' + formatCurrency(totalAplicado));
     
     if (totalAplicado < 0.01) {
         mostrarNotificacion('No se ha aplicado ningún monto a las facturas', 'warning');
@@ -2334,8 +2777,6 @@ function confirmarAplicacionFacturas() {
             factura_id: parseInt(id),
             monto: parseFloat(monto.toFixed(2))
         }));
-    
-    debugLog('Facturas a aplicar:', facturasAplicadas);
     
     const facturasJsonInput = document.getElementById('facturas_aplicadas_json');
     if (facturasJsonInput) {
@@ -2355,7 +2796,6 @@ function confirmarAplicacionFacturas() {
             `<br><strong>Total aplicado: ${formatCurrency(totalAplicado)}</strong>`;
     }
     
-    // Actualizar totales en el modal principal
     const appTotalAplicado = document.getElementById('appTotalAplicado');
     const appDiferencia = document.getElementById('appDiferencia');
     if (appTotalAplicado) appTotalAplicado.textContent = formatCurrency(totalAplicado);
@@ -2370,12 +2810,27 @@ function confirmarAplicacionFacturas() {
 }
 
 // ============================================
+// CAMBIO DE FILAS POR PÁGINA
+// ============================================
+function cambiarFilasPorPagina(cantidad) {
+    rowsPerPage = parseInt(cantidad);
+    currentPage = 1;
+    cargarTabla(datosOriginales);
+}
+
+// ============================================
 // EVENT LISTENERS
 // ============================================
 document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarTabla(datosOriginales); });
 document.getElementById('btnAnterior')?.addEventListener('click', () => { if(currentPage > 1) { currentPage--; cargarTabla(datosOriginales); } });
-document.getElementById('btnSiguiente')?.addEventListener('click', () => { const total = Math.ceil(datosOriginales.length / rowsPerPage); if(currentPage < total) { currentPage++; cargarTabla(datosOriginales); } });
-document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = Math.ceil(datosOriginales.length / rowsPerPage); cargarTabla(datosOriginales); });
+document.getElementById('btnSiguiente')?.addEventListener('click', () => { 
+    const total = Math.ceil(datosOriginales.length / rowsPerPage); 
+    if(currentPage < total) { currentPage++; cargarTabla(datosOriginales); } 
+});
+document.getElementById('btnUltima')?.addEventListener('click', () => { 
+    currentPage = Math.ceil(datosOriginales.length / rowsPerPage) || 1; 
+    cargarTabla(datosOriginales); 
+});
 
 document.getElementById('buscador')?.addEventListener('input', e => {
     const busqueda = e.target.value.toLowerCase();
@@ -2392,9 +2847,8 @@ document.getElementById('buscador')?.addEventListener('input', e => {
 document.getElementById('fechaInicio')?.addEventListener('change', () => cargarDepositos());
 document.getElementById('fechaFin')?.addEventListener('change', () => cargarDepositos());
 document.getElementById('btnCrearFiltro')?.addEventListener('click', () => alert('Filtro - En desarrollo'));
-document.getElementById('btnColumnas')?.addEventListener('click', () => alert('Selector columnas - En desarrollo'));
+document.getElementById('btnColumnas')?.addEventListener('click', abrirModalColumnas);
 
-// Actualizar totales cuando cambia el monto
 document.getElementById('monto')?.addEventListener('input', function() {
     const monto = parseFloat(this.value) || 0;
     const appTotalPago = document.getElementById('appTotalPago');
@@ -2405,12 +2859,10 @@ document.getElementById('monto')?.addEventListener('input', function() {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    debugLog('DOM completamente cargado');
     setupDragAndDrop();
     cargarDepositos();
 });
 
-// Event listener para cliente select
 document.getElementById('cliente_select')?.addEventListener('change', cargarCliente);
 </script>
 @endsection

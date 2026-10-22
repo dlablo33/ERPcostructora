@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
-        "eclipxe/cfdiutils": "^2.4",
+        "eclipxe/cfdiutils": "^2.31",
         "endroid/qr-code": "^6.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^4.1",
@@ -15,6 +15,7 @@
         "laravel/reverb": "^1.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
+        "lunasoft/sw-sdk-php": "^1.1",
         "maatwebsite/excel": "^3.1",
         "minishlink/web-push": "^10.1",
         "phpoffice/phpspreadsheet": "^1.30"

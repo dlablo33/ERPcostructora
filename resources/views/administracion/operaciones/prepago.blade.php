@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Prepagos -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE !important; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
@@ -12,55 +11,30 @@
             </div>
 
             <div class="card-body p-4">
-                <!-- Barra de herramientas con agrupación y botones -->
+                <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
                     <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
+                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar"></i>
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
-                            <!-- Aquí se mostrarán las columnas agrupadas -->
-                        </div>
+                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
                     </div>
                     
-                    <!-- Grupo de botones derecho -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Date Inicio -->
-                        <div>
-                            <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
+                        <input type="date" id="fechaInicio" value="{{ $fechaInicio ?? date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                        <input type="date" id="fechaFin" value="{{ $fechaFin ?? date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
 
-                        <!-- Date Fin -->
-                        <div>
-                            <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
+                        <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
+                            <i class="fas fa-plus"></i>
+                        </button>
 
-                        <!-- Botón Agregar (+) -->
-                        <div>
-                            <button id="btnAgregar" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2378e1; font-size: 16px;" title="Agregar">
-                                <i class="fas fa-plus" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
+                        <button id="btnExcel" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;" title="Exportar todo">
+                            <i class="fas fa-file-excel"></i>
+                        </button>
 
-                        <!-- Botón Exportar Excel -->
-                        <div>
-                            <button id="btnExcel" 
-                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
-                                    title="Exportar todo">
-                                <i class="fas fa-file-excel" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
+                        <button id="btnColumnas" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;" title="Seleccionar columnas">
+                            <i class="fas fa-columns"></i>
+                        </button>
 
-                        <!-- Botón Seleccionar Columnas -->
-                        <div>
-                            <button id="btnColumnas" 
-                                    style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
-                                    title="Seleccionar columnas">
-                                <i class="fas fa-columns" style="color: #2378e1;"></i>
-                            </button>
-                        </div>
-
-                        <!-- Buscador -->
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
                             <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; font-size: 14px; width: 200px;">
@@ -68,14 +42,20 @@
                     </div>
                 </div>
 
-                <!-- Mensaje "Sin datos" centrado -->
+                <!-- Mensaje Sin datos -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
                     <i class="fas fa-hand-holding-usd" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay prepagos para mostrar</p>
                 </div>
 
-                <!-- Tabla de Prepagos -->
+                <!-- Loading -->
+                <div id="loadingTabla" style="text-align:center; padding:40px; display:none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:32px; color:#2378e1;"></i>
+                    <p style="color:#6c757d; margin-top:10px;">Cargando prepagos...</p>
+                </div>
+
+                <!-- Tabla -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
                     <table class="table table-bordered" id="tablaPrepagos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
@@ -107,15 +87,11 @@
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <span>Acciones</span>
-                                        <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                     </div>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="tablaBody">
-                            <!-- Las filas se insertarán dinámicamente -->
-                        </tbody>
-                        <!-- Fila de totales -->
+                        <tbody id="tablaBody"></tbody>
                         <tfoot id="tablaFoot" style="position: sticky; bottom: 0; z-index: 20; background-color: #e9ecef; font-weight: bold; display: table-footer-group;">
                             <tr>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: left; background-color: #e9ecef; color: #000000;" colspan="3">Registros: <span id="totalRegistros">0</span></td>
@@ -126,32 +102,30 @@
                     </table>
                 </div>
                 
-                <!-- Paginación y botón Crear filtro -->
-                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
-                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
-                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
+                <!-- Paginación -->
+                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px;">
+                    <button id="btnCrearFiltro" style="background: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1;">
                         <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
                         <span style="color: #2378e1;">Crear filtro</span>
                     </button>
                     
-                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
-                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
-                            <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <button id="btnPrimera" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;" title="Primera página">
+                            <i class="fas fa-angle-double-left"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
-                            <i class="fas fa-angle-left" style="color: #2378e1;"></i>
+                        <button id="btnAnterior" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;" title="Página anterior">
+                            <i class="fas fa-angle-left"></i>
                         </button>
-                        <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
-                            <i class="fas fa-angle-right" style="color: #2378e1;"></i>
+                        <span id="paginaActual" style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;">1</span>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
+                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
+                        <button id="btnSiguiente" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;" title="Página siguiente">
+                            <i class="fas fa-angle-right"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
-                            <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
+                        <button id="btnUltima" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;" title="Última página">
+                            <i class="fas fa-angle-double-right"></i>
                         </button>
-                        <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 1-8 de 12 registros</span>
+                        <span id="paginacionInfo" style="margin-left: 10px; color: #2378e1; font-size: 14px;">Mostrando 0-0 de 0 registros</span>
                     </div>
                 </div>
             </div>
@@ -159,827 +133,777 @@
     </section>
 </div>
 
-<style>
-    .semaforo .card-header {
-        background-color: #f4f6f9;
-        border-bottom: 2px solid #2378e1;
-    }
-    
-    .semaforo .card-header h2 {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilos de tabla */
-    .table th {
-        white-space: nowrap;
-        font-size: 12px;
-        background-color: #2378e1 !important;
-        color: white;
-        font-weight: 600;
-        padding: 10px 4px;
-    }
-    
-    .table td {
-        white-space: nowrap;
-        font-size: 12px;
-        padding: 10px 4px;
-        color: #000000 !important;
-    }
-    
-    /* Estilo para las filas alternadas */
-    #tablaBody tr:nth-child(odd) {
-        background-color: #ffffff;
-    }
-    
-    #tablaBody tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-    
-    #tablaBody tr:hover {
-        background-color: #e0e0e0;
-    }
-    
-    /* Estilo para los iconos de acción */
-    #tablaBody td i {
-        transition: transform 0.2s;
-        font-size: 14px;
-        color: #083CAE;
-        cursor: pointer;
-    }
-    
-    #tablaBody td i:hover {
-        transform: scale(1.2);
-    }
-    
-    /* Estilo para el filtro en encabezados */
-    .table th i {
-        opacity: 0.7;
-        transition: opacity 0.2s;
-        color: white;
-    }
-    
-    .table th i:hover {
-        opacity: 1;
-    }
-    
-    /* Columna de acciones fija */
-    #tablaBody td:last-child {
-        background-color: white;
-        position: sticky;
-        right: 0;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-        z-index: 15;
-    }
-    
-    /* Estilo para el pie de tabla (totales) */
-    tfoot td {
-        font-weight: bold;
-        background-color: #e9ecef !important;
-        border-top: 2px solid #2378e1;
-        color: #000000 !important;
-    }
-    
-    /* Estilos para agrupación de columnas */
-    [draggable="true"] {
-        cursor: grab;
-    }
-    
-    [draggable="true"]:active {
-        cursor: grabbing;
-        opacity: 0.7;
-    }
-    
-    #grupoAgrupacion {
-        position: relative;
-    }
-    
-    #grupoColumnas {
-        display: inline-flex;
-        align-items: center;
-    }
-    
-    .columna-agrupada {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        background-color: #f0f4ff;
-        border-radius: 16px;
-        color: #2378e1;
-        font-size: 12px;
-        margin: 2px;
-        border: 1px solid #2378e1;
-    }
-    
-    .columna-agrupada .remover {
-        margin-left: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        color: #2378e1;
-    }
-    
-    .columna-agrupada .remover:hover {
-        opacity: 0.7;
-    }
-    
-    /* Estilo para filas de grupo */
-    .fila-grupo {
-        background-color: #f0f7ff !important;
-        font-weight: 500;
-        cursor: pointer;
-    }
-    
-    .fila-grupo:hover {
-        background-color: #e1f0ff !important;
-    }
-    
-    .fila-grupo td:first-child i {
-        transition: transform 0.2s;
-        margin-right: 8px;
-    }
-    
-    .fila-grupo:not(.expandido) td:first-child i {
-        transform: rotate(-90deg);
-    }
-    
-    .fila-detalle {
-        background-color: #ffffff;
-    }
-    
-    .fila-detalle td {
-        border-top: none !important;
-    }
-    
-    .fila-detalle td:first-child {
-        padding-left: 30px !important;
-    }
-    
-    /* Estilo cuando se está arrastrando sobre el área de grupo */
-    .drag-over #grupoColumnas {
-        background-color: rgba(35, 120, 225, 0.1);
-        border-radius: 4px;
-    }
-    
-    /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
-    #paginacionContainer {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* Todos los elementos dentro del contenedor también sin fondo */
-    #paginacionContainer * {
-        background: transparent !important;
-        background-color: transparent !important;
-    }
-    
-    /* Excepción para los spans que deben tener fondo azul */
-    #paginacionContainer span[style*="background-color"] {
-        background-color: #2378e1 !important;
-    }
-    
-    /* Estilos para los botones de paginación */
-    #paginacionContainer button {
-        background: transparent !important;
-        border: none !important;
-        color: #2378e1 !important;
-        cursor: pointer;
-    }
-    
-    #paginacionContainer button:hover {
-        opacity: 0.7;
-    }
-    
-    #paginacionContainer button i {
-        color: #2378e1 !important;
-    }
-    
-    /* Estilo específico para btnCrearFiltro */
-    #btnCrearFiltro,
-    #btnCrearFiltro:hover,
-    #btnCrearFiltro:focus,
-    #btnCrearFiltro:active {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    
-    #btnCrearFiltro i,
-    #btnCrearFiltro span {
-        color: #2378e1 !important;
-    }
-    
-    #paginacionInfo {
-        color: #2378e1 !important;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        div[style*="justify-content: flex-end"] {
-            justify-content: center !important;
-        }
-        
-        input[type="date"], select {
-            width: 100% !important;
-        }
-        
-        button {
-            width: 100%;
-        }
-        
-        div[style*="position: relative"] {
-            width: 100%;
-        }
-        
-        input#buscador {
-            width: 100% !important;
-        }
-        
-        #paginacionContainer {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-</style>
+<!-- ============================ MODAL AGREGAR / EDITAR ============================ -->
+<div id="modalPrepago" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:8px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="padding:15px 20px; border-bottom:2px solid #2378e1; display:flex; justify-content:space-between; align-items:center;">
+            <h3 id="modalPrepagoTitulo" style="margin:0; color:#083CAE; font-weight:bold;">Agregar Prepago</h3>
+            <button type="button" id="btnCerrarModal" style="background:none; border:none; font-size:22px; color:#6c757d; cursor:pointer;">&times;</button>
+        </div>
+        <form id="formPrepago" style="padding:20px;">
+            <input type="hidden" id="prepagoId" name="id">
+            
+            <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Proveedor *</label>
+                <select id="proveedorId" name="proveedor_id" required style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; font-size:14px;">
+                    <option value="">-- Seleccione proveedor --</option>
+                </select>
+            </div>
 
-<!-- Font Awesome -->
+            <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Folio (opcional)</label>
+                <input type="text" id="folio" name="folio" placeholder="Se generará automáticamente" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; font-size:14px;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Fecha *</label>
+                <input type="date" id="fecha" name="fecha" required style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; font-size:14px;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Monto *</label>
+                <input type="number" id="monto" name="monto" step="0.01" min="0.01" required style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; font-size:14px;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Observaciones</label>
+                <textarea id="observaciones" name="observaciones" rows="3" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; font-size:14px;"></textarea>
+            </div>
+
+            <div id="formError" style="display:none; background:#f8d7da; color:#721c24; padding:10px; border-radius:4px; margin-bottom:12px; font-size:13px;"></div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; padding-top:10px; border-top:1px solid #dee2e6;">
+                <button type="button" id="btnCancelarForm" style="padding:8px 16px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer;">Cancelar</button>
+                <button type="submit" id="btnGuardarForm" style="padding:8px 16px; background:#2378e1; color:white; border:none; border-radius:4px; cursor:pointer;">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============================ MODAL VER DETALLE ============================ -->
+<div id="modalVer" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:8px; width:100%; max-width:520px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="padding:15px 20px; border-bottom:2px solid #2378e1; display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; color:#083CAE; font-weight:bold;">Detalle del Prepago</h3>
+            <button type="button" id="btnCerrarVer" style="background:none; border:none; font-size:22px; color:#6c757d; cursor:pointer;">&times;</button>
+        </div>
+        <div id="verContenido" style="padding:20px;"></div>
+        <div style="padding:10px 20px 20px; text-align:right;">
+            <button type="button" id="btnCerrarVer2" style="padding:8px 16px; background:#2378e1; color:white; border:none; border-radius:4px; cursor:pointer;">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================ MODAL COLUMNAS ============================ -->
+<div id="modalColumnas" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:8px; width:100%; max-width:400px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="padding:15px 20px; border-bottom:2px solid #2378e1; display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; color:#083CAE; font-weight:bold;">Seleccionar columnas</h3>
+            <button type="button" id="btnCerrarColumnas" style="background:none; border:none; font-size:22px; color:#6c757d; cursor:pointer;">&times;</button>
+        </div>
+        <div style="padding:20px;">
+            <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:14px;">
+                <input type="checkbox" class="col-toggle" value="folio" checked> <span>Folio</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:14px;">
+                <input type="checkbox" class="col-toggle" value="proveedor" checked> <span>Proveedor</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:14px;">
+                <input type="checkbox" class="col-toggle" value="fecha" checked> <span>Fecha</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:14px;">
+                <input type="checkbox" class="col-toggle" value="monto" checked> <span>Monto</span>
+            </label>
+        </div>
+        <div style="padding:10px 20px 20px; text-align:right;">
+            <button type="button" id="btnAplicarColumnas" style="padding:8px 16px; background:#2378e1; color:white; border:none; border-radius:4px; cursor:pointer;">Aplicar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================ MODAL CREAR FILTRO ============================ -->
+<div id="modalFiltro" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:8px; width:100%; max-width:500px; box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+        <div style="padding:15px 20px; border-bottom:2px solid #2378e1; display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="margin:0; color:#083CAE; font-weight:bold;">Crear filtro</h3>
+            <button type="button" id="btnCerrarFiltro" style="background:none; border:none; font-size:22px; color:#6c757d; cursor:pointer;">&times;</button>
+        </div>
+        <div style="padding:20px;">
+            <p style="font-size:13px; color:#6c757d; margin-bottom:12px;">Ajusta los filtros y presiona Aplicar.</p>
+            <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Fecha inicio</label>
+            <input type="date" id="filtroFechaInicio" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; margin-bottom:12px;">
+            <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Fecha fin</label>
+            <input type="date" id="filtroFechaFin" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px; margin-bottom:12px;">
+            <label style="display:block; font-size:13px; color:#495057; margin-bottom:4px;">Proveedor (texto)</label>
+            <input type="text" id="filtroBuscar" placeholder="Nombre o folio..." style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;">
+        </div>
+        <div style="padding:10px 20px 20px; display:flex; justify-content:flex-end; gap:10px;">
+            <button type="button" id="btnLimpiarFiltro" style="padding:8px 16px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer;">Limpiar</button>
+            <button type="button" id="btnAplicarFiltro" style="padding:8px 16px; background:#2378e1; color:white; border:none; border-radius:4px; cursor:pointer;">Aplicar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================ TOAST NOTIFICACIONES ============================ -->
+<div id="toastContainer" style="position:fixed; top:20px; right:20px; z-index:2000; display:flex; flex-direction:column; gap:10px;"></div>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Prepagos');
-        
-        // Variables para agrupación
-        let columnasAgrupadas = [];
-        let expandedGroups = new Set();
-        let datosOriginales = [];
-        let paginaActual = 1;
-        const registrosPorPagina = 8;
-        
-        // Datos de ejemplo para Prepagos
-        const datosPrepagos = [
-            {
-                prepago_id: 1001,
-                proveedor: 'Transportes del Bajío',
-                fecha: '2026-02-01',
-                monto: 25000.00
-            },
-            {
-                prepago_id: 1002,
-                proveedor: 'Logística Monterrey',
-                fecha: '2026-02-02',
-                monto: 18750.00
-            },
-            {
-                prepago_id: 1003,
-                proveedor: 'Autotransportes Mexicanos',
-                fecha: '2026-02-03',
-                monto: 32200.00
-            },
-            {
-                prepago_id: 1004,
-                proveedor: 'Ferrocarriles Nacionales',
-                fecha: '2026-02-04',
-                monto: 15800.00
-            },
-            {
-                prepago_id: 1005,
-                proveedor: 'Cervecería del Centro',
-                fecha: '2026-02-05',
-                monto: 9340.00
-            },
-            {
-                prepago_id: 1006,
-                proveedor: 'Papelera del Pacífico',
-                fecha: '2026-02-06',
-                monto: 45600.00
-            },
-            {
-                prepago_id: 1007,
-                proveedor: 'Minería del Norte',
-                fecha: '2026-02-07',
-                monto: 21250.00
-            },
-            {
-                prepago_id: 1008,
-                proveedor: 'Comercializadora del Sur',
-                fecha: '2026-02-08',
-                monto: 7850.00
-            },
-            {
-                prepago_id: 1009,
-                proveedor: 'Transportes Unidos',
-                fecha: '2026-02-09',
-                monto: 11230.00
-            },
-            {
-                prepago_id: 1010,
-                proveedor: 'Distribuidora de Papel',
-                fecha: '2026-02-10',
-                monto: 6730.00
-            },
-            {
-                prepago_id: 1011,
-                proveedor: 'Maquiladora Industrial',
-                fecha: '2026-02-11',
-                monto: 15670.00
-            },
-            {
-                prepago_id: 1012,
-                proveedor: 'Cartones del Norte',
-                fecha: '2026-02-12',
-                monto: 3420.00
-            }
-        ];
+document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
 
-        datosOriginales = [...datosPrepagos];
-        let datosFiltrados = [...datosPrepagos];
-        
-        // Elementos del DOM
-        const fechaInicio = document.getElementById('fechaInicio');
-        const fechaFin = document.getElementById('fechaFin');
-        const btnCrearFiltro = document.getElementById('btnCrearFiltro');
-        const btnAgregar = document.getElementById('btnAgregar');
-        const btnExcel = document.getElementById('btnExcel');
-        const btnColumnas = document.getElementById('btnColumnas');
-        const buscador = document.getElementById('buscador');
-        const tablaBody = document.getElementById('tablaBody');
-        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const tablaFoot = document.getElementById('tablaFoot');
-        const totalRegistros = document.getElementById('totalRegistros');
-        const sumMonto = document.getElementById('sumMonto');
-        const paginacionInfo = document.getElementById('paginacionInfo');
-        const textoAgrupar = document.getElementById('textoAgrupar');
-        
-        // Elementos de paginación
-        const btnPrimera = document.getElementById('btnPrimera');
-        const btnAnterior = document.getElementById('btnAnterior');
-        const btnSiguiente = document.getElementById('btnSiguiente');
-        const btnUltima = document.getElementById('btnUltima');
-        const paginaActualSpan = document.getElementById('paginaActual');
-        
-        // Función para formatear moneda
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    // ============ META CSRF (crítico) ============
+    // Se crea si el layout no lo tiene, garantizando que siempre exista
+    let csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfMeta) {
+        csrfMeta = document.createElement('meta');
+        csrfMeta.setAttribute('name', 'csrf-token');
+        csrfMeta.setAttribute('content', '{{ csrf_token() }}');
+        document.head.appendChild(csrfMeta);
+    }
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+    }
+
+    // ============ CONFIG ============
+    const ROUTES = {
+        listado:      "{{ route('prepagos.listado') }}",
+        proveedores:  "{{ route('prepagos.proveedores') }}",
+        store:        "{{ route('prepagos.store') }}",
+        base:         "{{ url('prepagos') }}",
+        exportExcel:  "{{ route('prepagos.export.excel') }}",
+    };
+
+    // ============ ESTADO ============
+    let datosOriginales = [];
+    let datosFiltrados = [];
+    let columnasAgrupadas = [];
+    let expandedGroups = new Set();
+    let paginaActual = 1;
+    const registrosPorPagina = 8;
+    let columnasVisibles = { folio: true, proveedor: true, fecha: true, monto: true };
+    let proveedoresCache = null;
+    let modoEdicion = false;
+
+    // ============ DOM ============
+    const $tablaBody       = document.getElementById('tablaBody');
+    const $sinDatos        = document.getElementById('sinDatosMensaje');
+    const $tablaContainer  = document.getElementById('tablaContainer');
+    const $tablaFoot       = document.getElementById('tablaFoot');
+    const $loading         = document.getElementById('loadingTabla');
+    const $totalRegistros  = document.getElementById('totalRegistros');
+    const $sumMonto        = document.getElementById('sumMonto');
+    const $paginacionInfo  = document.getElementById('paginacionInfo');
+    const $paginaActual    = document.getElementById('paginaActual');
+    const $buscador        = document.getElementById('buscador');
+    const $fechaInicio     = document.getElementById('fechaInicio');
+    const $fechaFin        = document.getElementById('fechaFin');
+    const $textoAgrupar    = document.getElementById('textoAgrupar');
+    const $grupoColumnas   = document.getElementById('grupoColumnas');
+
+    // ============ UTILIDADES ============
+    function formatCurrency(n) {
+        return '$' + Number(n || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+    function formatDate(s) {
+        if (!s) return '-';
+        const d = new Date(s + 'T00:00:00');
+        if (isNaN(d)) return s;
+        return d.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    }
+    function esc(str) {
+        return String(str == null ? '' : str)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function toast(msg, tipo = 'success') {
+        const colores = { success: '#28a745', error: '#dc3545', info: '#2378e1', warning: '#ffc107' };
+        const iconos  = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle', warning: 'fa-exclamation-circle' };
+        const div = document.createElement('div');
+        div.style.cssText = `background:${colores[tipo]}; color:white; padding:12px 20px; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:14px; display:flex; align-items:center; gap:10px; min-width:250px; animation: slideIn 0.3s ease;`;
+        div.innerHTML = `<i class="fas ${iconos[tipo]}"></i><span>${esc(msg)}</span>`;
+        document.getElementById('toastContainer').appendChild(div);
+        setTimeout(() => { div.style.opacity = '0'; div.style.transition = 'opacity 0.3s'; setTimeout(() => div.remove(), 300); }, 3000);
+    }
+
+    /**
+     * ⚠️ FETCH CENTRALIZADO
+     * - credentials: 'same-origin'  → envía cookies de sesión
+     * - X-CSRF-TOKEN dinámico      → evita 419
+     * - X-Requested-With           → Laravel responde JSON
+     */
+    async function fetchJSON(url, options = {}) {
+        const method = (options.method || 'GET').toUpperCase();
+        const headers = {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': getCsrfToken(),
+            ...(options.headers || {}),
+        };
+        if (method !== 'GET' && method !== 'HEAD' && !headers['Content-Type']) {
+            headers['Content-Type'] = 'application/json';
         }
-        
-        // Función para formatear fecha
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        }
-        
-        // Función para generar un ID único para el grupo
-        function generarGrupoId(item, columnas) {
-            return columnas.map(col => {
-                switch(col) {
-                    case 'folio': return item.prepago_id ? item.prepago_id.toString() : 'Sin folio';
-                    case 'proveedor': return item.proveedor || 'Sin proveedor';
-                    case 'fecha': return item.fecha || 'Sin fecha';
-                    case 'monto': return item.monto ? item.monto.toString() : '0';
-                    default: return '';
-                }
-            }).join('||');
-        }
-        
-        // Función para agrupar datos por columnas seleccionadas
-        function agruparDatos(datos, columnas) {
-            if (columnas.length === 0) return { grupos: [], items: datos };
-            
-            const gruposMap = new Map();
-            
-            datos.forEach(item => {
-                const grupoId = generarGrupoId(item, columnas);
-                
-                if (!gruposMap.has(grupoId)) {
-                    // Crear un nuevo grupo
-                    const valorGrupo = columnas.map(col => {
-                        switch(col) {
-                            case 'folio': return item.prepago_id || 'Sin folio';
-                            case 'proveedor': return item.proveedor || 'Sin proveedor';
-                            case 'fecha': return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
-                            case 'monto': return item.monto || 0;
-                            default: return '';
-                        }
-                    }).join(' - ');
-                    
-                    gruposMap.set(grupoId, {
-                        id: grupoId,
-                        valor: valorGrupo,
-                        items: [item],
-                        totalMonto: item.monto || 0
-                    });
-                } else {
-                    const grupo = gruposMap.get(grupoId);
-                    grupo.items.push(item);
-                    grupo.totalMonto += item.monto || 0;
-                }
-            });
-            
-            return {
-                grupos: Array.from(gruposMap.values()),
-                items: []
-            };
-        }
-        
-        // Función para obtener datos de la página actual
-        function getCurrentPageData(datos) {
-            const start = (paginaActual - 1) * registrosPorPagina;
-            const end = start + registrosPorPagina;
-            return datos.slice(start, end);
-        }
-        
-        // Función para actualizar la paginación
-        function actualizarPaginacion(total) {
-            const totalPaginas = Math.ceil(total / registrosPorPagina);
-            paginaActualSpan.textContent = paginaActual;
-            
-            // Mostrar/ocultar botones de página según sea necesario
-            document.querySelectorAll('.pagina-btn').forEach(btn => {
-                const pagina = parseInt(btn.dataset.pagina);
-                if (pagina <= totalPaginas) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-            
-            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
-            const fin = Math.min(paginaActual * registrosPorPagina, total);
-            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
-        }
-        
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            let sumaMonto = 0;
-            
-            datos.forEach(item => {
-                sumaMonto += item.monto || 0;
-            });
-            
-            totalRegistros.textContent = datos.length;
-            sumMonto.textContent = formatCurrency(sumaMonto);
-        }
-        
-        // Función para cargar datos en la tabla
-        function cargarTabla(datos) {
-            if (!tablaBody) return;
-            
-            // Ocultar texto de agrupar si hay columnas agrupadas
-            if (textoAgrupar) {
-                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
-            }
-            
-            // Aplicar agrupación si hay columnas seleccionadas
-            const { grupos } = agruparDatos(datos, columnasAgrupadas);
-            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-            
-            // Limpiar tabla
-            tablaBody.innerHTML = '';
-            
-            if (datos.length === 0) {
-                sinDatosMensaje.style.display = 'block';
-                tablaContainer.style.display = 'none';
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                totalRegistros.textContent = '0';
-                sumMonto.textContent = formatCurrency(0);
-                
-                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                return;
-            }
-            
-            sinDatosMensaje.style.display = 'none';
-            tablaContainer.style.display = 'block';
-            
-            if (hayGrupos) {
-                // Ocultar pie de tabla cuando hay grupos
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                // Mostrar grupos
-                grupos.forEach(grupo => {
-                    const grupoRow = document.createElement('tr');
-                    grupoRow.className = 'fila-grupo';
-                    grupoRow.dataset.grupoId = grupo.id;
-                    
-                    if (expandedGroups.has(grupo.id)) {
-                        grupoRow.classList.add('expandido');
-                    }
-                    
-                    // Determinar el proveedor predominante en el grupo (para el badge)
-                    const proveedorCounts = {};
-                    grupo.items.forEach(item => {
-                        proveedorCounts[item.proveedor] = (proveedorCounts[item.proveedor] || 0) + 1;
-                    });
-                    
-                    let proveedorPredominante = 'Proveedor';
-                    let maxCount = 0;
-                    for (const [proveedor, count] of Object.entries(proveedorCounts)) {
-                        if (count > maxCount) {
-                            maxCount = count;
-                            proveedorPredominante = proveedor;
-                        }
-                    }
-                    
-                    grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="5">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
-                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Monto: ${formatCurrency(grupo.totalMonto)})
-                                    </span>
-                                </div>
-                                <span class="badge" style="background-color: #2378e1; color: white; margin-right: 10px;">${proveedorPredominante}</span>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(grupoRow);
-                    
-                    // Mostrar items del grupo si está expandido
-                    if (expandedGroups.has(grupo.id)) {
-                        grupo.items.forEach(item => {
-                            const detalleRow = document.createElement('tr');
-                            detalleRow.className = 'fila-detalle';
-                            
-                            detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.prepago_id || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.proveedor || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.prepago_id}"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.prepago_id}"></i>
-                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.prepago_id}"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.prepago_id}"></i>
-                                    </div>
-                                </td>
-                            `;
-                            
-                            tablaBody.appendChild(detalleRow);
-                        });
-                    }
-                });
-                
-                if (paginacionInfo) {
-                    const totalRegistros = datos.length;
-                    const mostrando = grupos.length;
-                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
-                }
-            } else {
-                // Mostrar todos los items sin agrupar (con paginación)
-                const pageData = getCurrentPageData(datos);
-                
-                pageData.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    
-                    row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.prepago_id || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.proveedor || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.fecha ? formatDate(item.fecha) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                            <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.prepago_id}"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.prepago_id}"></i>
-                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.prepago_id}"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.prepago_id}"></i>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(row);
-                });
-                
-                // Mostrar pie de tabla con totales
-                if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
-                calcularTotales(datos);
-                
-                actualizarPaginacion(datos.length);
-            }
-        }
-        
-        // Función para actualizar la visualización de columnas agrupadas
-        function actualizarGrupoColumnas() {
-            const grupoContainer = document.getElementById('grupoColumnas');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            
-            if (!grupoContainer) return;
-            
-            grupoContainer.innerHTML = '';
-            
-            if (columnasAgrupadas.length === 0) {
-                if (textoAgrupar) textoAgrupar.style.display = 'inline';
-            } else {
-                if (textoAgrupar) textoAgrupar.style.display = 'none';
-                
-                columnasAgrupadas.forEach(col => {
-                    const nombreColumna = {
-                        'folio': 'Folio',
-                        'proveedor': 'Proveedor',
-                        'fecha': 'Fecha',
-                        'monto': 'Monto'
-                    }[col] || col;
-                    
-                    const chip = document.createElement('span');
-                    chip.className = 'columna-agrupada';
-                    chip.innerHTML = `
-                        ${nombreColumna}
-                        <span class="remover" data-columna="${col}">&times;</span>
-                    `;
-                    grupoContainer.appendChild(chip);
-                });
-            }
-            
-            // Limpiar grupos expandidos al cambiar agrupación
-            expandedGroups.clear();
-            
-            // Recargar tabla con nueva agrupación
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Configurar drag and drop
-        function setupDragAndDrop() {
-            const encabezados = document.querySelectorAll('th[draggable="true"]');
-            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-            
-            encabezados.forEach(th => {
-                th.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', th.dataset.columna);
-                    e.dataTransfer.effectAllowed = 'copy';
-                    th.style.opacity = '0.5';
-                });
-                
-                th.addEventListener('dragend', (e) => {
-                    th.style.opacity = '1';
-                });
-            });
-            
-            grupoAgrupacion.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
-                grupoAgrupacion.classList.add('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('dragleave', () => {
-                grupoAgrupacion.classList.remove('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('drop', (e) => {
-                e.preventDefault();
-                grupoAgrupacion.classList.remove('drag-over');
-                
-                const columna = e.dataTransfer.getData('text/plain');
-                
-                if (columna && !columnasAgrupadas.includes(columna)) {
-                    columnasAgrupadas.push(columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-            
-            // Event listener para remover columnas (usando delegación)
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remover')) {
-                    const columna = e.target.dataset.columna;
-                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-        }
-        
-        // Event listener para expandir/colapsar grupos
-        document.addEventListener('click', function(e) {
-            const filaGrupo = e.target.closest('.fila-grupo');
-            if (filaGrupo) {
-                const grupoId = filaGrupo.dataset.grupoId;
-                const icono = filaGrupo.querySelector('i');
-                
-                if (expandedGroups.has(grupoId)) {
-                    expandedGroups.delete(grupoId);
-                    filaGrupo.classList.remove('expandido');
-                    if (icono) icono.className = 'fas fa-caret-right';
-                } else {
-                    expandedGroups.add(grupoId);
-                    filaGrupo.classList.add('expandido');
-                    if (icono) icono.className = 'fas fa-caret-down';
-                }
-                
-                // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosFiltrados);
-            }
+
+        const res = await fetch(url, {
+            credentials: 'same-origin',
+            ...options,
+            method,
+            headers,
         });
-        
-        // Función para filtrar por búsqueda
-        function filtrarPorBusqueda() {
-            const termino = buscador.value.toLowerCase().trim();
-            
-            if (termino === '') {
-                datosFiltrados = [...datosOriginales];
-            } else {
-                datosFiltrados = datosOriginales.filter(item => 
-                    item.proveedor?.toLowerCase().includes(termino) ||
-                    item.prepago_id?.toString().includes(termino)
-                );
+
+        let data = null;
+        const text = await res.text();
+        try { data = text ? JSON.parse(text) : null; }
+        catch (e) { data = { success: false, message: text || 'Respuesta inválida del servidor' }; }
+
+        if (!res.ok) {
+            if (res.status === 419) {
+                throw { status: 419, data: { success: false, message: 'Sesión expirada (CSRF). Recarga la página.' } };
             }
-            
+            throw { status: res.status, data };
+        }
+        return data;
+    }
+
+    // ============ CARGA DE DATOS ============
+    async function cargarDatos(mostrarLoading = true) {
+        if (mostrarLoading) {
+            $loading.style.display = 'block';
+            $tablaContainer.style.display = 'none';
+        }
+        try {
+            const params = new URLSearchParams({
+                fecha_inicio: $fechaInicio.value || '',
+                fecha_fin: $fechaFin.value || '',
+                buscar: $buscador.value.trim(),
+            });
+            const json = await fetchJSON(`${ROUTES.listado}?${params.toString()}`);
+            if (!json.success) throw new Error(json.message || 'Error al cargar');
+            datosOriginales = (json.data || []).map(r => ({
+                prepago_id: r.prepago_id,
+                id: r.id,
+                proveedor: r.proveedor,
+                fecha: r.fecha,
+                monto: Number(r.monto) || 0,
+            }));
+            datosFiltrados = [...datosOriginales];
             paginaActual = 1;
             cargarTabla(datosFiltrados);
+        } catch (err) {
+            console.error(err);
+            toast(err?.data?.message || err.message || 'Error al cargar prepagos', 'error');
+            $sinDatos.style.display = 'block';
+            $tablaContainer.style.display = 'none';
+        } finally {
+            $loading.style.display = 'none';
+            $tablaContainer.style.display = 'block';
         }
-        
-        // Función para cambiar de página
-        function cambiarPagina(nuevaPagina) {
-            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
-                paginaActual = nuevaPagina;
-                cargarTabla(datosFiltrados);
+    }
+
+    // ============ FILTRADO LOCAL (búsqueda) ============
+    function filtrarLocal() {
+        const t = $buscador.value.toLowerCase().trim();
+        if (!t) { datosFiltrados = [...datosOriginales]; }
+        else {
+            datosFiltrados = datosOriginales.filter(i =>
+                (i.proveedor || '').toLowerCase().includes(t) ||
+                String(i.prepago_id || '').toLowerCase().includes(t)
+            );
+        }
+        paginaActual = 1;
+        cargarTabla(datosFiltrados);
+    }
+
+    // ============ AGRUPACIÓN ============
+    function generarGrupoId(item, cols) {
+        return cols.map(c => {
+            if (c === 'folio') return item.prepago_id ?? '';
+            if (c === 'proveedor') return item.proveedor ?? '';
+            if (c === 'fecha') return item.fecha ?? '';
+            if (c === 'monto') return item.monto ?? 0;
+            return '';
+        }).join('||');
+    }
+
+    function agruparDatos(datos, cols) {
+        if (!cols.length) return { grupos: [], items: datos };
+        const map = new Map();
+        datos.forEach(item => {
+            const id = generarGrupoId(item, cols);
+            if (!map.has(id)) {
+                const valor = cols.map(c => {
+                    if (c === 'folio') return item.prepago_id ?? 'Sin folio';
+                    if (c === 'proveedor') return item.proveedor ?? 'Sin proveedor';
+                    if (c === 'fecha') return item.fecha ? formatDate(item.fecha) : 'Sin fecha';
+                    if (c === 'monto') return formatCurrency(item.monto || 0);
+                    return '';
+                }).join(' - ');
+                map.set(id, { id, valor, items: [item], totalMonto: item.monto || 0 });
+            } else {
+                const g = map.get(id);
+                g.items.push(item);
+                g.totalMonto += item.monto || 0;
             }
-        }
-        
-        // Cargar datos iniciales
-        cargarTabla(datosOriginales);
-        
-        // Configurar drag and drop
-        setupDragAndDrop();
-        
-        // Event Listeners
-        btnCrearFiltro.addEventListener('click', function() {
-            alert('Crear filtro - Funcionalidad en desarrollo');
         });
-        
-        btnAgregar.addEventListener('click', function() {
-            alert('Agregar Prepago - Funcionalidad en desarrollo');
-        });
-        
-        btnExcel.addEventListener('click', function() {
-            exportTableToExcel('tablaPrepagos', 'Prepagos');
-        });
-        
-        btnColumnas.addEventListener('click', function() {
-            alert('Selector de Columnas - Funcionalidad en desarrollo');
-        });
-        
-        buscador.addEventListener('input', filtrarPorBusqueda);
-        
-        // Eventos de paginación
+        return { grupos: Array.from(map.values()), items: [] };
+    }
+
+    function getCurrentPageData(datos) {
+        const s = (paginaActual - 1) * registrosPorPagina;
+        return datos.slice(s, s + registrosPorPagina);
+    }
+
+    function actualizarPaginacion(total) {
+        const totalPaginas = Math.max(1, Math.ceil(total / registrosPorPagina));
+        $paginaActual.textContent = paginaActual;
         document.querySelectorAll('.pagina-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                cambiarPagina(parseInt(this.dataset.pagina));
-            });
+            const p = parseInt(btn.dataset.pagina, 10);
+            btn.style.display = p <= totalPaginas ? 'inline-block' : 'none';
+            btn.style.fontWeight = p === paginaActual ? 'bold' : 'normal';
         });
-        
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
-        
-        // Iconos de filtro en encabezados
-        document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
-            icon.addEventListener('click', function() {
-                alert('Filtro de columna - Funcionalidad en desarrollo');
-            });
-        });
-        
-        // Acciones de los iconos (delegación de eventos)
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fa-edit')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Editar Prepago ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-trash-alt')) {
-                const id = e.target.getAttribute('data-id');
-                if (confirm(`¿Está seguro de eliminar el prepago ID: ${id}?`)) {
-                    alert(`Eliminar Prepago ID: ${id} - Funcionalidad en desarrollo`);
+        const ini = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
+        const fin = Math.min(paginaActual * registrosPorPagina, total);
+        $paginacionInfo.textContent = `Mostrando ${ini}-${fin} de ${total} registros`;
+    }
+
+    function calcularTotales(datos) {
+        const suma = datos.reduce((a, b) => a + (b.monto || 0), 0);
+        $totalRegistros.textContent = datos.length;
+        $sumMonto.textContent = formatCurrency(suma);
+    }
+
+    // ============ RENDER TABLA ============
+    function aplicarVisibilidadColumnas() {
+        const idx = { folio: 1, proveedor: 2, fecha: 3, monto: 4 };
+        for (const col in idx) {
+            const n = idx[col];
+            const th = document.querySelector(`#tablaPrepagos thead th:nth-child(${n})`);
+            const tds = document.querySelectorAll(`#tablaPrepagos tbody tr td:nth-child(${n})`);
+            if (th) th.style.display = columnasVisibles[col] ? '' : 'none';
+            tds.forEach(td => td.style.display = columnasVisibles[col] ? '' : 'none');
+        }
+    }
+
+    function cargarTabla(datos) {
+        if ($textoAgrupar) $textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
+
+        const { grupos } = agruparDatos(datos, columnasAgrupadas);
+        const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
+
+        $tablaBody.innerHTML = '';
+
+        if (!datos.length) {
+            $sinDatos.style.display = 'block';
+            $tablaContainer.style.display = 'none';
+            if ($tablaFoot) $tablaFoot.style.display = 'none';
+            $totalRegistros.textContent = '0';
+            $sumMonto.textContent = formatCurrency(0);
+            $paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
+            return;
+        }
+
+        $sinDatos.style.display = 'none';
+        $tablaContainer.style.display = 'block';
+
+        if (hayGrupos) {
+            $tablaFoot.style.display = 'none';
+            grupos.forEach(g => {
+                const tr = document.createElement('tr');
+                tr.className = 'fila-grupo';
+                tr.dataset.grupoId = g.id;
+                if (expandedGroups.has(g.id)) tr.classList.add('expandido');
+
+                const counts = {};
+                g.items.forEach(i => { counts[i.proveedor] = (counts[i.proveedor] || 0) + 1; });
+                let pred = 'Proveedor', max = 0;
+                for (const [k, v] of Object.entries(counts)) if (v > max) { max = v; pred = k; }
+
+                tr.innerHTML = `
+                    <td colspan="5" style="border:1px solid #dee2e6; padding:10px 4px; color:#000;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <i class="fas ${expandedGroups.has(g.id) ? 'fa-caret-down' : 'fa-caret-right'}" style="margin-right:8px; color:#2378e1;"></i>
+                                <strong style="color:#2378e1;">${esc(g.valor)}</strong>
+                                <span style="color:#6c757d; font-size:11px; margin-left:10px;">
+                                    (${g.items.length} registros - ${formatCurrency(g.totalMonto)})
+                                </span>
+                            </div>
+                            <span style="background:#2378e1; color:white; padding:3px 10px; border-radius:12px; font-size:11px;">${esc(pred)}</span>
+                        </div>
+                    </td>`;
+                $tablaBody.appendChild(tr);
+
+                if (expandedGroups.has(g.id)) {
+                    g.items.forEach(item => $tablaBody.appendChild(filaDetalle(item, true)));
                 }
-            } else if (e.target.classList.contains('fa-eye')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Ver detalles de Prepago ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-file-pdf')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Descargar PDF - Prepago ID: ${id} - Funcionalidad en desarrollo`);
-            }
-        });
-        
-        // Función para exportar a Excel
-        function exportTableToExcel(tableId, filename = '') {
-            var table = document.getElementById(tableId);
-            if (!table) return;
-            
-            var html = table.outerHTML;
-            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
-            
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = filename + '.xls';
-            link.click();
+            });
+            $paginacionInfo.textContent = `Mostrando ${grupos.length} grupos de ${datos.length} registros`;
+        } else {
+            $tablaFoot.style.display = 'table-footer-group';
+            getCurrentPageData(datos).forEach(item => $tablaBody.appendChild(filaDetalle(item, false)));
+            calcularTotales(datos);
+            actualizarPaginacion(datos.length);
+        }
+
+        aplicarVisibilidadColumnas();
+    }
+
+    function filaDetalle(item, esDetalle) {
+        const tr = document.createElement('tr');
+        tr.className = esDetalle ? 'fila-detalle' : '';
+        tr.dataset.id = item.id;
+        tr.innerHTML = `
+            <td style="border:1px solid #dee2e6; padding:10px 4px; color:#000; ${esDetalle ? 'padding-left:30px;' : ''}">${esc(item.prepago_id || '-')}</td>
+            <td style="border:1px solid #dee2e6; padding:10px 4px; color:#000;">${esc(item.proveedor || '-')}</td>
+            <td style="border:1px solid #dee2e6; padding:10px 4px; text-align:center; color:#000;">${esc(formatDate(item.fecha))}</td>
+            <td style="border:1px solid #dee2e6; padding:10px 4px; text-align:right; color:#000;">${esc(formatCurrency(item.monto))}</td>
+            <td style="border:1px solid #dee2e6; padding:10px 4px; background:white; position:sticky; right:0; box-shadow:-2px 0 5px rgba(0,0,0,0.1);">
+                <div style="display:flex; gap:8px; justify-content:center;">
+                    <i class="fas fa-edit"       data-action="edit"   data-id="${item.id}" style="color:#083CAE; cursor:pointer; font-size:14px;" title="Editar"></i>
+                    <i class="fas fa-trash-alt"  data-action="delete" data-id="${item.id}" style="color:#083CAE; cursor:pointer; font-size:14px;" title="Eliminar"></i>
+                    <i class="fas fa-eye"        data-action="view"   data-id="${item.id}" style="color:#083CAE; cursor:pointer; font-size:14px;" title="Ver"></i>
+                </div>
+            </td>`;
+        return tr;
+    }
+
+    // ============ AGRUPACIÓN UI ============
+    function actualizarGrupoColumnas() {
+        $grupoColumnas.innerHTML = '';
+        if (!columnasAgrupadas.length) {
+            if ($textoAgrupar) $textoAgrupar.style.display = 'inline';
+        } else {
+            if ($textoAgrupar) $textoAgrupar.style.display = 'none';
+            const nombres = { folio: 'Folio', proveedor: 'Proveedor', fecha: 'Fecha', monto: 'Monto' };
+            columnasAgrupadas.forEach(col => {
+                const chip = document.createElement('span');
+                chip.className = 'columna-agrupada';
+                chip.style.cssText = 'display:inline-flex; align-items:center; padding:4px 10px; background:#f0f4ff; border-radius:16px; color:#2378e1; font-size:12px; margin:2px; border:1px solid #2378e1;';
+                chip.innerHTML = `${nombres[col] || col} <span class="remover" data-columna="${col}" style="margin-left:6px; cursor:pointer; font-weight:bold;">&times;</span>`;
+                $grupoColumnas.appendChild(chip);
+            });
+        }
+        expandedGroups.clear();
+        cargarTabla(datosFiltrados);
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('remover')) {
+            const col = e.target.dataset.columna;
+            columnasAgrupadas = columnasAgrupadas.filter(c => c !== col);
+            actualizarGrupoColumnas();
         }
     });
+
+    // Drag & drop
+    (function setupDnD() {
+        const grupo = document.getElementById('grupoAgrupacion');
+        document.querySelectorAll('th[draggable="true"]').forEach(th => {
+            th.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', th.dataset.columna);
+                th.style.opacity = '0.5';
+            });
+            th.addEventListener('dragend', () => th.style.opacity = '1');
+        });
+        grupo.addEventListener('dragover', e => { e.preventDefault(); grupo.style.background = 'rgba(35,120,225,0.1)'; });
+        grupo.addEventListener('dragleave', () => { grupo.style.background = ''; });
+        grupo.addEventListener('drop', e => {
+            e.preventDefault(); grupo.style.background = '';
+            const col = e.dataTransfer.getData('text/plain');
+            if (col && !columnasAgrupadas.includes(col)) {
+                columnasAgrupadas.push(col);
+                actualizarGrupoColumnas();
+            }
+        });
+    })();
+
+    // Expandir/colapsar grupos
+    $tablaBody.addEventListener('click', e => {
+        const tr = e.target.closest('.fila-grupo');
+        if (!tr) return;
+        const id = tr.dataset.grupoId;
+        if (expandedGroups.has(id)) expandedGroups.delete(id);
+        else expandedGroups.add(id);
+        cargarTabla(datosFiltrados);
+    });
+
+    // ============ PROVEEDORES ============
+    async function cargarProveedores() {
+        if (proveedoresCache) return proveedoresCache;
+        try {
+            const json = await fetchJSON(ROUTES.proveedores);
+            proveedoresCache = json.data || [];
+            return proveedoresCache;
+        } catch (err) {
+            toast(err?.data?.message || 'No se pudieron cargar los proveedores', 'error');
+            return [];
+        }
+    }
+
+    // ============ MODAL AGREGAR/EDITAR ============
+    const $modalPrepago = document.getElementById('modalPrepago');
+    const $formPrepago  = document.getElementById('formPrepago');
+    const $modalTitulo  = document.getElementById('modalPrepagoTitulo');
+    const $formError    = document.getElementById('formError');
+
+    async function abrirModalCrear() {
+        modoEdicion = false;
+        $formPrepago.reset();
+        document.getElementById('prepagoId').value = '';
+        $modalTitulo.textContent = 'Agregar Prepago';
+        document.getElementById('fecha').value = new Date().toISOString().slice(0, 10);
+        $formError.style.display = 'none';
+
+        const proveedores = await cargarProveedores();
+        const sel = document.getElementById('proveedorId');
+        sel.innerHTML = '<option value="">-- Seleccione proveedor --</option>';
+        proveedores.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.id; opt.textContent = p.nombre;
+            sel.appendChild(opt);
+        });
+
+        $modalPrepago.style.display = 'flex';
+    }
+
+    async function abrirModalEditar(id) {
+        modoEdicion = true;
+        $formError.style.display = 'none';
+        try {
+            const [json, proveedores] = await Promise.all([
+                fetchJSON(`${ROUTES.base}/${id}`),
+                cargarProveedores(),
+            ]);
+            if (!json.success) throw new Error(json.message);
+            const d = json.data;
+
+            $formPrepago.reset();
+            document.getElementById('prepagoId').value = d.id;
+            document.getElementById('folio').value = d.folio || '';
+            document.getElementById('fecha').value = d.fecha || '';
+            document.getElementById('monto').value = d.monto;
+            document.getElementById('observaciones').value = d.observaciones || '';
+
+            const sel = document.getElementById('proveedorId');
+            sel.innerHTML = '<option value="">-- Seleccione proveedor --</option>';
+            proveedores.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id; opt.textContent = p.nombre;
+                if (p.id == d.proveedor_id) opt.selected = true;
+                sel.appendChild(opt);
+            });
+
+            $modalTitulo.textContent = 'Editar Prepago';
+            $modalPrepago.style.display = 'flex';
+        } catch (err) {
+            toast(err?.data?.message || 'Error al cargar prepago', 'error');
+        }
+    }
+
+    function cerrarModalPrepago() { $modalPrepago.style.display = 'none'; }
+    document.getElementById('btnCerrarModal').onclick = cerrarModalPrepago;
+    document.getElementById('btnCancelarForm').onclick = cerrarModalPrepago;
+
+    $formPrepago.addEventListener('submit', async e => {
+        e.preventDefault();
+        $formError.style.display = 'none';
+        const btn = document.getElementById('btnGuardarForm');
+        btn.disabled = true; btn.textContent = 'Guardando...';
+
+        const id = document.getElementById('prepagoId').value;
+        const payload = {
+            proveedor_id: document.getElementById('proveedorId').value,
+            folio: document.getElementById('folio').value.trim() || null,
+            fecha: document.getElementById('fecha').value,
+            monto: parseFloat(document.getElementById('monto').value),
+            observaciones: document.getElementById('observaciones').value.trim() || null,
+        };
+
+        const url = modoEdicion ? `${ROUTES.base}/${id}` : ROUTES.store;
+        const method = modoEdicion ? 'PUT' : 'POST';
+
+        try {
+            const json = await fetchJSON(url, {
+                method,
+                body: JSON.stringify(payload),
+            });
+            if (!json.success) throw { data: json };
+            toast(json.message || 'Guardado correctamente', 'success');
+            cerrarModalPrepago();
+            await cargarDatos(false);
+        } catch (err) {
+            const msg = err?.data?.message || err.message || 'Error al guardar';
+            let html = `<strong>${esc(msg)}</strong>`;
+            if (err?.data?.errors) {
+                html += '<ul style="margin:6px 0 0 18px; padding:0;">';
+                Object.values(err.data.errors).flat().forEach(m => html += `<li>${esc(m)}</li>`);
+                html += '</ul>';
+            }
+            $formError.innerHTML = html;
+            $formError.style.display = 'block';
+        } finally {
+            btn.disabled = false; btn.textContent = 'Guardar';
+        }
+    });
+
+    // ============ MODAL VER ============
+    const $modalVer = document.getElementById('modalVer');
+    document.getElementById('btnCerrarVer').onclick = () => $modalVer.style.display = 'none';
+    document.getElementById('btnCerrarVer2').onclick = () => $modalVer.style.display = 'none';
+
+    async function abrirModalVer(id) {
+        try {
+            const json = await fetchJSON(`${ROUTES.base}/${id}`);
+            if (!json.success) throw new Error(json.message);
+            const d = json.data;
+            document.getElementById('verContenido').innerHTML = `
+                <table style="width:100%; font-size:14px; border-collapse:collapse;">
+                    <tr><td style="padding:8px; color:#6c757d; width:40%;">Folio</td><td style="padding:8px; font-weight:bold;">${esc(d.folio || '-')}</td></tr>
+                    <tr><td style="padding:8px; color:#6c757d;">Proveedor</td><td style="padding:8px;">${esc(d.proveedor || '-')}</td></tr>
+                    <tr><td style="padding:8px; color:#6c757d;">Fecha</td><td style="padding:8px;">${esc(formatDate(d.fecha))}</td></tr>
+                    <tr><td style="padding:8px; color:#6c757d;">Monto</td><td style="padding:8px; font-weight:bold; color:#2378e1;">${esc(formatCurrency(d.monto))}</td></tr>
+                    <tr><td style="padding:8px; color:#6c757d;">Estatus</td><td style="padding:8px;"><span style="background:#28a745; color:white; padding:3px 10px; border-radius:12px; font-size:12px;">${esc(d.estatus || 'activo')}</span></td></tr>
+                    <tr><td style="padding:8px; color:#6c757d;">Observaciones</td><td style="padding:8px;">${esc(d.observaciones || '-')}</td></tr>
+                </table>`;
+            $modalVer.style.display = 'flex';
+        } catch (err) {
+            toast(err?.data?.message || 'Error al cargar prepago', 'error');
+        }
+    }
+
+    // ============ ACCIONES DE TABLA ============
+    $tablaBody.addEventListener('click', async e => {
+        const icon = e.target.closest('i[data-action]');
+        if (!icon) return;
+        const action = icon.dataset.action;
+        const id = icon.dataset.id;
+
+        if (action === 'edit') return abrirModalEditar(id);
+        if (action === 'view') return abrirModalVer(id);
+        if (action === 'pdf')  return window.open(`${ROUTES.base}/${id}/pdf`, '_blank');
+        if (action === 'delete') {
+            if (!confirm('¿Está seguro de eliminar este prepago?')) return;
+            try {
+                const json = await fetchJSON(`${ROUTES.base}/${id}`, { method: 'DELETE' });
+                if (!json.success) throw { data: json };
+                toast(json.message || 'Eliminado correctamente', 'success');
+                await cargarDatos(false);
+            } catch (err) {
+                toast(err?.data?.message || 'Error al eliminar', 'error');
+            }
+        }
+    });
+
+    // ============ BOTONES TOP ============
+    document.getElementById('btnAgregar').onclick = abrirModalCrear;
+    document.getElementById('btnExcel').onclick = () => {
+        const params = new URLSearchParams({
+            fecha_inicio: $fechaInicio.value || '',
+            fecha_fin: $fechaFin.value || '',
+        });
+        window.location.href = `${ROUTES.exportExcel}?${params.toString()}`;
+    };
+
+    // ============ MODAL COLUMNAS ============
+    const $modalCols = document.getElementById('modalColumnas');
+    document.getElementById('btnColumnas').onclick = () => {
+        document.querySelectorAll('.col-toggle').forEach(cb => {
+            cb.checked = columnasVisibles[cb.value] !== false;
+        });
+        $modalCols.style.display = 'flex';
+    };
+    document.getElementById('btnCerrarColumnas').onclick = () => $modalCols.style.display = 'none';
+    document.getElementById('btnAplicarColumnas').onclick = () => {
+        document.querySelectorAll('.col-toggle').forEach(cb => {
+            columnasVisibles[cb.value] = cb.checked;
+        });
+        aplicarVisibilidadColumnas();
+        $modalCols.style.display = 'none';
+    };
+
+    // ============ MODAL FILTRO ============
+    const $modalFiltro = document.getElementById('modalFiltro');
+    document.getElementById('btnCrearFiltro').onclick = () => {
+        document.getElementById('filtroFechaInicio').value = $fechaInicio.value;
+        document.getElementById('filtroFechaFin').value = $fechaFin.value;
+        document.getElementById('filtroBuscar').value = $buscador.value;
+        $modalFiltro.style.display = 'flex';
+    };
+    document.getElementById('btnCerrarFiltro').onclick = () => $modalFiltro.style.display = 'none';
+    document.getElementById('btnAplicarFiltro').onclick = () => {
+        $fechaInicio.value = document.getElementById('filtroFechaInicio').value;
+        $fechaFin.value = document.getElementById('filtroFechaFin').value;
+        $buscador.value = document.getElementById('filtroBuscar').value;
+        $modalFiltro.style.display = 'none';
+        cargarDatos(true);
+    };
+    document.getElementById('btnLimpiarFiltro').onclick = () => {
+        document.getElementById('filtroFechaInicio').value = '';
+        document.getElementById('filtroFechaFin').value = '';
+        document.getElementById('filtroBuscar').value = '';
+    };
+
+    // ============ BÚSQUEDA LOCAL (input) ============
+    let searchTimer;
+    $buscador.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(filtrarLocal, 250);
+    });
+
+    // ============ PAGINACIÓN ============
+    document.querySelectorAll('.pagina-btn').forEach(btn => {
+        btn.addEventListener('click', () => cambiarPagina(parseInt(btn.dataset.pagina, 10)));
+    });
+    document.getElementById('btnPrimera').onclick   = () => cambiarPagina(1);
+    document.getElementById('btnAnterior').onclick  = () => cambiarPagina(paginaActual - 1);
+    document.getElementById('btnSiguiente').onclick = () => cambiarPagina(paginaActual + 1);
+    document.getElementById('btnUltima').onclick    = () => cambiarPagina(Math.max(1, Math.ceil(datosFiltrados.length / registrosPorPagina)));
+
+    function cambiarPagina(p) {
+        const totalPaginas = Math.max(1, Math.ceil(datosFiltrados.length / registrosPorPagina));
+        if (p >= 1 && p <= totalPaginas) {
+            paginaActual = p;
+            cargarTabla(datosFiltrados);
+        }
+    }
+
+    // ============ FECHAS ============
+    $fechaInicio.addEventListener('change', () => cargarDatos(true));
+    $fechaFin.addEventListener('change', () => cargarDatos(true));
+
+    // ============ INICIO ============
+    cargarDatos(true);
+});
 </script>
+
+<style>
+    .semaforo .card-header { background-color: #f4f6f9; border-bottom: 2px solid #2378e1; }
+    .semaforo .card-header h2 { color: #2378e1 !important; }
+    .table th { white-space: nowrap; font-size: 12px; background-color: #2378e1 !important; color: white; font-weight: 600; padding: 10px 4px; }
+    .table td { white-space: nowrap; font-size: 12px; padding: 10px 4px; color: #000 !important; }
+    #tablaBody tr:nth-child(odd)  { background-color: #ffffff; }
+    #tablaBody tr:nth-child(even) { background-color: #f2f2f2; }
+    #tablaBody tr:hover { background-color: #e0e0e0; }
+    #tablaBody td i { transition: transform 0.2s; font-size: 14px; color: #083CAE; cursor: pointer; }
+    #tablaBody td i:hover { transform: scale(1.2); }
+    #tablaBody td:last-child { background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1); z-index: 15; }
+    tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #2378e1; color: #000 !important; }
+    [draggable="true"] { cursor: grab; }
+    [draggable="true"]:active { cursor: grabbing; opacity: 0.7; }
+    .fila-grupo { background-color: #f0f7ff !important; font-weight: 500; cursor: pointer; }
+    .fila-grupo:hover { background-color: #e1f0ff !important; }
+    .fila-detalle { background-color: #fff; }
+    #paginacionContainer button { background: transparent !important; border: none !important; color: #2378e1 !important; cursor: pointer; }
+    #paginacionContainer button:hover { opacity: 0.7; }
+    #paginacionContainer button i { color: #2378e1 !important; }
+    #btnCrearFiltro, #btnCrearFiltro:hover, #btnCrearFiltro:focus { background: transparent !important; border: none !important; box-shadow: none !important; outline: none !important; }
+    #btnCrearFiltro i, #btnCrearFiltro span, #paginacionInfo { color: #2378e1 !important; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @media (max-width: 768px) {
+        input[type="date"], input#buscador { width: 100% !important; }
+        #paginacionContainer { flex-direction: column; align-items: flex-start; }
+    }
+</style>
 @endsection

@@ -37,7 +37,7 @@ class CostoDirectoController extends Controller
     {
         Log::info('=== COSTOS DIRECTOS INDEX ===');
         Log::info('Filtros recibidos:', $request->all());
-        
+
         try {
             $query = CostoDirecto::with(['proyecto', 'proveedor', 'empleado', 'creador']);
 
@@ -49,21 +49,17 @@ class CostoDirectoController extends Controller
             // Aplicar filtro por múltiples proyectos
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
-                
-                // Si es un array (múltiple selección)
+
                 if (is_array($proyectos) && count($proyectos) > 0) {
-                    // Filtrar valores vacíos
-                    $proyectosFiltrados = array_filter($proyectos, function($value) {
+                    $proyectosFiltrados = array_filter($proyectos, function ($value) {
                         return $value !== '' && $value !== null;
                     });
-                    
+
                     if (count($proyectosFiltrados) > 0) {
                         $query->whereIn('proyecto_id', $proyectosFiltrados);
                         Log::info('Filtrando por proyectos: ' . implode(', ', $proyectosFiltrados));
                     }
-                } 
-                // Si es un solo valor (selección única)
-                elseif (!is_array($proyectos) && $proyectos !== '' && $proyectos !== null) {
+                } elseif (!is_array($proyectos) && $proyectos !== '' && $proyectos !== null) {
                     $query->where('proyecto_id', $proyectos);
                     Log::info('Filtrando por proyecto: ' . $proyectos);
                 }
@@ -88,7 +84,7 @@ class CostoDirectoController extends Controller
             $perPage = $request->get('per_page', 10);
             $costos = $query->orderBy('fecha', 'desc')->paginate($perPage);
 
-            // Calcular estadísticas para los 4 cuadros (aplicando los mismos filtros)
+            // Calcular estadísticas para los 4 cuadros (aplicando TODOS los filtros)
             $estadisticas = $this->calcularEstadisticas($request);
 
             return response()->json([
@@ -108,7 +104,7 @@ class CostoDirectoController extends Controller
         } catch (\Exception $e) {
             Log::error('ERROR en index Costos Directos: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener costos: ' . $e->getMessage()
@@ -122,10 +118,10 @@ class CostoDirectoController extends Controller
     public function show($id)
     {
         Log::info('=== COSTOS DIRECTOS: Mostrando detalle ID: ' . $id);
-        
+
         try {
             $costo = CostoDirecto::with(['proyecto', 'proveedor', 'empleado', 'creador', 'documentos'])->findOrFail($id);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $costo,
@@ -148,10 +144,10 @@ class CostoDirectoController extends Controller
     {
         Log::info('=== COSTOS DIRECTOS: Creando nuevo costo ===');
         Log::info('Datos recibidos:', $request->all());
-        
+
         try {
             DB::beginTransaction();
-            
+
             $costo = CostoDirecto::create([
                 'proyecto_id' => $request->proyecto_id,
                 'proveedor_id' => $request->proveedor_id,
@@ -172,29 +168,29 @@ class CostoDirectoController extends Controller
                 'observaciones' => $request->observaciones,
                 'created_by' => auth()->id()
             ]);
-            
+
             Log::info('Costo creado con ID: ' . $costo->id);
-            
+
             // Procesar documentos si se subieron
             if ($request->hasFile('documentos')) {
                 foreach ($request->file('documentos') as $file) {
-                    $this->subirDocumento($file, $costo->id);
+                    $this->subirDocumentoArchivo($file, $costo->id);
                 }
             }
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $costo,
                 'message' => 'Costo directo creado correctamente'
             ], 201);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al crear costo: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el costo: ' . $e->getMessage()
@@ -209,12 +205,12 @@ class CostoDirectoController extends Controller
     {
         Log::info('=== COSTOS DIRECTOS: Actualizando ID: ' . $id);
         Log::info('Datos:', $request->all());
-        
+
         try {
             DB::beginTransaction();
-            
+
             $costo = CostoDirecto::findOrFail($id);
-            
+
             $costo->update([
                 'proyecto_id' => $request->proyecto_id,
                 'proveedor_id' => $request->proveedor_id,
@@ -234,11 +230,11 @@ class CostoDirectoController extends Controller
                 'estatus_pago' => $request->estatus_pago ?? $costo->estatus_pago,
                 'observaciones' => $request->observaciones
             ]);
-            
+
             Log::info('Costo actualizado ID: ' . $costo->id);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $costo,
@@ -248,7 +244,7 @@ class CostoDirectoController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al actualizar costo: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el costo: ' . $e->getMessage()
@@ -262,18 +258,18 @@ class CostoDirectoController extends Controller
     public function destroy($id)
     {
         Log::info('=== COSTOS DIRECTOS: Eliminando ID: ' . $id);
-        
+
         try {
             $costo = CostoDirecto::findOrFail($id);
-            
+
             // Eliminar documentos asociados
             foreach ($costo->documentos as $documento) {
                 Storage::disk('public')->delete($documento->ruta);
                 $documento->delete();
             }
-            
+
             $costo->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Costo directo eliminado correctamente'
@@ -294,17 +290,17 @@ class CostoDirectoController extends Controller
     public function cambiarEstatusPago(Request $request, $id)
     {
         Log::info('=== COSTOS DIRECTOS: Cambiando estatus ID: ' . $id . ' a: ' . $request->estatus);
-        
+
         try {
             $costo = CostoDirecto::findOrFail($id);
-            
+
             if (!$costo->cambiarEstatusPago($request->estatus)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Estatus de pago no válido'
                 ], 400);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $costo,
@@ -327,7 +323,7 @@ class CostoDirectoController extends Controller
     {
         try {
             $estadisticas = $this->calcularEstadisticas($request);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $estadisticas
@@ -348,19 +344,18 @@ class CostoDirectoController extends Controller
     public function exportar(Request $request)
     {
         Log::info('=== COSTOS DIRECTOS: Exportando datos ===');
-        
+
         try {
             $query = CostoDirecto::with(['proyecto']);
-            
+
             if ($request->filled('busqueda')) {
                 $query->buscar($request->busqueda);
             }
-            
-            // Aplicar filtro por múltiples proyectos
+
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
                 if (is_array($proyectos) && count($proyectos) > 0) {
-                    $proyectosFiltrados = array_filter($proyectos, function($value) {
+                    $proyectosFiltrados = array_filter($proyectos, function ($value) {
                         return $value !== '' && $value !== null;
                     });
                     if (count($proyectosFiltrados) > 0) {
@@ -370,16 +365,23 @@ class CostoDirectoController extends Controller
                     $query->where('proyecto_id', $proyectos);
                 }
             }
-            
+
             if ($request->filled('categoria') && $request->categoria !== 'todos') {
                 $query->byCategoria($request->categoria);
             }
-            
+
+            if ($request->filled('estatus_pago')) {
+                $query->byEstatusPago($request->estatus_pago);
+            }
+
+            if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+                $query->byRangoFechas($request->fecha_inicio, $request->fecha_fin);
+            }
+
             $costos = $query->orderBy('fecha', 'desc')->get();
-            
-            // Preparar datos para CSV
+
             $headers = ['Proyecto', 'Categoría', 'Concepto', 'Fecha', 'Proveedor', 'RFC', 'Factura', 'Unidad', 'Cantidad', 'Precio Unit.', 'Subtotal', 'IVA', 'Total', 'Fecha Pago', 'Estatus', 'Observaciones'];
-            $rows = $costos->map(function($costo) {
+            $rows = $costos->map(function ($costo) {
                 return [
                     $costo->proyecto?->nombre ?? '-',
                     $costo->categoria_nombre,
@@ -399,7 +401,7 @@ class CostoDirectoController extends Controller
                     $costo->observaciones ?? '-'
                 ];
             });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -431,13 +433,13 @@ class CostoDirectoController extends Controller
                 ->select('id', 'codigo', 'nombre')
                 ->orderBy('nombre')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'nombre' => $item->codigo . ' - ' . $item->nombre
                     ];
                 });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $proyectos
@@ -463,7 +465,7 @@ class CostoDirectoController extends Controller
                 ->select('id', 'nombre', 'rfc')
                 ->orderBy('nombre')
                 ->get();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $proveedores
@@ -488,13 +490,13 @@ class CostoDirectoController extends Controller
             $empleados = Plantilla::where('estatus', 'Activo')
                 ->select('plantilla_id as id', 'nombre', 'apellido_paterno', 'apellido_materno')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'nombre_completo' => trim($item->nombre . ' ' . ($item->apellido_paterno ?? '') . ' ' . ($item->apellido_materno ?? ''))
                     ];
                 });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $empleados
@@ -516,17 +518,17 @@ class CostoDirectoController extends Controller
     public function subirDocumento(Request $request, $id)
     {
         Log::info('=== COSTOS DIRECTOS: Subiendo documento para ID: ' . $id);
-        
+
         try {
             $request->validate([
                 'documento' => 'required|file|max:10240|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx'
             ]);
-            
+
             $costo = CostoDirecto::findOrFail($id);
             $file = $request->file('documento');
-            
+
             $documento = $this->subirDocumentoArchivo($file, $costo->id);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $documento,
@@ -548,15 +550,15 @@ class CostoDirectoController extends Controller
     public function eliminarDocumento($id, $documentoId)
     {
         Log::info('=== COSTOS DIRECTOS: Eliminando documento ID: ' . $documentoId . ' de costo ID: ' . $id);
-        
+
         try {
             $documento = CostoDirectoDocumento::where('costo_directo_id', $id)
                 ->where('id', $documentoId)
                 ->firstOrFail();
-            
+
             Storage::disk('public')->delete($documento->ruta);
             $documento->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Documento eliminado correctamente'
@@ -580,11 +582,11 @@ class CostoDirectoController extends Controller
             $documento = CostoDirectoDocumento::where('costo_directo_id', $id)
                 ->where('id', $documentoId)
                 ->firstOrFail();
-            
+
             if (!Storage::disk('public')->exists($documento->ruta)) {
                 abort(404, 'El archivo no existe');
             }
-            
+
             return Storage::disk('public')->download(
                 $documento->ruta,
                 $documento->nombre_original
@@ -599,19 +601,27 @@ class CostoDirectoController extends Controller
     // ==================== MÉTODOS PRIVADOS ====================
 
     /**
-     * Calcula las estadísticas para los 4 cuadros
-     * APLICANDO LOS MISMOS FILTROS (incluyendo múltiples proyectos)
+     * Calcula las estadísticas para los 4 cuadros.
+     *
+     * IMPORTANTE: aplica EXACTAMENTE los mismos filtros que index()
+     * (búsqueda, proyectos múltiples, categoría, estatus_pago y rango de fechas)
+     * para que los cuadros de resumen reflejen lo mismo que la tabla.
      */
     private function calcularEstadisticas(Request $request): array
     {
         try {
             $query = CostoDirecto::query();
-            
-            // Aplicar filtro por múltiples proyectos (mismo que en index)
+
+            // Filtro de búsqueda (mismo que en index)
+            if ($request->filled('busqueda')) {
+                $query->buscar($request->busqueda);
+            }
+
+            // Filtro por múltiples proyectos
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
                 if (is_array($proyectos) && count($proyectos) > 0) {
-                    $proyectosFiltrados = array_filter($proyectos, function($value) {
+                    $proyectosFiltrados = array_filter($proyectos, function ($value) {
                         return $value !== '' && $value !== null;
                     });
                     if (count($proyectosFiltrados) > 0) {
@@ -621,45 +631,56 @@ class CostoDirectoController extends Controller
                     $query->where('proyecto_id', $proyectos);
                 }
             }
-            
+
+            // Filtro por categoría
             if ($request->filled('categoria') && $request->categoria !== 'todos') {
                 $query->byCategoria($request->categoria);
             }
 
+            // Filtro por estatus de pago
+            if ($request->filled('estatus_pago')) {
+                $query->byEstatusPago($request->estatus_pago);
+            }
+
+            // ⚠️ Filtro por rango de fechas — ESTE FALTABA y por eso los cuadros no se actualizaban
+            if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+                $query->byRangoFechas($request->fecha_inicio, $request->fecha_fin);
+            }
+
             // Totales por categoría
-            $totalDirectos = (clone $query)->sum('total');
+            $totalDirectos   = (clone $query)->sum('total');
             $totalMateriales = (clone $query)->where('categoria', 'materiales')->sum('total');
-            $totalManoObra = (clone $query)->where('categoria', 'mano_obra')->sum('total');
+            $totalManoObra   = (clone $query)->where('categoria', 'mano_obra')->sum('total');
             $totalMaquinaria = (clone $query)->where('categoria', 'maquinaria')->sum('total');
 
             return [
-                'total_directos' => $totalDirectos,
-                'total_materiales' => $totalMateriales,
-                'total_mano_obra' => $totalManoObra,
-                'total_maquinaria' => $totalMaquinaria,
-                'total_subcontratos' => (clone $query)->where('categoria', 'subcontratos')->sum('total'),
-                'total_equipos' => (clone $query)->where('categoria', 'equipos')->sum('total'),
-                'count' => (clone $query)->count(),
-                'count_pagados' => (clone $query)->where('estatus_pago', 'pagado')->count(),
-                'count_pendientes' => (clone $query)->where('estatus_pago', 'pendiente')->count(),
-                'count_programados' => (clone $query)->where('estatus_pago', 'programado')->count(),
-                'count_vencidos' => (clone $query)->where('estatus_pago', 'vencido')->count()
+                'total_directos'     => (float) $totalDirectos,
+                'total_materiales'   => (float) $totalMateriales,
+                'total_mano_obra'    => (float) $totalManoObra,
+                'total_maquinaria'   => (float) $totalMaquinaria,
+                'total_subcontratos' => (float) (clone $query)->where('categoria', 'subcontratos')->sum('total'),
+                'total_equipos'      => (float) (clone $query)->where('categoria', 'equipos')->sum('total'),
+                'count'              => (clone $query)->count(),
+                'count_pagados'      => (clone $query)->where('estatus_pago', 'pagado')->count(),
+                'count_pendientes'   => (clone $query)->where('estatus_pago', 'pendiente')->count(),
+                'count_programados'  => (clone $query)->where('estatus_pago', 'programado')->count(),
+                'count_vencidos'     => (clone $query)->where('estatus_pago', 'vencido')->count()
             ];
-            
+
         } catch (\Exception $e) {
             Log::error('ERROR calcularEstadisticas: ' . $e->getMessage());
             return [
-                'total_directos' => 0,
-                'total_materiales' => 0,
-                'total_mano_obra' => 0,
-                'total_maquinaria' => 0,
+                'total_directos'     => 0,
+                'total_materiales'   => 0,
+                'total_mano_obra'    => 0,
+                'total_maquinaria'   => 0,
                 'total_subcontratos' => 0,
-                'total_equipos' => 0,
-                'count' => 0,
-                'count_pagados' => 0,
-                'count_pendientes' => 0,
-                'count_programados' => 0,
-                'count_vencidos' => 0
+                'total_equipos'      => 0,
+                'count'              => 0,
+                'count_pagados'      => 0,
+                'count_pendientes'   => 0,
+                'count_programados'  => 0,
+                'count_vencidos'     => 0
             ];
         }
     }
@@ -673,7 +694,7 @@ class CostoDirectoController extends Controller
         $extension = $file->getClientOriginalExtension();
         $nombreUnico = uniqid() . '_' . time() . '.' . $extension;
         $ruta = $file->storeAs('costos_directos/documentos', $nombreUnico, 'public');
-        
+
         return CostoDirectoDocumento::create([
             'costo_directo_id' => $costoId,
             'nombre_original' => $nombreOriginal,

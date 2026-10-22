@@ -28,12 +28,16 @@ class HistorialPresupuestoContratista extends Model
         'fecha_cambio' => 'date'
     ];
 
+    // ============================================
+    // RELACIONES
+    // ============================================
+
     /**
-     * Relación con asignación
+     * ⚠️ CORREGIDO: Forzar foreign key 'asignacion_id'
      */
     public function asignacion(): BelongsTo
     {
-        return $this->belongsTo(AsignacionContratista::class);
+        return $this->belongsTo(AsignacionContratista::class, 'asignacion_id', 'id');
     }
 
     /**
@@ -41,7 +45,7 @@ class HistorialPresupuestoContratista extends Model
      */
     public function contratista(): BelongsTo
     {
-        return $this->belongsTo(Contratista::class);
+        return $this->belongsTo(Contratista::class, 'contratista_id', 'id');
     }
 
     /**
@@ -52,15 +56,19 @@ class HistorialPresupuestoContratista extends Model
         return $this->belongsTo(User::class, 'realizado_por');
     }
 
+    // ============================================
+    // ACCESSORS
+    // ============================================
+
     /**
      * Accessor para diferencia
      */
     public function getDiferenciaAttribute(): float
     {
         if ($this->presupuesto_anterior) {
-            return $this->presupuesto_nuevo - $this->presupuesto_anterior;
+            return (float) ($this->presupuesto_nuevo - $this->presupuesto_anterior);
         }
-        return $this->presupuesto_nuevo;
+        return (float) $this->presupuesto_nuevo;
     }
 
     /**
@@ -69,7 +77,7 @@ class HistorialPresupuestoContratista extends Model
     public function getPorcentajeCambioAttribute(): float
     {
         if ($this->presupuesto_anterior > 0) {
-            return (($this->presupuesto_nuevo - $this->presupuesto_anterior) / $this->presupuesto_anterior) * 100;
+            return (float) ((($this->presupuesto_nuevo - $this->presupuesto_anterior) / $this->presupuesto_anterior) * 100);
         }
         return 0;
     }

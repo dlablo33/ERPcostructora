@@ -14,6 +14,7 @@ class MantenimientoActivo extends Model
 
     protected $fillable = [
         'activo_id',
+        'proyecto_id',
         'proveedor_id',
         'responsable_id',
         'created_by',
@@ -22,11 +23,13 @@ class MantenimientoActivo extends Model
         'descripcion',
         'fecha_inicio',
         'fecha_fin',
+        'fecha_fin_estimada',
         'costo',
         'horometro_actual',
         'horometro_proximo',
         'dias_proximo',
         'estatus',
+        'prioridad',
         'observaciones'
     ];
 
@@ -37,6 +40,7 @@ class MantenimientoActivo extends Model
         'dias_proximo' => 'integer',
         'fecha_inicio' => 'date',
         'fecha_fin' => 'date',
+        'fecha_fin_estimada' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime'
@@ -102,16 +106,27 @@ class MantenimientoActivo extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    // ==================== ACCESSORS ====================
-
-    public function getTipoNombreAttribute(): string
+    public function proyecto()
     {
-        return self::TIPOS[$this->tipo_mantenimiento] ?? $this->tipo_mantenimiento;
+        return $this->belongsTo(Proyecto::class, 'proyecto_id');
     }
 
+    // ==================== ACCESSORS ====================
+
+    /**
+     * ✅ FIX: fallback 'Sin tipo' evita el TypeError cuando tipo_mantenimiento es null
+     */
+    public function getTipoNombreAttribute(): string
+    {
+        return self::TIPOS[$this->tipo_mantenimiento] ?? 'Sin tipo';
+    }
+
+    /**
+     * ✅ FIX: fallback 'Sin estatus' evita el TypeError cuando estatus es null
+     */
     public function getEstatusNombreAttribute(): string
     {
-        return self::ESTATUS[$this->estatus] ?? $this->estatus;
+        return self::ESTATUS[$this->estatus] ?? 'Sin estatus';
     }
 
     public function getEstatusBadgeAttribute(): string
@@ -138,9 +153,11 @@ class MantenimientoActivo extends Model
         if (!$this->responsable) {
             return 'No asignado';
         }
-        return trim($this->responsable->nombre . ' ' . 
-                   ($this->responsable->apellido_paterno ?? '') . ' ' . 
-                   ($this->responsable->apellido_materno ?? ''));
+        return trim(
+            $this->responsable->nombre . ' ' .
+            ($this->responsable->apellido_paterno ?? '') . ' ' .
+            ($this->responsable->apellido_materno ?? '')
+        );
     }
 
     public function getNombreProveedorAttribute(): string
@@ -218,10 +235,10 @@ class MantenimientoActivo extends Model
         if ($this->estatus === 'completado') {
             return false;
         }
-        
+
         $this->estatus = 'completado';
         $this->fecha_fin = now();
-        
+
         if ($data) {
             if (isset($data['horometro_proximo'])) {
                 $this->horometro_proximo = $data['horometro_proximo'];
@@ -230,7 +247,7 @@ class MantenimientoActivo extends Model
                 $this->observaciones = $data['observaciones'];
             }
         }
-        
+
         return $this->save();
     }
 
@@ -239,7 +256,7 @@ class MantenimientoActivo extends Model
         if ($this->estatus === 'completado') {
             return false;
         }
-        
+
         $this->estatus = 'cancelado';
         if ($motivo) {
             $this->observaciones = $motivo;
@@ -271,7 +288,7 @@ class MantenimientoActivo extends Model
                 $count = self::whereDate('created_at', now()->toDateString())->count() + 1;
                 $mantenimiento->folio = 'MANT-' . $fecha . '-' . str_pad($count, 4, '0', STR_PAD_LEFT);
             }
-            
+
             if (!$mantenimiento->created_by) {
                 $mantenimiento->created_by = auth()->id();
             }
@@ -282,20 +299,20 @@ class MantenimientoActivo extends Model
             if ($mantenimiento->isDirty('estatus') && $mantenimiento->estatus === 'completado') {
                 if ($mantenimiento->activo) {
                     $activo = $mantenimiento->activo;
-                    
+
                     // Actualizar fechas de mantenimiento en el activo
                     $activo->fecha_ultimo_mantenimiento = now();
                     if ($mantenimiento->dias_proximo) {
                         $activo->fecha_proximo_mantenimiento = now()->addDays($mantenimiento->dias_proximo);
                     }
-                    
+
                     // Si estaba en mantenimiento, cambiar a activo
                     if ($activo->estatus === 'mantenimiento') {
                         $activo->estatus = 'activo';
                     }
-                    
+
                     $activo->save();
-                    
+
                     // Actualizar horometros en maquinaria
                     if ($activo->maquinaria && $mantenimiento->horometro_actual) {
                         $activo->maquinaria->horometro_actual = $mantenimiento->horometro_actual;
@@ -308,17 +325,4 @@ class MantenimientoActivo extends Model
             }
         });
     }
-    // ==================== RELACIONES ====================
-
-
-
-// AGREGA ESTA RELACIÓN
-public function proyecto()
-{
-    return $this->belongsTo(Proyecto::class, 'proyecto_id');
-}
-
-
-
-
 }

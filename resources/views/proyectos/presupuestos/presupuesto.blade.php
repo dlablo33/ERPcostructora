@@ -51,8 +51,6 @@
                         </select>
                         
                         <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                            <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar"></i>
-                            <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
                             <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
                         </div>
                     </div>
@@ -156,7 +154,16 @@
                             </h5>
                         </div>
                         <div style="overflow-x: auto;">
-                            <table style="width: 100%; font-size: 13px; border-collapse: collapse; min-width: 800px;">
+                            <table id="tablaResumenSecciones" style="width: 100%; font-size: 13px; border-collapse: collapse; min-width: 800px; table-layout: fixed;">
+                                <colgroup>
+                                    <col style="width: 40px;">
+                                    <col style="width: 22%;">
+                                    <col style="width: 13%;">
+                                    <col style="width: 13%;">
+                                    <col style="width: 13%;">
+                                    <col style="width: 13%;">
+                                    <col style="width: 10%;">
+                                </colgroup>
                                 <thead style="position: sticky; top: 0; z-index: 10;">
                                     <tr style="background-color: #083CAE; color: white;">
                                         <th style="width: 40px; padding: 14px 12px; text-align: center; font-weight: 600;"></th>
@@ -229,7 +236,13 @@
             </div>
             <div style="margin-bottom:15px"><label>Descripción *</label><input type="text" id="modalNombre" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;"></div>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:15px; margin-bottom:15px">
-                <div><label>Unidad</label><input type="text" id="modalUnidad" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;"></div>
+                <div>
+                    <label>Unidad *</label>
+                    {{-- ✅ TICKET #3: ahora es un select, no un input libre --}}
+                    <select id="modalUnidad" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;">
+                        <option value="">Cargando unidades...</option>
+                    </select>
+                </div>
                 <div><label>Cantidad</label><input type="number" id="modalCantidad" step="0.01" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;"></div>
                 <div><label>Precio Unitario</label><input type="number" id="modalPrecioUnitario" step="0.01" style="width:100%; padding:8px; border:1px solid #ced4da; border-radius:4px;"></div>
                 <div><label>Importe</label><div id="modalImporte" style="background:#f8f9fa; padding:8px; border:1px solid #ced4da; border-radius:4px;">$0.00</div></div>
@@ -270,9 +283,46 @@
     .texto-ejecutado { color: #00A86B !important; font-weight: 600 !important; }
     .texto-pendiente { color: #FF6B00 !important; font-weight: 600 !important; }
     
-    .mini-header { background-color: #2378e1 !important; color: white !important; font-weight: 600 !important; font-size: 11px !important; padding: 8px 6px !important; }
-    .mini-header th { background-color: #2378e1 !important; color: white !important; font-weight: 600; font-size: 11px; padding: 8px 6px; text-align: center; }
-    .mini-header th:first-child { padding-left: 40px; text-align: left; }
+    /* ✅ TICKET #2: mini-header ahora ocupa 7 columnas reales para no romper el ancho */
+    .fila-mini-header {
+        background-color: #2378e1 !important;
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 11px !important;
+    }
+    .fila-mini-header td {
+        background-color: #2378e1 !important;
+        color: white !important;
+        font-weight: 600;
+        font-size: 11px;
+        padding: 8px 6px;
+        text-align: center;
+        white-space: nowrap;
+    }
+    .fila-mini-header td.col-izq { padding-left: 40px; text-align: left; }
+    
+    /* Sub-fila expandida: 7 celdas alineadas con la tabla principal */
+    .fila-partida-expandida { background-color: #ffffff; border-bottom: 1px solid #f0f0f0; }
+    .fila-partida-expandida:hover { background-color: #f8f9fc !important; }
+    .fila-partida-expandida td {
+        padding: 10px 6px;
+        vertical-align: middle;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .fila-partida-expandida td.col-izq { padding-left: 40px; }
+    .fila-partida-expandida .cell-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        line-height: 1.2;
+    }
+    .fila-partida-expandida .cell-wrap .sub {
+        font-size: 10px;
+        color: #6c757d;
+    }
     
     .fila-partida { background-color: #ffffff; border-bottom: 1px solid #f0f0f0; }
     .fila-partida:hover { background-color: #f8f9fc !important; }
@@ -286,8 +336,8 @@
     
     @media (max-width: 768px) { 
         select, input, button { width:100% !important; } 
-        .fila-partida td { padding: 6px 3px; font-size: 10px; }
-        .mini-header th { font-size: 9px; padding: 5px 3px; }
+        .fila-partida-expandida td { padding: 6px 3px; font-size: 10px; }
+        .fila-mini-header td { font-size: 9px; padding: 5px 3px; }
         .badge-categoria { font-size: 9px; padding: 2px 5px; }
         table { min-width: 700px; }
     }
@@ -302,21 +352,85 @@ document.addEventListener('DOMContentLoaded', function() {
     let seccionesExpandidas = new Set();
     let proyectosList = [];
     let partidasPorSeccion = {};
+    let unidadesCatalogo = {}; // ✅ TICKET #3: cache del catálogo de unidades
 
     function formatCurrencyFull(amount) {
         return '$' + parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
     
-    function getCategoriaBadge(categoria) {
-        const classes = { materiales:'badge-materiales', mano_obra:'badge-mano_obra', maquinaria:'badge-maquinaria', subcontratos:'badge-subcontratos', indirectos:'badge-indirectos' };
-        const labels = { materiales:'Materiales', mano_obra:'Mano Obra', maquinaria:'Maquinaria', subcontratos:'Subcontratos', indirectos:'Indirectos' };
-        return `<span class="badge-categoria ${classes[categoria] || ''}">${labels[categoria] || categoria}</span>`;
+    // ✅ TICKET #1: fallback seguro por si el backend no envía 'categoria' raw
+    function getCategoriaBadge(categoria, categoriaNombre) {
+        const classes = { 
+            materiales:'badge-materiales', 
+            mano_obra:'badge-mano_obra', 
+            maquinaria:'badge-maquinaria', 
+            subcontratos:'badge-subcontratos', 
+            indirectos:'badge-indirectos' 
+        };
+        const labels = { 
+            materiales:'Materiales', 
+            mano_obra:'Mano Obra', 
+            maquinaria:'Maquinaria', 
+            subcontratos:'Subcontratos', 
+            indirectos:'Indirectos' 
+        };
+        
+        // Si no viene 'categoria' raw, intentamos deducirla desde el nombre
+        let key = categoria;
+        if (!key && categoriaNombre) {
+            const mapNombre = {
+                'Materiales': 'materiales',
+                'Mano de Obra': 'mano_obra',
+                'Mano Obra': 'mano_obra',
+                'Maquinaria': 'maquinaria',
+                'Subcontratos': 'subcontratos',
+                'Gastos Indirectos': 'indirectos',
+                'Indirectos': 'indirectos'
+            };
+            key = mapNombre[categoriaNombre] || '';
+        }
+        if (!key) {
+            return `<span class="badge-categoria badge-indirectos">-</span>`;
+        }
+        return `<span class="badge-categoria ${classes[key] || ''}">${labels[key] || key}</span>`;
     }
     
     function getProgressClass(avance) {
         if (avance >= 75) return 'success';
         if (avance >= 50) return 'warning';
         return 'danger';
+    }
+
+    // ✅ TICKET #3: obtener etiqueta de unidad legible
+    function getUnidadLabel(unidad, unidadLabel) {
+        if (unidadLabel) return unidadLabel;
+        if (unidadesCatalogo[unidad]) return unidadesCatalogo[unidad];
+        return unidad || '-';
+    }
+
+    // ✅ TICKET #3: cargar catálogo de unidades y poblar el select
+    async function cargarUnidades() {
+        try {
+            const response = await fetch('/api/unidades', {
+                headers: { 'Accept': 'application/json' }
+            });
+            const result = await response.json();
+            const select = document.getElementById('modalUnidad');
+            if (result.success && Array.isArray(result.data)) {
+                unidadesCatalogo = {};
+                let options = '<option value="">Seleccione...</option>';
+                result.data.forEach(u => {
+                    unidadesCatalogo[u.value] = u.label;
+                    options += `<option value="${u.value}">${u.label}</option>`;
+                });
+                select.innerHTML = options;
+            } else {
+                select.innerHTML = '<option value="">Error cargando unidades</option>';
+            }
+        } catch (error) {
+            console.error('Error cargando unidades:', error);
+            document.getElementById('modalUnidad').innerHTML = '<option value="">Error cargando unidades</option>';
+        }
     }
 
     // Cargar proyectos
@@ -452,46 +566,60 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     
                     if (estaExpandida && partidasPorSeccion[seccion] && partidasPorSeccion[seccion].length > 0) {
+                        // ✅ TICKET #2: mini-header con EXACTAMENTE 7 columnas (las mismas que la tabla padre)
                         html += `
-                            <tr class="mini-header">
-                                <td colspan="2" style="padding-left: 40px;">Código / Partida</td>
-                                <td style="text-align: center;">Categoría</td>
-                                <td style="text-align: center;">Unidad</td>
-                                <td style="text-align: center;">Cantidad</td>
-                                <td style="text-align: center;">P.U.</td>
-                                <td style="text-align: center;">Importe</td>
-                                <td style="text-align: center;">Ejecutado</td>
-                                <td style="text-align: center;">Pendiente</td>
-                                <td style="text-align: center;">Avance</td>
-                                <td style="text-align: center;">Acciones</td>
-                              </tr>
+                            <tr class="fila-mini-header">
+                                <td colspan="2" class="col-izq">Código / Partida</td>
+                                <td>Categoría</td>
+                                <td>Unidad</td>
+                                <td>Cantidad / P.U.</td>
+                                <td>Importe / Ejecutado</td>
+                                <td>Avance / Acciones</td>
+                            </tr>
                         `;
                         
                         const partidas = partidasPorSeccion[seccion];
                         partidas.forEach(partida => {
                             const progressClassPartida = partida.avance >= 75 ? 'success' : (partida.avance >= 50 ? 'warning' : 'danger');
+                            const unidadLabel = getUnidadLabel(partida.unidad, partida.unidad_label);
+                            // ✅ TICKET #1: pasamos ambos, categoria raw y categoria_nombre
+                            const categoriaBadge = getCategoriaBadge(partida.categoria, partida.categoria_nombre);
+                            
+                            // ✅ TICKET #2: la fila expandida también tiene 7 celdas (colspan=2 en la primera)
                             html += `
-                                <tr class="fila-partida">
-                                    <td style="padding-left: 40px;"><code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px;">${partida.codigo}</code></td>
-                                    <td><strong>${partida.nombre}</strong></td>
-                                    <td style="text-align: center;">${getCategoriaBadge(partida.categoria)}</td>
-                                    <td style="text-align: center;">${partida.unidad || '-'}</td>
-                                    <td style="text-align: right;">${parseFloat(partida.cantidad).toFixed(2)}</td>
-                                    <td style="text-align: right;">${formatCurrencyFull(partida.precio_unitario)}</td>
-                                    <td style="text-align: right; font-weight: 600; color: #083CAE;">${formatCurrencyFull(partida.importe)}</td>
-                                    <td style="text-align: right; color: #00A86B; font-weight: 600;">${formatCurrencyFull(partida.ejecutado)}</td>
-                                    <td style="text-align: right; color: #FF6B00; font-weight: 600;">${formatCurrencyFull(partida.pendiente)}</td>
-                                    <td style="text-align: center;">
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <div class="progress-mini"><div class="progress-mini-fill ${progressClassPartida}" style="width: ${partida.avance}%"></div></div>
-                                            <span style="font-size: 11px;">${partida.avance}%</span>
+                                <tr class="fila-partida-expandida">
+                                    <td colspan="2" class="col-izq">
+                                        <div class="cell-wrap">
+                                            <span><code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px;">${partida.codigo}</code> <strong>${partida.nombre}</strong></span>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;">${categoriaBadge}</td>
+                                    <td style="text-align: center;">${unidadLabel}</td>
+                                    <td style="text-align: right;">
+                                        <div class="cell-wrap">
+                                            <span>${parseFloat(partida.cantidad).toFixed(2)}</span>
+                                            <span class="sub">${formatCurrencyFull(partida.precio_unitario)}</span>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <div class="cell-wrap">
+                                            <span style="font-weight: 600; color: #083CAE;">${formatCurrencyFull(partida.importe)}</span>
+                                            <span class="sub" style="color: #00A86B;">Ejec: ${formatCurrencyFull(partida.ejecutado)}</span>
                                         </div>
                                     </td>
                                     <td style="text-align: center;">
-                                        <i class="fas fa-edit" onclick="event.stopPropagation(); editarPartida(${partida.id})" style="cursor:pointer; margin:0 5px; color:#083CAE;"></i>
-                                        <i class="fas fa-trash" onclick="event.stopPropagation(); eliminarPartida(${partida.id})" style="cursor:pointer; margin:0 5px; color:#dc3545;"></i>
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                                            <div style="display: flex; align-items: center; gap: 6px;">
+                                                <div class="progress-mini"><div class="progress-mini-fill ${progressClassPartida}" style="width: ${partida.avance}%"></div></div>
+                                                <span style="font-size: 11px;">${partida.avance}%</span>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-edit" onclick="event.stopPropagation(); editarPartida(${partida.id})" style="cursor:pointer; margin:0 5px; color:#083CAE;"></i>
+                                                <i class="fas fa-trash" onclick="event.stopPropagation(); eliminarPartida(${partida.id})" style="cursor:pointer; margin:0 5px; color:#dc3545;"></i>
+                                            </div>
+                                        </div>
                                     </td>
-                                  </tr>
+                                </tr>
                             `;
                         });
                     }
@@ -557,13 +685,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         tbody.innerHTML = partidas.map(item => {
             const progressClass = getProgressClass(item.avance);
+            const unidadLabel = getUnidadLabel(item.unidad, item.unidad_label);
+            // ✅ TICKET #1: usamos ambos parámetros
+            const categoriaBadge = getCategoriaBadge(item.categoria, item.categoria_nombre);
             return `
                 <tr>
                     <td>${item.seccion || '-'}</td>
                     <td><code style="background:#f5f5f5; padding:2px 6px; border-radius:4px;">${item.codigo}</code></td>
                     <td><strong>${item.nombre}</strong></td>
-                    <td style="text-align: center;">${getCategoriaBadge(item.categoria)}</td>
-                    <td style="text-align: center;">${item.unidad}</td>
+                    <td style="text-align: center;">${categoriaBadge}</td>
+                    <td style="text-align: center;">${unidadLabel}</td>
                     <td style="text-align: right;">${parseFloat(item.cantidad).toFixed(2)}</td>
                     <td style="text-align: right; font-weight: 600;">${parseFloat(item.cantidad_ejecutada || 0).toFixed(2)}</td>
                     <td style="text-align: right;">${formatCurrencyFull(item.precio_unitario)}</td>
@@ -613,7 +744,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('modalNombre').value = p.nombre;
                 document.getElementById('modalSeccion').value = p.seccion || '';
                 document.getElementById('modalCategoria').value = p.categoria;
-                document.getElementById('modalUnidad').value = p.unidad;
+                // ✅ TICKET #3: seleccionar la unidad en el <select>
+                const unidadSelect = document.getElementById('modalUnidad');
+                const unidadValor = p.unidad || '';
+                // Si la unidad no existe en el catálogo, la agregamos dinámicamente
+                if (unidadValor && !Array.from(unidadSelect.options).some(o => o.value === unidadValor)) {
+                    const opt = document.createElement('option');
+                    opt.value = unidadValor;
+                    opt.textContent = p.unidad_label || unidadValor;
+                    unidadSelect.appendChild(opt);
+                }
+                unidadSelect.value = unidadValor;
+                
                 document.getElementById('modalCantidad').value = p.cantidad;
                 document.getElementById('modalPrecioUnitario').value = p.precio_unitario;
                 document.getElementById('modalTitulo').textContent = 'Editar Partida';
@@ -658,7 +800,9 @@ document.addEventListener('DOMContentLoaded', function() {
             cantidad: parseFloat(document.getElementById('modalCantidad').value) || 0,
             precio_unitario: parseFloat(document.getElementById('modalPrecioUnitario').value) || 0
         };
+        // ✅ TICKET #3: validar que se haya seleccionado unidad
         if (!data.codigo || !data.nombre) { alert('Complete código y nombre'); return; }
+        if (!data.unidad) { alert('Seleccione una unidad'); return; }
         
         try {
             const url = id ? `/api/proyectos/${currentProjectId}/partidas/${id}` : `/api/proyectos/${currentProjectId}/partidas`;
@@ -698,6 +842,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalNombre').value = '';
         document.getElementById('modalSeccion').value = '';
         document.getElementById('modalCategoria').value = 'materiales';
+        // ✅ TICKET #3: resetear select de unidad
         document.getElementById('modalUnidad').value = '';
         document.getElementById('modalCantidad').value = '';
         document.getElementById('modalPrecioUnitario').value = '';
@@ -738,7 +883,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Inicializar
-    cargarProyectos();
+    (async function init() {
+        await cargarUnidades();   // ✅ TICKET #3: cargar catálogo antes de todo
+        await cargarProyectos();
+    })();
 });
 </script>
 @endsection

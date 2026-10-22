@@ -168,4 +168,9 @@ class CombustibleActivo extends Model
             }
         });
     }
+
+    public function proveedor()
+{
+    return $this->belongsTo(\App\Models\Proveedor::class, 'proveedor_id');
+}
 }

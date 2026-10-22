@@ -18,7 +18,7 @@
                         <span style="color: #6c757d; font-size: 12px;">arrastra una columna para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
                     </div>
-                    
+
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <input type="date" id="fechaInicio" value="{{ date('Y-m-01') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; width: 140px;">
                         <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; width: 140px;">
@@ -70,7 +70,7 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <!-- Paginación -->
                 <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 15px; gap: 5px;">
                     <button id="btnPrimera" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-double-left"></i></button>
@@ -96,7 +96,7 @@
             <form id="formFacturaProveedor">
                 <div class="modal-body" style="max-height: 65vh; overflow-y: auto; padding: 20px;">
                     <input type="hidden" id="factura_id" name="factura_id">
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="fw-bold">Proveedor <span class="text-danger">*</span></label>
@@ -123,7 +123,7 @@
                             <input type="date" class="form-control" id="fecha" value="{{ date('Y-m-d') }}">
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <label class="fw-bold">F. Vencimiento</label>
@@ -152,11 +152,11 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <label class="fw-bold">Tipo Cambio</label>
-                            <input type="number" step="0.000001" class="form-control" id="tipo_cambio" value="1">
+                            <input type="number" step="0.000001" min="0.000001" class="form-control" id="tipo_cambio" value="1">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="fw-bold">UUID</label>
@@ -167,7 +167,7 @@
                             <textarea class="form-control" id="observaciones" rows="2"></textarea>
                         </div>
                     </div>
-                    
+
                     <hr>
                     <h6><i class="fas fa-list"></i> Conceptos</h6>
                     <div class="table-responsive">
@@ -205,7 +205,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Factura</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardarFactura" disabled style="opacity:0.6;">Guardar Factura</button>
                 </div>
             </form>
         </div>
@@ -271,12 +271,13 @@
     .badge-pendiente { background-color: #fd7e14; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
     .badge-pagada { background-color: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
     .badge-cancelada { background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
-    
+    .badge-info { background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+
     .table th { background-color: #2378e1 !important; color: white !important; }
     .table td { color: #000000 !important; }
     #tablaBody tr:nth-child(odd) { background-color: #ffffff; }
     #tablaBody tr:nth-child(even) { background-color: #f2f2f2; }
-    
+
     .fa-eye, .fa-trash-alt { cursor: pointer; color: #083CAE; margin: 0 5px; }
     .fa-eye:hover, .fa-trash-alt:hover { opacity: 0.7; }
 
@@ -310,21 +311,21 @@
 <script>
 $(document).ready(function() {
     console.log('Documento listo - Facturas Proveedores');
-    
+
     let datosFacturas = [];
     let paginaActual = 1;
     const registrosPorPagina = 10;
-    
+
     const fechaInicio = $('#fechaInicio');
     const fechaFin = $('#fechaFin');
     const buscador = $('#buscador');
     const tablaBody = $('#tablaBody');
-    
+
     function formatCurrency(amount) {
         let num = parseFloat(amount) || 0;
         return '$' + num.toLocaleString('es-MX', { minimumFractionDigits: 2 });
     }
-    
+
     function formatDate(dateString) {
         if (!dateString) return '-';
         try {
@@ -334,37 +335,37 @@ $(document).ready(function() {
             return dateString;
         }
     }
-    
-    function getBadgeClass(estatus, tipoComprobante) {
-    if (tipoComprobante === 'E') return 'badge-info';
-    const e = parseInt(estatus);
-    if (e === 2) return 'badge-pagada';
-    if (e === 3) return 'badge-cancelada';
-    return 'badge-pendiente';
-}
 
-function getBadgeText(estatus, tipoComprobante) {
-    if (tipoComprobante === 'E') return 'NOTA CRÉDITO';
-    const e = parseInt(estatus);
-    if (e === 2) return 'PAGADA';
-    if (e === 3) return 'CANCELADA';
-    return 'PENDIENTE';
-}
-    
+    function getBadgeClass(estatus, tipoComprobante) {
+        if (tipoComprobante === 'E') return 'badge-info';
+        const e = parseInt(estatus);
+        if (e === 2) return 'badge-pagada';
+        if (e === 3) return 'badge-cancelada';
+        return 'badge-pendiente';
+    }
+
+    function getBadgeText(estatus, tipoComprobante) {
+        if (tipoComprobante === 'E') return 'NOTA CRÉDITO';
+        const e = parseInt(estatus);
+        if (e === 2) return 'PAGADA';
+        if (e === 3) return 'CANCELADA';
+        return 'PENDIENTE';
+    }
+
     async function cargarDatos() {
         const fi = fechaInicio.val() || '{{ date("Y-m-01") }}';
         const ff = fechaFin.val() || '{{ date("Y-m-d") }}';
         const busqueda = buscador.val() || '';
-        
+
         tablaBody.html('<tr><td colspan="10" class="text-center py-5"><div class="spinner-border text-primary"></div><p>Cargando facturas...</p></td></tr>');
-        
+
         try {
             let url = `/admin/facturacionproveedores/data?fecha_inicio=${fi}&fecha_fin=${ff}`;
             if (busqueda) url += `&buscar=${encodeURIComponent(busqueda)}`;
-            
+
             const response = await fetch(url);
             const result = await response.json();
-            
+
             if (result.success) {
                 datosFacturas = result.data || [];
                 $('#sumSubtotal').text(formatCurrency(result.totales?.subtotal || 0));
@@ -381,22 +382,25 @@ function getBadgeText(estatus, tipoComprobante) {
             tablaBody.html('<tr><td colspan="10" class="text-center text-danger py-5">Error de conexión</td></tr>');
         }
     }
-    
+
     function renderizarTabla() {
         if (!datosFacturas.length) {
             tablaBody.html('<tr><td colspan="10" class="text-center py-5">No hay facturas para mostrar</td></tr>');
             $('#paginacionInfo').text('Mostrando 0-0 de 0 registros');
             return;
         }
-        
+
         const start = (paginaActual - 1) * registrosPorPagina;
         const pageData = datosFacturas.slice(start, start + registrosPorPagina);
-        
+
         tablaBody.empty();
         pageData.forEach(item => {
+            const badgeClass = getBadgeClass(item.estatus, item.tipo_comprobante);
+            const badgeText = getBadgeText(item.estatus, item.tipo_comprobante);
+
             const row = $(`
                 <tr>
-                    <td class="text-center"><span class="badge ${getBadgeClass(item.estatus)}">${getBadgeText(item.estatus)}</span></td>
+                    <td class="text-center"><span class="badge ${badgeClass}">${badgeText}</span></td>
                     <td class="text-center fw-bold">${item.folio || '-'}</td>
                     <td>${item.proveedor || '-'}</td>
                     <td class="text-center">${formatDate(item.fecha)}</td>
@@ -413,19 +417,19 @@ function getBadgeText(estatus, tipoComprobante) {
             `);
             tablaBody.append(row);
         });
-        
+
         const totalPaginas = Math.ceil(datosFacturas.length / registrosPorPagina);
         $('#paginaActual').text(paginaActual);
         const inicio = datosFacturas.length > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
         const fin = Math.min(paginaActual * registrosPorPagina, datosFacturas.length);
         $('#paginacionInfo').text(`Mostrando ${inicio}-${fin} de ${datosFacturas.length} registros`);
-        
+
         $('#btnPrimera').prop('disabled', paginaActual === 1);
         $('#btnAnterior').prop('disabled', paginaActual === 1);
         $('#btnSiguiente').prop('disabled', paginaActual === totalPaginas);
         $('#btnUltima').prop('disabled', paginaActual === totalPaginas);
     }
-    
+
     function cambiarPagina(nuevaPagina) {
         const totalPaginas = Math.ceil(datosFacturas.length / registrosPorPagina);
         if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
@@ -433,48 +437,61 @@ function getBadgeText(estatus, tipoComprobante) {
             renderizarTabla();
         }
     }
-    
+
     function agregarFilaConcepto() {
         const fila = $(`
             <tr class="fila-concepto">
                 <td><input type="text" class="form-control form-control-sm concepto-descripcion" placeholder="Descripción"></td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm concepto-cantidad text-end" value="1"></td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm concepto-precio text-end" value="0"></td>
+                <td><input type="number" step="0.01" min="0.01" class="form-control form-control-sm concepto-cantidad text-end" value="1"></td>
+                <td><input type="number" step="0.01" min="0.01" class="form-control form-control-sm concepto-precio text-end" value=""></td>
                 <td><input type="text" class="form-control form-control-sm concepto-importe text-end" readonly style="background:#e9ecef;"></td>
                 <td class="text-center"><button type="button" class="btn btn-sm btn-danger btn-eliminar-concepto"><i class="fas fa-trash"></i></button></td>
             </tr>
         `);
-        
+
         $('#conceptosBody').append(fila);
-        
+
         const cantidad = fila.find('.concepto-cantidad');
-        const precio = fila.find('.concepto-precio');
-        const importe = fila.find('.concepto-importe');
-        
+        const precio   = fila.find('.concepto-precio');
+        const importe  = fila.find('.concepto-importe');
+
         const calcular = () => {
             const cant = parseFloat(cantidad.val()) || 0;
             const prec = parseFloat(precio.val()) || 0;
             importe.val((cant * prec).toFixed(2));
             calcularTotales();
         };
-        
+
         cantidad.on('input', calcular);
         precio.on('input', calcular);
-        fila.find('.btn-eliminar-concepto').on('click', () => fila.remove());
+        fila.find('.btn-eliminar-concepto').on('click', () => {
+            fila.remove();
+            calcularTotales();
+        });
         calcular();
     }
-    
+
     function calcularTotales() {
         let subtotal = 0;
         $('.fila-concepto').each(function() {
             subtotal += parseFloat($(this).find('.concepto-importe').val()) || 0;
         });
-        const iva = subtotal * 0.16;
+        const iva   = subtotal * 0.16;
+        const total = subtotal + iva;
+
         $('#subtotal').val(subtotal.toFixed(2));
         $('#iva').val(iva.toFixed(2));
-        $('#total').val((subtotal + iva).toFixed(2));
+        $('#total').val(total.toFixed(2));
+
+        // Bloquear botón guardar si el total es <= 0
+        const btnGuardar = $('#btnGuardarFactura');
+        if (total <= 0) {
+            btnGuardar.prop('disabled', true).css('opacity', '0.6');
+        } else {
+            btnGuardar.prop('disabled', false).css('opacity', '1');
+        }
     }
-    
+
     function limpiarFormFactura() {
         $('#formFacturaProveedor')[0].reset();
         $('#factura_id').val('');
@@ -484,23 +501,24 @@ function getBadgeText(estatus, tipoComprobante) {
         $('#fecha_vencimiento').val(fechaVencimiento.toISOString().split('T')[0]);
         $('#conceptosBody').empty();
         agregarFilaConcepto();
+        calcularTotales();
     }
-    
+
     // Eventos
     $('#btnPrimera').on('click', () => cambiarPagina(1));
     $('#btnAnterior').on('click', () => cambiarPagina(paginaActual - 1));
     $('#btnSiguiente').on('click', () => cambiarPagina(paginaActual + 1));
     $('#btnUltima').on('click', () => cambiarPagina(Math.ceil(datosFacturas.length / registrosPorPagina)));
-    
+
     $('#btnRecargar').on('click', cargarDatos);
     $('#fechaInicio, #fechaFin').on('change', cargarDatos);
-    
+
     let timeoutBuscador;
     $('#buscador').on('input', function() {
         clearTimeout(timeoutBuscador);
         timeoutBuscador = setTimeout(cargarDatos, 500);
     });
-    
+
     $('#btnExcel').on('click', function() {
         const table = document.getElementById('tablaFacturas');
         if (!table) return;
@@ -512,56 +530,98 @@ function getBadgeText(estatus, tipoComprobante) {
         link.click();
         URL.revokeObjectURL(link.href);
     });
-    
+
     $('#btnAgregar').on('click', function() {
         limpiarFormFactura();
         $('#modalFacturaProveedor').modal('show');
     });
-    
+
     $('#btnAgregarConceptoModal').on('click', agregarFilaConcepto);
-    
+
     $('#formFacturaProveedor').on('submit', async function(e) {
         e.preventDefault();
-        
+
         const proveedorId = $('#proveedor_id').val();
         if (!proveedorId) {
             Swal.fire('Error', 'Seleccione un proveedor', 'error');
             return;
         }
-        
+
+        const folio = ($('#folio').val() || '').trim();
+        if (!folio) {
+            Swal.fire('Error', 'El folio es obligatorio', 'error');
+            return;
+        }
+
+        // ---- Validar conceptos ----
         const conceptos = [];
-        $('.fila-concepto').each(function() {
-            const desc = $(this).find('.concepto-descripcion').val();
-            if (desc) {
-                conceptos.push({
-                    descripcion: desc,
-                    cantidad: $(this).find('.concepto-cantidad').val(),
-                    precio_unitario: $(this).find('.concepto-precio').val()
-                });
+        let errorConcepto = null;
+
+        $('.fila-concepto').each(function(index) {
+            const desc   = ($(this).find('.concepto-descripcion').val() || '').trim();
+            const cant   = parseFloat($(this).find('.concepto-cantidad').val());
+            const precio = parseFloat($(this).find('.concepto-precio').val());
+
+            if (!desc) {
+                errorConcepto = `El concepto #${index + 1} no tiene descripción.`;
+                return false;
             }
+            if (!cant || cant <= 0) {
+                errorConcepto = `El concepto "${desc}" debe tener cantidad mayor a 0.`;
+                return false;
+            }
+            if (!precio || precio <= 0) {
+                errorConcepto = `El concepto "${desc}" debe tener precio mayor a 0.`;
+                return false;
+            }
+
+            conceptos.push({
+                descripcion: desc,
+                cantidad: cant,
+                precio_unitario: precio
+            });
         });
-        
+
+        if (errorConcepto) {
+            Swal.fire('Error', errorConcepto, 'error');
+            return;
+        }
+
         if (conceptos.length === 0) {
             Swal.fire('Error', 'Agregue al menos un concepto', 'error');
             return;
         }
-        
+
+        // ---- Validar montos ----
+        const subtotal = parseFloat($('#subtotal').val()) || 0;
+        const iva      = parseFloat($('#iva').val()) || 0;
+        const total    = parseFloat($('#total').val()) || 0;
+
+        if (subtotal <= 0) {
+            Swal.fire('Error', 'El subtotal debe ser mayor a 0', 'error');
+            return;
+        }
+        if (total <= 0) {
+            Swal.fire('Error', 'El total debe ser mayor a 0', 'error');
+            return;
+        }
+
         const formData = {
             proveedor_id: parseInt(proveedorId),
-            folio: $('#folio').val(),
+            folio: folio,
             fecha: $('#fecha').val(),
             fecha_vencimiento: $('#fecha_vencimiento').val(),
             metodo_pago: $('#metodo_pago').val(),
             forma_pago: $('#forma_pago').val(),
             moneda: $('#moneda').val(),
             tipo_cambio: parseFloat($('#tipo_cambio').val()) || 1,
-            subtotal: parseFloat($('#subtotal').val()) || 0,
-            iva: parseFloat($('#iva').val()) || 0,
-            total: parseFloat($('#total').val()) || 0,
+            subtotal: subtotal,
+            iva: iva,
+            total: total,
             observaciones: $('#observaciones').val() || null,
             conceptos: conceptos
         };
-        
+
         try {
             const response = await fetch('/admin/facturacionproveedores', {
                 method: 'POST',
@@ -571,9 +631,9 @@ function getBadgeText(estatus, tipoComprobante) {
                 },
                 body: JSON.stringify(formData)
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 $('#modalFacturaProveedor').modal('hide');
                 Swal.fire('Éxito', 'Factura guardada correctamente', 'success');
@@ -586,23 +646,24 @@ function getBadgeText(estatus, tipoComprobante) {
             Swal.fire('Error', 'Error al guardar la factura', 'error');
         }
     });
-    
+
     $(document).on('click', '.fa-eye', async function() {
         const id = $(this).data('id');
-        
+
         try {
             const response = await fetch(`/admin/facturacionproveedores/${id}`);
             const result = await response.json();
-            
+
             if (result.success) {
                 const f = result.factura;
                 const conceptos = result.conceptos || [];
-                
+
                 let badgeClass = 'badge-pendiente';
                 let badgeText = 'PENDIENTE';
-                if (f.estatus == 2) { badgeClass = 'badge-pagada'; badgeText = 'PAGADA'; }
-                if (f.estatus == 3) { badgeClass = 'badge-cancelada'; badgeText = 'CANCELADA'; }
-                
+                if (f.tipo_comprobante === 'E') { badgeClass = 'badge-info'; badgeText = 'NOTA CRÉDITO'; }
+                else if (f.estatus == 2) { badgeClass = 'badge-pagada'; badgeText = 'PAGADA'; }
+                else if (f.estatus == 3) { badgeClass = 'badge-cancelada'; badgeText = 'CANCELADA'; }
+
                 let conceptosHtml = '';
                 conceptos.forEach(c => {
                     conceptosHtml += `<tr>
@@ -612,7 +673,7 @@ function getBadgeText(estatus, tipoComprobante) {
                         <td class="text-end">${formatCurrency(c.importe || 0)}</td>
                     </tr>`;
                 });
-                
+
                 $('#detalleFacturaContent').html(`
                     <div class="row">
                         <div class="col-md-6">
@@ -630,7 +691,7 @@ function getBadgeText(estatus, tipoComprobante) {
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
                             <thead class="table-light"><tr><th>Descripción</th><th>Cantidad</th><th>Precio</th><th>Importe</th></tr></thead>
-                            <tbody>${conceptosHtml || '</td><td colspan="4">Sin conceptos</td></tr>'}</tbody>
+                            <tbody>${conceptosHtml || '<tr><td colspan="4">Sin conceptos</td></tr>'}</tbody>
                             <tfoot>
                                 <tr><td colspan="3" class="text-end">Subtotal:</td><td class="text-end">${formatCurrency(f.subtotal)}</td></tr>
                                 <tr><td colspan="3" class="text-end">IVA:</td><td class="text-end">${formatCurrency(f.iva)}</td></tr>
@@ -649,11 +710,11 @@ function getBadgeText(estatus, tipoComprobante) {
             Swal.fire('Error', 'Error de conexión', 'error');
         }
     });
-    
+
     $(document).on('click', '.fa-trash-alt', async function() {
         const id = $(this).data('id');
         const folio = $(this).data('folio');
-        
+
         const confirm = await Swal.fire({
             title: '¿Cancelar factura?',
             html: `¿Cancelar factura <strong>${folio}</strong>?`,
@@ -662,7 +723,7 @@ function getBadgeText(estatus, tipoComprobante) {
             confirmButtonColor: '#d33',
             confirmButtonText: 'Sí, cancelar'
         });
-        
+
         if (confirm.isConfirmed) {
             try {
                 const response = await fetch(`/admin/facturacionproveedores/${id}`, {
@@ -670,7 +731,7 @@ function getBadgeText(estatus, tipoComprobante) {
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
                 });
                 const result = await response.json();
-                
+
                 if (result.success) {
                     Swal.fire('Cancelada', 'Factura cancelada', 'success');
                     cargarDatos();
@@ -682,23 +743,23 @@ function getBadgeText(estatus, tipoComprobante) {
             }
         }
     });
-    
+
     $('#btnNuevoProveedorModal').on('click', function(e) {
         e.preventDefault();
         $('#modalFacturaProveedor').modal('hide');
         setTimeout(() => $('#modalNuevoProveedor').modal('show'), 300);
     });
-    
+
     $('#formNuevoProveedor').on('submit', async function(e) {
         e.preventDefault();
-        
+
         const data = {
             nombre: $('#proveedor_nombre').val(),
             rfc: $('#proveedor_rfc').val(),
             telefono: $('#proveedor_telefono').val(),
             email: $('#proveedor_email').val()
         };
-        
+
         try {
             const response = await fetch('/api/proveedores-lista', {
                 method: 'POST',
@@ -708,9 +769,9 @@ function getBadgeText(estatus, tipoComprobante) {
                 },
                 body: JSON.stringify(data)
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 $('#modalNuevoProveedor').modal('hide');
                 Swal.fire('Éxito', 'Proveedor registrado', 'success');
@@ -722,7 +783,7 @@ function getBadgeText(estatus, tipoComprobante) {
             Swal.fire('Error', 'Error al guardar proveedor', 'error');
         }
     });
-    
+
     cargarDatos();
     agregarFilaConcepto();
 });

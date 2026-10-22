@@ -41,12 +41,16 @@ class AsignacionContratista extends Model
         'avance_porcentaje' => 'decimal:2'
     ];
 
+    // ============================================
+    // RELACIONES
+    // ============================================
+
     /**
      * Relación con contratista
      */
     public function contratista(): BelongsTo
     {
-        return $this->belongsTo(Contratista::class);
+        return $this->belongsTo(Contratista::class, 'contratista_id');
     }
 
     /**
@@ -54,7 +58,7 @@ class AsignacionContratista extends Model
      */
     public function proyecto(): BelongsTo
     {
-        return $this->belongsTo(Proyecto::class);
+        return $this->belongsTo(Proyecto::class, 'proyecto_id');
     }
 
     /**
@@ -66,35 +70,36 @@ class AsignacionContratista extends Model
     }
 
     /**
-     * Relación con gastos
+     * ⚠️ CORREGIDO: Forzar la foreign key correcta 'asignacion_id'
+     * Sin esto Laravel busca 'asignacion_contratista_id' (que no existe)
      */
     public function gastos(): HasMany
     {
-        return $this->hasMany(GastoContratista::class);
+        return $this->hasMany(GastoContratista::class, 'asignacion_id', 'id');
     }
 
     /**
-     * Relación con órdenes de trabajo
+     * ⚠️ CORREGIDO: Forzar la foreign key correcta 'asignacion_id'
      */
     public function ordenesTrabajo(): HasMany
     {
-        return $this->hasMany(OrdenTrabajoContratista::class);
+        return $this->hasMany(OrdenTrabajoContratista::class, 'asignacion_id', 'id');
     }
 
     /**
-     * Relación con historial de presupuestos
+     * ⚠️ CORREGIDO: Forzar la foreign key correcta 'asignacion_id'
      */
     public function historialPresupuesto(): HasMany
     {
-        return $this->hasMany(HistorialPresupuestoContratista::class);
+        return $this->hasMany(HistorialPresupuestoContratista::class, 'asignacion_id', 'id');
     }
 
     /**
-     * Relación con pagos
+     * ⚠️ CORREGIDO: Forzar la foreign key correcta 'asignacion_id'
      */
     public function pagos(): HasMany
     {
-        return $this->hasMany(PagoContratista::class);
+        return $this->hasMany(PagoContratista::class, 'asignacion_id', 'id');
     }
 
     /**
@@ -104,6 +109,10 @@ class AsignacionContratista extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    // ============================================
+    // SCOPES
+    // ============================================
 
     /**
      * Scope por status
@@ -137,12 +146,16 @@ class AsignacionContratista extends Model
         return $query->whereBetween('fecha_asignacion', [$inicio, $fin]);
     }
 
+    // ============================================
+    // ACCESSORS
+    // ============================================
+
     /**
      * Accessor para presupuesto restante
      */
     public function getPresupuestoRestanteAttribute(): float
     {
-        return $this->presupuesto_asignado - $this->gasto_acumulado;
+        return (float) ($this->presupuesto_asignado - $this->gasto_acumulado);
     }
 
     /**
@@ -151,7 +164,7 @@ class AsignacionContratista extends Model
     public function getPorcentajeGastoAttribute(): float
     {
         if ($this->presupuesto_asignado > 0) {
-            return ($this->gasto_acumulado / $this->presupuesto_asignado) * 100;
+            return (float) (($this->gasto_acumulado / $this->presupuesto_asignado) * 100);
         }
         return 0;
     }
@@ -162,10 +175,14 @@ class AsignacionContratista extends Model
     public function getDiasTranscurridosAttribute(): int
     {
         if ($this->fecha_inicio) {
-            return now()->diffInDays($this->fecha_inicio);
+            return (int) now()->diffInDays($this->fecha_inicio);
         }
         return 0;
     }
+
+    // ============================================
+    // MÉTODOS
+    // ============================================
 
     /**
      * Método para actualizar saldo

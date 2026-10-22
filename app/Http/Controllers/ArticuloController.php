@@ -8,9 +8,25 @@ use App\Models\Subfamilia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\CuentaContable;
 
 class ArticuloController extends Controller
 {
+    /**
+     * Cuentas contables disponibles (catálogo).
+     * Si tienes una tabla de cuentas contables, reemplaza esto por una consulta.
+     */
+    protected function getCatalogoCuentasContables()
+{
+    return CuentaContable::activas()
+        ->orderBy('codigo')
+        ->get()
+        ->mapWithKeys(function ($cuenta) {
+            return [$cuenta->codigo => $cuenta->codigo . ' - ' . $cuenta->nombre];
+        })
+        ->toArray();
+}
+
     /**
      * Display a listing of the resource.
      */
@@ -18,10 +34,11 @@ class ArticuloController extends Controller
     {
         $familias = Familia::where('estatus', 'Activo')->orderBy('nombre')->get();
         $subfamilias = Subfamilia::where('estatus', 'Activo')->orderBy('nombre')->get();
-        
-        return view('almacen.catalogo.articulos', compact('familias', 'subfamilias'));
+        $cuentasContables = $this->getCatalogoCuentasContables();
+
+        return view('almacen.catalogo.articulos', compact('familias', 'subfamilias', 'cuentasContables'));
     }
-    
+
     /**
      * Get articulos for DataTable with pagination
      */
@@ -29,37 +46,37 @@ class ArticuloController extends Controller
     {
         try {
             $query = Articulo::with(['familia', 'subfamilia']);
-            
+
             // Filtros
             if ($request->filled('search')) {
                 $search = $request->search;
-                $query->where(function($q) use ($search) {
+                $query->where(function ($q) use ($search) {
                     $q->where('codigo', 'LIKE', "%{$search}%")
                       ->orWhere('descripcion', 'LIKE', "%{$search}%")
                       ->orWhere('numero_parte', 'LIKE', "%{$search}%")
                       ->orWhere('ubicacion', 'LIKE', "%{$search}%");
                 });
             }
-            
+
             if ($request->filled('familia_id')) {
                 $query->where('familia_id', $request->familia_id);
             }
-            
+
             if ($request->filled('subfamilia_id')) {
                 $query->where('subfamilia_id', $request->subfamilia_id);
             }
-            
+
             if ($request->filled('estatus')) {
                 $query->where('estatus', $request->estatus);
             }
-            
+
             // Paginación
             $perPage = $request->get('per_page', 10);
             $page = $request->get('page', 1);
-            
+
             $articulos = $query->orderBy('codigo')->paginate($perPage, ['*'], 'page', $page);
-            
-            $data = $articulos->getCollection()->map(function($articulo) {
+
+            $data = $articulos->getCollection()->map(function ($articulo) {
                 return [
                     'id' => $articulo->id,
                     'codigo' => $articulo->codigo,
@@ -79,7 +96,7 @@ class ArticuloController extends Controller
                     'created_at' => $articulo->created_at ? $articulo->created_at->format('d/m/Y') : '',
                 ];
             });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $data,
@@ -88,7 +105,7 @@ class ArticuloController extends Controller
                 'current_page' => $articulos->currentPage(),
                 'last_page' => $articulos->lastPage()
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error en getArticulos: ' . $e->getMessage());
             return response()->json([
@@ -97,7 +114,27 @@ class ArticuloController extends Controller
             ], 500);
         }
     }
-    
+
+    /**
+     * Genera un código único para el artículo.
+     * Usa bloqueo y busca el máximo real con patrón ART-XXXXX para evitar colisiones.
+     */
+    protected function generarCodigoUnico()
+    {
+        // Bloqueo pesimista para evitar race conditions
+        $ultimo = Articulo::where('codigo', 'LIKE', 'ART-%')
+            ->lockForUpdate()
+            ->orderByRaw("CAST(SUBSTRING(codigo FROM 5) AS INTEGER) DESC")
+            ->first();
+
+        $siguiente = 1;
+        if ($ultimo) {
+            $siguiente = ((int) substr($ultimo->codigo, 4)) + 1;
+        }
+
+        return 'ART-' . str_pad($siguiente, 5, '0', STR_PAD_LEFT);
+    }
+
     /**
      * Store a newly created resource.
      */
@@ -116,43 +153,65 @@ class ArticuloController extends Controller
                 'cuenta_contable' => 'nullable|string|max:50',
                 'estatus' => 'required|in:Activo,Inactivo'
             ]);
-            
+
             DB::beginTransaction();
-            
-            $articulo = Articulo::create([
-                'codigo' => Articulo::generarCodigo(),
-                'descripcion' => $request->descripcion,
-                'numero_parte' => $request->numero_parte,
-                'familia_id' => $request->familia_id,
-                'subfamilia_id' => $request->subfamilia_id,
-                'ubicacion' => $request->ubicacion,
-                'minimo' => $request->minimo ?? 0,
-                'maximo' => $request->maximo ?? 0,
-                'punto_reorden' => $request->punto_reorden ?? 0,
-                'unidad_medida' => $request->unidad_medida,
-                'cuenta_contable' => $request->cuenta_contable,
-                'estatus' => $request->estatus
-            ]);
-            
+
+            // Reintentar hasta 5 veces si hay colisión de código
+            $intentos = 0;
+            $articulo = null;
+            while ($intentos < 5) {
+                try {
+                    $codigo = $this->generarCodigoUnico();
+
+                    $articulo = Articulo::create([
+                        'codigo' => $codigo,
+                        'descripcion' => $request->descripcion,
+                        'numero_parte' => $request->numero_parte,
+                        'familia_id' => $request->familia_id,
+                        'subfamilia_id' => $request->subfamilia_id,
+                        'ubicacion' => $request->ubicacion,
+                        'minimo' => $request->minimo ?? 0,
+                        'maximo' => $request->maximo ?? 0,
+                        'punto_reorden' => $request->punto_reorden ?? 0,
+                        'unidad_medida' => $request->unidad_medida,
+                        'cuenta_contable' => $request->cuenta_contable,
+                        'estatus' => $request->estatus
+                    ]);
+
+                    break; // Éxito, salir del bucle
+                } catch (\Illuminate\Database\QueryException $qe) {
+                    // Si es violación de unique en codigo, reintentar
+                    if ($qe->getCode() == '23505' || str_contains($qe->getMessage(), 'articulos_codigo_unique')) {
+                        $intentos++;
+                        Log::warning("Colisión de código ART al crear artículo, reintento #{$intentos}");
+                        if ($intentos >= 5) {
+                            throw $qe;
+                        }
+                        continue;
+                    }
+                    throw $qe; // Otro error, propagar
+                }
+            }
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Artículo creado exitosamente',
                 'data' => $articulo->load(['familia', 'subfamilia'])
             ]);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al crear artículo: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear artículo: ' . $e->getMessage()
             ], 500);
         }
     }
-    
+
     /**
      * Display the specified resource.
      */
@@ -160,7 +219,7 @@ class ArticuloController extends Controller
     {
         try {
             $articulo = Articulo::with(['familia', 'subfamilia'])->findOrFail($id);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -181,7 +240,7 @@ class ArticuloController extends Controller
                     'estatus' => $articulo->estatus
                 ]
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -189,7 +248,7 @@ class ArticuloController extends Controller
             ], 404);
         }
     }
-    
+
     /**
      * Update the specified resource.
      */
@@ -197,7 +256,7 @@ class ArticuloController extends Controller
     {
         try {
             $articulo = Articulo::findOrFail($id);
-            
+
             $request->validate([
                 'descripcion' => 'required|string|max:500',
                 'familia_id' => 'nullable|exists:familias,id',
@@ -210,9 +269,9 @@ class ArticuloController extends Controller
                 'cuenta_contable' => 'nullable|string|max:50',
                 'estatus' => 'required|in:Activo,Inactivo'
             ]);
-            
+
             DB::beginTransaction();
-            
+
             $articulo->update([
                 'descripcion' => $request->descripcion,
                 'numero_parte' => $request->numero_parte,
@@ -226,26 +285,26 @@ class ArticuloController extends Controller
                 'cuenta_contable' => $request->cuenta_contable,
                 'estatus' => $request->estatus
             ]);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Artículo actualizado exitosamente',
                 'data' => $articulo->load(['familia', 'subfamilia'])
             ]);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al actualizar artículo: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar artículo: ' . $e->getMessage()
             ], 500);
         }
     }
-    
+
     /**
      * Remove the specified resource.
      */
@@ -254,22 +313,22 @@ class ArticuloController extends Controller
         try {
             $articulo = Articulo::findOrFail($id);
             $articulo->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Artículo eliminado exitosamente'
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error al eliminar artículo: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al eliminar artículo: ' . $e->getMessage()
             ], 500);
         }
     }
-    
+
     /**
      * Export to Excel
      */
@@ -277,7 +336,7 @@ class ArticuloController extends Controller
     {
         try {
             $articulos = Articulo::with(['familia', 'subfamilia'])->orderBy('codigo')->get();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Exportación en desarrollo',
@@ -290,7 +349,7 @@ class ArticuloController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Get subfamilias by familia
      */
@@ -301,12 +360,12 @@ class ArticuloController extends Controller
                 ->where('estatus', 'Activo')
                 ->orderBy('nombre')
                 ->get(['id', 'codigo', 'nombre']);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $subfamilias
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -316,22 +375,33 @@ class ArticuloController extends Controller
     }
 
     /**
+     * Obtener catálogo de cuentas contables (para el selector del frontend).
+     */
+    public function getCuentasContables()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $this->getCatalogoCuentasContables()
+        ]);
+    }
+
+    /**
      * Crear artículo temporalmente (para recepción de compras)
      */
     public function crearTemporal(Request $request)
     {
         try {
             Log::info('Crear artículo temporal llamado', $request->all());
-            
+
             $request->validate([
                 'codigo' => 'required|string|max:50',
                 'descripcion' => 'required|string|max:500',
                 'unidad_medida' => 'nullable|string|max:20'
             ]);
-            
+
             // Verificar si ya existe por código
             $existente = Articulo::where('codigo', $request->codigo)->first();
-            
+
             if ($existente) {
                 return response()->json([
                     'success' => true,
@@ -339,7 +409,7 @@ class ArticuloController extends Controller
                     'data' => ['id' => $existente->id]
                 ]);
             }
-            
+
             // Crear nuevo artículo
             $articulo = Articulo::create([
                 'codigo' => $request->codigo,
@@ -351,15 +421,15 @@ class ArticuloController extends Controller
                 'punto_reorden' => 0,
                 'numero_parte' => $request->codigo
             ]);
-            
+
             Log::info('Artículo creado temporalmente', ['id' => $articulo->id, 'codigo' => $articulo->codigo]);
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Artículo creado temporalmente',
                 'data' => ['id' => $articulo->id]
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error al crear artículo temporal: ' . $e->getMessage());
             return response()->json([
@@ -367,5 +437,28 @@ class ArticuloController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function buscarOCrear(Request $request)
+    {
+        $request->validate([
+            'codigo'        => 'required|string|max:100',
+            'descripcion'   => 'required|string|max:255',
+            'unidad_medida' => 'nullable|string|max:50',
+        ]);
+
+        $articulo = Articulo::firstOrCreate(
+            ['codigo' => $request->codigo],
+            [
+                'descripcion'   => $request->descripcion,
+                'unidad_medida' => $request->unidad_medida ?? 'Pieza',
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'data'    => $articulo,
+            'created' => $articulo->wasRecentlyCreated,
+        ]);
     }
 }

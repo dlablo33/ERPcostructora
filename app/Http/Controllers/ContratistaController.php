@@ -27,83 +27,55 @@ class ContratistaController extends Controller
     // SECCIÓN 0: VISTAS (WEB)
     // ============================================
 
-    /**
-     * Mostrar vista de listado de contratistas
-     */
     public function indexContratistasView()
     {
         return view('proyectos.contratistas.index');
     }
 
-    /**
-     * Mostrar vista de detalle de contratista
-     */
     public function showContratistaView($id)
     {
         return view('proyectos.contratistas.show', compact('id'));
     }
 
-    /**
-     * Mostrar vista de dashboard
-     */
     public function dashboardView()
     {
         return view('proyectos.contratistas.dashboard');
     }
 
-    /**
-     * Mostrar vista de asignaciones
-     */
     public function asignacionesView()
     {
         return view('proyectos.contratistas.asignaciones');
     }
 
-    /**
-     * Mostrar vista de gastos
-     */
     public function gastosView()
     {
         return view('proyectos.contratistas.gastos');
     }
 
-    /**
-     * Mostrar vista de pagos
-     */
     public function pagosView()
     {
         return view('proyectos.contratistas.pagos');
     }
 
-    /**
-     * Mostrar vista de creación
-     */
     public function create()
     {
         return view('proyectos.contratistas.create');
     }
 
-    /**
-     * Mostrar vista de edición
-     */
     public function edit($id)
     {
         return view('proyectos.contratistas.edit', compact('id'));
     }
 
     // ============================================
-    // SECCIÓN 1: CONTRATISTAS (CRUD + Estadísticas)
+    // SECCIÓN 1: CONTRATISTAS
     // ============================================
 
-    /**
-     * Listar contratistas (API)
-     */
     public function indexContratistas(Request $request)
     {
         try {
             $query = Contratista::with(['proveedor', 'asignaciones']);
 
-            // Filtros
             if ($request->has('search')) {
                 $search = $request->search;
                 $query->where(function($q) use ($search) {
@@ -131,7 +103,6 @@ class ContratistaController extends Controller
 
             $contratistas = $query->paginate($request->get('per_page', 15));
 
-            // Agregar estadísticas adicionales
             $contratistas->getCollection()->transform(function ($contratista) {
                 $contratista->presupuesto_total = $contratista->presupuesto_total;
                 $contratista->gasto_total = $contratista->gasto_total;
@@ -151,9 +122,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Crear contratista (API)
-     */
     public function storeContratista(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -172,7 +140,6 @@ class ContratistaController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Log::error('Error de validación:', $validator->errors()->toArray());
             return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors()
@@ -182,13 +149,11 @@ class ContratistaController extends Controller
         try {
             DB::beginTransaction();
 
-            // Convertir el valor de 'activo' a booleano
             $activo = false;
             if ($request->has('activo')) {
                 $activo = filter_var($request->activo, FILTER_VALIDATE_BOOLEAN);
             }
 
-            // Si no hay proveedor_id, crear uno automáticamente
             if (!$request->proveedor_id) {
                 $proveedor = Proveedor::create([
                     'nombre' => $request->nombre_comercial,
@@ -212,7 +177,6 @@ class ContratistaController extends Controller
                 'activo' => $activo,
             ]);
 
-            // Procesar documentos si se subieron
             if ($request->hasFile('documento_contrato')) {
                 $this->guardarDocumento($request->file('documento_contrato'), $contratista->id, 'contrato');
             }
@@ -228,8 +192,6 @@ class ContratistaController extends Controller
 
             DB::commit();
 
-            Log::info('Contratista creado exitosamente', ['id' => $contratista->id, 'codigo' => $contratista->codigo]);
-
             return response()->json([
                 'message' => 'Contratista creado exitosamente',
                 'data' => $contratista->load('proveedor')
@@ -237,7 +199,7 @@ class ContratistaController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al crear contratista:', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            Log::error('Error al crear contratista: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al crear el contratista',
                 'error' => $e->getMessage()
@@ -245,9 +207,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Mostrar contratista (API)
-     */
     public function showContratista($id)
     {
         try {
@@ -280,7 +239,6 @@ class ContratistaController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error al mostrar contratista: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Contratista no encontrado',
                 'error' => $e->getMessage()
@@ -288,9 +246,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Actualizar contratista (API)
-     */
     public function updateContratista(Request $request, $id)
     {
         $contratista = Contratista::findOrFail($id);
@@ -319,7 +274,6 @@ class ContratistaController extends Controller
         try {
             DB::beginTransaction();
 
-            // Convertir activo a booleano si está presente
             if ($request->has('activo')) {
                 $request->merge(['activo' => filter_var($request->activo, FILTER_VALIDATE_BOOLEAN)]);
             }
@@ -338,7 +292,6 @@ class ContratistaController extends Controller
                 }
             }
 
-            // Procesar nuevos documentos si se subieron
             if ($request->hasFile('documento_contrato')) {
                 $this->guardarDocumento($request->file('documento_contrato'), $contratista->id, 'contrato');
             }
@@ -369,9 +322,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Eliminar contratista (API)
-     */
     public function destroyContratista($id)
     {
         $contratista = Contratista::findOrFail($id);
@@ -409,9 +359,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Validar código único
-     */
     public function validarCodigo(Request $request)
     {
         try {
@@ -423,30 +370,23 @@ class ContratistaController extends Controller
             return response()->json(['existe' => $existe]);
 
         } catch (\Exception $e) {
-            Log::error('Error al validar código: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Obtener datos para gráficas
-     */
     public function datosGraficas()
     {
         try {
-            // Distribución por especialidad
             $especialidades = Contratista::select('especialidad', DB::raw('count(*) as total'))
                 ->where('activo', true)
                 ->groupBy('especialidad')
                 ->get();
 
-            // Gastos por tipo
             $gastosTipo = DB::table('gastos_contratista')
                 ->select('tipo_gasto', DB::raw('sum(monto) as total'))
                 ->groupBy('tipo_gasto')
                 ->get();
 
-            // Evolución mensual de contrataciones
             $contratacionesMensuales = Contratista::select(
                 DB::raw('EXTRACT(YEAR FROM created_at) as year'),
                 DB::raw('EXTRACT(MONTH FROM created_at) as month'),
@@ -465,7 +405,6 @@ class ContratistaController extends Controller
                 ];
             });
 
-            // Distribución por nivel de riesgo
             $riesgo = Contratista::select('nivel_riesgo', DB::raw('count(*) as total'))
                 ->groupBy('nivel_riesgo')
                 ->get();
@@ -478,7 +417,6 @@ class ContratistaController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener datos para gráficas: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener datos para gráficas',
                 'error' => $e->getMessage()
@@ -486,9 +424,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Top contratistas
-     */
     public function topContratistas(Request $request)
     {
         $limit = $request->get('limit', 10);
@@ -518,7 +453,6 @@ class ContratistaController extends Controller
             return response()->json($result);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener top contratistas: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener top contratistas',
                 'error' => $e->getMessage()
@@ -530,9 +464,6 @@ class ContratistaController extends Controller
     // SECCIÓN 2: ASIGNACIONES
     // ============================================
 
-    /**
-     * Listar asignaciones (API)
-     */
     public function indexAsignaciones(Request $request)
     {
         try {
@@ -587,9 +518,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Crear asignación (API)
-     */
     public function storeAsignacion(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -634,7 +562,6 @@ class ContratistaController extends Controller
                 'created_by' => auth()->id()
             ]);
 
-            // Registrar en historial
             HistorialPresupuestoContratista::create([
                 'asignacion_id' => $asignacion->id,
                 'contratista_id' => $request->contratista_id,
@@ -644,7 +571,6 @@ class ContratistaController extends Controller
                 'realizado_por' => auth()->id()
             ]);
 
-            // Crear alerta
             $this->crearAlerta(
                 $request->contratista_id,
                 $asignacion->id,
@@ -657,6 +583,7 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Asignación creada exitosamente',
                 'data' => $asignacion->load(['contratista', 'proyecto', 'partida'])
             ], 201);
@@ -665,6 +592,7 @@ class ContratistaController extends Controller
             DB::rollBack();
             Log::error('Error al crear asignación: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al crear la asignación',
                 'error' => $e->getMessage()
             ], 500);
@@ -672,7 +600,8 @@ class ContratistaController extends Controller
     }
 
     /**
-     * Mostrar asignación (API)
+     * ⚠️ MÉTODO CRÍTICO - Debe retornar SIEMPRE la estructura {asignacion: {...}}
+     * porque el frontend hace data.asignacion.xxx
      */
     public function showAsignacion($id)
     {
@@ -706,22 +635,29 @@ class ContratistaController extends Controller
                 'dias_transcurridos' => $asignacion->dias_transcurridos
             ];
 
+            // ⚠️ IMPORTANTE: Siempre retornar 'asignacion' como clave principal
             return response()->json([
+                'success' => true,
                 'asignacion' => $asignacion,
                 'estadisticas' => $estadisticas
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
+                'success' => false,
                 'message' => 'Asignación no encontrada',
-                'error' => $e->getMessage()
+                'error' => 'No existe una asignación con ID ' . $id
             ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error al mostrar asignación: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener la asignación',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
-    /**
-     * Actualizar asignación (API)
-     */
     public function updateAsignacion(Request $request, $id)
     {
         $asignacion = AsignacionContratista::findOrFail($id);
@@ -765,29 +701,6 @@ class ContratistaController extends Controller
 
                 $nuevoSaldo = $request->presupuesto_asignado - $asignacion->gasto_acumulado;
                 $request->merge(['saldo_disponible' => max(0, $nuevoSaldo)]);
-
-                $this->crearAlerta(
-                    $asignacion->contratista_id,
-                    $asignacion->id,
-                    'presupuesto',
-                    'Cambio en presupuesto asignado',
-                    "El presupuesto cambió de $" . number_format($oldPresupuesto, 2) . " a $" . number_format($request->presupuesto_asignado, 2),
-                    'warning'
-                );
-            }
-
-            if ($request->has('status') && $request->status === 'finalizado') {
-                $request->merge(['avance_porcentaje' => 100]);
-                $asignacion->fecha_fin = now()->toDateString();
-
-                $this->crearAlerta(
-                    $asignacion->contratista_id,
-                    $asignacion->id,
-                    'evaluacion',
-                    'Proyecto finalizado',
-                    "El proyecto {$asignacion->proyecto->nombre} ha sido finalizado con un avance del 100%",
-                    'info'
-                );
             }
 
             $asignacion->update($request->all());
@@ -799,23 +712,21 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Asignación actualizada exitosamente',
                 'data' => $asignacion->load(['contratista', 'proyecto'])
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al actualizar asignación: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al actualizar la asignación',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Cambiar status de asignación (API)
-     */
     public function cambiarStatusAsignacion(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -856,22 +767,20 @@ class ContratistaController extends Controller
             );
 
             return response()->json([
+                'success' => true,
                 'message' => 'Estado actualizado exitosamente',
                 'data' => $asignacion
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error al cambiar estado de asignación: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al cambiar el estado',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Eliminar asignación (API)
-     */
     public function destroyAsignacion($id)
     {
         $asignacion = AsignacionContratista::findOrFail($id);
@@ -894,13 +803,14 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Asignación eliminada exitosamente'
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al eliminar asignación: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al eliminar la asignación',
                 'error' => $e->getMessage()
             ], 500);
@@ -911,9 +821,6 @@ class ContratistaController extends Controller
     // SECCIÓN 3: GASTOS
     // ============================================
 
-    /**
-     * Listar gastos (API)
-     */
     public function indexGastos(Request $request)
     {
         try {
@@ -964,7 +871,6 @@ class ContratistaController extends Controller
             return response()->json($gastos);
 
         } catch (\Exception $e) {
-            Log::error('Error al listar gastos: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al listar gastos',
                 'error' => $e->getMessage()
@@ -972,9 +878,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Registrar gasto (API)
-     */
     public function storeGasto(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -991,6 +894,7 @@ class ContratistaController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'message' => 'Error de validación',
                 'errors' => $validator->errors()
             ], 422);
@@ -1001,11 +905,17 @@ class ContratistaController extends Controller
 
             $asignacion = AsignacionContratista::findOrFail($request->asignacion_id);
 
+            // Validar ANTES de crear
             $nuevoGasto = $asignacion->gasto_acumulado + $request->monto;
             if ($nuevoGasto > $asignacion->presupuesto_asignado) {
+                DB::rollBack();
                 return response()->json([
-                    'message' => 'El gasto excede el presupuesto disponible',
-                    'disponible' => $asignacion->saldo_disponible
+                    'success' => false,
+                    'message' => 'El gasto excede el presupuesto disponible de la asignación',
+                    'disponible' => $asignacion->saldo_disponible,
+                    'presupuesto_asignado' => $asignacion->presupuesto_asignado,
+                    'gasto_acumulado' => $asignacion->gasto_acumulado,
+                    'monto_solicitado' => $request->monto
                 ], 400);
             }
 
@@ -1043,7 +953,7 @@ class ContratistaController extends Controller
                     $asignacion->id,
                     'presupuesto',
                     'Presupuesto próximo a agotarse',
-                    "El presupuesto está al {$porcentajeGasto}% de uso. Gasto acumulado: $" . number_format($asignacion->gasto_acumulado, 2) . " de $" . number_format($asignacion->presupuesto_asignado, 2),
+                    "El presupuesto está al {$porcentajeGasto}% de uso.",
                     $porcentajeGasto >= 95 ? 'danger' : 'warning'
                 );
             }
@@ -1051,6 +961,7 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Gasto registrado exitosamente',
                 'data' => [
                     'gasto' => $gasto,
@@ -1062,15 +973,13 @@ class ContratistaController extends Controller
             DB::rollBack();
             Log::error('Error al registrar gasto: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al registrar el gasto',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Mostrar gasto (API)
-     */
     public function showGasto($id)
     {
         try {
@@ -1081,25 +990,41 @@ class ContratistaController extends Controller
                 'creador'
             ])->findOrFail($id);
 
-            return response()->json($gasto);
+            return response()->json([
+                'success' => true,
+                'gasto' => $gasto,
+                // También retornar los campos en la raíz para compatibilidad con el frontend
+                'id' => $gasto->id,
+                'contratista_id' => $gasto->contratista_id,
+                'asignacion_id' => $gasto->asignacion_id,
+                'proyecto_id' => $gasto->proyecto_id,
+                'concepto' => $gasto->concepto,
+                'monto' => $gasto->monto,
+                'contratista' => $gasto->contratista,
+                'asignacion' => $gasto->asignacion
+            ]);
 
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gasto no encontrado'
+            ], 404);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Gasto no encontrado',
+                'success' => false,
+                'message' => 'Error al obtener el gasto',
                 'error' => $e->getMessage()
-            ], 404);
+            ], 500);
         }
     }
 
-    /**
-     * Actualizar gasto (API)
-     */
     public function updateGasto(Request $request, $id)
     {
         $gasto = GastoContratista::findOrFail($id);
 
         if ($gasto->status_pago === 'pagado') {
             return response()->json([
+                'success' => false,
                 'message' => 'No se puede actualizar un gasto que ya está pagado'
             ], 400);
         }
@@ -1115,6 +1040,7 @@ class ContratistaController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'success' => false,
                 'message' => 'Error de validación',
                 'errors' => $validator->errors()
             ], 422);
@@ -1128,8 +1054,11 @@ class ContratistaController extends Controller
                 $diferencia = $request->monto - $gasto->monto;
                 
                 if ($asignacion->gasto_acumulado + $diferencia > $asignacion->presupuesto_asignado) {
+                    DB::rollBack();
                     return response()->json([
-                        'message' => 'El nuevo monto excede el presupuesto disponible'
+                        'success' => false,
+                        'message' => 'El nuevo monto excede el presupuesto disponible',
+                        'disponible' => $asignacion->saldo_disponible
                     ], 400);
                 }
 
@@ -1144,29 +1073,28 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Gasto actualizado exitosamente',
                 'data' => $gasto
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al actualizar gasto: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al actualizar el gasto',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Eliminar gasto (API)
-     */
     public function destroyGasto($id)
     {
         $gasto = GastoContratista::findOrFail($id);
 
         if ($gasto->status_pago === 'pagado') {
             return response()->json([
+                'success' => false,
                 'message' => 'No se puede eliminar un gasto que ya está pagado'
             ], 400);
         }
@@ -1189,13 +1117,14 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Gasto eliminado exitosamente'
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al eliminar gasto: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al eliminar el gasto',
                 'error' => $e->getMessage()
             ], 500);
@@ -1203,18 +1132,33 @@ class ContratistaController extends Controller
     }
 
     /**
-     * Marcar gasto como pagado (API)
+     * Marcar gasto como pagado
+     * El frontend envía: fecha_pago, forma_pago, cuenta_bancaria, referencia, observaciones
      */
     public function marcarGastoPagado(Request $request, $id)
     {
+        // Log para debugging
+        Log::info('marcarGastoPagado llamado', [
+            'id' => $id,
+            'request' => $request->all()
+        ]);
+
         $validator = Validator::make($request->all(), [
             'fecha_pago' => 'required|date',
             'forma_pago' => 'required|in:transferencia,cheque,efectivo',
-            'referencia' => 'nullable|string|max:100'
+            'referencia' => 'nullable|string|max:100',
+            'cuenta_bancaria' => 'nullable|string|max:100',
+            'observaciones' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
+            Log::error('Validación fallida en marcarGastoPagado', [
+                'errors' => $validator->errors()->toArray(),
+                'request' => $request->all()
+            ]);
+            
             return response()->json([
+                'success' => false,
                 'message' => 'Error de validación',
                 'errors' => $validator->errors()
             ], 422);
@@ -1226,7 +1170,9 @@ class ContratistaController extends Controller
             $gasto = GastoContratista::findOrFail($id);
             
             if ($gasto->status_pago === 'pagado') {
+                DB::rollBack();
                 return response()->json([
+                    'success' => false,
                     'message' => 'El gasto ya está pagado'
                 ], 400);
             }
@@ -1235,39 +1181,59 @@ class ContratistaController extends Controller
             $gasto->fecha_pago = $request->fecha_pago;
             $gasto->save();
 
-            PagoContratista::create([
+            // Generar folio
+            $folio = 'PAG-' . strtoupper(uniqid());
+
+            $pagoData = [
                 'contratista_id' => $gasto->contratista_id,
                 'asignacion_id' => $gasto->asignacion_id,
                 'gasto_id' => $gasto->id,
-                'folio' => PagoContratista::generarFolio(),
+                'folio' => $folio,
                 'fecha_pago' => $request->fecha_pago,
                 'monto' => $gasto->monto,
                 'forma_pago' => $request->forma_pago,
                 'referencia' => $request->referencia,
                 'observaciones' => $request->observaciones,
                 'created_by' => auth()->id()
-            ]);
+            ];
+
+            // Solo agregar cuenta_bancaria si la columna existe
+            if (\Schema::hasColumn('pagos_contratista', 'cuenta_bancaria')) {
+                $pagoData['cuenta_bancaria'] = $request->cuenta_bancaria;
+            }
+
+            $pago = PagoContratista::create($pagoData);
 
             DB::commit();
 
+            Log::info('Gasto marcado como pagado exitosamente', [
+                'gasto_id' => $gasto->id,
+                'pago_id' => $pago->id
+            ]);
+
             return response()->json([
+                'success' => true,
                 'message' => 'Gasto marcado como pagado exitosamente',
-                'data' => $gasto
+                'data' => [
+                    'gasto' => $gasto,
+                    'pago' => $pago
+                ]
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al marcar gasto como pagado: ' . $e->getMessage());
+            Log::error('Error al marcar gasto como pagado: ' . $e->getMessage(), [
+                'id' => $id,
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
+                'success' => false,
                 'message' => 'Error al marcar el gasto como pagado',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Resumen de gastos por tipo (API)
-     */
     public function resumenGastosPorTipo(Request $request)
     {
         try {
@@ -1290,7 +1256,6 @@ class ContratistaController extends Controller
             return response()->json($result);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener resumen de gastos por tipo: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener resumen de gastos',
                 'error' => $e->getMessage()
@@ -1298,9 +1263,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Descargar comprobante de gasto (API)
-     */
     public function descargarComprobanteGasto($id)
     {
         try {
@@ -1317,7 +1279,6 @@ class ContratistaController extends Controller
             return Storage::disk('public')->download($gasto->comprobante_path);
 
         } catch (\Exception $e) {
-            Log::error('Error al descargar comprobante de gasto: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al descargar el comprobante',
                 'error' => $e->getMessage()
@@ -1329,9 +1290,6 @@ class ContratistaController extends Controller
     // SECCIÓN 4: PAGOS
     // ============================================
 
-    /**
-     * Listar pagos (API)
-     */
     public function indexPagos(Request $request)
     {
         try {
@@ -1376,10 +1334,16 @@ class ContratistaController extends Controller
     }
 
     /**
-     * Registrar pago (API)
+     * Registrar pago
+     * El frontend puede enviar: contratista_id, asignacion_id, gasto_id, fecha_pago, monto, forma_pago, cuenta_bancaria, referencia, observaciones
      */
     public function storePago(Request $request)
     {
+        // Log para debugging
+        Log::info('storePago llamado', [
+            'request' => $request->all()
+        ]);
+
         $validator = Validator::make($request->all(), [
             'contratista_id' => 'required|exists:contratistas,id',
             'asignacion_id' => 'required|exists:asignaciones_contratistas,id',
@@ -1388,12 +1352,19 @@ class ContratistaController extends Controller
             'monto' => 'required|numeric|min:0.01',
             'forma_pago' => 'required|in:transferencia,cheque,efectivo',
             'referencia' => 'nullable|string|max:100',
+            'cuenta_bancaria' => 'nullable|string|max:100',
             'comprobante' => 'nullable|file|max:5120',
             'observaciones' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
+            Log::error('Validación fallida en storePago', [
+                'errors' => $validator->errors()->toArray(),
+                'request' => $request->all()
+            ]);
+            
             return response()->json([
+                'success' => false,
                 'message' => 'Error de validación',
                 'errors' => $validator->errors()
             ], 422);
@@ -1404,10 +1375,14 @@ class ContratistaController extends Controller
 
             $asignacion = AsignacionContratista::findOrFail($request->asignacion_id);
 
+            // Validar monto contra gasto acumulado
             if ($request->monto > $asignacion->gasto_acumulado) {
+                DB::rollBack();
                 return response()->json([
+                    'success' => false,
                     'message' => 'El monto del pago excede el gasto acumulado',
-                    'gasto_acumulado' => $asignacion->gasto_acumulado
+                    'gasto_acumulado' => $asignacion->gasto_acumulado,
+                    'monto_solicitado' => $request->monto
                 ], 400);
             }
 
@@ -1418,11 +1393,13 @@ class ContratistaController extends Controller
                 $comprobantePath = $file->storeAs('contratistas/pagos', $fileName, 'public');
             }
 
-            $pago = PagoContratista::create([
+            $folio = 'PAG-' . strtoupper(uniqid());
+
+            $pagoData = [
                 'contratista_id' => $request->contratista_id,
                 'asignacion_id' => $request->asignacion_id,
                 'gasto_id' => $request->gasto_id,
-                'folio' => PagoContratista::generarFolio(),
+                'folio' => $folio,
                 'fecha_pago' => $request->fecha_pago,
                 'monto' => $request->monto,
                 'forma_pago' => $request->forma_pago,
@@ -1430,7 +1407,14 @@ class ContratistaController extends Controller
                 'comprobante_path' => $comprobantePath,
                 'observaciones' => $request->observaciones,
                 'created_by' => auth()->id()
-            ]);
+            ];
+
+            // Solo agregar cuenta_bancaria si la columna existe
+            if (\Schema::hasColumn('pagos_contratista', 'cuenta_bancaria')) {
+                $pagoData['cuenta_bancaria'] = $request->cuenta_bancaria;
+            }
+
+            $pago = PagoContratista::create($pagoData);
 
             if ($request->gasto_id) {
                 $gasto = GastoContratista::find($request->gasto_id);
@@ -1443,24 +1427,27 @@ class ContratistaController extends Controller
 
             DB::commit();
 
+            Log::info('Pago registrado exitosamente', ['pago_id' => $pago->id]);
+
             return response()->json([
+                'success' => true,
                 'message' => 'Pago registrado exitosamente',
                 'data' => $pago->load(['contratista', 'asignacion', 'gasto'])
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al registrar pago: ' . $e->getMessage());
+            Log::error('Error al registrar pago: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
+                'success' => false,
                 'message' => 'Error al registrar el pago',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Mostrar pago (API)
-     */
     public function showPago($id)
     {
         try {
@@ -1481,9 +1468,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Eliminar pago (API)
-     */
     public function destroyPago($id)
     {
         try {
@@ -1509,22 +1493,20 @@ class ContratistaController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Pago eliminado exitosamente'
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al eliminar pago: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al eliminar el pago',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Resumen de pagos (API)
-     */
     public function resumenPagos(Request $request)
     {
         try {
@@ -1559,7 +1541,6 @@ class ContratistaController extends Controller
             return response()->json($result);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener resumen de pagos: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener resumen de pagos',
                 'error' => $e->getMessage()
@@ -1567,9 +1548,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Descargar comprobante de pago (API)
-     */
     public function descargarComprobantePago($id)
     {
         try {
@@ -1586,7 +1564,6 @@ class ContratistaController extends Controller
             return Storage::disk('public')->download($pago->comprobante_path);
 
         } catch (\Exception $e) {
-            Log::error('Error al descargar comprobante de pago: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al descargar el comprobante',
                 'error' => $e->getMessage()
@@ -1595,40 +1572,48 @@ class ContratistaController extends Controller
     }
 
     // ============================================
-    // SECCIÓN 5: DASHBOARD Y ESTADÍSTICAS
+    // SECCIÓN 5: DASHBOARD
     // ============================================
 
-    /**
-     * Dashboard principal (API)
-     */
     public function dashboard(Request $request)
     {
         try {
+            $totalProyectos = AsignacionContratista::distinct()->count('proyecto_id');
+            
             $kpis = [
                 'total_contratistas' => Contratista::count(),
                 'activos' => Contratista::where('activo', true)->count(),
                 'inactivos' => Contratista::where('activo', false)->count(),
-                'total_proyectos' => AsignacionContratista::distinct('proyecto_id')->count(),
+                'total_proyectos' => $totalProyectos,
                 'total_asignaciones' => AsignacionContratista::count(),
-                'presupuesto_total' => AsignacionContratista::sum('presupuesto_asignado'),
-                'gasto_total' => AsignacionContratista::sum('gasto_acumulado'),
-                'saldo_total' => AsignacionContratista::sum('saldo_disponible')
+                'presupuesto_total' => (float) (AsignacionContratista::sum('presupuesto_asignado') ?? 0),
+                'gasto_total' => (float) (AsignacionContratista::sum('gasto_acumulado') ?? 0),
+                'saldo_total' => (float) (AsignacionContratista::sum('saldo_disponible') ?? 0)
             ];
 
             $asignacionesStatus = AsignacionContratista::select('status', DB::raw('count(*) as total'))
                 ->groupBy('status')
-                ->get();
+                ->get()
+                ->map(function($item) {
+                    return ['status' => $item->status, 'total' => (int) $item->total];
+                });
 
             $gastosTipo = GastoContratista::select('tipo_gasto', DB::raw('sum(monto) as total'))
                 ->groupBy('tipo_gasto')
-                ->get();
+                ->get()
+                ->map(function($item) {
+                    return ['tipo_gasto' => $item->tipo_gasto, 'total' => (float) $item->total];
+                });
 
             $especialidades = Contratista::select('especialidad', DB::raw('count(*) as total'))
                 ->where('activo', true)
                 ->groupBy('especialidad')
-                ->get();
+                ->get()
+                ->map(function($item) {
+                    return ['especialidad' => $item->especialidad, 'total' => (int) $item->total];
+                });
 
-            $alertasNoLeidas = AlertaContratista::noLeidas()->count();
+            $alertasNoLeidas = AlertaContratista::where('leida', false)->count();
 
             $proyectosActivos = AsignacionContratista::select(
                 'proyecto_id',
@@ -1645,34 +1630,47 @@ class ContratistaController extends Controller
                 return [
                     'id' => $item->proyecto_id,
                     'nombre' => $item->proyecto->nombre ?? 'N/A',
-                    'total_asignaciones' => $item->total_asignaciones,
-                    'total_presupuesto' => $item->total_presupuesto
+                    'total_asignaciones' => (int) $item->total_asignaciones,
+                    'total_presupuesto' => (float) $item->total_presupuesto
                 ];
             });
 
             $gastosMensuales = GastoContratista::select(
-                DB::raw('TO_CHAR(fecha_gasto, \'YYYY-MM\') as mes'),
+                DB::raw("TO_CHAR(fecha_gasto, 'YYYY-MM') as mes"),
                 DB::raw('sum(monto) as total')
             )
             ->where('fecha_gasto', '>=', now()->subMonths(6))
             ->groupBy('mes')
             ->orderBy('mes', 'asc')
-            ->get();
+            ->get()
+            ->map(function($item) {
+                return ['mes' => $item->mes, 'total' => (float) $item->total];
+            });
 
             $topContratistas = Contratista::select(
                 'contratistas.id',
                 'contratistas.nombre_comercial',
                 'contratistas.especialidad',
-                DB::raw('sum(gastos_contratista.monto) as total_gasto')
+                DB::raw('COALESCE(SUM(gastos_contratista.monto), 0) as total_gasto')
             )
             ->leftJoin('gastos_contratista', 'contratistas.id', '=', 'gastos_contratista.contratista_id')
             ->where('contratistas.activo', true)
             ->groupBy('contratistas.id', 'contratistas.nombre_comercial', 'contratistas.especialidad')
             ->orderBy('total_gasto', 'desc')
             ->limit(5)
-            ->get();
+            ->get()
+            ->map(function($item) {
+                return [
+                    'id' => $item->id,
+                    'nombre_comercial' => $item->nombre_comercial,
+                    'especialidad' => $item->especialidad,
+                    'total_gasto' => (float) $item->total_gasto,
+                    'proyectos' => 0
+                ];
+            });
 
             return response()->json([
+                'success' => true,
                 'kpis' => $kpis,
                 'asignaciones_status' => $asignacionesStatus,
                 'gastos_tipo' => $gastosTipo,
@@ -1686,15 +1684,25 @@ class ContratistaController extends Controller
         } catch (\Exception $e) {
             Log::error('Error al obtener datos del dashboard: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al obtener datos del dashboard',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'kpis' => [
+                    'total_contratistas' => 0,
+                    'activos' => 0,
+                    'inactivos' => 0,
+                    'total_proyectos' => 0,
+                    'total_asignaciones' => 0,
+                    'presupuesto_total' => 0,
+                    'gasto_total' => 0,
+                    'saldo_total' => 0
+                ],
+                'top_contratistas' => [],
+                'alertas_no_leidas' => 0
             ], 500);
         }
     }
 
-    /**
-     * Estadísticas globales (API)
-     */
     public function estadisticasGlobales()
     {
         try {
@@ -1702,10 +1710,10 @@ class ContratistaController extends Controller
                 'total' => Contratista::count(),
                 'activos' => Contratista::where('activo', true)->count(),
                 'inactivos' => Contratista::where('activo', false)->count(),
-                'total_proyectos' => AsignacionContratista::distinct('proyecto_id')->count(),
-                'presupuesto_total' => AsignacionContratista::sum('presupuesto_asignado'),
-                'gasto_total' => AsignacionContratista::sum('gasto_acumulado'),
-                'saldo_total' => AsignacionContratista::sum('saldo_disponible'),
+                'total_proyectos' => AsignacionContratista::distinct()->count('proyecto_id'),
+                'presupuesto_total' => (float) (AsignacionContratista::sum('presupuesto_asignado') ?? 0),
+                'gasto_total' => (float) (AsignacionContratista::sum('gasto_acumulado') ?? 0),
+                'saldo_total' => (float) (AsignacionContratista::sum('saldo_disponible') ?? 0),
                 'por_especialidad' => Contratista::select('especialidad', DB::raw('count(*) as total'))
                     ->where('activo', true)
                     ->groupBy('especialidad')
@@ -1713,13 +1721,12 @@ class ContratistaController extends Controller
                 'por_riesgo' => Contratista::select('nivel_riesgo', DB::raw('count(*) as total'))
                     ->groupBy('nivel_riesgo')
                     ->get(),
-                'promedio_calificacion' => Contratista::where('calificacion', '>', 0)->avg('calificacion')
+                'promedio_calificacion' => (float) (Contratista::where('calificacion', '>', 0)->avg('calificacion') ?? 0)
             ];
 
             return response()->json($estadisticas);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener estadísticas globales: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener estadísticas',
                 'error' => $e->getMessage()
@@ -1731,9 +1738,6 @@ class ContratistaController extends Controller
     // SECCIÓN 6: ALERTAS
     // ============================================
 
-    /**
-     * Listar alertas (API)
-     */
     public function indexAlertas(Request $request)
     {
         try {
@@ -1757,7 +1761,6 @@ class ContratistaController extends Controller
             return response()->json($alertas);
 
         } catch (\Exception $e) {
-            Log::error('Error al listar alertas: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al listar alertas',
                 'error' => $e->getMessage()
@@ -1765,9 +1768,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Marcar alerta como leída (API)
-     */
     public function marcarAlertaLeida($id)
     {
         try {
@@ -1775,34 +1775,33 @@ class ContratistaController extends Controller
             $alerta->marcarComoLeida();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Alerta marcada como leída',
                 'data' => $alerta
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error al marcar alerta como leída: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al marcar alerta como leída',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Marcar todas las alertas como leídas (API)
-     */
     public function marcarTodasAlertasLeidas()
     {
         try {
-            AlertaContratista::noLeidas()->update(['leida' => true]);
+            AlertaContratista::where('leida', false)->update(['leida' => true]);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Todas las alertas marcadas como leídas'
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error al marcar todas las alertas como leídas: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al marcar alertas como leídas',
                 'error' => $e->getMessage()
             ], 500);
@@ -1810,12 +1809,9 @@ class ContratistaController extends Controller
     }
 
     // ============================================
-    // SECCIÓN 7: CATÁLOGOS Y UTILIDADES
+    // SECCIÓN 7: CATÁLOGOS
     // ============================================
 
-    /**
-     * Obtener proyectos disponibles (API)
-     */
     public function proyectosDisponibles()
     {
         try {
@@ -1827,7 +1823,6 @@ class ContratistaController extends Controller
             return response()->json($proyectos);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener proyectos disponibles: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener proyectos disponibles',
                 'error' => $e->getMessage()
@@ -1835,9 +1830,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Obtener partidas de un proyecto (API)
-     */
     public function partidasProyecto($proyectoId)
     {
         try {
@@ -1850,7 +1842,6 @@ class ContratistaController extends Controller
             return response()->json($partidas);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener partidas del proyecto: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener partidas del proyecto',
                 'error' => $e->getMessage()
@@ -1858,9 +1849,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Obtener resumen por proyecto (API)
-     */
     public function resumenProyecto($proyectoId)
     {
         try {
@@ -1908,7 +1896,6 @@ class ContratistaController extends Controller
             return response()->json($resumen);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener resumen del proyecto: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener resumen del proyecto',
                 'error' => $e->getMessage()
@@ -1920,9 +1907,6 @@ class ContratistaController extends Controller
     // SECCIÓN 8: DOCUMENTOS
     // ============================================
 
-    /**
-     * Guardar documento (privado)
-     */
     private function guardarDocumento($file, $contratistaId, $tipo)
     {
         try {
@@ -1947,9 +1931,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Obtener documentos del contratista (API)
-     */
     public function getDocumentos($id)
     {
         try {
@@ -1960,7 +1941,6 @@ class ContratistaController extends Controller
             return response()->json($documentos);
 
         } catch (\Exception $e) {
-            Log::error('Error al obtener documentos: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al obtener documentos',
                 'error' => $e->getMessage()
@@ -1968,9 +1948,6 @@ class ContratistaController extends Controller
         }
     }
 
-    /**
-     * Eliminar documento (API)
-     */
     public function eliminarDocumento($id)
     {
         try {
@@ -1983,21 +1960,19 @@ class ContratistaController extends Controller
             $documento->delete();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Documento eliminado exitosamente'
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error al eliminar documento: ' . $e->getMessage());
             return response()->json([
+                'success' => false,
                 'message' => 'Error al eliminar el documento',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Descargar documento (API)
-     */
     public function descargarDocumento($id)
     {
         try {
@@ -2012,7 +1987,6 @@ class ContratistaController extends Controller
             return Storage::disk('public')->download($documento->ruta_archivo, $documento->nombre_original);
 
         } catch (\Exception $e) {
-            Log::error('Error al descargar documento: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Error al descargar el documento',
                 'error' => $e->getMessage()
@@ -2024,9 +1998,6 @@ class ContratistaController extends Controller
     // SECCIÓN 9: MÉTODOS PRIVADOS
     // ============================================
 
-    /**
-     * Crear alerta (privado)
-     */
     private function crearAlerta($contratistaId, $asignacionId, $tipo, $titulo, $descripcion, $nivel = 'info')
     {
         try {

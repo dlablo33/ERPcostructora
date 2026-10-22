@@ -14,6 +14,32 @@ use Illuminate\Support\Facades\Log;
 
 class PresupuestoProyectoController extends Controller
 {
+    /**
+     * Catálogo de unidades disponibles (Ticket #3)
+     */
+    const UNIDADES = [
+        'm'   => 'Metro (m)',
+        'm2'  => 'Metro cuadrado (m²)',
+        'm3'  => 'Metro cúbico (m³)',
+        'ml'  => 'Metro lineal (ml)',
+        'kg'  => 'Kilogramo (kg)',
+        'ton' => 'Tonelada (ton)',
+        'pza' => 'Pieza (pza)',
+        'lote'=> 'Lote',
+        'juego'=>'Juego',
+        'global'=>'Global',
+        'día' => 'Día',
+        'hora'=> 'Hora',
+        'mes' => 'Mes',
+        'servicio' => 'Servicio',
+        'viaje'    => 'Viaje',
+        'saco'     => 'Saco',
+        'cubeta'   => 'Cubeta',
+        'rollo'    => 'Rollo',
+        'caja'     => 'Caja',
+        'paquete'  => 'Paquete',
+    ];
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -31,7 +57,7 @@ class PresupuestoProyectoController extends Controller
             ->orderBy('seccion')
             ->pluck('seccion')
             ->toArray();
-        
+
         return view('proyectos.presupuestos.presupuesto', compact('proyecto', 'secciones'));
     }
 
@@ -44,29 +70,29 @@ class PresupuestoProyectoController extends Controller
             $partidas = ProyectoPartida::where('proyecto_id', $proyecto->id)
                 ->where('activa', true)
                 ->get();
-            
+
             $presupuestoTotal = $partidas->sum('importe');
-            
+
             $ejecutadoTotal = 0;
             $ejecutadoPorCategoria = [];
             $cantidadEjecutadaGlobal = 0;
             $cantidadPresupuestadaGlobal = 0;
-            
+
             foreach ($partidas as $partida) {
                 $ultimaEstimacion = EstimacionesPartida::where('partida_id', $partida->id)
                     ->orderBy('fecha', 'desc')
                     ->first();
-                
+
                 if ($ultimaEstimacion) {
                     $avanceAcumulado = min($ultimaEstimacion->avance_porcentaje, 100);
                     $montoDevengado = ($avanceAcumulado / 100) * $partida->importe;
-                    
+
                     $ejecutadoTotal += $montoDevengado;
-                    
+
                     $cantidadEjecutada = min($partida->estimaciones()->sum('cantidad_ejecutada'), $partida->cantidad);
                     $cantidadEjecutadaGlobal += $cantidadEjecutada;
                     $cantidadPresupuestadaGlobal += $partida->cantidad;
-                    
+
                     $categoria = $partida->categoria;
                     if (!isset($ejecutadoPorCategoria[$categoria])) {
                         $ejecutadoPorCategoria[$categoria] = 0;
@@ -74,45 +100,45 @@ class PresupuestoProyectoController extends Controller
                     $ejecutadoPorCategoria[$categoria] += $montoDevengado;
                 }
             }
-            
+
             $pendienteTotal = $presupuestoTotal - $ejecutadoTotal;
             if ($pendienteTotal < 0) $pendienteTotal = 0;
-            
+
             $avanceGlobal = $presupuestoTotal > 0 ? min(round(($ejecutadoTotal / $presupuestoTotal) * 100, 1), 100) : 0;
-            
-            $avanceGlobalCantidad = $cantidadPresupuestadaGlobal > 0 
+
+            $avanceGlobalCantidad = $cantidadPresupuestadaGlobal > 0
                 ? min(round(($cantidadEjecutadaGlobal / $cantidadPresupuestadaGlobal) * 100, 1), 100)
                 : 0;
-            
+
             $categorias = [
-                'materiales' => ['nombre' => 'Materiales', 'color' => '#2378e1', 'presupuesto' => 0, 'ejecutado' => 0],
-                'mano_obra' => ['nombre' => 'Mano de Obra', 'color' => '#28a745', 'presupuesto' => 0, 'ejecutado' => 0],
-                'maquinaria' => ['nombre' => 'Maquinaria', 'color' => '#ffc107', 'presupuesto' => 0, 'ejecutado' => 0],
-                'subcontratos' => ['nombre' => 'Subcontratos', 'color' => '#17a2b8', 'presupuesto' => 0, 'ejecutado' => 0],
-                'indirectos' => ['nombre' => 'Gastos Indirectos', 'color' => '#6c757d', 'presupuesto' => 0, 'ejecutado' => 0],
+                'materiales'   => ['nombre' => 'Materiales',         'color' => '#2378e1', 'presupuesto' => 0, 'ejecutado' => 0],
+                'mano_obra'    => ['nombre' => 'Mano de Obra',       'color' => '#28a745', 'presupuesto' => 0, 'ejecutado' => 0],
+                'maquinaria'   => ['nombre' => 'Maquinaria',         'color' => '#ffc107', 'presupuesto' => 0, 'ejecutado' => 0],
+                'subcontratos' => ['nombre' => 'Subcontratos',       'color' => '#17a2b8', 'presupuesto' => 0, 'ejecutado' => 0],
+                'indirectos'   => ['nombre' => 'Gastos Indirectos',  'color' => '#6c757d', 'presupuesto' => 0, 'ejecutado' => 0],
             ];
-            
+
             foreach ($partidas as $partida) {
                 $categoria = $partida->categoria;
                 if (isset($categorias[$categoria])) {
                     $categorias[$categoria]['presupuesto'] += $partida->importe;
                 }
             }
-            
+
             foreach ($categorias as $key => $data) {
                 $categorias[$key]['ejecutado'] = $ejecutadoPorCategoria[$key] ?? 0;
                 $categorias[$key]['pendiente'] = max($categorias[$key]['presupuesto'] - $categorias[$key]['ejecutado'], 0);
-                $categorias[$key]['avance'] = $categorias[$key]['presupuesto'] > 0 
+                $categorias[$key]['avance'] = $categorias[$key]['presupuesto'] > 0
                     ? min(round(($categorias[$key]['ejecutado'] / $categorias[$key]['presupuesto']) * 100, 1), 100)
                     : 0;
             }
-            
+
             $partidasActivas = $partidas->count();
-            $partidasConAvance = $partidas->filter(function($p) {
+            $partidasConAvance = $partidas->filter(function ($p) {
                 $ultima = EstimacionesPartida::where('partida_id', $p->id)->orderBy('fecha', 'desc')->first();
                 return $ultima && $ultima->avance_porcentaje > 0;
             })->count();
-            
+
             return response()->json([
                 'success' => true,
                 'proyecto' => [
@@ -135,7 +161,7 @@ class PresupuestoProyectoController extends Controller
                 ],
                 'categorias' => $categorias,
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error en getPresupuesto: ' . $e->getMessage());
             return response()->json([
@@ -153,34 +179,32 @@ class PresupuestoProyectoController extends Controller
         try {
             $query = ProyectoPartida::where('proyecto_id', $proyecto->id)
                 ->where('activa', true);
-            
+
             if ($request->has('seccion') && $request->seccion && $request->seccion !== '') {
                 $query->where('seccion', $request->seccion);
             }
-            
+
             if ($request->has('search') && $request->search) {
                 $search = $request->search;
-                $query->where(function($q) use ($search) {
+                $query->where(function ($q) use ($search) {
                     $q->where('codigo', 'like', "%{$search}%")
                       ->orWhere('nombre', 'like', "%{$search}%");
                 });
             }
-            
+
             $query->orderBy('seccion')->orderBy('orden', 'asc')->orderBy('codigo', 'asc');
             $partidas = $query->get();
-            
+
             $partidasArray = [];
             foreach ($partidas as $partida) {
-                // Obtener avance desde estimaciones
                 $avance = 0;
                 $cantidadEjecutada = 0;
                 $costoIncurrido = 0;
-                
-                // Última estimación
+
                 $ultimaEstimacion = EstimacionesPartida::where('partida_id', $partida->id)
                     ->orderBy('fecha', 'desc')
                     ->first();
-                
+
                 if ($ultimaEstimacion) {
                     $avance = min($ultimaEstimacion->avance_porcentaje, 100);
                     $cantidadEjecutada = DB::table('estimaciones_partidas')
@@ -188,33 +212,32 @@ class PresupuestoProyectoController extends Controller
                         ->sum('cantidad_ejecutada');
                     $cantidadEjecutada = min($cantidadEjecutada, $partida->cantidad);
                 }
-                
-                // Costo incurrido desde movimientos bancarios (ahora con partida_id)
+
                 $costoIncurrido = DB::table('movimientos_bancarios')
                     ->where('partida_id', $partida->id)
                     ->where('tipo', 'egreso')
                     ->where('status', 'aplicado')
                     ->sum('monto');
-                
+
                 $ejecutado = ($avance / 100) * $partida->importe;
                 $pendiente = max($partida->importe - $ejecutado, 0);
-                
-                // Calcular índice de rendimiento
+
                 $indiceRendimiento = 0;
                 if ($avance > 0 && $costoIncurrido > 0) {
                     $avanceFinanciero = ($costoIncurrido / $partida->importe) * 100;
                     $indiceRendimiento = $avanceFinanciero > 0 ? round($avance / $avanceFinanciero, 2) : 0;
                 }
-                
+
                 $partidasArray[] = [
                     'id' => $partida->id,
                     'codigo' => $partida->codigo,
                     'nombre' => $partida->nombre,
                     'descripcion' => $partida->descripcion,
                     'seccion' => $partida->seccion ?? 'Sin sección',
-                    'categoria' => $partida->categoria,
-                    'categoria_nombre' => $partida->categoria_nombre,
+                    'categoria' => $partida->categoria,                      // ✅ FIX Ticket #1
+                    'categoria_nombre' => $partida->categoria_nombre,        // ✅ FIX Ticket #1
                     'unidad' => $partida->unidad,
+                    'unidad_label' => self::UNIDADES[$partida->unidad] ?? $partida->unidad, // ✅ FIX Ticket #3
                     'cantidad' => floatval($partida->cantidad),
                     'cantidad_ejecutada' => round($cantidadEjecutada, 2),
                     'precio_unitario' => floatval($partida->precio_unitario),
@@ -226,13 +249,13 @@ class PresupuestoProyectoController extends Controller
                     'indice_rendimiento' => $indiceRendimiento,
                 ];
             }
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $partidasArray,
                 'total' => count($partidasArray),
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error en getPartidas: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
@@ -246,6 +269,8 @@ class PresupuestoProyectoController extends Controller
 
     /**
      * Obtiene las partidas de una sección específica
+     * ✅ FIX Ticket #1: se agrega 'categoria' (raw) además de 'categoria_nombre'
+     * ✅ FIX Ticket #3: se agrega 'unidad_label'
      */
     public function getPartidasPorSeccion(Proyecto $proyecto, $seccion)
     {
@@ -256,23 +281,27 @@ class PresupuestoProyectoController extends Controller
                 ->orderBy('orden', 'asc')
                 ->orderBy('codigo', 'asc')
                 ->get();
-            
+
             $partidasArray = [];
             foreach ($partidas as $partida) {
                 $ultimaEstimacion = EstimacionesPartida::where('partida_id', $partida->id)
                     ->orderBy('fecha', 'desc')
                     ->first();
-                
+
                 $avance = $ultimaEstimacion ? min($ultimaEstimacion->avance_porcentaje, 100) : 0;
                 $ejecutado = ($avance / 100) * $partida->importe;
                 $cantidadEjecutada = min($partida->estimaciones()->sum('cantidad_ejecutada'), $partida->cantidad);
-                
+
                 $partidasArray[] = [
                     'id' => $partida->id,
                     'codigo' => $partida->codigo,
                     'nombre' => $partida->nombre,
-                    'categoria_nombre' => $partida->categoria_nombre,
+                    'descripcion' => $partida->descripcion,
+                    'seccion' => $partida->seccion,
+                    'categoria' => $partida->categoria,                   // ✅ FIX Ticket #1 (raw)
+                    'categoria_nombre' => $partida->categoria_nombre,     // ✅ FIX Ticket #1 (label)
                     'unidad' => $partida->unidad,
+                    'unidad_label' => self::UNIDADES[$partida->unidad] ?? $partida->unidad, // ✅ FIX Ticket #3
                     'cantidad' => floatval($partida->cantidad),
                     'cantidad_ejecutada' => round($cantidadEjecutada, 2),
                     'precio_unitario' => floatval($partida->precio_unitario),
@@ -280,9 +309,10 @@ class PresupuestoProyectoController extends Controller
                     'ejecutado' => round($ejecutado, 2),
                     'pendiente' => round($partida->importe - $ejecutado, 2),
                     'avance' => $avance,
+                    'orden' => $partida->orden,
                 ];
             }
-            
+
             return response()->json([
                 'success' => true,
                 'seccion' => $seccion,
@@ -292,7 +322,7 @@ class PresupuestoProyectoController extends Controller
                 'ejecutado_total' => collect($partidasArray)->sum('ejecutado'),
                 'avance_promedio' => collect($partidasArray)->avg('avance'),
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error en getPartidasPorSeccion: ' . $e->getMessage());
             return response()->json([
@@ -304,6 +334,7 @@ class PresupuestoProyectoController extends Controller
 
     /**
      * Obtiene el resumen del proyecto por secciones
+     * ✅ FIX Ticket #1: se agrega 'categoria' (raw) además de 'categoria_nombre'
      */
     public function getResumenPorSeccion(Proyecto $proyecto, Request $request)
     {
@@ -311,18 +342,18 @@ class PresupuestoProyectoController extends Controller
             $partidas = ProyectoPartida::where('proyecto_id', $proyecto->id)
                 ->where('activa', true)
                 ->get();
-            
+
             $resumen = [];
-            
+
             foreach ($partidas as $partida) {
                 $seccion = $partida->seccion ?? 'Otras';
                 $ultimaEstimacion = EstimacionesPartida::where('partida_id', $partida->id)
                     ->orderBy('fecha', 'desc')
                     ->first();
-                
+
                 $avance = $ultimaEstimacion ? min($ultimaEstimacion->avance_porcentaje, 100) : 0;
                 $ejecutado = ($avance / 100) * $partida->importe;
-                
+
                 if (!isset($resumen[$seccion])) {
                     $resumen[$seccion] = [
                         'presupuesto' => 0,
@@ -332,24 +363,24 @@ class PresupuestoProyectoController extends Controller
                         'avance' => 0,
                     ];
                 }
-                
+
                 $resumen[$seccion]['presupuesto'] += $partida->importe;
                 $resumen[$seccion]['ejecutado'] += $ejecutado;
                 $resumen[$seccion]['pendiente'] += max($partida->importe - $ejecutado, 0);
                 $resumen[$seccion]['partidas']++;
             }
-            
+
             foreach ($resumen as $key => $value) {
                 if ($value['presupuesto'] > 0) {
                     $resumen[$key]['avance'] = min(round(($value['ejecutado'] / $value['presupuesto']) * 100, 1), 100);
                 }
             }
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $resumen
             ]);
-            
+
         } catch (\Exception $e) {
             Log::error('Error en getResumenPorSeccion: ' . $e->getMessage());
             return response()->json([
@@ -389,9 +420,9 @@ class PresupuestoProyectoController extends Controller
                 'precio_unitario' => 'required|numeric|min:0',
                 'orden' => 'nullable|integer|min:0',
             ]);
-            
+
             DB::beginTransaction();
-            
+
             $partida = ProyectoPartida::create([
                 'proyecto_id' => $proyecto->id,
                 'codigo' => $validated['codigo'],
@@ -405,15 +436,15 @@ class PresupuestoProyectoController extends Controller
                 'orden' => $validated['orden'] ?? 0,
                 'activa' => true,
             ]);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Partida creada exitosamente',
                 'data' => $partida
             ]);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error en storePartida: ' . $e->getMessage());
@@ -432,7 +463,7 @@ class PresupuestoProyectoController extends Controller
         try {
             $partida = ProyectoPartida::where('proyecto_id', $proyecto->id)
                 ->findOrFail($partidaId);
-            
+
             $validated = $request->validate([
                 'codigo' => 'required|string|max:50',
                 'nombre' => 'required|string|max:255',
@@ -445,17 +476,17 @@ class PresupuestoProyectoController extends Controller
                 'orden' => 'nullable|integer|min:0',
                 'activa' => 'nullable|boolean',
             ]);
-            
+
             DB::beginTransaction();
             $partida->update($validated);
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Partida actualizada exitosamente',
                 'data' => $partida
             ]);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error en updatePartida: ' . $e->getMessage());
@@ -474,31 +505,31 @@ class PresupuestoProyectoController extends Controller
         try {
             $partida = ProyectoPartida::where('proyecto_id', $proyecto->id)
                 ->findOrFail($partidaId);
-            
+
             DB::beginTransaction();
-            
+
             if ($partida->movimientos()->count() > 0) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No se puede eliminar la partida porque tiene movimientos asociados'
                 ], 422);
             }
-            
+
             if ($partida->estimaciones()->count() > 0) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No se puede eliminar la partida porque tiene estimaciones asociadas'
                 ], 422);
             }
-            
+
             $partida->delete();
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Partida eliminada exitosamente'
             ]);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error en destroyPartida: ' . $e->getMessage());
@@ -522,7 +553,7 @@ class PresupuestoProyectoController extends Controller
                 ->orderBy('seccion')
                 ->pluck('seccion')
                 ->toArray();
-            
+
             return response()->json(['success' => true, 'data' => $secciones]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
@@ -537,28 +568,46 @@ class PresupuestoProyectoController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
-                ['value' => 'materiales', 'label' => 'Materiales', 'color' => '#2378e1'],
-                ['value' => 'mano_obra', 'label' => 'Mano de Obra', 'color' => '#28a745'],
-                ['value' => 'maquinaria', 'label' => 'Maquinaria', 'color' => '#ffc107'],
-                ['value' => 'subcontratos', 'label' => 'Subcontratos', 'color' => '#17a2b8'],
-                ['value' => 'indirectos', 'label' => 'Gastos Indirectos', 'color' => '#6c757d'],
+                ['value' => 'materiales',   'label' => 'Materiales',        'color' => '#2378e1'],
+                ['value' => 'mano_obra',    'label' => 'Mano de Obra',      'color' => '#28a745'],
+                ['value' => 'maquinaria',   'label' => 'Maquinaria',        'color' => '#ffc107'],
+                ['value' => 'subcontratos', 'label' => 'Subcontratos',      'color' => '#17a2b8'],
+                ['value' => 'indirectos',   'label' => 'Gastos Indirectos', 'color' => '#6c757d'],
             ]
         ]);
     }
 
     /**
+     * Obtiene el catálogo de unidades (Ticket #3)
+     */
+    public function getUnidades()
+    {
+        $unidades = [];
+        foreach (self::UNIDADES as $value => $label) {
+            $unidades[] = ['value' => $value, 'label' => $label];
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $unidades
+        ]);
+    }
+
+    /**
      * Obtiene una partida específica
+     * ✅ FIX Ticket #1: se agrega 'categoria' (raw)
+     * ✅ FIX Ticket #3: se agrega 'unidad_label'
      */
     public function getPartida(Proyecto $proyecto, $partidaId)
     {
         try {
             $partida = ProyectoPartida::where('proyecto_id', $proyecto->id)
                 ->findOrFail($partidaId);
-            
+
             $ultimaEstimacion = EstimacionesPartida::where('partida_id', $partida->id)
                 ->orderBy('fecha', 'desc')
                 ->first();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -567,9 +616,10 @@ class PresupuestoProyectoController extends Controller
                     'nombre' => $partida->nombre,
                     'descripcion' => $partida->descripcion,
                     'seccion' => $partida->seccion,
-                    'categoria' => $partida->categoria,
-                    'categoria_nombre' => $partida->categoria_nombre,
+                    'categoria' => $partida->categoria,                    // ✅ FIX Ticket #1
+                    'categoria_nombre' => $partida->categoria_nombre,      // ✅ FIX Ticket #1
                     'unidad' => $partida->unidad,
+                    'unidad_label' => self::UNIDADES[$partida->unidad] ?? $partida->unidad, // ✅ FIX Ticket #3
                     'cantidad' => floatval($partida->cantidad),
                     'precio_unitario' => floatval($partida->precio_unitario),
                     'importe' => $partida->importe,
@@ -580,7 +630,7 @@ class PresupuestoProyectoController extends Controller
                     'monto_devengado' => $ultimaEstimacion ? (min($ultimaEstimacion->avance_porcentaje, 100) / 100) * $partida->importe : 0,
                 ]
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Partida no encontrada'], 404);
         }
@@ -597,12 +647,12 @@ class PresupuestoProyectoController extends Controller
                 ->orderBy('seccion')
                 ->orderBy('orden')
                 ->get();
-            
+
             $filename = "presupuesto_{$proyecto->codigo}_" . date('Y-m-d') . ".xls";
-            
+
             header("Content-Type: application/vnd.ms-excel");
             header("Content-Disposition: attachment; filename=\"$filename\"");
-            
+
             echo "<table border='1'>";
             echo "<thead>";
             echo "<tr>";
@@ -618,39 +668,39 @@ class PresupuestoProyectoController extends Controller
             echo "<th>Avance %</th>";
             echo "<th>Devengado</th>";
             echo "<th>Pendiente</th>";
-            echo "</table>";
+            echo "</tr>";
             echo "</thead>";
             echo "<tbody>";
-            
+
             foreach ($partidas as $partida) {
                 $ultimaEstimacion = EstimacionesPartida::where('partida_id', $partida->id)
                     ->orderBy('fecha', 'desc')
                     ->first();
-                
+
                 $avance = $ultimaEstimacion ? min($ultimaEstimacion->avance_porcentaje, 100) : 0;
                 $ejecutado = ($avance / 100) * $partida->importe;
                 $cantidadEjecutada = min($partida->estimaciones()->sum('cantidad_ejecutada'), $partida->cantidad);
-                
+
                 echo "<tr>";
                 echo "<td>{$partida->seccion}</td>";
                 echo "<td>{$partida->codigo}</td>";
                 echo "<td>{$partida->nombre}</td>";
                 echo "<td>{$partida->categoria_nombre}</td>";
-                echo "<td>{$partida->unidad}</td>";
+                echo "<td>" . (self::UNIDADES[$partida->unidad] ?? $partida->unidad) . "</td>";
                 echo "<td>" . number_format($partida->cantidad, 2) . "</td>";
                 echo "<td>" . number_format($cantidadEjecutada, 2) . "</td>";
                 echo "<td>$" . number_format($partida->precio_unitario, 2) . "</td>";
                 echo "<td>$" . number_format($partida->importe, 2) . "</td>";
-                echo "<td>{$avance}%</span></td>";
+                echo "<td>{$avance}%</td>";
                 echo "<td>$" . number_format($ejecutado, 2) . "</td>";
                 echo "<td>$" . number_format($partida->importe - $ejecutado, 2) . "</td>";
                 echo "</tr>";
             }
-            
+
             echo "</tbody>";
             echo "</table>";
             exit;
-            
+
         } catch (\Exception $e) {
             Log::error('Error en exportarExcel: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

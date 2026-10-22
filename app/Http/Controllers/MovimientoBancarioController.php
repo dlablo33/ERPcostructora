@@ -100,7 +100,6 @@ class MovimientoBancarioController extends Controller
 
             DB::beginTransaction();
             
-            // Subir comprobante si existe
             if ($request->hasFile('comprobante')) {
                 $archivo = $request->file('comprobante');
                 $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
@@ -113,7 +112,6 @@ class MovimientoBancarioController extends Controller
             
             $movimiento = MovimientoBancario::create($validated);
             
-            // Si está marcado como aplicado, procesar inmediatamente
             if ($movimiento->status === 'aplicado') {
                 $movimiento->aplicar();
             }
@@ -144,11 +142,78 @@ class MovimientoBancarioController extends Controller
         return view('administracion.tesoreria.movimientos.show', compact('movimiento'));
     }
 
+    /**
+     * ✅ NUEVO: Detalle del movimiento en JSON (para el modal).
+     */
+    public function detalleJson($id)
+    {
+        try {
+            $movimiento = MovimientoBancario::with([
+                'cuentaBancaria.banco',
+                'cuentaBancaria.moneda',
+                'proyecto',
+                'tipoIngreso',
+                'tipoEgreso',
+                'categoriaGasto',
+                'metodoPago',
+                'creador'
+            ])->findOrFail($id);
+
+            // Detectar cargo/abono según el campo `tipo` (igual que en getDataForEstadosCuenta)
+            $esCargo = in_array($movimiento->tipo, ['cargo', 'egreso', 'pago', 'retiro', 'compra', 'gasto']);
+            $esAbono = in_array($movimiento->tipo, ['abono', 'ingreso', 'deposito', 'transferencia_recibida', 'pago_recibido']);
+
+            $monto = floatval($movimiento->monto);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id'            => $movimiento->id,
+                    'fecha'         => $movimiento->fecha,
+                    'folio'         => $movimiento->folio ?? ('MOV-' . str_pad($movimiento->id, 6, '0', STR_PAD_LEFT)),
+                    'referencia'    => $movimiento->referencia ?? '-',
+                    'ref_bancaria'  => $movimiento->referencia_bancaria ?? '-',
+                    'origen'        => $movimiento->origen ?? $movimiento->tipo ?? '-',
+                    'descripcion'   => $movimiento->descripcion ?? $movimiento->concepto ?? '-',
+                    'concepto'      => $movimiento->concepto ?? '-',
+                    'observaciones' => $movimiento->observaciones ?? '-',
+                    'cargos'        => $esCargo ? $monto : 0,
+                    'abonos'        => $esAbono ? $monto : 0,
+                    'monto'         => $monto,
+                    'tipo'          => $movimiento->tipo,
+                    'status'        => $movimiento->status ?? '-',
+                    'saldo_final'   => null, // se recalcula en el listado
+                    'banco'         => optional($movimiento->cuentaBancaria->banco ?? null)->nombre,
+                    'numero_cuenta' => optional($movimiento->cuentaBancaria ?? null)->numero_cuenta,
+                    'moneda'        => optional($movimiento->cuentaBancaria->moneda ?? null)->nombre,
+                    'proyecto'      => optional($movimiento->proyecto ?? null)->nombre,
+                    'tipo_ingreso'  => optional($movimiento->tipoIngreso ?? null)->nombre,
+                    'tipo_egreso'   => optional($movimiento->tipoEgreso ?? null)->nombre,
+                    'categoria'     => optional($movimiento->categoriaGasto ?? null)->nombre,
+                    'metodo_pago'   => optional($movimiento->metodoPago ?? null)->nombre,
+                    'creador'       => optional($movimiento->creador ?? null)->name,
+                    'created_at'    => $movimiento->created_at,
+                    'updated_at'    => $movimiento->updated_at,
+                ],
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Movimiento no encontrado.',
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error en detalleJson: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener detalle: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function edit($id)
     {
         $movimiento = MovimientoBancario::findOrFail($id);
         
-        // Solo se pueden editar movimientos pendientes
         if ($movimiento->status !== 'pendiente') {
             return redirect()->route('movimientos.index')->with('error', 'Solo se pueden editar movimientos pendientes');
         }
@@ -167,7 +232,6 @@ class MovimientoBancarioController extends Controller
         try {
             $movimiento = MovimientoBancario::findOrFail($id);
             
-            // Solo se pueden actualizar movimientos pendientes
             if ($movimiento->status !== 'pendiente') {
                 return response()->json([
                     'success' => false,
@@ -191,9 +255,7 @@ class MovimientoBancarioController extends Controller
             ]);
 
             DB::beginTransaction();
-            
             $movimiento->update($validated);
-            
             DB::commit();
 
             return response()->json([
@@ -218,7 +280,6 @@ class MovimientoBancarioController extends Controller
             DB::beginTransaction();
             $movimiento = MovimientoBancario::findOrFail($id);
             
-            // Solo se pueden eliminar movimientos pendientes
             if ($movimiento->status !== 'pendiente') {
                 return response()->json([
                     'success' => false,
@@ -226,7 +287,6 @@ class MovimientoBancarioController extends Controller
                 ], 422);
             }
             
-            // Eliminar comprobante si existe
             if ($movimiento->comprobante && Storage::disk('public')->exists($movimiento->comprobante)) {
                 Storage::disk('public')->delete($movimiento->comprobante);
             }
@@ -329,31 +389,26 @@ class MovimientoBancarioController extends Controller
     }
 
     // ==================================================================
+    // ================  VISTA ESTADOS DE CUENTA  =======================
+    // ==================================================================
 
-    /**
- * Obtener datos para la vista de estados de cuenta
- */
-// En app/Http/Controllers/MovimientoBancarioController.php
     public function getDataForEstadosCuenta(Request $request)
     {
         try {
             $query = MovimientoBancario::with(['cuentaBancaria.banco', 'cuentaBancaria.moneda']);
             
-            // Filtro por cuenta bancaria
             $cuentaId = null;
             if ($request->has('cuenta_id') && $request->cuenta_id != '0' && $request->cuenta_id != 'null') {
                 $cuentaId = $request->cuenta_id;
                 $query->where('cuenta_bancaria_id', $cuentaId);
             }
             
-            // Filtro por fechas
             $fechaInicio = $request->has('fecha_inicio') && $request->fecha_inicio ? $request->fecha_inicio : date('Y-m-01');
             $fechaFin = $request->has('fecha_fin') && $request->fecha_fin ? $request->fecha_fin : date('Y-m-t');
             
             $query->whereDate('fecha', '>=', $fechaInicio)
                   ->whereDate('fecha', '<=', $fechaFin);
             
-            // Búsqueda
             if ($request->has('busqueda') && $request->busqueda) {
                 $busqueda = $request->busqueda;
                 $query->where(function($q) use ($busqueda) {
@@ -366,18 +421,14 @@ class MovimientoBancarioController extends Controller
                 });
             }
             
-            // Obtener movimientos ordenados
             $movimientos = $query->orderBy('fecha', 'asc')->orderBy('id', 'asc')->get();
             
-            // Calcular saldo inicial
             $saldoInicial = $this->calcularSaldoInicial($cuentaId, $fechaInicio);
             
-            // Procesar movimientos y calcular saldo corrido
             $data = [];
             $saldoCorrido = $saldoInicial;
             
             foreach ($movimientos as $movimiento) {
-                // Determinar si es cargo o abono
                 $esCargo = in_array($movimiento->tipo, ['cargo', 'egreso', 'pago', 'retiro', 'compra', 'gasto']);
                 $esAbono = in_array($movimiento->tipo, ['abono', 'ingreso', 'deposito', 'transferencia_recibida', 'pago_recibido']);
                 
@@ -406,7 +457,6 @@ class MovimientoBancarioController extends Controller
                 ];
             }
             
-            // Calcular totales
             $totalCargos = array_sum(array_column($data, 'cargos'));
             $totalAbonos = array_sum(array_column($data, 'abonos'));
             $saldoFinal = count($data) > 0 ? end($data)['saldo_final'] : $saldoInicial;
@@ -433,22 +483,16 @@ class MovimientoBancarioController extends Controller
         }
     }
     
-    /**
-     * Calcular saldo inicial para el período
-     */
     private function calcularSaldoInicial($cuentaId, $fechaInicio)
     {
         try {
-            // Si no hay cuenta seleccionada, sumar saldos iniciales de todas las cuentas
             if (!$cuentaId) {
                 $cuentas = CuentaBancaria::where('activa', true)->get();
                 $saldoTotal = 0;
                 
                 foreach ($cuentas as $cuenta) {
-                    // Obtener saldo inicial de la cuenta
                     $saldoBase = floatval($cuenta->saldo_inicial ?? 0);
                     
-                    // Sumar movimientos ANTES de la fecha de inicio
                     $movimientosPrevios = MovimientoBancario::where('cuenta_bancaria_id', $cuenta->id)
                         ->whereDate('fecha', '<', $fechaInicio)
                         ->get();
@@ -471,16 +515,13 @@ class MovimientoBancarioController extends Controller
                 return $saldoTotal;
             }
             
-            // Para una cuenta específica
             $cuenta = CuentaBancaria::find($cuentaId);
             if (!$cuenta) {
                 return 0;
             }
             
-            // Saldo inicial de la cuenta
             $saldoBase = floatval($cuenta->saldo_inicial ?? 0);
             
-            // Sumar movimientos ANTES de la fecha de inicio
             $movimientosPrevios = MovimientoBancario::where('cuenta_bancaria_id', $cuentaId)
                 ->whereDate('fecha', '<', $fechaInicio)
                 ->get();
@@ -504,11 +545,37 @@ class MovimientoBancarioController extends Controller
             return 0;
         }
     }
-    
 
+    /**
+     * PDF del movimiento.
+     */
+    public function pdf($id)
+    {
+        $movimiento = MovimientoBancario::with([
+            'cuentaBancaria.banco',
+            'cuentaBancaria.moneda',
+            'proyecto',
+            'tipoIngreso',
+            'tipoEgreso',
+            'categoriaGasto',
+            'metodoPago',
+            'creador'
+        ])->findOrFail($id);
 
-/**
- * Calcular saldo inicial para el período
- */
+        // DomPDF si está disponible
+        if (class_exists(\Barryvdh\DomPDF\Facade\Pdf::class)) {
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+                'administracion.tesoreria.movimientos.pdf',
+                compact('movimiento')
+            );
+            $pdf->setPaper('letter', 'portrait');
 
+            return $pdf->download("movimiento_{$movimiento->id}.pdf");
+        }
+
+        // Fallback: HTML imprimible
+        return response()
+            ->view('administracion.tesoreria.movimientos.pdf', compact('movimiento'))
+            ->header('Content-Type', 'text/html; charset=UTF-8');
+    }
 }

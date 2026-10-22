@@ -41,9 +41,7 @@
                     <button id="btnNuevoProveedor" onclick="abrirModalProveedor()" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 20px; cursor: pointer; color: var(--color-primary);">
                         <i class="fas fa-plus"></i> Nuevo Proveedor
                     </button>
-                    <button id="btnExportar" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 20px; cursor: pointer; color: var(--color-primary);">
-                        <i class="fas fa-file-excel"></i> Exportar
-                    </button>
+                
                 </div>
 
                 <!-- Tabla -->
@@ -67,25 +65,21 @@
                                 <th>Forma Pago</th>
                                 <th>Método Pago</th>
                                 <th>Uso CFDI</th>
-                                <th>Banco</th>
-                                <th>Cuenta Banco</th>
                                 <th>Cuenta Contable</th>
-                                <th>Cuenta Sec.</th>
-                                <th>Cuenta Resultado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <tr><td colspan="22" style="text-align: center;">Cargando...<\/td></tr>
+                            <tr><td colspan="18" style="text-align: center;">Cargando...<\/td></tr>
                         </tbody>
                         <tfoot style="background-color: #e9ecef; font-weight: bold;">
                             <tr>
-                                <td colspan="22" style="padding: 10px; text-align: center;">Total Proveedores: 0<\/td>
+                                <td colspan="18" style="padding: 10px; text-align: center;">Total Proveedores: 0<\/td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <!-- Paginación -->
                 <div class="pagination-container" style="margin-top: 15px; display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
                     <button class="page-btn" id="btnPrimera" disabled><i class="fas fa-angle-double-left"></i></button>
@@ -99,7 +93,7 @@
                         <option value="50">50</option>
                     </select>
                 </div>
-                
+
                 <!-- Botón Crear filtro -->
                 <div style="margin-top: 15px; display: flex; justify-content: flex-start;">
                     <button id="btnCrearFiltro" style="background: transparent; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 25px; cursor: pointer; color: var(--color-primary); font-size: 13px; display: flex; align-items: center; gap: 8px;">
@@ -206,32 +200,17 @@
                         <option>G03 - Gastos en general</option>
                     </select>
                 </div>
-                <div>
-                    <label style="font-size: 12px; font-weight: 600;">Banco</label>
-                    <select id="modalBanco" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>BBVA</option>
-                        <option>Santander</option>
-                        <option>Banamex</option>
-                        <option>Banorte</option>
-                        <option>HSBC</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="font-size: 12px; font-weight: 600;">Cuenta Banco</label>
-                    <input type="text" id="modalCuentaBanco" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Número de cuenta">
-                </div>
+
+                <!-- ============ CUENTA CONTABLE (SELECTOR) ============ -->
                 <div>
                     <label style="font-size: 12px; font-weight: 600;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaContable" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="2010-01">
+                    <select id="modalCuentaContable" class="select-cuenta" data-tipo="contable"
+                            style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">-- Seleccionar cuenta --</option>
+                    </select>
                 </div>
-                <div>
-                    <label style="font-size: 12px; font-weight: 600;">Cuenta Contable Sec.</label>
-                    <input type="text" id="modalCuentaSecundaria" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="2010-02">
-                </div>
-                <div>
-                    <label style="font-size: 12px; font-weight: 600;">Cuenta Edo. Resultado</label>
-                    <input type="text" id="modalCuentaResultado" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="5010-01">
-                </div>
+                <!-- ================================================== -->
+
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalProveedor()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
@@ -278,23 +257,29 @@ let totalPages = 1;
 let editingId = null;
 let searchTimeout = null;
 
+// Cache de cuentas contables
+const cuentasContablesCache = {};
+
 document.addEventListener('DOMContentLoaded', function() {
     cargarProveedores();
     configurarEventos();
 });
 
+/* ============================================================
+ *  CARGA DE PROVEEDORES
+ * ============================================================ */
 function cargarProveedores() {
     const fechaInicio = document.getElementById('fechaInicio')?.value || '';
     const fechaFin = document.getElementById('fechaFin')?.value || '';
     const estatus = document.getElementById('filtroEstatus')?.value || '';
     const busqueda = document.getElementById('buscador')?.value || '';
-    
+
     let url = `/compras/api/proveedores?page=${currentPage}&per_page=${perPage}`;
     if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
     if (fechaFin) url += `&fecha_fin=${fechaFin}`;
     if (estatus) url += `&estatus=${estatus}`;
     if (busqueda) url += `&search=${encodeURIComponent(busqueda)}`;
-    
+
     fetch(url)
         .then(response => response.json())
         .then(response => {
@@ -302,44 +287,44 @@ function cargarProveedores() {
                 renderizarTabla(response.data);
                 totalPages = response.last_page;
                 actualizarPaginacion(response.current_page, response.last_page);
-                
+
                 const tfoot = document.querySelector('#tablaProveedores tfoot');
                 if (tfoot) {
-                    tfoot.innerHTML = `<tr><td colspan="22" style="padding: 10px; text-align: center;">Total Proveedores: ${response.total}<\/td><\/tr>`;
+                    tfoot.innerHTML = `<tr><td colspan="18" style="padding: 10px; text-align: center;">Total Proveedores: ${response.total}<\/td><\/tr>`;
                 }
             } else {
-                document.getElementById('tablaBody').innerHTML = `<tr><td colspan="22" style="text-align: center;">Error: ${response.message}<\/td><\/tr>`;
+                document.getElementById('tablaBody').innerHTML = `<tr><td colspan="18" style="text-align: center;">Error: ${response.message}<\/td><\/tr>`;
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('tablaBody').innerHTML = `<tr><td colspan="22" style="text-align: center;">Error de conexión: ${error.message}<\/td><\/tr>`;
+            document.getElementById('tablaBody').innerHTML = `<tr><td colspan="18" style="text-align: center;">Error de conexión: ${error.message}<\/td><\/tr>`;
         });
 }
 
 function renderizarTabla(data) {
     const tbody = document.getElementById('tablaBody');
     if (!tbody) return;
-    
+
     if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="22" style="text-align: center;">No hay proveedores registrados<\/td><\/tr>';
+        tbody.innerHTML = '<tr><td colspan="18" style="text-align: center;">No hay proveedores registrados<\/td><\/tr>';
         return;
     }
-    
+
     tbody.innerHTML = '';
     data.forEach(item => {
         const estatusClass = item.estatus === 'Activo' ? 'badge-activo' : 'badge-inactivo';
-        
+
         let acciones = `
             <i class="fas fa-eye" onclick="verDetalle(${item.id})" style="color: var(--color-primary); cursor: pointer; margin: 0 3px;" title="Ver detalle"></i>
             <i class="fas fa-edit" onclick="editarProveedor(${item.id})" style="color: var(--color-primary); cursor: pointer; margin: 0 3px;" title="Editar"></i>
             <i class="fas fa-trash" onclick="eliminarProveedor(${item.id}, '${item.folio}')" style="color: #dc3545; cursor: pointer; margin: 0 3px;" title="Eliminar"></i>
         `;
-        
+
         if (item.estatus === 'Inactivo') {
             acciones += `<i class="fas fa-redo-alt" onclick="reactivarProveedor(${item.id}, '${item.folio}')" style="color: #ffc107; cursor: pointer; margin: 0 3px;" title="Reactivar"></i>`;
         }
-        
+
         tbody.innerHTML += `
             <tr>
                 <td style="padding: 10px 8px;"><strong>${escapeHtml(item.folio)}</strong></td>
@@ -358,11 +343,7 @@ function renderizarTabla(data) {
                 <td style="padding: 10px 8px;">${escapeHtml(item.forma_pago) || '---'}</td>
                 <td style="padding: 10px 8px;">${escapeHtml(item.metodo_pago) || '---'}</td>
                 <td style="padding: 10px 8px;">${escapeHtml(item.uso_cfdi) || '---'}</td>
-                <td style="padding: 10px 8px;">${escapeHtml(item.banco) || '---'}</td>
-                <td style="padding: 10px 8px;">${escapeHtml(item.cuenta_banco) || '---'}</td>
                 <td style="padding: 10px 8px;">${escapeHtml(item.cuenta_contable) || '---'}</td>
-                <td style="padding: 10px 8px;">${escapeHtml(item.cuenta_secundaria) || '---'}</td>
-                <td style="padding: 10px 8px;">${escapeHtml(item.cuenta_resultado) || '---'}</td>
                 <td style="padding: 10px 8px; position: sticky; right: 0; background-color: inherit; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">${acciones}</td>
             </tr>
         `;
@@ -399,11 +380,10 @@ function configurarEventos() {
     document.getElementById('porPagina')?.addEventListener('change', (e) => { perPage = parseInt(e.target.value); currentPage = 1; cargarProveedores(); });
     document.getElementById('btnExportar')?.addEventListener('click', () => window.location.href = '/compras/api/proveedores/exportar');
     document.getElementById('btnCrearFiltro')?.addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcel')?.addEventListener('click', () => window.location.href = '/compras/api/proveedores/exportar');
-    
+
     const buscador = document.getElementById('buscador');
     if (buscador) {
-        buscador.addEventListener('input', function(e) {
+        buscador.addEventListener('input', function() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 currentPage = 1;
@@ -413,7 +393,86 @@ function configurarEventos() {
     }
 }
 
-function abrirModalProveedor() {
+/* ============================================================
+ *  CUENTAS CONTABLES (SELECTOR)
+ * ============================================================ */
+
+async function cargarCuentasContables(selectId, tipo) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    if (cuentasContablesCache[tipo]) {
+        renderOpcionesCuentas(select, cuentasContablesCache[tipo]);
+        return;
+    }
+
+    try {
+        select.innerHTML = '<option value="">Cargando...</option>';
+        select.disabled = true;
+
+        const url = `/compras/api/cuentas-contables?tipo=${tipo}`;
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'same-origin'
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            select.innerHTML = `<option value="">Error: respuesta no JSON (status ${response.status})</option>`;
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+            cuentasContablesCache[tipo] = data.data;
+            renderOpcionesCuentas(select, data.data);
+        } else {
+            select.innerHTML = `<option value="">Error: ${data.message || 'desconocido'}</option>`;
+        }
+    } catch (error) {
+        console.error('Error cargando cuentas contables:', error);
+        select.innerHTML = `<option value="">Error de conexión: ${error.message}</option>`;
+    } finally {
+        select.disabled = false;
+    }
+}
+
+function renderOpcionesCuentas(select, cuentas) {
+    let html = '<option value="">-- Seleccionar cuenta --</option>';
+    cuentas.forEach(c => {
+        const label = `${c.codigo} - ${c.nombre}`;
+        html += `<option value="${escapeHtml(c.codigo)}">${escapeHtml(label)}</option>`;
+    });
+    select.innerHTML = html;
+}
+
+async function cargarCuentasDelModal() {
+    await cargarCuentasContables('modalCuentaContable', 'contable');
+}
+
+function asegurarOpcionEnSelect(selectId, valor) {
+    if (!valor) return;
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    const existe = Array.from(select.options).some(o => o.value === valor);
+    if (!existe) {
+        const opt = document.createElement('option');
+        opt.value = valor;
+        opt.textContent = `[Histórico] ${valor}`;
+        select.appendChild(opt);
+    }
+    select.value = valor;
+}
+
+/* ============================================================
+ *  MODAL PROVEEDOR
+ * ============================================================ */
+async function abrirModalProveedor() {
     editingId = null;
     document.getElementById('modalTituloProveedor').textContent = 'Nuevo Proveedor';
     document.getElementById('proveedorId').value = '';
@@ -433,49 +492,57 @@ function abrirModalProveedor() {
     document.getElementById('modalFormaPago').value = 'Pago en una sola exhibición';
     document.getElementById('modalMetodoPago').value = 'Transferencia';
     document.getElementById('modalUsoCFDI').value = 'G01 - Adquisición de mercancías';
-    document.getElementById('modalBanco').value = 'BBVA';
-    document.getElementById('modalCuentaBanco').value = '';
+
+    // Cargar cuentas contables antes de mostrar el modal
+    await cargarCuentasDelModal();
     document.getElementById('modalCuentaContable').value = '';
-    document.getElementById('modalCuentaSecundaria').value = '';
-    document.getElementById('modalCuentaResultado').value = '';
+
     document.getElementById('modalProveedor').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
 
-function editarProveedor(id) {
-    fetch(`/compras/api/proveedores/${id}`)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                const p = response.data;
-                editingId = p.id;
-                document.getElementById('modalTituloProveedor').textContent = `Editar Proveedor ${p.folio}`;
-                document.getElementById('proveedorId').value = p.id;
-                document.getElementById('modalFolio').value = p.folio;
-                document.getElementById('modalEstatus').value = p.estatus;
-                document.getElementById('modalFechaAlta').value = p.fecha_alta;
-                document.getElementById('modalAlias').value = p.alias;
-                document.getElementById('modalRazonSocial').value = p.razon_social || '';
-                document.getElementById('modalRFC').value = p.rfc || '';
-                document.getElementById('modalRegimenFiscal').value = p.regimen_fiscal || 'General de Ley';
-                document.getElementById('modalCalle').value = p.calle || '';
-                document.getElementById('modalNumExt').value = p.num_ext || '';
-                document.getElementById('modalNumInt').value = p.num_int || '';
-                document.getElementById('modalCP').value = p.codigo_postal || '';
-                document.getElementById('modalLimiteCredito').value = p.limite_credito || 0;
-                document.getElementById('modalCredito').value = p.credito || 0;
-                document.getElementById('modalFormaPago').value = p.forma_pago || 'Pago en una sola exhibición';
-                document.getElementById('modalMetodoPago').value = p.metodo_pago || 'Transferencia';
-                document.getElementById('modalUsoCFDI').value = p.uso_cfdi || 'G01 - Adquisición de mercancías';
-                document.getElementById('modalBanco').value = p.banco || 'BBVA';
-                document.getElementById('modalCuentaBanco').value = p.cuenta_banco || '';
-                document.getElementById('modalCuentaContable').value = p.cuenta_contable || '';
-                document.getElementById('modalCuentaSecundaria').value = p.cuenta_secundaria || '';
-                document.getElementById('modalCuentaResultado').value = p.cuenta_resultado || '';
-                document.getElementById('modalProveedor').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        });
+async function editarProveedor(id) {
+    try {
+        const response = await fetch(`/compras/api/proveedores/${id}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            alert('No se pudo cargar el proveedor');
+            return;
+        }
+
+        const p = data.data;
+        editingId = p.id;
+        document.getElementById('modalTituloProveedor').textContent = `Editar Proveedor ${p.folio}`;
+        document.getElementById('proveedorId').value = p.id;
+        document.getElementById('modalFolio').value = p.folio;
+        document.getElementById('modalEstatus').value = p.estatus;
+        document.getElementById('modalFechaAlta').value = p.fecha_alta;
+        document.getElementById('modalAlias').value = p.alias || '';
+        document.getElementById('modalRazonSocial').value = p.razon_social || '';
+        document.getElementById('modalRFC').value = p.rfc || '';
+        document.getElementById('modalRegimenFiscal').value = p.regimen_fiscal || 'General de Ley';
+        document.getElementById('modalCalle').value = p.calle || '';
+        document.getElementById('modalNumExt').value = p.num_ext || '';
+        document.getElementById('modalNumInt').value = p.num_int || '';
+        document.getElementById('modalCP').value = p.codigo_postal || '';
+        document.getElementById('modalLimiteCredito').value = p.limite_credito || 0;
+        document.getElementById('modalCredito').value = p.credito || 0;
+        document.getElementById('modalFormaPago').value = p.forma_pago || 'Pago en una sola exhibición';
+        document.getElementById('modalMetodoPago').value = p.metodo_pago || 'Transferencia';
+        document.getElementById('modalUsoCFDI').value = p.uso_cfdi || 'G01 - Adquisición de mercancías';
+
+        // Cargar cuentas ANTES de asignar el valor seleccionado
+        await cargarCuentasDelModal();
+        asegurarOpcionEnSelect('modalCuentaContable', p.cuenta_contable);
+
+        document.getElementById('modalProveedor').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+    } catch (error) {
+        console.error('Error al cargar proveedor:', error);
+        alert('Error de conexión al cargar el proveedor');
+    }
 }
 
 function guardarProveedor() {
@@ -484,7 +551,7 @@ function guardarProveedor() {
         alert('El alias es obligatorio');
         return;
     }
-    
+
     const data = {
         alias: alias,
         razon_social: document.getElementById('modalRazonSocial').value,
@@ -499,17 +566,13 @@ function guardarProveedor() {
         forma_pago: document.getElementById('modalFormaPago').value,
         metodo_pago: document.getElementById('modalMetodoPago').value,
         uso_cfdi: document.getElementById('modalUsoCFDI').value,
-        banco: document.getElementById('modalBanco').value,
-        cuenta_banco: document.getElementById('modalCuentaBanco').value,
         cuenta_contable: document.getElementById('modalCuentaContable').value,
-        cuenta_secundaria: document.getElementById('modalCuentaSecundaria').value,
-        cuenta_resultado: document.getElementById('modalCuentaResultado').value,
         estatus: document.getElementById('modalEstatus').value
     };
-    
+
     const url = editingId ? `/compras/api/proveedores/${editingId}` : '/compras/api/proveedores';
     const method = editingId ? 'PUT' : 'POST';
-    
+
     fetch(url, {
         method: method,
         headers: {
@@ -555,11 +618,7 @@ function verDetalle(id) {
                         <div><strong>Forma Pago:</strong> ${escapeHtml(p.forma_pago) || '---'}</div>
                         <div><strong>Método Pago:</strong> ${escapeHtml(p.metodo_pago) || '---'}</div>
                         <div><strong>Uso CFDI:</strong> ${escapeHtml(p.uso_cfdi) || '---'}</div>
-                        <div><strong>Banco:</strong> ${escapeHtml(p.banco) || '---'}</div>
-                        <div><strong>Cuenta Banco:</strong> ${p.cuenta_banco || '---'}</div>
                         <div><strong>Cuenta Contable:</strong> ${p.cuenta_contable || '---'}</div>
-                        <div><strong>Cuenta Secundaria:</strong> ${p.cuenta_secundaria || '---'}</div>
-                        <div><strong>Cuenta Resultado:</strong> ${p.cuenta_resultado || '---'}</div>
                     </div>
                 `;
                 document.getElementById('detalleContenido').innerHTML = html;
@@ -626,11 +685,11 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-document.getElementById('modalProveedor')?.addEventListener('click', (e) => {
+document.getElementById('modalProveedor')?.addEventListener('click', function(e) {
     if (e.target === this) cerrarModalProveedor();
 });
 
-document.getElementById('modalDetalle')?.addEventListener('click', (e) => {
+document.getElementById('modalDetalle')?.addEventListener('click', function(e) {
     if (e.target === this) cerrarModalDetalle();
 });
 </script>

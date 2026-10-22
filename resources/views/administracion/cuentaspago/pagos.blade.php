@@ -138,7 +138,7 @@
                         <thead style="position: sticky; top: 0; z-index: 10;">
                             <tr style="background-color: #e9ecef;">
                                 <th style="width: 30px; text-align: center; background-color: #6B8ACE !important; color: white;"></th>
-                                <th style="min-width: 200px; background-color: #6B8ACE !important; color: white;">Proveedor / Pago</th>
+                                <th style="min-width: 220px; background-color: #6B8ACE !important; color: white;">Proveedor / Documento</th>
                                 <th style="min-width: 120px; text-align: center; background-color: #6B8ACE !important; color: white;">Fecha Venc.</th>
                                 <th style="width: 100px; background-color: #28a745 !important; color: white; text-align: center;">Corriente</th>
                                 <th style="width: 80px; background-color: #ffc107 !important; color: #000; text-align: center;">1-30</th>
@@ -175,9 +175,25 @@
                                     @foreach($proveedorData['pagos'] as $pago)
                                     <tr class="child-row" data-parent="{{ $proveedorId }}" style="background-color: #ffffff; display: none;">
                                         <td style="text-align: center;"> </td>
-                                        <td style="padding-left: 35px;">
-                                            <i class="fas fa-file-invoice"></i> 
-                                            <a href="#" onclick="verDetallePago({{ $pago['pago_id'] }})" style="text-decoration: underline; color: #0000ee; cursor: pointer;">
+                                        <td style="padding-left: 25px;">
+                                            @php $tipoDoc = $pago['tipo'] ?? 'pago'; @endphp
+                                            @if($tipoDoc === 'gasto_fijo')
+                                                <i class="fas fa-sync-alt" style="color: #17a2b8;"></i>
+                                                <span class="badge-tipo" style="background-color: #17a2b8; color: white;">FIJO</span>
+                                            @elseif($tipoDoc === 'gasto_proyecto')
+                                                <i class="fas fa-hard-hat" style="color: #fd7e14;"></i>
+                                                <span class="badge-tipo" style="background-color: #fd7e14; color: white;">PROYECTO</span>
+                                            @elseif($tipoDoc === 'gasto_indirecto')
+                                                <i class="fas fa-briefcase" style="color: #6f42c1;"></i>
+                                                <span class="badge-tipo" style="background-color: #6f42c1; color: white;">INDIRECTO</span>
+                                            @elseif($tipoDoc === 'factura')
+                                                <i class="fas fa-file-invoice-dollar" style="color: #083CAE;"></i>
+                                                <span class="badge-tipo" style="background-color: #6B8ACE; color: white;">FACTURA</span>
+                                            @else
+                                                <i class="fas fa-money-bill-wave" style="color: #28a745;"></i>
+                                                <span class="badge-tipo" style="background-color: #28a745; color: white;">PAGO</span>
+                                            @endif
+                                            <a href="#" onclick="verDetallePago('{{ $pago['pago_id'] }}'); return false;" style="text-decoration: underline; color: #0000ee; cursor: pointer; margin-left: 4px;">
                                                 {{ $pago['folio'] }}
                                             </a>
                                         </td>
@@ -185,7 +201,7 @@
                                             @if($pago['fecha_vencimiento'])
                                                 {{ $pago['fecha_vencimiento'] }}
                                                 <br>
-                                                <small class="{{ str_contains($pago['texto_dias'], 'Vence') ? 'text-success' : 'text-danger' }}">
+                                                <small class="{{ str_contains($pago['texto_dias'], 'Vence') ? 'text-success' : (str_contains($pago['texto_dias'], 'Sin') ? 'text-muted' : 'text-danger') }}">
                                                     {{ $pago['texto_dias'] }}
                                                 </small>
                                             @else
@@ -207,8 +223,8 @@
                                     <td colspan="10" style="text-align: center; padding: 40px;">
                                         <div class="alert alert-info mb-0">
                                             <i class="fas fa-check-circle fa-3x mb-3 d-block"></i>
-                                            <h5>No hay pagos pendientes</h5>
-                                            <p class="mb-0">Todos los pagos están liquidados o no hay registros.</p>
+                                            <h5>No hay cuentas por pagar pendientes</h5>
+                                            <p class="mb-0">No se encontraron gastos pendientes de pago.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -285,6 +301,14 @@
     }
     .btn-sm:hover {
         opacity: 0.9;
+    }
+    .badge-tipo {
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 4px;
+        vertical-align: middle;
+        font-weight: 600;
     }
 </style>
 
@@ -372,9 +396,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function verDetallePago(pagoId) {
     Swal.fire({
-        title: 'Detalle de Pago',
+        title: 'Detalle del Documento',
         html: '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Cargando detalles...</p></div>',
-        width: '700px',
+        width: '750px',
         showConfirmButton: true,
         showCancelButton: false,
         confirmButtonText: 'Cerrar',
@@ -382,12 +406,13 @@ async function verDetallePago(pagoId) {
         allowOutsideClick: false,
         didOpen: async () => {
             try {
-                const response = await fetch('/administracion/cuentaspago/detalle/' + pagoId);
+                const response = await fetch('/administracion/cuentaspago/detalle/' + encodeURIComponent(pagoId));
                 const data = await response.json();
                 
                 if (data.success) {
                     function formatearPesos(monto) {
                         let numero = typeof monto === 'string' ? parseFloat(monto) : monto;
+                        if (isNaN(numero)) numero = 0;
                         return new Intl.NumberFormat('es-MX', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2
@@ -396,40 +421,76 @@ async function verDetallePago(pagoId) {
                     
                     function formatearFecha(fecha) {
                         if (!fecha) return 'N/A';
-                        const date = new Date(fecha);
-                        return date.toLocaleDateString('es-MX');
+                        try {
+                            const date = new Date(fecha);
+                            if (isNaN(date.getTime())) return fecha;
+                            return date.toLocaleDateString('es-MX');
+                        } catch (e) {
+                            return fecha;
+                        }
+                    }
+                    
+                    const tipo = data.tipo || 'pago';
+                    let badge = '';
+                    if (tipo === 'gasto_fijo') {
+                        badge = '<span class="badge-tipo" style="background-color: #17a2b8; color: white; font-size: 12px; padding: 4px 10px;">GASTO FIJO</span>';
+                    } else if (tipo === 'gasto_proyecto') {
+                        badge = '<span class="badge-tipo" style="background-color: #fd7e14; color: white; font-size: 12px; padding: 4px 10px;">GASTO PROYECTO</span>';
+                    } else if (tipo === 'gasto_indirecto') {
+                        badge = '<span class="badge-tipo" style="background-color: #6f42c1; color: white; font-size: 12px; padding: 4px 10px;">GASTO INDIRECTO</span>';
+                    } else if (tipo === 'factura') {
+                        badge = '<span class="badge-tipo" style="background-color: #6B8ACE; color: white; font-size: 12px; padding: 4px 10px;">FACTURA PROVEEDOR</span>';
+                    } else {
+                        badge = '<span class="badge-tipo" style="background-color: #28a745; color: white; font-size: 12px; padding: 4px 10px;">PAGO</span>';
+                    }
+                    
+                    let htmlExtra = '';
+                    if (data.pago.periodicidad) {
+                        htmlExtra += `
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <div class="alert alert-info mb-0 py-2">
+                                        <small>Periodicidad</small><br>
+                                        <strong>${data.pago.periodicidad}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                     }
                     
                     Swal.update({
                         html: `
-                            <div class="text-start" style="max-height: 500px; overflow-y: auto;">
+                            <div class="text-start" style="max-height: 550px; overflow-y: auto;">
+                                <div class="text-center mb-3">${badge}</div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <p><strong>Pago:</strong> ${data.pago.folio}</p>
-                                        <p><strong>Fecha Pago:</strong> ${formatearFecha(data.pago.fecha_pago)}</p>
+                                        <p><strong>Folio:</strong> ${data.pago.folio || 'N/A'}</p>
+                                        <p><strong>Fecha:</strong> ${formatearFecha(data.pago.fecha_pago)}</p>
+                                        ${data.pago.fecha_vencimiento ? `<p><strong>Vencimiento:</strong> ${formatearFecha(data.pago.fecha_vencimiento)}</p>` : ''}
                                     </div>
                                     <div class="col-md-6">
-                                        <p><strong>Proveedor:</strong> ${data.proveedor_nombre || data.pago.proveedor_nombre || 'N/A'}</p>
-                                        <p><strong>RFC:</strong> ${data.proveedor_rfc || data.pago.proveedor_rfc || 'N/A'}</p>
+                                        <p><strong>Proveedor:</strong> ${data.proveedor_nombre || 'N/A'}</p>
+                                        <p><strong>RFC:</strong> ${data.proveedor_rfc || 'N/A'}</p>
                                     </div>
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-md-6">
-                                        <div class="alert alert-secondary mb-0">
+                                        <div class="alert alert-secondary mb-0 py-2">
                                             <small>Monto</small><br>
                                             <strong>$${formatearPesos(data.pago.monto)}</strong>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="alert alert-primary mb-0">
+                                        <div class="alert alert-danger mb-0 py-2">
                                             <small>Saldo Pendiente</small><br>
                                             <strong>$${formatearPesos(data.saldo_pendiente)}</strong>
                                         </div>
                                     </div>
                                 </div>
+                                ${htmlExtra}
                                 <div class="row mt-2">
                                     <div class="col-md-12">
-                                        <div class="alert alert-info mb-0">
+                                        <div class="alert alert-light mb-0 py-2 border">
                                             <small>Concepto</small><br>
                                             <strong>${data.pago.concepto || 'Sin concepto'}</strong>
                                         </div>
@@ -437,9 +498,9 @@ async function verDetallePago(pagoId) {
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-md-12">
-                                        <div class="alert alert-secondary mb-0">
+                                        <div class="alert alert-secondary mb-0 py-2">
                                             <small>Estatus</small><br>
-                                            <strong class="text-warning">${data.pago.estatus ? data.pago.estatus.toUpperCase() : 'PENDIENTE'}</strong>
+                                            <strong class="text-warning">${data.pago.estatus ? String(data.pago.estatus).toUpperCase() : 'PENDIENTE'}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -450,12 +511,13 @@ async function verDetallePago(pagoId) {
                     });
                 } else {
                     Swal.update({
-                        html: '<div class="alert alert-danger">Error al cargar los detalles</div>',
+                        html: '<div class="alert alert-danger">Error: ' + (data.message || 'Desconocido') + '</div>',
                         showConfirmButton: true,
                         confirmButtonText: 'Cerrar'
                     });
                 }
             } catch (error) {
+                console.error(error);
                 Swal.update({
                     html: '<div class="alert alert-danger">Error de conexión al servidor</div>',
                     showConfirmButton: true,

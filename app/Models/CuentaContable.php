@@ -70,4 +70,9 @@ class CuentaContable extends Model
         ];
         return $colores[$this->tipo] ?? 'secondary';
     }
+
+    public function almacenes()
+    {
+        return $this->hasMany(Almacen::class, 'cuenta_contable_id');
+    }
 }

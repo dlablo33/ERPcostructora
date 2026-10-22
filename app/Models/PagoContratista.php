@@ -22,6 +22,7 @@ class PagoContratista extends Model
         'monto',
         'forma_pago',
         'referencia',
+        'cuenta_bancaria',
         'comprobante_path',
         'observaciones',
         'created_by'
@@ -41,20 +42,24 @@ class PagoContratista extends Model
         'efectivo' => 'Efectivo'
     ];
 
+    // ============================================
+    // RELACIONES
+    // ============================================
+
     /**
      * Relación con contratista
      */
     public function contratista(): BelongsTo
     {
-        return $this->belongsTo(Contratista::class);
+        return $this->belongsTo(Contratista::class, 'contratista_id', 'id');
     }
 
     /**
-     * Relación con asignación
+     * ⚠️ CORREGIDO: Forzar foreign key 'asignacion_id'
      */
     public function asignacion(): BelongsTo
     {
-        return $this->belongsTo(AsignacionContratista::class);
+        return $this->belongsTo(AsignacionContratista::class, 'asignacion_id', 'id');
     }
 
     /**
@@ -62,7 +67,7 @@ class PagoContratista extends Model
      */
     public function gasto(): BelongsTo
     {
-        return $this->belongsTo(GastoContratista::class);
+        return $this->belongsTo(GastoContratista::class, 'gasto_id', 'id');
     }
 
     /**
@@ -72,6 +77,10 @@ class PagoContratista extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    // ============================================
+    // SCOPES
+    // ============================================
 
     /**
      * Scope por rango de fechas
@@ -89,6 +98,10 @@ class PagoContratista extends Model
         return $query->where('forma_pago', $forma);
     }
 
+    // ============================================
+    // ACCESSORS
+    // ============================================
+
     /**
      * Accessor para forma de pago formateada
      */
@@ -104,6 +117,10 @@ class PagoContratista extends Model
     {
         return '$' . number_format($this->monto, 2);
     }
+
+    // ============================================
+    // MÉTODOS
+    // ============================================
 
     /**
      * Método para generar folio

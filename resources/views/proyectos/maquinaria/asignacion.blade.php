@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Maquinaria y Equipo -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
@@ -12,7 +11,7 @@
             </div>
 
             <div class="card-body p-4">
-                <!-- 4 CUADROS DE MAQUINARIA -->
+                <!-- 4 CUADROS DE ESTADÍSTICAS -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
@@ -20,21 +19,18 @@
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalEquipos">0</div>
                         </div>
                     </div>
-                    
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">En Operación</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalOperacion">0</div>
                         </div>
                     </div>
-                    
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Mantenimiento</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="totalMantenimiento">0</div>
                         </div>
                     </div>
-                    
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Disponibles</div>
@@ -46,20 +42,16 @@
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <!-- Filtro de Proyectos - Dropdown con checkboxes -->
                         <div style="position: relative; min-width: 200px;" id="proyectoFilterContainer">
                             <button type="button" id="btnFiltroProyectos" style="width: 100%; padding: 6px 12px; border: 1px solid #ced4da; border-radius: 4px; background-color: white; cursor: pointer; font-size: 14px; display: flex; justify-content: space-between; align-items: center; min-height: 38px;">
                                 <span id="filtroProyectosLabel">Todos los proyectos</span>
                                 <i class="fas fa-chevron-down" style="color: #6c757d; font-size: 12px;"></i>
                             </button>
-                            
                             <div id="filtroProyectosDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ced4da; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; max-height: 280px; overflow: hidden; padding: 8px 0; margin-top: 2px;">
                                 <div style="padding: 0 12px 8px 12px; border-bottom: 1px solid #e9ecef;">
                                     <input type="text" id="filtroProyectosBuscar" placeholder="Buscar proyecto..." style="width: 100%; padding: 6px 8px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
                                 </div>
-                                <div id="filtroProyectosLista" style="max-height: 180px; overflow-y: auto; padding: 8px 0;">
-                                    <!-- Los checkboxes se cargarán dinámicamente -->
-                                </div>
+                                <div id="filtroProyectosLista" style="max-height: 180px; overflow-y: auto; padding: 8px 0;"></div>
                                 <div style="padding: 8px 12px; border-top: 1px solid #e9ecef; display: flex; gap: 10px; flex-wrap: wrap;">
                                     <button id="btnSeleccionarTodos" style="background: none; border: none; color: #083CAE; cursor: pointer; font-size: 12px; font-weight: 600;">Seleccionar todos</button>
                                     <button id="btnDeseleccionarTodos" style="background: none; border: none; color: #6c757d; cursor: pointer; font-size: 12px;">Deseleccionar todos</button>
@@ -78,33 +70,32 @@
 
                         <select id="selectorStatus" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 150px;">
                             <option value="">Todos los estados</option>
-                            <option value="activo">✅ Activo</option>
-                            <option value="mantenimiento">🔧 Mantenimiento</option>
-                            <option value="inactivo">❌ Inactivo</option>
-                            <option value="baja">📦 Baja</option>
+                            <option value="Disponible">✅ Disponible</option>
+                            <option value="Asignado">🔧 Asignado</option>
+                            <option value="En mantenimiento">🛠️ En Mantenimiento</option>
+                            <option value="Dado de baja">❌ Dado de Baja</option>
                         </select>
                     </div>
-                    
+
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <div>
-                            <button id="btnAsignarEquipo" style="background-color: #083CAE; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;" title="Asignar Equipo a Proyecto">
+                            <button id="btnAsignarEquipo" style="background-color: #083CAE; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                                 <i class="fas fa-tasks"></i> Asignar Equipo
                             </button>
                         </div>
                         <div>
-                            <button id="btnRegistrarMantenimiento" style="background-color: white; border: 1px solid #ffc107; color: #ffc107; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;" title="Registrar Mantenimiento">
+                            <button id="btnRegistrarMantenimiento" style="background-color: white; border: 1px solid #ffc107; color: #ffc107; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                                 <i class="fas fa-tools"></i> Mantenimiento
                             </button>
                         </div>
                         <div>
-                            <button id="btnAgregarEquipo" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar Equipo">
-                                <i class="fas fa-plus" style="color: #083CAE;"></i>
+                            <button id="btnAgregarEquipo" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
                         <div>
-                            <button id="btnExcel" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;" title="Exportar a Excel">
-                                <i class="fas fa-file-excel" style="color: #083CAE;"></i>
-                                Exportar
+                            <button id="btnExcel" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;">
+                                <i class="fas fa-file-excel"></i> Exportar
                             </button>
                         </div>
                         <div style="position: relative;">
@@ -114,7 +105,7 @@
                     </div>
                 </div>
 
-                <!-- Pestañas de secciones -->
+                <!-- Pestañas -->
                 <div style="display: flex; gap: 2px; margin-bottom: 20px; border-bottom: 2px solid #083CAE;">
                     <button class="maquinaria-tab active" data-tab="inventario" style="padding: 12px 25px; background-color: #083CAE; color: white; border: none; border-radius: 8px 8px 0 0; font-weight: 600; font-size: 14px; cursor: pointer;">
                         <i class="fas fa-warehouse"></i> Inventario
@@ -136,7 +127,7 @@
                     <p style="margin-top: 10px; color: #6c757d;">Cargando equipos...</p>
                 </div>
 
-                <!-- Mensaje "Sin datos" -->
+                <!-- Sin datos -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
                     <i class="fas fa-tractor" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin equipos</h3>
@@ -149,40 +140,38 @@
                         <table class="table table-bordered" id="tablaInventario" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                             <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                                 <tr>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Código</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Nombre</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Tipo</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Marca/Modelo</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Año</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Horómetro</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Proyecto</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Estado</th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">Acciones</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Código</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Nombre</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Tipo</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Marca/Modelo</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Año</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Horómetro</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Proyecto</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">Estado</th>
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaBodyInventario">
-                                <!-- Las filas se insertarán dinámicamente -->
-                            </tbody>
+                            <tbody id="tablaBodyInventario"></tbody>
                         </table>
                     </div>
-                    
+
                     <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px;">
                         <div style="visibility: hidden;"></div>
                         <div style="display: flex; align-items: center; gap: 5px;">
-                            <button id="btnPrimera" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-double-left"></i></button>
-                            <button id="btnAnterior" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-left"></i></button>
+                            <button id="btnPrimera" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-double-left"></i></button>
+                            <button id="btnAnterior" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-left"></i></button>
                             <span id="paginaActual" style="padding: 5px 12px; background-color: #2378e1; color: white; border-radius: 4px;">1</span>
                             <span id="totalPaginas" style="margin-left: 5px; color: #6c757d;">de 1</span>
-                            <button id="btnSiguiente" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-right"></i></button>
-                            <button id="btnUltima" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-double-right"></i></button>
+                            <button id="btnSiguiente" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-right"></i></button>
+                            <button id="btnUltima" style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1;"><i class="fas fa-angle-double-right"></i></button>
                             <span id="paginacionInfo" style="margin-left: 10px; color: #2378e1;"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN 2: ASIGNACIÓN DE EQUIPO -->
+                <!-- SECCIÓN 2: ASIGNACIÓN -->
                 <div id="tab-asignacion" class="maquinaria-content" style="display: none;">
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;" id="resumenAsignaciones">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
                         <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <div style="width: 40px; height: 40px; background-color: #e8f0fe; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
@@ -218,7 +207,7 @@
                         </div>
                     </div>
 
-                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                    <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;">
                         <div style="background-color: #f8f9fa; padding: 12px 15px; border-bottom: 2px solid #083CAE; display: flex; justify-content: space-between; align-items: center;">
                             <h5 style="margin: 0; color: #083CAE; font-size: 15px;"><i class="fas fa-tasks"></i> Asignaciones Activas</h5>
                             <button id="btnNuevaAsignacion" style="background-color: #083CAE; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-size: 13px;">
@@ -239,9 +228,7 @@
                                         <th style="padding: 12px; text-align: center;">Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="tablaAsignaciones">
-                                    <!-- Las filas se insertarán dinámicamente -->
-                                </tbody>
+                                <tbody id="tablaAsignaciones"></tbody>
                             </table>
                         </div>
                     </div>
@@ -285,6 +272,8 @@
                         </div>
                     </div>
 
+                    
+
                     <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 8px;">
                         <table class="table" style="width: 100%; font-size: 13px; border-collapse: collapse;">
                             <thead style="background-color: #f8f9fa;">
@@ -299,16 +288,13 @@
                                     <th style="padding: 12px;">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaMantenimientos">
-                                <!-- Las filas se insertarán dinámicamente -->
-                            </tbody>
+                            <tbody id="tablaMantenimientos"></tbody>
                         </table>
                     </div>
                 </div>
 
                 <!-- SECCIÓN 4: COMBUSTIBLE -->
                 <div id="tab-combustible" class="maquinaria-content" style="display: none;">
-                    <!-- Filtros y botón de combustible -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                             <select id="selectorCombustibleEquipo" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 200px;">
@@ -320,9 +306,12 @@
                             <button id="btnFiltrarCombustible" style="background-color: #083CAE; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-size: 14px;">
                                 <i class="fas fa-filter"></i> Filtrar
                             </button>
+                            <button id="btnLimpiarFiltrosComb" style="background-color: white; color: #6c757d; border: 1px solid #6c757d; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-size: 14px;">
+                                <i class="fas fa-times"></i> Limpiar
+                            </button>
                         </div>
                         <div>
-                            <button id="btnRegistrarCarga" style="background-color: #28a745; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;" title="Registrar Carga de Combustible">
+                            <button id="btnRegistrarCarga" style="background-color: #28a745; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                                 <i class="fas fa-plus-circle"></i> Registrar Carga
                             </button>
                         </div>
@@ -335,7 +324,7 @@
                                     <i class="fas fa-gas-pump" style="color: #083CAE;"></i>
                                 </div>
                                 <div>
-                                    <div style="font-size: 12px; color: #6c757d;">Consumo Mensual</div>
+                                    <div style="font-size: 12px; color: #6c757d;">Consumo (Filtro)</div>
                                     <div style="font-size: 24px; font-weight: bold; color: #083CAE;" id="totalConsumoMensual">0 L</div>
                                 </div>
                             </div>
@@ -346,7 +335,7 @@
                                     <i class="fas fa-dollar-sign" style="color: #ffc107;"></i>
                                 </div>
                                 <div>
-                                    <div style="font-size: 12px; color: #6c757d;">Costo Mensual</div>
+                                    <div style="font-size: 12px; color: #6c757d;">Costo (Filtro)</div>
                                     <div style="font-size: 24px; font-weight: bold; color: #ffc107;" id="totalCostoMensual">$0</div>
                                 </div>
                             </div>
@@ -357,8 +346,8 @@
                                     <i class="fas fa-chart-line" style="color: #28a745;"></i>
                                 </div>
                                 <div>
-                                    <div style="font-size: 12px; color: #6c757d;">Rendimiento Prom.</div>
-                                    <div style="font-size: 24px; font-weight: bold; color: #28a745;" id="totalRendimientoProm">0 L/carga</div>
+                                    <div style="font-size: 12px; color: #6c757d;">Precio Prom. (Filtro)</div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #28a745;" id="totalRendimientoProm">$0/L</div>
                                 </div>
                             </div>
                         </div>
@@ -378,9 +367,7 @@
                                     <th style="padding: 12px;">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaCombustible">
-                                <!-- Las filas se insertarán dinámicamente -->
-                            </tbody>
+                            <tbody id="tablaCombustible"></tbody>
                         </table>
                     </div>
                 </div>
@@ -389,99 +376,235 @@
     </section>
 </div>
 
-<!-- Modal para Asignar Equipo -->
+<!-- ============================================================ -->
+<!-- MODAL: ASIGNAR EQUIPO -->
+<!-- ============================================================ -->
 <div id="modalAsignarEquipo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 12px 12px 0 0;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 12px 12px 0 0;">
             <h3 style="margin: 0; color: white;"><i class="fas fa-tasks"></i> Asignar Equipo a Proyecto</h3>
-            <button id="btnCerrarModalAsignacion" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+            <button type="button" data-close-modal="modalAsignarEquipo" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
         </div>
-        
         <div style="padding: 20px;">
             <form id="formAsignarEquipo">
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Equipo <span style="color: #dc3545;">*</span></label>
-                    <select id="modalEquipo" name="activo_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Equipo <span style="color: #dc3545;">*</span></label>
+                    <select id="modalAsignacionEquipo" name="activo_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                         <option value="">Seleccionar equipo...</option>
                     </select>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Proyecto <span style="color: #dc3545;">*</span></label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Proyecto <span style="color: #dc3545;">*</span></label>
                     <select id="modalProyecto" name="proyecto_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                         <option value="">Seleccionar proyecto...</option>
                     </select>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Responsable</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Responsable</label>
                     <select id="modalResponsable" name="responsable_asignado_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                         <option value="">Seleccionar responsable...</option>
                     </select>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Fecha Inicio <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Inicio <span style="color: #dc3545;">*</span></label>
                         <input type="date" id="modalFechaInicio" name="fecha_salida" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Fecha Estimada Fin</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Estimada Fin</label>
                         <input type="date" id="modalFechaFin" name="fecha_estimada_devolucion" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Horómetro Salida</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Horómetro Salida</label>
                         <input type="number" id="modalHorometro" name="horometro_salida" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Condición Salida</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Condición Salida</label>
                         <select id="modalCondicion" name="condicion_salida" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
-                            <option value="excelente">Excelente</option>
-                            <option value="bueno" selected>Bueno</option>
-                            <option value="regular">Regular</option>
-                            <option value="malo">Malo</option>
-                            <option value="danado">Dañado</option>
+                            <option value="Excelente">Excelente</option>
+                            <option value="Bueno" selected>Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
                         </select>
                     </div>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Observaciones</label>
-                    <textarea id="modalObservacionesAsignacion" name="observaciones" rows="2" placeholder="Notas adicionales sobre la asignación..." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Observaciones</label>
+                    <textarea id="modalObservacionesAsignacion" name="observaciones" rows="2" placeholder="Notas adicionales..." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
-                    <button type="button" id="btnCancelarAsignacion" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
-                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
-                        <i class="fas fa-save"></i> Asignar Equipo
-                    </button>
+                    <button type="button" data-close-modal="modalAsignarEquipo" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-save"></i> Asignar Equipo</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal para Agregar/Editar Equipo -->
-<div id="modalEquipo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
-            <h3 style="margin: 0; color: white;"><i class="fas fa-plus-circle"></i> Nuevo Equipo</h3>
-            <button id="btnCerrarModalEquipo" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+<!-- ============================================================ -->
+<!-- MODAL: EDITAR ASIGNACIÓN -->
+<!-- ============================================================ -->
+<div id="modalEditarAsignacion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 12px 12px 0 0;">
+            <h3 style="margin: 0; color: white;"><i class="fas fa-edit"></i> Editar Asignación</h3>
+            <button type="button" data-close-modal="modalEditarAsignacion" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
         </div>
-        
+        <div style="padding: 20px;">
+            <form id="formEditarAsignacion">
+                <input type="hidden" id="editAsignacionId">
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Equipo</label>
+                    <input type="text" id="editAsignacionEquipo" readonly style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; background-color: #f8f9fa;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Proyecto <span style="color: #dc3545;">*</span></label>
+                    <select id="editAsignacionProyecto" name="proyecto_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <option value="">Seleccionar proyecto...</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Responsable</label>
+                    <select id="editAsignacionResponsable" name="responsable_asignado_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <option value="">Sin responsable</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Inicio <span style="color: #dc3545;">*</span></label>
+                        <input type="date" id="editAsignacionFechaInicio" name="fecha_salida" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Estimada Fin</label>
+                        <input type="date" id="editAsignacionFechaFin" name="fecha_estimada_devolucion" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Horómetro Salida</label>
+                        <input type="number" id="editAsignacionHorometro" name="horometro_salida" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Condición Salida</label>
+                        <select id="editAsignacionCondicion" name="condicion_salida" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                            <option value="Excelente">Excelente</option>
+                            <option value="Bueno" selected>Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Observaciones</label>
+                    <textarea id="editAsignacionObservaciones" name="observaciones_salida" rows="2" placeholder="Notas adicionales..." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
+                    <button type="button" data-close-modal="modalEditarAsignacion" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; background-color: #083CAE; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-save"></i> Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: DEVOLVER EQUIPO -->
+<!-- ============================================================ -->
+<div id="modalDevolverEquipo" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
+            <h3 style="margin: 0; color: white;"><i class="fas fa-undo"></i> Devolver Equipo</h3>
+            <button type="button" data-close-modal="modalDevolverEquipo" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
+        </div>
+        <div style="padding: 20px;">
+            <form id="formDevolverEquipo">
+                <input type="hidden" id="devolverAsignacionId">
+
+                <div style="margin-bottom: 15px; padding: 12px; background-color: #e8f0fe; border-radius: 8px; border-left: 4px solid #083CAE;">
+                    <div style="font-size: 13px; color: #495057;">
+                        <strong>Equipo:</strong> <span id="devolverEquipoInfo">-</span>
+                    </div>
+                    <div style="font-size: 13px; color: #495057; margin-top: 4px;">
+                        <strong>Proyecto:</strong> <span id="devolverProyectoInfo">-</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Devolución <span style="color: #dc3545;">*</span></label>
+                        <input type="date" id="devolverFecha" name="fecha_devolucion_real" required style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Condición Devolución <span style="color: #dc3545;">*</span></label>
+                        <select id="devolverCondicion" name="condicion_devolucion" required style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                            <option value="Excelente">Excelente</option>
+                            <option value="Bueno" selected>Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Horómetro Devolución</label>
+                        <input type="number" id="devolverHorometro" name="horometro_devolucion" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Kilometraje Devolución</label>
+                        <input type="number" id="devolverKilometraje" name="kilometraje_devolucion" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Observaciones</label>
+                    <textarea id="devolverObservaciones" name="observaciones" rows="3" placeholder="Observaciones de la devolución..." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+                </div>
+
+                <div id="devolverReporteDanos" style="display: none; margin-bottom: 15px; padding: 12px; background-color: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #856404;">Reporte de Daños</label>
+                    <textarea id="devolverReporteDanosTxt" name="reporte_danos" rows="2" placeholder="Describe los daños..." style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+                    <label style="display: block; margin-top: 10px; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #856404;">Costo de Reparación</label>
+                    <input type="number" id="devolverCostoReparacion" name="costo_reparacion" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
+                    <button type="button" data-close-modal="modalDevolverEquipo" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-check"></i> Confirmar Devolución</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: AGREGAR / EDITAR EQUIPO -->
+<!-- ============================================================ -->
+<div id="modalNuevoEquipo" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; overflow: auto;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
+            <h3 id="modalEquipoTitulo" style="margin: 0; color: white;"><i class="fas fa-plus-circle"></i> Nuevo Equipo</h3>
+            <button type="button" data-close-modal="modalNuevoEquipo" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
+        </div>
         <div style="padding: 20px;">
             <form id="formEquipo">
                 <input type="hidden" id="editEquipoId">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Nombre <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Nombre <span style="color: #dc3545;">*</span></label>
                         <input type="text" id="campoNombre" name="nombre" required placeholder="Nombre del equipo" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Tipo <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Tipo <span style="color: #dc3545;">*</span></label>
                         <select id="campoTipo" name="tipo_activo" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="">Seleccionar...</option>
                             <option value="maquinaria">🚜 Maquinaria</option>
@@ -491,75 +614,79 @@
                         </select>
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Marca</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Marca</label>
                         <input type="text" id="campoMarca" name="marca" placeholder="Marca" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Modelo</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Modelo</label>
                         <input type="text" id="campoModelo" name="modelo" placeholder="Modelo" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Año</label>
-                        <input type="number" id="campoAnio" name="anio" placeholder="2024" min="1900" max="2026" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Año</label>
+                        <input type="number" id="campoAnio" name="anio" placeholder="2024" min="1900" max="2030" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Serie</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Serie</label>
                         <input type="text" id="campoSerie" name="serie" placeholder="Número de serie" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Costo Adquisición</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Costo Adquisición</label>
                         <input type="number" id="campoCosto" name="costo_adquisicion" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Costo Operación/hora</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Costo Operación/hora</label>
                         <input type="number" id="campoCostoOperacion" name="costo_operacion_hora" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Descripción</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Descripción</label>
                     <textarea id="campoDescripcion" name="descripcion" rows="2" placeholder="Descripción del equipo" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
-                    <button type="button" id="btnCancelarEquipo" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
-                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
-                        <i class="fas fa-save"></i> Guardar Equipo
-                    </button>
+                    <button type="button" data-close-modal="modalNuevoEquipo" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-save"></i> Guardar Equipo</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal para Registrar Mantenimiento -->
+<!-- ============================================================ -->
+<!-- MODAL: REGISTRAR MANTENIMIENTO -->
+<!-- ============================================================ -->
 <div id="modalMantenimiento" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #ffc107 0%, #d39e00 100%); border-radius: 12px 12px 0 0;">
-            <h3 style="margin: 0; color: white;"><i class="fas fa-tools"></i> Registrar Mantenimiento</h3>
-            <button id="btnCerrarModalMantenimiento" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #ffc107 0%, #d39e00 100%); border-radius: 12px 12px 0 0;">
+            <h3 id="modalMantTitulo" style="margin: 0; color: white;"><i class="fas fa-tools"></i> Registrar Mantenimiento</h3>
+            <button type="button" data-close-modal="modalMantenimiento" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
         </div>
-        
         <div style="padding: 20px;">
             <form id="formMantenimiento">
+                <input type="hidden" id="editMantId">
+                <input type="hidden" id="modoMantenimiento" value="registrar">
+
+                <div id="bloqueProgramar" style="margin-bottom: 15px; padding: 10px; background-color: #fff3cd; border-radius: 6px; border-left: 4px solid #ffc107;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #856404; cursor: pointer;">
+                        <input type="checkbox" id="chkProgramarMant" style="cursor: pointer;">
+                        Programar mantenimiento (no cambia el estado del equipo hasta iniciarlo)
+                    </label>
+                </div>
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Equipo <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Equipo <span style="color: #dc3545;">*</span></label>
                         <select id="modalMantEquipo" name="activo_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="">Seleccionar equipo...</option>
                         </select>
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Tipo Mantenimiento <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Tipo Mant. <span style="color: #dc3545;">*</span></label>
                         <select id="modalMantTipo" name="tipo_mantenimiento" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="preventivo">Preventivo</option>
                             <option value="correctivo">Correctivo</option>
@@ -567,125 +694,151 @@
                         </select>
                     </div>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Descripción <span style="color: #dc3545;">*</span></label>
-                    <textarea id="modalMantDescripcion" name="descripcion" rows="2" placeholder="Descripción del trabajo realizado" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Descripción <span style="color: #dc3545;">*</span></label>
+                    <textarea id="modalMantDescripcion" name="descripcion" rows="2" placeholder="Descripción del trabajo a realizar" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Fecha Inicio <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Inicio <span style="color: #dc3545;">*</span></label>
                         <input type="date" id="modalMantFechaInicio" name="fecha_inicio" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Costo</label>
-                        <input type="number" id="modalMantCosto" name="costo" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Fin Estimada</label>
+                        <input type="date" id="modalMantFechaFinEstimada" name="fecha_fin_estimada" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Horómetro Actual</label>
-                        <input type="number" id="modalMantHorometro" name="horometro_actual" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Costo Estimado</label>
+                        <input type="number" id="modalMantCosto" name="costo" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Próximo Mantenimiento (horas)</label>
-                        <input type="number" id="modalMantProximo" name="horometro_proximo" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Prioridad</label>
+                        <select id="modalMantPrioridad" name="prioridad" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                            <option value="baja">Baja</option>
+                            <option value="media" selected>Media</option>
+                            <option value="alta">Alta</option>
+                        </select>
                     </div>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Observaciones</label>
-                    <textarea id="modalMantObservaciones" name="observaciones" rows="2" placeholder="Observaciones adicionales" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Responsable</label>
+                    <select id="modalMantResponsable" name="responsable_asignado" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <option value="">Sin responsable asignado</option>
+                    </select>
                 </div>
-
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
-                    <button type="button" id="btnCancelarMantenimiento" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
-                    <button type="submit" style="padding: 8px 20px; background-color: #ffc107; color: #856404; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
-                        <i class="fas fa-save"></i> Registrar Mantenimiento
-                    </button>
+                    <button type="button" data-close-modal="modalMantenimiento" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; background-color: #ffc107; color: #856404; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;"><i class="fas fa-save"></i> Guardar Mantenimiento</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal para Registrar Carga de Combustible -->
-<div id="modalCombustible" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
-    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
-            <h3 style="margin: 0; color: white;"><i class="fas fa-gas-pump"></i> Registrar Carga de Combustible</h3>
-            <button id="btnCerrarModalCombustible" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+<!-- ============================================================ -->
+<!-- MODAL: CERRAR MANTENIMIENTO -->
+<!-- ============================================================ -->
+<div id="modalCerrarMantenimiento" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 500px;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
+            <h3 style="margin: 0; color: white;"><i class="fas fa-check-circle"></i> Finalizar Mantenimiento</h3>
+            <button type="button" data-close-modal="modalCerrarMantenimiento" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
         </div>
-        
+        <form id="formCerrarMantenimiento" style="padding: 20px;">
+            <input type="hidden" id="cerrarMantId">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha Fin <span style="color: #dc3545;">*</span></label>
+                <input type="date" id="cerrarMantFechaFin" name="fecha_fin" required style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Costo Final</label>
+                <input type="number" id="cerrarMantCostoFinal" name="costo_real" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Observaciones de cierre</label>
+                <textarea id="cerrarMantObservaciones" name="observaciones" rows="3" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 15px;">
+                <button type="button" data-close-modal="modalCerrarMantenimiento" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-check"></i> Finalizar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: REGISTRAR COMBUSTIBLE -->
+<!-- ============================================================ -->
+<div id="modalCombustible" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
+            <h3 id="modalCombTitulo" style="margin: 0; color: white;"><i class="fas fa-gas-pump"></i> Registrar Carga de Combustible</h3>
+            <button type="button" data-close-modal="modalCombustible" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%;">&times;</button>
+        </div>
         <div style="padding: 20px;">
             <form id="formCombustible">
+                <input type="hidden" id="editCombId">
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Equipo <span style="color: #dc3545;">*</span></label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Equipo <span style="color: #dc3545;">*</span></label>
                     <select id="modalCombustibleEquipo" name="activo_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                         <option value="">Seleccionar equipo...</option>
                     </select>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Fecha <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Fecha <span style="color: #dc3545;">*</span></label>
                         <input type="date" id="modalCombustibleFecha" name="fecha" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Litros <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Litros <span style="color: #dc3545;">*</span></label>
                         <input type="number" id="modalCombustibleLitros" name="litros" step="0.01" min="0.01" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Costo Total <span style="color: #dc3545;">*</span></label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Costo Total <span style="color: #dc3545;">*</span></label>
                         <input type="number" id="modalCombustibleCosto" name="costo" step="0.01" min="0.01" placeholder="0.00" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Horómetro</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Horómetro</label>
                         <input type="number" id="modalCombustibleHorometro" name="horometro" step="0.1" min="0" placeholder="0.0" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Proyecto</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Proyecto</label>
                         <select id="modalCombustibleProyecto" name="proyecto_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="">Sin proyecto</option>
                         </select>
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Operador</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Operador</label>
                         <select id="modalCombustibleOperador" name="operador_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                             <option value="">Sin operador</option>
                         </select>
                     </div>
                 </div>
-
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Factura</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Factura</label>
                         <input type="text" id="modalCombustibleFactura" name="factura" placeholder="Número de factura" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Proveedor</label>
-                        <input type="text" id="modalCombustibleProveedor" name="proveedor" placeholder="Nombre del proveedor" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Proveedor</label>
+                        <select id="modalCombustibleProveedor" name="proveedor_id" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                            <option value="">Sin proveedor</option>
+                        </select>
                     </div>
                 </div>
-
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Observaciones</label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Observaciones</label>
                     <textarea id="modalCombustibleObservaciones" name="observaciones" rows="2" placeholder="Observaciones adicionales" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
                 </div>
-
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
-                    <button type="button" id="btnCancelarCombustible" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
-                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
-                        <i class="fas fa-save"></i> Registrar Carga
-                    </button>
+                    <button type="button" data-close-modal="modalCombustible" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;"><i class="fas fa-save"></i> Guardar</button>
                 </div>
             </form>
         </div>
@@ -697,68 +850,59 @@
     .semaforo .card-header h2 { color: #083CAE !important; }
     .custom-card { transition: transform 0.2s, box-shadow 0.2s; height: 100%; }
     .custom-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(8, 60, 174, 0.15) !important; border-color: #083CAE !important; }
-    
+
     .table th { white-space: nowrap; font-size: 12px; background-color: #2378e1 !important; color: white; font-weight: 600; padding: 10px 4px; }
     .table td { white-space: nowrap; font-size: 12px; padding: 10px 4px; color: #000000 !important; }
-    
+
     #tablaBodyInventario tr:nth-child(odd) { background-color: #ffffff; }
     #tablaBodyInventario tr:nth-child(even) { background-color: #f2f2f2; }
     #tablaBodyInventario tr:hover { background-color: #e0e0e0; }
-    
-    #tablaBodyInventario td:last-child {
-        background-color: white;
-        position: sticky;
-        right: 0;
-        box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-        z-index: 15;
-    }
-    
+    #tablaBodyInventario td:last-child { background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1); z-index: 15; }
+
     .badge-equipo { font-size: 11px; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; }
     .badge-activo { background-color: #d4edda; color: #28a745; }
     .badge-mantenimiento { background-color: #f8d7da; color: #dc3545; }
     .badge-disponible { background-color: #cce5ff; color: #0d6efd; }
+    .badge-asignado { background-color: #d4edda; color: #28a745; }
     .badge-inactivo { background-color: #e2e3e5; color: #6c757d; }
     .badge-baja { background-color: #f8d7da; color: #dc3545; }
-    
     .badge-mant-pendiente { background-color: #fff3cd; color: #856404; }
     .badge-mant-en-proceso { background-color: #cce5ff; color: #0d6efd; }
     .badge-mant-completado { background-color: #d4edda; color: #28a745; }
     .badge-mant-cancelado { background-color: #e2e3e5; color: #6c757d; }
-    
+
     .maquinaria-tab { transition: all 0.3s ease; }
     .maquinaria-tab:hover { opacity: 0.9; transform: translateY(-2px); }
     .maquinaria-tab.active { background-color: #083CAE !important; color: white !important; }
     .maquinaria-content { animation: fadeIn 0.3s ease; }
-    
+
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    
+
     .toast-notification { position: fixed; bottom: 20px; right: 20px; z-index: 100000; animation: slideIn 0.3s ease; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 14px; }
     .toast-notification.success { background-color: #28a745; color: white; }
     .toast-notification.error { background-color: #dc3545; color: white; }
     .toast-notification.warning { background-color: #ffc107; color: #333; }
-    
+
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    
+
     #filtroProyectosDropdown { min-width: 250px; }
     #filtroProyectosLista label { display: flex; align-items: center; padding: 4px 12px; cursor: pointer; font-size: 13px; transition: background 0.2s; }
     #filtroProyectosLista label:hover { background-color: #f0f4ff; }
     #filtroProyectosLista input[type="checkbox"] { margin-right: 8px; cursor: pointer; }
-    
-    #paginacionContainer { background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important; }
-    #paginacionContainer * { background: transparent !important; background-color: transparent !important; }
+
+    #paginacionContainer { background: transparent !important; }
     #paginacionContainer span[style*="background-color"] { background-color: #2378e1 !important; }
     #paginacionContainer button { background: transparent !important; border: none !important; color: #2378e1 !important; cursor: pointer; }
-    #paginacionContainer button:hover { opacity: 0.7; }
-    #paginacionContainer button i { color: #2378e1 !important; }
-    #paginacionInfo { color: #2378e1 !important; }
-    
+
+    .action-icon { cursor: pointer; font-size: 14px; padding: 4px; }
+
     @media (max-width: 768px) {
         input[type="date"] { width: 100% !important; }
         input#buscador { width: 100% !important; }
         #proyectoFilterContainer { min-width: 100% !important; }
         #filtroProyectosDropdown { min-width: 100% !important; }
         #paginacionContainer { flex-direction: column; align-items: flex-start; }
-        #modalAsignarEquipo > div, #modalEquipo > div, #modalMantenimiento > div, #modalCombustible > div { width: 95%; margin: 10px; }
+        #modalAsignarEquipo > div, #modalEditarAsignacion > div, #modalDevolverEquipo > div, #modalNuevoEquipo > div, #modalMantenimiento > div, #modalCombustible > div { width: 95%; margin: 10px; }
         .maquinaria-tab { padding: 8px 12px !important; font-size: 12px !important; }
     }
 </style>
@@ -767,1203 +911,1647 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    // ============================================
-    // CONFIGURACIÓN
-    // ============================================
-    const API_BASE = '/proyectos/maquinaria';
-    let currentPage = 1;
-    let totalPages = 1;
-    let currentTab = 'inventario';
-    let proyectosLista = [];
-    let catalogosCargados = false;
-    let equiposDisponibles = [];
-    let todosEquipos = [];
-    let equiposAsignacionCargados = false;
+/* =====================================================================
+   CONFIGURACIÓN Y ESTADO GLOBAL
+   ===================================================================== */
+const API_BASE = '/proyectos/maquinaria';
+const CSRF = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
-    let currentFilters = {
-        busqueda: '',
-        tipo: '',
-        estatus: '',
-        proyecto_id: [],
-        page: 1,
-        per_page: 10
+let currentPage = 1;
+let totalPages = 1;
+let currentTab = 'inventario';
+let proyectosLista = [];
+let catalogosCargados = false;
+let equiposDisponibles = [];
+let todosEquipos = [];
+let responsablesLista = [];
+let operadoresLista = [];
+let proveedoresLista = [];
+
+let currentFilters = {
+    busqueda: '',
+    tipo: '',
+    estatus: '',
+    proyecto_id: [],
+    page: 1,
+    per_page: 10
+};
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+function mostrarLoading(show) {
+    const el = document.getElementById('loadingSpinner');
+    if (el) el.style.display = show ? 'flex' : 'none';
+}
+
+function mostrarNotificacion(mensaje, tipo = 'success') {
+    document.querySelectorAll('.toast-notification').forEach(el => el.remove());
+    const n = document.createElement('div');
+    n.className = `toast-notification ${tipo}`;
+    const icono = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+    n.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 3000);
+}
+
+function formatDate(d) {
+    if (!d) return '-';
+    try { return new Date(d).toLocaleDateString('es-MX'); } catch { return '-'; }
+}
+
+/* ✅ FIX: normaliza el estatus a minúsculas para el badge */
+function getStatusBadge(s) {
+    const key = (s || '').toString().toLowerCase().trim();
+    const b = {
+        'activo': 'badge-activo',
+        'activa': 'badge-activo',
+        'asignado': 'badge-asignado',
+        'asignada': 'badge-asignado',
+        'disponible': 'badge-disponible',
+        'mantenimiento': 'badge-mantenimiento',
+        'en mantenimiento': 'badge-mantenimiento',
+        'inactivo': 'badge-inactivo',
+        'baja': 'badge-baja',
+        'dado de baja': 'badge-baja'
     };
+    return b[key] || 'badge-equipo';
+}
 
-    // ============================================
-    // FUNCIONES PRINCIPALES
-    // ============================================
+function getMantenimientoStatusBadge(s) {
+    const key = (s || '').toString().toLowerCase();
+    const b = {
+        pendiente: 'badge-mant-pendiente',
+        en_proceso: 'badge-mant-en-proceso',
+        completado: 'badge-mant-completado',
+        cancelado: 'badge-mant-cancelado'
+    };
+    return b[key] || 'badge-mant-pendiente';
+}
 
-    async function cargarActivos() {
-        mostrarLoading(true);
-        
-        try {
-            const proyectosSeleccionados = getProyectosSeleccionados();
-            currentFilters.proyecto_id = proyectosSeleccionados;
-            
-            const params = new URLSearchParams();
-            params.append('busqueda', currentFilters.busqueda || '');
-            params.append('tipo', currentFilters.tipo || '');
-            params.append('estatus', currentFilters.estatus || '');
-            params.append('page', currentFilters.page || 1);
-            params.append('per_page', currentFilters.per_page || 10);
-            
-            if (proyectosSeleccionados.length > 0) {
-                proyectosSeleccionados.forEach(id => {
-                    params.append('proyecto_id[]', id);
-                });
-            }
-            
-            const url = `${API_BASE}?${params.toString()}`;
-            console.log('Cargando desde:', url);
-            
-            const response = await fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                }
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
-            }
-            
-            const result = await response.json();
-            console.log('Resultado:', result);
-            
-            if (result.success) {
-                const data = result.data.data || [];
-                const pagination = result.data;
-                
-                actualizarEstadisticas(result.estadisticas);
-                renderizarTablaInventario(data);
-                actualizarPaginacion(pagination);
-                
-                currentPage = pagination.current_page || 1;
-                totalPages = pagination.last_page || 1;
-            } else {
-                mostrarNotificacion(result.message || 'Error al cargar datos', 'error');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            mostrarNotificacion('Error al cargar los equipos', 'error');
-        } finally {
-            mostrarLoading(false);
-        }
+function abrirModal(id) {
+    const m = document.getElementById(id);
+    if (m) {
+        m.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
+}
 
-    async function cargarAsignacionesActivas() {
-        try {
-            const response = await fetch(`${API_BASE}/asignaciones/activas`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                renderizarTablaAsignaciones(result.data);
-                actualizarResumenAsignaciones(result.data);
-            }
-        } catch (error) {
-            console.error('Error cargando asignaciones:', error);
-        }
+function cerrarModal(id) {
+    const m = document.getElementById(id);
+    if (!m) return;
+    if (id.startsWith('modalDetalle')) {
+        m.remove();
+    } else {
+        m.style.display = 'none';
     }
+    document.body.style.overflow = 'auto';
+}
 
-    async function cargarCatalogos() {
-        try {
-            console.log('Cargando catálogos...');
-            const response = await fetch(`${API_BASE}/catalogos`, {
-                headers: { 
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-            const result = await response.json();
-            console.log('Catálogos cargados:', result);
-            
-            if (result.success) {
-                const data = result.data;
-                
-                equiposDisponibles = data.equipos || [];
-                todosEquipos = data.todos_equipos || data.equipos || [];
-                
-                llenarSelectAsignacion();
-                llenarSelectMantenimiento();
-                llenarSelectCombustible();
-                llenarSelectProyectos(data.proyectos || []);
-                llenarSelectResponsables(data.responsables || []);
-                llenarSelectOperadores(data.operadores || []);
-                
-                proyectosLista = data.proyectos || [];
-                renderizarCheckboxesProyectos(proyectosLista);
-                
-                catalogosCargados = true;
-                equiposAsignacionCargados = true;
-                console.log('Catálogos cargados correctamente');
-            } else {
-                mostrarNotificacion('Error al cargar catálogos: ' + (result.message || 'Error desconocido'), 'error');
-            }
-        } catch (error) {
-            console.error('Error en cargarCatalogos:', error);
-            mostrarNotificacion('Error al cargar los catálogos', 'error');
-        }
-    }
+/* =====================================================================
+   CATÁLOGOS
+   ===================================================================== */
+async function cargarCatalogos() {
+    try {
+        const r = await fetch(`${API_BASE}/catalogos`, {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        const result = await r.json();
+        console.log('📦 Catálogos recibidos:', result);
 
-    // ============================================
-    // FUNCIONES PARA LLENAR SELECTS
-    // ============================================
+        if (result.success) {
+            const data = result.data;
+            equiposDisponibles = data.equipos || [];
+            todosEquipos = data.todos_equipos || data.equipos || [];
+            proyectosLista = data.proyectos || [];
+            responsablesLista = data.responsables || [];
+            operadoresLista = data.operadores || [];
+            proveedoresLista = data.proveedores || [];
 
-    function llenarSelectAsignacion() {
-        const select = document.getElementById('modalEquipo');
-        if (!select) return;
-        
-        const valorActual = select.value;
-        select.innerHTML = '<option value="">Seleccionar equipo...</option>';
-        
-        if (equiposDisponibles && equiposDisponibles.length > 0) {
-            equiposDisponibles.forEach(e => {
-                const option = document.createElement('option');
-                option.value = e.id;
-                option.textContent = e.codigo + ' - ' + e.nombre + ' (' + e.tipo + ')';
-                select.appendChild(option);
-            });
+            console.log('📋 Equipos disponibles:', equiposDisponibles.length);
+            console.log('📋 Todos los equipos:', todosEquipos.length);
+            console.log('📋 Proyectos:', proyectosLista.length);
+
+            llenarSelectAsignacion(true);
+            llenarSelectMantenimiento(true);
+            llenarSelectCombustible(true);
+            llenarSelectProyectos(data.proyectos || [], true);
+            llenarSelectResponsables(data.responsables || [], true);
+            llenarSelectOperadores(data.operadores || [], true);
+            llenarSelectProveedores(data.proveedores || [], true);
+            llenarSelectMantResponsable(data.responsables || [], true);
+
+            renderizarCheckboxesProyectos(proyectosLista);
+            catalogosCargados = true;
         } else {
-            select.innerHTML += '<option value="">No hay equipos disponibles</option>';
+            console.error('❌ Catálogos devolvieron success=false:', result);
         }
-        
-        if (valorActual) {
-            select.value = valorActual;
-        }
+    } catch (e) {
+        console.error('❌ Error cargando catálogos:', e);
+        mostrarNotificacion('Error al cargar catálogos', 'error');
+    }
+}
+
+/* ✅ FIX: SOLO equipos disponibles para asignación */
+function llenarSelectAsignacion(force = false) {
+    const s = document.getElementById('modalAsignacionEquipo');
+    if (!s) return;
+
+    if (!force && s.querySelectorAll('option').length > 1) {
+        return;
     }
 
-    function llenarSelectMantenimiento() {
-        const select = document.getElementById('modalMantEquipo');
-        if (!select) return;
-        
-        select.innerHTML = '<option value="">Seleccionar equipo...</option>';
-        
-        if (todosEquipos && todosEquipos.length > 0) {
-            todosEquipos.forEach(e => {
-                const option = document.createElement('option');
-                option.value = e.id;
-                option.textContent = e.codigo + ' - ' + e.nombre + ' (' + e.tipo + ')';
-                select.appendChild(option);
-            });
+    const valorPrevio = s.value;
+    s.innerHTML = '<option value="">Seleccionar equipo...</option>';
+
+    const fuente = equiposDisponibles || [];
+
+    console.log('📋 Poblando select de ASIGNACIÓN con', fuente.length, 'equipos disponibles (force=' + force + ')');
+
+    if (fuente.length === 0) {
+        const opt = document.createElement('option');
+        opt.disabled = true;
+        opt.textContent = 'No hay equipos disponibles para asignar';
+        s.appendChild(opt);
+        return;
+    }
+
+    fuente.forEach(e => {
+        const o = document.createElement('option');
+        o.value = e.id;
+        const tipo = e.tipo_nombre || e.tipo || e.tipo_activo || 'Equipo';
+        o.textContent = `${e.codigo || ''} - ${e.nombre || ''} (${tipo})`;
+        s.appendChild(o);
+    });
+
+    if (valorPrevio) s.value = valorPrevio;
+}
+
+function llenarSelectMantenimiento(force = false) {
+    const s = document.getElementById('modalMantEquipo');
+    if (!s) return;
+    if (!force && s.querySelectorAll('option').length > 1) return;
+
+    const valorPrevio = s.value;
+    s.innerHTML = '<option value="">Seleccionar equipo...</option>';
+
+    const fuente = (todosEquipos && todosEquipos.length > 0) ? todosEquipos : (equiposDisponibles || []);
+    if (fuente.length === 0) {
+        const opt = document.createElement('option');
+        opt.disabled = true;
+        opt.textContent = 'No hay equipos disponibles';
+        s.appendChild(opt);
+        return;
+    }
+    fuente.forEach(e => {
+        const o = document.createElement('option');
+        o.value = e.id;
+        const tipo = e.tipo_nombre || e.tipo || e.tipo_activo || 'Equipo';
+        o.textContent = `${e.codigo || ''} - ${e.nombre || ''} (${tipo})`;
+        s.appendChild(o);
+    });
+    if (valorPrevio) s.value = valorPrevio;
+}
+
+function llenarSelectCombustible(force = false) {
+    const fuente = (todosEquipos && todosEquipos.length > 0) ? todosEquipos : (equiposDisponibles || []);
+
+    const sm = document.getElementById('modalCombustibleEquipo');
+    if (sm && (force || sm.querySelectorAll('option').length <= 1)) {
+        const vp = sm.value;
+        sm.innerHTML = '<option value="">Seleccionar equipo...</option>';
+        if (fuente.length === 0) {
+            const opt = document.createElement('option');
+            opt.disabled = true;
+            opt.textContent = 'No hay equipos disponibles';
+            sm.appendChild(opt);
         } else {
-            select.innerHTML += '<option value="">No hay equipos disponibles</option>';
-        }
-    }
-
-    function llenarSelectCombustible() {
-        const selectModal = document.getElementById('modalCombustibleEquipo');
-        if (selectModal) {
-            selectModal.innerHTML = '<option value="">Seleccionar equipo...</option>';
-            
-            if (todosEquipos && todosEquipos.length > 0) {
-                todosEquipos.forEach(e => {
-                    const option = document.createElement('option');
-                    option.value = e.id;
-                    option.textContent = e.codigo + ' - ' + e.nombre + ' (' + e.tipo + ')';
-                    selectModal.appendChild(option);
-                });
-            } else {
-                selectModal.innerHTML += '<option value="">No hay equipos disponibles</option>';
-            }
-        }
-        
-        const selectFiltro = document.getElementById('selectorCombustibleEquipo');
-        if (selectFiltro) {
-            selectFiltro.innerHTML = '<option value="">Todos los equipos</option>';
-            
-            if (todosEquipos && todosEquipos.length > 0) {
-                todosEquipos.forEach(e => {
-                    const option = document.createElement('option');
-                    option.value = e.id;
-                    option.textContent = e.codigo + ' - ' + e.nombre;
-                    selectFiltro.appendChild(option);
-                });
-            }
-        }
-    }
-
-    function llenarSelectProyectos(proyectos) {
-        const selectAsignacion = document.getElementById('modalProyecto');
-        if (selectAsignacion) {
-            selectAsignacion.innerHTML = '<option value="">Seleccionar proyecto...</option>';
-            if (proyectos && proyectos.length > 0) {
-                proyectos.forEach(p => {
-                    const option = document.createElement('option');
-                    option.value = p.id;
-                    option.textContent = p.nombre;
-                    selectAsignacion.appendChild(option);
-                });
-            }
-        }
-        
-        const selectCombustible = document.getElementById('modalCombustibleProyecto');
-        if (selectCombustible) {
-            selectCombustible.innerHTML = '<option value="">Sin proyecto</option>';
-            if (proyectos && proyectos.length > 0) {
-                proyectos.forEach(p => {
-                    const option = document.createElement('option');
-                    option.value = p.id;
-                    option.textContent = p.nombre;
-                    selectCombustible.appendChild(option);
-                });
-            }
-        }
-    }
-
-    function llenarSelectResponsables(responsables) {
-        const select = document.getElementById('modalResponsable');
-        if (!select) return;
-        
-        select.innerHTML = '<option value="">Seleccionar responsable...</option>';
-        if (responsables && responsables.length > 0) {
-            responsables.forEach(r => {
-                const option = document.createElement('option');
-                option.value = r.id;
-                option.textContent = r.nombre_completo;
-                select.appendChild(option);
+            fuente.forEach(e => {
+                const o = document.createElement('option');
+                o.value = e.id;
+                const tipo = e.tipo_nombre || e.tipo || e.tipo_activo || 'Equipo';
+                o.textContent = `${e.codigo || ''} - ${e.nombre || ''} (${tipo})`;
+                sm.appendChild(o);
             });
         }
+        if (vp) sm.value = vp;
     }
 
-    function llenarSelectOperadores(operadores) {
-        const select = document.getElementById('modalCombustibleOperador');
-        if (!select) return;
-        
-        select.innerHTML = '<option value="">Sin operador</option>';
-        if (operadores && operadores.length > 0) {
-            operadores.forEach(o => {
-                const option = document.createElement('option');
-                option.value = o.id;
-                option.textContent = o.nombre_completo;
-                select.appendChild(option);
-            });
-        }
-    }
-
-    // ============================================
-    // FILTRO DE PROYECTOS
-    // ============================================
-
-    function getProyectosSeleccionados() {
-        const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked');
-        const selected = [];
-        checkboxes.forEach(cb => {
-            if (cb.value) {
-                selected.push(cb.value);
-            }
+    const sf = document.getElementById('selectorCombustibleEquipo');
+    if (sf && (force || sf.querySelectorAll('option').length <= 1)) {
+        const vp = sf.value;
+        sf.innerHTML = '<option value="">Todos los equipos</option>';
+        fuente.forEach(e => {
+            const o = document.createElement('option');
+            o.value = e.id;
+            o.textContent = `${e.codigo || ''} - ${e.nombre || ''}`;
+            sf.appendChild(o);
         });
-        return selected;
+        if (vp) sf.value = vp;
     }
+}
 
-    function actualizarLabelProyectos() {
-        const total = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').length;
-        const selected = getProyectosSeleccionados().length;
-        const label = document.getElementById('filtroProyectosLabel');
-        
-        if (selected === 0 || selected === total) {
-            label.textContent = 'Todos los proyectos';
-        } else {
-            label.textContent = `${selected} proyecto${selected > 1 ? 's' : ''} seleccionado${selected > 1 ? 's' : ''}`;
-        }
-    }
+function llenarSelectProyectos(proyectos, force = false) {
+    const lista = proyectos || proyectosLista || [];
 
-    function toggleDropdown() {
-        const dropdown = document.getElementById('filtroProyectosDropdown');
-        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function cerrarDropdown() {
-        document.getElementById('filtroProyectosDropdown').style.display = 'none';
-    }
-
-    function renderizarCheckboxesProyectos(proyectos) {
-        const lista = document.getElementById('filtroProyectosLista');
-        lista.innerHTML = '';
-        
-        if (!proyectos || proyectos.length === 0) {
-            lista.innerHTML = '<div style="padding: 8px 12px; color: #6c757d; font-size: 13px;">No hay proyectos disponibles</div>';
-            return;
-        }
-        
-        const selected = getProyectosSeleccionados();
-        
-        proyectos.forEach(proyecto => {
-            const checked = selected.includes(String(proyecto.id)) ? 'checked' : '';
-            const label = document.createElement('label');
-            label.innerHTML = `
-                <input type="checkbox" value="${proyecto.id}" ${checked}>
-                <span>${proyecto.nombre}</span>
-            `;
-            lista.appendChild(label);
+    // Modal de asignación
+    const a = document.getElementById('modalProyecto');
+    if (a && (force || a.querySelectorAll('option').length <= 1)) {
+        const vp = a.value;
+        a.innerHTML = '<option value="">Seleccionar proyecto...</option>';
+        lista.forEach(p => {
+            const o = document.createElement('option');
+            o.value = p.id;
+            o.textContent = p.nombre;
+            a.appendChild(o);
         });
-        
-        actualizarLabelProyectos();
+        if (vp) a.value = vp;
     }
 
-    function filtrarProyectosLista(busqueda) {
-        const labels = document.querySelectorAll('#filtroProyectosLista label');
-        const term = busqueda.toLowerCase().trim();
-        
-        labels.forEach(label => {
-            const text = label.textContent.toLowerCase();
-            label.style.display = text.includes(term) ? 'flex' : 'none';
+    // Modal de edición de asignación
+    const e = document.getElementById('editAsignacionProyecto');
+    if (e && (force || e.querySelectorAll('option').length <= 1)) {
+        const vp = e.value;
+        e.innerHTML = '<option value="">Seleccionar proyecto...</option>';
+        lista.forEach(p => {
+            const o = document.createElement('option');
+            o.value = p.id;
+            o.textContent = p.nombre;
+            e.appendChild(o);
         });
+        if (vp) e.value = vp;
     }
 
-    function seleccionarTodosProyectos() {
-        const todosVisibles = document.querySelectorAll('#filtroProyectosLista label:not([style*="display: none"])');
-        todosVisibles.forEach(label => {
-            const cb = label.querySelector('input[type="checkbox"]');
-            if (cb) cb.checked = true;
+    // Modal de combustible
+    const c = document.getElementById('modalCombustibleProyecto');
+    if (c && (force || c.querySelectorAll('option').length <= 1)) {
+        const vp = c.value;
+        c.innerHTML = '<option value="">Sin proyecto</option>';
+        lista.forEach(p => {
+            const o = document.createElement('option');
+            o.value = p.id;
+            o.textContent = p.nombre;
+            c.appendChild(o);
         });
-        actualizarLabelProyectos();
-        aplicarFiltroProyectos();
+        if (vp) c.value = vp;
+    }
+}
+
+function llenarSelectResponsables(rs, force = false) {
+    const lista = rs || responsablesLista || [];
+
+    // Modal de asignación
+    const s = document.getElementById('modalResponsable');
+    if (s && (force || s.querySelectorAll('option').length <= 1)) {
+        const vp = s.value;
+        s.innerHTML = '<option value="">Seleccionar responsable...</option>';
+        lista.forEach(r => {
+            const o = document.createElement('option');
+            o.value = r.id;
+            o.textContent = r.nombre_completo;
+            s.appendChild(o);
+        });
+        if (vp) s.value = vp;
     }
 
-    function deseleccionarTodosProyectos() {
-        const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]');
-        checkboxes.forEach(cb => cb.checked = false);
-        actualizarLabelProyectos();
-        aplicarFiltroProyectos();
+    // Modal de edición de asignación
+    const e = document.getElementById('editAsignacionResponsable');
+    if (e && (force || e.querySelectorAll('option').length <= 1)) {
+        const vp = e.value;
+        e.innerHTML = '<option value="">Sin responsable</option>';
+        lista.forEach(r => {
+            const o = document.createElement('option');
+            o.value = r.id;
+            o.textContent = r.nombre_completo;
+            e.appendChild(o);
+        });
+        if (vp) e.value = vp;
     }
+}
 
-    function aplicarFiltroProyectos() {
-        currentFilters.page = 1;
-        cargarActivos();
-    }
+function llenarSelectOperadores(os, force = false) {
+    const s = document.getElementById('modalCombustibleOperador');
+    if (!s) return;
+    if (!force && s.querySelectorAll('option').length > 1) return;
 
-    // ============================================
-    // RENDERIZADO - INVENTARIO
-    // ============================================
+    const lista = os || operadoresLista || [];
+    const vp = s.value;
+    s.innerHTML = '<option value="">Sin operador</option>';
+    lista.forEach(o => {
+        const op = document.createElement('option');
+        op.value = o.id;
+        op.textContent = o.nombre_completo;
+        s.appendChild(op);
+    });
+    if (vp) s.value = vp;
+}
 
-    function renderizarTablaInventario(activos) {
-        const tbody = document.getElementById('tablaBodyInventario');
-        const sinDatos = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        
-        if (!tbody) return;
-        
-        tbody.innerHTML = '';
-        
-        if (!activos || activos.length === 0) {
-            sinDatos.style.display = 'block';
-            tablaContainer.style.display = 'none';
-            return;
+function llenarSelectProveedores(ps, force = false) {
+    const s = document.getElementById('modalCombustibleProveedor');
+    if (!s) return;
+    if (!force && s.querySelectorAll('option').length > 1) return;
+
+    const lista = ps || proveedoresLista || [];
+    const vp = s.value;
+    s.innerHTML = '<option value="">Sin proveedor</option>';
+    lista.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p.id;
+        o.textContent = p.nombre;
+        s.appendChild(o);
+    });
+    if (vp) s.value = vp;
+}
+
+function llenarSelectMantResponsable(rs, force = false) {
+    const s = document.getElementById('modalMantResponsable');
+    if (!s) return;
+    if (!force && s.querySelectorAll('option').length > 1) return;
+
+    const lista = rs || responsablesLista || [];
+    const vp = s.value;
+    s.innerHTML = '<option value="">Sin responsable asignado</option>';
+    lista.forEach(r => {
+        const o = document.createElement('option');
+        o.value = r.nombre_completo;
+        o.textContent = r.nombre_completo;
+        s.appendChild(o);
+    });
+    if (vp) s.value = vp;
+}
+
+/* =====================================================================
+   FILTRO DE PROYECTOS
+   ===================================================================== */
+function getProyectosSeleccionados() {
+    return Array.from(document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]:checked')).map(c => c.value).filter(v => v);
+}
+
+function actualizarLabelProyectos() {
+    const total = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').length;
+    const sel = getProyectosSeleccionados().length;
+    document.getElementById('filtroProyectosLabel').textContent =
+        (sel === 0 || sel === total) ? 'Todos los proyectos' : `${sel} proyecto${sel > 1 ? 's' : ''} seleccionado${sel > 1 ? 's' : ''}`;
+}
+
+function renderizarCheckboxesProyectos(ps) {
+    const l = document.getElementById('filtroProyectosLista');
+    l.innerHTML = '';
+    if (!ps.length) { l.innerHTML = '<div style="padding:8px 12px;color:#6c757d;font-size:13px;">Sin proyectos</div>'; return; }
+    ps.forEach(p => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${p.id}"><span>${p.nombre}</span>`;
+        l.appendChild(label);
+    });
+    actualizarLabelProyectos();
+}
+
+/* =====================================================================
+   CARGA DE DATOS
+   ===================================================================== */
+async function cargarActivos() {
+    mostrarLoading(true);
+    try {
+        const ps = getProyectosSeleccionados();
+        currentFilters.proyecto_id = ps;
+
+        const params = new URLSearchParams();
+        params.append('busqueda', currentFilters.busqueda || '');
+        params.append('tipo', currentFilters.tipo || '');
+        params.append('estatus', currentFilters.estatus || '');
+        params.append('page', currentFilters.page || 1);
+        params.append('per_page', currentFilters.per_page || 10);
+        ps.forEach(id => params.append('proyecto_id[]', id));
+
+        const r = await fetch(`${API_BASE}?${params}`, {
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': CSRF }
+        });
+        const result = await r.json();
+
+        if (result.success) {
+            actualizarEstadisticas(result.estadisticas);
+            renderizarTablaInventario(result.data.data || []);
+            actualizarPaginacion(result.data);
+            currentPage = result.data.current_page || 1;
+            totalPages = result.data.last_page || 1;
         }
-        
-        sinDatos.style.display = 'none';
-        tablaContainer.style.display = 'block';
-        
-        activos.forEach(item => {
-            const row = document.createElement('tr');
-            const statusBadge = getStatusBadge(item.estatus);
-            const horometro = item.maquinaria?.horometro_actual || '-';
-            
-            row.innerHTML = `
-                <td style="padding: 10px 4px;">${item.codigo}</td>
-                <td style="padding: 10px 4px;">${item.nombre}</td>
-                <td style="padding: 10px 4px;">${item.tipo_nombre || '-'}</td>
-                <td style="padding: 10px 4px;">${item.marca || '-'} ${item.modelo || ''}</td>
-                <td style="padding: 10px 4px; text-align: center;">${item.anio || '-'}</td>
-                <td style="padding: 10px 4px; text-align: right;">${horometro}</td>
-                <td style="padding: 10px 4px;">${item.proyecto_asignado?.nombre || 'Disponible'}</td>
-                <td style="padding: 10px 4px;"><span class="badge-equipo ${statusBadge}">${item.estatus_nombre || item.estatus}</span></td>
-                <td style="padding: 10px 4px; background-color: white; position: sticky; right: 0;">
-                    <div style="display: flex; gap: 8px; justify-content: center;">
-                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${item.id})"></i>
-                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" onclick="editarEquipo(${item.id})"></i>
-                        <i class="fas fa-tasks" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Asignar" onclick="abrirModalAsignacion(${item.id})"></i>
+    } catch (e) {
+        console.error(e);
+        mostrarNotificacion('Error al cargar equipos', 'error');
+    } finally {
+        mostrarLoading(false);
+    }
+}
+
+async function cargarAsignacionesActivas() {
+    try {
+        const r = await fetch(`${API_BASE}/asignaciones/activas`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (result.success) {
+            renderizarTablaAsignaciones(result.data);
+            actualizarResumenAsignaciones(result.data);
+        }
+    } catch (e) { console.error(e); }
+}
+
+async function cargarMantenimientos() {
+    try {
+        const e = document.getElementById('filtroMantEstatus')?.value || '';
+        const t = document.getElementById('filtroMantTipo')?.value || '';
+        const b = document.getElementById('filtroMantBusqueda')?.value || '';
+        const p = new URLSearchParams();
+        if (e) p.append('estatus', e);
+        if (t) p.append('tipo', t);
+        if (b) p.append('busqueda', b);
+
+        const r = await fetch(`${API_BASE}/mantenimientos/list?${p}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+
+        if (result.success) {
+            const data = Array.isArray(result.data) ? result.data : (result.data?.data || []);
+            renderizarTablaMantenimientos(data);
+            if (result.estadisticas) actualizarEstadisticasMantenimiento(result.estadisticas);
+        }
+    } catch (e) { console.error(e); }
+}
+
+async function cargarCombustible() {
+    try {
+        const a = document.getElementById('selectorCombustibleEquipo')?.value || '';
+        const fi = document.getElementById('fechaCombustibleInicio')?.value || '';
+        const ff = document.getElementById('fechaCombustibleFin')?.value || '';
+        let url = `${API_BASE}/combustible/historial?per_page=100`;
+        if (a) url += `&activo_id=${a}`;
+        if (fi) url += `&fecha_inicio=${fi}`;
+        if (ff) url += `&fecha_fin=${ff}`;
+
+        const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+
+        if (result.success) {
+            const data = result.data.data || [];
+            renderizarTablaCombustible(data);
+            calcularResumenCombustible(data);
+        }
+    } catch (e) { console.error(e); }
+}
+
+/* =====================================================================
+   RENDERIZADO
+   ===================================================================== */
+function renderizarTablaInventario(activos) {
+    const tbody = document.getElementById('tablaBodyInventario');
+    const sin = document.getElementById('sinDatosMensaje');
+    const tc = document.getElementById('tablaContainer');
+    tbody.innerHTML = '';
+
+    if (!activos.length) { sin.style.display = 'block'; tc.style.display = 'none'; return; }
+    sin.style.display = 'none'; tc.style.display = 'block';
+
+    activos.forEach(item => {
+        const badge = getStatusBadge(item.estatus);
+        const hor = item.maquinaria?.horometro_actual ?? '-';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.codigo}</td>
+            <td>${item.nombre}</td>
+            <td>${item.tipo_nombre || '-'}</td>
+            <td>${item.marca || '-'} ${item.modelo || ''}</td>
+            <td style="text-align:center;">${item.anio || '-'}</td>
+            <td style="text-align:right;">${hor}</td>
+            <td>${item.proyecto_asignado?.nombre || item.proyectoAsignado?.nombre || 'Disponible'}</td>
+            <td><span class="badge-equipo ${badge}">${item.estatus_nombre || item.estatus}</span></td>
+            <td style="background:white;position:sticky;right:0;">
+                <div style="display:flex;gap:8px;justify-content:center;">
+                    <i class="fas fa-eye action-icon" data-action="ver-detalle" data-id="${item.id}" style="color:#083CAE;" title="Ver"></i>
+                    <i class="fas fa-edit action-icon" data-action="editar" data-id="${item.id}" style="color:#083CAE;" title="Editar"></i>
+                    <i class="fas fa-tasks action-icon" data-action="asignar" data-id="${item.id}" style="color:#083CAE;" title="Asignar"></i>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderizarTablaAsignaciones(as) {
+    const tbody = document.getElementById('tablaAsignaciones');
+    tbody.innerHTML = '';
+    if (!as.length) { tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#6c757d;">Sin asignaciones activas</td></tr>`; return; }
+
+    as.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.activo?.codigo} - ${item.activo?.nombre}</td>
+            <td>${item.activo?.tipo_nombre || '-'}</td>
+            <td>${item.proyecto?.nombre || '-'}</td>
+            <td>${item.responsable_asignado || '-'}</td>
+            <td style="text-align:center;">${formatDate(item.fecha_salida)}</td>
+            <td style="text-align:center;">${formatDate(item.fecha_estimada_devolucion)}</td>
+            <td style="text-align:right;">${item.horas_usadas ? item.horas_usadas.toFixed(1) : '-'}</td>
+            <td style="text-align:center;">
+                <i class="fas fa-edit action-icon" data-action="editar-asignacion" data-id="${item.id}" style="color:#083CAE;" title="Editar"></i>
+                <i class="fas fa-check action-icon" data-action="devolver-asignacion" data-id="${item.id}" style="color:#28a745;" title="Devolver"></i>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderizarTablaMantenimientos(data) {
+    const tbody = document.getElementById('tablaMantenimientos');
+    tbody.innerHTML = '';
+    if (!data.length) { tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#6c757d;">Sin registros</td></tr>`; return; }
+
+    data.forEach(item => {
+        const badge = getMantenimientoStatusBadge(item.estatus);
+        const puedeCerrar = item.estatus !== 'completado' && item.estatus !== 'cancelado';
+        const resp = item.responsable_asignado || item.responsable?.nombre_completo || '-';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.activo?.codigo || ''} - ${item.activo?.nombre || ''}</td>
+            <td>${item.activo?.tipo_nombre || item.activo?.tipo_activo || '-'}</td>
+            <td>${item.tipo_mantenimiento || '-'}</td>
+            <td>${formatDate(item.fecha_inicio)}</td>
+            <td>${item.fecha_fin ? formatDate(item.fecha_fin) : '-'}</td>
+            <td>${resp}</td>
+            <td><span class="badge-equipo ${badge}">${item.estatus || 'Pendiente'}</span></td>
+            <td>
+                <i class="fas fa-eye action-icon" data-action="ver-mant" data-id="${item.id}" style="color:#083CAE;"></i>
+                <i class="fas fa-edit action-icon" data-action="editar-mant" data-id="${item.id}" style="color:#ffc107;"></i>
+                ${puedeCerrar ? `<i class="fas fa-check-circle action-icon" data-action="cerrar-mant" data-id="${item.id}" style="color:#28a745;"></i>` : ''}
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderizarTablaCombustible(data) {
+    const tbody = document.getElementById('tablaCombustible');
+    tbody.innerHTML = '';
+    if (!data.length) { tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;">Sin registros de combustible</td></tr>`; return; }
+
+    data.forEach(item => {
+        const op = item.operador?.nombre_completo || item.operador?.nombre || '-';
+        const proy = item.proyecto?.nombre || 'Sin proyecto';
+        const act = item.activo ? `${item.activo.codigo || ''} - ${item.activo.nombre || ''}` : '-';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${act}</td>
+            <td>${proy}</td>
+            <td>${formatDate(item.fecha)}</td>
+            <td style="text-align:right;">${Number(item.litros).toFixed(2)} L</td>
+            <td style="text-align:right;">$${Number(item.costo).toFixed(2)}</td>
+            <td>${item.horometro || '-'}</td>
+            <td>${op}</td>
+            <td>
+                <i class="fas fa-eye action-icon" data-action="ver-comb" data-id="${item.id}" style="color:#083CAE;"></i>
+                <i class="fas fa-edit action-icon" data-action="editar-comb" data-id="${item.id}" style="color:#ffc107;"></i>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function actualizarEstadisticas(s) {
+    if (!s) return;
+    document.getElementById('totalEquipos').textContent = s.total_equipos || 0;
+    document.getElementById('totalOperacion').textContent = s.en_operacion || 0;
+    document.getElementById('totalMantenimiento').textContent = s.en_mantenimiento || 0;
+    document.getElementById('totalDisponibles').textContent = s.disponibles || 0;
+}
+
+function actualizarEstadisticasMantenimiento(s) {
+    if (!s) return;
+    document.getElementById('totalMantEnProceso').textContent = s.en_mantenimiento ?? s.en_proceso ?? 0;
+    document.getElementById('totalMantProximos').textContent = s.programados ?? s.proximos ?? 0;
+    document.getElementById('totalMantCompletados').textContent = s.completados ?? 0;
+}
+
+function actualizarResumenAsignaciones(as) {
+    document.getElementById('totalAsignados').textContent = as.length;
+    let horas = 0; as.forEach(a => horas += a.horas_usadas || 0);
+    document.getElementById('totalHorasOperacion').textContent = horas.toFixed(0);
+    const mes = new Date().getMonth();
+    document.getElementById('totalAsignacionesMes').textContent = as.filter(a => new Date(a.fecha_salida).getMonth() === mes).length;
+}
+
+function actualizarPaginacion(p) {
+    if (!p) return;
+    document.getElementById('paginaActual').textContent = p.current_page || 1;
+    document.getElementById('totalPaginas').textContent = `de ${p.last_page || 1}`;
+    document.getElementById('paginacionInfo').textContent = `Mostrando ${p.from || 0}-${p.to || 0} de ${p.total || 0} registros`;
+}
+
+function calcularResumenCombustible(regs) {
+    const L = regs.reduce((s, r) => s + Number(r.litros || 0), 0);
+    const C = regs.reduce((s, r) => s + Number(r.costo || 0), 0);
+    const P = L > 0 ? C / L : 0;
+    document.getElementById('totalConsumoMensual').textContent = L.toFixed(2) + ' L';
+    document.getElementById('totalCostoMensual').textContent = '$' + C.toFixed(2);
+    document.getElementById('totalRendimientoProm').textContent = '$' + P.toFixed(2) + '/L';
+}
+
+/* =====================================================================
+   RED DE SEGURIDAD: recrear modal de asignación si fue eliminado
+   ===================================================================== */
+function crearModalAsignacionSiNoExiste() {
+    const existe = document.getElementById('modalAsignarEquipo');
+
+    if (existe) {
+        const selEquipo = document.getElementById('modalAsignacionEquipo');
+        if (selEquipo && selEquipo.querySelectorAll('option').length <= 1) {
+            llenarSelectAsignacion(true);
+        }
+        const selProyecto = document.getElementById('modalProyecto');
+        if (selProyecto && selProyecto.querySelectorAll('option').length <= 1) {
+            llenarSelectProyectos(proyectosLista, true);
+        }
+        const selResp = document.getElementById('modalResponsable');
+        if (selResp && selResp.querySelectorAll('option').length <= 1) {
+            llenarSelectResponsables(responsablesLista, true);
+        }
+        return;
+    }
+
+    console.warn('⚠️ Modal de asignación no existe, recreándolo...');
+
+    const modalHTML = `
+    <div id="modalAsignarEquipo" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:12px;width:90%;max-width:600px;max-height:90vh;overflow-y:auto;">
+            <div style="padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#083CAE,#052a6b);border-radius:12px 12px 0 0;">
+                <h3 style="margin:0;color:white;"><i class="fas fa-tasks"></i> Asignar Equipo a Proyecto</h3>
+                <button type="button" data-close-modal="modalAsignarEquipo" style="background:rgba(255,255,255,0.2);border:none;font-size:20px;cursor:pointer;color:white;width:36px;height:36px;border-radius:50%;">&times;</button>
+            </div>
+            <div style="padding:20px;">
+                <form id="formAsignarEquipo">
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Equipo <span style="color:#dc3545;">*</span></label>
+                        <select id="modalAsignacionEquipo" name="activo_id" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;"></select>
                     </div>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Proyecto <span style="color:#dc3545;">*</span></label>
+                        <select id="modalProyecto" name="proyecto_id" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;"></select>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Responsable</label>
+                        <select id="modalResponsable" name="responsable_asignado_id" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;"></select>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Fecha Inicio <span style="color:#dc3545;">*</span></label>
+                            <input type="date" id="modalFechaInicio" name="fecha_salida" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;">
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Fecha Estimada Fin</label>
+                            <input type="date" id="modalFechaFin" name="fecha_estimada_devolucion" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;">
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Horómetro Salida</label>
+                            <input type="number" id="modalHorometro" name="horometro_salida" step="0.1" min="0" placeholder="0.0" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;">
+                        </div>
+                        <div>
+                            <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Condición Salida</label>
+                            <select id="modalCondicion" name="condicion_salida" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;">
+                                <option value="Excelente">Excelente</option>
+                                <option value="Bueno" selected>Bueno</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Malo">Malo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label style="display:block;margin-bottom:5px;font-weight:600;font-size:13px;">Observaciones</label>
+                        <textarea id="modalObservacionesAsignacion" name="observaciones" rows="2" style="width:100%;padding:8px 12px;border:1px solid #ced4da;border-radius:4px;font-size:14px;resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #dee2e6;padding-top:20px;">
+                        <button type="button" data-close-modal="modalAsignarEquipo" style="padding:8px 20px;background-color:#6c757d;color:white;border:none;border-radius:4px;cursor:pointer;">Cancelar</button>
+                        <button type="submit" style="padding:8px 20px;background-color:#28a745;color:white;border:none;border-radius:4px;cursor:pointer;"><i class="fas fa-save"></i> Asignar Equipo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>`;
 
-    function renderizarTablaAsignaciones(asignaciones) {
-        const tbody = document.getElementById('tablaAsignaciones');
-        if (!tbody) return;
-        
-        tbody.innerHTML = '';
-        
-        if (!asignaciones || asignaciones.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; padding: 20px; color: #6c757d;">
-                        No hay asignaciones activas
-                    </td>
-                </tr>
-            `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    llenarSelectAsignacion(true);
+    llenarSelectProyectos(proyectosLista, true);
+    llenarSelectResponsables(responsablesLista, true);
+
+    document.getElementById('formAsignarEquipo').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const activoId = document.getElementById('modalAsignacionEquipo')?.value;
+        if (!activoId) {
+            mostrarNotificacion('Debes seleccionar un equipo', 'warning');
             return;
         }
-        
-        asignaciones.forEach(item => {
-            const row = document.createElement('tr');
-            const horas = item.horas_usadas || 0;
-            
-            row.innerHTML = `
-                <td style="padding: 12px;">${item.activo?.codigo} - ${item.activo?.nombre}</td>
-                <td style="padding: 12px;">${item.activo?.tipo_nombre || '-'}</td>
-                <td style="padding: 12px;">${item.proyecto?.nombre || '-'}</td>
-                <td style="padding: 12px;">${item.responsable_asignado || '-'}</td>
-                <td style="padding: 12px; text-align: center;">${formatDate(item.fecha_salida)}</td>
-                <td style="padding: 12px; text-align: center;">${formatDate(item.fecha_estimada_devolucion)}</td>
-                <td style="padding: 12px; text-align: right;">${horas ? horas.toFixed(1) : '-'}</td>
-                <td style="padding: 12px; text-align: center;">
-                    <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; margin: 0 5px;" onclick="editarAsignacion(${item.id})"></i>
-                    <i class="fas fa-check" style="color: #28a745; cursor: pointer; margin: 0 5px;" onclick="devolverEquipo(${item.id})"></i>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
-
-    function actualizarResumenAsignaciones(asignaciones) {
-        const total = asignaciones?.length || 0;
-        document.getElementById('totalAsignados').textContent = total;
-        
-        let horas = 0;
-        asignaciones?.forEach(a => {
-            horas += a.horas_usadas || 0;
-        });
-        document.getElementById('totalHorasOperacion').textContent = horas.toFixed(0);
-        
-        const mes = new Date().getMonth();
-        const mesActual = asignaciones?.filter(a => {
-            const fecha = new Date(a.fecha_salida);
-            return fecha.getMonth() === mes;
-        }) || [];
-        document.getElementById('totalAsignacionesMes').textContent = mesActual.length;
-    }
-
-    function actualizarEstadisticas(stats) {
-        if (!stats) return;
-        document.getElementById('totalEquipos').textContent = stats.total_equipos || 0;
-        document.getElementById('totalOperacion').textContent = stats.en_operacion || 0;
-        document.getElementById('totalMantenimiento').textContent = stats.en_mantenimiento || 0;
-        document.getElementById('totalDisponibles').textContent = stats.disponibles || 0;
-    }
-
-    function actualizarPaginacion(pagination) {
-        if (!pagination) return;
-        document.getElementById('paginaActual').textContent = pagination.current_page || 1;
-        document.getElementById('totalPaginas').textContent = `de ${pagination.last_page || 1}`;
-        document.getElementById('paginacionInfo').textContent = 
-            `Mostrando ${pagination.from || 0}-${pagination.to || 0} de ${pagination.total || 0} registros`;
-    }
-
-    // ============================================
-    // FUNCIONES AUXILIARES
-    // ============================================
-
-    function getStatusBadge(status) {
-        const badges = {
-            'activo': 'badge-activo',
-            'mantenimiento': 'badge-mantenimiento',
-            'inactivo': 'badge-inactivo',
-            'baja': 'badge-baja',
-            'disponible': 'badge-disponible'
-        };
-        return badges[status] || 'badge-equipo';
-    }
-
-    function getMantenimientoStatusBadge(status) {
-        const badges = {
-            'pendiente': 'badge-mant-pendiente',
-            'en_proceso': 'badge-mant-en-proceso',
-            'completado': 'badge-mant-completado',
-            'cancelado': 'badge-mant-cancelado'
-        };
-        return badges[status] || 'badge-mant-pendiente';
-    }
-
-    function formatDate(dateString) {
-        if (!dateString) return '-';
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Asignando...';
         try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('es-MX');
-        } catch {
-            return '-';
-        }
-    }
-
-    function mostrarLoading(show) {
-        document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
-    }
-
-    function mostrarNotificacion(mensaje, tipo = 'success') {
-        document.querySelectorAll('.toast-notification').forEach(el => el.remove());
-        
-        const notificacion = document.createElement('div');
-        notificacion.className = `toast-notification ${tipo}`;
-        const icono = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
-        notificacion.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
-        document.body.appendChild(notificacion);
-        setTimeout(() => notificacion.remove(), 3000);
-    }
-
-    // ============================================
-    // FUNCIONES PARA MANTENIMIENTO
-    // ============================================
-
-    async function cargarMantenimientos() {
-        try {
-            const response = await fetch(`${API_BASE}/mantenimientos/list`, {
-                headers: { 'Accept': 'application/json' }
+            const fd = new FormData(this);
+            const r = await fetch(`${API_BASE}/asignar`, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+                body: fd
             });
-            const result = await response.json();
-            console.log('Mantenimientos cargados:', result);
-            
+            const result = await r.json();
             if (result.success) {
-                renderizarTablaMantenimientos(result.data);
-                actualizarEstadisticasMantenimiento(result.estadisticas);
+                mostrarNotificacion(result.message, 'success');
+                cerrarModal('modalAsignarEquipo');
+                cargarActivos(); cargarAsignacionesActivas(); cargarCatalogos();
+            } else {
+                console.error('❌ Error:', result);
+                mostrarNotificacion(result.message || 'Error', 'error');
             }
-        } catch (error) {
-            console.error('Error cargando mantenimientos:', error);
-        }
-    }
+        } catch (err) { mostrarNotificacion('Error al asignar', 'error'); }
+        finally { btn.disabled = false; btn.innerHTML = txt; }
+    });
+}
 
-    function renderizarTablaMantenimientos(data) {
-        const tbody = document.getElementById('tablaMantenimientos');
-        if (!tbody) return;
-        
-        if (!data || data.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; padding: 20px; color: #6c757d;">
-                        No hay registros de mantenimiento
-                    </td>
-                </tr>
-            `;
+/* =====================================================================
+   EDITAR ASIGNACIÓN
+   ===================================================================== */
+async function editarAsignacion(id) {
+    try {
+        console.log('🚀 editarAsignacion llamado con id:', id);
+
+        const r = await fetch(`${API_BASE}/asignaciones/${id}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        const result = await r.json();
+        console.log('📦 Datos recibidos:', result);
+
+        if (!result.success) {
+            mostrarNotificacion('No se pudo cargar la asignación', 'error');
             return;
         }
-        
-        tbody.innerHTML = data.map(item => {
-            const statusBadge = getMantenimientoStatusBadge(item.estatus);
-            const fechaFin = item.fecha_fin ? formatDate(item.fecha_fin) : '-';
-            const responsable = item.responsable ? 
-                (item.responsable.nombre_completo || item.responsable.nombre || '-') : 
-                (item.responsable_asignado || '-');
-            
-            return `
-                <tr>
-                    <td>${item.activo?.codigo || ''} - ${item.activo?.nombre || ''}</td>
-                    <td>${item.activo?.tipo_nombre || '-'}</td>
-                    <td>${item.tipo_mantenimiento || '-'}</td>
-                    <td>${formatDate(item.fecha_inicio)}</td>
-                    <td>${fechaFin}</td>
-                    <td>${responsable}</td>
-                    <td><span class="badge-equipo ${statusBadge}">${item.estatus || 'Pendiente'}</span></td>
-                    <td>
-                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" onclick="verDetalleMantenimiento(${item.id})"></i>
-                        <i class="fas fa-edit" style="color: #ffc107; cursor: pointer; margin: 0 5px;" onclick="editarMantenimiento(${item.id})"></i>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
 
-    function actualizarEstadisticasMantenimiento(estadisticas) {
-        if (!estadisticas) return;
-        document.getElementById('totalMantEnProceso').textContent = estadisticas.en_proceso || 0;
-        document.getElementById('totalMantProximos').textContent = estadisticas.proximos || 0;
-        document.getElementById('totalMantCompletados').textContent = estadisticas.completados || 0;
-    }
+        const item = result.data;
 
-    window.verDetalleMantenimiento = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
+        const form = document.getElementById('formEditarAsignacion');
+        if (form) form.reset();
 
-    window.editarMantenimiento = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
+        document.getElementById('editAsignacionId').value = item.id;
 
-    // ============================================
-    // FUNCIONES PARA COMBUSTIBLE
-    // ============================================
+        const equipoInfo = item.activo
+            ? `${item.activo.codigo || ''} - ${item.activo.nombre || ''}`
+            : '-';
+        document.getElementById('editAsignacionEquipo').value = equipoInfo;
 
-    async function cargarCombustible() {
-        try {
-            const activoId = document.getElementById('selectorCombustibleEquipo')?.value || '';
-            const fechaInicio = document.getElementById('fechaCombustibleInicio')?.value || '';
-            const fechaFin = document.getElementById('fechaCombustibleFin')?.value || '';
-            
-            let url = `${API_BASE}/combustible/historial?per_page=20`;
-            if (activoId) url += `&activo_id=${activoId}`;
-            if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
-            if (fechaFin) url += `&fecha_fin=${fechaFin}`;
-            
-            console.log('Cargando combustible desde:', url);
-            
-            const response = await fetch(url, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
-            console.log('Combustible cargado:', result);
-            
-            if (result.success) {
-                renderizarTablaCombustible(result.data.data || []);
-                actualizarEstadisticasCombustible(result);
-            }
-        } catch (error) {
-            console.error('Error al cargar combustible:', error);
-            mostrarNotificacion('Error al cargar combustible', 'error');
+        llenarSelectProyectos(proyectosLista, true);
+        const selProyecto = document.getElementById('editAsignacionProyecto');
+        if (selProyecto && item.proyecto_id) {
+            selProyecto.value = String(item.proyecto_id);
         }
-    }
 
-    function renderizarTablaCombustible(data) {
-        const tbody = document.getElementById('tablaCombustible');
-        if (!tbody) return;
-        
-        if (!data || data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px;">
-                <i class="fas fa-gas-pump" style="font-size: 24px; color: #ccc; display: block; margin-bottom: 10px;"></i>
-                No hay registros de combustible
-            </td></tr>`;
+        llenarSelectResponsables(responsablesLista, true);
+        const selResp = document.getElementById('editAsignacionResponsable');
+        if (selResp && item.responsable_asignado) {
+            const opciones = Array.from(selResp.options);
+            const opt = opciones.find(o => o.textContent === item.responsable_asignado);
+            if (opt) selResp.value = opt.value;
+        }
+
+        document.getElementById('editAsignacionFechaInicio').value = item.fecha_salida ? item.fecha_salida.split('T')[0] : '';
+        document.getElementById('editAsignacionFechaFin').value = item.fecha_estimada_devolucion ? item.fecha_estimada_devolucion.split('T')[0] : '';
+        document.getElementById('editAsignacionHorometro').value = item.horometro_salida || '';
+
+        const selCond = document.getElementById('editAsignacionCondicion');
+        if (selCond && item.condicion_salida) {
+            const condMap = {
+                'excelente': 'Excelente',
+                'bueno': 'Bueno',
+                'regular': 'Regular',
+                'malo': 'Malo',
+                'danado': 'Malo',
+                'dañado': 'Malo',
+            };
+            const key = String(item.condicion_salida).toLowerCase();
+            selCond.value = condMap[key] || 'Bueno';
+        }
+
+        document.getElementById('editAsignacionObservaciones').value = item.observaciones_salida || '';
+
+        abrirModal('modalEditarAsignacion');
+
+    } catch (e) {
+        console.error('❌ Error en editarAsignacion:', e);
+        mostrarNotificacion('Error al cargar asignación', 'error');
+    }
+}
+
+/* =====================================================================
+   DEVOLVER EQUIPO
+   ===================================================================== */
+async function devolverEquipo(id) {
+    try {
+        console.log('🚀 devolverEquipo llamado con id:', id);
+
+        const r = await fetch(`${API_BASE}/asignaciones/${id}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        const result = await r.json();
+
+        if (!result.success) {
+            mostrarNotificacion('No se pudo cargar la asignación', 'error');
             return;
         }
-        
-        tbody.innerHTML = data.map(item => {
-            let operadorNombre = '-';
-            if (item.operador) {
-                operadorNombre = item.operador.nombre_completo || 
-                                (item.operador.nombre ? `${item.operador.nombre} ${item.operador.apellido_paterno || ''}`.trim() : '-');
-            }
-            
-            let proyectoNombre = 'Sin proyecto';
-            if (item.proyecto) {
-                proyectoNombre = item.proyecto.nombre || 'Sin proyecto';
-            }
-            
-            let activoNombre = '-';
-            if (item.activo) {
-                activoNombre = `${item.activo.codigo || ''} - ${item.activo.nombre || ''}`;
-            }
-            
-            return `
-                <tr>
-                    <td>${activoNombre}</td>
-                    <td>${proyectoNombre}</td>
-                    <td>${formatDate(item.fecha)}</td>
-                    <td style="text-align: right;">${Number(item.litros).toFixed(2)} L</td>
-                    <td style="text-align: right;">$${Number(item.costo).toFixed(2)}</td>
-                    <td>${item.horometro || '-'}</td>
-                    <td>${operadorNombre}</td>
-                    <td>
-                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" onclick="verDetalleCombustible(${item.id})"></i>
-                        <i class="fas fa-edit" style="color: #ffc107; cursor: pointer; margin: 0 5px;" onclick="editarCombustible(${item.id})"></i>
-                    </td>
-                </tr>
-            `;
-        }).join('');
+
+        const item = result.data;
+
+        const form = document.getElementById('formDevolverEquipo');
+        if (form) form.reset();
+
+        document.getElementById('devolverAsignacionId').value = item.id;
+
+        const equipoInfo = item.activo
+            ? `${item.activo.codigo || ''} - ${item.activo.nombre || ''}`
+            : '-';
+        document.getElementById('devolverEquipoInfo').textContent = equipoInfo;
+        document.getElementById('devolverProyectoInfo').textContent = item.proyecto?.nombre || '-';
+
+        document.getElementById('devolverFecha').value = new Date().toISOString().split('T')[0];
+        document.getElementById('devolverCondicion').value = 'Bueno';
+        document.getElementById('devolverHorometro').value = item.horometro_salida || '';
+        document.getElementById('devolverKilometraje').value = '';
+        document.getElementById('devolverObservaciones').value = '';
+
+        document.getElementById('devolverReporteDanos').style.display = 'none';
+
+        abrirModal('modalDevolverEquipo');
+
+    } catch (e) {
+        console.error('❌ Error en devolverEquipo:', e);
+        mostrarNotificacion('Error al cargar asignación', 'error');
+    }
+}
+
+/* =====================================================================
+   ACCIONES: VER / EDITAR
+   ===================================================================== */
+async function verDetalle(id) {
+    try {
+        const r = await fetch(`${API_BASE}/${id}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (!result.success) { mostrarNotificacion('No se pudo cargar', 'error'); return; }
+
+        const item = result.data;
+        document.getElementById('modalDetalleEquipo')?.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'modalDetalleEquipo';
+        modal.style.cssText = 'display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;';
+
+        const m = item.maquinaria || {};
+        const v = item.vehiculo || {};
+        const p = item.proyecto_asignado || item.proyectoAsignado || {};
+
+        modal.innerHTML = `
+            <div style="background:#fff;border-radius:12px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;">
+                <div style="padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#083CAE,#052a6b);border-radius:12px 12px 0 0;">
+                    <h3 style="margin:0;color:white;"><i class="fas fa-info-circle"></i> Detalle del Equipo</h3>
+                    <button data-close-modal="modalDetalleEquipo" style="background:rgba(255,255,255,0.2);border:none;font-size:20px;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;">&times;</button>
+                </div>
+                <div style="padding:20px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;">
+                        <div><strong>Código:</strong> ${item.codigo||'-'}</div>
+                        <div><strong>Nombre:</strong> ${item.nombre||'-'}</div>
+                        <div><strong>Tipo:</strong> ${item.tipo_nombre||item.tipo_activo||'-'}</div>
+                        <div><strong>Estado:</strong> ${item.estatus_nombre||item.estatus||'-'}</div>
+                        <div><strong>Marca:</strong> ${item.marca||'-'}</div>
+                        <div><strong>Modelo:</strong> ${item.modelo||'-'}</div>
+                        <div><strong>Año:</strong> ${item.anio||'-'}</div>
+                        <div><strong>Serie:</strong> ${item.serie||'-'}</div>
+                        <div><strong>Horómetro:</strong> ${m.horometro_actual ?? '-'}</div>
+                        <div><strong>Kilometraje:</strong> ${v.kilometraje_actual ?? '-'}</div>
+                        <div><strong>Proyecto:</strong> ${p.nombre||'Disponible'}</div>
+                        <div><strong>Condición:</strong> ${item.estado_general||'-'}</div>
+                        <div><strong>Costo Adq.:</strong> ${item.costo_adquisicion ? '$'+Number(item.costo_adquisicion).toFixed(2) : '-'}</div>
+                        <div><strong>Costo Op/h:</strong> ${item.costo_operacion_hora ? '$'+Number(item.costo_operacion_hora).toFixed(2) : '-'}</div>
+                        <div style="grid-column:1/-1;"><strong>Descripción:</strong> ${item.descripcion||'-'}</div>
+                        <div style="grid-column:1/-1;"><strong>Observaciones:</strong> ${item.observaciones||'-'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+    } catch (e) { console.error(e); mostrarNotificacion('Error', 'error'); }
+}
+
+async function editarEquipo(id) {
+    const modal = document.getElementById('modalNuevoEquipo');
+    const form = document.getElementById('formEquipo');
+    if (!modal || !form) {
+        mostrarNotificacion('Error: modal de edición no encontrado', 'error');
+        return;
+    }
+    try {
+        const r = await fetch(`${API_BASE}/${id}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (!result.success) { mostrarNotificacion('No se pudo cargar el equipo', 'error'); return; }
+
+        const item = result.data;
+        form.reset();
+
+        const setVal = (elemId, val) => {
+            const el = document.getElementById(elemId);
+            if (el) el.value = val ?? '';
+        };
+
+        setVal('editEquipoId', item.id);
+        setVal('campoNombre', item.nombre);
+        setVal('campoTipo', item.tipo_activo);
+        setVal('campoMarca', item.marca);
+        setVal('campoModelo', item.modelo);
+        setVal('campoAnio', item.anio);
+        setVal('campoSerie', item.serie);
+        setVal('campoCosto', item.costo_adquisicion);
+        setVal('campoCostoOperacion', item.costo_operacion_hora);
+        setVal('campoDescripcion', item.descripcion);
+
+        document.getElementById('modalEquipoTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Equipo';
+        abrirModal('modalNuevoEquipo');
+    } catch (e) { console.error(e); mostrarNotificacion('Error al cargar equipo', 'error'); }
+}
+
+async function verDetalleMantenimiento(id) {
+    try {
+        const r = await fetch(`${API_BASE}/mantenimiento/${id}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (!result.success) { mostrarNotificacion('No se pudo cargar', 'error'); return; }
+
+        const item = result.data;
+        document.getElementById('modalDetalleMantenimiento')?.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'modalDetalleMantenimiento';
+        modal.style.cssText = 'display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;';
+        modal.innerHTML = `
+            <div style="background:#fff;border-radius:12px;width:90%;max-width:650px;max-height:90vh;overflow-y:auto;">
+                <div style="padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#ffc107,#d39e00);border-radius:12px 12px 0 0;">
+                    <h3 style="margin:0;color:white;"><i class="fas fa-tools"></i> Detalle de Mantenimiento</h3>
+                    <button data-close-modal="modalDetalleMantenimiento" style="background:rgba(255,255,255,0.2);border:none;font-size:20px;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;">&times;</button>
+                </div>
+                <div style="padding:20px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;">
+                        <div style="grid-column:1/-1;"><strong>Equipo:</strong> ${item.activo?.codigo||''} - ${item.activo?.nombre||''}</div>
+                        <div><strong>Tipo:</strong> ${item.tipo_mantenimiento||'-'}</div>
+                        <div><strong>Estado:</strong> ${item.estatus||'-'}</div>
+                        <div><strong>Prioridad:</strong> ${item.prioridad||'-'}</div>
+                        <div><strong>Responsable:</strong> ${item.responsable_asignado||item.responsable?.nombre_completo||'-'}</div>
+                        <div><strong>Fecha Inicio:</strong> ${formatDate(item.fecha_inicio)}</div>
+                        <div><strong>Fecha Fin:</strong> ${item.fecha_fin ? formatDate(item.fecha_fin) : '-'}</div>
+                        <div><strong>Costo:</strong> ${item.costo ? '$'+Number(item.costo).toFixed(2) : '-'}</div>
+                        <div style="grid-column:1/-1;"><strong>Descripción:</strong> ${item.descripcion||'-'}</div>
+                        <div style="grid-column:1/-1;"><strong>Observaciones:</strong> ${item.observaciones||'-'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+    } catch (e) { console.error(e); mostrarNotificacion('Error', 'error'); }
+}
+
+async function editarMantenimiento(id) {
+    const form = document.getElementById('formMantenimiento');
+    if (!form) { mostrarNotificacion('Modal no disponible', 'error'); return; }
+    try {
+        const r = await fetch(`${API_BASE}/mantenimiento/${id}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (!result.success) { mostrarNotificacion('No se pudo cargar', 'error'); return; }
+
+        const item = result.data;
+        form.reset();
+        document.getElementById('editMantId').value = id;
+        document.getElementById('modoMantenimiento').value = 'editar';
+
+        document.getElementById('modalMantEquipo').value = item.activo_id || '';
+        document.getElementById('modalMantTipo').value = item.tipo_mantenimiento || 'preventivo';
+        document.getElementById('modalMantDescripcion').value = item.descripcion || '';
+        document.getElementById('modalMantFechaInicio').value = item.fecha_inicio ? item.fecha_inicio.split('T')[0] : '';
+        document.getElementById('modalMantFechaFinEstimada').value = item.fecha_fin_estimada ? item.fecha_fin_estimada.split('T')[0] : '';
+        document.getElementById('modalMantCosto').value = item.costo || '';
+        document.getElementById('modalMantPrioridad').value = item.prioridad || 'media';
+        if (item.responsable_asignado) document.getElementById('modalMantResponsable').value = item.responsable_asignado;
+
+        document.getElementById('modalMantTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Mantenimiento';
+        document.getElementById('chkProgramarMant').disabled = true;
+        document.getElementById('bloqueProgramar').style.display = 'none';
+
+        abrirModal('modalMantenimiento');
+    } catch (e) { console.error(e); mostrarNotificacion('Error', 'error'); }
+}
+
+function cerrarMantenimientoModal(id) {
+    const form = document.getElementById('formCerrarMantenimiento');
+    if (form) form.reset();
+    document.getElementById('cerrarMantId').value = id;
+    document.getElementById('cerrarMantFechaFin').value = new Date().toISOString().split('T')[0];
+    abrirModal('modalCerrarMantenimiento');
+}
+
+async function verDetalleCombustible(id) {
+    try {
+        const r = await fetch(`${API_BASE}/combustible/${id}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (!result.success) { mostrarNotificacion('No se pudo cargar', 'error'); return; }
+
+        const item = result.data;
+        document.getElementById('modalDetalleCombustible')?.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'modalDetalleCombustible';
+        modal.style.cssText = 'display:flex;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:99999;align-items:center;justify-content:center;';
+        modal.innerHTML = `
+            <div style="background:#fff;border-radius:12px;width:90%;max-width:600px;">
+                <div style="padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#28a745,#1e7e34);border-radius:12px 12px 0 0;">
+                    <h3 style="margin:0;color:white;"><i class="fas fa-gas-pump"></i> Detalle de Carga</h3>
+                    <button data-close-modal="modalDetalleCombustible" style="background:rgba(255,255,255,0.2);border:none;font-size:20px;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;">&times;</button>
+                </div>
+                <div style="padding:20px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;">
+                        <div style="grid-column:1/-1;"><strong>Equipo:</strong> ${item.activo?.codigo||''} - ${item.activo?.nombre||''}</div>
+                        <div><strong>Proyecto:</strong> ${item.proyecto?.nombre||'Sin proyecto'}</div>
+                        <div><strong>Fecha:</strong> ${formatDate(item.fecha)}</div>
+                        <div><strong>Litros:</strong> ${Number(item.litros).toFixed(2)} L</div>
+                        <div><strong>Costo:</strong> $${Number(item.costo).toFixed(2)}</div>
+                        <div><strong>Precio/L:</strong> $${Number(item.precio_litro || (item.costo/item.litros) || 0).toFixed(2)}</div>
+                        <div><strong>Horómetro:</strong> ${item.horometro||'-'}</div>
+                        <div><strong>Factura:</strong> ${item.factura||'-'}</div>
+                        <div><strong>Proveedor:</strong> ${item.proveedor?.nombre||'-'}</div>
+                        <div><strong>Operador:</strong> ${item.operador?.nombre_completo||'-'}</div>
+                        <div style="grid-column:1/-1;"><strong>Observaciones:</strong> ${item.observaciones||'-'}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+    } catch (e) { console.error(e); mostrarNotificacion('Error', 'error'); }
+}
+
+async function editarCombustible(id) {
+    const form = document.getElementById('formCombustible');
+    if (!form) { mostrarNotificacion('Modal no disponible', 'error'); return; }
+    try {
+        const r = await fetch(`${API_BASE}/combustible/${id}`, { headers: { 'Accept': 'application/json' } });
+        const result = await r.json();
+        if (!result.success) { mostrarNotificacion('No se pudo cargar', 'error'); return; }
+
+        const item = result.data;
+        form.reset();
+        document.getElementById('editCombId').value = id;
+        document.getElementById('modalCombustibleEquipo').value = item.activo_id || '';
+        document.getElementById('modalCombustibleFecha').value = item.fecha ? item.fecha.split('T')[0] : '';
+        document.getElementById('modalCombustibleLitros').value = item.litros || '';
+        document.getElementById('modalCombustibleCosto').value = item.costo || '';
+        document.getElementById('modalCombustibleHorometro').value = item.horometro || '';
+        document.getElementById('modalCombustibleFactura').value = item.factura || '';
+        document.getElementById('modalCombustibleObservaciones').value = item.observaciones || '';
+        if (item.proyecto_id) document.getElementById('modalCombustibleProyecto').value = item.proyecto_id;
+        if (item.operador_id) document.getElementById('modalCombustibleOperador').value = item.operador_id;
+        if (item.proveedor_id) document.getElementById('modalCombustibleProveedor').value = item.proveedor_id;
+
+        document.getElementById('modalCombTitulo').innerHTML = '<i class="fas fa-edit"></i> Editar Carga';
+        abrirModal('modalCombustible');
+    } catch (e) { console.error(e); mostrarNotificacion('Error', 'error'); }
+}
+
+/* =====================================================================
+   ABRIR MODALES
+   ===================================================================== */
+function abrirModalAsignacion(equipoId) {
+    crearModalAsignacionSiNoExiste();
+
+    const form = document.getElementById('formAsignarEquipo');
+    const modal = document.getElementById('modalAsignarEquipo');
+
+    if (!form || !modal) {
+        console.error('❌ No se encontró el modal o formulario de asignación');
+        mostrarNotificacion('Error: no se pudo abrir el modal de asignación', 'error');
+        return;
     }
 
-    function actualizarEstadisticasCombustible(result) {
-        if (!result || !result.totales) return;
-        
-        const totalLitros = document.getElementById('totalConsumoMensual');
-        const totalCosto = document.getElementById('totalCostoMensual');
-        const rendimiento = document.getElementById('totalRendimientoProm');
-        
-        const totalL = Number(result.totales.total_litros || 0);
-        const totalC = Number(result.totales.total_costo || 0);
-        const registros = Number(result.totales.total_registros || 1);
-        
-        if (totalLitros) {
-            totalLitros.textContent = totalL.toFixed(2) + ' L';
+    form.reset();
+
+    const selEquipo = document.getElementById('modalAsignacionEquipo');
+    if (selEquipo && selEquipo.querySelectorAll('option').length <= 1) {
+        llenarSelectAsignacion(true);
+    }
+    const selProyecto = document.getElementById('modalProyecto');
+    if (selProyecto && selProyecto.querySelectorAll('option').length <= 1) {
+        llenarSelectProyectos(proyectosLista, true);
+    }
+    const selResp = document.getElementById('modalResponsable');
+    if (selResp && selResp.querySelectorAll('option').length <= 1) {
+        llenarSelectResponsables(responsablesLista, true);
+    }
+
+    if (equipoId) {
+        const s = document.getElementById('modalAsignacionEquipo');
+        const existe = s && Array.from(s.options).some(o => o.value === String(equipoId));
+        if (existe) {
+            s.value = String(equipoId);
+        } else {
+            mostrarNotificacion('Este equipo no está disponible para asignación (ya asignado o en mantenimiento)', 'warning');
         }
-        
-        if (totalCosto) {
-            totalCosto.textContent = '$' + totalC.toFixed(2);
+    }
+
+    const hoy = new Date();
+    const fechaInicio = document.getElementById('modalFechaInicio');
+    if (fechaInicio) fechaInicio.value = hoy.toISOString().split('T')[0];
+
+    const mes = new Date(); mes.setMonth(mes.getMonth() + 1);
+    const fechaFin = document.getElementById('modalFechaFin');
+    if (fechaFin) fechaFin.value = mes.toISOString().split('T')[0];
+
+    abrirModal('modalAsignarEquipo');
+}
+
+function abrirModalNuevoEquipo() {
+    const form = document.getElementById('formEquipo');
+    if (form) form.reset();
+    document.getElementById('editEquipoId').value = '';
+    document.getElementById('modalEquipoTitulo').innerHTML = '<i class="fas fa-plus-circle"></i> Nuevo Equipo';
+    abrirModal('modalNuevoEquipo');
+}
+
+function abrirModalNuevoMantenimiento() {
+    const form = document.getElementById('formMantenimiento');
+    if (form) form.reset();
+    document.getElementById('editMantId').value = '';
+    document.getElementById('modoMantenimiento').value = 'registrar';
+    document.getElementById('chkProgramarMant').checked = false;
+    document.getElementById('chkProgramarMant').disabled = false;
+    document.getElementById('bloqueProgramar').style.display = 'block';
+    document.getElementById('modalMantTitulo').innerHTML = '<i class="fas fa-tools"></i> Registrar Mantenimiento';
+    document.getElementById('modalMantFechaInicio').value = new Date().toISOString().split('T')[0];
+    abrirModal('modalMantenimiento');
+}
+
+function abrirModalNuevoCombustible() {
+    const form = document.getElementById('formCombustible');
+    if (form) form.reset();
+    document.getElementById('editCombId').value = '';
+    document.getElementById('modalCombTitulo').innerHTML = '<i class="fas fa-gas-pump"></i> Registrar Carga';
+    document.getElementById('modalCombustibleFecha').value = new Date().toISOString().split('T')[0];
+    abrirModal('modalCombustible');
+}
+
+/* =====================================================================
+   EVENT DELEGATION GLOBAL
+   ===================================================================== */
+document.addEventListener('click', function(e) {
+    const closeBtn = e.target.closest('[data-close-modal]');
+    if (closeBtn) {
+        e.preventDefault();
+        const id = closeBtn.dataset.closeModal;
+        if (id) {
+            const m = document.getElementById(id);
+            if (m) {
+                if (id.startsWith('modalDetalle')) m.remove();
+                else m.style.display = 'none';
+            }
+            document.body.style.overflow = 'auto';
         }
-        
-        if (rendimiento) {
-            const rend = totalL / registros;
-            rendimiento.textContent = rend.toFixed(2) + ' L/carga';
+        return;
+    }
+
+    const actionEl = e.target.closest('[data-action]');
+    if (actionEl) {
+        e.preventDefault();
+        const action = actionEl.dataset.action;
+        const id = actionEl.dataset.id;
+        console.log('[Action]', action, id);
+        switch(action) {
+            case 'ver-detalle':         verDetalle(id); break;
+            case 'editar':              editarEquipo(id); break;
+            case 'asignar':             abrirModalAsignacion(id); break;
+            case 'ver-mant':            verDetalleMantenimiento(id); break;
+            case 'editar-mant':         editarMantenimiento(id); break;
+            case 'cerrar-mant':         cerrarMantenimientoModal(id); break;
+            case 'ver-comb':            verDetalleCombustible(id); break;
+            case 'editar-comb':         editarCombustible(id); break;
+            case 'editar-asignacion':   editarAsignacion(id); break;
+            case 'devolver-asignacion': devolverEquipo(id); break;
+            default: console.warn('Acción no reconocida:', action);
         }
+        return;
     }
 
-    window.verDetalleCombustible = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
-
-    window.editarCombustible = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
-
-    // ============================================
-    // ACCIONES DE LA PÁGINA
-    // ============================================
-
-    window.verDetalle = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
-
-    window.editarEquipo = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
-
-    window.editarAsignacion = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
-
-    window.devolverEquipo = function(id) {
-        if (!confirm('¿Está seguro de devolver este equipo?')) return;
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
-    };
-
-    window.abrirModalAsignacion = async function(equipoId = null) {
-        try {
-            const select = document.getElementById('modalEquipo');
-            if (select) {
-                select.innerHTML = '<option value="">Cargando equipos...</option>';
-            }
-            
-            const modal = document.getElementById('modalAsignarEquipo');
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            if (!equiposAsignacionCargados || equiposDisponibles.length === 0) {
-                await cargarCatalogos();
-            }
-            
-            llenarSelectAsignacion();
-            
-            if (equipoId) {
-                const selectEquipo = document.getElementById('modalEquipo');
-                if (selectEquipo) {
-                    for (let i = 0; i < selectEquipo.options.length; i++) {
-                        if (selectEquipo.options[i].value == equipoId) {
-                            selectEquipo.selectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            const hoy = new Date();
-            document.getElementById('modalFechaInicio').value = hoy.toISOString().split('T')[0];
-            const unMes = new Date();
-            unMes.setMonth(unMes.getMonth() + 1);
-            document.getElementById('modalFechaFin').value = unMes.toISOString().split('T')[0];
-            
-        } catch (error) {
-            console.error('Error al abrir modal:', error);
-            mostrarNotificacion('Error al cargar los equipos', 'error');
-            
-            const select = document.getElementById('modalEquipo');
-            if (select) {
-                select.innerHTML = '<option value="">Error al cargar equipos</option>';
-            }
-        }
-    };
-
-    // ============================================
-    // FUNCIONES PARA CERRAR MODALES
-    // ============================================
-
-    function cerrarModalAsignacion() {
-        document.getElementById('modalAsignarEquipo').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function cerrarModalEquipo() {
-        document.getElementById('modalEquipo').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function cerrarModalMantenimiento() {
-        document.getElementById('modalMantenimiento').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    function cerrarModalCombustible() {
-        document.getElementById('modalCombustible').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.getElementById('formCombustible').reset();
-    }
-
-    // ============================================
-    // EXPORTAR A EXCEL
-    // ============================================
-
-    async function exportarExcel() {
-        try {
-            const params = new URLSearchParams();
-            params.append('busqueda', currentFilters.busqueda || '');
-            params.append('tipo', currentFilters.tipo || '');
-            params.append('estatus', currentFilters.estatus || '');
-            
-            const proyectos = getProyectosSeleccionados();
-            if (proyectos.length > 0) {
-                proyectos.forEach(id => params.append('proyecto_id[]', id));
-            }
-            
-            const response = await fetch(`${API_BASE}/exportar?${params.toString()}`);
-            const result = await response.json();
-            
-            if (result.success && result.data) {
-                const headers = result.data.headers || [];
-                const rows = result.data.rows || [];
-                
-                if (headers.length === 0 || rows.length === 0) {
-                    mostrarNotificacion('No hay datos para exportar', 'warning');
-                    return;
-                }
-                
-                const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
-                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `Maquinaria_${new Date().toISOString().split('T')[0]}.csv`;
-                link.click();
-                URL.revokeObjectURL(link.href);
-                mostrarNotificacion('Exportación completada', 'success');
-            }
-        } catch (error) {
-            mostrarNotificacion('Error al exportar', 'error');
+    // Cerrar dropdown de proyectos (solo si el clic NO fue dentro de un modal)
+    const c = document.getElementById('proyectoFilterContainer');
+    const dropdown = document.getElementById('filtroProyectosDropdown');
+    if (c && dropdown && !c.contains(e.target)) {
+        const estaEnModal = e.target.closest('#modalAsignarEquipo') ||
+                            e.target.closest('#modalEditarAsignacion') ||
+                            e.target.closest('#modalDevolverEquipo') ||
+                            e.target.closest('#modalNuevoEquipo') ||
+                            e.target.closest('#modalMantenimiento') ||
+                            e.target.closest('#modalCombustible') ||
+                            e.target.closest('#modalCerrarMantenimiento');
+        if (!estaEnModal && dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
         }
     }
+});
 
-    // ============================================
-    // EVENTOS E INICIALIZACIÓN
-    // ============================================
+/* =====================================================================
+   CERRAR MODALES CON CLIC FUERA
+   ===================================================================== */
+window.addEventListener('click', function(e) {
+    const modalesDetalle = ['modalDetalleEquipo','modalDetalleMantenimiento','modalDetalleCombustible'];
+    const modalesForm = [
+        'modalAsignarEquipo','modalEditarAsignacion','modalDevolverEquipo',
+        'modalNuevoEquipo','modalMantenimiento','modalCombustible','modalCerrarMantenimiento'
+    ];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM cargado - API_BASE:', API_BASE);
-        
-        cargarCatalogos().then(() => {
-            cargarActivos();
-            cargarAsignacionesActivas();
-            cargarCombustible();
-            cargarMantenimientos();
-        });
-        
-        // Eventos del dropdown de proyectos
-        document.getElementById('btnFiltroProyectos')?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleDropdown();
-        });
-        
-        document.getElementById('btnCerrarFiltro')?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            cerrarDropdown();
-        });
-        
-        document.getElementById('btnSeleccionarTodos')?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            seleccionarTodosProyectos();
-        });
-        
-        document.getElementById('btnDeseleccionarTodos')?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            deseleccionarTodosProyectos();
-        });
-        
-        document.getElementById('filtroProyectosBuscar')?.addEventListener('input', function(e) {
-            e.stopPropagation();
-            filtrarProyectosLista(this.value);
-        });
-        
-        document.getElementById('filtroProyectosLista')?.addEventListener('change', function(e) {
-            if (e.target.type === 'checkbox') {
-                actualizarLabelProyectos();
-                aplicarFiltroProyectos();
-            }
-        });
-        
-        document.addEventListener('click', function(e) {
-            const container = document.getElementById('proyectoFilterContainer');
-            if (container && !container.contains(e.target)) {
-                cerrarDropdown();
-            }
-        });
-        
-        // Pestañas
-        document.querySelectorAll('.maquinaria-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.maquinaria-tab').forEach(t => {
-                    t.classList.remove('active');
-                    t.style.backgroundColor = '#e9ecef';
-                    t.style.color = '#495057';
-                });
-                
-                this.classList.add('active');
-                this.style.backgroundColor = '#083CAE';
-                this.style.color = 'white';
-                
-                currentTab = this.dataset.tab;
-                
-                document.querySelectorAll('.maquinaria-content').forEach(content => {
-                    content.style.display = 'none';
-                });
-                
-                const target = document.getElementById(`tab-${currentTab}`);
-                if (target) {
-                    target.style.display = 'block';
-                }
-                
-                if (currentTab === 'asignacion') {
-                    cargarAsignacionesActivas();
-                }
-                if (currentTab === 'mantenimiento') {
-                    cargarMantenimientos();
-                }
-                if (currentTab === 'combustible') {
-                    cargarCombustible();
-                }
-            });
-        });
-        
-        // Filtros
-        document.getElementById('selectorTipo')?.addEventListener('change', function() {
-            currentFilters.tipo = this.value;
-            currentFilters.page = 1;
-            cargarActivos();
-        });
-        
-        document.getElementById('selectorStatus')?.addEventListener('change', function() {
-            currentFilters.estatus = this.value;
-            currentFilters.page = 1;
-            cargarActivos();
-        });
-        
-        document.getElementById('buscador')?.addEventListener('input', function() {
-            currentFilters.busqueda = this.value;
-            currentFilters.page = 1;
-            cargarActivos();
-        });
-        
-        // Botón Asignar Equipo
-        document.getElementById('btnAsignarEquipo')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            document.getElementById('formAsignarEquipo').reset();
-            abrirModalAsignacion();
-        });
-        
-        // Botón Nueva Asignación
-        document.getElementById('btnNuevaAsignacion')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            document.getElementById('formAsignarEquipo').reset();
-            abrirModalAsignacion();
-        });
-        
-        document.getElementById('btnAgregarEquipo')?.addEventListener('click', function() {
-            document.getElementById('modalEquipo').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            document.getElementById('formEquipo').reset();
-            document.getElementById('editEquipoId').value = '';
-        });
-        
-        document.getElementById('btnRegistrarMantenimiento')?.addEventListener('click', function() {
-            document.getElementById('modalMantenimiento').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            document.getElementById('formMantenimiento').reset();
-            const hoy = new Date();
-            document.getElementById('modalMantFechaInicio').value = hoy.toISOString().split('T')[0];
-        });
-        
-        document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
-        
-        // Botones de combustible
-        document.getElementById('btnRegistrarCarga')?.addEventListener('click', function() {
-            document.getElementById('modalCombustible').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            document.getElementById('formCombustible').reset();
-            const hoy = new Date();
-            document.getElementById('modalCombustibleFecha').value = hoy.toISOString().split('T')[0];
-        });
-        
-        document.getElementById('btnFiltrarCombustible')?.addEventListener('click', cargarCombustible);
-        
-        // Cerrar modales de combustible
-        document.getElementById('btnCerrarModalCombustible')?.addEventListener('click', cerrarModalCombustible);
-        document.getElementById('btnCancelarCombustible')?.addEventListener('click', cerrarModalCombustible);
-        
-        // Paginación
-        document.getElementById('btnPrimera')?.addEventListener('click', () => {
-            if (currentPage > 1) { currentFilters.page = 1; cargarActivos(); }
-        });
-        document.getElementById('btnAnterior')?.addEventListener('click', () => {
-            if (currentPage > 1) { currentFilters.page = currentPage - 1; cargarActivos(); }
-        });
-        document.getElementById('btnSiguiente')?.addEventListener('click', () => {
-            if (currentPage < totalPages) { currentFilters.page = currentPage + 1; cargarActivos(); }
-        });
-        document.getElementById('btnUltima')?.addEventListener('click', () => {
-            if (currentPage < totalPages) { currentFilters.page = totalPages; cargarActivos(); }
-        });
-        
-        // Cerrar modales
-        document.getElementById('btnCerrarModalAsignacion')?.addEventListener('click', cerrarModalAsignacion);
-        document.getElementById('btnCancelarAsignacion')?.addEventListener('click', cerrarModalAsignacion);
-        document.getElementById('btnCerrarModalEquipo')?.addEventListener('click', cerrarModalEquipo);
-        document.getElementById('btnCancelarEquipo')?.addEventListener('click', cerrarModalEquipo);
-        document.getElementById('btnCerrarModalMantenimiento')?.addEventListener('click', cerrarModalMantenimiento);
-        document.getElementById('btnCancelarMantenimiento')?.addEventListener('click', cerrarModalMantenimiento);
-        
-        // Submit forms
-        document.getElementById('formAsignarEquipo')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const btnSubmit = this.querySelector('button[type="submit"]');
-            const textoOriginal = btnSubmit.innerHTML;
-            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Asignando...';
-            btnSubmit.disabled = true;
-            
-            const formData = new FormData(this);
-            
-            fetch(`${API_BASE}/asignar`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                btnSubmit.innerHTML = textoOriginal;
-                btnSubmit.disabled = false;
-                
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalAsignacion();
-                    cargarActivos();
-                    cargarAsignacionesActivas();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al asignar', 'error');
-                }
-            })
-            .catch(error => {
-                btnSubmit.innerHTML = textoOriginal;
-                btnSubmit.disabled = false;
-                mostrarNotificacion('Error al asignar el equipo', 'error');
-            });
-        });
-        
-        document.getElementById('formEquipo')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            fetch(API_BASE, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalEquipo();
-                    cargarActivos();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al guardar', 'error');
-                }
-            })
-            .catch(error => {
-                mostrarNotificacion('Error al guardar el equipo', 'error');
-            });
-        });
-        
-        document.getElementById('formMantenimiento')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const btnSubmit = this.querySelector('button[type="submit"]');
-            const textoOriginal = btnSubmit.innerHTML;
-            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-            btnSubmit.disabled = true;
-            
-            const formData = new FormData(this);
-            
-            fetch(`${API_BASE}/mantenimientos`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                btnSubmit.innerHTML = textoOriginal;
-                btnSubmit.disabled = false;
-                
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalMantenimiento();
-                    cargarActivos();
-                    cargarMantenimientos();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al registrar', 'error');
-                }
-            })
-            .catch(error => {
-                btnSubmit.innerHTML = textoOriginal;
-                btnSubmit.disabled = false;
-                mostrarNotificacion('Error al registrar mantenimiento', 'error');
-            });
-        });
-        
-        document.getElementById('formCombustible')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const btnSubmit = this.querySelector('button[type="submit"]');
-            const textoOriginal = btnSubmit.innerHTML;
-            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-            btnSubmit.disabled = true;
-            
-            const formData = new FormData(this);
-            
-            fetch(`${API_BASE}/combustible/consumo`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                btnSubmit.innerHTML = textoOriginal;
-                btnSubmit.disabled = false;
-                
-                if (result.success) {
-                    mostrarNotificacion(result.message, 'success');
-                    cerrarModalCombustible();
-                    cargarCombustible();
-                } else {
-                    mostrarNotificacion(result.message || 'Error al registrar', 'error');
-                }
-            })
-            .catch(error => {
-                btnSubmit.innerHTML = textoOriginal;
-                btnSubmit.disabled = false;
-                mostrarNotificacion('Error al registrar consumo de combustible', 'error');
-            });
-        });
-        
-        // Cerrar modales al hacer clic fuera
-        window.addEventListener('click', function(e) {
-            const modalAsignacion = document.getElementById('modalAsignarEquipo');
-            const modalEquipo = document.getElementById('modalEquipo');
-            const modalMantenimiento = document.getElementById('modalMantenimiento');
-            const modalCombustible = document.getElementById('modalCombustible');
-            
-            if (e.target === modalAsignacion) cerrarModalAsignacion();
-            if (e.target === modalEquipo) cerrarModalEquipo();
-            if (e.target === modalMantenimiento) cerrarModalMantenimiento();
-            if (e.target === modalCombustible) cerrarModalCombustible();
+    modalesDetalle.forEach(id => {
+        const m = document.getElementById(id);
+        if (m && e.target === m) { m.remove(); document.body.style.overflow = 'auto'; }
+    });
+    modalesForm.forEach(id => {
+        const m = document.getElementById(id);
+        if (m && e.target === m) { m.style.display = 'none'; document.body.style.overflow = 'auto'; }
+    });
+});
+
+/* =====================================================================
+   INICIALIZACIÓN
+   ===================================================================== */
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Maquinaria Blade inicializado');
+
+    cargarCatalogos().then(() => {
+        cargarActivos();
+        cargarAsignacionesActivas();
+        cargarMantenimientos();
+        cargarCombustible();
+    });
+
+    /* ---------- FILTRO PROYECTOS ---------- */
+    document.getElementById('btnFiltroProyectos')?.addEventListener('click', e => { e.stopPropagation();
+        const d = document.getElementById('filtroProyectosDropdown');
+        d.style.display = d.style.display === 'block' ? 'none' : 'block';
+    });
+    document.getElementById('btnCerrarFiltro')?.addEventListener('click', e => { e.stopPropagation(); document.getElementById('filtroProyectosDropdown').style.display = 'none'; });
+    document.getElementById('btnSeleccionarTodos')?.addEventListener('click', e => { e.stopPropagation();
+        document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').forEach(c => c.checked = true);
+        actualizarLabelProyectos(); currentFilters.page = 1; cargarActivos();
+    });
+    document.getElementById('btnDeseleccionarTodos')?.addEventListener('click', e => { e.stopPropagation();
+        document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]').forEach(c => c.checked = false);
+        actualizarLabelProyectos(); currentFilters.page = 1; cargarActivos();
+    });
+    document.getElementById('filtroProyectosBuscar')?.addEventListener('input', function() {
+        const t = this.value.toLowerCase().trim();
+        document.querySelectorAll('#filtroProyectosLista label').forEach(l => {
+            l.style.display = l.textContent.toLowerCase().includes(t) ? 'flex' : 'none';
         });
     });
+    document.getElementById('filtroProyectosLista')?.addEventListener('change', () => { actualizarLabelProyectos(); currentFilters.page = 1; cargarActivos(); });
+
+    /* ---------- TABS ---------- */
+    document.querySelectorAll('.maquinaria-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.maquinaria-tab').forEach(t => {
+                t.classList.remove('active'); t.style.background = '#e9ecef'; t.style.color = '#495057';
+            });
+            this.classList.add('active'); this.style.background = '#083CAE'; this.style.color = 'white';
+
+            currentTab = this.dataset.tab;
+            document.querySelectorAll('.maquinaria-content').forEach(c => c.style.display = 'none');
+            const target = document.getElementById(`tab-${currentTab}`);
+            if (target) target.style.display = 'block';
+
+            if (currentTab === 'asignacion') cargarAsignacionesActivas();
+            if (currentTab === 'mantenimiento') cargarMantenimientos();
+            if (currentTab === 'combustible') cargarCombustible();
+        });
+    });
+
+    /* ---------- FILTROS INVENTARIO ---------- */
+    document.getElementById('selectorTipo')?.addEventListener('change', function() { currentFilters.tipo = this.value; currentFilters.page = 1; cargarActivos(); });
+    document.getElementById('selectorStatus')?.addEventListener('change', function() { currentFilters.estatus = this.value; currentFilters.page = 1; cargarActivos(); });
+    let bTimeout;
+    document.getElementById('buscador')?.addEventListener('input', function() {
+        clearTimeout(bTimeout);
+        bTimeout = setTimeout(() => { currentFilters.busqueda = this.value; currentFilters.page = 1; cargarActivos(); }, 400);
+    });
+
+    /* ---------- FILTROS MANTENIMIENTO ---------- */
+    document.getElementById('filtroMantEstatus')?.addEventListener('change', cargarMantenimientos);
+    document.getElementById('filtroMantTipo')?.addEventListener('change', cargarMantenimientos);
+    let mTimeout;
+    document.getElementById('filtroMantBusqueda')?.addEventListener('input', () => { clearTimeout(mTimeout); mTimeout = setTimeout(cargarMantenimientos, 400); });
+    document.getElementById('btnLimpiarFiltrosMant')?.addEventListener('click', () => {
+        document.getElementById('filtroMantEstatus').value = '';
+        document.getElementById('filtroMantTipo').value = '';
+        document.getElementById('filtroMantBusqueda').value = '';
+        cargarMantenimientos();
+    });
+
+    /* ---------- FILTROS COMBUSTIBLE ---------- */
+    document.getElementById('btnFiltrarCombustible')?.addEventListener('click', cargarCombustible);
+    document.getElementById('selectorCombustibleEquipo')?.addEventListener('change', cargarCombustible);
+    document.getElementById('fechaCombustibleInicio')?.addEventListener('change', cargarCombustible);
+    document.getElementById('fechaCombustibleFin')?.addEventListener('change', cargarCombustible);
+    document.getElementById('btnLimpiarFiltrosComb')?.addEventListener('click', () => {
+        document.getElementById('selectorCombustibleEquipo').value = '';
+        document.getElementById('fechaCombustibleInicio').value = '';
+        document.getElementById('fechaCombustibleFin').value = '';
+        cargarCombustible();
+    });
+
+    /* ---------- BOTONES PRINCIPALES ---------- */
+    document.getElementById('btnAsignarEquipo')?.addEventListener('click', () => abrirModalAsignacion());
+    document.getElementById('btnNuevaAsignacion')?.addEventListener('click', () => abrirModalAsignacion());
+    document.getElementById('btnAgregarEquipo')?.addEventListener('click', abrirModalNuevoEquipo);
+    document.getElementById('btnRegistrarMantenimiento')?.addEventListener('click', abrirModalNuevoMantenimiento);
+    document.getElementById('btnRegistrarCarga')?.addEventListener('click', abrirModalNuevoCombustible);
+    document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
+
+    /* ---------- CHECKBOX PROGRAMAR ---------- */
+    document.getElementById('chkProgramarMant')?.addEventListener('change', function() {
+        document.getElementById('modoMantenimiento').value = this.checked ? 'programar' : 'registrar';
+    });
+
+    /* ---------- CAMBIO DE CONDICIÓN EN DEVOLUCIÓN ---------- */
+    document.getElementById('devolverCondicion')?.addEventListener('change', function() {
+        const condLower = (this.value || '').toLowerCase();
+        const bloque = document.getElementById('devolverReporteDanos');
+        if (bloque) {
+            bloque.style.display = (condLower === 'malo') ? 'block' : 'none';
+        }
+    });
+
+    /* ---------- PAGINACIÓN ---------- */
+    document.getElementById('btnPrimera')?.addEventListener('click', () => { if (currentPage > 1) { currentFilters.page = 1; cargarActivos(); } });
+    document.getElementById('btnAnterior')?.addEventListener('click', () => { if (currentPage > 1) { currentFilters.page = currentPage - 1; cargarActivos(); } });
+    document.getElementById('btnSiguiente')?.addEventListener('click', () => { if (currentPage < totalPages) { currentFilters.page = currentPage + 1; cargarActivos(); } });
+    document.getElementById('btnUltima')?.addEventListener('click', () => { if (currentPage < totalPages) { currentFilters.page = totalPages; cargarActivos(); } });
+
+    /* ---------- SUBMIT FORMS ---------- */
+    // Asignar equipo
+    document.getElementById('formAsignarEquipo')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const activoId = document.getElementById('modalAsignacionEquipo')?.value;
+        if (!activoId) {
+            mostrarNotificacion('Debes seleccionar un equipo', 'warning');
+            return;
+        }
+
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Asignando...';
+        try {
+            const fd = new FormData(this);
+            console.log('📤 Enviando asignación:', Object.fromEntries(fd));
+            const r = await fetch(`${API_BASE}/asignar`, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+                body: fd
+            });
+            const result = await r.json();
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cerrarModal('modalAsignarEquipo');
+                cargarActivos();
+                cargarAsignacionesActivas();
+                cargarCatalogos();
+            } else {
+                console.error('❌ Error del servidor:', result);
+                mostrarNotificacion(result.message || 'Error al asignar', 'error');
+            }
+        } catch (err) {
+            console.error('❌ Error fetch:', err);
+            mostrarNotificacion('Error al asignar', 'error');
+        }
+        finally { btn.disabled = false; btn.innerHTML = txt; }
+    });
+
+    // Editar asignación
+    document.getElementById('formEditarAsignacion')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('editAsignacionId').value;
+        if (!id) {
+            mostrarNotificacion('ID de asignación no válido', 'error');
+            return;
+        }
+
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+        try {
+            const fd = new FormData(this);
+            fd.append('_method', 'PUT');
+
+            const r = await fetch(`${API_BASE}/asignaciones/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+
+            const result = await r.json();
+
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Asignación actualizada', 'success');
+                cerrarModal('modalEditarAsignacion');
+                cargarAsignacionesActivas();
+                cargarActivos();
+            } else {
+                console.error('❌ Error:', result);
+                mostrarNotificacion(result.message || 'Error al actualizar', 'error');
+            }
+        } catch (err) {
+            console.error('❌ Error fetch:', err);
+            mostrarNotificacion('Error al actualizar asignación', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = txt;
+        }
+    });
+
+    // Devolver equipo
+    document.getElementById('formDevolverEquipo')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('devolverAsignacionId').value;
+        if (!id) {
+            mostrarNotificacion('ID de asignación no válido', 'error');
+            return;
+        }
+
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Devolviendo...';
+
+        try {
+            const fd = new FormData(this);
+
+            const r = await fetch(`${API_BASE}/${id}/devolver`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF,
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+
+            const result = await r.json();
+
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Equipo devuelto', 'success');
+                cerrarModal('modalDevolverEquipo');
+                cargarAsignacionesActivas();
+                cargarActivos();
+                cargarCatalogos();
+            } else {
+                console.error('❌ Error:', result);
+                mostrarNotificacion(result.message || 'Error al devolver', 'error');
+            }
+        } catch (err) {
+            console.error('❌ Error fetch:', err);
+            mostrarNotificacion('Error al devolver el equipo', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = txt;
+        }
+    });
+
+    // Equipo (crear / editar)
+    document.getElementById('formEquipo')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const editId = document.getElementById('editEquipoId').value;
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        try {
+            const fd = new FormData(this);
+            let url = API_BASE; let method = 'POST';
+            if (editId) { url = `${API_BASE}/${editId}`; fd.append('_method', 'PUT'); }
+            const r = await fetch(url, { method, headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' }, body: fd });
+            const result = await r.json();
+            if (result.success) {
+                mostrarNotificacion(result.message, 'success');
+                cerrarModal('modalNuevoEquipo');
+                cargarActivos();
+                cargarCatalogos();
+            } else mostrarNotificacion(result.message || 'Error', 'error');
+        } catch (err) { mostrarNotificacion('Error al guardar', 'error'); }
+        finally { btn.disabled = false; btn.innerHTML = txt; }
+    });
+
+    // Mantenimiento
+    document.getElementById('formMantenimiento')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const editId = document.getElementById('editMantId').value;
+        const modo = document.getElementById('modoMantenimiento').value;
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        try {
+            const fd = new FormData(this);
+            let url, method = 'POST';
+            if (editId) { url = `${API_BASE}/mantenimiento/${editId}`; fd.append('_method', 'PUT'); }
+            else { url = `${API_BASE}/mantenimiento`; fd.append('modo', modo); }
+
+            const r = await fetch(url, { method, headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' }, body: fd });
+            const result = await r.json();
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Guardado', 'success');
+                cerrarModal('modalMantenimiento');
+                cargarActivos();
+                cargarMantenimientos();
+                cargarCatalogos();
+            } else mostrarNotificacion(result.message || 'Error', 'error');
+        } catch (err) { mostrarNotificacion('Error al guardar', 'error'); }
+        finally { btn.disabled = false; btn.innerHTML = txt; }
+    });
+
+    // Cerrar mantenimiento
+    document.getElementById('formCerrarMantenimiento')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const id = document.getElementById('cerrarMantId').value;
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Finalizando...';
+        try {
+            const r = await fetch(`${API_BASE}/mantenimiento/${id}/cerrar`, {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' },
+                body: new FormData(this)
+            });
+            const result = await r.json();
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Finalizado', 'success');
+                cerrarModal('modalCerrarMantenimiento');
+                cargarMantenimientos();
+                cargarActivos();
+                cargarCatalogos();
+            } else mostrarNotificacion(result.message || 'Error', 'error');
+        } catch (err) { mostrarNotificacion('Error', 'error'); }
+        finally { btn.disabled = false; btn.innerHTML = txt; }
+    });
+
+    // Combustible
+    document.getElementById('formCombustible')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const editId = document.getElementById('editCombId').value;
+        const btn = this.querySelector('button[type="submit"]');
+        const txt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+        try {
+            const fd = new FormData(this);
+            let url, method = 'POST';
+            if (editId) { url = `${API_BASE}/combustible/${editId}`; fd.append('_method', 'PUT'); }
+            else { url = `${API_BASE}/combustible/consumo`; }
+
+            const r = await fetch(url, { method, headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' }, body: fd });
+            const result = await r.json();
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Guardado', 'success');
+                cerrarModal('modalCombustible');
+                cargarCombustible();
+            } else mostrarNotificacion(result.message || 'Error', 'error');
+        } catch (err) { mostrarNotificacion('Error', 'error'); }
+        finally { btn.disabled = false; btn.innerHTML = txt; }
+    });
+});
+
+/* =====================================================================
+   EXPORTAR EXCEL
+   ===================================================================== */
+async function exportarExcel() {
+    try {
+        const p = new URLSearchParams();
+        p.append('busqueda', currentFilters.busqueda || '');
+        p.append('tipo', currentFilters.tipo || '');
+        p.append('estatus', currentFilters.estatus || '');
+        getProyectosSeleccionados().forEach(id => p.append('proyecto_id[]', id));
+
+        const r = await fetch(`${API_BASE}/exportar?${p}`);
+        const result = await r.json();
+
+        if (result.success && result.data) {
+            const { headers, rows } = result.data;
+            if (!headers?.length || !rows?.length) { mostrarNotificacion('Sin datos', 'warning'); return; }
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Maquinaria_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            mostrarNotificacion('Exportado', 'success');
+        }
+    } catch (e) { mostrarNotificacion('Error al exportar', 'error'); }
+}
 </script>
 @endsection

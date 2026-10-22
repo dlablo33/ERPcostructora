@@ -74,18 +74,22 @@ class Activo extends Model
         'equipo' => 'Equipo'
     ];
 
+    /**
+     * ✅ Valores EXACTOS que acepta el constraint de la tabla `activos`:
+     *   CHECK (estatus IN ('Disponible', 'Asignado', 'En mantenimiento', 'Dado de baja'))
+     */
     const ESTATUS = [
-        'Disponible' => 'Disponible',
-        'Asignado' => 'Asignado', 
+        'Disponible'       => 'Disponible',
+        'Asignado'         => 'Asignado',
         'En mantenimiento' => 'En Mantenimiento',
-        'Dado de baja' => 'Dado de Baja'
+        'Dado de baja'     => 'Dado de Baja',
     ];
 
     const ESTATUS_BADGE = [
-        'activo' => 'badge-activo',
-        'inactivo' => 'badge-inactivo',
-        'mantenimiento' => 'badge-mantenimiento',
-        'baja' => 'badge-baja'
+        'Disponible'       => 'badge-disponible',
+        'Asignado'         => 'badge-asignado',
+        'En mantenimiento' => 'badge-mantenimiento',
+        'Dado de baja'     => 'badge-baja',
     ];
 
     const ESTADO_GENERAL = [
@@ -151,7 +155,7 @@ class Activo extends Model
     public function asignacionActiva()
     {
         return $this->hasOne(AsignacionActivo::class)
-            ->whereIn('estatus', ['activa', 'asignado'])
+            ->whereIn('estatus', ['Activa', 'Parcial'])
             ->latest('fecha_salida');
     }
     
@@ -177,11 +181,82 @@ class Activo extends Model
         return $this->hasMany(CombustibleActivo::class);
     }
     
+    // ==================== MUTATORS ====================
+
+    /**
+     * ✅ FIX CRÍTICO: normaliza el estatus al formato EXACTO que exige
+     * el constraint de la tabla `activos`:
+     *
+     *   CHECK (estatus IN (
+     *       'Disponible',
+     *       'Asignado',
+     *       'En mantenimiento',
+     *       'Dado de baja'
+     *   ))
+     *
+     * NUNCA mapear a 'Activa'/'Devuelta'/'Parcial' — esos valores son del
+     * constraint de `asignaciones_activos` y aquí rompen el INSERT/UPDATE.
+     */
+    public function setEstatusAttribute($value)
+    {
+        $mapa = [
+            // variantes minúsculas → valor canónico de `activos`
+            'activo'             => 'Disponible',
+            'activa'             => 'Disponible',
+            'disponible'         => 'Disponible',
+            'devuelto'           => 'Disponible',
+            'devuelta'           => 'Disponible',
+            'asignado'           => 'Asignado',
+            'asignada'           => 'Asignado',
+            'parcial'            => 'Asignado',
+            'mantenimiento'      => 'En mantenimiento',
+            'en mantenimiento'   => 'En mantenimiento',
+            'en_mantenimiento'   => 'En mantenimiento',
+            'inactivo'           => 'Dado de baja',
+            'baja'               => 'Dado de baja',
+            'dado de baja'       => 'Dado de baja',
+            'dado_de_baja'       => 'Dado de baja',
+        ];
+
+        $key = strtolower(trim($value ?? 'disponible'));
+
+        // Si el valor ya viene canónico (ej. 'Disponible'), lo respetamos
+        if (in_array($value, ['Disponible', 'Asignado', 'En mantenimiento', 'Dado de baja'], true)) {
+            $this->attributes['estatus'] = $value;
+            return;
+        }
+
+        $this->attributes['estatus'] = $mapa[$key] ?? 'Disponible';
+    }
+
+    /**
+     * ✅ Devuelve el estatus tal cual está en la BD.
+     * NO lo convertimos a minúsculas aquí porque necesitamos los valores
+     * canónicos con mayúscula para las comparaciones contra el constraint.
+     */
+    public function getEstatusAttribute($value)
+    {
+        return $value ?? 'Disponible';
+    }
+
+    /**
+     * ✅ Normaliza el tipo_activo a minúsculas al guardar.
+     */
+    public function setTipoActivoAttribute($value)
+    {
+        $this->attributes['tipo_activo'] = strtolower(trim($value ?? 'equipo'));
+    }
+
+    /**
+     * ✅ Normaliza el estado_general a minúsculas al guardar.
+     */
+
+    
     // ==================== ACCESSORS ====================
 
     public function getTipoNombreAttribute(): string
     {
-        return self::TIPOS_ACTIVO[$this->tipo_activo] ?? $this->tipo_activo;
+        return self::TIPOS_ACTIVO[$this->tipo_activo] ?? ucfirst($this->tipo_activo ?? '');
     }
 
     public function getEstatusNombreAttribute(): string
@@ -194,9 +269,18 @@ class Activo extends Model
         return self::ESTATUS_BADGE[$this->estatus] ?? 'badge-estatus';
     }
 
+    /**
+     * ✅ Devuelve el estatus en minúsculas para comparaciones limpias en JS.
+     */
+    public function getEstatusNormalizadoAttribute(): string
+    {
+        return strtolower($this->estatus ?? 'disponible');
+    }
+
     public function getEstadoGeneralNombreAttribute(): string
     {
-        return self::ESTADO_GENERAL[$this->estado_general] ?? $this->estado_general;
+        $key = strtolower($this->estado_general ?? '');
+        return self::ESTADO_GENERAL[$key] ?? ucfirst($key);
     }
     
     public function getNombreCompletoAttribute()
@@ -204,14 +288,22 @@ class Activo extends Model
         return $this->codigo . ' - ' . $this->nombre;
     }
     
-    public function getEstaDisponibleAttribute()
+    /**
+     * ✅ Un activo está disponible si su estatus es 'Disponible' y NO tiene proyecto asignado.
+     */
+    public function getEstaDisponibleAttribute(): bool
     {
-        return $this->estatus === 'activo' && !$this->proyecto_asignado_id;
+        return $this->estatus === 'Disponible'
+            && is_null($this->proyecto_asignado_id);
     }
     
-    public function getEstaAsignadoAttribute()
+    /**
+     * ✅ Un activo está asignado si su estatus es 'Asignado' y tiene proyecto.
+     */
+    public function getEstaAsignadoAttribute(): bool
     {
-        return $this->estatus === 'activo' && $this->proyecto_asignado_id;
+        return $this->estatus === 'Asignado'
+            && !is_null($this->proyecto_asignado_id);
     }
 
     public function getDiasUltimoMantenimientoAttribute(): ?int
@@ -229,19 +321,30 @@ class Activo extends Model
     
     // ==================== SCOPES ====================
     
+    /**
+     * ✅ Scope de disponibles.
+     */
     public function scopeDisponibles($query)
     {
-        return $query->where('estatus', 'activo')->whereNull('proyecto_asignado_id');
+        return $query->where('estatus', 'Disponible')
+            ->whereNull('proyecto_asignado_id');
     }
     
+    /**
+     * ✅ Scope de asignados.
+     */
     public function scopeAsignados($query)
     {
-        return $query->where('estatus', 'activo')->whereNotNull('proyecto_asignado_id');
+        return $query->where('estatus', 'Asignado')
+            ->whereNotNull('proyecto_asignado_id');
     }
 
+    /**
+     * ✅ Scope en mantenimiento.
+     */
     public function scopeEnMantenimiento($query)
     {
-        return $query->where('estatus', 'mantenimiento');
+        return $query->where('estatus', 'En mantenimiento');
     }
     
     public function scopePorTipo($query, $tipo)
@@ -252,12 +355,31 @@ class Activo extends Model
         return $query;
     }
 
+    /**
+     * ✅ Scope por estatus: acepta variantes y las normaliza al valor canónico.
+     */
     public function scopeByEstatus($query, $estatus)
     {
-        if ($estatus) {
-            return $query->where('estatus', $estatus);
-        }
-        return $query;
+        if (!$estatus) return $query;
+
+        $mapa = [
+            'activo'            => 'Disponible',
+            'activa'            => 'Disponible',
+            'disponible'        => 'Disponible',
+            'asignado'          => 'Asignado',
+            'asignada'          => 'Asignado',
+            'mantenimiento'     => 'En mantenimiento',
+            'en mantenimiento'  => 'En mantenimiento',
+            'en_mantenimiento'  => 'En mantenimiento',
+            'baja'              => 'Dado de baja',
+            'dado de baja'      => 'Dado de baja',
+            'inactivo'          => 'Dado de baja',
+        ];
+
+        $key = strtolower(trim($estatus));
+        $valor = $mapa[$key] ?? $estatus;
+
+        return $query->where('estatus', $valor);
     }
 
     public function scopeByProyecto($query, $proyectoId)
@@ -272,11 +394,11 @@ class Activo extends Model
     {
         if ($termino) {
             return $query->where(function($q) use ($termino) {
-                $q->where('codigo', 'LIKE', "%{$termino}%")
-                  ->orWhere('nombre', 'LIKE', "%{$termino}%")
-                  ->orWhere('marca', 'LIKE', "%{$termino}%")
-                  ->orWhere('modelo', 'LIKE', "%{$termino}%")
-                  ->orWhere('serie', 'LIKE', "%{$termino}%");
+                $q->where('codigo', 'ILIKE', "%{$termino}%")
+                  ->orWhere('nombre', 'ILIKE', "%{$termino}%")
+                  ->orWhere('marca', 'ILIKE', "%{$termino}%")
+                  ->orWhere('modelo', 'ILIKE', "%{$termino}%")
+                  ->orWhere('serie', 'ILIKE', "%{$termino}%");
             });
         }
         return $query;
@@ -323,12 +445,22 @@ class Activo extends Model
         return $this->tipo_activo === 'herramienta';
     }
 
+    /**
+     * ✅ Cambia el estatus validando contra los valores canónicos.
+     */
     public function cambiarEstatus(string $nuevoEstatus): bool
     {
-        if (!array_key_exists($nuevoEstatus, self::ESTATUS)) {
-            return false;
-        }
-        $this->estatus = $nuevoEstatus;
+        $mapa = [
+            'activo'            => 'Disponible',
+            'disponible'        => 'Disponible',
+            'asignado'          => 'Asignado',
+            'mantenimiento'     => 'En mantenimiento',
+            'en mantenimiento'  => 'En mantenimiento',
+            'baja'              => 'Dado de baja',
+            'dado de baja'      => 'Dado de baja',
+        ];
+        $key = strtolower(trim($nuevoEstatus));
+        $this->estatus = $mapa[$key] ?? 'Disponible';
         return $this->save();
     }
 
@@ -341,7 +473,7 @@ class Activo extends Model
         $this->proyecto_asignado_id = $proyectoId;
         $this->fecha_asignacion = now();
         $this->responsable_asignado_id = $responsableId;
-        $this->estatus = 'activo';
+        $this->estatus = 'Asignado';
         return $this->save();
     }
 
@@ -350,6 +482,7 @@ class Activo extends Model
         $this->proyecto_asignado_id = null;
         $this->fecha_asignacion = null;
         $this->responsable_asignado_id = null;
+        $this->estatus = 'Disponible';
         return $this->save();
     }
     
@@ -391,4 +524,19 @@ class Activo extends Model
             }
         });
     }
+
+    public function setEstadoGeneralAttribute($value)
+{
+    $map = [
+        'excelente'     => 'Excelente',
+        'bueno'         => 'Bueno',
+        'regular'       => 'Regular',
+        'malo'          => 'Malo',
+        'en reparacion' => 'En reparacion',
+        'en_reparacion' => 'En reparacion',
+        'enreparacion'  => 'En reparacion',
+    ];
+    $key = strtolower(trim((string) $value));
+    $this->attributes['estado_general'] = $map[$key] ?? 'Bueno';
+}
 }

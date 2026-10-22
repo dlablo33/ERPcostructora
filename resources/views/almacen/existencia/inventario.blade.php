@@ -80,11 +80,11 @@
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <tr><td colspan="12" style="text-align: center;">Cargando...<\/td></tr>
+                            <tr><td colspan="12" style="text-align: center;">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Paginación -->
                 <div class="pagination-container" style="margin-top: 15px; display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
                     <button class="page-btn" id="btnPrimera" disabled><i class="fas fa-angle-double-left"></i></button>
@@ -107,16 +107,18 @@
     :root { --color-primary: #083CAE; }
     .table-container { border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; max-height: 500px; overflow-y: auto; }
     .table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .table th { background-color: var(--color-primary) !important; color: white; padding: 12px 8px; border: 1px solid #dee2e6; position: sticky; top: 0; }
-    .table td { padding: 10px 8px; border: 1px solid #dee2e6; }
+    .table th { background-color: var(--color-primary) !important; color: white; padding: 12px 8px; border: 1px solid #dee2e6; position: sticky; top: 0; z-index: 2; }
+    .table td { padding: 10px 8px; border: 1px solid #dee2e6; vertical-align: middle; }
     tbody tr:nth-child(even) { background-color: #f8f9fa; }
     tbody tr:hover { background-color: #e8f0fe; }
     .page-btn { padding: 5px 12px; border: 1px solid var(--color-primary); border-radius: 4px; background: white; cursor: pointer; color: var(--color-primary); }
     .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .badge-bajo-stock { background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; }
-    .badge-normal { background-color: #28a745; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; }
+    .badge-bajo-stock { background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; display: inline-block; white-space: nowrap; }
+    .badge-normal { background-color: #28a745; color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; display: inline-block; white-space: nowrap; }
     .btn-excel:hover { background-color: var(--color-primary) !important; color: white !important; }
     .ubicacion-tag { background-color: #e9ecef; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin: 2px; display: inline-block; }
+    .loading-cell { text-align: center; padding: 20px; color: #6c757d; }
+    .error-cell { text-align: center; padding: 20px; color: #dc3545; font-weight: 600; }
     @media (max-width: 768px) { div[style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; } }
 </style>
 
@@ -128,133 +130,249 @@ let perPage = 10;
 let totalPages = 1;
 
 document.addEventListener('DOMContentLoaded', function() {
-    cargarInventario();
     configurarEventos();
+    cargarInventario();
 });
 
+/**
+ * Carga el inventario desde el backend.
+ */
 function cargarInventario() {
+    const tbody = document.getElementById('tablaBody');
+    tbody.innerHTML = '<tr><td colspan="12" class="loading-cell">Cargando...</td></tr>';
+
     const proyectoId = document.getElementById('filtroProyecto')?.value || '';
     const articuloId = document.getElementById('filtroArticulo')?.value || '';
     const almacenId = document.getElementById('filtroAlmacen')?.value || '';
-    
-    let url = `/almacen/api/inventario-fisico?page=${currentPage}&per_page=${perPage}`;
-    if (proyectoId) url += `&proyecto_id=${proyectoId}`;
-    if (articuloId) url += `&articulo_id=${articuloId}`;
-    if (almacenId) url += `&almacen_id=${almacenId}`;
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                renderizarTabla(response.data);
-                totalPages = response.last_page;
-                actualizarPaginacion(response.current_page, response.last_page);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-}
 
-function renderizarTabla(data) {
-    const tbody = document.getElementById('tablaBody');
-    if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="12" style="text-align: center;">No hay inventario registrado</td></tr>';
-        return;
-    }
-    
-    tbody.innerHTML = '';
-    data.forEach((item, index) => {
-        const row = tbody.insertRow();
-        row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
-        
-        // Estado de stock
-        const stockStatus = item.bajo_stock 
-            ? '<span class="badge-bajo-stock">⚠️ Bajo Stock</span>' 
-            : '<span class="badge-normal">✓ Normal</span>';
-        
-        // Ubicaciones
-        let ubicacionesHtml = '';
-        if (item.ubicaciones && item.ubicaciones.length > 0) {
-            item.ubicaciones.forEach(ubi => {
-                ubicacionesHtml += `<span class="ubicacion-tag">${ubi.almacen_nombre}: ${ubi.cantidad}</span>`;
-            });
-        } else {
-            ubicacionesHtml = '---';
+    let url = `/almacen/api/inventario-fisico?page=${currentPage}&per_page=${perPage}`;
+    if (proyectoId) url += `&proyecto_id=${encodeURIComponent(proyectoId)}`;
+    if (articuloId) url += `&articulo_id=${encodeURIComponent(articuloId)}`;
+    if (almacenId) url += `&almacen_id=${encodeURIComponent(almacenId)}`;
+
+    // Timeout de seguridad: si en 20s no responde, mostramos error
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+    fetch(url, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        signal: controller.signal,
+        credentials: 'same-origin'
+    })
+    .then(async response => {
+        clearTimeout(timeoutId);
+
+        const text = await response.text();
+
+        // Si Laravel devolvió HTML (login, error 500, etc.)
+        if (!text) {
+            throw new Error('Respuesta vacía del servidor.');
         }
-        
-        row.insertCell(0).innerHTML = item.id;
-        row.insertCell(1).innerHTML = `<strong>${item.proyecto_codigo || ''}</strong><br><small>${item.proyecto_nombre || ''}</small>`;
-        row.insertCell(2).innerHTML = item.articulo_codigo;
-        row.insertCell(3).innerHTML = item.articulo_descripcion;
-        row.insertCell(4).innerHTML = `${item.cantidad_actual} ${item.unidad_medida || ''}`;
-        row.insertCell(5).innerHTML = `<strong>${item.disponible}</strong> ${item.unidad_medida || ''}`;
-        row.insertCell(6).innerHTML = item.cantidad_minima || 0;
-        row.insertCell(7).innerHTML = item.cantidad_maxima || 0;
-        row.insertCell(8).innerHTML = item.punto_reorden || 0;
-        row.insertCell(9).innerHTML = ubicacionesHtml;
-        row.insertCell(10).innerHTML = stockStatus;
-        row.insertCell(11).innerHTML = `<i class="fas fa-eye" onclick="verDetalle(${item.id})" style="color: var(--color-primary); cursor: pointer;"></i>`;
+
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.error('Respuesta no JSON:', text.substring(0, 500));
+            throw new Error('El servidor no devolvió JSON. Revisa rutas y logs.');
+        }
+    })
+    .then(response => {
+        if (response.success) {
+            renderizarTabla(response.data);
+            totalPages = response.last_page || 1;
+            actualizarPaginacion(response.current_page || 1, response.last_page || 1);
+        } else {
+            tbody.innerHTML = `<tr><td colspan="12" class="error-cell">${response.message || 'Error al cargar el inventario.'}</td></tr>`;
+        }
+    })
+    .catch(error => {
+        clearTimeout(timeoutId);
+        console.error('Error cargando inventario:', error);
+
+        let mensaje = error.message || 'Error desconocido';
+        if (error.name === 'AbortError') {
+            mensaje = 'La petición tardó demasiado. Verifica tu conexión o el servidor.';
+        }
+
+        tbody.innerHTML = `<tr><td colspan="12" class="error-cell">Error: ${mensaje}</td></tr>`;
     });
 }
 
-function actualizarPaginacion(currentPage, lastPage) {
-    document.getElementById('paginaActual').textContent = currentPage;
-    document.getElementById('totalPaginas').textContent = lastPage;
-    document.getElementById('btnPrimera').disabled = currentPage === 1;
-    document.getElementById('btnAnterior').disabled = currentPage === 1;
-    document.getElementById('btnSiguiente').disabled = currentPage === lastPage;
-    document.getElementById('btnUltima').disabled = currentPage === lastPage;
+/**
+ * Renderiza las filas de la tabla.
+ */
+function renderizarTabla(data) {
+    const tbody = document.getElementById('tablaBody');
+
+    if (!data || !data.length) {
+        tbody.innerHTML = '<tr><td colspan="12" class="loading-cell">No hay inventario registrado.</td></tr>';
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    data.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
+
+        const stockStatus = item.bajo_stock
+            ? '<span class="badge-bajo-stock">⚠️ Bajo Stock</span>'
+            : '<span class="badge-normal">✓ Normal</span>';
+
+        let ubicacionesHtml = '---';
+        if (item.ubicaciones && item.ubicaciones.length > 0) {
+            ubicacionesHtml = item.ubicaciones.map(ubi => {
+                const nombre = ubi.almacen_nombre || 'N/A';
+                return `<span class="ubicacion-tag">${nombre}: ${ubi.cantidad}</span>`;
+            }).join('');
+        }
+
+        row.innerHTML = `
+            <td>${item.id ?? ''}</td>
+            <td><strong>${item.proyecto_codigo ?? ''}</strong><br><small>${item.proyecto_nombre ?? ''}</small></td>
+            <td>${item.articulo_codigo ?? ''}</td>
+            <td>${item.articulo_descripcion ?? ''}</td>
+            <td>${item.cantidad_actual ?? 0} ${item.unidad_medida ?? ''}</td>
+            <td><strong>${item.disponible ?? 0}</strong> ${item.unidad_medida ?? ''}</td>
+            <td>${item.cantidad_minima ?? 0}</td>
+            <td>${item.cantidad_maxima ?? 0}</td>
+            <td>${item.punto_reorden ?? 0}</td>
+            <td>${ubicacionesHtml}</td>
+            <td>${stockStatus}</td>
+            <td>
+                <i class="fas fa-eye" style="color: var(--color-primary); cursor: pointer;" title="Ver detalle"></i>
+            </td>
+        `;
+
+        // Evento al ícono de detalle
+        row.querySelector('.fa-eye').addEventListener('click', () => verDetalle(item.id));
+
+        fragment.appendChild(row);
+    });
+
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
 }
 
+/**
+ * Actualiza los controles de paginación.
+ */
+function actualizarPaginacion(page, lastPage) {
+    document.getElementById('paginaActual').textContent = page;
+    document.getElementById('totalPaginas').textContent = lastPage;
+    document.getElementById('btnPrimera').disabled = page <= 1;
+    document.getElementById('btnAnterior').disabled = page <= 1;
+    document.getElementById('btnSiguiente').disabled = page >= lastPage;
+    document.getElementById('btnUltima').disabled = page >= lastPage;
+}
+
+/**
+ * Configura todos los eventos de la vista.
+ */
 function configurarEventos() {
     document.getElementById('btnActualizar')?.addEventListener('click', () => {
         currentPage = 1;
         cargarInventario();
     });
-    
-    document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarInventario(); });
-    document.getElementById('btnAnterior')?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; cargarInventario(); } });
-    document.getElementById('btnSiguiente')?.addEventListener('click', () => { currentPage++; cargarInventario(); });
-    document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = totalPages; cargarInventario(); });
-    document.getElementById('porPagina')?.addEventListener('change', (e) => { perPage = parseInt(e.target.value); currentPage = 1; cargarInventario(); });
-    
+
+    document.getElementById('btnPrimera')?.addEventListener('click', () => {
+        currentPage = 1;
+        cargarInventario();
+    });
+
+    document.getElementById('btnAnterior')?.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            cargarInventario();
+        }
+    });
+
+    document.getElementById('btnSiguiente')?.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            cargarInventario();
+        }
+    });
+
+    document.getElementById('btnUltima')?.addEventListener('click', () => {
+        currentPage = totalPages;
+        cargarInventario();
+    });
+
+    document.getElementById('porPagina')?.addEventListener('change', (e) => {
+        perPage = parseInt(e.target.value, 10) || 10;
+        currentPage = 1;
+        cargarInventario();
+    });
+
     document.getElementById('btnExportar')?.addEventListener('click', () => {
         const proyectoId = document.getElementById('filtroProyecto')?.value || '';
-        window.location.href = `/almacen/api/inventario-fisico/exportar?proyecto_id=${proyectoId}`;
+        const articuloId = document.getElementById('filtroArticulo')?.value || '';
+        const almacenId = document.getElementById('filtroAlmacen')?.value || '';
+
+        let url = `/almacen/api/inventario-fisico/exportar?`;
+        const params = [];
+        if (proyectoId) params.push(`proyecto_id=${encodeURIComponent(proyectoId)}`);
+        if (articuloId) params.push(`articulo_id=${encodeURIComponent(articuloId)}`);
+        if (almacenId) params.push(`almacen_id=${encodeURIComponent(almacenId)}`);
+
+        window.location.href = url + params.join('&');
     });
 }
 
+/**
+ * Muestra el detalle de un registro de inventario.
+ */
 window.verDetalle = function(id) {
-    fetch(`/almacen/api/inventario-fisico/${id}`)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                const item = response.data;
-                let detalles = `╔════════════════════════════════════════════════════════════╗\n`;
-                detalles += `║              DETALLE DE INVENTARIO #${id}                    ║\n`;
-                detalles += `╠════════════════════════════════════════════════════════════╣\n`;
-                detalles += `║ 📦 Artículo:    ${item.articulo_codigo}\n`;
-                detalles += `║ 📝 Descripción: ${item.articulo_descripcion}\n`;
-                detalles += `║ 🏗️ Proyecto:    ${item.proyecto_nombre}\n`;
-                detalles += `║ 📊 Stock actual: ${item.cantidad_actual} ${item.unidad_medida}\n`;
-                detalles += `║ ✅ Disponible:  ${item.disponible} ${item.unidad_medida}\n`;
-                detalles += `║ 📉 Mínimo:      ${item.cantidad_minima} ${item.unidad_medida}\n`;
-                detalles += `║ 📈 Máximo:      ${item.cantidad_maxima} ${item.unidad_medida}\n`;
-                detalles += `║ 🔔 Punto reorden: ${item.punto_reorden} ${item.unidad_medida}\n`;
-                detalles += `╠════════════════════════════════════════════════════════════╣\n`;
-                detalles += `║ 📍 UBICACIONES POR ALMACÉN:\n`;
-                item.ubicaciones.forEach(ubi => {
-                    detalles += `║    🏪 ${ubi.almacen_nombre}: ${ubi.cantidad} ${item.unidad_medida}\n`;
-                    if (ubi.ubicacion_especifica) detalles += `║       📍 Ubicación: ${ubi.ubicacion_especifica}\n`;
-                    if (ubi.lote) detalles += `║       🏷️ Lote: ${ubi.lote}\n`;
-                });
-                if (item.observaciones) {
-                    detalles += `╠════════════════════════════════════════════════════════════╣\n`;
-                    detalles += `║ 💬 Observaciones: ${item.observaciones}\n`;
-                }
-                detalles += `╚════════════════════════════════════════════════════════════╝`;
-                alert(detalles);
-            }
-        });
+    fetch(`/almacen/api/inventario-fisico/${id}`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (!response.success) {
+            alert(response.message || 'No se pudo cargar el detalle.');
+            return;
+        }
+
+        const item = response.data;
+
+        let detalles = '';
+        detalles += `📦 Artículo: ${item.articulo_codigo} - ${item.articulo_descripcion}\n`;
+        detalles += `🏗️ Proyecto: ${item.proyecto_nombre}\n`;
+        detalles += `📊 Stock actual: ${item.cantidad_actual} ${item.unidad_medida}\n`;
+        detalles += `✅ Disponible: ${item.disponible} ${item.unidad_medida}\n`;
+        detalles += `📉 Mínimo: ${item.cantidad_minima} ${item.unidad_medida}\n`;
+        detalles += `📈 Máximo: ${item.cantidad_maxima} ${item.unidad_medida}\n`;
+        detalles += `🔔 Punto reorden: ${item.punto_reorden} ${item.unidad_medida}\n`;
+        detalles += `\n📍 UBICACIONES POR ALMACÉN:\n`;
+
+        if (item.ubicaciones && item.ubicaciones.length > 0) {
+            item.ubicaciones.forEach(ubi => {
+                detalles += `   🏪 ${ubi.almacen_nombre}: ${ubi.cantidad} ${item.unidad_medida}\n`;
+                if (ubi.ubicacion_especifica) detalles += `      📍 Ubicación: ${ubi.ubicacion_especifica}\n`;
+                if (ubi.lote) detalles += `      🏷️ Lote: ${ubi.lote}\n`;
+            });
+        } else {
+            detalles += '   (Sin ubicaciones registradas)\n';
+        }
+
+        if (item.observaciones) {
+            detalles += `\n💬 Observaciones: ${item.observaciones}\n`;
+        }
+
+        alert(detalles);
+    })
+    .catch(error => {
+        console.error('Error al obtener detalle:', error);
+        alert('Error al obtener el detalle del inventario.');
+    });
 };
 </script>
 @endsection

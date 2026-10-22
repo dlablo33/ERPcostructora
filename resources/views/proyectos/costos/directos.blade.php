@@ -46,8 +46,6 @@
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
                     </div>
 
@@ -74,31 +72,54 @@
                             </div>
                         </div>
 
+                        <!-- Filtro de Categoría -->
                         <div>
-                            <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <select id="filtroCategoria" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 150px; height: 38px;">
+                                <option value="todos">Todas las categorías</option>
+                                <option value="materiales">📦 Materiales</option>
+                                <option value="mano_obra">👷 Mano de Obra</option>
+                                <option value="maquinaria">🚜 Maquinaria</option>
+                                <option value="subcontratos">🤝 Subcontratos</option>
+                                <option value="equipos">🔧 Equipos</option>
+                            </select>
+                        </div>
+
+                        <!-- Filtro de Estatus de Pago -->
+                        <div>
+                            <select id="filtroEstatusPago" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 150px; height: 38px;">
+                                <option value="">Todos los estatus</option>
+                                <option value="pagado">Pagado</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="programado">Programado</option>
+                                <option value="vencido">Vencido</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px; height: 38px;">
                         </div>
                         <div>
-                            <input type="date" id="fechaFin" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px; height: 38px;">
                         </div>
                         <div>
-                            <button id="btnAgregarCosto" style="background-color: #28a745; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: white;" title="Agregar nuevo costo directo">
+                            <button id="btnAgregarCosto" style="background-color: #28a745; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: white; height: 38px;" title="Agregar nuevo costo directo">
                                 <i class="fas fa-plus-circle"></i> Agregar Costo
                             </button>
                         </div>
                         <div>
-                            <button id="btnExcel" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;" title="Exportar todo">
+                            <button id="btnExcel" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE; height: 38px;" title="Exportar todo">
                                 <i class="fas fa-file-excel" style="color: #083CAE;"></i>
                                 Exportar
                             </button>
                         </div>
                         <div>
-                            <button id="btnColumnas" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;" title="Seleccionar columnas">
+                            <button id="btnColumnas" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE; height: 38px;" title="Seleccionar columnas">
                                 <i class="fas fa-columns" style="color: #083CAE;"></i>
                             </button>
                         </div>
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                            <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px; height: 38px;">
                         </div>
                     </div>
                 </div>
@@ -148,7 +169,7 @@
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumSubtotal">$0.00</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumIva">$0.00</td>
                                 <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; background-color: #e9ecef; color: #000000;" id="sumTotal">$0.00</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="3"></td>
+                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: #e9ecef; color: #000000;" colspan="4"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -584,7 +605,7 @@
     .fila-grupo:hover { background-color: #e1f0ff !important; }
     .fila-grupo td:first-child i { transition: transform 0.2s; margin-right: 8px; }
     .fila-grupo:not(.expandido) td:first-child i { transform: rotate(-90deg); }
-    .fila-detalle { background-color: #ffffff; }
+    .fila-detalle { background-color: #ffffff !important; }
     .fila-detalle td { border-top: none !important; }
     .fila-detalle td:first-child { padding-left: 30px !important; }
     .drag-over #grupoColumnas { background-color: rgba(35, 120, 225, 0.1); border-radius: 4px; }
@@ -625,7 +646,6 @@
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     // ============================================
@@ -740,13 +760,30 @@
                 totalPages = pagination.last_page || 1;
             } else {
                 mostrarNotificacion(result.message || 'Error al cargar datos', 'error');
+                limpiarTablaEnError();
             }
         } catch (error) {
             console.error('[CostosDirectos] Error:', error);
             mostrarNotificacion('Error al cargar los costos: ' + error.message, 'error');
+            limpiarTablaEnError();
         } finally {
             mostrarLoading(false);
         }
+    }
+
+    /**
+     * Deja la tabla vacía y las estadísticas en 0 si falla el fetch
+     */
+    function limpiarTablaEnError() {
+        ultimosDatos = [];
+        renderizarTabla([]);
+        calcularTotales([]);
+        actualizarEstadisticas({
+            total_directos: 0,
+            total_materiales: 0,
+            total_mano_obra: 0,
+            total_maquinaria: 0
+        });
     }
 
     // ============================================
@@ -824,17 +861,21 @@
             if (cb) cb.checked = true;
         });
         actualizarLabelProyectos();
-        aplicarFiltroProyectos();
+        aplicarFiltrosGenerales();
     }
 
     function deseleccionarTodosProyectos() {
         const checkboxes = document.querySelectorAll('#filtroProyectosLista input[type="checkbox"]');
         checkboxes.forEach(cb => cb.checked = false);
         actualizarLabelProyectos();
-        aplicarFiltroProyectos();
+        aplicarFiltrosGenerales();
     }
 
-    function aplicarFiltroProyectos() {
+    /**
+     * Resetea a página 1 y recarga con los filtros actuales.
+     * Centraliza lo que antes se hacía repetido.
+     */
+    function aplicarFiltrosGenerales() {
         currentFilters.page = 1;
         cargarCostos();
     }
@@ -1077,7 +1118,6 @@
     function formatDate(dateString) {
         if (!dateString) return '-';
         try {
-            // Si viene como 'YYYY-MM-DD' o 'YYYY-MM-DD HH:MM:SS', parseo manual para evitar UTC shift
             const match = String(dateString).match(/^(\d{4})-(\d{2})-(\d{2})/);
             if (match) {
                 const [_, y, m, d] = match;
@@ -1101,13 +1141,15 @@
     }
 
     function mostrarLoading(show) {
-        document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
     }
 
     function mostrarNotificacion(mensaje, tipo = 'success') {
         const notificacion = document.createElement('div');
         notificacion.className = `toast-notification ${tipo}`;
-        const icono = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+        let icono = 'fa-check-circle';
+        if (tipo === 'error') icono = 'fa-exclamation-circle';
+        else if (tipo === 'warning') icono = 'fa-exclamation-triangle';
         notificacion.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
         document.body.appendChild(notificacion);
         setTimeout(() => notificacion.remove(), 3500);
@@ -1533,7 +1575,6 @@
 
     function cerrarModal(id) {
         document.getElementById(id).style.display = 'none';
-        // Solo restaura scroll si no hay otro modal abierto
         const abiertos = ['modalAgregarCosto', 'modalEditarCosto', 'modalVerDetalle']
             .some(mid => document.getElementById(mid).style.display === 'flex');
         if (!abiertos) document.body.style.overflow = 'auto';
@@ -1595,7 +1636,7 @@
             if (response.ok && result.success) {
                 mostrarNotificacion(result.message || 'Costo creado', 'success');
                 cerrarModalAgregar();
-                currentFilters.page = 1; // ← clave: ir a pág 1 para ver el recién creado
+                currentFilters.page = 1;
                 await cargarCostos();
             } else {
                 mostrarNotificacion(result.message || 'Error al guardar', 'error');
@@ -1677,7 +1718,7 @@
         setupDragAndDrop();
 
         // Primero catálogos (para que el dropdown de proyectos esté listo),
-        // luego la tabla. Así evitamos que un filtro se aplique sin opciones.
+        // luego la tabla.
         await cargarCatalogos();
         await cargarCostos();
 
@@ -1710,7 +1751,7 @@
         document.getElementById('filtroProyectosLista')?.addEventListener('change', function(e) {
             if (e.target.type === 'checkbox') {
                 actualizarLabelProyectos();
-                aplicarFiltroProyectos();
+                aplicarFiltrosGenerales();
             }
         });
 
@@ -1728,21 +1769,28 @@
             const valor = e.target.value;
             buscadorTimeout = setTimeout(() => {
                 currentFilters.busqueda = valor;
-                currentFilters.page = 1;
-                cargarCostos();
+                aplicarFiltrosGenerales();
             }, 300);
         });
 
         document.getElementById('fechaInicio')?.addEventListener('change', (e) => {
             currentFilters.fecha_inicio = e.target.value;
-            currentFilters.page = 1;
-            cargarCostos();
+            aplicarFiltrosGenerales();
         });
 
         document.getElementById('fechaFin')?.addEventListener('change', (e) => {
             currentFilters.fecha_fin = e.target.value;
-            currentFilters.page = 1;
-            cargarCostos();
+            aplicarFiltrosGenerales();
+        });
+
+        document.getElementById('filtroCategoria')?.addEventListener('change', (e) => {
+            currentFilters.categoria = e.target.value || 'todos';
+            aplicarFiltrosGenerales();
+        });
+
+        document.getElementById('filtroEstatusPago')?.addEventListener('change', (e) => {
+            currentFilters.estatus_pago = e.target.value || '';
+            aplicarFiltrosGenerales();
         });
 
         // --- Botones principales ---
@@ -1807,7 +1855,6 @@
                 expandedGroups.add(grupoId);
                 filaGrupo.classList.add('expandido');
             }
-            // Re-render con los datos que ya tenemos en memoria
             renderizarTabla(ultimosDatos);
         });
     });

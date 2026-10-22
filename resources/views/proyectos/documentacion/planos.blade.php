@@ -610,6 +610,45 @@
         let totalPlanos = 0;
 
         // ════════════════════════════════════════════════════════════════
+        // ✅ FIX: FUNCIÓN PARA RESETEAR EL FORMULARIO DE SUBIDA
+        // Limpia todos los campos del modal para evitar que se queden
+        // los datos del registro anterior al volver a abrirlo.
+        // ════════════════════════════════════════════════════════════════
+        function resetearFormularioSubida() {
+            // Selects y campos de texto
+            const modalTipoDoc = document.getElementById('modalTipoDoc');
+            const modalProyectoDoc = document.getElementById('modalProyectoDoc');
+            const modalNumeroDoc = document.getElementById('modalNumeroDoc');
+            const modalNombreDoc = document.getElementById('modalNombreDoc');
+            const modalDisciplinaDoc = document.getElementById('modalDisciplinaDoc');
+            const modalFechaDoc = document.getElementById('modalFechaDoc');
+            const modalVersionDoc = document.getElementById('modalVersionDoc');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const dropZone = document.getElementById('dropZone');
+
+            if (modalTipoDoc) modalTipoDoc.value = '';
+            if (modalProyectoDoc) modalProyectoDoc.value = '';
+            if (modalNumeroDoc) modalNumeroDoc.value = '';
+            if (modalNombreDoc) modalNombreDoc.value = '';
+            if (modalDisciplinaDoc) modalDisciplinaDoc.value = '';
+            if (modalFechaDoc) modalFechaDoc.value = new Date().toISOString().split('T')[0];
+            if (modalVersionDoc) modalVersionDoc.value = 'v1.0';
+
+            // Resetear archivo
+            if (fileInput) fileInput.value = '';
+            if (fileInfo) fileInfo.style.display = 'none';
+            if (fileName) fileName.textContent = '';
+            if (fileSize) fileSize.textContent = '';
+
+            // Quitar clase drag-over si quedó activa
+            if (dropZone) dropZone.classList.remove('drag-over');
+        }
+        // ✅ FIN FIX
+
+        // ════════════════════════════════════════════════════════════════
         // FUNCIONES DE CARGA DE DATOS
         // ════════════════════════════════════════════════════════════════
 
@@ -895,7 +934,6 @@
             const total = pagination.total || 0;
             const perPage = pagination.per_page || 10;
             const current = pagination.current_page || 1;
-            const last = pagination.last_page || 1;
             
             const inicio = ((current - 1) * perPage) + 1;
             const fin = Math.min(current * perPage, total);
@@ -911,7 +949,6 @@
             const total = pagination.total || 0;
             const perPage = pagination.per_page || 12;
             const current = pagination.current_page || 1;
-            const last = pagination.last_page || 1;
             
             const inicio = ((current - 1) * perPage) + 1;
             const fin = Math.min(current * perPage, total);
@@ -1336,8 +1373,9 @@
             }, 500);
         });
 
-        // Botones
+        // ✅ FIX: Botón subir - limpiar formulario ANTES de abrir
         document.getElementById('btnSubirDocumento')?.addEventListener('click', function() {
+            resetearFormularioSubida();
             document.getElementById('modalSubirDocumento').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
@@ -1410,12 +1448,17 @@
 
         // Modal Subir Documento
         const modalSubir = document.getElementById('modalSubirDocumento');
+
+        // ✅ FIX: Cerrar modal - limpiar formulario
         document.getElementById('btnCerrarModalSubir')?.addEventListener('click', function() {
+            resetearFormularioSubida();
             modalSubir.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
 
+        // ✅ FIX: Cancelar - limpiar formulario
         document.getElementById('btnCancelarSubir')?.addEventListener('click', function() {
+            resetearFormularioSubida();
             modalSubir.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
@@ -1470,6 +1513,7 @@
             fileInfo.style.display = 'block';
         }
 
+        // ✅ FIX: Subir archivo - limpiar formulario tras éxito
         document.getElementById('btnSubirArchivo')?.addEventListener('click', async function() {
             const tipo = document.getElementById('modalTipoDoc').value;
             const proyectoId = document.getElementById('modalProyectoDoc').value;
@@ -1508,6 +1552,8 @@
 
                 if (result.success) {
                     alert('Documento subido correctamente');
+                    // ✅ FIX: Limpiar formulario tras subida exitosa
+                    resetearFormularioSubida();
                     modalSubir.style.display = 'none';
                     document.body.style.overflow = 'auto';
                     cargarTodosLosDatos();
@@ -1520,9 +1566,10 @@
             }
         });
 
-        // Cerrar modales con click fuera
+        // ✅ FIX: Cerrar modal con click fuera - limpiar formulario
         window.addEventListener('click', function(event) {
             if (event.target === document.getElementById('modalSubirDocumento')) {
+                resetearFormularioSubida();
                 document.getElementById('modalSubirDocumento').style.display = 'none';
                 document.body.style.overflow = 'auto';
             }

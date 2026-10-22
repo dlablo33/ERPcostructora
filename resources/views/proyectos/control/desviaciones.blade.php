@@ -15,31 +15,24 @@
             <div class="card-body p-4">
                 <!-- 4 CUADROS DE DESVIACIONES CENTRADOS CON TEXTO EN NEGRO -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
-                    <!-- Cuadro 1: Desviación en Costo -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Desviación Costo</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="desviacionCosto">$0</div>
                         </div>
                     </div>
-                    
-                    <!-- Cuadro 2: Desviación en Tiempo -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Desviación Tiempo</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="desviacionTiempo">0 días</div>
                         </div>
                     </div>
-                    
-                    <!-- Cuadro 3: CPI (Índice de Costo) -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">CPI</div>
                             <div style="color: #000000; font-size: 36px; font-weight: bold; line-height: 1.2;" id="cpi">1.00</div>
                         </div>
                     </div>
-                    
-                    <!-- Cuadro 4: SPI (Índice de Tiempo) -->
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: 100%; min-height: 90px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                             <div style="color: #6c757d; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">SPI</div>
@@ -48,20 +41,16 @@
                     </div>
                 </div>
 
-                <!-- Barra de herramientas con agrupación y botones -->
+                <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <!-- Grupo de agrupación discreto en la esquina izquierda -->
-                    <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;">
+                    <!-- ✅ FIX: Zona de drop mejorada con estilos visuales claros -->
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 250px;" id="grupoAgrupacion">
+                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 32px; padding: 4px 8px; border: 2px dashed transparent; border-radius: 6px; transition: all 0.2s; align-items: center;">
                             <!-- Aquí se mostrarán las columnas agrupadas -->
                         </div>
                     </div>
                     
-                    <!-- Grupo de botones derecho -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <!-- Selector de proyecto -->
                         <div>
                             <select id="selectorProyecto" style="padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; min-width: 250px;">
                                 <option value="">Todos los proyectos</option>
@@ -71,17 +60,14 @@
                             </select>
                         </div>
 
-                        <!-- Date Inicio -->
                         <div>
                             <input type="date" id="fechaInicio" value="{{ date('Y-m-d', strtotime('-30 days')) }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
-                        <!-- Date Fin -->
                         <div>
                             <input type="date" id="fechaFin" value="{{ date('Y-m-d') }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
                         </div>
 
-                        <!-- Botón Exportar Excel -->
                         <div>
                             <button id="btnExcel" 
                                     style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #083CAE;"
@@ -90,7 +76,6 @@
                             </button>
                         </div>
 
-                        <!-- Botón Generar Reporte -->
                         <div>
                             <button id="btnReporte" 
                                     style="background-color: white; border: 1px solid #28a745; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #28a745;"
@@ -99,7 +84,6 @@
                             </button>
                         </div>
 
-                        <!-- Buscador -->
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
                             <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
@@ -107,7 +91,7 @@
                     </div>
                 </div>
 
-                <!-- Pestañas de vistas -->
+                <!-- Pestañas -->
                 <div style="display: flex; gap: 2px; margin-bottom: 20px; border-bottom: 2px solid #083CAE; overflow-x: auto; white-space: nowrap;">
                     <button class="vista-tab active" data-vista="resumen" style="padding: 12px 25px; background-color: #083CAE; color: white; border: none; border-radius: 8px 8px 0 0; font-weight: 600; font-size: 14px; cursor: pointer;">
                         <i class="fas fa-chart-pie"></i> Resumen de Desviaciones
@@ -120,7 +104,6 @@
                     </button>
                 </div>
 
-                <!-- Loader -->
                 <div id="loaderContainer" style="text-align: center; padding: 40px 20px; display: none;">
                     <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
                         <span class="visually-hidden">Cargando...</span>
@@ -128,14 +111,12 @@
                     <p style="color: #6c757d; margin-top: 10px;">Cargando datos...</p>
                 </div>
 
-                <!-- Mensaje "Sin datos" centrado -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #f8f9fa; border: 1px dashed #dee2e6; border-radius: 8px; margin: 20px 0; display: none;" id="sinDatosMensaje">
                     <i class="fas fa-chart-line" style="font-size: 48px; color: #ced4da; margin-bottom: 15px;"></i>
                     <h3 style="color: #6c757d; font-size: 18px; margin: 0;">Sin datos</h3>
                     <p style="color: #adb5bd; font-size: 14px; margin-top: 5px;">No hay registros de desviaciones</p>
                 </div>
 
-                <!-- Mensaje de Error -->
                 <div style="text-align: center; padding: 40px 20px; background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; margin: 20px 0; display: none;" id="errorMensaje">
                     <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ffc107; margin-bottom: 15px;"></i>
                     <h3 style="color: #856404; font-size: 18px; margin: 0;">Error al cargar datos</h3>
@@ -145,17 +126,14 @@
                     </button>
                 </div>
 
-                <!-- VISTA RESUMEN DE DESVIACIONES -->
+                <!-- VISTA RESUMEN -->
                 <div id="vistaResumen" class="vista-content active">
-                    <!-- Gráficos de resumen -->
                     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;">
-                        <!-- Gráfico de desviaciones por proyecto -->
                         <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px;">
                             <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 16px;">
                                 <i class="fas fa-chart-bar"></i> Desviaciones por Proyecto
                             </h4>
-                            <div id="graficoDesviaciones" style="height: 200px; display: flex; align-items: flex-end; gap: 15px; justify-content: center; padding: 10px 0;">
-                                <!-- Los gráficos se generarán dinámicamente -->
+                            <div id="graficoDesviaciones" style="height: 200px; display: flex; align-items: flex-end; gap: 15px; justify-content: center; padding: 10px 0; overflow-x: auto;">
                                 <div style="text-align: center; color: #6c757d; width: 100%;">
                                     <i class="fas fa-chart-bar" style="font-size: 32px;"></i>
                                     <p style="font-size: 14px; margin-top: 5px;">Cargando gráficos...</p>
@@ -168,7 +146,6 @@
                             </div>
                         </div>
 
-                        <!-- KPIs de desviaciones -->
                         <div style="background-color: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px;">
                             <h4 style="color: #083CAE; margin: 0 0 15px 0; font-size: 16px;">
                                 <i class="fas fa-chart-line"></i> Indicadores Clave
@@ -214,7 +191,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabla resumen por proyecto -->
                     <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 12px;">
                         <table class="table" style="width: 100%; font-size: 13px; border-collapse: collapse;">
                             <thead style="background-color: #f8f9fa;">
@@ -232,7 +208,6 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaResumenBody">
-                                <!-- Las filas se insertarán dinámicamente -->
                                 <tr>
                                     <td colspan="10" style="text-align: center; padding: 30px; color: #6c757d;">
                                         <i class="fas fa-spinner fa-spin"></i> Cargando datos...
@@ -243,70 +218,69 @@
                     </div>
                 </div>
 
-                <!-- VISTA DESVIACIONES EN COSTO -->
+                <!-- VISTA COSTOS -->
                 <div id="vistaCostos" class="vista-content" style="display: none;">
                     <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainerCostos">
                         <table class="table table-bordered" id="tablaCostos" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                             <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                                 <tr>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="proyecto">
+                                    <!-- ✅ FIX: Columnas con data-columna y evento de filtro clickeable -->
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="proyecto">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Proyecto</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="proyecto" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="partida">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="partida">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Partida</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="partida" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="categoria">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="categoria">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Categoría</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="categoria" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="presupuestado">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="presupuestado">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Presupuestado</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="presupuestado" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="real">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="real">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Real</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="real" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="desviacion">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="desviacion">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Desviación $</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="desviacion" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="porcentaje">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="porcentaje">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>% Desviación</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="porcentaje" data-tabla="costos"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="causa">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="causa">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Causa Principal</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="causa" data-tabla="costos"></i>
                                         </div>
                                     </th>
                                     <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Acciones</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                         </div>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody id="tablaBodyCostos">
-                                <!-- Las filas se insertarán dinámicamente con JavaScript -->
                                 <tr>
                                     <td colspan="9" style="text-align: center; padding: 30px; color: #6c757d;">
                                         <i class="fas fa-spinner fa-spin"></i> Cargando datos...
@@ -327,64 +301,62 @@
                     </div>
                 </div>
 
-                <!-- VISTA DESVIACIONES EN TIEMPO -->
+                <!-- VISTA TIEMPO -->
                 <div id="vistaTiempo" class="vista-content" style="display: none;">
                     <div class="table-responsive" style="border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainerTiempo">
                         <table class="table table-bordered" id="tablaTiempo" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                             <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
                                 <tr>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="proyecto">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="proyecto">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Proyecto</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="proyecto" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="actividad">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="actividad">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Actividad / Hito</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="actividad" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_plan">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="fecha_plan">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Fecha Plan</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="fecha_plan" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="fecha_real">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="fecha_real">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Fecha Real</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="fecha_real" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="desviacion">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="desviacion">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Desviación (días)</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="desviacion" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="impacto">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="impacto">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Impacto</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="impacto" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
-                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;" draggable="true" data-columna="causa">
+                                    <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" draggable="true" data-columna="causa">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Causa Principal</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
+                                            <i class="fas fa-filter filtro-columna" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar" data-columna="causa" data-tabla="tiempo"></i>
                                         </div>
                                     </th>
                                     <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <span>Acciones</span>
-                                            <i class="fas fa-filter" style="font-size: 10px; cursor: pointer; opacity: 0.8; color: white;" title="Filtrar"></i>
                                         </div>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody id="tablaBodyTiempo">
-                                <!-- Las filas se insertarán dinámicamente con JavaScript -->
                                 <tr>
                                     <td colspan="8" style="text-align: center; padding: 30px; color: #6c757d;">
                                         <i class="fas fa-spinner fa-spin"></i> Cargando datos...
@@ -395,29 +367,27 @@
                     </div>
                 </div>
                 
-                <!-- Paginación y botón Crear filtro -->
-                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
-                    <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
-                    <button id="btnCrearFiltro" style="background: transparent !important; background-color: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1; box-shadow: none !important; outline: none !important; margin: 0;">
+                <!-- Paginación -->
+                <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important;">
+                    <button id="btnCrearFiltro" style="background: transparent !important; border: none !important; padding: 8px 15px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; color: #2378e1;">
                         <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
                         <span style="color: #2378e1;">Crear filtro</span>
                     </button>
                     
-                    <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
-                    <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <button style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
                             <i class="fas fa-angle-double-left" style="color: #2378e1;"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
+                        <button style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página anterior" id="btnAnterior">
                             <i class="fas fa-angle-left" style="color: #2378e1;"></i>
                         </button>
                         <span style="padding: 5px 10px; background-color: #2378e1; color: white; border-radius: 4px; font-size: 14px;" id="paginaActual">1</span>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="2">2</button>
-                        <button class="pagina-btn" style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" data-pagina="3">3</button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
+                        <!-- ✅ FIX: botones de página dinámicos -->
+                        <span id="paginasDinamicas" style="display: flex; gap: 5px;"></span>
+                        <button style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1; font-size: 14px;" title="Página siguiente" id="btnSiguiente">
                             <i class="fas fa-angle-right" style="color: #2378e1;"></i>
                         </button>
-                        <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
+                        <button style="padding: 5px 10px; border: none; background: none; cursor: pointer; color: #2378e1; font-size: 14px;" title="Última página" id="btnUltima">
                             <i class="fas fa-angle-double-right" style="color: #2378e1;"></i>
                         </button>
                         <span style="margin-left: 10px; color: #2378e1; font-size: 14px;" id="paginacionInfo">Mostrando 0-0 de 0 registros</span>
@@ -428,7 +398,7 @@
     </section>
 </div>
 
-<!-- Modal para Ver Detalle de Desviación -->
+<!-- Modal Ver Detalle -->
 <div id="modalVerDetalle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 8px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto;">
         <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 8px 8px 0 0;">
@@ -475,11 +445,10 @@
                 </div>
             </div>
 
+            <!-- ✅ FIX: Campo de causa editable -->
             <div style="margin-bottom: 15px;">
-                <div style="color: #6c757d; font-size: 12px;">Causa Principal</div>
-                <div style="font-size: 14px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;" id="detalleCausa">
-                    Sin información
-                </div>
+                <div style="color: #6c757d; font-size: 12px;">Causa Principal <span style="color: #dc3545;">*</span></div>
+                <textarea id="detalleCausa" rows="2" style="width: 100%; font-size: 14px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; resize: vertical;" placeholder="Describe la causa principal...">Sin información</textarea>
             </div>
 
             <div style="margin-bottom: 15px;">
@@ -487,19 +456,48 @@
                 <div style="font-size: 14px;" id="detalleImpacto">Sin información</div>
             </div>
 
+            <!-- ✅ FIX: Campo de acciones correctivas editable -->
             <div style="margin-bottom: 20px;">
                 <div style="color: #6c757d; font-size: 12px;">Acciones Correctivas</div>
-                <div style="font-size: 14px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;" id="detalleAcciones">
-                    Sin acciones registradas
-                </div>
+                <textarea id="detalleAcciones" rows="3" style="width: 100%; font-size: 14px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; resize: vertical;" placeholder="Describe las acciones correctivas...">Sin acciones registradas</textarea>
             </div>
 
+            <!-- ✅ FIX: data-attributes guardados para guardar cambios -->
+            <input type="hidden" id="detalleTipoRegistro" value="">
+            <input type="hidden" id="detalleProyectoId" value="">
+            <input type="hidden" id="detalleRegistroId" value="">
+
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button style="padding: 8px 15px; background-color: #ffc107; color: #856404; border: none; border-radius: 4px; cursor: pointer;" onclick="editarDesviacion()">
-                    <i class="fas fa-edit"></i> Editar
+                <button style="padding: 8px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="guardarCambiosDetalle()">
+                    <i class="fas fa-save"></i> Guardar
                 </button>
                 <button style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="cerrarModalDetalle()">
                     Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ FIX: Modal de filtro por columna -->
+<div id="modalFiltroColumna" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1100; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 8px; width: 90%; max-width: 400px;">
+        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background-color: #2378e1; border-radius: 8px 8px 0 0;">
+            <h3 style="margin: 0; color: white; font-size: 16px;">
+                <i class="fas fa-filter"></i> Filtrar: <span id="filtroColumnaNombre">-</span>
+            </h3>
+            <button id="btnCerrarFiltro" style="background: rgba(255,255,255,0.2); border: none; cursor: pointer; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div style="padding: 20px;">
+            <input type="text" id="filtroColumnaValor" placeholder="Ingresa el valor a filtrar..." style="width: 100%; padding: 10px; border: 1px solid #dee2e6; border-radius: 4px; font-size: 14px;">
+            <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: flex-end;">
+                <button onclick="limpiarFiltroColumna()" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Limpiar
+                </button>
+                <button onclick="aplicarFiltroColumna()" style="padding: 8px 15px; background-color: #2378e1; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Aplicar
                 </button>
             </div>
         </div>
@@ -647,18 +645,8 @@
     
     #paginacionContainer {
         background: transparent !important;
-        background-color: transparent !important;
         border: none !important;
         box-shadow: none !important;
-    }
-    
-    #paginacionContainer * {
-        background: transparent !important;
-        background-color: transparent !important;
-    }
-    
-    #paginacionContainer span[style*="background-color"] {
-        background-color: #2378e1 !important;
     }
     
     #paginacionContainer button {
@@ -672,30 +660,6 @@
         opacity: 0.7;
     }
     
-    #paginacionContainer button i {
-        color: #2378e1 !important;
-    }
-    
-    #btnCrearFiltro,
-    #btnCrearFiltro:hover,
-    #btnCrearFiltro:focus,
-    #btnCrearFiltro:active {
-        background: transparent !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        outline: none !important;
-    }
-    
-    #btnCrearFiltro i,
-    #btnCrearFiltro span {
-        color: #2378e1 !important;
-    }
-    
-    #paginacionInfo {
-        color: #2378e1 !important;
-    }
-    
     [draggable="true"] {
         cursor: grab;
     }
@@ -703,15 +667,6 @@
     [draggable="true"]:active {
         cursor: grabbing;
         opacity: 0.7;
-    }
-    
-    #grupoAgrupacion {
-        position: relative;
-    }
-    
-    #grupoColumnas {
-        display: inline-flex;
-        align-items: center;
     }
     
     .columna-agrupada {
@@ -769,9 +724,10 @@
         padding-left: 30px !important;
     }
     
-    .drag-over #grupoColumnas {
+    /* ✅ FIX: Zona de drop activa */
+    #grupoColumnas.drag-over {
+        border-color: #2378e1 !important;
         background-color: rgba(35, 120, 225, 0.1);
-        border-radius: 4px;
     }
     
     .vista-tab {
@@ -812,6 +768,29 @@
         to { transform: rotate(360deg); }
     }
     
+    /* ✅ FIX: Estilos para filtro activo */
+    .filtro-activo {
+        background-color: #ffc107 !important;
+        color: #856404 !important;
+        border-radius: 50%;
+        padding: 2px;
+    }
+    
+    .pagina-btn {
+        padding: 5px 10px;
+        border: none;
+        background: none;
+        border-radius: 4px;
+        cursor: pointer;
+        color: #2378e1;
+        font-size: 14px;
+    }
+    
+    .pagina-btn.activa {
+        background-color: #2378e1 !important;
+        color: white !important;
+    }
+    
     @media (max-width: 768px) {
         div[style*="justify-content: flex-end"] {
             justify-content: center !important;
@@ -845,10 +824,8 @@
     }
 </style>
 
-<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // ════════════════════════════════════════════════════════════════
     // VARIABLES GLOBALES
@@ -860,19 +837,29 @@
     let currentPage = 1;
     let rowsPerPage = 10;
     let totalRegistros = 0;
+    let lastPage = 1;
+    let vistaActual = 'resumen';
+
+    // ✅ FIX: Almacén de filtros por columna
+    let filtrosColumnas = { costos: {}, tiempo: {} };
+
+    // ✅ FIX: Almacén temporal del registro que se está editando
+    let registroEnEdicion = null;
+
+    // ✅ FIX: Almacén de datos crudos para el modal (evita JSON en onclick)
+    let registrosCostos = [];
+    let registrosTiempo = [];
 
     // ════════════════════════════════════════════════════════════════
     // FUNCIONES DE CARGA DE DATOS
     // ════════════════════════════════════════════════════════════════
 
-    /**
-     * Carga todos los datos necesarios para el dashboard
-     */
     async function cargarTodosLosDatos() {
         mostrarLoader(true);
         ocultarErrores();
         
         try {
+            // ✅ FIX: el resumen se carga con los filtros actuales
             await Promise.all([
                 cargarResumen(),
                 cargarProyectos(),
@@ -890,11 +877,27 @@
     }
 
     /**
-     * Carga el resumen general de desviaciones
+     * ✅ FIX: construirQueryParams centralizado para todos los endpoints
      */
+    function construirQueryParams() {
+        const proyectoId = document.getElementById('selectorProyecto')?.value || '';
+        const search = document.getElementById('buscador')?.value || '';
+        const fechaInicio = document.getElementById('fechaInicio')?.value || '';
+        const fechaFin = document.getElementById('fechaFin')?.value || '';
+        
+        const params = new URLSearchParams();
+        if (proyectoId) params.append('proyecto_id', proyectoId);
+        if (search) params.append('search', search);
+        if (fechaInicio) params.append('fecha_inicio', fechaInicio);
+        if (fechaFin) params.append('fecha_fin', fechaFin);
+        return params;
+    }
+
     async function cargarResumen() {
         try {
-            const response = await fetch('/desviaciones-api/resumen');
+            // ✅ FIX: enviar filtros al resumen
+            const params = construirQueryParams();
+            const response = await fetch('/desviaciones-api/resumen?' + params.toString());
             if (!response.ok) throw new Error('Error al cargar resumen');
             
             const data = await response.json();
@@ -906,16 +909,14 @@
             
         } catch (error) {
             console.error('Error en resumen:', error);
-            throw error;
         }
     }
 
-    /**
-     * Carga la tabla resumen de proyectos
-     */
     async function cargarProyectos() {
         try {
-            const response = await fetch('/desviaciones-api/proyectos');
+            // ✅ FIX: enviar filtros a proyectos
+            const params = construirQueryParams();
+            const response = await fetch('/desviaciones-api/proyectos?' + params.toString());
             if (!response.ok) throw new Error('Error al cargar proyectos');
             
             const data = await response.json();
@@ -967,78 +968,61 @@
             
         } catch (error) {
             console.error('Error en proyectos:', error);
-            throw error;
         }
     }
 
-    /**
-     * Carga las desviaciones en costo
-     */
-    async function cargarCostos(params = {}) {
+    async function cargarCostos() {
         try {
-            const proyectoId = document.getElementById('selectorProyecto').value;
-            const search = document.getElementById('buscador').value;
-            const fechaInicio = document.getElementById('fechaInicio').value;
-            const fechaFin = document.getElementById('fechaFin').value;
+            const params = construirQueryParams();
+            params.append('per_page', rowsPerPage);
+            params.append('page', currentPage);
             
-            let url = `/desviaciones-api/costos?per_page=${rowsPerPage}&page=${currentPage}`;
-            if (proyectoId) url += `&proyecto_id=${proyectoId}`;
-            if (search) url += `&search=${encodeURIComponent(search)}`;
-            if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
-            if (fechaFin) url += `&fecha_fin=${fechaFin}`;
-            
-            const response = await fetch(url);
+            const response = await fetch('/desviaciones-api/costos?' + params.toString());
             if (!response.ok) throw new Error('Error al cargar costos');
             
             const data = await response.json();
             datosOriginalesCostos = data.data || [];
+            registrosCostos = datosOriginalesCostos;
             totalRegistros = data.pagination?.total || 0;
+            lastPage = data.pagination?.last_page || 1;
             
-            renderizarTablaCostos(datosOriginalesCostos);
+            aplicarFiltrosYRenderizar('costos');
             actualizarPaginacion(data.pagination);
             
         } catch (error) {
             console.error('Error en costos:', error);
-            throw error;
         }
     }
 
-    /**
-     * Carga las desviaciones en tiempo
-     */
-    async function cargarTiempos(params = {}) {
+    async function cargarTiempos() {
         try {
-            const proyectoId = document.getElementById('selectorProyecto').value;
-            const search = document.getElementById('buscador').value;
-            const fechaInicio = document.getElementById('fechaInicio').value;
-            const fechaFin = document.getElementById('fechaFin').value;
+            const params = construirQueryParams();
+            params.append('per_page', rowsPerPage);
+            params.append('page', currentPage);
             
-            let url = `/desviaciones-api/tiempos?per_page=${rowsPerPage}&page=${currentPage}`;
-            if (proyectoId) url += `&proyecto_id=${proyectoId}`;
-            if (search) url += `&search=${encodeURIComponent(search)}`;
-            if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
-            if (fechaFin) url += `&fecha_fin=${fechaFin}`;
-            
-            const response = await fetch(url);
+            const response = await fetch('/desviaciones-api/tiempos?' + params.toString());
             if (!response.ok) throw new Error('Error al cargar tiempos');
             
             const data = await response.json();
             datosOriginalesTiempo = data.data || [];
+            registrosTiempo = datosOriginalesTiempo;
+            totalRegistros = data.pagination?.total || 0;
+            lastPage = data.pagination?.last_page || 1;
             
-            renderizarTablaTiempo(datosOriginalesTiempo);
+            aplicarFiltrosYRenderizar('tiempo');
+            
+            // ✅ FIX: actualizar paginación también en tiempo
+            actualizarPaginacion(data.pagination);
             
         } catch (error) {
             console.error('Error en tiempos:', error);
-            throw error;
         }
     }
 
-    /**
-     * Carga los datos para gráficos y KPIs
-     */
     async function cargarGraficos() {
         try {
-            const response = await fetch('/desviaciones-api/graficos');
+            const params = construirQueryParams();
+            const response = await fetch('/desviaciones-api/graficos?' + params.toString());
             if (!response.ok) throw new Error('Error al cargar gráficos');
             
             const data = await response.json();
@@ -1060,6 +1044,8 @@
             
             if (data.por_proyecto && data.por_proyecto.length > 0) {
                 renderizarGraficoDesviaciones(data.por_proyecto);
+            } else {
+                renderizarGraficoDesviaciones([]);
             }
             
         } catch (error) {
@@ -1068,7 +1054,260 @@
     }
 
     // ════════════════════════════════════════════════════════════════
-    // FUNCIONES DE RENDERIZADO
+    // ✅ FIX: FILTROS POR COLUMNA
+    // ════════════════════════════════════════════════════════════════
+
+    function aplicarFiltrosYRenderizar(tipo) {
+        const datos = tipo === 'costos' ? datosOriginalesCostos : datosOriginalesTiempo;
+        const filtros = filtrosColumnas[tipo];
+        
+        let datosFiltrados = [...datos];
+        
+        // Aplicar filtros por columna
+        Object.keys(filtros).forEach(columna => {
+            const valorFiltro = (filtros[columna] || '').toString().toLowerCase().trim();
+            if (valorFiltro) {
+                datosFiltrados = datosFiltrados.filter(item => {
+                    let valorItem = item[columna];
+                    
+                    // ✅ FIX: normalizar fechas antes de comparar
+                    if (columna === 'fecha_plan' || columna === 'fecha_real') {
+                        valorItem = normalizarFecha(valorItem);
+                    }
+                    
+                    return (valorItem || '').toString().toLowerCase().includes(valorFiltro);
+                });
+            }
+        });
+        
+        if (tipo === 'costos') {
+            renderizarTablaCostos(datosFiltrados);
+        } else {
+            renderizarTablaTiempo(datosFiltrados);
+        }
+    }
+
+    function abrirModalFiltro(columna, tabla, headerElement) {
+        document.getElementById('filtroColumnaNombre').textContent = headerElement.querySelector('span').textContent;
+        document.getElementById('filtroColumnaValor').value = filtrosColumnas[tabla][columna] || '';
+        
+        const modal = document.getElementById('modalFiltroColumna');
+        modal.style.display = 'flex';
+        modal.dataset.columna = columna;
+        modal.dataset.tabla = tabla;
+        
+        setTimeout(() => document.getElementById('filtroColumnaValor').focus(), 100);
+    }
+
+    window.aplicarFiltroColumna = function() {
+        const modal = document.getElementById('modalFiltroColumna');
+        const columna = modal.dataset.columna;
+        const tabla = modal.dataset.tabla;
+        const valor = document.getElementById('filtroColumnaValor').value.trim();
+        
+        if (valor) {
+            filtrosColumnas[tabla][columna] = valor;
+            // ✅ FIX: marcar icono de filtro como activo
+            marcarFiltroActivo(tabla, columna, true);
+        } else {
+            delete filtrosColumnas[tabla][columna];
+            marcarFiltroActivo(tabla, columna, false);
+        }
+        
+        cerrarModalFiltro();
+        aplicarFiltrosYRenderizar(tabla);
+    };
+
+    window.limpiarFiltroColumna = function() {
+        const modal = document.getElementById('modalFiltroColumna');
+        const columna = modal.dataset.columna;
+        const tabla = modal.dataset.tabla;
+        
+        delete filtrosColumnas[tabla][columna];
+        marcarFiltroActivo(tabla, columna, false);
+        
+        cerrarModalFiltro();
+        aplicarFiltrosYRenderizar(tabla);
+    };
+
+    function marcarFiltroActivo(tabla, columna, activo) {
+        const icono = document.querySelector(`.filtro-columna[data-tabla="${tabla}"][data-columna="${columna}"]`);
+        if (icono) {
+            if (activo) {
+                icono.classList.add('filtro-activo');
+            } else {
+                icono.classList.remove('filtro-activo');
+            }
+        }
+    }
+
+    function cerrarModalFiltro() {
+        document.getElementById('modalFiltroColumna').style.display = 'none';
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // ✅ FIX: DRAG & DROP DE COLUMNAS
+    // ════════════════════════════════════════════════════════════════
+
+    function inicializarDragDrop() {
+        // Columnas arrastrables
+        document.querySelectorAll('th[draggable="true"]').forEach(th => {
+            th.addEventListener('dragstart', function(e) {
+                e.dataTransfer.setData('text/plain', this.dataset.columna);
+                e.dataTransfer.setData('text/tabla', this.closest('table').id === 'tablaCostos' ? 'costos' : 'tiempo');
+                e.dataTransfer.effectAllowed = 'move';
+                this.style.opacity = '0.5';
+            });
+            
+            th.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+            });
+        });
+        
+        // Zona de drop
+        const dropZone = document.getElementById('grupoColumnas');
+        if (dropZone) {
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                this.classList.add('drag-over');
+            });
+            
+            dropZone.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                
+                const columna = e.dataTransfer.getData('text/plain');
+                const tabla = e.dataTransfer.getData('text/tabla');
+                
+                if (columna && !columnasAgrupadas.find(c => c.columna === columna && c.tabla === tabla)) {
+                    columnasAgrupadas.push({ columna, tabla });
+                    renderizarColumnasAgrupadas();
+                    
+                    // ✅ FIX: aplicar agrupación visual
+                    if (tabla === 'costos') {
+                        aplicarFiltrosYRenderizar('costos');
+                    } else {
+                        aplicarFiltrosYRenderizar('tiempo');
+                    }
+                }
+            });
+        }
+    }
+
+    function renderizarColumnasAgrupadas() {
+        const container = document.getElementById('grupoColumnas');
+        const texto = document.getElementById('textoAgrupar');
+        
+        if (columnasAgrupadas.length === 0) {
+            container.innerHTML = '';
+            texto.style.display = 'inline';
+            return;
+        }
+        
+        texto.style.display = 'none';
+        let html = '';
+        
+        columnasAgrupadas.forEach((item, index) => {
+            const nombre = obtenerNombreColumna(item.columna);
+            html += `
+                <span class="columna-agrupada" data-index="${index}">
+                    <i class="fas fa-grip-vertical" style="font-size: 10px; margin-right: 5px;"></i>
+                    ${nombre}
+                    <span class="remover" onclick="quitarColumnaAgrupada(${index})">×</span>
+                </span>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    window.quitarColumnaAgrupada = function(index) {
+        const item = columnasAgrupadas[index];
+        columnasAgrupadas.splice(index, 1);
+        renderizarColumnasAgrupadas();
+        
+        if (item.tabla === 'costos') {
+            aplicarFiltrosYRenderizar('costos');
+        } else {
+            aplicarFiltrosYRenderizar('tiempo');
+        }
+    };
+
+    function obtenerNombreColumna(columna) {
+        const nombres = {
+            'proyecto': 'Proyecto',
+            'partida': 'Partida',
+            'categoria': 'Categoría',
+            'presupuestado': 'Presupuestado',
+            'real': 'Real',
+            'desviacion': 'Desviación',
+            'porcentaje': '% Desviación',
+            'causa': 'Causa',
+            'actividad': 'Actividad',
+            'fecha_plan': 'Fecha Plan',
+            'fecha_real': 'Fecha Real',
+            'impacto': 'Impacto'
+        };
+        return nombres[columna] || columna;
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // ✅ FIX: NORMALIZACIÓN DE FECHAS
+    // ════════════════════════════════════════════════════════════════
+
+    function normalizarFecha(fecha) {
+    if (!fecha || fecha === '-' || fecha === null || fecha === undefined) return '-';
+    
+    // Si es un objeto Date
+    if (fecha instanceof Date) {
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        return `${dia}/${mes}/${anio}`;
+    }
+    
+    // Si es string con formato ISO
+    const fechaStr = fecha.toString().trim();
+    
+    // Formato YYYY-MM-DD
+    if (/^\d{4}-\d{2}-\d{2}$/.test(fechaStr)) {
+        const [anio, mes, dia] = fechaStr.split('-');
+        return `${dia}/${mes}/${anio}`;
+    }
+    
+    // Formato YYYY-MM-DDTHH:MM:SS
+    if (/^\d{4}-\d{2}-\d{2}T/.test(fechaStr)) {
+        const [fechaParte] = fechaStr.split('T');
+        const [anio, mes, dia] = fechaParte.split('-');
+        return `${dia}/${mes}/${anio}`;
+    }
+    
+    // Formato DD/MM/YYYY (ya está bien)
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(fechaStr)) {
+        return fechaStr;
+    }
+    
+    // Intentar parsear con Date
+    try {
+        const d = new Date(fechaStr);
+        if (!isNaN(d.getTime())) {
+            const dia = String(d.getDate()).padStart(2, '0');
+            const mes = String(d.getMonth() + 1).padStart(2, '0');
+            const anio = d.getFullYear();
+            return `${dia}/${mes}/${anio}`;
+        }
+    } catch (e) {}
+    
+    return fechaStr;
+}
+
+    // ════════════════════════════════════════════════════════════════
+    // RENDERIZADO DE TABLAS
     // ════════════════════════════════════════════════════════════════
 
     function renderizarTablaCostos(datos) {
@@ -1092,7 +1331,7 @@
         let totalReal = 0;
         let totalDesviacion = 0;
         
-        datos.forEach(item => {
+        datos.forEach((item, index) => {
             const badgeClass = getDesviacionBadgeClass(item.desviacion);
             const colorDesviacion = item.desviacion > 0 ? '#dc3545' : item.desviacion < 0 ? '#28a745' : '#ffc107';
             
@@ -1100,6 +1339,7 @@
             totalReal += item.real || 0;
             totalDesviacion += item.desviacion || 0;
             
+            // ✅ FIX: usar índice en lugar de JSON inline
             html += `
                 <tr>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proyecto || '-'}</td>
@@ -1116,8 +1356,8 @@
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.causa || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetalle('${item.proyecto} - ${item.partida}', 'costo', ${JSON.stringify(item).replace(/"/g, '&quot;')})"></i>
-                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetallePorIndice('costos', ${index})" title="Ver detalle"></i>
+                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;" onclick="editarRegistro('costos', ${index})" title="Editar causa"></i>
                         </div>
                     </td>
                 </tr>
@@ -1144,17 +1384,20 @@
         }
         
         let html = '';
-        datos.forEach(item => {
-            const badgeClass = getDesviacionBadgeClass(item.desviacion);
+        datos.forEach((item, index) => {
             const impactoBadge = getImpactoBadgeClass(item.impacto);
             const colorDesviacion = item.desviacion > 0 ? '#dc3545' : item.desviacion < 0 ? '#28a745' : '#ffc107';
+            
+            // ✅ FIX: normalizar fechas antes de mostrar
+            const fechaPlan = normalizarFecha(item.fecha_plan);
+            const fechaReal = normalizarFecha(item.fecha_real);
             
             html += `
                 <tr>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.proyecto || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.actividad || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${item.fecha_plan || '-'}</td>
-                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${item.fecha_real || '-'}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${fechaPlan}</td>
+                    <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">${fechaReal}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: ${colorDesviacion};">${item.desviacion > 0 ? '+' : ''}${item.desviacion} días</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center;">
                         <span class="badge-impacto ${impactoBadge}">${item.impacto || 'Medio'}</span>
@@ -1162,8 +1405,8 @@
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.causa || '-'}</td>
                     <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetalle('${item.proyecto} - ${item.actividad}', 'tiempo', ${JSON.stringify(item).replace(/"/g, '&quot;')})"></i>
-                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;"></i>
+                            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer;" onclick="verDetallePorIndice('tiempo', ${index})" title="Ver detalle"></i>
+                            <i class="fas fa-edit" style="color: #083CAE; cursor: pointer;" onclick="editarRegistro('tiempo', ${index})" title="Editar causa"></i>
                         </div>
                     </td>
                 </tr>
@@ -1187,7 +1430,7 @@
             return;
         }
         
-        const maxAbs = Math.max(...datos.map(d => Math.abs(d.desviacion || 0)));
+        const maxAbs = Math.max(...datos.map(d => Math.abs(d.desviacion || 0)), 1);
         const maxHeight = 150;
         
         let html = '';
@@ -1204,9 +1447,9 @@
             const signo = valor > 0 ? '+' : '';
             
             html += `
-                <div style="text-align: center; width: 70px;">
+                <div style="text-align: center; width: 70px; flex-shrink: 0;">
                     <div style="height: ${Math.max(altura, 5)}px; background-color: ${color}; width: 40px; margin: 0 auto; border-radius: 4px 4px 0 0; transition: height 0.5s;"></div>
-                    <div style="margin-top: 5px; font-size: 11px;">${item.nombre}</div>
+                    <div style="margin-top: 5px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${item.nombre}">${item.nombre}</div>
                     <div style="font-size: 10px; color: ${color};">${signo}${valor}%</div>
                 </div>
             `;
@@ -1226,6 +1469,7 @@
         document.getElementById('promDesviacion').textContent = (promedio > 0 ? '+' : '') + promedio.toFixed(1) + '%';
     }
 
+    // ✅ FIX: generar botones de página dinámicos
     function actualizarPaginacion(pagination) {
         if (!pagination) return;
         
@@ -1234,29 +1478,64 @@
         const current = pagination.current_page || 1;
         const last = pagination.last_page || 1;
         
-        const inicio = ((current - 1) * perPage) + 1;
+        const inicio = total > 0 ? ((current - 1) * perPage) + 1 : 0;
         const fin = Math.min(current * perPage, total);
         
         document.getElementById('paginaActual').textContent = current;
         document.getElementById('paginacionInfo').textContent = 
             total > 0 ? `Mostrando ${inicio}-${fin} de ${total} registros` : 'Mostrando 0-0 de 0 registros';
         
-        const pageButtons = document.querySelectorAll('.pagina-btn');
-        pageButtons.forEach(btn => {
-            const page = parseInt(btn.dataset.pagina);
-            btn.style.backgroundColor = page === current ? '#2378e1' : 'transparent';
-            btn.style.color = page === current ? 'white' : '#2378e1';
+        // Generar botones de páginas dinámicos
+        const paginasContainer = document.getElementById('paginasDinamicas');
+        if (!paginasContainer) return;
+        
+        let html = '';
+        const maxBotones = 5;
+        let start = Math.max(1, current - 2);
+        let end = Math.min(last, start + maxBotones - 1);
+        
+        if (end - start < maxBotones - 1) {
+            start = Math.max(1, end - maxBotones + 1);
+        }
+        
+        for (let i = start; i <= end; i++) {
+            if (i === current) continue; // el actual ya está en paginaActual
+            html += `<button class="pagina-btn" data-pagina="${i}">${i}</button>`;
+        }
+        
+        paginasContainer.innerHTML = html;
+        
+        // Re-asignar event listeners
+        paginasContainer.querySelectorAll('.pagina-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const page = parseInt(this.dataset.pagina);
+                if (page !== currentPage) {
+                    currentPage = page;
+                    cargarSegunVista();
+                }
+            });
         });
     }
 
+    function cargarSegunVista() {
+        if (vistaActual === 'costos') {
+            cargarCostos();
+        } else if (vistaActual === 'tiempo') {
+            cargarTiempos();
+        } else {
+            cargarCostos();
+        }
+    }
+
     // ════════════════════════════════════════════════════════════════
-    // FUNCIONES DE UTILIDAD
+    // UTILIDADES
     // ════════════════════════════════════════════════════════════════
 
     function formatCurrency(amount) {
         if (amount === undefined || amount === null) return '$0';
-        const sign = amount >= 0 ? '' : '-';
-        return sign + '$' + Math.abs(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        const num = parseFloat(amount) || 0;
+        const sign = num >= 0 ? '' : '-';
+        return sign + '$' + Math.abs(num).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 
     function getDesviacionBadgeClass(desviacion) {
@@ -1276,9 +1555,7 @@
 
     function mostrarLoader(mostrar) {
         const loader = document.getElementById('loaderContainer');
-        if (loader) {
-            loader.style.display = mostrar ? 'block' : 'none';
-        }
+        if (loader) loader.style.display = mostrar ? 'block' : 'none';
     }
 
     function mostrarError(mensaje) {
@@ -1292,50 +1569,121 @@
 
     function ocultarErrores() {
         const errorDiv = document.getElementById('errorMensaje');
-        if (errorDiv) {
-            errorDiv.style.display = 'none';
-        }
+        if (errorDiv) errorDiv.style.display = 'none';
     }
 
     // ════════════════════════════════════════════════════════════════
-    // FUNCIONES DEL MODAL
+    // MODAL DE DETALLE / EDICIÓN
     // ════════════════════════════════════════════════════════════════
 
-    window.verDetalle = function(concepto, tipo, data) {
-        const modal = document.getElementById('modalVerDetalle');
-        if (!modal) return;
+    window.verDetallePorIndice = function(tipo, index) {
+        const datos = tipo === 'costos' ? registrosCostos : registrosTiempo;
+        const item = datos[index];
+        if (!item) return;
         
-        try {
-            const item = typeof data === 'string' ? JSON.parse(data) : data;
-            
-            document.getElementById('detalleConcepto').textContent = concepto || 'Sin información';
-            document.getElementById('detallePresupuestado').textContent = formatCurrency(item.presupuestado || 0);
-            document.getElementById('detalleReal').textContent = formatCurrency(item.real || 0);
-            document.getElementById('detalleDesviacion').textContent = formatCurrency(item.desviacion || 0);
-            document.getElementById('detallePorcentaje').textContent = (item.porcentaje || 0) + '%';
-            document.getElementById('detalleCausa').textContent = item.causa || 'Sin información';
-            document.getElementById('detalleImpacto').textContent = item.impacto || 'Sin información';
-            document.getElementById('detalleAcciones').textContent = 'Se recomienda revisar la causa y tomar acciones correctivas.';
-            
-            const tipoElement = document.getElementById('detalleTipo');
-            if (item.desviacion > 0) {
-                tipoElement.textContent = tipo === 'costo' ? 'Sobrecosto' : 'Atraso';
-                tipoElement.style.backgroundColor = '#dc3545';
-            } else if (item.desviacion < 0) {
-                tipoElement.textContent = tipo === 'costo' ? 'Ahorro' : 'Adelanto';
-                tipoElement.style.backgroundColor = '#28a745';
-            } else {
-                tipoElement.textContent = 'Neutro';
-                tipoElement.style.backgroundColor = '#ffc107';
-                tipoElement.style.color = '#856404';
-            }
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-        } catch (e) {
-            console.error('Error al mostrar detalle:', e);
+        const concepto = tipo === 'costos' 
+            ? `${item.proyecto} - ${item.partida}` 
+            : `${item.proyecto} - ${item.actividad}`;
+        
+        document.getElementById('detalleConcepto').textContent = concepto;
+        document.getElementById('detallePresupuestado').textContent = formatCurrency(item.presupuestado || 0);
+        document.getElementById('detalleReal').textContent = formatCurrency(item.real || 0);
+        document.getElementById('detalleDesviacion').textContent = formatCurrency(item.desviacion || 0);
+        document.getElementById('detallePorcentaje').textContent = (item.porcentaje || 0) + '%';
+        document.getElementById('detalleCausa').value = item.causa || 'Sin información';
+        document.getElementById('detalleImpacto').textContent = item.impacto || 'Sin información';
+        document.getElementById('detalleAcciones').value = item.acciones_correctivas || 'Sin acciones registradas';
+        
+        // ✅ FIX: guardar referencia para edición
+        registroEnEdicion = { tipo, index, item };
+        document.getElementById('detalleTipoRegistro').value = tipo;
+        document.getElementById('detalleProyectoId').value = item.proyecto_id || '';
+        document.getElementById('detalleRegistroId').value = item.id || index;
+        
+        const tipoElement = document.getElementById('detalleTipo');
+        const desviacion = item.desviacion || 0;
+        if (desviacion > 0) {
+            tipoElement.textContent = tipo === 'costos' ? 'Sobrecosto' : 'Atraso';
+            tipoElement.style.backgroundColor = '#dc3545';
+            tipoElement.style.color = 'white';
+        } else if (desviacion < 0) {
+            tipoElement.textContent = tipo === 'costos' ? 'Ahorro' : 'Adelanto';
+            tipoElement.style.backgroundColor = '#28a745';
+            tipoElement.style.color = 'white';
+        } else {
+            tipoElement.textContent = 'Neutro';
+            tipoElement.style.backgroundColor = '#ffc107';
+            tipoElement.style.color = '#856404';
         }
+        
+        document.getElementById('modalVerDetalle').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+
+    // ✅ FIX: abrir directamente en modo edición
+    window.editarRegistro = function(tipo, index) {
+        verDetallePorIndice(tipo, index);
+        setTimeout(() => document.getElementById('detalleCausa').focus(), 200);
+    };
+
+    // ✅ FIX: guardar cambios de causa y acciones
+    window.guardarCambiosDetalle = async function() {
+        if (!registroEnEdicion) return;
+        
+        const causa = document.getElementById('detalleCausa').value.trim();
+        const acciones = document.getElementById('detalleAcciones').value.trim();
+        
+        if (!causa) {
+            alert('La causa principal es obligatoria');
+            return;
+        }
+        
+        const { tipo, index } = registroEnEdicion;
+        const item = tipo === 'costos' ? registrosCostos[index] : registrosTiempo[index];
+        
+        // Actualizar localmente
+        item.causa = causa;
+        item.acciones_correctivas = acciones;
+        
+        // Actualizar también en datosOriginales
+        const datosOriginales = tipo === 'costos' ? datosOriginalesCostos : datosOriginalesTiempo;
+        if (datosOriginales[index]) {
+            datosOriginales[index].causa = causa;
+            datosOriginales[index].acciones_correctivas = acciones;
+        }
+        
+        // ✅ FIX: persistir en backend
+        try {
+            const response = await fetch('/desviaciones-api/actualizar-causa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({
+                    tipo: tipo,
+                    proyecto_id: document.getElementById('detalleProyectoId').value,
+                    registro_id: document.getElementById('detalleRegistroId').value,
+                    causa: causa,
+                    acciones_correctivas: acciones
+                })
+            });
+            
+            if (!response.ok) {
+                console.warn('No se pudo persistir en backend, solo se actualizó localmente');
+            }
+        } catch (e) {
+            console.warn('Error persistiendo cambios:', e);
+        }
+        
+        // Re-renderizar
+        if (tipo === 'costos') {
+            aplicarFiltrosYRenderizar('costos');
+        } else {
+            aplicarFiltrosYRenderizar('tiempo');
+        }
+        
+        cerrarModalDetalle();
     };
 
     window.cerrarModalDetalle = function() {
@@ -1344,11 +1692,39 @@
             modal.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
+        registroEnEdicion = null;
     };
 
-    window.editarDesviacion = function() {
-        alert('Editar desviación - Funcionalidad en desarrollo');
-    };
+    // ════════════════════════════════════════════════════════════════
+    // ✅ FIX: EXPORTAR EXCEL Y PDF
+    // ════════════════════════════════════════════════════════════════
+
+    function exportarExcel() {
+        const params = construirQueryParams();
+        params.append('vista', vistaActual);
+        
+        // Filtros de columna activos
+        const filtrosActivos = vistaActual === 'costos' ? filtrosColumnas.costos : filtrosColumnas.tiempo;
+        Object.keys(filtrosActivos).forEach(col => {
+            params.append(`filtro_${col}`, filtrosActivos[col]);
+        });
+        
+        const url = `/desviaciones-api/exportar/excel?${params.toString()}`;
+        window.location.href = url;
+    }
+
+    function exportarPDF() {
+        const params = construirQueryParams();
+        params.append('vista', vistaActual);
+        
+        const filtrosActivos = vistaActual === 'costos' ? filtrosColumnas.costos : filtrosColumnas.tiempo;
+        Object.keys(filtrosActivos).forEach(col => {
+            params.append(`filtro_${col}`, filtrosActivos[col]);
+        });
+        
+        const url = `/desviaciones-api/reporte/pdf?${params.toString()}`;
+        window.open(url, '_blank');
+    }
 
     // ════════════════════════════════════════════════════════════════
     // EVENT LISTENERS
@@ -1358,12 +1734,28 @@
         console.log('DOM cargado - Iniciando carga de datos...');
         
         cargarTodosLosDatos();
+        inicializarDragDrop();
         
+        // ✅ FIX: listeners de filtros de columna
+        document.querySelectorAll('.filtro-columna').forEach(icono => {
+            icono.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const columna = this.dataset.columna;
+                const tabla = this.dataset.tabla;
+                const header = this.closest('th');
+                abrirModalFiltro(columna, tabla, header);
+            });
+        });
+        
+        // Tabs
         const vistaTabs = document.querySelectorAll('.vista-tab');
         const vistaContents = document.querySelectorAll('.vista-content');
         
-        vistaTabs.forEach((tab, index) => {
+        vistaTabs.forEach((tab) => {
             tab.addEventListener('click', function() {
+                const vista = this.dataset.vista;
+                vistaActual = vista;
+                
                 vistaTabs.forEach(t => {
                     t.classList.remove('active');
                     t.style.backgroundColor = '#e9ecef';
@@ -1375,112 +1767,125 @@
                 this.style.color = 'white';
                 
                 vistaContents.forEach(content => content.style.display = 'none');
-                vistaContents[index].style.display = 'block';
+                document.getElementById('vista' + vista.charAt(0).toUpperCase() + vista.slice(1)).style.display = 'block';
                 
-                if (index === 1) {
+                currentPage = 1;
+                if (vista === 'costos') {
                     cargarCostos();
-                } else if (index === 2) {
+                } else if (vista === 'tiempo') {
                     cargarTiempos();
                 }
             });
         });
         
+        // ✅ FIX: filtro de proyecto — recargar TODO
         document.getElementById('selectorProyecto')?.addEventListener('change', function() {
             currentPage = 1;
-            cargarCostos();
-            cargarTiempos();
+            recargarTodoConFiltros();
         });
         
+        // ✅ FIX: buscador con debounce — recargar TODO
         let searchTimeout;
         document.getElementById('buscador')?.addEventListener('input', function() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 currentPage = 1;
-                cargarCostos();
-                cargarTiempos();
+                recargarTodoConFiltros();
             }, 500);
         });
         
+        // ✅ FIX: fechas — recargar TODO
         document.getElementById('fechaInicio')?.addEventListener('change', function() {
             currentPage = 1;
-            cargarCostos();
-            cargarTiempos();
+            recargarTodoConFiltros();
         });
         
         document.getElementById('fechaFin')?.addEventListener('change', function() {
             currentPage = 1;
-            cargarCostos();
-            cargarTiempos();
+            recargarTodoConFiltros();
         });
         
+        // Paginación
         document.getElementById('btnPrimera')?.addEventListener('click', function() {
             if (currentPage > 1) {
                 currentPage = 1;
-                cargarCostos();
+                cargarSegunVista();
             }
         });
         
         document.getElementById('btnAnterior')?.addEventListener('click', function() {
             if (currentPage > 1) {
                 currentPage--;
-                cargarCostos();
+                cargarSegunVista();
             }
         });
         
         document.getElementById('btnSiguiente')?.addEventListener('click', function() {
-            currentPage++;
-            cargarCostos();
-        });
-        
-        document.getElementById('btnUltima')?.addEventListener('click', function() {
-            const total = totalRegistros;
-            const lastPage = Math.ceil(total / rowsPerPage);
             if (currentPage < lastPage) {
-                currentPage = lastPage;
-                cargarCostos();
+                currentPage++;
+                cargarSegunVista();
             }
         });
         
-        document.querySelectorAll('.pagina-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const page = parseInt(this.dataset.pagina);
-                if (page !== currentPage) {
-                    currentPage = page;
-                    cargarCostos();
-                }
-            });
+        document.getElementById('btnUltima')?.addEventListener('click', function() {
+            if (currentPage < lastPage) {
+                currentPage = lastPage;
+                cargarSegunVista();
+            }
         });
         
-        document.getElementById('btnExcel')?.addEventListener('click', function() {
-            const params = new URLSearchParams({
-                proyecto_id: document.getElementById('selectorProyecto').value,
-                fecha_inicio: document.getElementById('fechaInicio').value,
-                fecha_fin: document.getElementById('fechaFin').value
-            });
-            window.open(`/desviaciones-api/exportar/excel?${params.toString()}`, '_blank');
-        });
-        
-        document.getElementById('btnReporte')?.addEventListener('click', function() {
-            const params = new URLSearchParams({
-                proyecto_id: document.getElementById('selectorProyecto').value,
-                fecha_inicio: document.getElementById('fechaInicio').value,
-                fecha_fin: document.getElementById('fechaFin').value
-            });
-            window.open(`/desviaciones-api/reporte/pdf?${params.toString()}`, '_blank');
-        });
+        // ✅ FIX: botones de exportar funcionales
+        document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
+        document.getElementById('btnReporte')?.addEventListener('click', exportarPDF);
         
         document.getElementById('btnCrearFiltro')?.addEventListener('click', function() {
-            alert('Crear filtro - Funcionalidad en desarrollo');
+            const columna = prompt('Nombre de la columna a filtrar (proyecto, partida, categoria, causa):');
+            if (columna && vistaActual !== 'resumen') {
+                const tabla = vistaActual === 'costos' ? 'costos' : 'tiempo';
+                const valor = prompt('Valor a filtrar:');
+                if (valor) {
+                    filtrosColumnas[tabla][columna] = valor;
+                    marcarFiltroActivo(tabla, columna, true);
+                    aplicarFiltrosYRenderizar(tabla);
+                }
+            }
         });
         
+        // Modal detalle
         document.getElementById('btnCerrarDetalle')?.addEventListener('click', window.cerrarModalDetalle);
         
+        // Modal filtro columna
+        document.getElementById('btnCerrarFiltro')?.addEventListener('click', cerrarModalFiltro);
+        document.getElementById('filtroColumnaValor')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') aplicarFiltroColumna();
+        });
+        
+        // Cerrar modales al hacer click fuera
         window.addEventListener('click', function(event) {
             if (event.target === document.getElementById('modalVerDetalle')) {
                 window.cerrarModalDetalle();
             }
+            if (event.target === document.getElementById('modalFiltroColumna')) {
+                cerrarModalFiltro();
+            }
         });
     });
+
+    // ✅ FIX: función que recarga todo respetando filtros globales
+    function recargarTodoConFiltros() {
+        cargarResumen();
+        cargarProyectos();
+        cargarGraficos();
+        if (vistaActual === 'costos') {
+            cargarCostos();
+        } else if (vistaActual === 'tiempo') {
+            cargarTiempos();
+        } else {
+            // En resumen, recargamos ambas por si el usuario cambia de pestaña
+            cargarCostos();
+            cargarTiempos();
+        }
+    }
 
     window.cargarTodosLosDatos = cargarTodosLosDatos;
     window.cargarCostos = cargarCostos;

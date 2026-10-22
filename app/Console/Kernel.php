@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
     {
         // Programar la generación automática de lista de asistencia diaria a las 6:00 AM
         $schedule->command('asistencia:generar-lista')->dailyAt('06:00');
+        $schedule->command('facturas:sincronizar-estatus --dias=30')->dailyAt('02:00');
     }
 
     /**

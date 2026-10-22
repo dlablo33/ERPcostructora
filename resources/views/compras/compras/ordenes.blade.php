@@ -16,14 +16,20 @@
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;">
                     <div>
                         <label style="font-size: 12px; font-weight: 600;">Folio</label>
-                        <input type="text" id="filtroFolio" class="form-control" placeholder="Buscar por folio" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <input type="text" id="filtroFolio" class="form-control"
+                               placeholder="Buscar por folio (no distingue mayúsculas)"
+                               value="{{ request('folio') }}"
+                               autocomplete="off"
+                               style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: 600;">Proyecto</label>
                         <select id="filtroProyecto" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                             <option value="">Todos los proyectos</option>
                             @foreach($proyectos ?? [] as $proyecto)
-                                <option value="{{ $proyecto->id }}">{{ $proyecto->codigo }} - {{ $proyecto->nombre }}</option>
+                                <option value="{{ $proyecto->id }}" {{ request('proyecto') == $proyecto->id ? 'selected' : '' }}>
+                                    {{ $proyecto->codigo }} - {{ $proyecto->nombre }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -31,78 +37,23 @@
                         <label style="font-size: 12px; font-weight: 600;">Estatus Cotización</label>
                         <select id="filtroEstatus" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
                             <option value="">Todos</option>
-                            <option value="Pendiente">Sin Cotizar</option>
-                            <option value="En_Cotizacion">En Proceso (con cotizaciones)</option>
+                            <option value="Pendiente" {{ request('estatus_cotizacion') == 'Pendiente' ? 'selected' : '' }}>Sin Cotizar</option>
+                            <option value="En_Cotizacion" {{ request('estatus_cotizacion') == 'En_Cotizacion' ? 'selected' : '' }}>En Proceso (con cotizaciones)</option>
                         </select>
                     </div>
-                    <div style="display: flex; align-items: flex-end;">
-                        <button id="btnActualizar" class="btn btn-primary" style="background-color: var(--color-primary); color: white; border: none; padding: 8px 20px; border-radius: 4px; width: 100%;">
+                    <div style="display: flex; align-items: flex-end; gap: 8px;">
+                        <button id="btnActualizar" class="btn btn-primary" style="background-color: var(--color-primary); color: white; border: none; padding: 8px 16px; border-radius: 4px; flex: 1;">
                             <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                        <button id="btnLimpiar" class="btn btn-secondary" style="background-color: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; flex: 1;">
+                            <i class="fas fa-eraser"></i> Limpiar
                         </button>
                     </div>
                 </div>
 
-                <!-- Tabla de Requisiciones -->
-                <div class="table-responsive" style="overflow-x: auto; border: 1px solid #dee2e6; border-radius: 4px;">
-                    <table class="table table-bordered" style="width: 100%; font-size: 12px; margin-bottom: 0;">
-                        <thead style="background-color: var(--color-primary); color: white;">
-                            <tr>
-                                <th style="padding: 10px;">Folio</th>
-                                <th style="padding: 10px;">Fecha</th>
-                                <th style="padding: 10px;">Proyecto</th>
-                                <th style="padding: 10px;">Solicitante</th>
-                                <th style="padding: 10px;">Artículos</th>
-                                <th style="padding: 10px;">Cotizados</th>
-                                <th style="padding: 10px;">Estatus</th>
-                                <th style="padding: 10px; text-align: center;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($requisiciones as $req)
-                            @php
-                                $totalArticulos = $req->articulos->count();
-                                $cotizados = $req->articulos->where('cotizada', true)->count();
-                                $porcentaje = $totalArticulos > 0 ? round(($cotizados / $totalArticulos) * 100) : 0;
-                            @endphp
-                            <tr>
-                                <td style="padding: 10px;"><strong>{{ $req->folio }}</strong></td>
-                                <td style="padding: 10px;">{{ $req->fecha_requerimiento ? date('d/m/Y', strtotime($req->fecha_requerimiento)) : '-' }}</td>
-                                <td style="padding: 10px;">{{ $req->proyecto->nombre ?? '-' }}</td>
-                                <td style="padding: 10px;">{{ $req->solicitante }}</td>
-                                <td style="padding: 10px; text-align: center;">{{ $totalArticulos }}</td>
-                                <td style="padding: 10px;">
-                                    <div style="display: flex; align-items: center; gap: 5px;">
-                                        <span>{{ $cotizados }}/{{ $totalArticulos }}</span>
-                                        <div style="flex: 1; background-color: #e9ecef; border-radius: 4px; height: 6px;">
-                                            <div style="width: {{ $porcentaje }}%; background-color: #28a745; border-radius: 4px; height: 6px;"></div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="padding: 10px;">
-                                    @if($req->estatus_cotizacion == 'Pendiente' || !$req->estatus_cotizacion)
-                                        <span class="badge" style="background-color: #ffc107; color: #212529; padding: 4px 8px; border-radius: 4px;">Pendiente</span>
-                                    @elseif($req->estatus_cotizacion == 'En_Cotizacion')
-                                        <span class="badge" style="background-color: #17a2b8; color: white; padding: 4px 8px; border-radius: 4px;">En Cotización</span>
-                                    @endif
-                                </td>
-                                <td style="padding: 10px; text-align: center;">
-                                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                                        <button class="btn-ver-articulos btn-sm" data-id="{{ $req->id }}" data-folio="{{ $req->folio }}" style="background-color: var(--color-primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px;">
-                                            <i class="fas fa-list"></i> Ver Artículos
-                                        </button>
-                                    </div>
-                                </td>
-                             </tr>
-                            @empty
-                            <tr>
-                                <td colspan="8" style="text-align: center; padding: 40px;">
-                                    <i class="fas fa-inbox" style="font-size: 48px; color: #ccc;"></i>
-                                    <p style="margin-top: 10px;">No hay requisiciones autorizadas pendientes de cotizar</p>
-                                </td>
-                             </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                <!-- Contenedor dinámico: barra de filtros + tabla -->
+                <div id="contenedorResultados">
+                    @include('compras.compras._tabla_ordenes', ['requisiciones' => $requisiciones])
                 </div>
             </div>
         </div>
@@ -203,6 +154,7 @@
     .table th, .table td { vertical-align: middle; }
     .cotizacion-existente { background-color: #d4edda !important; }
     .btn-sm { font-size: 11px; padding: 6px 12px; cursor: pointer; }
+    #contenedorResultados.cargando { opacity: 0.5; pointer-events: none; }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -210,41 +162,133 @@
 
 <script>
 let cantidadActual = 0;
+let filtrosTimer = null;
+let fetchAbortController = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     configurarEventos();
 });
 
 function configurarEventos() {
-    document.getElementById('btnActualizar')?.addEventListener('click', function() {
-        aplicarFiltros();
-    });
-    
-    document.getElementById('filtroFolio')?.addEventListener('keyup', aplicarFiltros);
+    document.getElementById('btnActualizar')?.addEventListener('click', aplicarFiltros);
+    document.getElementById('btnLimpiar')?.addEventListener('click', limpiarFiltros);
+
+    // Folio: Enter + debounce
+    const inputFolio = document.getElementById('filtroFolio');
+    if (inputFolio) {
+        inputFolio.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                clearTimeout(filtrosTimer);
+                aplicarFiltros();
+            }
+        });
+        inputFolio.addEventListener('input', function() {
+            clearTimeout(filtrosTimer);
+            filtrosTimer = setTimeout(aplicarFiltros, 700);
+        });
+    }
+
+    // Selects: inmediato
     document.getElementById('filtroProyecto')?.addEventListener('change', aplicarFiltros);
     document.getElementById('filtroEstatus')?.addEventListener('change', aplicarFiltros);
-    
-    document.querySelectorAll('.btn-ver-articulos').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const requisicionId = this.dataset.id;
-            const folio = this.dataset.folio;
-            verArticulosRequisicion(requisicionId, folio);
-        });
+
+    // Delegación de eventos para botones "Ver Artículos" y "Limpiar" del estado vacío
+    document.getElementById('contenedorResultados')?.addEventListener('click', function(e) {
+        const btnVer = e.target.closest('.btn-ver-articulos');
+        if (btnVer) {
+            verArticulosRequisicion(btnVer.dataset.id, btnVer.dataset.folio);
+            return;
+        }
+        const btnLimpiarEmpty = e.target.closest('.btn-limpiar-empty');
+        if (btnLimpiarEmpty) {
+            limpiarFiltros();
+        }
     });
 }
 
-function aplicarFiltros() {
-    const folio = document.getElementById('filtroFolio')?.value || '';
+/**
+ * Construye la URL con los filtros actuales.
+ */
+function construirUrl() {
+    const folio = (document.getElementById('filtroFolio')?.value || '').trim();
     const proyecto = document.getElementById('filtroProyecto')?.value || '';
     const estatus = document.getElementById('filtroEstatus')?.value || '';
-    
+
     const url = new URL(window.location.href);
-    if (folio) url.searchParams.set('folio', folio);
-    if (proyecto) url.searchParams.set('proyecto', proyecto);
-    if (estatus) url.searchParams.set('estatus_cotizacion', estatus);
-    
+    url.searchParams.delete('folio');
+    url.searchParams.delete('proyecto');
+    url.searchParams.delete('estatus_cotizacion');
+
+    if (folio !== '') url.searchParams.set('folio', folio);
+    if (proyecto !== '') url.searchParams.set('proyecto', proyecto);
+    if (estatus !== '') url.searchParams.set('estatus_cotizacion', estatus);
+
+    return url;
+}
+
+/**
+ * Opción B: aplica filtros vía fetch, reemplaza solo el bloque #contenedorResultados.
+ */
+async function aplicarFiltros() {
+    const url = construirUrl();
+    const nuevaUrl = url.toString();
+
+    if (nuevaUrl === window.location.href) return;
+
+    // Cancelar fetch anterior si todavía está en vuelo
+    if (fetchAbortController) fetchAbortController.abort();
+    fetchAbortController = new AbortController();
+
+    const contenedor = document.getElementById('contenedorResultados');
+    contenedor?.classList.add('cargando');
+
+    try {
+        const response = await fetch(nuevaUrl, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'text/html'
+            },
+            signal: fetchAbortController.signal
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+
+        const html = await response.text();
+        contenedor.innerHTML = html;
+
+        // Actualizar URL sin recargar
+        window.history.pushState({}, '', nuevaUrl);
+    } catch (error) {
+        if (error.name === 'AbortError') return; // cancelado por otra petición, ok
+        console.error('Error al filtrar:', error);
+        // Fallback: recarga completa
+        window.location.href = nuevaUrl;
+    } finally {
+        contenedor?.classList.remove('cargando');
+    }
+}
+
+function limpiarFiltros() {
+    document.getElementById('filtroFolio').value = '';
+    document.getElementById('filtroProyecto').value = '';
+    document.getElementById('filtroEstatus').value = '';
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete('folio');
+    url.searchParams.delete('proyecto');
+    url.searchParams.delete('estatus_cotizacion');
     window.location.href = url.toString();
 }
+
+// Soporte botón atrás / adelante
+window.addEventListener('popstate', function() {
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('filtroFolio').value = params.get('folio') || '';
+    document.getElementById('filtroProyecto').value = params.get('proyecto') || '';
+    document.getElementById('filtroEstatus').value = params.get('estatus_cotizacion') || '';
+    aplicarFiltros();
+});
 
 // ==================== ARTÍCULOS PARA COTIZAR ====================
 async function verArticulosRequisicion(requisicionId, folio) {
@@ -257,11 +301,11 @@ async function verArticulosRequisicion(requisicionId, folio) {
     contenido.innerHTML = '<div style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Cargando artículos...</div>';
     
     try {
-        const response = await fetch(`/compras/cotizaciones/articulos/${requisicionId}`);
+        const response = await fetch(`/compras/cotizaciones/articulos/${requisicionId}`, {
+            headers: { 'Accept': 'application/json' }
+        });
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const result = await response.json();
         

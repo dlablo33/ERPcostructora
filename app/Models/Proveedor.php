@@ -129,4 +129,9 @@ class Proveedor extends Model
     {
         return $this->codigoSatDefault ? $this->codigoSatDefault->codigo_agrupador : 'N/A';
     }
+
+    public function anticipos()
+{
+    return $this->hasMany(Anticipo::class, 'proveedor_id');
+}
 }

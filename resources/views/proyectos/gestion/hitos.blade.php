@@ -511,16 +511,38 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('fechaFin').addEventListener('change', cargarHitos);
 
     document.querySelectorAll('.filtro-hito').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filtro-hito').forEach(b => { b.classList.remove('active'); b.style.background='white'; b.style.color='#495057'; });
-            this.classList.add('active'); this.style.background='#083CAE'; this.style.color='white';
-            const f = this.dataset.filtro;
-            document.querySelectorAll('#tablaHitosBody tr').forEach(row => {
-                const e = row.querySelector('td:nth-child(7) span')?.textContent?.toLowerCase()||'';
-                row.style.display = f==='todos' ? '' : (e.includes(f.replace('_',' '))?'':'none');
-            });
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filtro-hito').forEach(b => {
+            b.classList.remove('active');
+            b.style.background = 'white';
+            b.style.color = '#495057';
+        });
+        this.classList.add('active');
+        this.style.background = '#083CAE';
+        this.style.color = 'white';
+
+        const filtro = this.dataset.filtro;
+
+        document.querySelectorAll('#tablaHitosBody tr').forEach(row => {
+            if (filtro === 'todos') {
+                row.style.display = '';
+                return;
+            }
+
+            // Obtener el texto del estado desde el span (columna 7)
+            const estadoTexto = (row.querySelector('td:nth-child(7) span')?.textContent || '')
+                .trim()
+                .toLowerCase();
+
+            // Normalizar: quitar plural y espacios
+            const normalizar = (str) => str.replace(/\s+/g, '_').replace(/s$/, '');
+            const estadoNorm = normalizar(estadoTexto);
+            const filtroNorm = normalizar(filtro); // 'completados' -> 'completado', 'retrasados' -> 'retrasado'
+
+            row.style.display = (estadoNorm === filtroNorm) ? '' : 'none';
         });
     });
+});
 
     cargarHitos();
 });

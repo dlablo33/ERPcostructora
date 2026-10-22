@@ -107,7 +107,7 @@
                         </div>
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
-                            <input type="text" id="buscador" placeholder="Buscar personal..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
+                            <input type="text" id="buscador" placeholder="Buscar No. Empleado..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 200px;">
                         </div>
                     </div>
                 </div>
@@ -345,6 +345,9 @@
     </div>
 </div>
 
+<!-- ✅ NUEVO: Modal para Reasignar -->
+
+
 <!-- Modal para Ver Detalle -->
 <div id="modalVerDetalle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
@@ -390,12 +393,22 @@
     #filtroProyectosLista label:hover { background-color: #f0f4ff; }
     #filtroProyectosLista input[type="checkbox"] { margin-right: 8px; cursor: pointer; }
     
+    /* ✅ Estilos para el modal de reasignación */
+    #modalReasignar select:focus,
+    #modalReasignar textarea:focus {
+        outline: none;
+        border-color: #17a2b8;
+        box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.15);
+    }
+    #btnConfirmarReasignar:hover { background-color: #138496 !important; }
+    #btnConfirmarReasignar:disabled { background-color: #adb5bd !important; cursor: not-allowed; }
+    
     @media (max-width: 768px) {
         input#buscador { width: 100% !important; }
         #proyectoFilterContainer { min-width: 100% !important; }
         #filtroProyectosDropdown { min-width: 100% !important; }
         #paginacionContainer { flex-direction: column; align-items: flex-start; }
-        #modalAgregar > div, #modalEditar > div, #modalVerDetalle > div { width: 95%; margin: 10px; }
+        #modalAgregar > div, #modalEditar > div, #modalVerDetalle > div, #modalReasignar > div { width: 95%; margin: 10px; }
         select { width: 100% !important; }
     }
 </style>
@@ -670,7 +683,6 @@
                     <div style="display: flex; gap: 8px; justify-content: center;">
                         <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${item.id})"></i>
                         <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" onclick="editarAsignacion(${item.id})"></i>
-                        <i class="fas fa-exchange-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Reasignar" onclick="reasignar(${item.id})"></i>
                     </div>
                 </td>
             `;
@@ -746,6 +758,10 @@
         notificacion.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
         document.body.appendChild(notificacion);
         setTimeout(() => notificacion.remove(), 3000);
+    }
+
+    function getCsrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
     }
 
     // ============================================
@@ -865,9 +881,85 @@
         }
     };
 
-    window.reasignar = function(id) {
-        mostrarNotificacion('Funcionalidad de reasignación en desarrollo', 'warning');
+    // ============================================
+    // ✅ REASIGNAR - IMPLEMENTACIÓN COMPLETA
+    // ============================================
+
+    window.reasignar = async function(id) {
+        try {
+            // Mostrar modal con estado de carga
+            document.getElementById('modalReasignar').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Resetear formulario
+            document.getElementById('formReasignar').reset();
+            document.getElementById('reasignarId').value = id;
+            document.getElementById('reasignarProyecto').innerHTML = '<option value="">Cargando proyectos...</option>';
+            document.getElementById('reasignarProyecto').disabled = true;
+            document.getElementById('btnConfirmarReasignar').disabled = true;
+            
+            // Limpiar info del empleado
+            document.getElementById('reasignarEmpleadoNombre').textContent = 'Cargando...';
+            document.getElementById('reasignarEmpleadoNumero').textContent = '-';
+            document.getElementById('reasignarProyectoActual').textContent = '-';
+            document.getElementById('reasignarRolTipo').textContent = '-';
+            
+            // Llamar al nuevo endpoint
+            const response = await fetch(`${API_BASE}/${id}/proyectos-reasignar`, {
+                headers: { 
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.message || 'Error al cargar datos');
+            }
+            
+            const data = result.data;
+            const asignacion = data.asignacion_actual;
+            const proyectos = data.proyectos;
+            
+            // Rellenar info del empleado
+            document.getElementById('reasignarEmpleadoNombre').textContent = asignacion.empleado_nombre || '-';
+            document.getElementById('reasignarEmpleadoNumero').textContent = asignacion.empleado_id || '-';
+            document.getElementById('reasignarProyectoActual').textContent = asignacion.proyecto_nombre || '-';
+            document.getElementById('reasignarRolTipo').textContent = 
+                `${asignacion.rol || '-'} / ${asignacion.tipo_personal || '-'}`;
+            
+            // Cargar proyectos
+            const selectProyecto = document.getElementById('reasignarProyecto');
+            
+            if (!proyectos || proyectos.length === 0) {
+                selectProyecto.innerHTML = '<option value="">No hay proyectos disponibles</option>';
+                selectProyecto.disabled = true;
+                document.getElementById('btnConfirmarReasignar').disabled = true;
+                mostrarNotificacion('No hay otros proyectos disponibles para reasignar', 'warning');
+                return;
+            }
+            
+            selectProyecto.innerHTML = '<option value="">Seleccionar proyecto destino...</option>' +
+                proyectos.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+            selectProyecto.disabled = false;
+            document.getElementById('btnConfirmarReasignar').disabled = false;
+            
+        } catch (error) {
+            console.error('Error en reasignar:', error);
+            mostrarNotificacion('Error al cargar la información de reasignación: ' + error.message, 'error');
+            cerrarModalReasignar();
+        }
     };
+
+    function cerrarModalReasignar() {
+        document.getElementById('modalReasignar').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
 
     function cerrarModalDetalle() {
         document.getElementById('modalVerDetalle').style.display = 'none';
@@ -1032,6 +1124,10 @@
         document.getElementById('btnCancelarEditar')?.addEventListener('click', cerrarModalEditar);
         document.getElementById('btnCerrarModalDetalle')?.addEventListener('click', cerrarModalDetalle);
         
+        // ✅ Eventos del modal de reasignar
+        document.getElementById('btnCerrarModalReasignar')?.addEventListener('click', cerrarModalReasignar);
+        document.getElementById('btnCancelarReasignar')?.addEventListener('click', cerrarModalReasignar);
+        
         // Submit forms
         document.getElementById('formAgregar')?.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1040,7 +1136,7 @@
             fetch(API_BASE, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'X-CSRF-TOKEN': getCsrfToken(),
                     'Accept': 'application/json'
                 },
                 body: formData
@@ -1068,7 +1164,7 @@
             fetch(`${API_BASE}/${id}`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'X-CSRF-TOKEN': getCsrfToken(),
                     'Accept': 'application/json',
                     'X-HTTP-Method-Override': 'PUT'
                 },
@@ -1088,16 +1184,81 @@
                 mostrarNotificacion('Error al actualizar la asignación', 'error');
             });
         });
+
+        // ✅ Submit del formulario de reasignación
+        document.getElementById('formReasignar')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('reasignarId').value;
+            const proyectoId = document.getElementById('reasignarProyecto').value;
+            const observaciones = document.getElementById('reasignarObservaciones').value;
+            
+            // Validación cliente
+            if (!proyectoId) {
+                mostrarNotificacion('Debe seleccionar un proyecto destino', 'warning');
+                return;
+            }
+            
+            // Deshabilitar botón mientras se procesa
+            const btnConfirmar = document.getElementById('btnConfirmarReasignar');
+            const originalHTML = btnConfirmar.innerHTML;
+            btnConfirmar.disabled = true;
+            btnConfirmar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Reasignando...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/${id}/reasignar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': getCsrfToken(),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        proyecto_id: proyectoId,
+                        observaciones: observaciones
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    mostrarNotificacion(result.message || 'Empleado reasignado correctamente', 'success');
+                    cerrarModalReasignar();
+                    cargarAsignaciones();
+                } else {
+                    mostrarNotificacion(result.message || 'Error al reasignar', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarNotificacion('Error de conexión al reasignar', 'error');
+            } finally {
+                btnConfirmar.disabled = false;
+                btnConfirmar.innerHTML = originalHTML;
+            }
+        });
         
         // Cerrar modales al hacer clic fuera
         window.addEventListener('click', function(e) {
             const modalAgregar = document.getElementById('modalAgregar');
             const modalEditar = document.getElementById('modalEditar');
             const modalVer = document.getElementById('modalVerDetalle');
+            const modalReasignar = document.getElementById('modalReasignar');
             
             if (e.target === modalAgregar) cerrarModalAgregar();
             if (e.target === modalEditar) cerrarModalEditar();
             if (e.target === modalVer) cerrarModalDetalle();
+            if (e.target === modalReasignar) cerrarModalReasignar();
+        });
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarModalAgregar();
+                cerrarModalEditar();
+                cerrarModalDetalle();
+                cerrarModalReasignar();
+            }
         });
     });
 </script>

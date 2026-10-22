@@ -95,94 +95,11 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaBodyFamilias">
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">FAM-001</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas manuales y eléctricas para construcción</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-01</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle FAM-001')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarFamilia('FAM-001')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar familia?')) alert('Familia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">FAM-002</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Materiales</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Materiales de construcción como cemento, varilla, block</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-02</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle FAM-002')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarFamilia('FAM-002')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar familia?')) alert('Familia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">FAM-003</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Equipo</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Maquinaria y equipo pesado para construcción</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-03</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle FAM-003')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarFamilia('FAM-003')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar familia?')) alert('Familia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">FAM-004</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Consumibles</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Artículos de consumo como guantes, cascos, lentes</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-04</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle FAM-004')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarFamilia('FAM-004')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar familia?')) alert('Familia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">FAM-005</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Seguridad</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Equipos de protección personal y seguridad</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-05</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle FAM-005')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarFamilia('FAM-005')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar familia?')) alert('Familia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">FAM-006</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Electricidad</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Materiales y herramientas eléctricas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-06</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle FAM-006')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarFamilia('FAM-006')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar familia?')) alert('Familia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
+                                <tr><td colspan="6" style="text-align: center; padding: 20px;">Cargando...</td></tr>
                             </tbody>
                             <tfoot style="background-color: #e9ecef; font-weight: bold;">
                                 <tr>
-                                    <td colspan="6" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">Total Familias: 6</td>
+                                    <td colspan="6" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;" id="totalFamilias">Total Familias: 0</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -263,115 +180,11 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaBodySubfamilias">
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-001</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Eléctricas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas eléctricas como taladros, pulidoras, sierras</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-01-01</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-001')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-001')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-002</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Manuales</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas manuales como martillos, desarmadores, llaves</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-01-02</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-002')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-002')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-003</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Neumáticas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Herramientas neumáticas como pistolas de aire, compresores</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-01-03</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-003')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-003')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-004</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Materiales</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Acero</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Productos de acero como varilla, perfiles, láminas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-02-01</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-004')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-004')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-005</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Materiales</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Concreto</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Cemento, concreto premezclado, mortero</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-02-02</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-005')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-005')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr style="background-color: #f8f9fa;">
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-006</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Equipo</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Maquinaria Pesada</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Excavadoras, retroexcavadoras, grúas</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-03-01</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: #f8f9fa; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-006')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-006')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">
-                                        <span style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; display: inline-block; min-width: 70px;">Activo</span>
-                                    </td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center; font-weight: 500;">SUB-007</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Consumibles</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Protección Personal</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: left;">Cascos, guantes, lentes, arneses</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; text-align: center;">1150-04-01</td>
-                                    <td style="padding: 10px 8px; border: 1px solid #dee2e6; position: sticky; right: 0; background-color: white; box-shadow: -2px 0 5px rgba(0,0,0,0.1); text-align: center;">
-                                        <i class="fas fa-eye" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="alert('Ver detalle SUB-007')" title="Ver detalle"></i>
-                                        <i class="fas fa-edit" style="color: var(--color-primary); margin: 0 5px; cursor: pointer;" onclick="editarSubfamilia('SUB-007')" title="Editar"></i>
-                                        <i class="fas fa-trash" style="color: #dc3545; margin: 0 5px; cursor: pointer;" onclick="if(confirm('¿Eliminar subfamilia?')) alert('Subfamilia eliminada')" title="Eliminar"></i>
-                                    </td>
-                                </tr>
+                                <tr><td colspan="7" style="text-align: center; padding: 20px;">Cargando...</td></tr>
                             </tbody>
                             <tfoot style="background-color: #e9ecef; font-weight: bold;">
                                 <tr>
-                                    <td colspan="7" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;">Total Subfamilias: 7</td>
+                                    <td colspan="7" style="padding: 10px; border: 1px solid #dee2e6; text-align: center; font-size: 13px;" id="totalSubfamilias">Total Subfamilias: 0</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -401,6 +214,7 @@
         
         <!-- Formulario -->
         <div style="padding: 20px;">
+            <input type="hidden" id="modalIdFamilia">
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Estatus</label>
@@ -411,15 +225,23 @@
                 </div>
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">N° Familia</label>
-                    <input type="text" id="modalNumeroFamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="FAM-007">
+                    <input type="text" id="modalNumeroFamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; background-color: #e9ecef;" placeholder="Autogenerado" readonly>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Tipo</label>
+                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Nombre / Tipo <span style="color: red;">*</span></label>
                     <input type="text" id="modalTipoFamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Ej: Herramientas">
                 </div>
+                {{-- ✅ Cuenta Contable ahora es SELECT --}}
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaFamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="1150-07">
+                    <select id="modalCuentaFamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Seleccionar cuenta contable</option>
+                        @isset($cuentasContables)
+                            @foreach($cuentasContables as $codigoCuenta => $nombreCuenta)
+                                <option value="{{ $codigoCuenta }}">{{ $nombreCuenta }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
                 </div>
                 <div style="grid-column: span 2;">
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Descripción</label>
@@ -429,7 +251,7 @@
             
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalFamilia()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="guardarFamilia()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
+                <button onclick="guardarFamilia()" id="btnGuardarFamilia" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
             </div>
         </div>
     </div>
@@ -447,6 +269,7 @@
         
         <!-- Formulario -->
         <div style="padding: 20px;">
+            <input type="hidden" id="modalIdSubfamilia">
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Estatus</label>
@@ -457,27 +280,34 @@
                 </div>
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">N° Subfamilia</label>
-                    <input type="text" id="modalNumeroSubfamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="SUB-008">
+                    <input type="text" id="modalNumeroSubfamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; background-color: #e9ecef;" placeholder="Autogenerado" readonly>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Familia</label>
+                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Familia <span style="color: red;">*</span></label>
                     <select id="modalFamiliaSubfamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
-                        <option>Seleccionar familia</option>
-                        <option>Herramientas</option>
-                        <option>Materiales</option>
-                        <option>Equipo</option>
-                        <option>Consumibles</option>
-                        <option>Seguridad</option>
-                        <option>Electricidad</option>
+                        <option value="">Seleccionar familia</option>
+                        @isset($familias)
+                            @foreach($familias as $familia)
+                                <option value="{{ $familia->id }}">{{ $familia->codigo }} - {{ $familia->nombre }}</option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Tipo Subfamilia</label>
+                    <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Nombre / Tipo <span style="color: red;">*</span></label>
                     <input type="text" id="modalTipoSubfamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Ej: Eléctricas">
                 </div>
+                {{-- ✅ Cuenta Contable ahora es SELECT --}}
                 <div>
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaSubfamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="1150-01-01">
+                    <select id="modalCuentaSubfamilia" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Seleccionar cuenta contable</option>
+                        @isset($cuentasContables)
+                            @foreach($cuentasContables as $codigoCuenta => $nombreCuenta)
+                                <option value="{{ $codigoCuenta }}">{{ $nombreCuenta }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
                 </div>
                 <div style="grid-column: span 2;">
                     <label style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px;">Descripción</label>
@@ -487,7 +317,7 @@
             
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalSubfamilia()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="guardarSubfamilia()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
+                <button onclick="guardarSubfamilia()" id="btnGuardarSubfamilia" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
             </div>
         </div>
     </div>
@@ -734,150 +564,466 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
+// Estado global
+let editingFamiliaId = null;
+let editingSubfamiliaId = null;
+let columnasAgrupadasFamilias = [];
+let columnasAgrupadasSubfamilias = [];
+
 document.addEventListener('DOMContentLoaded', function() {
-    let columnasAgrupadasFamilias = [];
-    let columnasAgrupadasSubfamilias = [];
+    cargarFamilias();
+    cargarSubfamilias();
+    configurarEventos();
+});
+
+// =========================================
+// CARGA DE DATOS
+// =========================================
+
+function cargarFamilias() {
+    fetch(`{{ route('almacen.api.familias') }}`)
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                renderizarTablaFamilias(res.data);
+                document.getElementById('totalFamilias').textContent = `Total Familias: ${res.total}`;
+            }
+        })
+        .catch(error => console.error('Error al cargar familias:', error));
+}
+
+function cargarSubfamilias() {
+    fetch(`{{ route('almacen.api.subfamilias') }}`)
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                renderizarTablaSubfamilias(res.data);
+                document.getElementById('totalSubfamilias').textContent = `Total Subfamilias: ${res.total}`;
+            }
+        })
+        .catch(error => console.error('Error al cargar subfamilias:', error));
+}
+
+function renderizarTablaFamilias(data) {
+    const tbody = document.getElementById('tablaBodyFamilias');
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">No hay familias registradas</td></tr>';
+        return;
+    }
     
-    // Función para cambiar entre pestañas
-    window.switchTab = function(tab) {
-        if (tab === 'familias') {
-            document.getElementById('panelFamilias').style.display = 'block';
-            document.getElementById('panelSubfamilias').style.display = 'none';
-            document.getElementById('tabFamilias').style.backgroundColor = 'var(--color-primary)';
-            document.getElementById('tabFamilias').style.color = 'white';
-            document.getElementById('tabSubfamilias').style.backgroundColor = '#e9ecef';
-            document.getElementById('tabSubfamilias').style.color = '#495057';
+    tbody.innerHTML = '';
+    data.forEach((item, index) => {
+        const estatusBadge = item.estatus === 'Activo' 
+            ? '<span class="badge-activo">Activo</span>' 
+            : '<span class="badge-inactivo">Inactivo</span>';
+        
+        const row = document.createElement('tr');
+        row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
+        row.innerHTML = `
+            <td style="text-align: center;">${estatusBadge}</td>
+            <td style="text-align: center; font-weight: 500;">${escapeHtml(item.codigo)}</td>
+            <td style="text-align: left;">${escapeHtml(item.nombre)}</td>
+            <td style="text-align: left;">${escapeHtml(item.descripcion) || '---'}</td>
+            <td style="text-align: center;">${escapeHtml(item.cuenta_contable) || '---'}</td>
+            <td style="text-align: center;">
+                <i class="fas fa-eye" style="color: var(--color-primary); cursor: pointer;" onclick="verFamilia(${item.id})" title="Ver detalle"></i>
+                <i class="fas fa-edit" style="color: var(--color-primary); cursor: pointer;" onclick="editarFamilia(${item.id})" title="Editar"></i>
+                <i class="fas fa-trash" style="color: #dc3545; cursor: pointer;" onclick="eliminarFamilia(${item.id}, '${escapeHtml(item.codigo)}')" title="Eliminar"></i>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function renderizarTablaSubfamilias(data) {
+    const tbody = document.getElementById('tablaBodySubfamilias');
+    if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">No hay subfamilias registradas</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    data.forEach((item, index) => {
+        const estatusBadge = item.estatus === 'Activo' 
+            ? '<span class="badge-activo">Activo</span>' 
+            : '<span class="badge-inactivo">Inactivo</span>';
+        
+        const row = document.createElement('tr');
+        row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
+        row.innerHTML = `
+            <td style="text-align: center;">${estatusBadge}</td>
+            <td style="text-align: center; font-weight: 500;">${escapeHtml(item.codigo)}</td>
+            <td style="text-align: left;">${escapeHtml(item.familia_codigo)} - ${escapeHtml(item.familia_nombre)}</td>
+            <td style="text-align: left;">${escapeHtml(item.nombre)}</td>
+            <td style="text-align: left;">${escapeHtml(item.descripcion) || '---'}</td>
+            <td style="text-align: center;">${escapeHtml(item.cuenta_contable) || '---'}</td>
+            <td style="text-align: center;">
+                <i class="fas fa-eye" style="color: var(--color-primary); cursor: pointer;" onclick="verSubfamilia(${item.id})" title="Ver detalle"></i>
+                <i class="fas fa-edit" style="color: var(--color-primary); cursor: pointer;" onclick="editarSubfamilia(${item.id})" title="Editar"></i>
+                <i class="fas fa-trash" style="color: #dc3545; cursor: pointer;" onclick="eliminarSubfamilia(${item.id}, '${escapeHtml(item.codigo)}')" title="Eliminar"></i>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// =========================================
+// HELPER: Cuenta contable en select
+// =========================================
+
+/**
+ * Asigna el valor al select de cuenta contable.
+ * Si el valor no existe en las opciones (valor histórico), lo agrega dinámicamente.
+ */
+function setCuentaContableSelect(selectId, valor) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    
+    const valorStr = (valor || '').toString();
+    
+    // Si el valor no está en las opciones, agregarlo (histórico)
+    if (valorStr && !Array.from(sel.options).some(o => o.value === valorStr)) {
+        const opt = document.createElement('option');
+        opt.value = valorStr;
+        opt.textContent = valorStr + ' (histórico)';
+        sel.appendChild(opt);
+    }
+    
+    sel.value = valorStr;
+}
+
+// =========================================
+// PESTAÑAS
+// =========================================
+
+window.switchTab = function(tab) {
+    if (tab === 'familias') {
+        document.getElementById('panelFamilias').style.display = 'block';
+        document.getElementById('panelSubfamilias').style.display = 'none';
+        document.getElementById('tabFamilias').style.backgroundColor = 'var(--color-primary)';
+        document.getElementById('tabFamilias').style.color = 'white';
+        document.getElementById('tabSubfamilias').style.backgroundColor = '#e9ecef';
+        document.getElementById('tabSubfamilias').style.color = '#495057';
+    } else {
+        document.getElementById('panelFamilias').style.display = 'none';
+        document.getElementById('panelSubfamilias').style.display = 'block';
+        document.getElementById('tabSubfamilias').style.backgroundColor = 'var(--color-primary)';
+        document.getElementById('tabSubfamilias').style.color = 'white';
+        document.getElementById('tabFamilias').style.backgroundColor = '#e9ecef';
+        document.getElementById('tabFamilias').style.color = '#495057';
+    }
+};
+
+// =========================================
+// FAMILIAS: CRUD
+// =========================================
+
+window.abrirModalFamilia = function() {
+    editingFamiliaId = null;
+    document.getElementById('modalTituloFamilia').textContent = 'Nueva Familia';
+    document.getElementById('modalIdFamilia').value = '';
+    document.getElementById('modalEstatusFamilia').value = 'Activo';
+    document.getElementById('modalNumeroFamilia').value = 'Autogenerado';
+    document.getElementById('modalTipoFamilia').value = '';
+    document.getElementById('modalDescripcionFamilia').value = '';
+    // ✅ Reset del select de cuenta contable
+    document.getElementById('modalCuentaFamilia').value = '';
+    
+    document.getElementById('modalFamilia').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+window.editarFamilia = function(id) {
+    fetch(`{{ route('almacen.api.familias') }}/${id}`)
+        .catch(() => {
+            // Si no tienes endpoint show para familia, usa la lista
+            return fetch(`{{ route('almacen.api.familias') }}`)
+                .then(res => res.json())
+                .then(res => {
+                    const familia = res.data.find(f => f.id === id);
+                    return { success: true, data: familia };
+                });
+        })
+        .then(res => {
+            if (res && res.success && res.data) {
+                const familia = res.data;
+                editingFamiliaId = familia.id;
+                document.getElementById('modalTituloFamilia').textContent = `Editar Familia ${familia.codigo}`;
+                document.getElementById('modalIdFamilia').value = familia.id;
+                document.getElementById('modalEstatusFamilia').value = familia.estatus;
+                document.getElementById('modalNumeroFamilia').value = familia.codigo;
+                document.getElementById('modalTipoFamilia').value = familia.nombre;
+                document.getElementById('modalDescripcionFamilia').value = familia.descripcion || '';
+                // ✅ Asignar valor al select con fallback
+                setCuentaContableSelect('modalCuentaFamilia', familia.cuenta_contable);
+                
+                document.getElementById('modalFamilia').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        })
+        .catch(error => console.error('Error al cargar familia:', error));
+};
+
+window.guardarFamilia = function() {
+    const nombre = document.getElementById('modalTipoFamilia').value.trim();
+    
+    if (!nombre) {
+        alert('El nombre de la familia es obligatorio');
+        return;
+    }
+    
+    const btnGuardar = document.getElementById('btnGuardarFamilia');
+    const textoOriginal = btnGuardar.textContent;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
+    
+    const data = {
+        nombre: nombre,
+        descripcion: document.getElementById('modalDescripcionFamilia').value,
+        cuenta_contable: document.getElementById('modalCuentaFamilia').value,
+        estatus: document.getElementById('modalEstatusFamilia').value
+    };
+    
+    const url = editingFamiliaId 
+        ? `{{ route('almacen.api.familias.update', '') }}/${editingFamiliaId}` 
+        : `{{ route('almacen.api.familias.store') }}`;
+    const method = editingFamiliaId ? 'PUT' : 'POST';
+    
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json().then(json => ({ status: res.status, body: json })))
+    .then(({ status, body }) => {
+        if (body.success) {
+            alert('✅ ' + body.message);
+            cerrarModalFamilia();
+            cargarFamilias();
         } else {
-            document.getElementById('panelFamilias').style.display = 'none';
-            document.getElementById('panelSubfamilias').style.display = 'block';
-            document.getElementById('tabSubfamilias').style.backgroundColor = 'var(--color-primary)';
-            document.getElementById('tabSubfamilias').style.color = 'white';
-            document.getElementById('tabFamilias').style.backgroundColor = '#e9ecef';
-            document.getElementById('tabFamilias').style.color = '#495057';
+            let mensaje = body.message || 'Error desconocido';
+            if (body.errors) {
+                mensaje = Object.values(body.errors).flat().join('\n');
+            }
+            alert('❌ Error: ' + mensaje);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar la familia');
+    })
+    .finally(() => {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
+    });
+};
+
+window.eliminarFamilia = function(id, codigo) {
+    if (confirm(`¿Eliminar la familia ${codigo}?`)) {
+        fetch(`{{ route('almacen.api.familias.destroy', '') }}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                alert('✅ ' + res.message);
+                cargarFamilias();
+            } else {
+                alert('❌ Error: ' + res.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar la familia');
+        });
+    }
+};
+
+window.verFamilia = function(id) {
+    fetch(`{{ route('almacen.api.familias') }}`)
+        .then(res => res.json())
+        .then(res => {
+            const familia = res.data.find(f => f.id === id);
+            if (familia) {
+                alert(`Familia: ${familia.codigo}\nNombre: ${familia.nombre}\nDescripción: ${familia.descripcion || '---'}\nCuenta Contable: ${familia.cuenta_contable || '---'}\nEstatus: ${familia.estatus}`);
+            }
+        });
+};
+
+window.cerrarModalFamilia = function() {
+    document.getElementById('modalFamilia').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+// =========================================
+// SUBFAMILIAS: CRUD
+// =========================================
+
+window.abrirModalSubfamilia = function() {
+    editingSubfamiliaId = null;
+    document.getElementById('modalTituloSubfamilia').textContent = 'Nueva Subfamilia';
+    document.getElementById('modalIdSubfamilia').value = '';
+    document.getElementById('modalEstatusSubfamilia').value = 'Activo';
+    document.getElementById('modalNumeroSubfamilia').value = 'Autogenerado';
+    document.getElementById('modalFamiliaSubfamilia').value = '';
+    document.getElementById('modalTipoSubfamilia').value = '';
+    document.getElementById('modalDescripcionSubfamilia').value = '';
+    // ✅ Reset del select de cuenta contable
+    document.getElementById('modalCuentaSubfamilia').value = '';
+    
+    document.getElementById('modalSubfamilia').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+};
+
+window.editarSubfamilia = function(id) {
+    fetch(`{{ route('almacen.api.subfamilias') }}`)
+        .then(res => res.json())
+        .then(res => {
+            const subfamilia = res.data.find(s => s.id === id);
+            if (subfamilia) {
+                editingSubfamiliaId = subfamilia.id;
+                document.getElementById('modalTituloSubfamilia').textContent = `Editar Subfamilia ${subfamilia.codigo}`;
+                document.getElementById('modalIdSubfamilia').value = subfamilia.id;
+                document.getElementById('modalEstatusSubfamilia').value = subfamilia.estatus;
+                document.getElementById('modalNumeroSubfamilia').value = subfamilia.codigo;
+                document.getElementById('modalFamiliaSubfamilia').value = subfamilia.familia_id;
+                document.getElementById('modalTipoSubfamilia').value = subfamilia.nombre;
+                document.getElementById('modalDescripcionSubfamilia').value = subfamilia.descripcion || '';
+                // ✅ Asignar valor al select con fallback
+                setCuentaContableSelect('modalCuentaSubfamilia', subfamilia.cuenta_contable);
+                
+                document.getElementById('modalSubfamilia').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        })
+        .catch(error => console.error('Error al cargar subfamilia:', error));
+};
+
+window.guardarSubfamilia = function() {
+    const familiaId = document.getElementById('modalFamiliaSubfamilia').value;
+    const nombre = document.getElementById('modalTipoSubfamilia').value.trim();
+    
+    if (!familiaId) {
+        alert('Debe seleccionar una familia');
+        return;
+    }
+    if (!nombre) {
+        alert('El nombre de la subfamilia es obligatorio');
+        return;
+    }
+    
+    const btnGuardar = document.getElementById('btnGuardarSubfamilia');
+    const textoOriginal = btnGuardar.textContent;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
+    
+    const data = {
+        familia_id: familiaId,
+        nombre: nombre,
+        descripcion: document.getElementById('modalDescripcionSubfamilia').value,
+        cuenta_contable: document.getElementById('modalCuentaSubfamilia').value,
+        estatus: document.getElementById('modalEstatusSubfamilia').value
     };
     
-    // Funciones para Familias
-    window.abrirModalFamilia = function() {
-        document.getElementById('modalTituloFamilia').textContent = 'Nueva Familia';
-        document.getElementById('modalEstatusFamilia').value = 'Activo';
-        document.getElementById('modalNumeroFamilia').value = '';
-        document.getElementById('modalTipoFamilia').value = '';
-        document.getElementById('modalCuentaFamilia').value = '';
-        document.getElementById('modalDescripcionFamilia').value = '';
-        document.getElementById('modalFamilia').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
+    const url = editingSubfamiliaId 
+        ? `{{ route('almacen.api.subfamilias.update', '') }}/${editingSubfamiliaId}` 
+        : `{{ route('almacen.api.subfamilias.store') }}`;
+    const method = editingSubfamiliaId ? 'PUT' : 'POST';
     
-    window.editarFamilia = function(numero) {
-        document.getElementById('modalTituloFamilia').textContent = 'Editar Familia ' + numero;
-        
-        // Simular carga de datos
-        if (numero === 'FAM-001') {
-            document.getElementById('modalEstatusFamilia').value = 'Activo';
-            document.getElementById('modalNumeroFamilia').value = 'FAM-001';
-            document.getElementById('modalTipoFamilia').value = 'Herramientas';
-            document.getElementById('modalCuentaFamilia').value = '1150-01';
-            document.getElementById('modalDescripcionFamilia').value = 'Herramientas manuales y eléctricas para construcción';
-        } else if (numero === 'FAM-002') {
-            document.getElementById('modalEstatusFamilia').value = 'Activo';
-            document.getElementById('modalNumeroFamilia').value = 'FAM-002';
-            document.getElementById('modalTipoFamilia').value = 'Materiales';
-            document.getElementById('modalCuentaFamilia').value = '1150-02';
-            document.getElementById('modalDescripcionFamilia').value = 'Materiales de construcción como cemento, varilla, block';
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json().then(json => ({ status: res.status, body: json })))
+    .then(({ status, body }) => {
+        if (body.success) {
+            alert('✅ ' + body.message);
+            cerrarModalSubfamilia();
+            cargarSubfamilias();
         } else {
-            document.getElementById('modalEstatusFamilia').value = 'Activo';
-            document.getElementById('modalNumeroFamilia').value = numero;
-            document.getElementById('modalTipoFamilia').value = 'Familia de ejemplo';
-            document.getElementById('modalCuentaFamilia').value = '1150-00';
-            document.getElementById('modalDescripcionFamilia').value = 'Descripción de ejemplo';
+            let mensaje = body.message || 'Error desconocido';
+            if (body.errors) {
+                mensaje = Object.values(body.errors).flat().join('\n');
+            }
+            alert('❌ Error: ' + mensaje);
         }
-        
-        document.getElementById('modalFamilia').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.cerrarModalFamilia = function() {
-        document.getElementById('modalFamilia').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-    
-    window.guardarFamilia = function() {
-        const numero = document.getElementById('modalNumeroFamilia').value;
-        const tipo = document.getElementById('modalTipoFamilia').value;
-        
-        if (!numero || !tipo) {
-            alert('Por favor complete los campos obligatorios');
-            return;
-        }
-        
-        alert(`Familia ${numero} guardada correctamente`);
-        cerrarModalFamilia();
-    };
-    
-    // Funciones para Subfamilias
-    window.abrirModalSubfamilia = function() {
-        document.getElementById('modalTituloSubfamilia').textContent = 'Nueva Subfamilia';
-        document.getElementById('modalEstatusSubfamilia').value = 'Activo';
-        document.getElementById('modalNumeroSubfamilia').value = '';
-        document.getElementById('modalFamiliaSubfamilia').value = 'Seleccionar familia';
-        document.getElementById('modalTipoSubfamilia').value = '';
-        document.getElementById('modalCuentaSubfamilia').value = '';
-        document.getElementById('modalDescripcionSubfamilia').value = '';
-        document.getElementById('modalSubfamilia').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.editarSubfamilia = function(numero) {
-        document.getElementById('modalTituloSubfamilia').textContent = 'Editar Subfamilia ' + numero;
-        
-        // Simular carga de datos
-        if (numero === 'SUB-001') {
-            document.getElementById('modalEstatusSubfamilia').value = 'Activo';
-            document.getElementById('modalNumeroSubfamilia').value = 'SUB-001';
-            document.getElementById('modalFamiliaSubfamilia').value = 'Herramientas';
-            document.getElementById('modalTipoSubfamilia').value = 'Eléctricas';
-            document.getElementById('modalCuentaSubfamilia').value = '1150-01-01';
-            document.getElementById('modalDescripcionSubfamilia').value = 'Herramientas eléctricas como taladros, pulidoras, sierras';
-        } else if (numero === 'SUB-004') {
-            document.getElementById('modalEstatusSubfamilia').value = 'Activo';
-            document.getElementById('modalNumeroSubfamilia').value = 'SUB-004';
-            document.getElementById('modalFamiliaSubfamilia').value = 'Materiales';
-            document.getElementById('modalTipoSubfamilia').value = 'Acero';
-            document.getElementById('modalCuentaSubfamilia').value = '1150-02-01';
-            document.getElementById('modalDescripcionSubfamilia').value = 'Productos de acero como varilla, perfiles, láminas';
-        } else {
-            document.getElementById('modalEstatusSubfamilia').value = 'Activo';
-            document.getElementById('modalNumeroSubfamilia').value = numero;
-            document.getElementById('modalFamiliaSubfamilia').value = 'Herramientas';
-            document.getElementById('modalTipoSubfamilia').value = 'Ejemplo';
-            document.getElementById('modalCuentaSubfamilia').value = '1150-00-00';
-            document.getElementById('modalDescripcionSubfamilia').value = 'Descripción de ejemplo';
-        }
-        
-        document.getElementById('modalSubfamilia').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    };
-    
-    window.cerrarModalSubfamilia = function() {
-        document.getElementById('modalSubfamilia').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-    
-    window.guardarSubfamilia = function() {
-        const numero = document.getElementById('modalNumeroSubfamilia').value;
-        const familia = document.getElementById('modalFamiliaSubfamilia').value;
-        const tipo = document.getElementById('modalTipoSubfamilia').value;
-        
-        if (!numero || familia === 'Seleccionar familia' || !tipo) {
-            alert('Por favor complete los campos obligatorios');
-            return;
-        }
-        
-        alert(`Subfamilia ${numero} guardada correctamente`);
-        cerrarModalSubfamilia();
-    };
-    
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar la subfamilia');
+    })
+    .finally(() => {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
+    });
+};
+
+window.eliminarSubfamilia = function(id, codigo) {
+    if (confirm(`¿Eliminar la subfamilia ${codigo}?`)) {
+        fetch(`{{ route('almacen.api.subfamilias.destroy', '') }}/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                alert('✅ ' + res.message);
+                cargarSubfamilias();
+            } else {
+                alert('❌ Error: ' + res.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar la subfamilia');
+        });
+    }
+};
+
+window.verSubfamilia = function(id) {
+    fetch(`{{ route('almacen.api.subfamilias') }}`)
+        .then(res => res.json())
+        .then(res => {
+            const subfamilia = res.data.find(s => s.id === id);
+            if (subfamilia) {
+                alert(`Subfamilia: ${subfamilia.codigo}\nFamilia: ${subfamilia.familia_codigo} - ${subfamilia.familia_nombre}\nNombre: ${subfamilia.nombre}\nDescripción: ${subfamilia.descripcion || '---'}\nCuenta Contable: ${subfamilia.cuenta_contable || '---'}\nEstatus: ${subfamilia.estatus}`);
+            }
+        });
+};
+
+window.cerrarModalSubfamilia = function() {
+    document.getElementById('modalSubfamilia').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+// =========================================
+// CONFIGURACIÓN DE EVENTOS
+// =========================================
+
+function configurarEventos() {
     // Cerrar modales con Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
@@ -888,70 +1034,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cerrar modales al hacer clic fuera
     document.getElementById('modalFamilia').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalFamilia();
-        }
+        if (e.target === this) cerrarModalFamilia();
     });
     
     document.getElementById('modalSubfamilia').addEventListener('click', function(e) {
-        if (e.target === this) {
-            cerrarModalSubfamilia();
-        }
+        if (e.target === this) cerrarModalSubfamilia();
     });
     
-    // Funciones de agrupación para Familias
-    function actualizarGrupoColumnasFamilias() {
-        const container = document.getElementById('grupoColumnasFamilias');
-        const texto = document.getElementById('textoAgruparFamilias');
-        
-        container.innerHTML = '';
-        
-        if (columnasAgrupadasFamilias.length === 0) {
-            texto.style.display = 'inline';
-        } else {
-            texto.style.display = 'none';
-            columnasAgrupadasFamilias.forEach(col => {
-                const chip = document.createElement('span');
-                chip.className = 'columna-agrupada';
-                chip.innerHTML = `${col} <span class="remover" onclick="removerColumnaFamilias('${col}')">&times;</span>`;
-                container.appendChild(chip);
-            });
-        }
-    }
-
-    window.removerColumnaFamilias = function(columna) {
-        columnasAgrupadasFamilias = columnasAgrupadasFamilias.filter(c => c !== columna);
-        actualizarGrupoColumnasFamilias();
-    };
+    // Botones
+    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
+    document.getElementById('btnExcelFamilias').addEventListener('click', () => window.location.href = '{{ route("almacen.api.familias.exportar") }}');
+    document.getElementById('btnExcelSubfamilias').addEventListener('click', () => window.location.href = '{{ route("almacen.api.subfamilias.exportar") }}');
     
-    // Funciones de agrupación para Subfamilias
-    function actualizarGrupoColumnasSubfamilias() {
-        const container = document.getElementById('grupoColumnasSubfamilias');
-        const texto = document.getElementById('textoAgruparSubfamilias');
-        
-        container.innerHTML = '';
-        
-        if (columnasAgrupadasSubfamilias.length === 0) {
-            texto.style.display = 'inline';
-        } else {
-            texto.style.display = 'none';
-            columnasAgrupadasSubfamilias.forEach(col => {
-                const chip = document.createElement('span');
-                chip.className = 'columna-agrupada';
-                chip.innerHTML = `${col} <span class="remover" onclick="removerColumnaSubfamilias('${col}')">&times;</span>`;
-                container.appendChild(chip);
-            });
-        }
-    }
+    // Buscadores
+    document.getElementById('buscadorFamilias').addEventListener('input', function(e) {
+        const termino = e.target.value.toLowerCase();
+        const filas = document.querySelectorAll('#tablaBodyFamilias tr');
+        filas.forEach(fila => {
+            fila.style.display = fila.textContent.toLowerCase().includes(termino) ? '' : 'none';
+        });
+    });
+    
+    document.getElementById('buscadorSubfamilias').addEventListener('input', function(e) {
+        const termino = e.target.value.toLowerCase();
+        const filas = document.querySelectorAll('#tablaBodySubfamilias tr');
+        filas.forEach(fila => {
+            fila.style.display = fila.textContent.toLowerCase().includes(termino) ? '' : 'none';
+        });
+    });
+    
+    // Drag & drop para agrupación
+    configurarDragDrop();
+}
 
-    window.removerColumnaSubfamilias = function(columna) {
-        columnasAgrupadasSubfamilias = columnasAgrupadasSubfamilias.filter(c => c !== columna);
-        actualizarGrupoColumnasSubfamilias();
-    };
-
-    // Drag & drop para Familias
+function configurarDragDrop() {
+    // Familias
     document.getElementById('grupoAgrupacionFamilias').addEventListener('dragover', (e) => e.preventDefault());
-    
     document.getElementById('grupoAgrupacionFamilias').addEventListener('drop', (e) => {
         e.preventDefault();
         const columna = e.dataTransfer.getData('text/plain');
@@ -962,9 +1080,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Drag & drop para Subfamilias
+    // Subfamilias
     document.getElementById('grupoAgrupacionSubfamilias').addEventListener('dragover', (e) => e.preventDefault());
-    
     document.getElementById('grupoAgrupacionSubfamilias').addEventListener('drop', (e) => {
         e.preventDefault();
         const columna = e.dataTransfer.getData('text/plain');
@@ -974,77 +1091,110 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Agrupando subfamilias por: ' + columna);
         }
     });
+}
 
-    // Selector de columnas
-    window.toggleColumnSelector = function(tipo) {
-        const selector = document.getElementById('columnSelector' + (tipo === 'familias' ? 'Familias' : 'Subfamilias'));
-        selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
-        
-        if (selector.style.display === 'block') {
-            const lista = document.getElementById('columnasLista' + (tipo === 'familias' ? 'Familias' : 'Subfamilias'));
-            
-            let columnas;
-            if (tipo === 'familias') {
-                columnas = [
-                    { field: 'estatus', caption: 'Estatus' },
-                    { field: 'n_familia', caption: 'N° Familia' },
-                    { field: 'tipo', caption: 'Tipo' },
-                    { field: 'descripcion', caption: 'Descripción' },
-                    { field: 'cuenta_contable', caption: 'Cuenta Contable' }
-                ];
-            } else {
-                columnas = [
-                    { field: 'estatus', caption: 'Estatus' },
-                    { field: 'n_subfamilia', caption: 'N° Subfamilia' },
-                    { field: 'familia', caption: 'Familia' },
-                    { field: 'tipo_subfamilia', caption: 'Tipo Subfamilia' },
-                    { field: 'descripcion', caption: 'Descripción' },
-                    { field: 'cuenta_contable', caption: 'Cuenta Contable' }
-                ];
-            }
-            
-            lista.innerHTML = columnas.map(col => `
-                <div style="padding: 5px 0; display: flex; align-items: center;">
-                    <input type="checkbox" 
-                           id="chk_${col.field}_${tipo}"
-                           data-columna="${col.field}"
-                           checked
-                           style="margin-right: 8px; accent-color: var(--color-primary);">
-                    <label for="chk_${col.field}_${tipo}" style="font-size: 12px;">${col.caption}</label>
-                </div>
-            `).join('');
-        }
-    };
-
-    window.cerrarColumnSelector = function(tipo) {
-        document.getElementById('columnSelector' + (tipo === 'familias' ? 'Familias' : 'Subfamilias')).style.display = 'none';
-    };
-
-    // Cerrar selectores al hacer clic fuera
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#btnColumnasFamilias') && !e.target.closest('#columnSelectorFamilias')) {
-            document.getElementById('columnSelectorFamilias').style.display = 'none';
-        }
-        if (!e.target.closest('#btnColumnasSubfamilias') && !e.target.closest('#columnSelectorSubfamilias')) {
-            document.getElementById('columnSelectorSubfamilias').style.display = 'none';
-        }
-    });
-
-    // Botones
-    document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Funcionalidad de filtro en desarrollo'));
-    document.getElementById('btnExcelFamilias').addEventListener('click', () => alert('Exportar familias a Excel'));
-    document.getElementById('btnExcelSubfamilias').addEventListener('click', () => alert('Exportar subfamilias a Excel'));
-
-    // Buscadores
-    document.getElementById('buscadorFamilias').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        console.log('Buscando en familias:', termino);
-    });
+function actualizarGrupoColumnasFamilias() {
+    const container = document.getElementById('grupoColumnasFamilias');
+    const texto = document.getElementById('textoAgruparFamilias');
+    container.innerHTML = '';
     
-    document.getElementById('buscadorSubfamilias').addEventListener('input', function(e) {
-        const termino = e.target.value.toLowerCase();
-        console.log('Buscando en subfamilias:', termino);
-    });
+    if (columnasAgrupadasFamilias.length === 0) {
+        texto.style.display = 'inline';
+    } else {
+        texto.style.display = 'none';
+        columnasAgrupadasFamilias.forEach(col => {
+            const chip = document.createElement('span');
+            chip.className = 'columna-agrupada';
+            chip.innerHTML = `${col} <span class="remover" onclick="removerColumnaFamilias('${col}')">&times;</span>`;
+            container.appendChild(chip);
+        });
+    }
+}
+
+window.removerColumnaFamilias = function(columna) {
+    columnasAgrupadasFamilias = columnasAgrupadasFamilias.filter(c => c !== columna);
+    actualizarGrupoColumnasFamilias();
+};
+
+function actualizarGrupoColumnasSubfamilias() {
+    const container = document.getElementById('grupoColumnasSubfamilias');
+    const texto = document.getElementById('textoAgruparSubfamilias');
+    container.innerHTML = '';
+    
+    if (columnasAgrupadasSubfamilias.length === 0) {
+        texto.style.display = 'inline';
+    } else {
+        texto.style.display = 'none';
+        columnasAgrupadasSubfamilias.forEach(col => {
+            const chip = document.createElement('span');
+            chip.className = 'columna-agrupada';
+            chip.innerHTML = `${col} <span class="remover" onclick="removerColumnaSubfamilias('${col}')">&times;</span>`;
+            container.appendChild(chip);
+        });
+    }
+}
+
+window.removerColumnaSubfamilias = function(columna) {
+    columnasAgrupadasSubfamilias = columnasAgrupadasSubfamilias.filter(c => c !== columna);
+    actualizarGrupoColumnasSubfamilias();
+};
+
+// =========================================
+// SELECTOR DE COLUMNAS
+// =========================================
+
+window.toggleColumnSelector = function(tipo) {
+    const selector = document.getElementById('columnSelector' + (tipo === 'familias' ? 'Familias' : 'Subfamilias'));
+    selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
+    
+    if (selector.style.display === 'block') {
+        const lista = document.getElementById('columnasLista' + (tipo === 'familias' ? 'Familias' : 'Subfamilias'));
+        
+        let columnas;
+        if (tipo === 'familias') {
+            columnas = [
+                { field: 'estatus', caption: 'Estatus' },
+                { field: 'n_familia', caption: 'N° Familia' },
+                { field: 'tipo', caption: 'Tipo' },
+                { field: 'descripcion', caption: 'Descripción' },
+                { field: 'cuenta_contable', caption: 'Cuenta Contable' }
+            ];
+        } else {
+            columnas = [
+                { field: 'estatus', caption: 'Estatus' },
+                { field: 'n_subfamilia', caption: 'N° Subfamilia' },
+                { field: 'familia', caption: 'Familia' },
+                { field: 'tipo_subfamilia', caption: 'Tipo Subfamilia' },
+                { field: 'descripcion', caption: 'Descripción' },
+                { field: 'cuenta_contable', caption: 'Cuenta Contable' }
+            ];
+        }
+        
+        lista.innerHTML = columnas.map(col => `
+            <div style="padding: 5px 0; display: flex; align-items: center;">
+                <input type="checkbox" 
+                       id="chk_${col.field}_${tipo}"
+                       data-columna="${col.field}"
+                       checked
+                       style="margin-right: 8px; accent-color: var(--color-primary);">
+                <label for="chk_${col.field}_${tipo}" style="font-size: 12px;">${col.caption}</label>
+            </div>
+        `).join('');
+    }
+};
+
+window.cerrarColumnSelector = function(tipo) {
+    document.getElementById('columnSelector' + (tipo === 'familias' ? 'Familias' : 'Subfamilias')).style.display = 'none';
+};
+
+// Cerrar selectores al hacer clic fuera
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btnColumnasFamilias') && !e.target.closest('#columnSelectorFamilias')) {
+        document.getElementById('columnSelectorFamilias').style.display = 'none';
+    }
+    if (!e.target.closest('#btnColumnasSubfamilias') && !e.target.closest('#columnSelectorSubfamilias')) {
+        document.getElementById('columnSelectorSubfamilias').style.display = 'none';
+    }
 });
 </script>
 @endsection

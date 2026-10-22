@@ -181,6 +181,23 @@
             <form id="formRegistrarPago">
                 <div class="modal-body">
                     <input type="hidden" id="pago_programacion_id" name="programacion_id">
+
+                    <!-- Cuenta bancaria desde donde se paga (NUEVO) -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Cuenta bancaria desde donde se paga <span class="text-danger">*</span></label>
+                        <select class="form-control" id="cuenta_bancaria_id" required>
+                            <option value="">-- Seleccione una cuenta --</option>
+                            @if(isset($cuentasBancarias) && count($cuentasBancarias) > 0)
+                                @foreach($cuentasBancarias as $cuenta)
+                                    <option value="{{ $cuenta->id }}">{{ $cuenta->numero_cuenta }}</option>
+                                @endforeach
+                            @else
+                                <option value="" disabled>No hay cuentas bancarias activas</option>
+                            @endif
+                        </select>
+                        <small class="text-muted">Seleccione la cuenta desde la cual se realizará el pago.</small>
+                    </div>
+
                     <div class="mb-3">
                         <label class="fw-bold">Monto a Pagar <span class="text-danger">*</span></label>
                         <input type="number" step="0.01" class="form-control" id="monto_pago" required placeholder="0.00">
@@ -308,7 +325,7 @@ $(document).ready(function() {
                 paginaActual = 1;
                 renderizarTabla();
             } else {
-                tablaBody.html(`<td><td colspan="11" class="text-center text-danger py-5">Error: ${result.message}</td></table>`);
+                tablaBody.html(`<tr><td colspan="11" class="text-center text-danger py-5">Error: ${result.message}</td></tr>`);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -318,7 +335,7 @@ $(document).ready(function() {
     
     function renderizarTabla() {
         if (!datosProgramaciones.length) {
-            tablaBody.html('<tr><td colspan="11" class="text-center py-5">No hay programaciones para mostrar</td></td>');
+            tablaBody.html('<tr><td colspan="11" class="text-center py-5">No hay programaciones para mostrar</td></tr>');
             $('#paginacionInfo').text('Mostrando 0-0 de 0 registros');
             return;
         }
@@ -442,11 +459,13 @@ $(document).ready(function() {
         }
     });
     
+    // Abrir modal de pago: resetear campos incluyendo cuenta bancaria
     $(document).on('click', '.fa-credit-card', function() {
         const id = $(this).data('id');
         const saldo = $(this).data('saldo');
         
         $('#pago_programacion_id').val(id);
+        $('#cuenta_bancaria_id').val('');
         $('#monto_pago').val('');
         $('#referencia_pago').val('');
         $('#saldo_disponible_label').text(`Saldo disponible: ${formatCurrency(saldo)}`);
@@ -458,9 +477,18 @@ $(document).ready(function() {
         e.preventDefault();
         
         const id = $('#pago_programacion_id').val();
+        const cuentaBancariaId = $('#cuenta_bancaria_id').val();
+        
+        // Validación previa en cliente
+        if (!cuentaBancariaId) {
+            Swal.fire('Atención', 'Debe seleccionar la cuenta bancaria desde donde se realiza el pago.', 'warning');
+            return;
+        }
+        
         const formData = {
             monto_pago: parseFloat($('#monto_pago').val()) || 0,
-            referencia: $('#referencia_pago').val()
+            referencia: $('#referencia_pago').val(),
+            cuenta_bancaria_id: cuentaBancariaId
         };
         
         try {
@@ -480,7 +508,11 @@ $(document).ready(function() {
                 Swal.fire('Éxito', 'Pago registrado correctamente', 'success');
                 cargarDatos();
             } else {
-                Swal.fire('Error', result.message, 'error');
+                let msg = result.message || 'Error al registrar pago';
+                if (result.errors) {
+                    msg = Object.values(result.errors).flat().join('<br>');
+                }
+                Swal.fire('Error', msg, 'error');
             }
         } catch (error) {
             Swal.fire('Error', 'Error al registrar pago', 'error');
@@ -511,6 +543,7 @@ $(document).ready(function() {
                             <p><strong>Monto:</strong> ${formatCurrency(p.monto)}</p>
                             <p><strong>Saldo:</strong> ${formatCurrency(p.saldo)}</p>
                             <p><strong>Estatus:</strong> <span class="badge ${getBadgeClass(p.estatus)}">${p.estatus}</span></p>
+                            <p><strong>Cuenta Bancaria:</strong> ${p.cuenta_bancaria || '-'}</p>
                             <p><strong>Referencia Pago:</strong> ${p.referencia_pago || '-'}</p>
                             <p><strong>Observaciones:</strong> ${p.observaciones || '-'}</p>
                             <p><strong>Creado por:</strong> ${p.creador || '-'}</p>

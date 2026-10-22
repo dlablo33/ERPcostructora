@@ -11,31 +11,51 @@
             </div>
 
             <div class="card-body p-4">
-                <!-- Filtros -->
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
-                    <div>
-                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Fecha Inicio</label>
-                        <input type="date" id="fechaInicio" class="form-control" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="{{ date('Y-m-01') }}">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Fecha Fin</label>
-                        <input type="date" id="fechaFin" class="form-control" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;" value="{{ date('Y-m-d') }}">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Proyecto</label>
-                        <select id="filtroProyecto" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
-                            <option value="">Todos los proyectos</option>
-                            @isset($proyectos)
-                                @foreach($proyectos as $proyecto)
-                                    <option value="{{ $proyecto->id }}">{{ $proyecto->codigo }} - {{ $proyecto->nombre }}</option>
-                                @endforeach
-                            @endisset
-                        </select>
-                    </div>
-                    <div style="display: flex; align-items: flex-end;">
-                        <button id="btnActualizar" style="background-color: var(--color-primary); color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; width: 100%;">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
+                <!-- Filtros y Buscador -->
+                <div style="background-color: #f8f9fa; border: 1px solid #e3e6ea; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: end;">
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 4px;">
+                                <i class="fas fa-calendar-alt"></i> Fecha Inicio
+                            </label>
+                            <input type="date" id="fechaInicio" class="form-control" style="width: 100%; padding: 7px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;" value="{{ date('Y-m-01') }}">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 4px;">
+                                <i class="fas fa-calendar-alt"></i> Fecha Fin
+                            </label>
+                            <input type="date" id="fechaFin" class="form-control" style="width: 100%; padding: 7px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;" value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 4px;">
+                                <i class="fas fa-project-diagram"></i> Proyecto
+                            </label>
+                            <select id="filtroProyecto" style="width: 100%; padding: 7px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <option value="">Todos los proyectos</option>
+                                @isset($proyectos)
+                                    @foreach($proyectos as $proyecto)
+                                        <option value="{{ $proyecto->id }}">{{ $proyecto->codigo }} - {{ $proyecto->nombre }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d; margin-bottom: 4px;">
+                                <i class="fas fa-search"></i> Buscar
+                            </label>
+                            <div style="position: relative;">
+                                <input type="text" id="filtroBusqueda" placeholder="Folio, artículo, solicitante..." style="width: 100%; padding: 7px 30px 7px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <i class="fas fa-search" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 12px;"></i>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="btnActualizar" style="background-color: var(--color-primary); color: white; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer; flex: 1; font-size: 12px; font-weight: 600;">
+                                <i class="fas fa-sync-alt"></i> Filtrar
+                            </button>
+                            <button id="btnLimpiarFiltros" title="Limpiar filtros" style="background-color: white; color: #6c757d; border: 1px solid #ced4da; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px;">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -54,9 +74,6 @@
                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
                         <button id="btnAgregarEntrada" class="btn-agregar" onclick="abrirModalMovimiento('entrada')" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 15px; cursor: pointer; color: var(--color-primary);">
                             <i class="fas fa-plus"></i> Nueva Entrada
-                        </button>
-                        <button id="btnExcelEntradas" class="btn-excel" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 15px; cursor: pointer; color: var(--color-primary);">
-                            <i class="fas fa-file-excel"></i> Exportar
                         </button>
                     </div>
 
@@ -79,7 +96,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaBodyEntradas">
-                                <tr><td colspan="12" style="text-align: center;">Cargando...</td></tr>
+                                <tr><td colspan="12" style="text-align: center; padding: 30px;"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -104,9 +121,7 @@
                         <button id="btnAgregarSalida" class="btn-agregar" onclick="abrirModalMovimiento('salida')" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 15px; cursor: pointer; color: var(--color-primary);">
                             <i class="fas fa-plus"></i> Nueva Salida
                         </button>
-                        <button id="btnExcelSalidas" class="btn-excel" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 15px; cursor: pointer; color: var(--color-primary);">
-                            <i class="fas fa-file-excel"></i> Exportar
-                        </button>
+                        
                     </div>
 
                     <div class="table-container">
@@ -129,7 +144,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tablaBodySalidas">
-                                <tr><td colspan="13" style="text-align: center;">Cargando...</td></tr>
+                                <tr><td colspan="13" style="text-align: center; padding: 30px;"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -297,21 +312,204 @@
     </div>
 </div>
 
+<!-- MODAL PARA VER DETALLE DEL MOVIMIENTO (MEJORADO) -->
+<div id="modalDetalle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 100002; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 95%; max-width: 720px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <!-- Header dinámico -->
+        <div id="detalleHeader" style="padding: 20px 25px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, var(--color-primary), #1a5fdc);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div id="detalleIconoHeader" style="width: 45px; height: 45px; border-radius: 50%; background-color: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div>
+                    <h3 style="color: white; margin: 0; font-size: 18px;" id="detalleTituloTipo">Movimiento #0</h3>
+                    <small style="color: rgba(255,255,255,0.8); font-size: 12px;" id="detalleSubtitulo">Detalle del movimiento</small>
+                </div>
+            </div>
+            <button onclick="cerrarModalDetalle()" style="background: rgba(255,255,255,0.15); border: none; color: white; font-size: 18px; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">✕</button>
+        </div>
+
+        <!-- Contenido -->
+        <div style="padding: 25px;">
+            <!-- Badge de tipo + Fecha -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <span id="detalleBadgeTipo" style="padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 700;">-</span>
+                <span style="color: #6c757d; font-size: 13px;">
+                    <i class="fas fa-clock"></i> <span id="detalleFecha">-</span>
+                </span>
+            </div>
+
+            <!-- Grid de información principal -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 12px 15px; border-left: 3px solid var(--color-primary);">
+                    <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">
+                        <i class="fas fa-project-diagram"></i> Proyecto
+                    </div>
+                    <div style="font-size: 14px; font-weight: 600; color: #212529;" id="detalleProyecto">-</div>
+                </div>
+                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 12px 15px; border-left: 3px solid #17a2b8;">
+                    <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">
+                        <i class="fas fa-warehouse"></i> Almacén
+                    </div>
+                    <div style="font-size: 14px; font-weight: 600; color: #212529;" id="detalleAlmacen">-</div>
+                </div>
+            </div>
+
+            <!-- Artículo -->
+            <div style="background-color: #e8f0fe; border-radius: 8px; padding: 15px; margin-bottom: 20px; border-left: 4px solid var(--color-primary);">
+                <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">
+                    <i class="fas fa-box"></i> Artículo
+                </div>
+                <div style="font-size: 15px; font-weight: 700; color: #083CAE;" id="detalleArticuloCodigo">-</div>
+                <div style="font-size: 13px; color: #495057; margin-top: 2px;" id="detalleArticuloDescripcion">-</div>
+            </div>
+
+            <!-- Cantidades y costos -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+                <div style="text-align: center; background-color: #fff; border: 1px solid #e3e6ea; border-radius: 8px; padding: 15px;">
+                    <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Cantidad</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #083CAE;" id="detalleCantidad">0</div>
+                    <div style="font-size: 11px; color: #6c757d;" id="detalleUnidad">-</div>
+                </div>
+                <div style="text-align: center; background-color: #fff; border: 1px solid #e3e6ea; border-radius: 8px; padding: 15px;">
+                    <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Costo Unit.</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #28a745;" id="detalleCosto">$0.00</div>
+                    <div style="font-size: 11px; color: #6c757d;">por unidad</div>
+                </div>
+                <div style="text-align: center; background-color: #fff; border: 1px solid #e3e6ea; border-radius: 8px; padding: 15px;">
+                    <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Importe</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #ff6b00;" id="detalleImporte">$0.00</div>
+                    <div style="font-size: 11px; color: #6c757d;">total</div>
+                </div>
+            </div>
+
+            <!-- Stock antes/después -->
+            <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <div style="font-size: 12px; font-weight: 700; color: #495057; margin-bottom: 12px; text-transform: uppercase;">
+                    <i class="fas fa-chart-line"></i> Movimiento de Stock
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-around;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; margin-bottom: 4px;">ANTES</div>
+                        <div style="font-size: 22px; font-weight: 700; color: #6c757d;" id="detalleCantidadAntes">0</div>
+                    </div>
+                    <div style="font-size: 24px; color: var(--color-primary);">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; margin-bottom: 4px;">DESPUÉS</div>
+                        <div style="font-size: 22px; font-weight: 700; color: var(--color-primary);" id="detalleCantidadDespues">0</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 11px; color: #6c757d; margin-bottom: 4px;">DIFERENCIA</div>
+                        <div style="font-size: 22px; font-weight: 700;" id="detalleDiferencia">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div style="border-top: 1px solid #e3e6ea; padding-top: 18px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 3px;">
+                            <i class="fas fa-file-alt"></i> Referencia
+                        </div>
+                        <div style="font-size: 13px; color: #212529;" id="detalleReferencia">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 3px;">
+                            <i class="fas fa-user"></i> Solicitante
+                        </div>
+                        <div style="font-size: 13px; color: #212529;" id="detalleSolicitante">-</div>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 3px;">
+                            <i class="fas fa-comment"></i> Observaciones
+                        </div>
+                        <div style="font-size: 13px; color: #212529; background-color: #f8f9fa; padding: 10px; border-radius: 6px; min-height: 20px;" id="detalleObservaciones">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 3px;">
+                            <i class="fas fa-user-check"></i> Registrado por
+                        </div>
+                        <div style="font-size: 13px; color: #212529;" id="detalleCreadoPor">-</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: #6c757d; font-weight: 600; text-transform: uppercase; margin-bottom: 3px;">
+                            <i class="fas fa-hashtag"></i> ID Movimiento
+                        </div>
+                        <div style="font-size: 13px; color: #212529; font-weight: 600;" id="detalleId">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="padding: 15px 25px; background-color: #f8f9fa; border-radius: 0 0 12px 12px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #e3e6ea;">
+            <button onclick="cerrarModalDetalle()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; font-size: 13px; color: #495057;">
+                <i class="fas fa-times"></i> Cerrar
+            </button>
+            <button onclick="imprimirDetalle()" style="padding: 8px 20px; border: none; border-radius: 6px; background: var(--color-primary); color: white; cursor: pointer; font-weight: 600; font-size: 13px;">
+                <i class="fas fa-print"></i> Imprimir
+            </button>
+        </div>
+    </div>
+</div>
+
 <style>
     :root { --color-primary: #083CAE; }
     .table-container { border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto; max-height: 500px; overflow-y: auto; }
     .table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .table th { background-color: var(--color-primary) !important; color: white; padding: 12px 8px; border: 1px solid #dee2e6; position: sticky; top: 0; }
-    .table td { padding: 10px 8px; border: 1px solid #dee2e6; }
+    .table th { background-color: var(--color-primary) !important; color: white; padding: 12px 8px; border: 1px solid #dee2e6; position: sticky; top: 0; z-index: 10; }
+    .table td { padding: 10px 8px; border: 1px solid #dee2e6; vertical-align: middle; }
     tbody tr:nth-child(even) { background-color: #f8f9fa; }
-    tbody tr:hover { background-color: #e8f0fe; }
+    tbody tr:hover { background-color: #e8f0fe; transition: background-color 0.15s; }
     .page-btn { padding: 5px 12px; border: 1px solid var(--color-primary); border-radius: 4px; background: white; cursor: pointer; color: var(--color-primary); }
     .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .page-btn:not(:disabled):hover { background-color: var(--color-primary); color: white; }
     .btn-agregar:hover, .btn-excel:hover { background-color: var(--color-primary) !important; color: white !important; }
     .cantidad-recibir { width: 100px; text-align: center; }
     .cantidad-recibir input { width: 100%; padding: 5px; text-align: center; }
     .badge-pendiente { background-color: #ffc107; color: #212529; padding: 2px 8px; border-radius: 20px; font-size: 11px; }
-    @media (max-width: 768px) { div[style*="grid-template-columns: repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; } }
+    
+    /* Botón de acción ver detalle */
+    .btn-ver-detalle {
+        background-color: #e8f0fe;
+        color: var(--color-primary);
+        border: 1px solid #c9dcf7;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+    }
+    .btn-ver-detalle:hover {
+        background-color: var(--color-primary);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(8,60,174,0.25);
+    }
+    
+    /* Badges de tipo de movimiento en tabla */
+    .badge-tipo {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .badge-entrada { background-color: #d4edda; color: #155724; }
+    .badge-salida { background-color: #f8d7da; color: #721c24; }
+    
+    @media (max-width: 768px) { 
+        div[style*="grid-template-columns: repeat(5, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+        div[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -323,6 +521,7 @@ let currentPageEntrada = 1, currentPageSalida = 1;
 let perPageEntrada = 10, perPageSalida = 10;
 let articulosCompraData = [];
 let compraSeleccionadaId = null;
+let movimientoDetalleActual = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     cargarMovimientos('entrada');
@@ -378,13 +577,20 @@ function cargarMovimientos(tipo) {
     const fechaInicio = document.getElementById('fechaInicio')?.value || '';
     const fechaFin = document.getElementById('fechaFin')?.value || '';
     const proyectoId = document.getElementById('filtroProyecto')?.value || '';
+    const search = document.getElementById('filtroBusqueda')?.value || '';
     const currentPage = tipo === 'entrada' ? currentPageEntrada : currentPageSalida;
     const perPage = tipo === 'entrada' ? perPageEntrada : perPageSalida;
     
     let url = `/inventario/api/movimientos?tipo=${tipo === 'entrada' ? 'Entrada' : 'Salida'}&page=${currentPage}&per_page=${perPage}`;
-    if (fechaInicio) url += `&fecha_inicio=${fechaInicio}`;
-    if (fechaFin) url += `&fecha_fin=${fechaFin}`;
-    if (proyectoId) url += `&proyecto_id=${proyectoId}`;
+    if (fechaInicio) url += `&fecha_inicio=${encodeURIComponent(fechaInicio)}`;
+    if (fechaFin) url += `&fecha_fin=${encodeURIComponent(fechaFin)}`;
+    if (proyectoId) url += `&proyecto_id=${encodeURIComponent(proyectoId)}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    
+    const tbody = document.getElementById(`tablaBody${tipo === 'entrada' ? 'Entradas' : 'Salidas'}`);
+    if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="${tipo === 'entrada' ? '12' : '13'}" style="text-align: center; padding: 30px;"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>`;
+    }
     
     fetch(url)
         .then(response => response.json())
@@ -392,15 +598,25 @@ function cargarMovimientos(tipo) {
             if (response.success) {
                 renderizarTabla(tipo, response.data);
                 actualizarPaginacion(tipo, response.current_page, response.last_page, response.total);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="${tipo === 'entrada' ? '12' : '13'}" style="text-align: center; padding: 30px; color: #dc3545;">Error: ${response.message || 'Desconocido'}</td></tr>`;
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            tbody.innerHTML = `<tr><td colspan="${tipo === 'entrada' ? '12' : '13'}" style="text-align: center; padding: 30px; color: #dc3545;">Error de conexión</td></tr>`;
+        });
 }
 
 function renderizarTabla(tipo, data) {
     const tbody = document.getElementById(`tablaBody${tipo === 'entrada' ? 'Entradas' : 'Salidas'}`);
+    const colspan = tipo === 'entrada' ? 12 : 13;
+    
     if (!data || !data.length) {
-        tbody.innerHTML = `<tr><td colspan="${tipo === 'entrada' ? '12' : '13'}" style="text-align: center;">No hay movimientos registrados</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; padding: 40px; color: #6c757d;">
+            <i class="fas fa-inbox" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.3;"></i>
+            No hay movimientos registrados con los filtros actuales
+        </td></tr>`;
         return;
     }
     
@@ -408,26 +624,64 @@ function renderizarTabla(tipo, data) {
     data.forEach((item, index) => {
         const row = tbody.insertRow();
         row.style.backgroundColor = index % 2 === 1 ? '#f8f9fa' : 'white';
-        row.insertCell(0).innerHTML = item.id;
-        row.insertCell(1).innerHTML = item.fecha_movimiento;
-        row.insertCell(2).innerHTML = item.proyecto_nombre || '---';
-        row.insertCell(3).innerHTML = `${item.articulo_codigo}<br><small>${item.articulo_descripcion || ''}</small>`;
-        row.insertCell(4).innerHTML = `${item.cantidad} ${item.unidad_medida || ''}`;
+        
+        // ID
+        row.insertCell(0).innerHTML = `<strong style="color: var(--color-primary);">#${item.id}</strong>`;
+        
+        // Fecha
+        row.insertCell(1).innerHTML = `<i class="far fa-clock" style="color:#6c757d; margin-right:4px;"></i>${item.fecha_movimiento}`;
+        
+        // Proyecto
+        row.insertCell(2).innerHTML = item.proyecto_nombre 
+            ? `<div style="font-weight:600; font-size:12px;">${item.proyecto_codigo || ''}</div><div style="font-size:11px; color:#6c757d;">${item.proyecto_nombre}</div>`
+            : '---';
+        
+        // Artículo
+        row.insertCell(3).innerHTML = `<div style="font-weight:600; color: var(--color-primary); font-size:12px;">${item.articulo_codigo || '---'}</div><div style="font-size:11px; color:#6c757d; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${item.articulo_descripcion || ''}">${item.articulo_descripcion || ''}</div>`;
+        
+        // Cantidad
+        row.insertCell(4).innerHTML = `<span style="font-weight:700; color:#083CAE;">${item.cantidad}</span> <small style="color:#6c757d;">${item.unidad_medida || ''}</small>`;
+        
+        // Costo Unit
         row.insertCell(5).innerHTML = item.costo_unitario ? `$${parseFloat(item.costo_unitario).toFixed(2)}` : '---';
-        row.insertCell(6).innerHTML = item.importe ? `$${parseFloat(item.importe).toFixed(2)}` : '---';
-        row.insertCell(7).innerHTML = item.almacen_nombre || '---';
-        row.insertCell(8).innerHTML = item.referencia_folio || '---';
+        
+        // Importe
+        row.insertCell(6).innerHTML = item.importe ? `<strong style="color:#28a745;">$${parseFloat(item.importe).toFixed(2)}</strong>` : '---';
+        
+        // Almacén
+        row.insertCell(7).innerHTML = item.almacen_nombre ? `<i class="fas fa-warehouse" style="color:#17a2b8; margin-right:4px;"></i>${item.almacen_nombre}` : '---';
+        
+        // Referencia
+        row.insertCell(8).innerHTML = item.referencia_folio 
+            ? `<span style="background:#e8f0fe; color:var(--color-primary); padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600;">${item.referencia_folio}</span>` 
+            : '---';
         
         if (tipo === 'salida') {
+            // Solicitante
             row.insertCell(9).innerHTML = item.solicitante || '---';
-            row.insertCell(10).innerHTML = item.observaciones || '---';
+            // Observaciones
+            row.insertCell(10).innerHTML = item.observaciones 
+                ? `<span title="${item.observaciones}" style="display:inline-block; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.observaciones}</span>` 
+                : '---';
+            // Registrado por
             row.insertCell(11).innerHTML = item.creado_por || '---';
-            row.insertCell(12).innerHTML = `<i class="fas fa-eye" onclick="verDetalle(${item.id})" style="color: var(--color-primary); cursor: pointer;"></i>`;
         } else {
-            row.insertCell(9).innerHTML = item.observaciones || '---';
+            // Observaciones
+            row.insertCell(9).innerHTML = item.observaciones 
+                ? `<span title="${item.observaciones}" style="display:inline-block; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.observaciones}</span>` 
+                : '---';
+            // Registrado por
             row.insertCell(10).innerHTML = item.creado_por || '---';
-            row.insertCell(11).innerHTML = `<i class="fas fa-eye" onclick="verDetalle(${item.id})" style="color: var(--color-primary); cursor: pointer;"></i>`;
         }
+        
+        // Acciones - Botón mejorado
+        const accionesCell = row.insertCell(tipo === 'entrada' ? 11 : 12);
+        accionesCell.style.textAlign = 'center';
+        accionesCell.innerHTML = `
+            <button class="btn-ver-detalle" onclick="verDetalle(${item.id})" title="Ver detalle completo">
+                <i class="fas fa-eye"></i> Ver
+            </button>
+        `;
     });
 }
 
@@ -442,25 +696,87 @@ function actualizarPaginacion(tipo, currentPage, lastPage, total) {
 }
 
 function configurarEventos() {
+    // Botón filtrar
     document.getElementById('btnActualizar')?.addEventListener('click', () => {
+        currentPageEntrada = 1;
+        currentPageSalida = 1;
         cargarMovimientos('entrada');
         cargarMovimientos('salida');
     });
     
+    // Botón limpiar filtros
+    document.getElementById('btnLimpiarFiltros')?.addEventListener('click', () => {
+        document.getElementById('fechaInicio').value = '{{ date('Y-m-01') }}';
+        document.getElementById('fechaFin').value = '{{ date('Y-m-d') }}';
+        document.getElementById('filtroProyecto').value = '';
+        document.getElementById('filtroBusqueda').value = '';
+        currentPageEntrada = 1;
+        currentPageSalida = 1;
+        cargarMovimientos('entrada');
+        cargarMovimientos('salida');
+    });
+    
+    // Filtros automáticos al cambiar
+    document.getElementById('fechaInicio')?.addEventListener('change', () => { currentPageEntrada = 1; currentPageSalida = 1; cargarMovimientos('entrada'); cargarMovimientos('salida'); });
+    document.getElementById('fechaFin')?.addEventListener('change', () => { currentPageEntrada = 1; currentPageSalida = 1; cargarMovimientos('entrada'); cargarMovimientos('salida'); });
+    document.getElementById('filtroProyecto')?.addEventListener('change', () => { currentPageEntrada = 1; currentPageSalida = 1; cargarMovimientos('entrada'); cargarMovimientos('salida'); });
+    
+    // Búsqueda con debounce
+    let searchTimeout;
+    document.getElementById('filtroBusqueda')?.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentPageEntrada = 1;
+            currentPageSalida = 1;
+            cargarMovimientos('entrada');
+            cargarMovimientos('salida');
+        }, 400);
+    });
+    
+    // Búsqueda con Enter
+    document.getElementById('filtroBusqueda')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            clearTimeout(searchTimeout);
+            currentPageEntrada = 1;
+            currentPageSalida = 1;
+            cargarMovimientos('entrada');
+            cargarMovimientos('salida');
+        }
+    });
+    
+    // Paginación entradas
     document.getElementById('btnPrimeraEntrada')?.addEventListener('click', () => { currentPageEntrada = 1; cargarMovimientos('entrada'); });
     document.getElementById('btnAnteriorEntrada')?.addEventListener('click', () => { if (currentPageEntrada > 1) { currentPageEntrada--; cargarMovimientos('entrada'); } });
     document.getElementById('btnSiguienteEntrada')?.addEventListener('click', () => { currentPageEntrada++; cargarMovimientos('entrada'); });
     document.getElementById('btnUltimaEntrada')?.addEventListener('click', () => { currentPageEntrada = 999; cargarMovimientos('entrada'); });
     document.getElementById('porPaginaEntrada')?.addEventListener('change', (e) => { perPageEntrada = parseInt(e.target.value); currentPageEntrada = 1; cargarMovimientos('entrada'); });
     
+    // Paginación salidas
     document.getElementById('btnPrimeraSalida')?.addEventListener('click', () => { currentPageSalida = 1; cargarMovimientos('salida'); });
     document.getElementById('btnAnteriorSalida')?.addEventListener('click', () => { if (currentPageSalida > 1) { currentPageSalida--; cargarMovimientos('salida'); } });
     document.getElementById('btnSiguienteSalida')?.addEventListener('click', () => { currentPageSalida++; cargarMovimientos('salida'); });
     document.getElementById('btnUltimaSalida')?.addEventListener('click', () => { currentPageSalida = 999; cargarMovimientos('salida'); });
     document.getElementById('porPaginaSalida')?.addEventListener('change', (e) => { perPageSalida = parseInt(e.target.value); currentPageSalida = 1; cargarMovimientos('salida'); });
     
-    document.getElementById('btnExcelEntradas')?.addEventListener('click', () => window.location.href = '/inventario/api/movimientos/exportar?tipo=Entrada');
-    document.getElementById('btnExcelSalidas')?.addEventListener('click', () => window.location.href = '/inventario/api/movimientos/exportar?tipo=Salida');
+    // Exportar
+    document.getElementById('btnExcelEntradas')?.addEventListener('click', () => {
+        const params = new URLSearchParams({
+            tipo: 'Entrada',
+            fecha_inicio: document.getElementById('fechaInicio').value,
+            fecha_fin: document.getElementById('fechaFin').value,
+            proyecto_id: document.getElementById('filtroProyecto').value
+        });
+        window.location.href = '/inventario/api/movimientos/exportar?' + params.toString();
+    });
+    document.getElementById('btnExcelSalidas')?.addEventListener('click', () => {
+        const params = new URLSearchParams({
+            tipo: 'Salida',
+            fecha_inicio: document.getElementById('fechaInicio').value,
+            fecha_fin: document.getElementById('fechaFin').value,
+            proyecto_id: document.getElementById('filtroProyecto').value
+        });
+        window.location.href = '/inventario/api/movimientos/exportar?' + params.toString();
+    });
 }
 
 async function cargarComprasPendientes() {
@@ -505,7 +821,7 @@ async function abrirModalArticulosCompra(compraId) {
     
     compraSeleccionadaId = compraId;
     const tbody = document.getElementById('tablaArticulosCompraBody');
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Cargando...</tr></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>';
     
     try {
         const response = await fetch(`/compras/api/pendientes-recepcion/${compraId}/detalle`);
@@ -895,6 +1211,9 @@ window.guardarMovimiento = async function() {
     });
 };
 
+/* ============================================================
+   MODAL DE DETALLE MEJORADO
+   ============================================================ */
 window.verDetalle = async function(id) {
     if (!id) {
         alert('ID no válido');
@@ -904,28 +1223,10 @@ window.verDetalle = async function(id) {
     try {
         const response = await fetch(`/inventario/api/movimientos/${id}`);
         const data = await response.json();
+        
         if (data.success && data.data) {
-            const m = data.data;
-            let detalles = `╔════════════════════════════════════════════════════════════╗\n`;
-            detalles += `║                    MOVIMIENTO #${m.id}                      ║\n`;
-            detalles += `╠════════════════════════════════════════════════════════════╣\n`;
-            detalles += `║ 📅 Fecha:        ${m.fecha_movimiento}\n`;
-            detalles += `║ 📌 Tipo:         ${m.tipo_movimiento}\n`;
-            detalles += `║ 🏗️ Proyecto:     ${m.proyecto_nombre || 'N/A'}\n`;
-            detalles += `║ 📦 Artículo:     ${m.articulo_codigo} - ${m.articulo_descripcion}\n`;
-            detalles += `║ 🔢 Cantidad:     ${m.cantidad}\n`;
-            detalles += `║ 💰 Costo Unit.:  ${m.costo_unitario ? '$' + parseFloat(m.costo_unitario).toFixed(2) : 'N/A'}\n`;
-            detalles += `║ 💵 Importe:      ${m.importe ? '$' + parseFloat(m.importe).toFixed(2) : 'N/A'}\n`;
-            detalles += `║ 🏪 Almacén:      ${m.almacen_nombre || 'N/A'}\n`;
-            detalles += `║ 📄 Referencia:   ${m.referencia_folio || 'N/A'}\n`;
-            detalles += `║ 👤 Solicitante:  ${m.solicitante || 'N/A'}\n`;
-            detalles += `║ 💬 Observaciones: ${m.observaciones || 'N/A'}\n`;
-            detalles += `║ 👨‍💼 Registrado:   ${m.creado_por || 'N/A'}\n`;
-            detalles += `╠════════════════════════════════════════════════════════════╣\n`;
-            detalles += `║ 📊 Stock antes:  ${m.cantidad_antes}\n`;
-            detalles += `║ 📊 Stock después: ${m.cantidad_despues}\n`;
-            detalles += `╚════════════════════════════════════════════════════════════╝`;
-            alert(detalles);
+            movimientoDetalleActual = data.data;
+            mostrarModalDetalle(data.data);
         } else {
             alert('❌ No se encontró el movimiento');
         }
@@ -933,6 +1234,142 @@ window.verDetalle = async function(id) {
         console.error('Error:', error);
         alert('❌ Error al conectar con el servidor');
     }
+};
+
+function mostrarModalDetalle(m) {
+    const esEntrada = m.tipo_movimiento === 'Entrada';
+    const esSalida = m.tipo_movimiento === 'Salida';
+    const esTransferencia = m.tipo_movimiento === 'Transferencia';
+    const esAjuste = m.tipo_movimiento === 'Ajuste';
+    
+    // Configurar header según tipo
+    const header = document.getElementById('detalleHeader');
+    const iconoHeader = document.getElementById('detalleIconoHeader');
+    const badgeTipo = document.getElementById('detalleBadgeTipo');
+    
+    if (esEntrada) {
+        header.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
+        iconoHeader.innerHTML = '<i class="fas fa-arrow-down"></i>';
+        badgeTipo.style.backgroundColor = '#d4edda';
+        badgeTipo.style.color = '#155724';
+        badgeTipo.innerHTML = '<i class="fas fa-arrow-down"></i> ENTRADA';
+    } else if (esSalida) {
+        header.style.background = 'linear-gradient(135deg, #dc3545, #a71d2a)';
+        iconoHeader.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        badgeTipo.style.backgroundColor = '#f8d7da';
+        badgeTipo.style.color = '#721c24';
+        badgeTipo.innerHTML = '<i class="fas fa-arrow-up"></i> SALIDA';
+    } else if (esTransferencia) {
+        header.style.background = 'linear-gradient(135deg, #17a2b8, #117a8b)';
+        iconoHeader.innerHTML = '<i class="fas fa-exchange-alt"></i>';
+        badgeTipo.style.backgroundColor = '#d1ecf1';
+        badgeTipo.style.color = '#0c5460';
+        badgeTipo.innerHTML = '<i class="fas fa-exchange-alt"></i> TRANSFERENCIA';
+    } else {
+        header.style.background = 'linear-gradient(135deg, #ffc107, #d39e00)';
+        iconoHeader.innerHTML = '<i class="fas fa-sliders-h"></i>';
+        badgeTipo.style.backgroundColor = '#fff3cd';
+        badgeTipo.style.color = '#856404';
+        badgeTipo.innerHTML = '<i class="fas fa-sliders-h"></i> AJUSTE';
+    }
+    
+    document.getElementById('detalleTituloTipo').textContent = `Movimiento #${m.id}`;
+    document.getElementById('detalleSubtitulo').textContent = `${m.tipo_movimiento} • ${m.fecha_movimiento}`;
+    document.getElementById('detalleFecha').textContent = m.fecha_movimiento;
+    
+    // Datos principales
+    document.getElementById('detalleProyecto').textContent = m.proyecto_nombre || 'N/A';
+    document.getElementById('detalleAlmacen').textContent = m.almacen_nombre || 
+        (m.almacen_origen_nombre && m.almacen_destino_nombre 
+            ? `${m.almacen_origen_nombre} → ${m.almacen_destino_nombre}`
+            : 'N/A');
+    
+    // Artículo
+    document.getElementById('detalleArticuloCodigo').textContent = m.articulo_codigo || '---';
+    document.getElementById('detalleArticuloDescripcion').textContent = m.articulo_descripcion || '---';
+    
+    // Cantidades y costos
+    document.getElementById('detalleCantidad').textContent = m.cantidad;
+    document.getElementById('detalleUnidad').textContent = m.unidad_medida || 'unidad';
+    document.getElementById('detalleCosto').textContent = m.costo_unitario ? `$${parseFloat(m.costo_unitario).toFixed(2)}` : 'N/A';
+    document.getElementById('detalleImporte').textContent = m.importe ? `$${parseFloat(m.importe).toFixed(2)}` : 'N/A';
+    
+    // Stock antes/después
+    const cantidadAntes = parseFloat(m.cantidad_antes) || 0;
+    const cantidadDespues = parseFloat(m.cantidad_despues) || 0;
+    const diferencia = cantidadDespues - cantidadAntes;
+    
+    document.getElementById('detalleCantidadAntes').textContent = cantidadAntes;
+    document.getElementById('detalleCantidadDespues').textContent = cantidadDespues;
+    
+    const difElement = document.getElementById('detalleDiferencia');
+    difElement.textContent = (diferencia > 0 ? '+' : '') + diferencia.toFixed(2);
+    difElement.style.color = diferencia > 0 ? '#28a745' : (diferencia < 0 ? '#dc3545' : '#6c757d');
+    
+    // Info adicional
+    document.getElementById('detalleReferencia').textContent = m.referencia_folio || 'N/A';
+    document.getElementById('detalleSolicitante').textContent = m.solicitante || 'N/A';
+    document.getElementById('detalleObservaciones').textContent = m.observaciones || 'Sin observaciones';
+    document.getElementById('detalleCreadoPor').textContent = m.creado_por || 'N/A';
+    document.getElementById('detalleId').textContent = `#${m.id}`;
+    
+    // Mostrar modal
+    document.getElementById('modalDetalle').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+window.cerrarModalDetalle = function() {
+    document.getElementById('modalDetalle').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+window.imprimirDetalle = function() {
+    if (!movimientoDetalleActual) return;
+    
+    const m = movimientoDetalleActual;
+    const ventana = window.open('', '_blank', 'width=800,height=600');
+    ventana.document.write(`
+        <html>
+        <head>
+            <title>Movimiento #${m.id}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 30px; color: #333; }
+                h1 { color: #083CAE; border-bottom: 3px solid #083CAE; padding-bottom: 10px; }
+                .info { margin: 15px 0; }
+                .info label { font-weight: bold; display: inline-block; width: 180px; color: #555; }
+                .info span { color: #000; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                th { background-color: #083CAE; color: white; }
+            </style>
+        </head>
+        <body>
+            <h1>📋 Detalle de Movimiento #${m.id}</h1>
+            <div class="info"><label>Tipo:</label> <span>${m.tipo_movimiento}</span></div>
+            <div class="info"><label>Fecha:</label> <span>${m.fecha_movimiento}</span></div>
+            <div class="info"><label>Proyecto:</label> <span>${m.proyecto_nombre || 'N/A'}</span></div>
+            <div class="info"><label>Almacén:</label> <span>${m.almacen_nombre || 'N/A'}</span></div>
+            <div class="info"><label>Artículo:</label> <span>${m.articulo_codigo} - ${m.articulo_descripcion}</span></div>
+            <table>
+                <tr><th>Cantidad</th><th>Costo Unitario</th><th>Importe</th></tr>
+                <tr>
+                    <td>${m.cantidad} ${m.unidad_medida || ''}</td>
+                    <td>${m.costo_unitario ? '$' + parseFloat(m.costo_unitario).toFixed(2) : 'N/A'}</td>
+                    <td>${m.importe ? '$' + parseFloat(m.importe).toFixed(2) : 'N/A'}</td>
+                </tr>
+            </table>
+            <div class="info" style="margin-top:20px;"><label>Stock antes:</label> <span>${m.cantidad_antes}</span></div>
+            <div class="info"><label>Stock después:</label> <span>${m.cantidad_despues}</span></div>
+            <div class="info"><label>Referencia:</label> <span>${m.referencia_folio || 'N/A'}</span></div>
+            <div class="info"><label>Solicitante:</label> <span>${m.solicitante || 'N/A'}</span></div>
+            <div class="info"><label>Observaciones:</label> <span>${m.observaciones || 'N/A'}</span></div>
+            <div class="info"><label>Registrado por:</label> <span>${m.creado_por || 'N/A'}</span></div>
+            <p style="margin-top:40px; text-align:center; color:#999; font-size:12px;">Generado el ${new Date().toLocaleString()}</p>
+        </body>
+        </html>
+    `);
+    ventana.document.close();
+    ventana.print();
 };
 
 window.cerrarModalMovimiento = function() {
@@ -950,6 +1387,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') { 
         cerrarModalMovimiento(); 
         cerrarModalArticulos(); 
+        cerrarModalDetalle();
     } 
 });
 
@@ -959,6 +1397,10 @@ document.getElementById('modalMovimiento')?.addEventListener('click', (e) => {
 
 document.getElementById('modalArticulosCompra')?.addEventListener('click', (e) => { 
     if (e.target === document.getElementById('modalArticulosCompra')) cerrarModalArticulos(); 
+});
+
+document.getElementById('modalDetalle')?.addEventListener('click', (e) => { 
+    if (e.target === document.getElementById('modalDetalle')) cerrarModalDetalle(); 
 });
 </script>
 @endsection

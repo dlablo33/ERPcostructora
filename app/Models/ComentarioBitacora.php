@@ -31,6 +31,8 @@ class ComentarioBitacora extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    
+
     // Accessors
     public function getComentarioResumidoAttribute(): string
     {

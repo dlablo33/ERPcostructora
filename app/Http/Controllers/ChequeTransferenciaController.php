@@ -8,14 +8,14 @@ use App\Models\CuentaBancaria;
 use App\Models\Moneda;
 use App\Models\Proyecto;
 use App\Models\Proveedor;
-use App\Models\Facturacion\Contacto;
-use App\Models\Facturacion\Factura;
 use App\Models\MovimientoBancario;
 use App\Models\CodigoSat;
 use App\Models\CuentaContable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ChequeTransferenciaController extends Controller
 {
@@ -33,10 +33,8 @@ class ChequeTransferenciaController extends Controller
         $monedas = Moneda::where('activa', true)->get();
         $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
         
-        // Proveedores para seleccionar
         $proveedores = Proveedor::where('activo', true)->orderBy('nombre')->get(['id', 'nombre', 'rfc']);
         
-        // Códigos SAT para gastos
         $codigosSatGastos = CodigoSat::whereIn('tipo', ['G', 'A'])
             ->orderBy('codigo_agrupador')
             ->get();
@@ -62,7 +60,6 @@ class ChequeTransferenciaController extends Controller
                 'proveedorRel'
             ])->where('tipo_operacion', 'egreso');
             
-            // Filtros
             if ($request->has('fecha_inicio') && $request->fecha_inicio) {
                 $query->whereDate('fecha', '>=', $request->fecha_inicio);
             }
@@ -91,8 +88,10 @@ class ChequeTransferenciaController extends Controller
                     'folio' => $item->folio,
                     'estatus' => $item->estatus,
                     'proveedor' => $item->proveedor,
+                    'proveedor_id' => $item->proveedor_id,
                     'forma_pago' => $item->forma_pago === 'cheque' ? 'Cheque' : 'Transferencia',
                     'cuenta' => $item->cuentaBancaria?->numero_cuenta ?? '-',
+                    'cuenta_bancaria_id' => $item->cuenta_bancaria_id,
                     'fecha' => $item->fecha,
                     'referencia' => $item->referencia ?? '-',
                     'referencia_bancaria' => $item->referencia_bancaria ?? '-',
@@ -100,6 +99,7 @@ class ChequeTransferenciaController extends Controller
                     'monto_restante' => (float) $item->monto_restante,
                     'monto_aplicado' => (float) $item->monto_aplicado,
                     'moneda' => $item->moneda?->simbolo ?? '-',
+                    'moneda_id' => $item->moneda_id,
                     'descripcion' => $item->descripcion ?? '-',
                     'facturas_aplicadas' => $item->facturas_aplicadas,
                 ];
@@ -114,7 +114,74 @@ class ChequeTransferenciaController extends Controller
     }
 
     /**
+     * Descargar PDF del listado de cheques/transferencias
+     */
+    public function descargarPdf(Request $request)
+    {
+        try {
+            $query = ChequeTransferencia::with([
+                'cuentaBancaria.banco',
+                'moneda',
+                'proyecto',
+                'codigoSat',
+                'proveedorRel'
+            ])->where('tipo_operacion', 'egreso');
+
+            // Mismos filtros que getData
+            if ($request->filled('fecha_inicio')) {
+                $query->whereDate('fecha', '>=', $request->fecha_inicio);
+            }
+            if ($request->filled('fecha_fin')) {
+                $query->whereDate('fecha', '<=', $request->fecha_fin);
+            }
+            if ($request->filled('forma_pago')) {
+                $query->where('forma_pago', $request->forma_pago);
+            }
+            if ($request->filled('estatus')) {
+                $query->where('estatus', $request->estatus);
+            }
+            if ($request->filled('proveedor_id')) {
+                $query->where('proveedor_id', $request->proveedor_id);
+            }
+            // Búsqueda libre (misma lógica que el buscador del frontend)
+            if ($request->filled('buscar')) {
+                $buscar = $request->buscar;
+                $query->where(function ($q) use ($buscar) {
+                    $q->where('proveedor', 'like', "%{$buscar}%")
+                      ->orWhere('folio', 'like', "%{$buscar}%")
+                      ->orWhere('descripcion', 'like', "%{$buscar}%");
+                });
+            }
+
+            $registros = $query->orderBy('fecha', 'desc')->get();
+
+            // Totales
+            $totalMonto = $registros->sum('monto');
+            $totalAplicado = $registros->sum('monto_aplicado');
+            $totalRestante = $registros->sum('monto_restante');
+
+            $pdf = Pdf::loadView(
+                'administracion.tesoreria.pdf.cheques-transferencias',
+                compact('registros', 'totalMonto', 'totalAplicado', 'totalRestante')
+            )->setPaper('letter', 'landscape');
+
+            $nombreArchivo = 'cheques-transferencias-' . now()->format('Y-m-d-His') . '.pdf';
+
+            return $pdf->download($nombreArchivo);
+
+        } catch (\Exception $e) {
+            Log::error('Error al generar PDF cheques-transferencias: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al generar PDF: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Obtener facturas/pagos pendientes de un proveedor
+     * ✅ REPARADO: Ahora consulta la tabla 'facturas' correctamente
      */
     public function getFacturasProveedor(Request $request, $proveedorId)
     {
@@ -126,50 +193,110 @@ class ChequeTransferenciaController extends Controller
                 ], 422);
             }
             
-            // Obtener pagos pendientes del proveedor (facturas por pagar)
-            $pagos = DB::table('pagos')
+            // Buscar el proveedor
+            $proveedor = DB::table('proveedores')
+                ->where('id', $proveedorId)
+                ->whereNull('deleted_at')
+                ->first();
+            
+            if (!$proveedor) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Proveedor no encontrado'
+                ], 404);
+            }
+            
+            // ✅ REPARADO: Buscar facturas reales en la tabla 'facturas' cruzando por RFC o razón social
+            $facturas = DB::table('facturas as f')
+                ->leftJoin('contactos as c', 'f.contacto_id', '=', 'c.contacto_id')
+                ->whereNull('f.deleted_at')
+                ->where(function($q) use ($proveedor) {
+                    $q->where('c.rfc', $proveedor->rfc)
+                      ->orWhere('c.razon_social', $proveedor->nombre);
+                })
+                ->where('f.saldo_disponible', '>', 0)
+                ->whereIn('f.estatus', [1, 2]) // 1=Pendiente, 2=Parcial
                 ->select(
-                    'id',
-                    'folio',
-                    'fecha_pago as fecha',
-                    'monto as total',
-                    'monto as saldo_pendiente',
-                    'proveedor_nombre',
-                    'concepto',
-                    'created_at'
+                    'f.factura_id as id',
+                    'f.folio',
+                    'f.fecha',
+                    'f.fecha_vencimiento',
+                    'f.subtotal',
+                    'f.iva',
+                    'f.total',
+                    'f.saldo_disponible',
+                    'f.estatus'
                 )
-                ->where('proveedor_id', $proveedorId)
-                ->where('estatus', 'pendiente')
-                ->orderBy('fecha_pago', 'asc')
+                ->orderBy('f.fecha', 'asc')
                 ->get()
-                ->map(function($pago) {
-                    // Calcular fecha de vencimiento (30 días después de la fecha de pago)
-                    $fechaPago = $pago->fecha ? Carbon::parse($pago->fecha) : Carbon::now();
-                    $fechaVencimiento = $fechaPago->copy()->addDays(30);
+                ->map(function($factura) {
+                    $fechaVencimiento = $factura->fecha_vencimiento 
+                        ? Carbon::parse($factura->fecha_vencimiento) 
+                        : Carbon::parse($factura->fecha)->addDays(30);
                     
                     return [
-                        'id' => $pago->id,
-                        'folio' => $pago->folio ?? 'P-' . $pago->id,
-                        'fecha' => $pago->fecha,
+                        'id' => $factura->id,
+                        'folio' => $factura->folio ?? 'F-' . $factura->id,
+                        'fecha' => $factura->fecha,
                         'fecha_vencimiento' => $fechaVencimiento->format('Y-m-d'),
-                        'total' => (float) $pago->total,
-                        'saldo_disponible' => (float) $pago->saldo_pendiente,
-                        'concepto' => $pago->concepto ?? 'Sin concepto'
+                        'total' => (float) $factura->total,
+                        'saldo_disponible' => (float) $factura->saldo_disponible,
+                        'subtotal' => (float) $factura->subtotal,
+                        'iva' => (float) $factura->iva,
+                        'concepto' => 'Factura ' . ($factura->folio ?? $factura->id)
                     ];
                 });
             
-            $hoy = now();
-            $totalVencido = $pagos->filter(function($f) use ($hoy) {
+            // ✅ Si no hay facturas en la tabla facturas, buscar en la tabla pagos como fallback
+            if ($facturas->isEmpty()) {
+                $pagos = DB::table('pagos')
+                    ->select(
+                        'id',
+                        'folio',
+                        'fecha_pago as fecha',
+                        'monto as total',
+                        'monto as saldo_disponible',
+                        'proveedor_nombre',
+                        'concepto',
+                        'created_at'
+                    )
+                    ->where('proveedor_id', $proveedorId)
+                    ->where('estatus', 'pendiente')
+                    ->where('monto', '>', 0)
+                    ->orderBy('fecha_pago', 'asc')
+                    ->get()
+                    ->map(function($pago) {
+                        $fechaPago = $pago->fecha ? Carbon::parse($pago->fecha) : Carbon::now();
+                        $fechaVencimiento = $fechaPago->copy()->addDays(30);
+                        
+                        return [
+                            'id' => $pago->id,
+                            'folio' => $pago->folio ?? 'P-' . $pago->id,
+                            'fecha' => $pago->fecha,
+                            'fecha_vencimiento' => $fechaVencimiento->format('Y-m-d'),
+                            'total' => (float) $pago->total,
+                            'saldo_disponible' => (float) $pago->saldo_disponible,
+                            'subtotal' => (float) $pago->total,
+                            'iva' => 0,
+                            'concepto' => $pago->concepto ?? 'Sin concepto'
+                        ];
+                    });
+                
+                $facturas = $pagos;
+            }
+            
+            $hoy = now()->format('Y-m-d');
+            $totalVencido = $facturas->filter(function($f) use ($hoy) {
                 return $f['fecha_vencimiento'] && $f['fecha_vencimiento'] < $hoy;
             })->sum('saldo_disponible');
             
-            $totalPorVencer = $pagos->filter(function($f) use ($hoy) {
+            $totalPorVencer = $facturas->filter(function($f) use ($hoy) {
                 return !$f['fecha_vencimiento'] || $f['fecha_vencimiento'] >= $hoy;
             })->sum('saldo_disponible');
             
             return response()->json([
                 'success' => true,
-                'data' => $pagos,
+                'data' => $facturas->values(),
                 'totales' => [
                     'vencido' => $totalVencido,
                     'por_vencer' => $totalPorVencer,
@@ -211,7 +338,7 @@ class ChequeTransferenciaController extends Controller
                 'codigo_sat_id' => 'nullable|exists:codigos_sat,id',
                 'proveedor_id' => 'nullable|exists:proveedores,id',
                 'facturas_aplicadas' => 'nullable|array',
-                'facturas_aplicadas.*.factura_id' => 'required|exists:pagos,id',
+                'facturas_aplicadas.*.factura_id' => 'required',
                 'facturas_aplicadas.*.monto' => 'required|numeric|min:0.01',
                 'cuenta_contable_id' => 'nullable|exists:cuentas_contables,id',
                 'fecha_vencimiento' => 'nullable|date',
@@ -221,10 +348,8 @@ class ChequeTransferenciaController extends Controller
             
             DB::beginTransaction();
             
-            // Determinar el nombre del proveedor
             $nombreProveedor = $this->getNombreProveedor($validated);
             
-            // Procesar facturas aplicadas
             $facturasAplicadas = [];
             $totalAplicado = 0;
             
@@ -235,12 +360,10 @@ class ChequeTransferenciaController extends Controller
                 }
             }
             
-            // Validar que el monto aplicado no exceda el total
             if ($totalAplicado > $validated['monto']) {
                 throw new \Exception('El monto aplicado a facturas no puede exceder el monto total del pago');
             }
             
-            // Preparar datos para crear
             $createData = [
                 'folio' => ChequeTransferencia::generarFolio(),
                 'fecha' => $validated['fecha'],
@@ -271,15 +394,12 @@ class ChequeTransferenciaController extends Controller
                 'poliza_contable' => $validated['poliza_contable'] ?? null,
             ];
             
-            // Crear el registro
             $registro = ChequeTransferencia::create($createData);
             
-            // Si hay facturas aplicadas, actualizar sus saldos
             if (!empty($facturasAplicadas)) {
                 $this->actualizarSaldosFacturasProveedor($facturasAplicadas);
             }
             
-            // Si se debe aplicar inmediatamente
             if ($validated['aplicar_ahora'] ?? true) {
                 $this->aplicarMovimiento($registro);
             }
@@ -312,6 +432,7 @@ class ChequeTransferenciaController extends Controller
 
     /**
      * Obtener un registro
+     * ✅ REPARADO: Ahora devuelve TODOS los campos necesarios para editar (incluyendo moneda_id, cuenta_bancaria_id, etc.)
      */
     public function show($id)
     {
@@ -325,23 +446,96 @@ class ChequeTransferenciaController extends Controller
                 'cuentaContable'
             ])->findOrFail($id);
             
-            // Cargar facturas aplicadas (de la tabla pagos)
-            if ($registro->facturas_aplicadas) {
+            // Cargar detalle de facturas aplicadas
+            $facturasDetalle = [];
+            if ($registro->facturas_aplicadas && is_array($registro->facturas_aplicadas)) {
                 $ids = array_keys($registro->facturas_aplicadas);
-                $facturas = DB::table('pagos')
-                    ->whereIn('id', $ids)
-                    ->get()
-                    ->map(function($factura) use ($registro) {
-                        $factura->monto_aplicado = $registro->facturas_aplicadas[$factura->id] ?? 0;
-                        return $factura;
-                    });
-                $registro->facturas_detalle = $facturas;
+                
+                // Buscar en facturas primero
+                $facturas = DB::table('facturas')
+                    ->whereIn('factura_id', $ids)
+                    ->whereNull('deleted_at')
+                    ->get();
+                
+                foreach ($facturas as $factura) {
+                    $facturasDetalle[] = [
+                        'id' => $factura->factura_id,
+                        'folio' => $factura->folio ?? 'F-' . $factura->factura_id,
+                        'fecha' => $factura->fecha,
+                        'total' => (float) $factura->total,
+                        'monto_aplicado' => (float) ($registro->facturas_aplicadas[$factura->factura_id] ?? 0),
+                    ];
+                }
+                
+                // Si no se encontraron en facturas, buscar en pagos
+                if (empty($facturasDetalle)) {
+                    $pagos = DB::table('pagos')->whereIn('id', $ids)->get();
+                    foreach ($pagos as $pago) {
+                        $facturasDetalle[] = [
+                            'id' => $pago->id,
+                            'folio' => $pago->folio ?? 'P-' . $pago->id,
+                            'fecha' => $pago->fecha_pago,
+                            'total' => (float) $pago->monto,
+                            'monto_aplicado' => (float) ($registro->facturas_aplicadas[$pago->id] ?? 0),
+                        ];
+                    }
+                }
             }
             
-            return response()->json($registro);
+            // ✅ REPARADO: Devolver TODOS los campos necesarios
+            return response()->json([
+                'id' => $registro->id,
+                'folio' => $registro->folio,
+                'estatus' => $registro->estatus,
+                'fecha' => $registro->fecha ? Carbon::parse($registro->fecha)->format('Y-m-d') : null,
+                'fecha_vencimiento' => $registro->fecha_vencimiento ? Carbon::parse($registro->fecha_vencimiento)->format('Y-m-d') : null,
+                'forma_pago' => $registro->forma_pago,
+                'proveedor' => $registro->proveedor,
+                'proveedor_id' => $registro->proveedor_id,
+                'rfc' => $registro->rfc,
+                'cuenta_bancaria_id' => $registro->cuenta_bancaria_id,
+                'cuenta_bancaria' => $registro->cuentaBancaria ? [
+                    'id' => $registro->cuentaBancaria->id,
+                    'numero_cuenta' => $registro->cuentaBancaria->numero_cuenta,
+                    'banco' => $registro->cuentaBancaria->banco?->nombre,
+                ] : null,
+                'moneda_id' => $registro->moneda_id,
+                'moneda' => $registro->moneda ? [
+                    'id' => $registro->moneda->id,
+                    'simbolo' => $registro->moneda->simbolo,
+                    'nombre' => $registro->moneda->nombre,
+                ] : null,
+                'monto' => (float) $registro->monto,
+                'monto_restante' => (float) $registro->monto_restante,
+                'monto_aplicado' => (float) $registro->monto_aplicado,
+                'referencia' => $registro->referencia,
+                'referencia_bancaria' => $registro->referencia_bancaria,
+                'proyecto_id' => $registro->proyecto_id,
+                'proyecto' => $registro->proyecto ? [
+                    'id' => $registro->proyecto->id,
+                    'codigo' => $registro->proyecto->codigo,
+                    'nombre' => $registro->proyecto->nombre,
+                ] : null,
+                'descripcion' => $registro->descripcion,
+                'observaciones' => $registro->observaciones,
+                'codigo_sat_id' => $registro->codigo_sat_id,
+                'codigo_sat' => $registro->codigoSat ? [
+                    'id' => $registro->codigoSat->id,
+                    'codigo_agrupador' => $registro->codigoSat->codigo_agrupador,
+                    'nombre_cuenta' => $registro->codigoSat->nombre_cuenta,
+                ] : null,
+                'cuenta_contable_id' => $registro->cuenta_contable_id,
+                'comprobante' => $registro->comprobante,
+                'poliza_contable' => $registro->poliza_contable,
+                'facturas_aplicadas' => $registro->facturas_aplicadas,
+                'facturas_detalle' => $facturasDetalle,
+                'created_at' => $registro->created_at,
+                'updated_at' => $registro->updated_at,
+            ]);
         } catch (\Exception $e) {
             Log::error('Error en show cheques-transferencias: ' . $e->getMessage());
-            return response()->json(['error' => 'Registro no encontrado'], 404);
+            Log::error($e->getTraceAsString());
+            return response()->json(['error' => 'Registro no encontrado: ' . $e->getMessage()], 404);
         }
     }
 
@@ -390,6 +584,7 @@ class ChequeTransferenciaController extends Controller
                     'fecha_vencimiento' => 'nullable|date',
                     'comprobante' => 'nullable|string',
                     'poliza_contable' => 'nullable|string',
+                    'facturas_aplicadas' => 'nullable|array',
                 ]);
             }
             
@@ -399,6 +594,23 @@ class ChequeTransferenciaController extends Controller
                 $validated['proveedor'] = $this->getNombreProveedor($validated);
             }
             
+            // Recalcular montos si hay facturas aplicadas
+            if (isset($validated['facturas_aplicadas']) && is_array($validated['facturas_aplicadas'])) {
+                $facturasAplicadas = [];
+                $totalAplicado = 0;
+                
+                foreach ($validated['facturas_aplicadas'] as $item) {
+                    if (isset($item['factura_id']) && isset($item['monto'])) {
+                        $facturasAplicadas[$item['factura_id']] = (float) $item['monto'];
+                        $totalAplicado += (float) $item['monto'];
+                    }
+                }
+                
+                $validated['facturas_aplicadas'] = !empty($facturasAplicadas) ? $facturasAplicadas : null;
+                $validated['monto_aplicado'] = $totalAplicado;
+                $validated['monto_restante'] = ($validated['monto'] ?? $registro->monto) - $totalAplicado;
+            }
+            
             $registro->update($validated);
             
             DB::commit();
@@ -406,11 +618,19 @@ class ChequeTransferenciaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Registro actualizado exitosamente',
-                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto', 'codigoSat'])
+                'data' => $registro->load(['cuentaBancaria.banco', 'moneda', 'proyecto', 'codigoSat', 'proveedorRel'])
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error en update cheques-transferencias: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -435,7 +655,6 @@ class ChequeTransferenciaController extends Controller
             
             DB::beginTransaction();
             
-            // Revertir saldos de facturas si las hay
             if ($registro->facturas_aplicadas) {
                 foreach ($registro->facturas_aplicadas as $facturaId => $montoAplicado) {
                     DB::table('pagos')
@@ -549,32 +768,81 @@ class ChequeTransferenciaController extends Controller
     }
 
     /**
-     * Actualizar saldos de facturas de proveedor (tabla pagos)
+     * Actualizar saldos de facturas de proveedor
+     * 
+     * Valores de estatus en tabla facturas:
+     *   1 = PENDIENTE
+     *   2 = PAGADA
+     *   3 = CANCELADA
      */
     private function actualizarSaldosFacturasProveedor($facturasAplicadas)
     {
+        // Constantes de estatus
+        $ESTATUS_PENDIENTE = 1;
+        $ESTATUS_PAGADA    = 2;
+        $ESTATUS_CANCELADA = 3;
+        
         foreach ($facturasAplicadas as $facturaId => $montoAplicado) {
-            $pago = DB::table('pagos')->where('id', $facturaId)->first();
-            if ($pago) {
-                $nuevoSaldo = $pago->monto - $montoAplicado;
-                DB::table('pagos')
-                    ->where('id', $facturaId)
+            // Buscar la factura primero
+            $factura = DB::table('facturas')->where('factura_id', $facturaId)->first();
+            
+            if ($factura) {
+                // 🛡️ PROTECCIÓN: no tocar facturas canceladas
+                if ((int) $factura->estatus === $ESTATUS_CANCELADA) {
+                    Log::warning('Intento de aplicar pago a factura CANCELADA. ID: ' . $facturaId);
+                    continue;
+                }
+                
+                $nuevoSaldo = max(0, $factura->saldo_disponible - $montoAplicado);
+                
+                // Determinar nuevo estatus según el saldo resultante
+                if ($nuevoSaldo <= 0.01) {
+                    // Saldo llegó a 0 → PAGADA
+                    $nuevoEstatus = $ESTATUS_PAGADA;
+                } else {
+                    // Aún tiene saldo pendiente → sigue PENDIENTE
+                    $nuevoEstatus = $ESTATUS_PENDIENTE;
+                }
+                
+                DB::table('facturas')
+                    ->where('factura_id', $facturaId)
                     ->update([
-                        'monto' => max(0, $nuevoSaldo),
+                        'saldo_disponible' => $nuevoSaldo,
+                        'estatus' => $nuevoEstatus,
                         'updated_at' => now()
                     ]);
                 
-                // Si el saldo queda en 0, cambiar estatus a pagado
+                Log::info('Factura actualizada', [
+                    'factura_id' => $facturaId,
+                    'saldo_anterior' => $factura->saldo_disponible,
+                    'monto_aplicado' => $montoAplicado,
+                    'nuevo_saldo' => $nuevoSaldo,
+                    'estatus_anterior' => $factura->estatus,
+                    'nuevo_estatus' => $nuevoEstatus,
+                ]);
+                
+                continue;
+            }
+            
+            // Fallback: tabla pagos (por si algún pago viejo apunta ahí)
+            $pago = DB::table('pagos')->where('id', $facturaId)->first();
+            if ($pago) {
+                $nuevoSaldo = max(0, $pago->monto - $montoAplicado);
+                $updateData = [
+                    'monto' => $nuevoSaldo,
+                    'updated_at' => now()
+                ];
+                
                 if ($nuevoSaldo <= 0) {
-                    DB::table('pagos')
-                        ->where('id', $facturaId)
-                        ->update([
-                            'estatus' => 'pagado',
-                            'updated_at' => now()
-                        ]);
+                    $updateData['estatus'] = 'pagado';
                 }
                 
-                Log::info('Pago actualizado ID: ' . $facturaId . ', Nuevo saldo: ' . max(0, $nuevoSaldo));
+                DB::table('pagos')->where('id', $facturaId)->update($updateData);
+                
+                Log::info('Pago actualizado', [
+                    'pago_id' => $facturaId,
+                    'nuevo_saldo' => $nuevoSaldo
+                ]);
             }
         }
     }
@@ -668,4 +936,138 @@ class ChequeTransferenciaController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Obtener detalle de facturas aplicadas a un pago
+     */
+    public function getFacturasAplicadas($id)
+    {
+        try {
+            $registro = ChequeTransferencia::findOrFail($id);
+            
+            $detalle = [];
+            
+            if ($registro->facturas_aplicadas && is_array($registro->facturas_aplicadas)) {
+                $ids = array_keys($registro->facturas_aplicadas);
+                
+                // Buscar en facturas
+                $facturas = DB::table('facturas')
+                    ->whereIn('factura_id', $ids)
+                    ->whereNull('deleted_at')
+                    ->get();
+                
+                foreach ($facturas as $factura) {
+                    $detalle[] = [
+                        'id' => $factura->factura_id,
+                        'folio' => $factura->folio ?? 'F-' . $factura->factura_id,
+                        'fecha' => $factura->fecha,
+                        'fecha_vencimiento' => $factura->fecha_vencimiento,
+                        'total' => (float) $factura->total,
+                        'saldo_actual' => (float) $factura->saldo_disponible,
+                        'monto_aplicado' => (float) ($registro->facturas_aplicadas[$factura->factura_id] ?? 0),
+                        'tipo' => 'factura'
+                    ];
+                }
+                
+                // Si no hay en facturas, buscar en pagos
+                if (empty($detalle)) {
+                    $pagos = DB::table('pagos')->whereIn('id', $ids)->get();
+                    foreach ($pagos as $pago) {
+                        $detalle[] = [
+                            'id' => $pago->id,
+                            'folio' => $pago->folio ?? 'P-' . $pago->id,
+                            'fecha' => $pago->fecha_pago,
+                            'fecha_vencimiento' => null,
+                            'total' => (float) $pago->monto,
+                            'saldo_actual' => (float) $pago->monto,
+                            'monto_aplicado' => (float) ($registro->facturas_aplicadas[$pago->id] ?? 0),
+                            'tipo' => 'pago'
+                        ];
+                    }
+                }
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $detalle,
+                'total_aplicado' => array_sum(array_column($detalle, 'monto_aplicado'))
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error en getFacturasAplicadas: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+ * Descargar PDF individual (comprobante) de una transferencia/cheque
+ */
+public function descargarPdfIndividual($id)
+{
+    try {
+        $registro = ChequeTransferencia::with([
+            'cuentaBancaria.banco',
+            'cuentaBancaria.moneda',
+            'moneda',
+            'proyecto',
+            'codigoSat',
+            'proveedorRel',
+            'cuentaContable'
+        ])->findOrFail($id);
+
+        // Cargar detalle de facturas aplicadas
+        $facturasDetalle = [];
+        if ($registro->facturas_aplicadas && is_array($registro->facturas_aplicadas)) {
+            $ids = array_keys($registro->facturas_aplicadas);
+
+            $facturas = DB::table('facturas')
+                ->whereIn('factura_id', $ids)
+                ->whereNull('deleted_at')
+                ->get();
+
+            foreach ($facturas as $factura) {
+                $facturasDetalle[] = [
+                    'id'             => $factura->factura_id,
+                    'folio'          => $factura->folio ?? 'F-' . $factura->factura_id,
+                    'fecha'          => $factura->fecha,
+                    'total'          => (float) $factura->total,
+                    'monto_aplicado' => (float) ($registro->facturas_aplicadas[$factura->factura_id] ?? 0),
+                ];
+            }
+
+            // Fallback: tabla pagos
+            if (empty($facturasDetalle)) {
+                $pagos = DB::table('pagos')->whereIn('id', $ids)->get();
+                foreach ($pagos as $pago) {
+                    $facturasDetalle[] = [
+                        'id'             => $pago->id,
+                        'folio'          => $pago->folio ?? 'P-' . $pago->id,
+                        'fecha'          => $pago->fecha_pago,
+                        'total'          => (float) $pago->monto,
+                        'monto_aplicado' => (float) ($registro->facturas_aplicadas[$pago->id] ?? 0),
+                    ];
+                }
+            }
+        }
+
+        $pdf = Pdf::loadView(
+            'administracion.tesoreria.pdf.comprobante-transferencia',
+            compact('registro', 'facturasDetalle')
+        )->setPaper('letter', 'portrait');
+
+        $nombreArchivo = 'comprobante-' . $registro->folio . '.pdf';
+
+        return $pdf->download($nombreArchivo);
+
+    } catch (\Exception $e) {
+        Log::error('Error al generar PDF individual: ' . $e->getMessage());
+        Log::error($e->getTraceAsString());
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al generar PDF: ' . $e->getMessage()
+        ], 500);
+    }
+}
 }

@@ -172,7 +172,9 @@
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Responsable</label>
-                    <input type="text" id="modalResponsableAlmacen" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Persona responsable">
+                    <select id="modalResponsableAlmacen" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Cargando responsables...</option>
+                    </select>
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Teléfono</label>
@@ -184,7 +186,9 @@
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Cuenta Contable</label>
-                    <input type="text" id="modalCuentaAlmacen" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="1150-01-001">
+                    <select id="modalCuentaAlmacen" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Cargando cuentas contables...</option>
+                    </select>
                 </div>
                 <div style="grid-column: span 2;">
                     <label style="font-size: 13px; font-weight: 600;">Descripción</label>
@@ -226,11 +230,129 @@ let currentPage = 1;
 let perPage = 10;
 let totalRecords = 0;
 let searchTimeout = null;
+let cuentasContablesCache = [];
+let usuariosCache = [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    cargarUsuarios();
+    cargarCuentasContables();
     cargarAlmacenes();
     configurarEventos();
 });
+
+/* ============================================================
+   CARGA DE CATÁLOGOS PARA LOS SELECTS
+   ============================================================ */
+
+/**
+ * Carga los usuarios del sistema (para el select de Responsable).
+ */
+function cargarUsuarios() {
+    fetch('{{ route("almacen.api.usuarios") }}', {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success && Array.isArray(res.data)) {
+            usuariosCache = res.data;
+            llenarSelectUsuarios(usuariosCache);
+        } else {
+            console.warn('No se pudieron cargar usuarios:', res.message);
+            const select = document.getElementById('modalResponsableAlmacen');
+            if (select) select.innerHTML = '<option value="">Sin usuarios disponibles</option>';
+        }
+    })
+    .catch(err => {
+        console.error('Error usuarios:', err);
+        const select = document.getElementById('modalResponsableAlmacen');
+        if (select) select.innerHTML = '<option value="">Error al cargar usuarios</option>';
+    });
+}
+
+function llenarSelectUsuarios(usuarios) {
+    const select = document.getElementById('modalResponsableAlmacen');
+    if (!select) return;
+    select.innerHTML = '<option value="">Seleccionar responsable</option>';
+    usuarios.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u.name;                     // se guarda el nombre del usuario
+        opt.textContent = u.label || u.name;
+        opt.dataset.userId = u.id;
+        select.appendChild(opt);
+    });
+}
+
+/**
+ * Carga las cuentas contables desde la BD.
+ */
+function cargarCuentasContables() {
+    fetch('{{ route("almacen.api.cuentas-contables") }}', {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+            cuentasContablesCache = res.data;
+            llenarSelectCuentas(cuentasContablesCache);
+        } else {
+            console.warn('Catálogo de cuentas contables vacío:', res);
+            const select = document.getElementById('modalCuentaAlmacen');
+            if (select) select.innerHTML = '<option value="">Sin cuentas contables disponibles</option>';
+        }
+    })
+    .catch(err => {
+        console.error('Error cuentas contables:', err);
+        const select = document.getElementById('modalCuentaAlmacen');
+        if (select) select.innerHTML = '<option value="">Error al cargar cuentas contables</option>';
+    });
+}
+
+function llenarSelectCuentas(cuentas) {
+    const select = document.getElementById('modalCuentaAlmacen');
+    if (!select) return;
+    select.innerHTML = '<option value="">Seleccionar cuenta contable</option>';
+    cuentas.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.codigo;
+        opt.textContent = c.label || `${c.codigo} - ${c.nombre}`;
+        select.appendChild(opt);
+    });
+}
+
+/* ============================================================
+   HELPERS PARA SETEAR VALORES EN LOS SELECTS
+   (agregan la opción si el valor no existe en el catálogo)
+   ============================================================ */
+
+function setResponsable(value) {
+    const select = document.getElementById('modalResponsableAlmacen');
+    if (!select) return;
+    value = value || '';
+    if (value && !Array.from(select.options).some(o => o.value === value)) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = value + ' (no en catálogo)';
+        select.appendChild(opt);
+    }
+    select.value = value;
+}
+
+function setCuentaContable(value) {
+    const select = document.getElementById('modalCuentaAlmacen');
+    if (!select) return;
+    value = value || '';
+    if (value && !Array.from(select.options).some(o => o.value === value)) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = value + ' (no en catálogo)';
+        select.appendChild(opt);
+    }
+    select.value = value;
+}
+
+/* ============================================================
+   CARGA Y RENDER DE LA TABLA
+   ============================================================ */
 
 function cargarAlmacenes() {
     const search = document.getElementById('buscador')?.value || '';
@@ -242,7 +364,7 @@ function cargarAlmacenes() {
     if (tipo) url += `&tipo=${encodeURIComponent(tipo)}`;
     if (estatus) url += `&estatus=${encodeURIComponent(estatus)}`;
     
-    fetch(url)
+    fetch(url, { headers: { 'Accept': 'application/json' } })
         .then(response => response.json())
         .then(response => {
             if (response.success) {
@@ -313,6 +435,10 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+/* ============================================================
+   EVENTOS DE LA UI (filtros, paginación, etc.)
+   ============================================================ */
+
 function configurarEventos() {
     document.getElementById('buscador').addEventListener('input', function() {
         clearTimeout(searchTimeout);
@@ -340,6 +466,10 @@ function configurarEventos() {
     document.getElementById('btnExcel').addEventListener('click', () => window.location.href = '{{ route("almacen.api.almacenes.exportar") }}');
 }
 
+/* ============================================================
+   MODAL — ABRIR, EDITAR, GUARDAR, CERRAR
+   ============================================================ */
+
 window.abrirModalAlmacen = function() {
     editingId = null;
     document.getElementById('modalTituloAlmacen').textContent = 'Nuevo Almacén';
@@ -350,37 +480,39 @@ window.abrirModalAlmacen = function() {
     document.getElementById('modalTipoAlmacen').value = '';
     document.getElementById('modalDescripcionAlmacen').value = '';
     document.getElementById('modalUbicacionAlmacen').value = '';
-    document.getElementById('modalResponsableAlmacen').value = '';
     document.getElementById('modalTelefonoAlmacen').value = '';
     document.getElementById('modalEmailAlmacen').value = '';
-    document.getElementById('modalCuentaAlmacen').value = '';
+    setResponsable('');
+    setCuentaContable('');
     document.getElementById('modalAlmacen').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 };
 
 window.editarAlmacen = function(id) {
-    fetch(`{{ route('almacen.api.almacenes.show', '') }}/${id}`)
-        .then(response => response.json())
-        .then(response => {
-            if (response.success) {
-                const item = response.data;
-                editingId = item.id;
-                document.getElementById('modalTituloAlmacen').textContent = `Editar Almacén ${item.codigo}`;
-                document.getElementById('almacenId').value = item.id;
-                document.getElementById('modalCodigoAlmacen').value = item.codigo;
-                document.getElementById('modalEstatusAlmacen').value = item.estatus;
-                document.getElementById('modalNombreAlmacen').value = item.nombre;
-                document.getElementById('modalTipoAlmacen').value = item.tipo;
-                document.getElementById('modalDescripcionAlmacen').value = item.descripcion || '';
-                document.getElementById('modalUbicacionAlmacen').value = item.ubicacion || '';
-                document.getElementById('modalResponsableAlmacen').value = item.responsable || '';
-                document.getElementById('modalTelefonoAlmacen').value = item.telefono || '';
-                document.getElementById('modalEmailAlmacen').value = item.email || '';
-                document.getElementById('modalCuentaAlmacen').value = item.cuenta_contable || '';
-                document.getElementById('modalAlmacen').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-        });
+    fetch(`{{ route('almacen.api.almacenes.show', '') }}/${id}`, {
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(response => {
+        if (response.success) {
+            const item = response.data;
+            editingId = item.id;
+            document.getElementById('modalTituloAlmacen').textContent = `Editar Almacén ${item.codigo}`;
+            document.getElementById('almacenId').value = item.id;
+            document.getElementById('modalCodigoAlmacen').value = item.codigo;
+            document.getElementById('modalEstatusAlmacen').value = item.estatus;
+            document.getElementById('modalNombreAlmacen').value = item.nombre;
+            document.getElementById('modalTipoAlmacen').value = item.tipo;
+            document.getElementById('modalDescripcionAlmacen').value = item.descripcion || '';
+            document.getElementById('modalUbicacionAlmacen').value = item.ubicacion || '';
+            document.getElementById('modalTelefonoAlmacen').value = item.telefono || '';
+            document.getElementById('modalEmailAlmacen').value = item.email || '';
+            setResponsable(item.responsable || '');
+            setCuentaContable(item.cuenta_contable || '');
+            document.getElementById('modalAlmacen').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    });
 };
 
 window.guardarAlmacen = function() {
@@ -415,6 +547,7 @@ window.guardarAlmacen = function() {
         method: method,
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         },
         body: JSON.stringify(data)
@@ -439,7 +572,10 @@ window.eliminarAlmacen = function(id, codigo) {
     if (confirm(`¿Eliminar el almacén ${codigo}?`)) {
         fetch(`{{ route('almacen.api.almacenes.destroy', '') }}/${id}`, {
             method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            headers: { 
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+            }
         })
         .then(response => response.json())
         .then(response => {
@@ -459,6 +595,7 @@ window.reactivarAlmacen = function(id, codigo) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             }
         })
@@ -487,7 +624,10 @@ document.getElementById('modalAlmacen').addEventListener('click', function(e) {
     if (e.target === this) cerrarModalAlmacen();
 });
 
-// Funciones de UI
+/* ============================================================
+   FUNCIONES DE UI: agrupación y selector de columnas
+   ============================================================ */
+
 let columnasAgrupadas = [];
 
 function actualizarGrupoColumnas() {

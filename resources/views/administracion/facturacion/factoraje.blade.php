@@ -42,8 +42,6 @@
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-layer-group" style="color: #083CAE; font-size: 14px;"></i>
-                        <span style="color: #6c757d; font-size: 12px;">Arrastra columna para agrupar</span>
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -64,15 +62,25 @@
                             </button>
                         </div>
                         <div>
-                            <button id="btnColumnas" class="btn btn-secondary" style="background-color: #6c757d; color: white; border: none; border-radius: 4px; padding: 8px 12px; cursor: pointer;">
-                                <i class="fas fa-columns"></i> Columnas
-                            </button>
+
                         </div>
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
                             <input type="text" id="buscador" class="form-control" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #ddd; border-radius: 4px; width: 250px;">
                         </div>
                     </div>
+                </div>
+
+                <!-- ZONA DE AGRUPACIÓN (DRAG & DROP) -->
+                <div id="grupoZona" 
+                     style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 10px 15px; margin-bottom: 12px; min-height: 46px; background: #f8fafc; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; transition: all 0.2s;"
+                     ondragover="event.preventDefault(); this.style.borderColor='#083CAE'; this.style.background='#eef4ff';"
+                     ondragleave="this.style.borderColor='#cbd5e1'; this.style.background='#f8fafc';"
+                     ondrop="dropGrupo(event)">
+                    <span style="color: #94a3b8; font-size: 12px; font-style: italic;" id="grupoPlaceholder">
+                        <i class="fas fa-grip-vertical"></i> Arrastra columnas aquí para agrupar
+                    </span>
+                    <div id="grupoChips" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
                 </div>
 
                 <!-- Loading -->
@@ -91,16 +99,16 @@
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 500px; overflow-y: auto;" id="tablaContainer">
                     <table class="table table-bordered table-hover" id="tablaFactoraje" style="width: 100%; font-size: 12px;">
                         <thead style="position: sticky; top: 0; background-color: #083CAE; color: white; z-index: 10;">
-                            <tr>
-                                <th style="padding: 12px 6px; text-align: center;">Folio</th>
-                                <th style="padding: 12px 6px; text-align: center;">Fecha</th>
-                                <th style="padding: 12px 6px;">Cliente</th>
-                                <th style="padding: 12px 6px;">Factor</th>
-                                <th style="padding: 12px 6px; text-align: right;">Monto Factura</th>
-                                <th style="padding: 12px 6px; text-align: right;">Anticipo</th>
-                                <th style="padding: 12px 6px; text-align: right;">Comisión</th>
-                                <th style="padding: 12px 6px; text-align: right;">Monto Recibir</th>
-                                <th style="padding: 12px 6px; text-align: center;">Estatus</th>
+                            <tr id="theadRow">
+                                <th draggable="true" data-col="folio" style="padding: 12px 6px; text-align: center; cursor: move;">Folio</th>
+                                <th draggable="true" data-col="fecha_solicitud" style="padding: 12px 6px; text-align: center; cursor: move;">Fecha</th>
+                                <th draggable="true" data-col="cliente_nombre" style="padding: 12px 6px; cursor: move;">Cliente</th>
+                                <th draggable="true" data-col="factor_nombre" style="padding: 12px 6px; cursor: move;">Factor</th>
+                                <th draggable="true" data-col="monto_factura" style="padding: 12px 6px; text-align: right; cursor: move;">Monto Factura</th>
+                                <th draggable="true" data-col="monto_anticipo" style="padding: 12px 6px; text-align: right; cursor: move;">Anticipo</th>
+                                <th draggable="true" data-col="total_comision" style="padding: 12px 6px; text-align: right; cursor: move;">Comisión</th>
+                                <th draggable="true" data-col="monto_recibir" style="padding: 12px 6px; text-align: right; cursor: move;">Monto Recibir</th>
+                                <th draggable="true" data-col="estatus" style="padding: 12px 6px; text-align: center; cursor: move;">Estatus</th>
                                 <th style="padding: 12px 6px; text-align: center; position: sticky; right: 0; background-color: #083CAE; z-index: 20;">Acciones</th>
                             </tr>
                         </thead>
@@ -171,10 +179,13 @@
                     </div>
                     
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Cliente *</label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Cliente / Deudor *</label>
                         <select id="contacto_id" class="form-control" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
-                            <option value="">Seleccionar cliente...</option>
+                            <option value="">Cargando clientes...</option>
                         </select>
+                        <small style="display: block; color: #6c757d; font-size: 11px; margin-top: 4px;">
+                            Solo se muestran clientes con facturas pagadas disponibles para factorizar
+                        </small>
                     </div>
                     
                     <div>
@@ -277,6 +288,10 @@
 </div>
 
 <style>
+    /* FIX z-index: SweetAlert por ENCIMA de los modales */
+    .swal2-container { z-index: 99999 !important; }
+    .swal2-popup { z-index: 100000 !important; }
+
     .custom-card { transition: transform 0.2s, box-shadow 0.2s; }
     .custom-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
     
@@ -294,26 +309,33 @@
     .factura-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
     .factura-item:hover { background-color: #f0f7ff; }
     .factura-item.selected { background-color: #e3f2fd; border-left: 3px solid #083CAE; }
-    
+
+    .factura-no-disponible { opacity: 0.6; cursor: not-allowed; background-color: #f8f9fa; }
+    .factura-no-disponible:hover { background-color: #f8f9fa !important; }
+    .text-danger { color: #dc3545; font-size: 11px; }
+
+    /* DRAG & DROP - Agrupación de columnas */
+    #theadRow th[draggable="true"] { user-select: none; transition: background-color 0.15s; }
+    #theadRow th[draggable="true"]:hover { background-color: #0a4bc9 !important; }
+    #theadRow th[draggable="true"]:active { opacity: 0.6; }
+    .grupo-chip {
+        background: #083CAE; color: white; padding: 5px 10px; border-radius: 16px;
+        font-size: 12px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;
+    }
+    .grupo-chip .cerrar-chip {
+        cursor: pointer; background: rgba(255,255,255,0.25); border-radius: 50%;
+        width: 16px; height: 16px; display: inline-flex; align-items: center;
+        justify-content: center; font-size: 11px; line-height: 1;
+    }
+    .grupo-chip .cerrar-chip:hover { background: rgba(255,255,255,0.45); }
+    .grupo-header-row td {
+        background: #eef4ff !important; font-weight: 700; color: #083CAE;
+        padding: 8px 12px !important; font-size: 12px; border-left: 4px solid #083CAE !important;
+    }
+
     @media (max-width: 768px) {
         div[style*="grid-template-columns: repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
     }
-
-    /* Agrega esto al final del bloque <style> */
-.factura-no-disponible {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: #f8f9fa;
-}
-
-.factura-no-disponible:hover {
-    background-color: #f8f9fa !important;
-}
-
-.text-danger {
-    color: #dc3545;
-    font-size: 11px;
-}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -330,14 +352,20 @@ const rowsPerPage = 10;
 let facturasDisponibles = [];
 let facturasSeleccionadas = [];
 let solicitudActualId = null;
+let columnasAgrupadas = [];
 
-// Mapa de estatus
-const ESTATUS = {
-    SOLICITADO: 1,
-    AUTORIZADO: 2,
-    LIQUIDADO: 3,
-    RECHAZADO: 4,
-    VENCIDO: 5
+const ESTATUS = { SOLICITADO: 1, AUTORIZADO: 2, LIQUIDADO: 3, RECHAZADO: 4, VENCIDO: 5 };
+
+const COL_LABELS = {
+    folio: 'Folio',
+    fecha_solicitud: 'Fecha',
+    cliente_nombre: 'Cliente',
+    factor_nombre: 'Factor',
+    monto_factura: 'Monto Factura',
+    monto_anticipo: 'Anticipo',
+    total_comision: 'Comisión',
+    monto_recibir: 'Monto Recibir',
+    estatus: 'Estatus'
 };
 
 // ============================================
@@ -390,6 +418,27 @@ function showError(msg) {
 
 function showSuccess(msg) { 
     Swal.fire({ icon: 'success', title: 'Éxito', text: msg, confirmButtonColor: '#083CAE', timer: 3000, showConfirmButton: false }); 
+}
+
+function toISODate(d) {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function setFechasPorDefecto() {
+    const fi = document.getElementById('fechaInicio');
+    const ff = document.getElementById('fechaFin');
+    if (!fi || !ff) return;
+    if (!fi.value) {
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        fi.value = toISODate(primerDiaMes);
+    }
+    if (!ff.value) {
+        ff.value = toISODate(new Date());
+    }
 }
 
 // ============================================
@@ -478,6 +527,20 @@ function cargarTabla() {
     
     tbody.innerHTML = '';
     
+    if (columnasAgrupadas.length > 0) {
+        renderAgrupado(tbody, pageData);
+    } else {
+        renderPlano(tbody, pageData);
+    }
+    
+    calcularTotales(datosFiltrados);
+    actualizarPaginacion(datosFiltrados.length);
+    
+    document.querySelectorAll('.fa-eye').forEach(el => el.addEventListener('click', () => verDetalles(el.dataset.id)));
+    document.querySelectorAll('.fa-trash-alt').forEach(el => el.addEventListener('click', () => eliminarSolicitud(el.dataset.id)));
+}
+
+function renderPlano(tbody, pageData) {
     pageData.forEach(item => {
         const row = tbody.insertRow();
         const badgeClass = getBadgeClass(item.estatus);
@@ -501,20 +564,194 @@ function cargarTabla() {
             </td>
         `;
     });
-    
-    calcularTotales(datosFiltrados);
-    actualizarPaginacion(datosFiltrados.length);
-    
-    document.querySelectorAll('.fa-eye').forEach(el => el.addEventListener('click', () => verDetalles(el.dataset.id)));
-    document.querySelectorAll('.fa-trash-alt').forEach(el => el.addEventListener('click', () => eliminarSolicitud(el.dataset.id)));
+}
+
+function renderAgrupado(tbody, pageData) {
+    const grupos = {};
+    pageData.forEach(item => {
+        const key = columnasAgrupadas.map(c => String(item[c.col] ?? '-')).join('||');
+        if (!grupos[key]) grupos[key] = [];
+        grupos[key].push(item);
+    });
+
+    Object.keys(grupos).forEach(key => {
+        const items = grupos[key];
+        const first = items[0];
+        const titulo = columnasAgrupadas
+            .map(c => `${c.label}: ${c.col === 'fecha_solicitud' ? formatDate(first[c.col]) : (first[c.col] ?? '-')}`)
+            .join('  •  ');
+        const count = items.length;
+
+        const headerRow = tbody.insertRow();
+        headerRow.className = 'grupo-header-row';
+        headerRow.innerHTML = `
+            <td colspan="10">
+                <i class="fas fa-folder-open" style="margin-right: 6px;"></i>
+                ${titulo}
+                <span style="float: right; background: #083CAE; color: white; padding: 2px 10px; border-radius: 12px; font-size: 11px;">
+                    ${count} registro${count !== 1 ? 's' : ''}
+                </span>
+            </td>
+        `;
+
+        items.forEach(item => {
+            const row = tbody.insertRow();
+            const badgeClass = getBadgeClass(item.estatus);
+            const estatusDisplay = getEstatusDisplay(item.estatus);
+
+            row.innerHTML = `
+                <td style="padding: 10px 6px; text-align: center;"><strong>${item.folio || '-'}</strong></td>
+                <td style="padding: 10px 6px; text-align: center;">${formatDate(item.fecha_solicitud)}</td>
+                <td style="padding: 10px 6px;">${item.cliente_nombre || '-'}</td>
+                <td style="padding: 10px 6px;">${item.factor_nombre || '-'}</td>
+                <td style="padding: 10px 6px; text-align: right;"><strong>${formatCurrency(item.monto_factura)}</strong></td>
+                <td style="padding: 10px 6px; text-align: right;">${formatCurrency(item.monto_anticipo)}</td>
+                <td style="padding: 10px 6px; text-align: right;">${formatCurrency(item.total_comision)}</td>
+                <td style="padding: 10px 6px; text-align: right;">${formatCurrency(item.monto_recibir)}</td>
+                <td style="padding: 10px 6px; text-align: center;"><span class="badge ${badgeClass}">${estatusDisplay}</span></td>
+                <td style="padding: 10px 6px; text-align: center; background: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 16px;" title="Ver detalles" data-id="${item.solicitud_id}"></i>
+                        ${item.estatus === ESTATUS.SOLICITADO ? `<i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer; font-size: 16px;" title="Eliminar" data-id="${item.solicitud_id}"></i>` : ''}
+                    </div>
+                </td>
+            `;
+        });
+    });
 }
 
 function actualizarPaginacion(total) {
-    const totalPages = Math.ceil(total / rowsPerPage);
-    const start = (currentPage - 1) * rowsPerPage + 1;
+    const totalPages = Math.ceil(total / rowsPerPage) || 1;
+    const start = total === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
     const end = Math.min(currentPage * rowsPerPage, total);
     document.getElementById('paginaActual').textContent = currentPage;
-    document.getElementById('paginacionInfo').textContent = `Mostrando ${total === 0 ? 0 : start}-${end} de ${total} registros`;
+    document.getElementById('paginacionInfo').textContent = `Mostrando ${start}-${end} de ${total} registros`;
+}
+
+// ============================================
+// DRAG & DROP DE COLUMNAS
+// ============================================
+function initDragDropColumnas() {
+    const theadRow = document.getElementById('theadRow');
+    if (!theadRow) return;
+
+    theadRow.querySelectorAll('th[draggable="true"]').forEach(th => {
+        th.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', th.dataset.col);
+            e.dataTransfer.effectAllowed = 'move';
+            th.style.opacity = '0.5';
+        });
+        th.addEventListener('dragend', () => { th.style.opacity = '1'; });
+    });
+}
+
+function dropGrupo(event) {
+    event.preventDefault();
+    const zona = document.getElementById('grupoZona');
+    zona.style.borderColor = '#cbd5e1';
+    zona.style.background = '#f8fafc';
+
+    const col = event.dataTransfer.getData('text/plain');
+    if (!col || !COL_LABELS[col]) return;
+    if (columnasAgrupadas.some(c => c.col === col)) return;
+
+    columnasAgrupadas.push({ col, label: COL_LABELS[col] });
+    renderGrupoChips();
+    currentPage = 1;
+    cargarTabla();
+}
+
+function renderGrupoChips() {
+    const chips = document.getElementById('grupoChips');
+    const placeholder = document.getElementById('grupoPlaceholder');
+    if (!chips) return;
+
+    if (columnasAgrupadas.length === 0) {
+        chips.innerHTML = '';
+        placeholder.style.display = 'inline';
+        return;
+    }
+
+    placeholder.style.display = 'none';
+    chips.innerHTML = columnasAgrupadas.map((c, i) => `
+        <span class="grupo-chip">
+            <i class="fas fa-grip-vertical" style="opacity:0.7;"></i>
+            ${c.label}
+            <span class="cerrar-chip" onclick="quitarGrupo(${i})">&times;</span>
+        </span>
+    `).join('');
+}
+
+function quitarGrupo(index) {
+    columnasAgrupadas.splice(index, 1);
+    renderGrupoChips();
+    cargarTabla();
+}
+
+// ============================================
+// SELECTOR DE CLIENTES (select tradicional)
+// ============================================
+function cargarClientesSelect() {
+    const select = document.getElementById('contacto_id');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Cargando clientes...</option>';
+    select.disabled = true;
+
+    fetch('/factoraje/clientes?con_facturas=1', {
+        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+    })
+        .then(async r => {
+            const ct = r.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) {
+                throw new Error(`Respuesta no JSON (HTTP ${r.status})`);
+            }
+            return await r.json();
+        })
+        .then(res => {
+            select.disabled = false;
+            if (!res.success) {
+                select.innerHTML = '<option value="">Error al cargar clientes</option>';
+                return;
+            }
+
+            const clientes = res.data || [];
+            if (clientes.length === 0) {
+                select.innerHTML = '<option value="">No hay clientes con facturas disponibles</option>';
+                return;
+            }
+
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            clientes.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.contacto_id;
+                opt.textContent = c.rfc ? `${c.razon_social} — ${c.rfc}` : c.razon_social;
+                opt.dataset.razonSocial = c.razon_social;
+                select.appendChild(opt);
+            });
+        })
+        .catch(err => {
+            console.error('Error cargando clientes:', err);
+            select.disabled = false;
+            select.innerHTML = '<option value="">Error de conexión al cargar clientes</option>';
+        });
+}
+
+function initClienteSelect() {
+    const select = document.getElementById('contacto_id');
+    if (!select) return;
+
+    select.addEventListener('change', function() {
+        const clienteId = this.value;
+        if (clienteId) {
+            cargarFacturasDisponibles(clienteId);
+        } else {
+            facturasDisponibles = [];
+            facturasSeleccionadas = [];
+            mostrarFacturasDisponibles();
+            actualizarResumen();
+        }
+    });
 }
 
 // ============================================
@@ -536,7 +773,7 @@ function abrirModalNuevaSolicitud() {
     document.getElementById('fecha_solicitud').value = hoy;
     
     cargarFactores();
-    cargarClientesConFacturas();
+    cargarClientesSelect();
     
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
@@ -569,27 +806,6 @@ function cargarFactores() {
         }).catch(e => console.error('Error factores:', e));
 }
 
-function cargarClientesConFacturas() {
-    fetch('/factoraje/clientes-con-facturas')
-        .then(r => r.json())
-        .then(data => {
-            const select = document.getElementById('contacto_id');
-            if (select && Array.isArray(data)) {
-                select.innerHTML = '<option value="">Seleccionar cliente...</option>';
-                data.forEach(c => {
-                    select.innerHTML += `<option value="${c.contacto_id}">${c.razon_social} ${c.rfc ? '- ' + c.rfc : ''}</option>`;
-                });
-                select.onchange = function() {
-                    if (this.value) cargarFacturasDisponibles(this.value);
-                    else {
-                        facturasDisponibles = [];
-                        mostrarFacturasDisponibles();
-                    }
-                };
-            }
-        }).catch(e => console.error('Error clientes:', e));
-}
-
 function cargarFacturasDisponibles(clienteId) {
     if (!clienteId) return;
     
@@ -597,10 +813,9 @@ function cargarFacturasDisponibles(clienteId) {
     fetch(`/factoraje/facturas-disponibles?cliente_id=${clienteId}`)
         .then(r => r.json())
         .then(data => {
-            // Marcar facturas que ya están en proceso
             facturasDisponibles = (Array.isArray(data) ? data : []).map(f => ({
                 ...f,
-                en_factoraje: false // Por defecto, la consulta SQL ya excluye las que están en proceso
+                en_factoraje: false
             }));
             mostrarFacturasDisponibles();
             showLoading(false);
@@ -634,9 +849,8 @@ function mostrarFacturasDisponibles() {
         const montoFactura = f.saldo_real || f.total;
         const estaEnProceso = f.en_factoraje || false;
         
-        // Determinar clase CSS adicional si está en proceso
         const claseAdicional = estaEnProceso ? 'factura-no-disponible' : '';
-        const onclickAction = !estaEnProceso ? `onclick='toggleFactura(${JSON.stringify(f)})'` : '';
+        const onclickAction = !estaEnProceso ? `onclick='toggleFactura(${JSON.stringify(f).replace(/'/g, "&apos;")})'` : '';
         
         html += `
             <div class="factura-item ${isSelected ? 'selected' : ''} ${claseAdicional}" 
@@ -656,12 +870,11 @@ function mostrarFacturasDisponibles() {
 }
 
 function toggleFactura(factura) {
-    // Verificar si la factura ya está en proceso
     if (factura.en_factoraje) {
         Swal.fire({
             icon: 'warning',
             title: 'Factura no disponible',
-            text: `La factura ${factura.serie || ''}${factura.serie ? '-' : ''}${factura.folio} ya está en proceso de factoraje o ya fue factorizada.`,
+            text: `La factura ${factura.serie || ''}${factura.serie ? '-' : ''}${factura.folio} ya está en proceso de factoraje.`,
             confirmButtonColor: '#083CAE'
         });
         return;
@@ -671,23 +884,16 @@ function toggleFactura(factura) {
     const montoFactura = factura.saldo_real || factura.total;
     
     if (index === -1) {
-        facturasSeleccionadas.push({ 
-            factura_id: factura.factura_id, 
-            monto: montoFactura 
-        });
+        facturasSeleccionadas.push({ factura_id: factura.factura_id, monto: montoFactura });
     } else {
         facturasSeleccionadas.splice(index, 1);
     }
     
-    // Actualizar UI
     const items = document.querySelectorAll('.factura-item');
     items.forEach(item => {
         if (parseInt(item.dataset.facturaId) === factura.factura_id) {
-            if (index === -1) {
-                item.classList.add('selected');
-            } else {
-                item.classList.remove('selected');
-            }
+            if (index === -1) item.classList.add('selected');
+            else item.classList.remove('selected');
         }
     });
     
@@ -717,7 +923,7 @@ function guardarSolicitud() {
     const observaciones = document.getElementById('observaciones').value;
     
     if (!factorId || !contactoId || !fechaSolicitud) {
-        showError('Por favor complete todos los campos obligatorios');
+        showError('Por favor complete todos los campos obligatorios (incluye seleccionar un cliente)');
         return;
     }
     
@@ -744,6 +950,7 @@ function guardarSolicitud() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
         },
         body: JSON.stringify(data)
@@ -767,7 +974,9 @@ function guardarSolicitud() {
 }
 
 function verDetalles(id) {
-    fetch(`/factoraje/solicitud/${id}`)
+    fetch(`/factoraje/solicitud/${id}`, {
+        headers: { 'Accept': 'application/json' }
+    })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -817,34 +1026,24 @@ function mostrarDetalles(solicitud, facturas) {
         </div>
     `;
     
-    // Mostrar/ocultar botones según estatus - USANDO NÚMEROS DIRECTAMENTE
     const btnAutorizar = document.getElementById('btnAutorizar');
     const btnRechazar = document.getElementById('btnRechazar');
     const btnLiquidar = document.getElementById('btnLiquidar');
     
-    // Asegurar que los botones existan
     if (btnAutorizar && btnRechazar && btnLiquidar) {
         const estatus = parseInt(solicitud.estatus);
         
-        // Ocultar todos primero
         btnAutorizar.style.display = 'none';
         btnRechazar.style.display = 'none';
         btnLiquidar.style.display = 'none';
         
-        // Mostrar según estatus
-        if (estatus === 1) { // Solicitado
+        if (estatus === 1) {
             btnAutorizar.style.display = 'inline-block';
             btnRechazar.style.display = 'inline-block';
-            console.log('Mostrando botones Autorizar y Rechazar para solicitud:', solicitud.folio);
-        } else if (estatus === 2) { // Autorizado
+        } else if (estatus === 2) {
             btnRechazar.style.display = 'inline-block';
             btnLiquidar.style.display = 'inline-block';
-            console.log('Mostrando botones Rechazar y Liquidar para solicitud:', solicitud.folio);
-        } else {
-            console.log('No se muestran botones de acción para estatus:', estatus);
         }
-    } else {
-        console.error('No se encontraron los botones en el DOM');
     }
     
     modal.style.display = 'block';
@@ -855,7 +1054,9 @@ function cerrarDetalles() {
     solicitudActualId = null;
 }
 
-// Modal de liquidación
+// ============================================
+// MODAL LIQUIDACIÓN
+// ============================================
 let liquidacionSolicitudId = null;
 
 function abrirModalLiquidacion(id) {
@@ -885,6 +1086,7 @@ function confirmarLiquidacion() {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
         },
         body: JSON.stringify({ 
@@ -892,14 +1094,20 @@ function confirmarLiquidacion() {
             referencia_pago: referenciaPago 
         })
     })
-    .then(response => response.json())
-    .then(result => {
+    .then(async response => {
+        const result = await response.json();
+        return { ok: response.ok, result };
+    })
+    .then(({ ok, result }) => {
         showLoading(false);
-        if (result.success) {
+        if (ok && result.success) {
             showSuccess('Factoraje liquidado correctamente');
             cerrarModalLiquidacion();
             cerrarDetalles();
             cargarDatos();
+        } else if (result.errors) {
+            const msgs = Object.values(result.errors).flat().join('<br>');
+            showError(msgs || result.message || 'Error al liquidar');
         } else {
             showError(result.message || 'Error al liquidar');
         }
@@ -914,8 +1122,7 @@ function confirmarLiquidacion() {
 function cambiarEstatus(nuevoEstatus) {
     if (!solicitudActualId) return;
     
-    // 2 = Autorizar, 3 = Liquidar, 4 = Rechazar
-    if (nuevoEstatus === 3) { // Liquidar
+    if (nuevoEstatus === 3) {
         abrirModalLiquidacion(solicitudActualId);
         return;
     }
@@ -950,18 +1157,22 @@ function cambiarEstatus(nuevoEstatus) {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                 }
             })
-            .then(response => response.json())
-            .then(result => {
+            .then(async response => {
+                const r = await response.json();
+                return { ok: response.ok, r };
+            })
+            .then(({ ok, r }) => {
                 showLoading(false);
-                if (result.success) {
+                if (ok && r.success) {
                     showSuccess('Estatus actualizado correctamente');
                     cerrarDetalles();
                     cargarDatos();
                 } else {
-                    showError(result.message || 'Error al actualizar estatus');
+                    showError(r.message || 'Error al actualizar estatus');
                 }
             })
             .catch(error => {
@@ -990,6 +1201,7 @@ function eliminarSolicitud(id) {
             fetch(`/factoraje/solicitud/${id}`, {
                 method: 'DELETE',
                 headers: {
+                    'Accept': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                 }
             })
@@ -1077,7 +1289,7 @@ function aplicarFiltros() {
 }
 
 function cambiarPagina(direccion) {
-    const totalPages = Math.ceil(datosFiltrados.length / rowsPerPage);
+    const totalPages = Math.ceil(datosFiltrados.length / rowsPerPage) || 1;
     
     if (direccion === 'primera') currentPage = 1;
     else if (direccion === 'anterior') currentPage = Math.max(1, currentPage - 1);
@@ -1121,10 +1333,11 @@ function guardarFiltro() {
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar datos iniciales
+    setFechasPorDefecto();
+    initDragDropColumnas();
+    initClienteSelect();
     cargarDatos();
     
-    // Event listeners
     document.getElementById('btnAgregar')?.addEventListener('click', abrirModalNuevaSolicitud);
     document.getElementById('cerrarModal')?.addEventListener('click', cerrarModalSolicitud);
     document.getElementById('btnCancelar')?.addEventListener('click', cerrarModalSolicitud);
@@ -1142,17 +1355,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('fechaFin')?.addEventListener('change', aplicarFiltros);
     document.getElementById('buscador')?.addEventListener('input', aplicarFiltros);
     
-    // Botones del modal de detalles
     document.getElementById('btnCerrarDetalles')?.addEventListener('click', cerrarDetalles);
     document.getElementById('btnAutorizar')?.addEventListener('click', () => cambiarEstatus(ESTATUS.AUTORIZADO));
     document.getElementById('btnRechazar')?.addEventListener('click', () => cambiarEstatus(ESTATUS.RECHAZADO));
     document.getElementById('btnLiquidar')?.addEventListener('click', () => cambiarEstatus(ESTATUS.LIQUIDADO));
     
-    // Botones del modal de liquidación
     document.getElementById('btnCancelarLiquidacion')?.addEventListener('click', cerrarModalLiquidacion);
     document.getElementById('btnConfirmarLiquidacion')?.addEventListener('click', confirmarLiquidacion);
     
-    // Porcentaje anticipo
     document.getElementById('porcentaje_anticipo')?.addEventListener('input', actualizarResumen);
 });
 </script>

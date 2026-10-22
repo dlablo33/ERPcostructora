@@ -45,18 +45,24 @@
 
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;" id="grupoAgrupacion">
+                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px;" title="Arrastra una columna aquí para agrupar"></i>
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
-                        <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
+                        <div id="grupoColumnas" 
+                             style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 32px; min-width: 200px; padding: 4px 8px; border: 2px dashed #ced4da; border-radius: 6px; background-color: #f8f9fa; align-items: center; transition: all 0.2s;"
+                             ondragover="event.preventDefault(); this.style.borderColor='#2378e1'; this.style.backgroundColor='#e7f0ff';"
+                             ondragleave="this.style.borderColor='#ced4da'; this.style.backgroundColor='#f8f9fa';"
+                             ondrop="handleDropGroup(event)">
+                        </div>
+                        <button id="btnLimpiarAgrupacion" style="display: none; background: #dc3545; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 11px; line-height: 1;" title="Quitar agrupación">×</button>
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <div>
-                            <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaInicio" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;" title="Fecha publicación desde">
                         </div>
                         <div>
-                            <input type="date" id="fechaFin" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
+                            <input type="date" id="fechaFin" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;" title="Fecha publicación hasta">
                         </div>
                         <div>
                             <button id="btnAgregar" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #083CAE; font-size: 16px;" title="Agregar Licitación">
@@ -82,6 +88,66 @@
                     </div>
                 </div>
 
+                <!-- Panel de filtros avanzados (oculto por defecto) -->
+                <div id="panelFiltros" style="display: none; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Estado</label>
+                            <select id="filtroEstado" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <option value="">Todos</option>
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Adjudicada">Adjudicada</option>
+                                <option value="No Adjudicada">No Adjudicada</option>
+                                <option value="Por Vencer">Por Vencer</option>
+                                <option value="Vencida">Vencida</option>
+                                <option value="Rechazada">Rechazada</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Cliente</label>
+                            <select id="filtroCliente" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Responsable</label>
+                            <select id="filtroResponsable" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Participación</label>
+                            <select id="filtroParticipa" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <option value="">Todas</option>
+                                <option value="1">Solo participantes</option>
+                                <option value="0">Solo no participantes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Monto mín.</label>
+                            <input type="number" id="filtroMontoMin" placeholder="0" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Monto máx.</label>
+                            <input type="number" id="filtroMontoMax" placeholder="1000000" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #495057;">Ordenar por</label>
+                            <select id="filtroOrden" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                                <option value="created_at|desc">Más recientes</option>
+                                <option value="fecha_cierre|asc">Cierre próximo</option>
+                                <option value="monto_estimado|desc">Mayor monto</option>
+                                <option value="monto_estimado|asc">Menor monto</option>
+                                <option value="no_licitacion|asc">No. Licitación</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px;">
+                        <button id="btnLimpiarFiltros" style="padding: 6px 14px; background-color: #f8f9fa; border: 1px solid #6c757d; color: #6c757d; border-radius: 4px; cursor: pointer; font-size: 13px;">Limpiar</button>
+                        <button id="btnAplicarFiltros" style="padding: 6px 14px; background-color: #083CAE; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">Aplicar filtros</button>
+                    </div>
+                </div>
+
                 <!-- Loading -->
                 <div id="loadingSpinner" style="text-align: center; padding: 40px; display: none;">
                     <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #083CAE;"></i>
@@ -99,16 +165,16 @@
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto; position: relative; display: block;" id="tablaContainer">
                     <table class="table table-bordered" id="tablaLicitaciones" style="width: 100%; margin-bottom: 0; font-size: 12px; border-collapse: collapse;">
                         <thead style="position: sticky; top: 0; z-index: 20; background-color: #2378e1; color: white;">
-                            <tr>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">No. Licitación</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Nombre / Descripción</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Cliente / Dependencia</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Fecha Publicación</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Fecha Cierre</th>
+                            <tr id="tablaHeaderRow">
+                                <th draggable="true" data-column="no_licitacion" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">No. Licitación</th>
+                                <th draggable="true" data-column="nombre" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Nombre / Descripción</th>
+                                <th draggable="true" data-column="cliente" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Cliente / Dependencia</th>
+                                <th draggable="true" data-column="fecha_publicacion" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Fecha Publicación</th>
+                                <th draggable="true" data-column="fecha_cierre" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Fecha Cierre</th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Días Restantes</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Monto Estimado</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Responsable</th>
-                                <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0;">Estado</th>
+                                <th draggable="true" data-column="monto_estimado" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Monto Estimado</th>
+                                <th draggable="true" data-column="responsable" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Responsable</th>
+                                <th draggable="true" data-column="estado" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; top: 0; cursor: grab;" title="Arrastra para agrupar">Estado</th>
                                 <th style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; background-color: #2378e1; color: white; position: sticky; right: 0; z-index: 30; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">Acciones</th>
                             </tr>
                         </thead>
@@ -141,7 +207,7 @@
     </section>
 </div>
 
-<!-- Modal para Agregar Licitación - CORREGIDO -->
+<!-- Modal para Agregar Licitación -->
 <div id="modalAgregarLicitacion" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
         <div style="padding: 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 12px 12px 0 0;">
@@ -216,7 +282,7 @@
     </div>
 </div>
 
-<!-- Modal para Ver Detalle - CORREGIDO -->
+<!-- Modal para Ver Detalle -->
 <div id="modalVerDetalle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
         <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 12px 12px 0 0;">
@@ -228,6 +294,25 @@
             </button>
         </div>
         <div style="padding: 20px;" id="detalleContent"></div>
+    </div>
+</div>
+
+<!-- Modal para Rechazar -->
+<div id="modalRechazar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 500px; position: relative; z-index: 100000;">
+        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%); border-radius: 12px 12px 0 0;">
+            <h3 style="margin: 0; color: white;"><i class="fas fa-times-circle"></i> Rechazar Licitación</h3>
+            <button id="btnCerrarRechazar" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+        </div>
+        <div style="padding: 20px;">
+            <p style="color: #6c757d; margin-bottom: 12px;">Indica el motivo por el cual no se ganó esta licitación:</p>
+            <textarea id="motivoRechazo" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="Ej: Precio fuera de rango, no cumplimos requisitos técnicos..."></textarea>
+            <input type="hidden" id="rechazarId">
+        </div>
+        <div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px;">
+            <button id="btnCancelarRechazo" style="padding: 8px 18px; background-color: #f8f9fa; border: 1px solid #6c757d; color: #6c757d; border-radius: 4px; cursor: pointer;">Cancelar</button>
+            <button id="btnConfirmarRechazo" style="padding: 8px 18px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Rechazar</button>
+        </div>
     </div>
 </div>
 
@@ -247,8 +332,52 @@
     .badge-por-vencer { background-color: #fff3cd; color: #ffc107; }
     .badge-vencida { background-color: #f8d7da; color: #dc3545; }
     .badge-no-adjudicada { background-color: #e2e3e5; color: #6c757d; }
+    .badge-rechazada { background-color: #f5c6cb; color: #721c24; }
     .badge-participa { background-color: #083CAE; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
     tfoot td { font-weight: bold; background-color: #e9ecef !important; border-top: 2px solid #083CAE; color: #000000 !important; }
+    
+    /* Grupo de agrupación */
+    #grupoColumnas.drag-over {
+        border-color: #2378e1 !important;
+        background-color: #e7f0ff !important;
+    }
+    
+    .chip-agrupacion {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background-color: #2378e1;
+        color: white;
+        border-radius: 14px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    .chip-agrupacion button {
+        background: rgba(255,255,255,0.3);
+        border: none;
+        color: white;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        font-size: 11px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Grupo fila agrupada */
+    .grupo-header-row {
+        background-color: #e7f0ff !important;
+        font-weight: 700;
+        color: #083CAE;
+    }
+    .grupo-header-row td {
+        padding: 8px 12px !important;
+        border-top: 2px solid #2378e1 !important;
+    }
     
     /* Toast notifications */
     .toast-notification { 
@@ -276,7 +405,8 @@
     /* Responsive */
     @media (max-width: 768px) {
         #modalAgregarLicitacion > div,
-        #modalVerDetalle > div {
+        #modalVerDetalle > div,
+        #modalRechazar > div {
             width: 95%;
             margin: 10px;
         }
@@ -293,11 +423,22 @@
     const API_BASE = '/proyectos/licitaciones';
     let currentPage = 1;
     let totalPages = 1;
+    let debounceTimer = null;
+    let agrupacionActual = null; // { columna, etiqueta }
+
     let currentFilters = {
         busqueda: '',
         estado: '',
         fecha_inicio: '',
         fecha_fin: '',
+        cliente_id: '',
+        responsable_id: '',
+        participa: '',
+        monto_min: '',
+        monto_max: '',
+        sort_by: 'created_at',
+        sort_dir: 'desc',
+        group_by: '',
         page: 1,
         per_page: 10
     };
@@ -310,7 +451,14 @@
         mostrarLoading(true);
         
         try {
-            const params = new URLSearchParams(currentFilters);
+            // Limpiar parámetros vacíos para no enviarlos
+            const params = new URLSearchParams();
+            Object.entries(currentFilters).forEach(([key, value]) => {
+                if (value !== '' && value !== null && value !== undefined) {
+                    params.append(key, value);
+                }
+            });
+            
             const url = `${API_BASE}?${params.toString()}`;
             console.log('Cargando desde:', url);
             
@@ -334,7 +482,7 @@
                 const pagination = result.data;
                 
                 actualizarEstadisticas(result.estadisticas);
-                renderizarTabla(data);
+                renderizarTabla(data, result.agrupado, result.group_by);
                 actualizarPaginacion(pagination);
                 currentPage = pagination.current_page || 1;
                 totalPages = pagination.last_page || 1;
@@ -360,19 +508,25 @@
             const result = await response.json();
             
             const select = document.getElementById('modalCliente');
+            const filtroCliente = document.getElementById('filtroCliente');
             
             if (result.success && result.data && result.data.length > 0) {
-                select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+                let options = '<option value="">Seleccionar cliente...</option>';
+                let optionsFiltro = '<option value="">Todos</option>';
+                
                 result.data.forEach(cliente => {
-                    select.innerHTML += `<option value="${cliente.id}">${cliente.nombre}</option>`;
+                    options += `<option value="${cliente.id}">${cliente.nombre}</option>`;
+                    optionsFiltro += `<option value="${cliente.id}">${cliente.nombre}</option>`;
                 });
+                
+                select.innerHTML = options;
+                filtroCliente.innerHTML = optionsFiltro;
             } else {
                 select.innerHTML = '<option value="">No hay clientes disponibles</option>';
             }
         } catch (error) {
             console.error('Error cargando clientes:', error);
-            const select = document.getElementById('modalCliente');
-            select.innerHTML = '<option value="">Error al cargar clientes</option>';
+            document.getElementById('modalCliente').innerHTML = '<option value="">Error al cargar clientes</option>';
         }
     }
 
@@ -387,20 +541,26 @@
             const result = await response.json();
             
             const select = document.getElementById('modalResponsable');
+            const filtroResp = document.getElementById('filtroResponsable');
             
             if (result.success && result.data && result.data.length > 0) {
-                select.innerHTML = '<option value="">Seleccionar responsable...</option>';
+                let options = '<option value="">Seleccionar responsable...</option>';
+                let optionsFiltro = '<option value="">Todos</option>';
+                
                 result.data.forEach(responsable => {
                     const nombre = responsable.nombre_completo || responsable.nombre || 'Sin nombre';
-                    select.innerHTML += `<option value="${responsable.id}">${nombre}</option>`;
+                    options += `<option value="${responsable.id}">${nombre}</option>`;
+                    optionsFiltro += `<option value="${responsable.id}">${nombre}</option>`;
                 });
+                
+                select.innerHTML = options;
+                filtroResp.innerHTML = optionsFiltro;
             } else {
                 select.innerHTML = '<option value="">No hay responsables disponibles</option>';
             }
         } catch (error) {
             console.error('Error cargando responsables:', error);
-            const select = document.getElementById('modalResponsable');
-            select.innerHTML = '<option value="">Error al cargar responsables</option>';
+            document.getElementById('modalResponsable').innerHTML = '<option value="">Error al cargar responsables</option>';
         }
     }
 
@@ -408,12 +568,12 @@
     // RENDERIZADO
     // ============================================
 
-    function renderizarTabla(licitaciones) {
+    function renderizarTabla(licitaciones, agrupado, groupBy) {
         const tbody = document.getElementById('tablaBody');
         const sinDatos = document.getElementById('sinDatosMensaje');
         const tablaContainer = document.getElementById('tablaContainer');
         
-        if (!licitaciones || licitaciones.length === 0) {
+        if ((!licitaciones || licitaciones.length === 0) && (!agrupado || agrupado.length === 0)) {
             tbody.innerHTML = '';
             sinDatos.style.display = 'block';
             tablaContainer.style.display = 'none';
@@ -423,7 +583,70 @@
         sinDatos.style.display = 'none';
         tablaContainer.style.display = 'block';
         
-        tbody.innerHTML = licitaciones.map(licitacion => `
+        let html = '';
+        let totalMonto = 0;
+        
+        if (agrupado && agrupado.length > 0) {
+            // Renderizar agrupado
+            agrupado.forEach(grupo => {
+                const items = grupo.items || [];
+                const montoGrupo = parseFloat(grupo.monto_total || 0);
+                totalMonto += montoGrupo;
+                
+                html += `
+                    <tr class="grupo-header-row">
+                        <td colspan="10" style="text-align: left;">
+                            <i class="fas fa-folder-open" style="margin-right: 6px;"></i>
+                            <strong>${grupo.grupo || 'Sin valor'}</strong>
+                            <span style="margin-left: 10px; color: #6c757d; font-weight: normal;">
+                                (${grupo.total} ${grupo.total === 1 ? 'registro' : 'registros'} · ${formatCurrency(montoGrupo)})
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                
+                items.forEach(licitacion => {
+                    html += renderFilaLicitacion(licitacion);
+                });
+            });
+        } else {
+            // Renderizar normal
+            licitaciones.forEach(licitacion => {
+                totalMonto += parseFloat(licitacion.monto_estimado || 0);
+                html += renderFilaLicitacion(licitacion);
+            });
+        }
+        
+        tbody.innerHTML = html;
+        document.getElementById('totalMonto').textContent = formatCurrency(totalMonto);
+    }
+
+    function renderFilaLicitacion(licitacion) {
+        // ✅ CORREGIDO: El check de participar se muestra siempre que NO participe y no esté en estados finales
+        const estadosFinales = ['Vencida', 'Adjudicada', 'No Adjudicada', 'Rechazada', 'Cancelada'];
+        const puedeParticipar = !licitacion.participa && !estadosFinales.includes(licitacion.estado);
+        
+        // ✅ CORREGIDO: Si participa y NO está adjudicada, mostrar botones Ganar / Rechazar
+        const puedeGanar = licitacion.participa && !['Adjudicada', 'No Adjudicada', 'Rechazada'].includes(licitacion.estado);
+        
+        let acciones = `
+            <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${licitacion.id})"></i>
+        `;
+        
+        if (puedeParticipar) {
+            acciones += `
+                <i class="fas fa-check-circle" style="color: #28a745; cursor: pointer; font-size: 14px;" title="Participar" onclick="confirmarParticipacion(${licitacion.id})"></i>
+            `;
+        }
+        
+        if (puedeGanar) {
+            acciones += `
+                <i class="fas fa-trophy" style="color: #ffc107; cursor: pointer; font-size: 14px;" title="Marcar como Ganadora" onclick="marcarGanadora(${licitacion.id})"></i>
+                <i class="fas fa-times-circle" style="color: #dc3545; cursor: pointer; font-size: 14px;" title="Marcar como Rechazada" onclick="abrirModalRechazar(${licitacion.id})"></i>
+            `;
+        }
+        
+        return `
             <tr>
                 <td style="padding: 10px 4px;">
                     ${licitacion.no_licitacion || 'N/A'}
@@ -443,16 +666,11 @@
                 </td>
                 <td style="padding: 10px 4px; background-color: white; position: sticky; right: 0;">
                     <div style="display: flex; gap: 8px; justify-content: center;">
-                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalle" onclick="verDetalle(${licitacion.id})"></i>
-                        ${!licitacion.participa && licitacion.estado !== 'Vencida' && licitacion.estado !== 'Adjudicada' ? 
-                            `<i class="fas fa-check-circle" style="color: #28a745; cursor: pointer; font-size: 14px;" title="Participar" onclick="confirmarParticipacion(${licitacion.id})"></i>` : ''}
+                        ${acciones}
                     </div>
                 </td>
             </tr>
-        `).join('');
-        
-        const totalMonto = licitaciones.reduce((sum, l) => sum + parseFloat(l.monto_estimado || 0), 0);
-        document.getElementById('totalMonto').textContent = formatCurrency(totalMonto);
+        `;
     }
 
     function actualizarEstadisticas(stats) {
@@ -502,15 +720,16 @@
             'Adjudicada': 'badge-adjudicada',
             'Por Vencer': 'badge-por-vencer',
             'Vencida': 'badge-vencida',
-            'No Adjudicada': 'badge-no-adjudicada'
+            'No Adjudicada': 'badge-no-adjudicada',
+            'Rechazada': 'badge-rechazada',
+            'Cancelada': 'badge-no-adjudicada'
         };
         return badges[estado] || 'badge-proceso';
     }
 
     function mostrarLoading(show) {
         const spinner = document.getElementById('loadingSpinner');
-        const tablaContainer = document.getElementById('tablaContainer');
-        if (spinner) spinner.style.display = show ? 'flex' : 'none';
+        if (spinner) spinner.style.display = show ? 'block' : 'none';
     }
 
     function mostrarNotificacion(mensaje, tipo = 'success') {
@@ -522,6 +741,87 @@
         document.body.appendChild(notificacion);
         setTimeout(() => notificacion.remove(), 3000);
     }
+
+    // ============================================
+    // ✅ DRAG & DROP PARA AGRUPACIÓN
+    // ============================================
+
+    function inicializarDragAndDrop() {
+        const headers = document.querySelectorAll('#tablaHeaderRow th[draggable="true"]');
+        
+        headers.forEach(th => {
+            th.addEventListener('dragstart', (e) => {
+                const columna = th.getAttribute('data-column');
+                const etiqueta = th.textContent.trim();
+                e.dataTransfer.setData('text/plain', columna);
+                e.dataTransfer.setData('text/label', etiqueta);
+                e.dataTransfer.effectAllowed = 'copy';
+                th.style.opacity = '0.5';
+            });
+            
+            th.addEventListener('dragend', (e) => {
+                th.style.opacity = '1';
+                document.getElementById('grupoColumnas').style.borderColor = '#ced4da';
+                document.getElementById('grupoColumnas').style.backgroundColor = '#f8f9fa';
+            });
+        });
+    }
+
+    window.handleDropGroup = function(event) {
+        event.preventDefault();
+        const columna = event.dataTransfer.getData('text/plain');
+        const etiqueta = event.dataTransfer.getData('text/label');
+        
+        if (!columna) return;
+        
+        // Resetear estilos
+        const dropZone = document.getElementById('grupoColumnas');
+        dropZone.style.borderColor = '#ced4da';
+        dropZone.style.backgroundColor = '#f8f9fa';
+        
+        // Establecer agrupación
+        agrupacionActual = { columna, etiqueta };
+        currentFilters.group_by = columna;
+        currentFilters.page = 1;
+        
+        // Renderizar chip
+        renderizarChipAgrupacion();
+        
+        // Recargar datos
+        cargarLicitaciones();
+    };
+
+    function renderizarChipAgrupacion() {
+        const grupoColumnas = document.getElementById('grupoColumnas');
+        const textoAgrupar = document.getElementById('textoAgrupar');
+        const btnLimpiar = document.getElementById('btnLimpiarAgrupacion');
+        
+        if (agrupacionActual) {
+            grupoColumnas.innerHTML = `
+                <span class="chip-agrupacion">
+                    <i class="fas fa-layer-group"></i>
+                    ${agrupacionActual.etiqueta}
+                    <button onclick="quitarAgrupacion()" title="Quitar">×</button>
+                </span>
+            `;
+            textoAgrupar.style.display = 'none';
+            btnLimpiar.style.display = 'flex';
+            btnLimpiar.style.alignItems = 'center';
+            btnLimpiar.style.justifyContent = 'center';
+        } else {
+            grupoColumnas.innerHTML = '';
+            textoAgrupar.style.display = 'inline';
+            btnLimpiar.style.display = 'none';
+        }
+    }
+
+    window.quitarAgrupacion = function() {
+        agrupacionActual = null;
+        currentFilters.group_by = '';
+        currentFilters.page = 1;
+        renderizarChipAgrupacion();
+        cargarLicitaciones();
+    };
 
     // ============================================
     // ACCIONES
@@ -565,12 +865,17 @@
                     </div>
                     <div style="margin-bottom: 20px;">
                         <div style="color: #6c757d; font-size: 12px;">Monto Estimado</div>
-                        <div style="font-size: 24px; font-weight: 700; color: #083CAE;">${formatCurrency(l.monto_estimado)}</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #083CAE;">${formatCurrency(l.monto_estimado)} ${l.moneda || 'MXN'}</div>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <div style="color: #6c757d; font-size: 12px;">Estado</div>
+                        <span class="badge-estado ${getEstadoBadgeClass(l.estado)}">${l.estado || 'En Proceso'}</span>
+                        ${l.participa ? '<span class="badge-participa" style="margin-left: 8px;">Participamos</span>' : ''}
                     </div>
                     ${l.observaciones ? `
                     <div style="margin-bottom: 20px;">
                         <div style="color: #6c757d; font-size: 12px;">Observaciones</div>
-                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;">${l.observaciones}</div>
+                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; white-space: pre-wrap;">${l.observaciones}</div>
                     </div>` : ''}
                     <div style="display: flex; justify-content: flex-end; gap: 10px;">
                         <button onclick="cerrarModalVer()" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
@@ -584,6 +889,7 @@
         }
     };
 
+    // ✅ Confirmar participación (marca el check y cambia estado a "En Proceso")
     window.confirmarParticipacion = async function(id) {
         if (!confirm('¿Desea confirmar su participación en esta licitación?')) return;
         
@@ -599,31 +905,105 @@
             const result = await response.json();
             
             if (result.success) {
-                mostrarNotificacion(result.message, 'success');
+                mostrarNotificacion(result.message || 'Participación confirmada', 'success');
                 cargarLicitaciones();
             } else {
-                mostrarNotificacion(result.message, 'error');
+                mostrarNotificacion(result.message || 'Error al confirmar', 'error');
             }
         } catch (error) {
             mostrarNotificacion('Error al confirmar participación', 'error');
         }
     };
 
+    // ✅ Marcar como ganadora (Adjudicada)
+    window.marcarGanadora = async function(id) {
+        if (!confirm('¿Confirmas que esta licitación fue GANADA / ADJUDICADA?')) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/${id}/ganar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Accept': 'application/json'
+                }
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Licitación marcada como Adjudicada', 'success');
+                cargarLicitaciones();
+            } else {
+                mostrarNotificacion(result.message || 'Error al marcar', 'error');
+            }
+        } catch (error) {
+            mostrarNotificacion('Error al marcar como ganadora', 'error');
+        }
+    };
+
+    // ✅ Abrir modal de rechazo
+    window.abrirModalRechazar = function(id) {
+        document.getElementById('rechazarId').value = id;
+        document.getElementById('motivoRechazo').value = '';
+        document.getElementById('modalRechazar').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.cerrarModalRechazar = function() {
+        document.getElementById('modalRechazar').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    };
+
+    // ✅ Confirmar rechazo
+    async function confirmarRechazo() {
+        const id = document.getElementById('rechazarId').value;
+        const motivo = document.getElementById('motivoRechazo').value.trim();
+        
+        if (!id) return;
+        
+        try {
+            const response = await fetch(`${API_BASE}/${id}/rechazar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ motivo })
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                mostrarNotificacion(result.message || 'Licitación rechazada', 'success');
+                cerrarModalRechazar();
+                cargarLicitaciones();
+            } else {
+                mostrarNotificacion(result.message || 'Error al rechazar', 'error');
+            }
+        } catch (error) {
+            mostrarNotificacion('Error al rechazar la licitación', 'error');
+        }
+    }
+
     function abrirModalVer() {
-        const modal = document.getElementById('modalVerDetalle');
-        modal.style.display = 'flex';
+        document.getElementById('modalVerDetalle').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
     window.cerrarModalVer = function() {
-        const modal = document.getElementById('modalVerDetalle');
-        modal.style.display = 'none';
+        document.getElementById('modalVerDetalle').style.display = 'none';
         document.body.style.overflow = 'auto';
     };
 
     async function exportarExcel() {
         try {
-            const params = new URLSearchParams(currentFilters);
+            const params = new URLSearchParams();
+            Object.entries(currentFilters).forEach(([key, value]) => {
+                if (value !== '' && value !== null && value !== undefined && key !== 'page') {
+                    params.append(key, value);
+                }
+            });
+            
             const response = await fetch(`${API_BASE}/exportar?${params.toString()}`);
             const result = await response.json();
             
@@ -633,8 +1013,11 @@
                     l.no_licitacion, l.nombre, l.nombre_cliente, formatDate(l.fecha_publicacion),
                     formatDate(l.fecha_cierre), l.dias_restantes, l.monto_estimado, l.nombre_responsable, l.estado
                 ]);
-                const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const csvContent = [headers, ...rows].map(row => 
+                    row.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')
+                ).join('\n');
+                
+                const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = `licitaciones_${new Date().toISOString().split('T')[0]}.csv`;
@@ -685,11 +1068,9 @@
     }
 
     function abrirModalAgregar() {
-        const modal = document.getElementById('modalAgregarLicitacion');
-        modal.style.display = 'flex';
+        document.getElementById('modalAgregarLicitacion').style.display = 'flex';
         document.body.style.overflow = 'hidden';
         
-        // Establecer fechas por defecto
         const hoy = new Date();
         const unMesDespues = new Date();
         unMesDespues.setMonth(hoy.getMonth() + 1);
@@ -699,10 +1080,59 @@
     }
 
     function cerrarModalAgregar() {
-        const modal = document.getElementById('modalAgregarLicitacion');
-        modal.style.display = 'none';
+        document.getElementById('modalAgregarLicitacion').style.display = 'none';
         document.body.style.overflow = 'auto';
         document.getElementById('formLicitacion')?.reset();
+    }
+
+    // ============================================
+    // ✅ FILTROS AVANZADOS
+    // ============================================
+
+    function togglePanelFiltros() {
+        const panel = document.getElementById('panelFiltros');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function aplicarFiltros() {
+        currentFilters.estado = document.getElementById('filtroEstado').value;
+        currentFilters.cliente_id = document.getElementById('filtroCliente').value;
+        currentFilters.responsable_id = document.getElementById('filtroResponsable').value;
+        currentFilters.participa = document.getElementById('filtroParticipa').value;
+        currentFilters.monto_min = document.getElementById('filtroMontoMin').value;
+        currentFilters.monto_max = document.getElementById('filtroMontoMax').value;
+        
+        const orden = document.getElementById('filtroOrden').value.split('|');
+        currentFilters.sort_by = orden[0];
+        currentFilters.sort_dir = orden[1];
+        
+        currentFilters.page = 1;
+        cargarLicitaciones();
+        
+        mostrarNotificacion('Filtros aplicados', 'success');
+    }
+
+    function limpiarFiltros() {
+        document.getElementById('filtroEstado').value = '';
+        document.getElementById('filtroCliente').value = '';
+        document.getElementById('filtroResponsable').value = '';
+        document.getElementById('filtroParticipa').value = '';
+        document.getElementById('filtroMontoMin').value = '';
+        document.getElementById('filtroMontoMax').value = '';
+        document.getElementById('filtroOrden').value = 'created_at|desc';
+        
+        currentFilters.estado = '';
+        currentFilters.cliente_id = '';
+        currentFilters.responsable_id = '';
+        currentFilters.participa = '';
+        currentFilters.monto_min = '';
+        currentFilters.monto_max = '';
+        currentFilters.sort_by = 'created_at';
+        currentFilters.sort_dir = 'desc';
+        currentFilters.page = 1;
+        
+        cargarLicitaciones();
+        mostrarNotificacion('Filtros limpiados', 'success');
     }
 
     // ============================================
@@ -710,6 +1140,7 @@
     // ============================================
 
     function inicializarEventos() {
+        // Paginación
         document.getElementById('btnPrimera')?.addEventListener('click', () => {
             if (currentPage > 1) { currentFilters.page = 1; cargarLicitaciones(); }
         });
@@ -723,12 +1154,17 @@
             if (currentPage < totalPages) { currentFilters.page = totalPages; cargarLicitaciones(); }
         });
         
+        // ✅ Buscador con debounce (evita múltiples peticiones)
         document.getElementById('buscador')?.addEventListener('input', (e) => {
-            currentFilters.busqueda = e.target.value;
-            currentFilters.page = 1;
-            cargarLicitaciones();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                currentFilters.busqueda = e.target.value.trim();
+                currentFilters.page = 1;
+                cargarLicitaciones();
+            }, 400);
         });
         
+        // ✅ Filtros de fecha (con debounce)
         document.getElementById('fechaInicio')?.addEventListener('change', (e) => {
             currentFilters.fecha_inicio = e.target.value;
             currentFilters.page = 1;
@@ -741,24 +1177,51 @@
             cargarLicitaciones();
         });
         
+        // Botones principales
         document.getElementById('btnAgregar')?.addEventListener('click', abrirModalAgregar);
         document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
+        document.getElementById('btnFiltrar')?.addEventListener('click', togglePanelFiltros);
+        
+        // Filtros avanzados
+        document.getElementById('btnAplicarFiltros')?.addEventListener('click', aplicarFiltros);
+        document.getElementById('btnLimpiarFiltros')?.addEventListener('click', limpiarFiltros);
+        
+        // Modales
         document.getElementById('btnCerrarModal')?.addEventListener('click', cerrarModalAgregar);
         document.getElementById('btnCancelar')?.addEventListener('click', cerrarModalAgregar);
         document.getElementById('btnCerrarVerModal')?.addEventListener('click', cerrarModalVer);
+        document.getElementById('btnCerrarRechazar')?.addEventListener('click', cerrarModalRechazar);
+        document.getElementById('btnCancelarRechazo')?.addEventListener('click', cerrarModalRechazar);
+        document.getElementById('btnConfirmarRechazo')?.addEventListener('click', confirmarRechazo);
         document.getElementById('formLicitacion')?.addEventListener('submit', crearLicitacion);
         
+        // Limpiar agrupación
+        document.getElementById('btnLimpiarAgrupacion')?.addEventListener('click', quitarAgrupacion);
+        
+        // Cerrar modales al hacer click fuera
         window.addEventListener('click', (event) => {
-            const modalAgregar = document.getElementById('modalAgregarLicitacion');
-            const modalVer = document.getElementById('modalVerDetalle');
-            if (event.target === modalAgregar) cerrarModalAgregar();
-            if (event.target === modalVer) cerrarModalVer();
+            const modales = [
+                'modalAgregarLicitacion',
+                'modalVerDetalle',
+                'modalRechazar'
+            ];
+            modales.forEach(id => {
+                const modal = document.getElementById(id);
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
         });
+        
+        // ✅ Inicializar drag & drop
+        inicializarDragAndDrop();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log('DOM cargado - API_BASE:', API_BASE);
         
+        // Establecer fechas por defecto (últimos 6 meses)
         const hoy = new Date();
         const seisMesesAtras = new Date();
         seisMesesAtras.setMonth(hoy.getMonth() - 6);
@@ -769,6 +1232,7 @@
         currentFilters.fecha_inicio = document.getElementById('fechaInicio').value;
         currentFilters.fecha_fin = document.getElementById('fechaFin').value;
         
+        // Cargar datos iniciales
         cargarClientes();
         cargarResponsables();
         cargarLicitaciones();

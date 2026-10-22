@@ -55,6 +55,8 @@ class BitacoraIncidencia extends Model
         };
     }
 
+    
+
     public function getEstaResueltaAttribute(): bool
     {
         return !is_null($this->resuelta_en);

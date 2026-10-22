@@ -18,40 +18,54 @@ class CotizacionController extends Controller
      * Muestra la lista de requisiciones para cotizar (vista ordenes.blade.php)
      * Órdenes pendientes de cotizar
      */
-    public function ordenesPendientes(Request $request)
-    {
-        $query = Requisicion::with(['proyecto', 'articulos.cotizaciones'])
-            ->where('estatus', 'Activo');
-        
-        // Filtros
-        if ($request->filled('folio')) {
-            $query->where('folio', 'LIKE', "%{$request->folio}%");
-        }
-        
-        if ($request->filled('proyecto')) {
-            $query->where('proyecto_id', $request->proyecto);
-        }
-        
-        if ($request->filled('estatus_cotizacion')) {
-            $query->where('estatus_cotizacion', $request->estatus_cotizacion);
-        }
-        
-        $requisiciones = $query->orderBy('id', 'desc')->get();
-        
-        // Calcular estadísticas para cada requisición
-        foreach ($requisiciones as $req) {
-            $totalArticulos = $req->articulos->count();
-            $cotizados = $req->articulos->where('cotizada', true)->count();
-            $req->progreso_cotizacion = $totalArticulos > 0 ? round(($cotizados / $totalArticulos) * 100) : 0;
-            $req->cotizados_count = $cotizados;
-            $req->total_articulos = $totalArticulos;
-        }
-        
-        $proveedores = Proveedor::activos()->orderBy('nombre')->get();
-        $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
-        
-        return view('compras.compras.ordenes', compact('requisiciones', 'proveedores', 'proyectos'));
+    /**
+ * Muestra la lista de requisiciones para cotizar (vista ordenes.blade.php)
+ * Órdenes pendientes de cotizar.
+ * Soporta:
+ *   - Búsqueda case-insensitive por folio
+ *   - Detección de petición AJAX → devuelve solo la parcial de la tabla
+ */
+public function ordenesPendientes(Request $request)
+{
+    $query = Requisicion::with(['proyecto', 'articulos.cotizaciones'])
+        ->where('estatus', 'Activo');
+
+    // Filtro Folio — case-insensitive y tolerante a espacios
+    if ($request->filled('folio')) {
+        $folio = mb_strtolower(trim($request->folio), 'UTF-8');
+        $query->whereRaw('LOWER(folio) LIKE ?', ["%{$folio}%"]);
     }
+
+    if ($request->filled('proyecto')) {
+        $query->where('proyecto_id', $request->proyecto);
+    }
+
+    if ($request->filled('estatus_cotizacion')) {
+        $query->where('estatus_cotizacion', $request->estatus_cotizacion);
+    }
+
+    $requisiciones = $query->orderBy('id', 'desc')->get();
+
+    // Estadísticas por requisición
+    foreach ($requisiciones as $req) {
+        $totalArticulos = $req->articulos->count();
+        $cotizados = $req->articulos->where('cotizada', true)->count();
+        $req->progreso_cotizacion = $totalArticulos > 0 ? round(($cotizados / $totalArticulos) * 100) : 0;
+        $req->cotizados_count = $cotizados;
+        $req->total_articulos = $totalArticulos;
+    }
+
+    // ─── Petición AJAX: devolver SOLO la parcial de la tabla ───
+    if ($request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+        return response()->view('compras.compras._tabla_ordenes', compact('requisiciones'));
+    }
+
+    // ─── Petición normal: devolver la vista completa ───
+    $proveedores = Proveedor::activos()->orderBy('nombre')->get();
+    $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
+
+    return view('compras.compras.ordenes', compact('requisiciones', 'proveedores', 'proyectos'));
+}
     
     /**
      * Muestra la lista de requisiciones con cotizaciones para autorizar

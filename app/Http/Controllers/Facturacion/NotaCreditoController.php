@@ -25,6 +25,23 @@ class NotaCreditoController extends Controller
     }
 
     /**
+     * Detecta si la tabla facturas tiene la columna deleted_at.
+     * Se cachea por request para no repetir la consulta.
+     */
+    private function tieneSoftDelete(): bool
+    {
+        static $tiene = null;
+        if ($tiene === null) {
+            try {
+                $tiene = Schema::hasColumn('facturas', 'deleted_at');
+            } catch (\Exception $e) {
+                $tiene = false;
+            }
+        }
+        return $tiene;
+    }
+
+    /**
      * Vista principal de notas de crédito
      */
     public function indexView()
@@ -44,27 +61,33 @@ class NotaCreditoController extends Controller
                 ->leftJoin('cfdi as cf', 'f.factura_id', '=', 'cf.factura_id')
                 ->leftJoin('facturas as fr', 'f.factura_relacionada_id', '=', 'fr.factura_id')
                 ->leftJoin('cat_series as cs_rel', 'fr.cat_serie_id', '=', 'cs_rel.cat_serie_id')
-                ->where('f.tipo_comprobante', 'E')
-                ->select(
-                    'f.factura_id',
-                    'f.folio',
-                    'f.fecha',
-                    'f.estatus',
-                    'f.subtotal',
-                    'f.iva',
-                    'f.total',
-                    'f.cat_monedas_clave as moneda',
-                    'f.observaciones',
-                    'f.motivo_nota_credito',
-                    'f.created_at',
-                    'cf.timbrefiscaldigitalUUID as uuid',
-                    'cf.timbrefiscaldigitalFechaTimbrado as fecha_timbrado',
-                    'cs.serie',
-                    'c.razon_social as cliente_nombre',
-                    'c.rfc as cliente_rfc',
-                    'fr.folio as factura_relacionada_folio',
-                    'cs_rel.serie as factura_relacionada_serie'
-                );
+                ->where('f.tipo_comprobante', 'E');
+
+            // Excluir soft-deleted si la columna existe
+            if ($this->tieneSoftDelete()) {
+                $query->whereNull('f.deleted_at');
+            }
+
+            $query->select(
+                'f.factura_id',
+                'f.folio',
+                'f.fecha',
+                'f.estatus',
+                'f.subtotal',
+                'f.iva',
+                'f.total',
+                'f.cat_monedas_clave as moneda',
+                'f.observaciones',
+                'f.motivo_nota_credito',
+                'f.created_at',
+                'cf.timbrefiscaldigitalUUID as uuid',
+                'cf.timbrefiscaldigitalFechaTimbrado as fecha_timbrado',
+                'cs.serie',
+                'c.razon_social as cliente_nombre',
+                'c.rfc as cliente_rfc',
+                'fr.folio as factura_relacionada_folio',
+                'cs_rel.serie as factura_relacionada_serie'
+            );
 
             // Filtros
             if ($request->fecha_inicio) {
@@ -74,11 +97,13 @@ class NotaCreditoController extends Controller
                 $query->whereDate('f.fecha', '<=', $request->fecha_fin);
             }
             if ($request->search) {
-                $query->where(function($q) use ($request) {
-                    $q->where('f.folio', 'like', "%{$request->search}%")
-                      ->orWhere('c.razon_social', 'like', "%{$request->search}%")
-                      ->orWhere('c.rfc', 'like', "%{$request->search}%")
-                      ->orWhere('f.motivo_nota_credito', 'like', "%{$request->search}%");
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('f.folio', 'like', "%{$search}%")
+                        ->orWhere('c.razon_social', 'like', "%{$search}%")
+                        ->orWhere('c.rfc', 'like', "%{$search}%")
+                        ->orWhere('f.motivo_nota_credito', 'like', "%{$search}%")
+                        ->orWhere('cf.timbrefiscaldigitalUUID', 'like', "%{$search}%");
                 });
             }
 
@@ -134,7 +159,7 @@ class NotaCreditoController extends Controller
     {
         try {
             $clientes = Contacto::where('estatus', true)
-                ->where(function($q) {
+                ->where(function ($q) {
                     $q->where('tipo', 'cliente')->orWhere('tipo', 'ambos');
                 })
                 ->orderBy('razon_social')
@@ -184,7 +209,7 @@ class NotaCreditoController extends Controller
 
             // Obtener la factura original
             $facturaOriginal = DB::table('facturas')->where('factura_id', $request->factura_relacionada_id)->first();
-            
+
             if (!$facturaOriginal) {
                 throw new \Exception('Factura original no encontrada');
             }
@@ -209,9 +234,14 @@ class NotaCreditoController extends Controller
             $notasAplicadas = DB::table('facturas')
                 ->where('factura_relacionada_id', $request->factura_relacionada_id)
                 ->where('tipo_comprobante', 'E')
-                ->where('estatus', 19)
-                ->sum('total');
-            
+                ->where('estatus', 19);
+
+            if ($this->tieneSoftDelete()) {
+                $notasAplicadas->whereNull('deleted_at');
+            }
+
+            $notasAplicadas = $notasAplicadas->sum('total');
+
             $saldoActual = $facturaOriginal->saldo_disponible ?? ($facturaOriginal->total - abs($notasAplicadas));
             $saldoRestante = max(0, $saldoActual);
 
@@ -228,7 +258,7 @@ class NotaCreditoController extends Controller
             if (!$serie) {
                 throw new \Exception('Serie no encontrada');
             }
-            
+
             $folio = str_pad(($serie->folio_actual ?? 0) + 1, 6, '0', STR_PAD_LEFT);
 
             // Obtener sucursal por defecto
@@ -254,7 +284,7 @@ class NotaCreditoController extends Controller
             $total = $subtotal + $iva;
 
             // Insertar nota de crédito
-            $notaId = DB::table('facturas')->insertGetId([
+            $insertData = [
                 'contacto_id' => $request->contacto_id,
                 'proyecto_id' => $request->proyecto_id ?? $facturaOriginal->proyecto_id,
                 'cat_serie_id' => $request->cat_serie_id,
@@ -279,7 +309,13 @@ class NotaCreditoController extends Controller
                 'created_by' => Auth::id(),
                 'created_at' => now(),
                 'updated_at' => now()
-            ], 'factura_id');
+            ];
+
+            if ($this->tieneSoftDelete()) {
+                $insertData['deleted_at'] = null;
+            }
+
+            $notaId = DB::table('facturas')->insertGetId($insertData, 'factura_id');
 
             // Insertar conceptos (con montos NEGATIVOS)
             foreach ($request->conceptos as $concepto) {
@@ -337,7 +373,7 @@ class NotaCreditoController extends Controller
 
             DB::commit();
 
-            $porcentajeAplicado = ($totalNotaCredito / $facturaOriginal->total) * 100;
+            $porcentajeAplicado = $facturaOriginal->total > 0 ? ($totalNotaCredito / $facturaOriginal->total) * 100 : 0;
             $estadoFactura = $nuevoSaldo <= 0 ? 'Totalmente pagada' : 'Parcialmente pagada';
 
             return response()->json([
@@ -375,23 +411,27 @@ class NotaCreditoController extends Controller
     {
         try {
             // Obtener la nota de crédito
-            $nota = DB::table('facturas as f')
+            $query = DB::table('facturas as f')
                 ->leftJoin('contactos as c', 'f.contacto_id', '=', 'c.contacto_id')
                 ->leftJoin('cat_series as cs', 'f.cat_serie_id', '=', 'cs.cat_serie_id')
                 ->leftJoin('cfdi as cf', 'f.factura_id', '=', 'cf.factura_id')
                 ->leftJoin('facturas as fr', 'f.factura_relacionada_id', '=', 'fr.factura_id')
                 ->leftJoin('cat_series as cs_rel', 'fr.cat_serie_id', '=', 'cs_rel.cat_serie_id')
-                ->where('f.factura_id', $id)
-                ->select(
-                    'f.*',
-                    'c.razon_social as cliente_nombre',
-                    'c.rfc as cliente_rfc',
-                    'cs.serie',
-                    'cf.timbrefiscaldigitalUUID as uuid',
-                    'fr.folio as factura_relacionada_folio',
-                    'cs_rel.serie as factura_relacionada_serie'
-                )
-                ->first();
+                ->where('f.factura_id', $id);
+
+            if ($this->tieneSoftDelete()) {
+                $query->whereNull('f.deleted_at');
+            }
+
+            $nota = $query->select(
+                'f.*',
+                'c.razon_social as cliente_nombre',
+                'c.rfc as cliente_rfc',
+                'cs.serie',
+                'cf.timbrefiscaldigitalUUID as uuid',
+                'fr.folio as factura_relacionada_folio',
+                'cs_rel.serie as factura_relacionada_serie'
+            )->first();
 
             if (!$nota) {
                 return response()->json(['success' => false, 'message' => 'Nota de crédito no encontrada'], 404);
@@ -408,7 +448,7 @@ class NotaCreditoController extends Controller
                     'fc.importe',
                     'fc.satcat_unidades_clave',
                     'fc.satcat_clave_productos_clave',
-                    DB::raw('(SELECT SUM(importe) FROM facturas_conceptos WHERE factura_id = ' . $nota->factura_relacionada_id . ') as total_factura')
+                    DB::raw('(SELECT SUM(importe) FROM facturas_conceptos WHERE factura_id = ' . (int) $nota->factura_relacionada_id . ') as total_factura')
                 )
                 ->get();
 
@@ -419,16 +459,21 @@ class NotaCreditoController extends Controller
 
             // Calcular información de la factura relacionada
             $facturaOriginal = DB::table('facturas')->where('factura_id', $nota->factura_relacionada_id)->first();
-            
+
             // Calcular notas de crédito aplicadas a esta factura
-            $totalNotasAplicadas = DB::table('facturas')
+            $notasQuery = DB::table('facturas')
                 ->where('factura_relacionada_id', $nota->factura_relacionada_id)
                 ->where('tipo_comprobante', 'E')
-                ->where('estatus', 19)
-                ->sum('total');
-            
+                ->where('estatus', 19);
+
+            if ($this->tieneSoftDelete()) {
+                $notasQuery->whereNull('deleted_at');
+            }
+
+            $totalNotasAplicadas = $notasQuery->sum('total');
+
             $saldoCalculado = ($facturaOriginal->total ?? 0) - abs($totalNotasAplicadas);
-            
+
             $nota->info_factura = [
                 'total' => $facturaOriginal->total ?? 0,
                 'saldo_disponible' => $facturaOriginal->saldo_disponible ?? $saldoCalculado,
@@ -455,21 +500,25 @@ class NotaCreditoController extends Controller
     public function pdf($id)
     {
         try {
-            $nota = DB::table('facturas as f')
+            $query = DB::table('facturas as f')
                 ->leftJoin('contactos as c', 'f.contacto_id', '=', 'c.contacto_id')
                 ->leftJoin('cat_series as cs', 'f.cat_serie_id', '=', 'cs.cat_serie_id')
                 ->leftJoin('facturas as fr', 'f.factura_relacionada_id', '=', 'fr.factura_id')
                 ->leftJoin('cat_series as cs_rel', 'fr.cat_serie_id', '=', 'cs_rel.cat_serie_id')
-                ->where('f.factura_id', $id)
-                ->select(
-                    'f.*',
-                    'c.razon_social as cliente_nombre',
-                    'c.rfc as cliente_rfc',
-                    'cs.serie',
-                    'fr.folio as factura_relacionada_folio',
-                    'cs_rel.serie as factura_relacionada_serie'
-                )
-                ->first();
+                ->where('f.factura_id', $id);
+
+            if ($this->tieneSoftDelete()) {
+                $query->whereNull('f.deleted_at');
+            }
+
+            $nota = $query->select(
+                'f.*',
+                'c.razon_social as cliente_nombre',
+                'c.rfc as cliente_rfc',
+                'cs.serie',
+                'fr.folio as factura_relacionada_folio',
+                'cs_rel.serie as factura_relacionada_serie'
+            )->first();
 
             if (!$nota) {
                 abort(404, 'Nota de crédito no encontrada');
@@ -495,28 +544,65 @@ class NotaCreditoController extends Controller
 
     /**
      * Eliminar nota de crédito
+     * - Si la tabla soporta soft-delete (columna deleted_at), marca deleted_at.
+     * - Si no, borra físicamente la nota y sus dependencias.
+     * - Restaura el saldo de la factura original.
      */
     public function destroy($id)
     {
         try {
             DB::beginTransaction();
-            
-            $nota = DB::table('facturas')->where('factura_id', $id)->first();
 
-            if (!$nota) {
-                return response()->json(['success' => false, 'message' => 'Nota de crédito no encontrada'], 404);
+            $notaQuery = DB::table('facturas')->where('factura_id', $id);
+
+            // Solo notas vigentes
+            if ($this->tieneSoftDelete()) {
+                $notaQuery->whereNull('deleted_at');
             }
 
-            if ($nota->estatus == 19) {
-                return response()->json(['success' => false, 'message' => 'No se puede eliminar una nota de crédito timbrada'], 422);
+            $nota = $notaQuery->first();
+
+            if (!$nota) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nota de crédito no encontrada o ya fue eliminada'
+                ], 404);
+            }
+
+            // Solo se permite eliminar notas de crédito (tipo E)
+            if ($nota->tipo_comprobante !== 'E') {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El registro no es una nota de crédito'
+                ], 422);
+            }
+
+            // No se puede eliminar una nota timbrada
+            if ((int) $nota->estatus === 19) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se puede eliminar una nota de crédito timbrada'
+                ], 422);
             }
 
             // Restaurar el saldo de la factura original
             if ($nota->factura_relacionada_id) {
-                $facturaOriginal = DB::table('facturas')->where('factura_id', $nota->factura_relacionada_id)->first();
+                $facturaOriginal = DB::table('facturas')
+                    ->where('factura_id', $nota->factura_relacionada_id)
+                    ->first();
+
                 if ($facturaOriginal) {
                     $montoNota = abs($nota->total);
                     $nuevoSaldo = ($facturaOriginal->saldo_disponible ?? 0) + $montoNota;
+
+                    // Nunca exceder el total de la factura original
+                    if (!empty($facturaOriginal->total) && $nuevoSaldo > $facturaOriginal->total) {
+                        $nuevoSaldo = $facturaOriginal->total;
+                    }
+
                     DB::table('facturas')
                         ->where('factura_id', $nota->factura_relacionada_id)
                         ->update([
@@ -526,14 +612,39 @@ class NotaCreditoController extends Controller
                 }
             }
 
-            DB::table('facturas')->where('factura_id', $id)->update(['deleted_at' => now()]);
-            
+            // Eliminar CFDI asociado (siempre, porque ya no es válido)
+            DB::table('cfdi')->where('factura_id', $id)->delete();
+
+            if ($this->tieneSoftDelete()) {
+                // Soft delete: marcamos la nota como eliminada.
+                // Los conceptos NO se borran para conservar el histórico,
+                // pero ya no se muestran porque getData/show filtran deleted_at.
+                DB::table('facturas')
+                    ->where('factura_id', $id)
+                    ->update([
+                        'deleted_at' => now(),
+                        'updated_at' => now()
+                    ]);
+            } else {
+                // Hard delete: hay que borrar también los conceptos para no dejar huérfanos
+                DB::table('facturas_conceptos')->where('factura_id', $id)->delete();
+                DB::table('facturas')->where('factura_id', $id)->delete();
+            }
+
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Nota de crédito eliminada']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota de crédito eliminada correctamente'
+            ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            \Log::error('Error al eliminar nota de crédito ID ' . $id . ': ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar: ' . $e->getMessage()
+            ], 500);
         }
     }
 
@@ -546,7 +657,6 @@ class NotaCreditoController extends Controller
             $formatter = new \NumberFormatter('es', \NumberFormatter::SPELLOUT);
             return ucfirst($formatter->format($numero)) . ' pesos 00/100 M.N.';
         } catch (\Exception $e) {
-            // Fallback manual si NumberFormatter no está disponible
             return number_format($numero, 2) . ' pesos 00/100 M.N.';
         }
     }

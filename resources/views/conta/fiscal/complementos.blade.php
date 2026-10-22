@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 text-gray-800">
     <section class="content container-fluid py-3">
-        <!-- Complementos de Pago -->
         <div class="semaforo card mt-2">
             <div class="semaforo card-header" style="background-color: #f4f6f9; border-bottom: 2px solid #083CAE; padding: 15px 20px;">
                 <h2 style="color: #083CAE; font-weight: bold; margin: 0; font-size: 24px; text-align: center;">
@@ -17,7 +16,7 @@
                     $fechaFinDefault = $fechaFin ?? date('Y-m-t');
                 @endphp
 
-                <!-- 4 CUADROS DE COMPLEMENTOS -->
+                <!-- KPIs -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; justify-content: center;">
                     <div style="flex: 0 1 calc(25% - 15px); min-width: 150px;">
                         <div class="custom-card" style="border: 2px solid #083CAE; border-radius: 10px; padding: 12px 20px; background-color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;">
@@ -52,14 +51,10 @@
                         <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
                     </div>
-                    
+
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <div>
-                            <input type="date" id="fechaInicio" value="{{ $fechaInicioDefault }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
-                        <div>
-                            <input type="date" id="fechaFin" value="{{ $fechaFinDefault }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;">
-                        </div>
+                        <div><input type="date" id="fechaInicio" value="{{ $fechaInicioDefault }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;"></div>
+                        <div><input type="date" id="fechaFin" value="{{ $fechaFinDefault }}" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; width: 140px;"></div>
                         <div>
                             <select id="filtroEstatus" style="padding: 6px 10px; border: 1px solid #083CAE; border-radius: 4px; font-size: 14px; width: 130px; background-color: white;">
                                 <option value="">Todos</option>
@@ -68,26 +63,10 @@
                                 <option value="Cancelado">Cancelados</option>
                             </select>
                         </div>
-                        <div>
-                            <button id="btnAplicarFiltros" style="background-color: #083CAE; border: none; border-radius: 4px; padding: 6px 16px; color: white; cursor: pointer;">
-                                <i class="fas fa-search"></i> Aplicar
-                            </button>
-                        </div>
-                        <div>
-                            <a href="{{ route('conta.complementos') }}" style="background-color: #6c757d; border: none; border-radius: 4px; padding: 6px 16px; color: white; text-decoration: none; display: inline-block;">
-                                <i class="fas fa-undo"></i> Limpiar
-                            </a>
-                        </div>
-                        <div>
-                            <button id="btnNuevo" style="background-color: #2CBF1F; border: none; border-radius: 4px; padding: 8px 16px; color: white; cursor: pointer;">
-                                <i class="fas fa-plus"></i> Nuevo
-                            </button>
-                        </div>
-                        <div>
-                            <a href="{{ route('conta.complementos.exportar', request()->all()) }}" id="btnExcel" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; color: #083CAE; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-                                <i class="fas fa-file-excel"></i> Excel
-                            </a>
-                        </div>
+                        <div><button id="btnAplicarFiltros" style="background-color: #083CAE; border: none; border-radius: 4px; padding: 6px 16px; color: white; cursor: pointer;"><i class="fas fa-search"></i> Aplicar</button></div>
+                        <div><a href="{{ route('conta.complementos') }}" style="background-color: #6c757d; border: none; border-radius: 4px; padding: 6px 16px; color: white; text-decoration: none; display: inline-block;"><i class="fas fa-undo"></i> Limpiar</a></div>
+                        <div><button id="btnNuevo" style="background-color: #2CBF1F; border: none; border-radius: 4px; padding: 8px 16px; color: white; cursor: pointer;"><i class="fas fa-plus"></i> Nuevo</button></div>
+                        <div><a href="{{ route('conta.complementos.exportar', request()->all()) }}" style="background-color: white; border: 1px solid #083CAE; border-radius: 4px; padding: 8px 12px; color: #083CAE; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-file-excel"></i> Excel</a></div>
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #083CAE;"></i>
                             <input type="text" id="buscador" placeholder="Buscar..." style="padding: 8px 8px 8px 35px; border: 1px solid #083CAE; border-radius: 4px; width: 200px;">
@@ -98,7 +77,7 @@
                 <!-- Tabla -->
                 <div class="table-responsive" style="margin-top: 20px; border: 1px solid #dee2e6; border-radius: 8px; max-height: 600px; overflow-y: auto;">
                     <table class="table table-bordered" style="width: 100%; font-size: 12px; margin-bottom: 0;">
-                        <thead style="position: sticky; top: 0; background-color: #2378e1;">
+                        <thead style="position: sticky; top: 0; background-color: #2378e1; z-index: 2;">
                             <tr>
                                 <th draggable="true" data-columna="folio" style="background:#2378e1;color:white;">Folio</th>
                                 <th draggable="true" data-columna="cliente" style="background:#2378e1;color:white;">Cliente/Proveedor</th>
@@ -113,7 +92,7 @@
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <tr><td colspan="10" style="text-align: center; padding: 40px;">Cargando datos...</td</tr>
+                            <tr><td colspan="10" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
                         </tbody>
                         <tfoot style="position: sticky; bottom: 0; background-color: #e9ecef;">
                             <tr>
@@ -124,7 +103,7 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <!-- Paginación -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                     <button id="btnCrearFiltro" style="background: transparent; border: none; color: #2378e1; cursor: pointer;">
@@ -144,48 +123,94 @@
     </section>
 </div>
 
-<!-- Modal para nuevo complemento -->
-<div class="modal" id="nuevoModal" style="display: none;">
-    <div class="modal-dialog" style="max-width: 500px;">
+<!-- MODAL CREAR / EDITAR -->
+<div class="modal" id="formModal" style="display:none;">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style="background: #083CAE;">
-                <h5 style="color: white; margin: 0;"><i class="fas fa-plus-circle"></i> Nuevo Complemento de Pago</h5>
-                <button type="button" class="close" onclick="cerrarModal()" style="color: white;">&times;</button>
+            <div class="modal-header">
+                <h5 id="formModalTitle"><i class="fas fa-plus-circle"></i> Nuevo Complemento de Pago</h5>
+                <button type="button" class="close" onclick="cerrarFormModal()" aria-label="Cerrar">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="nuevoForm">
+                <form id="formComplemento" autocomplete="off">
+                    <input type="hidden" id="fId" value="">
+                    <input type="hidden" id="fModo" value="crear">
+
                     <div class="form-group">
                         <label>Cliente/Proveedor <span style="color:red;">*</span></label>
-                        <select id="fCliente" class="form-control" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
-                            <option value="">Seleccione un cliente...</option>
+                        <select id="fCliente" class="form-control">
+                            <option value="">Cargando clientes...</option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label>Fecha Pago <span style="color:red;">*</span></label>
-                        <input type="date" id="fFecha" class="form-control" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;" value="{{ date('Y-m-d') }}">
+                        <label>Facturas relacionadas <span class="hint">(opcional, Ctrl/Cmd para múltiples)</span></label>
+                        <select id="fFactura" class="form-control" multiple size="4">
+                            <option value="" disabled>Seleccione primero un cliente...</option>
+                        </select>
+                        <small id="fFacturaHelp" class="hint" style="display:block; margin-top:4px;"></small>
                     </div>
-                    <div class="form-group">
-                        <label>Monto <span style="color:red;">*</span></label>
-                        <input type="number" id="fMonto" class="form-control" step="0.01" placeholder="0.00" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label>Fecha Pago <span style="color:red;">*</span></label>
+                            <input type="date" id="fFecha" class="form-control" value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Monto <span style="color:red;">*</span></label>
+                            <input type="number" id="fMonto" class="form-control" step="0.01" placeholder="0.00">
+                        </div>
                     </div>
+
                     <div class="form-group">
                         <label>Documento Relacionado (Factura)</label>
-                        <input type="text" id="fDocumento" class="form-control" placeholder="FAC-001-2026" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                        <input type="text" id="fDocumento" class="form-control" placeholder="FAC-001-2026">
                     </div>
-                    <div class="form-group">
-                        <label>Forma de Pago</label>
-                        <select id="fFormaPago" class="form-control" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
-                            <option value="Transferencia">Transferencia</option>
-                            <option value="Cheque">Cheque</option>
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Tarjeta">Tarjeta</option>
-                        </select>
+
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label>Forma de Pago</label>
+                            <select id="fFormaPago" class="form-control">
+                                <option value="Transferencia">Transferencia</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Tarjeta">Tarjeta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cuenta de banco</label>
+                            <select id="fCuentaBanco" class="form-control">
+                                <option value="">Cargando cuentas...</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer" style="padding: 15px; text-align: right; border-top: 1px solid #dee2e6;">
-                <button type="button" class="btn-cancelar" onclick="cerrarModal()" style="background:#6c757d; color:white; border:none; padding:8px 16px; border-radius:4px;">Cancelar</button>
-                <button type="button" class="btn-guardar" onclick="guardarComplemento()" style="background:#083CAE; color:white; border:none; padding:8px 16px; border-radius:4px;">Guardar</button>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarFormModal()">Cancelar</button>
+                <button type="button" id="btnGuardarComplemento" onclick="guardarComplemento()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL VER -->
+<div class="modal" id="verModal" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5><i class="fas fa-eye"></i> Detalle del Complemento</h5>
+                <button type="button" class="close" onclick="cerrarVerModal()" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="verContenido" style="font-size:13px;">
+                    <p style="text-align:center; color:#6c757d;">Cargando...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarVerModal()">Cerrar</button>
+                <button type="button" onclick="imprimirPdfActual()" style="background:#dc3545;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button type="button" onclick="descargarXmlActual()" style="background:#28a745;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;"><i class="fas fa-file-code"></i> XML</button>
             </div>
         </div>
     </div>
@@ -202,80 +227,119 @@
     .badge-cancelado { background: #dc3545; color: white; }
     .table td { white-space: nowrap; padding: 8px 4px; }
     .table th { white-space: nowrap; padding: 10px 4px; }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-    .modal-dialog { width: 100%; max-width: 500px; margin: 20px; }
-    .modal-content { background: white; border-radius: 10px; overflow: hidden; }
-    .form-group { margin-bottom: 15px; }
+
+    .modal {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.55); z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px; overflow-y: auto;
+    }
+    .modal-dialog {
+        width: 100%; max-width: 600px; margin: auto;
+        max-height: calc(100vh - 40px);
+        display: flex; flex-direction: column;
+    }
+    .modal-content {
+        background: #fff; border-radius: 10px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        display: flex; flex-direction: column;
+        max-height: calc(100vh - 40px);
+        overflow: hidden;
+    }
+    .modal-header {
+        background: #083CAE; color: #fff;
+        padding: 14px 18px;
+        display: flex; align-items: center; justify-content: space-between;
+        flex-shrink: 0;
+    }
+    .modal-header h5 { margin: 0; font-size: 16px; color: #fff; }
+    .modal-header .close { background: transparent; border: none; color: #fff; font-size: 26px; line-height: 1; cursor: pointer; padding: 0; }
+    .modal-body { padding: 18px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+    .modal-footer {
+        padding: 14px 18px; border-top: 1px solid #dee2e6;
+        display: flex; justify-content: flex-end; gap: 10px;
+        flex-shrink: 0; background: #fff;
+    }
+
+    .form-group { margin-bottom: 14px; }
     .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; }
+    .form-control { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; box-sizing: border-box; }
     .form-control:focus { outline: none; border-color: #083CAE; box-shadow: 0 0 0 2px rgba(8,60,174,0.2); }
-    [draggable="true"] { cursor: grab; }
-    [draggable="true"]:active { cursor: grabbing; }
-    .columna-agrupada { display: inline-flex; align-items: center; padding: 4px 10px; background: #f0f4ff; border-radius: 16px; color: #2378e1; font-size: 12px; margin: 2px; border: 1px solid #2378e1; }
-    .columna-agrupada .remover { margin-left: 6px; cursor: pointer; font-weight: bold; }
-    .fila-grupo { background: #f0f7ff; cursor: pointer; }
-    .fila-grupo:hover { background: #e1f0ff; }
-    .fila-detalle td:first-child { padding-left: 30px; }
-    .drag-over #grupoColumnas { background: rgba(35,120,225,0.1); border-radius: 4px; }
+    .row-2 { display: flex; gap: 12px; flex-wrap: wrap; }
+    .row-2 > .form-group { flex: 1 1 220px; }
+    .hint { color: #6c757d; font-size: 11px; font-weight: normal; }
+    .btn-secondary { background:#6c757d; color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; }
+    #btnGuardarComplemento { background:#083CAE; color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; }
+    #btnGuardarComplemento:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .ver-grid { display: grid; grid-template-columns: 160px 1fr; gap: 8px 14px; }
+    .ver-grid dt { color: #6c757d; font-weight: 600; }
+    .ver-grid dd { margin: 0; word-break: break-word; }
+    .ver-total { margin-top: 12px; padding-top: 12px; border-top: 1px dashed #dee2e6; display: flex; justify-content: space-between; align-items: center; font-size: 16px; }
+    .ver-total strong { color: #083CAE; }
+
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to   { transform: translateX(0); opacity: 1; }
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
-// API URLs
-const API_URL = '/api/complementos-pago';
-const API_CLIENTES = '/api/complementos-pago/clientes';
+// ============================================================
+// URLs y constantes
+// ============================================================
+var API_URL      = '/api/complementos-pago';
+var API_CLIENTES = '/api/complementos-pago/clientes';
+var API_FACTURAS = '/api/complementos-pago/facturas-cliente';
+var API_CUENTAS  = '/api/complementos-pago/cuentas-banco';
+var CSRF_TOKEN   = '{{ csrf_token() }}';
 
-// Variables globales
-let complementosData = [];
-let currentPage = 1;
-let perPage = 10;
-let totalPages = 1;
-let sortKey = 'fecha_pago';
-let sortDir = 'desc';
-let columnasAgrupadas = [];
-let expandedGroups = new Set();
-let searchTimeout;
+// ============================================================
+// Estado
+// ============================================================
+var complementosData = [];
+var currentPage = 1, perPage = 10, totalPages = 1;
+var sortKey = 'fecha_pago', sortDir = 'desc';
+var columnasAgrupadas = [];
+var expandedGroups = new Set();
+var searchTimeout;
+var formModalEl = null, verModalEl = null;
+var verComplementoActual = null;
 
-// Elementos DOM
-const tablaBody = document.getElementById('tablaBody');
-const btnAnterior = document.getElementById('btnAnterior');
-const btnSiguiente = document.getElementById('btnSiguiente');
-const btnPrimera = document.getElementById('btnPrimera');
-const btnUltima = document.getElementById('btnUltima');
-const paginaActualSpan = document.getElementById('paginaActual');
-const paginacionInfo = document.getElementById('paginacionInfo');
-const sumMonto = document.getElementById('sumMonto');
-const buscador = document.getElementById('buscador');
-const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
-const btnNuevo = document.getElementById('btnNuevo');
-const fechaInicio = document.getElementById('fechaInicio');
-const fechaFin = document.getElementById('fechaFin');
-const filtroEstatus = document.getElementById('filtroEstatus');
-const grupoAgrupacion = document.getElementById('grupoAgrupacion');
+function $(id) { return document.getElementById(id); }
 
-// Inicializar
+// ============================================================
+// Init
+// ============================================================
 document.addEventListener('DOMContentLoaded', function() {
+    formModalEl = $('formModal');
+    verModalEl  = $('verModal');
     cargarDatos();
     setupDragAndDrop();
+
+    if ($('fCliente')) $('fCliente').addEventListener('change', onClienteChange);
+    if ($('fFactura')) $('fFactura').addEventListener('change', onFacturaChange);
 });
 
-// Cargar datos
+// ============================================================
+// Carga
+// ============================================================
 async function cargarDatos() {
     try {
-        const params = new URLSearchParams({
-            page: currentPage,
-            per_page: perPage,
-            sort_key: sortKey,
-            sort_dir: sortDir,
-            search: buscador?.value || '',
-            fecha_inicio: fechaInicio?.value || '',
-            fecha_fin: fechaFin?.value || '',
-            estatus: filtroEstatus?.value || ''
+        var params = new URLSearchParams({
+            page: currentPage, per_page: perPage,
+            sort_key: sortKey, sort_dir: sortDir,
+            search: $('buscador') ? $('buscador').value : '',
+            fecha_inicio: $('fechaInicio') ? $('fechaInicio').value : '',
+            fecha_fin: $('fechaFin') ? $('fechaFin').value : '',
+            estatus: $('filtroEstatus') ? $('filtroEstatus').value : ''
         });
-        
-        const response = await fetch(`${API_URL}?${params}`);
-        const result = await response.json();
-        
+
+        var r = await fetch(API_URL + '?' + params.toString(), { headers: { 'Accept': 'application/json' } });
+        var result = await r.json();
+
         if (result.success) {
             complementosData = result.data.complementos;
             totalPages = result.data.pagination.last_page;
@@ -285,389 +349,693 @@ async function cargarDatos() {
         } else {
             mostrarToast('Error al cargar datos: ' + result.message, 'error');
         }
-    } catch (error) {
-        console.error('Error:', error);
+    } catch (err) {
         mostrarToast('Error de conexión', 'error');
     }
 }
 
-// Renderizar tabla
+// ============================================================
+// Render
+// ============================================================
 function renderizarTabla(datos) {
-    if (!tablaBody) return;
-    
-    if (datos.length === 0) {
-        tablaBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;"><i class="fas fa-folder-open" style="font-size: 48px; color: #ced4da;"></i><p>No hay complementos de pago para mostrar</p></td></tr>';
-        if (sumMonto) sumMonto.textContent = '$0.00';
+    var tbody = $('tablaBody');
+    if (!tbody) return;
+
+    if (!datos || datos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 40px;"><i class="fas fa-folder-open" style="font-size: 48px; color: #ced4da;"></i><p>No hay complementos de pago para mostrar</p></td></tr>';
+        $('sumMonto').textContent = '$0.00';
         return;
     }
-    
-    const { grupos } = agruparDatos(datos, columnasAgrupadas);
-    const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-    let totalMonto = 0;
-    
-    tablaBody.innerHTML = '';
-    
+
+    var agrupado = agruparDatos(datos, columnasAgrupadas);
+    var grupos = agrupado.grupos;
+    var hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
+    var totalMonto = 0;
+    tbody.innerHTML = '';
+
     if (hayGrupos) {
-        grupos.forEach(grupo => {
-            const grupoRow = document.createElement('tr');
+        grupos.forEach(function(grupo) {
+            var grupoRow = document.createElement('tr');
             grupoRow.className = 'fila-grupo';
             grupoRow.dataset.grupoId = grupo.id;
-            if (expandedGroups.has(grupo.id)) grupoRow.classList.add('expandido');
-            
-            grupoRow.innerHTML = `
-                <td colspan="10" style="border: 1px solid #dee2e6; padding: 10px;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <div>
-                            <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                            <strong style="color: #2378e1;">${escapeHtml(grupo.valor)}</strong>
-                            <span style="color: #6c757d;">(${grupo.items.length} registros - Monto: ${formatMoney(grupo.totalMonto)})</span>
-                        </div>
-                    </div>
-                </td>
-            `;
-            tablaBody.appendChild(grupoRow);
-            
+            grupoRow.innerHTML = '<td colspan="10" style="border: 1px solid #dee2e6; padding: 10px;">' +
+                '<div>' +
+                '<i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>' +
+                '<strong style="color: #2378e1;">' + escapeHtml(grupo.valor) + '</strong>' +
+                '<span style="color: #6c757d;">(' + grupo.items.length + ' registros - Monto: ' + formatMoney(grupo.totalMonto) + ')</span>' +
+                '</div></td>';
+            tbody.appendChild(grupoRow);
             totalMonto += grupo.totalMonto;
-            
             if (expandedGroups.has(grupo.id)) {
-                grupo.items.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.className = 'fila-detalle';
-                    row.innerHTML = `
-                        <td style="padding-left: 30px;">${escapeHtml(item.folio || '-')}</td>
-                        <td>${escapeHtml(item.cliente || '-')}</td>
-                        <td>${escapeHtml(item.rfc || '-')}</td>
-                        <td>${item.fecha_lista || '-'}</td>
-                        <td>${escapeHtml(item.documento_relacionado || '-')}</td>
-                        <td>${escapeHtml(item.forma_pago || '-')}</td>
-                        <td style="text-align:right;">${formatMoney(item.monto)}</td>
-                        <td><span class="badge ${item.badge_class}">${item.estatus}</span></td>
-                        <td style="font-size:10px;">${escapeHtml(item.uuid || '-')}</td>
-                        <td style="position:sticky;right:0;background:white;">
-                            <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-eye" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="Ver"></i>
-                                <i class="fas fa-edit" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="Editar"></i>
-                                ${item.estatus === 'Pendiente' ? '<i class="fas fa-cloud-upload-alt" data-id="${item.id}" style="cursor:pointer;color:#2CBF1F;" title="Timbrar"></i>' : ''}
-                                ${item.estatus === 'Timbrado' ? '<i class="fas fa-ban" data-id="${item.id}" style="cursor:pointer;color:#dc3545;" title="Cancelar"></i>' : ''}
-                                <i class="fas fa-file-pdf" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="PDF"></i>
-                                <i class="fas fa-file-code" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="XML"></i>
-                            </div>
-                        </td>
-                    `;
-                    tablaBody.appendChild(row);
-                });
+                grupo.items.forEach(function(item) { tbody.appendChild(filaDetalle(item)); });
             }
         });
-        paginacionInfo.textContent = `Mostrando ${grupos.length} grupos`;
+        $('paginacionInfo').textContent = 'Mostrando ' + grupos.length + ' grupos';
     } else {
-        datos.forEach(item => {
+        datos.forEach(function(item) {
             totalMonto += item.monto;
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${escapeHtml(item.folio || '-')}</td>
-                <td>${escapeHtml(item.cliente || '-')}</td>
-                <td>${escapeHtml(item.rfc || '-')}</td>
-                <td>${item.fecha_lista || '-'}</td>
-                <td>${escapeHtml(item.documento_relacionado || '-')}</td>
-                <td>${escapeHtml(item.forma_pago || '-')}</td>
-                <td style="text-align:right;">${formatMoney(item.monto)}</td>
-                <td><span class="badge ${item.badge_class}">${item.estatus}</span></td>
-                <td style="font-size:10px;">${escapeHtml(item.uuid || '-')}</td>
-                <td style="position:sticky;right:0;background:white;">
-                    <div style="display: flex; gap: 8px; justify-content: center;">
-                        <i class="fas fa-eye" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="Ver"></i>
-                        <i class="fas fa-edit" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="Editar"></i>
-                        ${item.estatus === 'Pendiente' ? '<i class="fas fa-cloud-upload-alt" data-id="${item.id}" style="cursor:pointer;color:#2CBF1F;" title="Timbrar"></i>' : ''}
-                        ${item.estatus === 'Timbrado' ? '<i class="fas fa-ban" data-id="${item.id}" style="cursor:pointer;color:#dc3545;" title="Cancelar"></i>' : ''}
-                        <i class="fas fa-file-pdf" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="PDF"></i>
-                        <i class="fas fa-file-code" data-id="${item.id}" style="cursor:pointer;color:#083CAE;" title="XML"></i>
-                    </div>
-                </td>
-            `;
-            tablaBody.appendChild(row);
+            tbody.appendChild(filaDetalle(item));
         });
     }
-    
-    if (sumMonto) sumMonto.textContent = formatMoney(totalMonto);
+
+    $('sumMonto').textContent = formatMoney(totalMonto);
 }
 
-// Actualizar KPIs
-function actualizarKPIs(kpis) {
-    if (!kpis) return;
-    document.getElementById('totalComplementos').textContent = kpis.total_formateado || '0';
-    document.getElementById('porTimbrar').textContent = kpis.por_timbrar || '0';
-    document.getElementById('timbrados').textContent = kpis.timbrados || '0';
-    document.getElementById('montoTotal').textContent = kpis.monto_total_formateado || '$0';
+function filaDetalle(item) {
+    var tr = document.createElement('tr');
+    var acciones = '<div style="display: flex; gap: 8px; justify-content: center;">' +
+        '<i class="fas fa-eye" data-id="' + item.id + '" data-accion="ver" title="Ver" style="cursor:pointer;color:#083CAE;"></i>' +
+        '<i class="fas fa-edit" data-id="' + item.id + '" data-accion="editar" title="Editar" style="cursor:pointer;color:#083CAE;"></i>' +
+        (item.estatus === 'Pendiente' ? '<i class="fas fa-cloud-upload-alt" data-id="' + item.id + '" data-accion="timbrar" title="Timbrar" style="cursor:pointer;color:#2CBF1F;"></i>' : '') +
+        (item.estatus === 'Timbrado'   ? '<i class="fas fa-ban" data-id="' + item.id + '" data-accion="cancelar" title="Cancelar" style="cursor:pointer;color:#dc3545;"></i>' : '') +
+        '<i class="fas fa-file-pdf"  data-id="' + item.id + '" data-accion="pdf" title="PDF" style="cursor:pointer;color:#dc3545;"></i>' +
+        '<i class="fas fa-file-code" data-id="' + item.id + '" data-accion="xml" title="XML" style="cursor:pointer;color:#28a745;"></i>' +
+        '</div>';
+    tr.innerHTML =
+        '<td>' + escapeHtml(item.folio || '-') + '</td>' +
+        '<td>' + escapeHtml(item.cliente || '-') + '</td>' +
+        '<td>' + escapeHtml(item.rfc || '-') + '</td>' +
+        '<td>' + (item.fecha_lista || '-') + '</td>' +
+        '<td>' + escapeHtml(item.documento_relacionado || '-') + '</td>' +
+        '<td>' + escapeHtml(item.forma_pago || '-') + '</td>' +
+        '<td style="text-align:right;">' + formatMoney(item.monto) + '</td>' +
+        '<td><span class="badge ' + item.badge_class + '">' + item.estatus + '</span></td>' +
+        '<td style="font-size:10px;">' + escapeHtml(item.uuid || '-') + '</td>' +
+        '<td style="position:sticky;right:0;background:white;">' + acciones + '</td>';
+    return tr;
 }
 
-// Actualizar paginación
-function actualizarPaginacion(pagination) {
-    if (!pagination) return;
-    const current = pagination.current_page || 1;
-    const total = pagination.total || 0;
-    const from = pagination.from || 0;
-    const to = pagination.to || 0;
-    
-    paginaActualSpan.textContent = current;
-    paginacionInfo.textContent = `Mostrando ${from}-${to} de ${total} registros`;
-    btnAnterior.disabled = current === 1;
-    btnPrimera.disabled = current === 1;
-    btnSiguiente.disabled = current === pagination.last_page;
-    btnUltima.disabled = current === pagination.last_page;
-    currentPage = current;
-    totalPages = pagination.last_page;
+// ============================================================
+// Utils
+// ============================================================
+function actualizarKPIs(k) {
+    if (!k) return;
+    $('totalComplementos').textContent = k.total_formateado || '0';
+    $('porTimbrar').textContent = k.por_timbrar || '0';
+    $('timbrados').textContent = k.timbrados || '0';
+    $('montoTotal').textContent = k.monto_total_formateado || '$0';
 }
-
-// Formatear moneda
-function formatMoney(amount) {
-    return '$' + parseFloat(amount).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function actualizarPaginacion(p) {
+    if (!p) return;
+    var cur = p.current_page || 1;
+    $('paginaActual').textContent = cur;
+    $('paginacionInfo').textContent = 'Mostrando ' + (p.from || 0) + '-' + (p.to || 0) + ' de ' + (p.total || 0) + ' registros';
+    $('btnAnterior').disabled = cur === 1;
+    $('btnPrimera').disabled = cur === 1;
+    $('btnSiguiente').disabled = cur === p.last_page;
+    $('btnUltima').disabled = cur === p.last_page;
+    currentPage = cur;
+    totalPages = p.last_page;
 }
-
-// Escapar HTML
-function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
+function formatMoney(a) {
+    return '$' + parseFloat(a || 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/[&<>"']/g, function(m) {
+        return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[m];
     });
 }
-
-// Agrupar datos
-function agruparDatos(datos, columnas) {
-    if (columnas.length === 0) return { grupos: [], items: datos };
-    const gruposMap = new Map();
-    datos.forEach(item => {
-        const grupoId = columnas.map(col => item[col] || 'Sin valor').join('||');
-        if (!gruposMap.has(grupoId)) {
-            gruposMap.set(grupoId, {
-                id: grupoId,
-                valor: columnas.map(col => item[col] || 'Sin valor').join(' - '),
-                items: [item],
-                totalMonto: item.monto || 0
-            });
+function agruparDatos(datos, cols) {
+    if (cols.length === 0) return { grupos: [], items: datos };
+    var map = new Map();
+    datos.forEach(function(item) {
+        var id = cols.map(function(c) { return item[c] || 'Sin valor'; }).join('||');
+        if (!map.has(id)) {
+            map.set(id, { id: id, valor: cols.map(function(c) { return item[c] || 'Sin valor'; }).join(' - '), items: [item], totalMonto: item.monto || 0 });
         } else {
-            const grupo = gruposMap.get(grupoId);
-            grupo.items.push(item);
-            grupo.totalMonto += item.monto || 0;
+            var g = map.get(id);
+            g.items.push(item);
+            g.totalMonto += item.monto || 0;
         }
     });
-    return { grupos: Array.from(gruposMap.values()), items: [] };
+    return { grupos: Array.from(map.values()), items: [] };
 }
 
+// ============================================================
 // Drag & Drop
+// ============================================================
 function setupDragAndDrop() {
-    const headers = document.querySelectorAll('th[draggable="true"]');
-    headers.forEach(th => {
-        th.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', th.dataset.columna);
-        });
+    document.querySelectorAll('th[draggable="true"]').forEach(function(th) {
+        th.addEventListener('dragstart', function(e) { e.dataTransfer.setData('text/plain', th.dataset.columna); });
     });
-    grupoAgrupacion.addEventListener('dragover', (e) => { e.preventDefault(); grupoAgrupacion.classList.add('drag-over'); });
-    grupoAgrupacion.addEventListener('dragleave', () => { grupoAgrupacion.classList.remove('drag-over'); });
-    grupoAgrupacion.addEventListener('drop', (e) => {
+    var grp = $('grupoAgrupacion');
+    if (!grp) return;
+    grp.addEventListener('dragover', function(e) { e.preventDefault(); grp.classList.add('drag-over'); });
+    grp.addEventListener('dragleave', function() { grp.classList.remove('drag-over'); });
+    grp.addEventListener('drop', function(e) {
         e.preventDefault();
-        grupoAgrupacion.classList.remove('drag-over');
-        const columna = e.dataTransfer.getData('text/plain');
-        if (columna && !columnasAgrupadas.includes(columna)) {
-            columnasAgrupadas.push(columna);
+        grp.classList.remove('drag-over');
+        var col = e.dataTransfer.getData('text/plain');
+        if (col && columnasAgrupadas.indexOf(col) === -1) {
+            columnasAgrupadas.push(col);
             actualizarGrupoColumnas();
         }
     });
 }
-
 function actualizarGrupoColumnas() {
-    const container = document.getElementById('grupoColumnas');
-    const texto = document.getElementById('textoAgrupar');
-    if (!container) return;
-    container.innerHTML = '';
+    var c = $('grupoColumnas'), t = $('textoAgrupar');
+    if (!c) return;
+    c.innerHTML = '';
     if (columnasAgrupadas.length === 0) {
-        if (texto) texto.style.display = 'inline';
+        if (t) t.style.display = 'inline';
     } else {
-        if (texto) texto.style.display = 'none';
-        columnasAgrupadas.forEach(col => {
-            const nombres = { folio:'Folio', cliente:'Cliente', rfc:'RFC', fecha_pago:'Fecha Pago', documento_relacionado:'Documento', forma_pago:'Forma Pago', monto:'Monto', estatus:'Estado', uuid:'UUID' };
-            const chip = document.createElement('span');
-            chip.className = 'columna-agrupada';
-            chip.innerHTML = `${nombres[col] || col}<span class="remover" data-columna="${col}">&times;</span>`;
-            container.appendChild(chip);
+        if (t) t.style.display = 'none';
+        var nombres = { folio:'Folio', cliente:'Cliente', rfc:'RFC', fecha_pago:'Fecha Pago', documento_relacionado:'Documento', forma_pago:'Forma Pago', monto:'Monto', estatus:'Estado', uuid:'UUID' };
+        columnasAgrupadas.forEach(function(col) {
+            var chip = document.createElement('span');
+            chip.style.cssText = 'display:inline-flex;align-items:center;padding:4px 10px;background:#f0f4ff;border-radius:16px;color:#2378e1;font-size:12px;margin:2px;border:1px solid #2378e1;';
+            chip.innerHTML = (nombres[col] || col) + '<span class="remover" data-columna="' + col + '" style="margin-left:6px;cursor:pointer;font-weight:bold;">&times;</span>';
+            c.appendChild(chip);
         });
     }
     expandedGroups.clear();
     renderizarTabla(complementosData);
 }
 
+// ============================================================
 // Eventos
-btnAnterior?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; cargarDatos(); } });
-btnSiguiente?.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; cargarDatos(); } });
-btnPrimera?.addEventListener('click', () => { currentPage = 1; cargarDatos(); });
-btnUltima?.addEventListener('click', () => { currentPage = totalPages; cargarDatos(); });
-btnAplicarFiltros?.addEventListener('click', () => { currentPage = 1; cargarDatos(); });
-fechaInicio?.addEventListener('change', () => { currentPage = 1; cargarDatos(); });
-fechaFin?.addEventListener('change', () => { currentPage = 1; cargarDatos(); });
-filtroEstatus?.addEventListener('change', () => { currentPage = 1; cargarDatos(); });
-
-if (buscador) {
-    buscador.addEventListener('input', () => {
+// ============================================================
+if ($('btnAnterior'))  $('btnAnterior').addEventListener('click',  function() { if (currentPage > 1) { currentPage--; cargarDatos(); } });
+if ($('btnSiguiente')) $('btnSiguiente').addEventListener('click', function() { if (currentPage < totalPages) { currentPage++; cargarDatos(); } });
+if ($('btnPrimera'))   $('btnPrimera').addEventListener('click',   function() { currentPage = 1; cargarDatos(); });
+if ($('btnUltima'))    $('btnUltima').addEventListener('click',    function() { currentPage = totalPages; cargarDatos(); });
+if ($('btnAplicarFiltros')) $('btnAplicarFiltros').addEventListener('click', function() { currentPage = 1; cargarDatos(); });
+if ($('fechaInicio'))  $('fechaInicio').addEventListener('change',  function() { currentPage = 1; cargarDatos(); });
+if ($('fechaFin'))     $('fechaFin').addEventListener('change',     function() { currentPage = 1; cargarDatos(); });
+if ($('filtroEstatus'))$('filtroEstatus').addEventListener('change',function() { currentPage = 1; cargarDatos(); });
+if ($('buscador')) {
+    $('buscador').addEventListener('input', function() {
         clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => { currentPage = 1; cargarDatos(); }, 500);
+        searchTimeout = setTimeout(function() { currentPage = 1; cargarDatos(); }, 500);
     });
 }
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', function(e) {
     if (e.target.classList.contains('remover')) {
-        columnasAgrupadas = columnasAgrupadas.filter(c => c !== e.target.dataset.columna);
+        columnasAgrupadas = columnasAgrupadas.filter(function(c) { return c !== e.target.dataset.columna; });
         actualizarGrupoColumnas();
-    } else if (e.target.closest('.fila-grupo')) {
-        const grupoRow = e.target.closest('.fila-grupo');
-        const grupoId = grupoRow.dataset.grupoId;
-        const icono = grupoRow.querySelector('i');
-        if (expandedGroups.has(grupoId)) {
-            expandedGroups.delete(grupoId);
+        return;
+    }
+    var grupoRow = e.target.closest('.fila-grupo');
+    if (grupoRow && !e.target.closest('[data-accion]')) {
+        var id = grupoRow.dataset.grupoId;
+        var icono = grupoRow.querySelector('i');
+        if (expandedGroups.has(id)) {
+            expandedGroups.delete(id);
             if (icono) icono.className = 'fas fa-caret-right';
         } else {
-            expandedGroups.add(grupoId);
+            expandedGroups.add(id);
             if (icono) icono.className = 'fas fa-caret-down';
         }
         renderizarTabla(complementosData);
-    } else if (e.target.classList.contains('fa-eye')) {
-        alert('Ver complemento');
-    } else if (e.target.classList.contains('fa-edit')) {
-        alert('Editar complemento');
-    } else if (e.target.classList.contains('fa-cloud-upload-alt')) {
-        const id = e.target.dataset.id;
-        if (confirm('¿Timbrar este complemento?')) {
-            timbrarComplemento(id);
-        }
-    } else if (e.target.classList.contains('fa-ban')) {
-        const id = e.target.dataset.id;
-        if (confirm('¿Cancelar este complemento?')) {
-            cancelarComplemento(id);
-        }
+        return;
+    }
+    var accionEl = e.target.closest('[data-accion]');
+    if (accionEl) {
+        var idComp = accionEl.dataset.id;
+        var accion = accionEl.dataset.accion;
+        if (accion === 'ver')      verComplemento(idComp);
+        if (accion === 'editar')   editarComplemento(idComp);
+        if (accion === 'timbrar')  { if (confirm('¿Timbrar este complemento?')) timbrarComplemento(idComp); }
+        if (accion === 'cancelar') { if (confirm('¿Cancelar este complemento?')) cancelarComplemento(idComp); }
+        if (accion === 'pdf')      generarPdfPorId(idComp);
+        if (accion === 'xml')      descargarXmlPorId(idComp);
     }
 });
 
+// ============================================================
+// Timbrar / Cancelar
+// ============================================================
 async function timbrarComplemento(id) {
     try {
-        const response = await fetch(`${API_URL}/${id}/timbrar`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
-        const result = await response.json();
-        if (result.success) {
-            mostrarToast('Complemento timbrado correctamente', 'success');
-            cargarDatos();
-        } else {
-            mostrarToast(result.message, 'error');
-        }
-    } catch (error) {
-        mostrarToast('Error al timbrar', 'error');
-    }
+        var r = await fetch(API_URL + '/' + id + '/timbrar', { method:'POST', headers:{'X-CSRF-TOKEN':CSRF_TOKEN,'Accept':'application/json'} });
+        var result = await r.json();
+        if (result.success) { mostrarToast('Complemento timbrado', 'success'); cargarDatos(); }
+        else mostrarToast(result.message, 'error');
+    } catch (e) { mostrarToast('Error al timbrar', 'error'); }
 }
-
 async function cancelarComplemento(id) {
     try {
-        const response = await fetch(`${API_URL}/${id}/cancelar`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' } });
-        const result = await response.json();
-        if (result.success) {
-            mostrarToast('Complemento cancelado correctamente', 'success');
-            cargarDatos();
-        } else {
-            mostrarToast(result.message, 'error');
+        var r = await fetch(API_URL + '/' + id + '/cancelar', { method:'POST', headers:{'X-CSRF-TOKEN':CSRF_TOKEN,'Accept':'application/json'} });
+        var result = await r.json();
+        if (result.success) { mostrarToast('Complemento cancelado', 'success'); cargarDatos(); }
+        else mostrarToast(result.message, 'error');
+    } catch (e) { mostrarToast('Error al cancelar', 'error'); }
+}
+
+// ============================================================
+// Fetch un complemento
+// ============================================================
+async function fetchComplemento(id) {
+    var r = await fetch(API_URL + '/' + id, { headers: { 'Accept': 'application/json' } });
+    var result = await r.json();
+    if (!result.success) throw new Error(result.message || 'No se pudo obtener el complemento');
+    return result.data;
+}
+
+// ============================================================
+// VER
+// ============================================================
+async function verComplemento(id) {
+    try {
+        var d = await fetchComplemento(id);
+        verComplementoActual = d;
+
+        $('verContenido').innerHTML =
+            '<dl class="ver-grid">' +
+            '<dt>Folio</dt><dd><strong>' + escapeHtml(d.folio || '-') + '</strong></dd>' +
+            '<dt>Cliente</dt><dd>' + escapeHtml(d.cliente_nombre || '-') + '</dd>' +
+            '<dt>RFC</dt><dd>' + escapeHtml(d.rfc || '-') + '</dd>' +
+            '<dt>Fecha de pago</dt><dd>' + escapeHtml(d.fecha_formateada || d.fecha_pago || '-') + '</dd>' +
+            '<dt>Documento</dt><dd>' + escapeHtml(d.documento_relacionado || '-') + '</dd>' +
+            '<dt>Forma de pago</dt><dd>' + escapeHtml(d.forma_pago || '-') + '</dd>' +
+            '<dt>Cuenta de banco</dt><dd>' + escapeHtml(d.cuenta_banco || '-') + '</dd>' +
+            '<dt>Estatus</dt><dd><span class="badge badge-' + (d.estatus || '').toLowerCase() + '">' + escapeHtml(d.estatus || '-') + '</span></dd>' +
+            '<dt>UUID</dt><dd style="font-size:11px;">' + escapeHtml(d.uuid || 'Sin timbrar') + '</dd>' +
+            '<dt>Creado</dt><dd>' + escapeHtml(d.created_at || '-') + '</dd>' +
+            '</dl>' +
+            '<div class="ver-total">' +
+            '<span>Monto total</span>' +
+            '<strong>' + (d.monto_formateado || formatMoney(d.monto)) + '</strong>' +
+            '</div>';
+        verModalEl.style.display = 'flex';
+    } catch (err) {
+        mostrarToast(err.message, 'error');
+    }
+}
+function cerrarVerModal() { verModalEl.style.display = 'none'; verComplementoActual = null; }
+
+// ============================================================
+// EDITAR
+// ============================================================
+async function editarComplemento(id) {
+    try {
+        var d = await fetchComplemento(id);
+        if (d.estatus !== 'Pendiente') {
+            mostrarToast('Solo se pueden editar complementos en estatus Pendiente', 'warning');
+            return;
         }
-    } catch (error) {
-        mostrarToast('Error al cancelar', 'error');
+
+        $('formModalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Complemento de Pago';
+        $('fId').value = d.id;
+        $('fModo').value = 'editar';
+
+        await Promise.all([cargarClientes(), cargarCuentasBanco()]);
+
+        $('fCliente').value = String(d.cliente_id || '');
+        await onClienteChange({ target: { value: String(d.cliente_id || '') } });
+
+        if (d.factura_id) {
+            var opt = $('fFactura').querySelector('option[value="' + d.factura_id + '"]');
+            if (opt) opt.selected = true;
+        }
+
+        $('fFecha').value = d.fecha_pago || new Date().toISOString().split('T')[0];
+        $('fMonto').value = d.monto || '';
+        $('fDocumento').value = d.documento_relacionado || '';
+        $('fFormaPago').value = d.forma_pago || 'Transferencia';
+
+        var selCuenta = $('fCuentaBanco');
+        if (d.cuenta_banco) {
+            var existe = Array.from(selCuenta.options).some(function(o) { return o.value === String(d.cuenta_banco); });
+            if (!existe) {
+                var opt2 = document.createElement('option');
+                opt2.value = d.cuenta_banco;
+                opt2.textContent = d.cuenta_banco;
+                selCuenta.appendChild(opt2);
+            }
+            selCuenta.value = String(d.cuenta_banco);
+        }
+
+        formModalEl.style.display = 'flex';
+    } catch (err) {
+        mostrarToast(err.message, 'error');
     }
 }
 
-// Modal nuevo complemento
-let modal = null;
+// ============================================================
+// Nuevo
+// ============================================================
+if ($('btnNuevo')) {
+    $('btnNuevo').addEventListener('click', async function() {
+        $('formModalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nuevo Complemento de Pago';
+        $('fId').value = '';
+        $('fModo').value = 'crear';
+        $('fCliente').innerHTML = '<option value="">Cargando clientes...</option>';
+        $('fFactura').innerHTML = '<option value="" disabled>Seleccione primero un cliente...</option>';
+        $('fFacturaHelp').textContent = '';
+        $('fFecha').value = new Date().toISOString().split('T')[0];
+        $('fMonto').value = '';
+        $('fDocumento').value = '';
+        $('fFormaPago').value = 'Transferencia';
+        $('fCuentaBanco').innerHTML = '<option value="">Cargando cuentas...</option>';
 
-btnNuevo?.addEventListener('click', async () => {
-    await cargarClientes();
-    if (!modal) {
-        modal = document.getElementById('nuevoModal');
-    }
-    if (modal) {
-        document.getElementById('fFecha').value = new Date().toISOString().split('T')[0];
-        document.getElementById('fMonto').value = '';
-        document.getElementById('fDocumento').value = '';
-        modal.style.display = 'flex';
-    }
-});
-
-function cerrarModal() {
-    if (modal) modal.style.display = 'none';
+        formModalEl.style.display = 'flex';
+        await Promise.all([cargarClientes(), cargarCuentasBanco()]);
+    });
 }
+function cerrarFormModal() { formModalEl.style.display = 'none'; }
 
+// ============================================================
+// Catálogos
+// ============================================================
 async function cargarClientes() {
     try {
-        const response = await fetch(API_CLIENTES);
-        const result = await response.json();
-        const select = document.getElementById('fCliente');
-        if (select && result.success) {
-            select.innerHTML = '<option value="">Seleccione un cliente...</option>';
-            result.data.forEach(cliente => {
-                select.innerHTML += `<option value="${cliente.contacto_id}">${cliente.razon_social} - ${cliente.rfc || 'Sin RFC'}</option>`;
+        var r = await fetch(API_CLIENTES, { headers: { 'Accept': 'application/json' } });
+        var result = await r.json();
+        var select = $('fCliente');
+        select.innerHTML = '<option value="">Seleccione un cliente...</option>';
+        if (result.success && Array.isArray(result.data)) {
+            result.data.forEach(function(c) {
+                var id = c.contacto_id || c.id;
+                var opt = document.createElement('option');
+                opt.value = String(id);
+                opt.textContent = (c.razon_social || 'Sin nombre') + ' - ' + (c.rfc || 'Sin RFC');
+                select.appendChild(opt);
             });
         }
-    } catch (error) {
-        console.error('Error cargando clientes:', error);
+    } catch (err) {
+        mostrarToast('No se pudieron cargar los clientes', 'error');
+    }
+}
+async function cargarCuentasBanco() {
+    try {
+        var r = await fetch(API_CUENTAS, { headers: { 'Accept': 'application/json' } });
+        var result = await r.json();
+        var select = $('fCuentaBanco');
+        select.innerHTML = '<option value="">Seleccione una cuenta...</option>';
+        if (result.success && Array.isArray(result.data) && result.data.length) {
+            result.data.forEach(function(c) {
+                var label = [c.banco, c.nombre, c.numero_cuenta || c.clabe].filter(Boolean).join(' · ') || ('Cuenta #' + (c.id || ''));
+                var opt = document.createElement('option');
+                opt.value = String(c.id || label);
+                opt.textContent = label;
+                select.appendChild(opt);
+            });
+        } else {
+            select.innerHTML += '<option value="" disabled>(Sin cuentas configuradas)</option>';
+        }
+    } catch (err) {
+        $('fCuentaBanco').innerHTML = '<option value="">Error al cargar cuentas</option>';
     }
 }
 
+// ============================================================
+// Facturas del cliente
+// ============================================================
+async function onClienteChange(e) {
+    var clienteIdRaw = e.target.value;
+    var clienteId = parseInt(clienteIdRaw, 10);
+    var selectFacturas = $('fFactura');
+    var help = $('fFacturaHelp');
+
+    if (!clienteIdRaw || clienteIdRaw === 'undefined' || !Number.isInteger(clienteId) || clienteId <= 0) {
+        selectFacturas.innerHTML = '<option value="" disabled>Seleccione primero un cliente...</option>';
+        if (help) help.textContent = '';
+        return;
+    }
+
+    selectFacturas.innerHTML = '<option value="" disabled>Cargando facturas...</option>';
+    if (help) help.textContent = 'Consultando facturas...';
+
+    try {
+        var r = await fetch(API_FACTURAS + '?cliente_id=' + encodeURIComponent(clienteId), { headers: { 'Accept': 'application/json' } });
+        var result = await r.json();
+        if (!result.success) {
+            selectFacturas.innerHTML = '<option value="" disabled>' + escapeHtml(result.message || 'Error') + '</option>';
+            if (help) help.textContent = result.message || '';
+            return;
+        }
+        if (!Array.isArray(result.data) || result.data.length === 0) {
+            selectFacturas.innerHTML = '<option value="" disabled>El cliente no tiene facturas pendientes</option>';
+            if (help) help.textContent = 'Sin facturas con saldo pendiente.';
+            return;
+        }
+        selectFacturas.innerHTML = '';
+        result.data.forEach(function(f) {
+            var folio = f.folio || ('#' + f.id);
+            var total = f.total ? formatMoney(f.total) : '';
+            var saldo = f.saldo ? (' · saldo ' + formatMoney(f.saldo)) : '';
+            var fecha = f.fecha ? String(f.fecha).substring(0, 10) : '';
+            var opt = document.createElement('option');
+            opt.value = String(f.id);
+            opt.textContent = (folio + ' · ' + fecha + ' · ' + total + saldo).replace(/\s+/g, ' ').trim();
+            opt.dataset.folio = folio;
+            opt.dataset.total = f.total || '';
+            selectFacturas.appendChild(opt);
+        });
+        if (help) help.textContent = result.data.length + ' factura(s). Ctrl/Cmd para varias.';
+    } catch (err) {
+        selectFacturas.innerHTML = '<option value="" disabled>Error: ' + escapeHtml(err.message) + '</option>';
+    }
+}
+
+function onFacturaChange(e) {
+    var selected = Array.from(e.target.selectedOptions || []);
+    if (selected.length === 1) {
+        var opt = selected[0];
+        var total = parseFloat(opt.dataset.total || '0');
+        var montoInput = $('fMonto');
+        var docInput = $('fDocumento');
+        if (total > 0 && (!montoInput.value || parseFloat(montoInput.value) === 0)) montoInput.value = total.toFixed(2);
+        if (!docInput.value && opt.dataset.folio) docInput.value = opt.dataset.folio;
+    }
+}
+
+// ============================================================
+// Guardar (crear / editar)
+// ============================================================
 async function guardarComplemento() {
-    const clienteId = document.getElementById('fCliente').value;
-    const fecha = document.getElementById('fFecha').value;
-    const monto = parseFloat(document.getElementById('fMonto').value);
-    const documento = document.getElementById('fDocumento').value;
-    const formaPago = document.getElementById('fFormaPago').value;
-    
-    if (!clienteId) { mostrarToast('Seleccione un cliente', 'warning'); return; }
+    var modo      = $('fModo').value;
+    var id        = $('fId').value;
+    var clienteId = parseInt($('fCliente').value, 10);
+    var fecha     = $('fFecha').value;
+    var monto     = parseFloat($('fMonto').value);
+    var documento = $('fDocumento').value;
+    var formaPago = $('fFormaPago').value;
+    var cuentaBanco = $('fCuentaBanco').value;
+    var facturasSel = Array.from($('fFactura').selectedOptions || [])
+        .map(function(o) { return parseInt(o.value, 10); })
+        .filter(function(v) { return Number.isInteger(v) && v > 0; });
+
+    if (!Number.isInteger(clienteId) || clienteId <= 0) { mostrarToast('Seleccione un cliente válido', 'warning'); return; }
     if (!fecha) { mostrarToast('Seleccione una fecha', 'warning'); return; }
     if (!monto || monto <= 0) { mostrarToast('Ingrese un monto válido', 'warning'); return; }
-    
+
+    var btn = $('btnGuardarComplemento');
+    btn.disabled = true; btn.textContent = 'Guardando...';
+
+    var payload = {
+        fecha_pago: fecha,
+        monto: monto,
+        documento_relacionado: documento || null,
+        forma_pago: formaPago || null,
+        cuenta_banco: cuentaBanco || null,
+        factura_id: facturasSel.length === 1 ? facturasSel[0] : null
+    };
+
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-            body: JSON.stringify({
-                cliente_id: clienteId,
-                fecha_pago: fecha,
-                monto: monto,
-                documento_relacionado: documento,
-                forma_pago: formaPago
-            })
+        var url = API_URL, method = 'POST';
+        if (modo === 'editar') { url = API_URL + '/' + id; method = 'PUT'; }
+        else { payload.cliente_id = clienteId; payload.facturas_ids = facturasSel.length ? facturasSel : null; }
+
+        var r = await fetch(url, {
+            method: method,
+            headers: { 'Content-Type':'application/json', 'Accept':'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
+            body: JSON.stringify(payload)
         });
-        const result = await response.json();
-        if (result.success) {
-            mostrarToast('Complemento registrado correctamente', 'success');
-            cerrarModal();
+        var result = await r.json();
+        if (r.ok && result.success) {
+            mostrarToast(modo === 'editar' ? 'Complemento actualizado' : 'Complemento registrado', 'success');
+            cerrarFormModal();
             cargarDatos();
         } else {
-            mostrarToast(result.message, 'error');
+            var errors = result.errors ? ' | ' + Object.values(result.errors).flat().join(' · ') : '';
+            mostrarToast((result.message || 'Error') + errors, 'error');
         }
-    } catch (error) {
-        mostrarToast('Error al guardar', 'error');
+    } catch (err) {
+        mostrarToast('Error de red al guardar', 'error');
+    } finally {
+        btn.disabled = false; btn.textContent = 'Guardar';
     }
 }
 
-function mostrarToast(msg, tipo = 'success') {
-    const container = document.getElementById('toastContainer') || (() => {
-        const div = document.createElement('div');
-        div.id = 'toastContainer';
-        div.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px;';
-        document.body.appendChild(div);
-        return div;
-    })();
-    const toast = document.createElement('div');
-    toast.className = `toast ${tipo}`;
-    toast.style.cssText = `background:#1A1D23; color:white; padding:12px 20px; border-radius:8px; font-size:13px; display:flex; align-items:center; gap:12px; min-width:300px; box-shadow:0 8px 24px rgba(0,0,0,0.2); animation:slideInRight 0.3s ease; border-left:4px solid ${tipo === 'success' ? '#28a745' : '#dc3545'};`;
-    const icon = tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
-    container.appendChild(toast);
-    setTimeout(() => {
-        toast.style.animation = 'slideInRight 0.3s reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+// ============================================================
+// PDF
+// ============================================================
+async function generarPdfPorId(id) {
+    try {
+        var d = await fetchComplemento(id);
+        imprimirPdf(d);
+    } catch (err) { mostrarToast(err.message, 'error'); }
 }
+function imprimirPdfActual() {
+    if (verComplementoActual) imprimirPdf(verComplementoActual);
+    else mostrarToast('No hay complemento cargado', 'warning');
+}
+function imprimirPdf(d) {
+    var win = window.open('', '_blank', 'width=900,height=700');
+    if (!win) { mostrarToast('Permite ventanas emergentes para ver el PDF', 'warning'); return; }
+
+    var estilo = 'body{font-family:Arial,sans-serif;color:#222;margin:30px;}' +
+        'h1{color:#083CAE;font-size:20px;margin:0 0 4px;}' +
+        '.sub{color:#6c757d;font-size:12px;margin-bottom:20px;}' +
+        'table{border-collapse:collapse;width:100%;font-size:12px;}' +
+        'th,td{border:1px solid #dee2e6;padding:8px 10px;text-align:left;}' +
+        'th{background:#083CAE;color:#fff;width:200px;}' +
+        '.total{margin-top:18px;text-align:right;font-size:16px;}' +
+        '.total strong{color:#083CAE;font-size:20px;}' +
+        '.firma{margin-top:60px;display:flex;justify-content:space-between;font-size:12px;}' +
+        '.firma div{width:45%;border-top:1px solid #333;padding-top:6px;text-align:center;}' +
+        '@media print{body{margin:10mm;}}';
+
+    var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">' +
+        '<title>Complemento de Pago ' + escapeHtml(d.folio || '') + '</title>' +
+        '<style>' + estilo + '</style></head><body>' +
+        '<h1>Complemento de Pago</h1>' +
+        '<div class="sub">Folio ' + escapeHtml(d.folio || '-') + ' · Generado ' + new Date().toLocaleString('es-MX') + '</div>' +
+        '<table>' +
+        '<tr><th>Cliente</th><td>' + escapeHtml(d.cliente_nombre || '-') + '</td></tr>' +
+        '<tr><th>RFC</th><td>' + escapeHtml(d.rfc || '-') + '</td></tr>' +
+        '<tr><th>Fecha de pago</th><td>' + escapeHtml(d.fecha_formateada || d.fecha_pago || '-') + '</td></tr>' +
+        '<tr><th>Documento relacionado</th><td>' + escapeHtml(d.documento_relacionado || '-') + '</td></tr>' +
+        '<tr><th>Forma de pago</th><td>' + escapeHtml(d.forma_pago || '-') + '</td></tr>' +
+        '<tr><th>Cuenta de banco</th><td>' + escapeHtml(d.cuenta_banco || '-') + '</td></tr>' +
+        '<tr><th>Estatus</th><td>' + escapeHtml(d.estatus || '-') + '</td></tr>' +
+        '<tr><th>UUID</th><td style="font-size:11px;">' + escapeHtml(d.uuid || 'Sin timbrar') + '</td></tr>' +
+        '</table>' +
+        '<div class="total">Monto total: <strong>' + (d.monto_formateado || formatMoney(d.monto)) + '</strong></div>' +
+        '<div class="firma"><div>Recibí conforme</div><div>Autorizó</div></div>' +
+        '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},300);};</scr' + 'ipt>' +
+        '</body></html>';
+
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+}
+
+// ============================================================
+// XML — construido con array.join para evitar problemas de escape
+// ============================================================
+async function descargarXmlPorId(id) {
+    try {
+        var d = await fetchComplemento(id);
+        descargarXml(d);
+    } catch (err) { mostrarToast(err.message, 'error'); }
+}
+function descargarXmlActual() {
+    if (verComplementoActual) descargarXml(verComplementoActual);
+    else mostrarToast('No hay complemento cargado', 'warning');
+}
+function descargarXml(d) {
+    var uuid      = d.uuid || '00000000-0000-0000-0000-000000000000';
+    var fechaPago = d.fecha_pago || new Date().toISOString().split('T')[0];
+    var total     = parseFloat(d.monto || 0).toFixed(2);
+    var iva       = (parseFloat(total) * 0.16).toFixed(2);
+    var folio     = (d.folio || 'SIN-FOLIO').replace(/[^A-Za-z0-9\-_]/g, '');
+    var rfc       = (d.rfc || 'XAXX010101000').toUpperCase();
+    var formaPago = mapFormaPago(d.forma_pago);
+    var numCta    = mapCuentaBanco(d.cuenta_banco);
+    var nombre    = escapeXml(d.cliente_nombre || 'CLIENTE');
+
+    var lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4"',
+        '    xmlns:pago20="http://www.sat.gob.mx/Pagos20"',
+        '    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+        '    xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd"',
+        '    Version="4.0" Serie="CP" Folio="' + folio + '"',
+        '    Fecha="' + new Date().toISOString().substring(0,19) + '"',
+        '    SubTotal="0.00" Moneda="XXX" Total="0.00" TipoDeComprobante="P"',
+        '    Exportacion="01" LugarExpedicion="45100" NoCertificado="00000000000000000000" Certificado="">',
+        '    <cfdi:Emisor Rfc="EKU9003173C9" Nombre="EMPRESA EMISORA" RegimenFiscal="601"/>',
+        '    <cfdi:Receptor Rfc="' + rfc + '" Nombre="' + nombre + '" DomicilioFiscalReceptor="64000" RegimenFiscalReceptor="601" UsoCFDI="CP01"/>',
+        '    <cfdi:Conceptos>',
+        '        <cfdi:Concepto ClaveProdServ="84111506" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago" ValorUnitario="0" Importe="0" ObjetoImp="01"/>',
+        '    </cfdi:Conceptos>',
+        '    <cfdi:Complemento>',
+        '        <pago20:Pagos Version="2.0">',
+        '            <pago20:Totales MontoTotalPagos="' + total + '"/>',
+        '            <pago20:Pago FechaPago="' + fechaPago + 'T12:00:00" FormaDePagoP="' + formaPago + '" MonedaP="MXN" Monto="' + total + '" NumOperacion="' + folio + '"' + (numCta ? ' NumCtaPago="' + numCta + '"' : '') + '>',
+        '                <pago20:DoctoRelacionado IdDocumento="' + uuid + '" MonedaDR="MXN" NumParcialidad="1" ImpSaldoAnt="' + total + '" ImpPagado="' + total + '" ImpSaldoInsoluto="0.00" ObjetoImpDR="02">',
+        '                    <pago20:ImpuestosDR>',
+        '                        <pago20:TrasladosDR>',
+        '                            <pago20:TrasladoDR BaseDR="' + total + '" ImpuestoDR="002" TipoFactorDR="Tasa" TasaOCuotaDR="0.160000" ImporteDR="' + iva + '"/>',
+        '                        </pago20:TrasladosDR>',
+        '                    </pago20:ImpuestosDR>',
+        '                </pago20:DoctoRelacionado>',
+        '                <pago20:ImpuestosP>',
+        '                    <pago20:TrasladosP>',
+        '                        <pago20:TrasladoP BaseP="' + total + '" ImpuestoP="002" TipoFactorP="Tasa" TasaOCuotaP="0.160000" ImporteP="' + iva + '"/>',
+        '                    </pago20:TrasladosP>',
+        '                </pago20:ImpuestosP>',
+        '            </pago20:Pago>',
+        '        </pago20:Pagos>',
+        '    </cfdi:Complemento>',
+        '</cfdi:Comprobante>'
+    ];
+
+    var xml = lines.join('\n');
+
+    var blob = new Blob([xml], { type: 'application/xml;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'ComplementoPago_' + folio + '_' + fechaPago + '.xml';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+
+    mostrarToast('XML descargado', 'success');
+}
+
+function escapeXml(s) {
+    return String(s === null || s === undefined ? '' : s).replace(/[<>&"']/g, function(c) {
+        return ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&apos;' })[c];
+    });
+}
+function mapFormaPago(v) {
+    var map = { 'Transferencia':'03', 'Cheque':'02', 'Efectivo':'01', 'Tarjeta':'04' };
+    return map[v] || '03';
+}
+function mapCuentaBanco(v) {
+    if (!v) return '';
+    return /^[0-9]{4,}$/.test(String(v)) ? String(v).substring(0,4) : '';
+}
+
+// ============================================================
+// Toast
+// ============================================================
+function mostrarToast(msg, tipo) {
+    tipo = tipo || 'success';
+    var container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:10px;';
+        document.body.appendChild(container);
+    }
+    var color = tipo === 'success' ? '#28a745' : (tipo === 'warning' ? '#fd7e14' : '#dc3545');
+    var icon  = tipo === 'success' ? 'fa-check-circle' : (tipo === 'warning' ? 'fa-exclamation-circle' : 'fa-exclamation-triangle');
+    var t = document.createElement('div');
+    t.style.cssText = 'background:#1A1D23;color:white;padding:12px 20px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:12px;min-width:300px;max-width:480px;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:slideInRight 0.3s ease;border-left:4px solid ' + color + ';';
+    t.innerHTML = '<i class="fas ' + icon + '"></i> <span>' + escapeHtml(msg) + '</span>';
+    container.appendChild(t);
+    setTimeout(function() {
+        t.style.animation = 'slideInRight 0.3s reverse';
+        setTimeout(function() { t.remove(); }, 300);
+    }, 4000);
+}
+
+// ============================================================
+// Exponer funciones globales para onclick
+// ============================================================
+window.cerrarFormModal = cerrarFormModal;
+window.cerrarVerModal  = cerrarVerModal;
+window.guardarComplemento = guardarComplemento;
+window.imprimirPdfActual  = imprimirPdfActual;
+window.descargarXmlActual = descargarXmlActual;
 </script>
 @endsection

@@ -347,11 +347,11 @@
 </div>
 
 <!-- Modal para Tomar Asistencia -->
-<div id="modalTomarAsistencia" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+<div id="modalTomarAsistencia" class="modal-custom" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
         <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #083CAE 0%, #052a6b 100%); border-radius: 12px 12px 0 0;">
             <h3 style="margin: 0; color: white;"><i class="fas fa-clipboard-check"></i> Tomar Asistencia</h3>
-            <button id="btnCerrarModalAsistencia" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+            <button type="button" class="btn-cerrar-modal" data-modal="modalTomarAsistencia" style="background: rgba(255,255,255,0.2); border: none; font-size: 24px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</button>
         </div>
         
         <div style="padding: 20px;">
@@ -367,7 +367,7 @@
                     </select>
                 </div>
                 <div style="margin-left: auto;">
-                    <button id="btnMarcarTodosPresente" style="background-color: #28a745; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer;">
+                    <button id="btnMarcarTodosPresente" type="button" style="background-color: #28a745; color: white; border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer;">
                         <i class="fas fa-check-double"></i> Marcar todos presente
                     </button>
                 </div>
@@ -392,8 +392,8 @@
         </div>
 
         <div style="padding: 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px;">
-            <button id="btnCancelarAsistencia" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
-            <button id="btnGuardarAsistencia" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+            <button type="button" class="btn-cerrar-modal" data-modal="modalTomarAsistencia" style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+            <button id="btnGuardarAsistencia" type="button" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
                 <i class="fas fa-save"></i> Guardar Asistencia
             </button>
         </div>
@@ -401,11 +401,11 @@
 </div>
 
 <!-- Modal para Agregar/Editar Cuadrilla -->
-<div id="modalCuadrilla" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+<div id="modalCuadrilla" class="modal-custom" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
         <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
             <h3 style="margin: 0; color: white;" id="modalCuadrillaTitulo"><i class="fas fa-users"></i> Nueva Cuadrilla</h3>
-            <button id="btnCerrarModalCuadrilla" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+            <button type="button" class="btn-cerrar-modal" data-modal="modalCuadrilla" style="background: rgba(255,255,255,0.2); border: none; font-size: 24px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</button>
         </div>
         
         <div style="padding: 20px;">
@@ -482,7 +482,7 @@
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #dee2e6; padding-top: 20px;">
-                    <button type="button" id="btnCancelarCuadrilla" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
+                    <button type="button" class="btn-cerrar-modal" data-modal="modalCuadrilla" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
                     <button type="submit" style="padding: 8px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                         <i class="fas fa-save"></i> <span id="btnCuadrillaTexto">Guardar Cuadrilla</span>
                     </button>
@@ -493,11 +493,11 @@
 </div>
 
 <!-- Modal para Asignar Empleados a Cuadrillas -->
-<div id="modalAsignarEmpleados" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+<div id="modalAsignarEmpleados" class="modal-custom" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
         <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #ffc107 0%, #d39e00 100%); border-radius: 12px 12px 0 0;">
             <h3 style="margin: 0; color: white;"><i class="fas fa-user-plus"></i> Asignar Empleados a Cuadrillas</h3>
-            <button id="btnCerrarAsignar" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+            <button type="button" class="btn-cerrar-modal" data-modal="modalAsignarEmpleados" style="background: rgba(255,255,255,0.2); border: none; font-size: 24px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">&times;</button>
         </div>
         
         <div style="padding: 20px;">
@@ -544,8 +544,8 @@
         </div>
 
         <div style="padding: 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px;">
-            <button id="btnCancelarAsignar" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
-            <button id="btnGuardarAsignacion" style="padding: 8px 20px; background-color: #ffc107; color: #856404; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+            <button type="button" class="btn-cerrar-modal" data-modal="modalAsignarEmpleados" style="padding: 8px 20px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Cancelar</button>
+            <button id="btnGuardarAsignacion" type="button" style="padding: 8px 20px; background-color: #ffc107; color: #856404; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px;">
                 <i class="fas fa-save"></i> Asignar
             </button>
         </div>
@@ -553,15 +553,28 @@
 </div>
 
 <!-- Modal para Ver Detalle de Asistencia -->
-<div id="modalVerDetalle" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+<div id="modalVerDetalle" class="modal-custom" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
         <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #2378e1 0%, #1a5cb0 100%); border-radius: 12px 12px 0 0;">
             <h3 style="margin: 0; color: white;"><i class="fas fa-user-clock"></i> Detalle de Asistencia</h3>
-            <button id="btnCerrarModalDetalle" style="background: rgba(255,255,255,0.2); border: none; font-size: 20px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-times"></i>
+            <button type="button" class="btn-cerrar-modal" data-modal="modalVerDetalle" style="background: rgba(255,255,255,0.2); border: none; font-size: 24px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">
+                <i class="fas fa-times" style="font-size: 16px;"></i>
             </button>
         </div>
         <div style="padding: 20px;" id="modalContenidoDetalle"></div>
+    </div>
+</div>
+
+<!-- Modal para Ver Detalle de Cuadrilla -->
+<div id="modalVerCuadrilla" class="modal-custom" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); z-index: 99999; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 12px; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; position: relative; z-index: 100000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <div style="padding: 15px 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border-radius: 12px 12px 0 0;">
+            <h3 style="margin: 0; color: white;"><i class="fas fa-users-cog"></i> Detalle de Cuadrilla</h3>
+            <button type="button" class="btn-cerrar-modal" data-modal="modalVerCuadrilla" style="background: rgba(255,255,255,0.2); border: none; font-size: 24px; cursor: pointer; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1;">
+                <i class="fas fa-times" style="font-size: 16px;"></i>
+            </button>
+        </div>
+        <div style="padding: 20px;" id="modalContenidoCuadrilla"></div>
     </div>
 </div>
 
@@ -640,13 +653,23 @@
     #graficoAsistencia .barra { width: 100%; border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.5s ease; }
     #graficoAsistencia .barra-label { font-size: 8px; color: #6c757d; margin-top: 4px; text-align: center; }
     
+    /* Botón cerrar modal - reset de estilos */
+    .btn-cerrar-modal {
+        font-family: Arial, sans-serif !important;
+        font-weight: 300 !important;
+    }
+    .btn-cerrar-modal:hover {
+        background: rgba(255,255,255,0.35) !important;
+        transform: scale(1.05);
+    }
+    
     @media (max-width: 768px) {
         input[type="date"] { width: 100% !important; }
         input#buscador { width: 100% !important; }
         #proyectoFilterContainer { min-width: 100% !important; }
         #filtroProyectosDropdown { min-width: 100% !important; }
         #paginacionContainer { flex-direction: column; align-items: flex-start; }
-        #modalTomarAsistencia > div, #modalCuadrilla > div, #modalAsignarEmpleados > div, #modalVerDetalle > div { width: 95%; margin: 10px; }
+        #modalTomarAsistencia > div, #modalCuadrilla > div, #modalAsignarEmpleados > div, #modalVerDetalle > div, #modalVerCuadrilla > div { width: 95%; margin: 10px; }
         .asistencia-tab { padding: 8px 12px !important; font-size: 12px !important; }
         #resumenMensual { grid-template-columns: 1fr 1fr !important; }
         #graficoAsistencia .barra-container { width: 2.5%; }
@@ -667,6 +690,8 @@
     let proyectosLista = [];
     let editCuadrillaId = null;
     let asignacionesActuales = {};
+    let cuadrillasCache = [];
+    let empleadosCache = [];
     
     let currentFilters = {
         busqueda: '',
@@ -677,6 +702,64 @@
         page: 1,
         per_page: 10
     };
+
+    // ============================================
+    // UTILIDADES FETCH
+    // ============================================
+    
+    async function fetchJSON(url, options = {}) {
+        const defaultHeaders = {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        };
+        
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...defaultHeaders,
+                ...(options.headers || {})
+            }
+        });
+        
+        let data;
+        try {
+            data = await response.json();
+        } catch (e) {
+            const text = await response.text().catch(() => '');
+            throw new Error(`Error ${response.status}: ${text.substring(0, 200)}`);
+        }
+        
+        if (!response.ok && !data) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        return data;
+    }
+
+    // ============================================
+    // MODALES - CONTROL CENTRALIZADO
+    // ============================================
+    
+    function cerrarModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        // Solo restaurar overflow si no hay otros modales abiertos
+        const modalesAbiertos = document.querySelectorAll('.modal-custom[style*="display: flex"]');
+        if (modalesAbiertos.length === 0) {
+            document.body.style.overflow = 'auto';
+        }
+    }
+    
+    function abrirModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    }
 
     // ============================================
     // FUNCIONES PRINCIPALES
@@ -706,20 +789,7 @@
             const url = `${API_BASE}/asistencias?${params.toString()}`;
             console.log('Cargando asistencias desde:', url);
             
-            const response = await fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                }
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 200)}`);
-            }
-            
-            const result = await response.json();
+            const result = await fetchJSON(url);
             
             if (result.success) {
                 const data = result.data.data || [];
@@ -736,7 +806,7 @@
             }
         } catch (error) {
             console.error('Error:', error);
-            mostrarNotificacion('Error al cargar las asistencias', 'error');
+            mostrarNotificacion('Error al cargar las asistencias: ' + error.message, 'error');
         } finally {
             mostrarLoading(false);
         }
@@ -744,36 +814,34 @@
 
     async function cargarCuadrillas() {
         try {
+            const proyectosSeleccionados = getProyectosSeleccionados();
             const params = new URLSearchParams();
-            params.append('proyecto_id', currentFilters.proyecto_id || '');
             
-            const response = await fetch(`${API_BASE}/cuadrillas?${params.toString()}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            });
+            if (proyectosSeleccionados.length > 0) {
+                proyectosSeleccionados.forEach(id => {
+                    params.append('proyecto_id[]', id);
+                });
+            }
             
-            if (!response.ok) throw new Error('Error al cargar cuadrillas');
-            
-            const result = await response.json();
+            const url = `${API_BASE}/cuadrillas?${params.toString()}`;
+            const result = await fetchJSON(url);
             
             if (result.success) {
-                renderizarTablaCuadrillas(result.data);
+                cuadrillasCache = result.data || [];
+                renderizarTablaCuadrillas(cuadrillasCache);
                 actualizarResumenCuadrillas(result.resumen);
+            } else {
+                mostrarNotificacion(result.message || 'Error al cargar cuadrillas', 'error');
             }
         } catch (error) {
             console.error('Error:', error);
-            mostrarNotificacion('Error al cargar cuadrillas', 'error');
+            mostrarNotificacion('Error al cargar cuadrillas: ' + error.message, 'error');
         }
     }
 
     async function cargarCatalogos() {
         try {
-            const response = await fetch(`${API_BASE}/catalogos`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
+            const result = await fetchJSON(`${API_BASE}/catalogos`);
             
             if (result.success) {
                 const data = result.data;
@@ -798,6 +866,7 @@
                 data.empleados.forEach(e => {
                     selectIntegrantes.innerHTML += `<option value="${e.id}">${e.nombre_completo}</option>`;
                 });
+                empleadosCache = data.empleados;
                 
                 // Llenar select de encargados en modal cuadrilla
                 const selectEncargado = document.getElementById('campoEncargado');
@@ -826,6 +895,7 @@
             }
         } catch (error) {
             console.error('Error cargando catálogos:', error);
+            mostrarNotificacion('Error al cargar catálogos: ' + error.message, 'error');
         }
     }
 
@@ -920,7 +990,7 @@
         currentFilters.page = 1;
         if (currentTab === 'asistencia') {
             cargarAsistencias();
-        } else {
+        } else if (currentTab === 'cuadrillas') {
             cargarCuadrillas();
         }
     }
@@ -959,7 +1029,7 @@
                 <td style="padding: 10px 4px;">${item.cuadrilla?.nombre || '-'}</td>
                 <td style="padding: 10px 4px;">${item.hora_entrada || '--:--'}</td>
                 <td style="padding: 10px 4px;">${item.hora_salida || '--:--'}</td>
-                <td style="padding: 10px 4px; text-align: right;">${horas ? horas.toFixed(1) : '-'}</td>
+                <td style="padding: 10px 4px; text-align: right;">${horas ? parseFloat(horas).toFixed(1) : '-'}</td>
                 <td style="padding: 10px 4px;"><span class="badge badge-${item.estatus}">${item.estatus_nombre || '-'}</span></td>
                 <td style="padding: 10px 4px; background-color: white; position: sticky; right: 0;">
                     <div style="display: flex; gap: 8px; justify-content: center;">
@@ -999,7 +1069,7 @@
             const row = document.createElement('tr');
             const especialidadBadge = getEspecialidadBadge(item.especialidad);
             const estatusBadge = item.estatus === 'activo' ? 'badge-activo' : 'badge-inactivo';
-            const integrantesCount = item.integrantes ? item.integrantes.length : 0;
+            const integrantesCount = item.total_integrantes || (item.integrantes ? item.integrantes.length : 0);
             
             row.innerHTML = `
                 <td style="padding: 12px;"><strong>${item.codigo}</strong><br><span style="font-size: 11px; color: #6c757d;">${item.nombre}</span></td>
@@ -1009,9 +1079,9 @@
                 <td style="padding: 12px; text-align: center;">${integrantesCount}</td>
                 <td style="padding: 12px; text-align: center;"><span class="badge ${estatusBadge}">${item.estatus_nombre}</span></td>
                 <td style="padding: 12px; text-align: center;">
-                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" onclick="verDetalleCuadrilla(${item.id})"></i>
-                    <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; margin: 0 5px;" onclick="editarCuadrilla(${item.id})"></i>
-                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer; margin: 0 5px;" onclick="eliminarCuadrilla(${item.id})"></i>
+                    <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Ver detalle" onclick="verDetalleCuadrilla(${item.id})"></i>
+                    <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; margin: 0 5px;" title="Editar" onclick="editarCuadrilla(${item.id})"></i>
+                    <i class="fas fa-trash-alt" style="color: #dc3545; cursor: pointer; margin: 0 5px;" title="Eliminar" onclick="eliminarCuadrilla(${item.id})"></i>
                 </td>
             `;
             tbody.appendChild(row);
@@ -1034,17 +1104,14 @@
         const anio = document.getElementById('selectorAnio').value;
         
         try {
-            const response = await fetch(`${API_BASE}/reporte-mensual?mes=${mes}&anio=${anio}`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
+            const result = await fetchJSON(`${API_BASE}/reporte-mensual?mes=${mes}&anio=${anio}`);
             
             if (result.success) {
                 const data = result.data;
                 
                 document.getElementById('diasLaborales').innerHTML = `<i class="fas fa-calendar"></i> Días laborales: ${data.dias_laborales || 0}`;
                 document.getElementById('totalRegistros').textContent = data.total_registros || 0;
-                document.getElementById('totalHoras').textContent = (data.total_horas || 0).toFixed(1);
+                document.getElementById('totalHoras').textContent = parseFloat(data.total_horas || 0).toFixed(1);
                 
                 const total = data.total_registros || 0;
                 const ausentes = data.resumen_proyectos ? Object.values(data.resumen_proyectos).reduce((sum, p) => sum + (p.ausentes || 0), 0) : 0;
@@ -1125,7 +1192,7 @@
             row.innerHTML = `
                 <td style="padding: 12px;">${nombre}</td>
                 <td style="padding: 12px; text-align: right;">${data.total_asistencias || 0}</td>
-                <td style="padding: 12px; text-align: right;">${data.total_horas ? data.total_horas.toFixed(1) : 0}</td>
+                <td style="padding: 12px; text-align: right;">${data.total_horas ? parseFloat(data.total_horas).toFixed(1) : 0}</td>
                 <td style="padding: 12px; text-align: right; color: #28a745;">${data.presentes || 0}</td>
                 <td style="padding: 12px; text-align: right; color: #dc3545;">${data.ausentes || 0}</td>
                 <td style="padding: 12px; text-align: right; color: #ffc107;">${data.retardos || 0}</td>
@@ -1220,7 +1287,7 @@
         const icono = tipo === 'success' ? 'fa-check-circle' : tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
         notificacion.innerHTML = `<i class="fas ${icono}"></i> ${mensaje}`;
         document.body.appendChild(notificacion);
-        setTimeout(() => notificacion.remove(), 3000);
+        setTimeout(() => notificacion.remove(), 4000);
     }
 
     // ============================================
@@ -1229,10 +1296,7 @@
 
     async function cargarEmpleadosParaAsignar() {
         try {
-            const response = await fetch('/api/empleados-disponibles', {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
+            const result = await fetchJSON('/api/empleados-disponibles');
             
             if (result.success) {
                 const select = document.getElementById('selectEmpleadoAsignar');
@@ -1252,13 +1316,10 @@
 
     async function cargarAsignacionesActuales() {
         try {
-            const response = await fetch(`${API_BASE}/cuadrillas/asignaciones`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/asignaciones`);
             
             if (result.success) {
-                asignacionesActuales = result.data;
+                asignacionesActuales = result.data || {};
                 renderizarTablaAsignaciones();
             }
         } catch (error) {
@@ -1299,19 +1360,15 @@
         if (!confirm('¿Está seguro de remover esta asignación?')) return;
         
         try {
-            const response = await fetch(`${API_BASE}/cuadrillas/asignaciones/${empleadoId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                }
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/asignaciones/${empleadoId}`, {
+                method: 'DELETE'
             });
-            const result = await response.json();
             
             if (result.success) {
                 mostrarNotificacion(result.message, 'success');
                 cargarAsignacionesActuales();
                 cargarEmpleadosParaAsignar();
+                cargarCuadrillas();
             } else {
                 mostrarNotificacion(result.message || 'Error al remover', 'error');
             }
@@ -1331,26 +1388,22 @@
         }
         
         try {
-            const response = await fetch(`${API_BASE}/cuadrillas/asignar`, {
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/asignar`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    'Accept': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     empleado_id: empleadoId,
                     cuadrilla_id: cuadrillaId,
                     observaciones: observaciones
                 })
             });
-            const result = await response.json();
             
             if (result.success) {
                 mostrarNotificacion(result.message, 'success');
                 document.getElementById('asignarObservaciones').value = '';
                 cargarAsignacionesActuales();
                 cargarEmpleadosParaAsignar();
+                cargarCuadrillas();
             } else {
                 mostrarNotificacion(result.message || 'Error al asignar', 'error');
             }
@@ -1360,27 +1413,22 @@
     }
 
     function abrirModalAsignar() {
-        document.getElementById('modalAsignarEmpleados').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        abrirModal('modalAsignarEmpleados');
         cargarEmpleadosParaAsignar();
         cargarAsignacionesActuales();
     }
 
     function cerrarModalAsignar() {
-        document.getElementById('modalAsignarEmpleados').style.display = 'none';
-        document.body.style.overflow = 'auto';
+        cerrarModal('modalAsignarEmpleados');
     }
 
     // ============================================
-    // ACCIONES
+    // ACCIONES - ASISTENCIA
     // ============================================
 
     window.verDetalleAsistencia = async function(id) {
         try {
-            const response = await fetch(`${API_BASE}/asistencias/${id}`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
+            const result = await fetchJSON(`${API_BASE}/asistencias/${id}`);
             
             if (result.success) {
                 const item = result.data;
@@ -1417,7 +1465,7 @@
                             </div>
                             <div>
                                 <div style="color: #6c757d; font-size: 11px;">Horas Trabajadas</div>
-                                <div style="font-size: 18px; font-weight: 700;">${(item.horas_trabajadas || 0).toFixed(1)} hrs</div>
+                                <div style="font-size: 18px; font-weight: 700;">${parseFloat(item.horas_trabajadas || 0).toFixed(1)} hrs</div>
                             </div>
                         </div>
                     </div>
@@ -1437,33 +1485,216 @@
                         <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 14px;">${item.observaciones}</div>
                     </div>` : ''}
                     <div style="border-top: 1px solid #dee2e6; padding-top: 15px; margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
-                        <button onclick="cerrarModalDetalle()" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
+                        <button type="button" onclick="cerrarModal('modalVerDetalle')" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
                     </div>
                 `;
                 
                 document.getElementById('modalContenidoDetalle').innerHTML = contenido;
-                document.getElementById('modalVerDetalle').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
+                abrirModal('modalVerDetalle');
+            } else {
+                mostrarNotificacion(result.message || 'Error al cargar detalle', 'error');
             }
         } catch (error) {
-            mostrarNotificacion('Error al cargar el detalle', 'error');
+            mostrarNotificacion('Error al cargar el detalle: ' + error.message, 'error');
         }
     };
 
-    window.editarAsistencia = function(id) {
-        mostrarNotificacion('Funcionalidad de edición en desarrollo', 'warning');
+    window.editarAsistencia = async function(id) {
+        try {
+            const result = await fetchJSON(`${API_BASE}/asistencias/${id}`);
+            
+            if (result.success) {
+                const item = result.data;
+                
+                const contenido = `
+                    <form id="formEditarAsistencia" data-id="${id}">
+                        <div style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                            <div style="font-size: 16px; font-weight: 600; color: #083CAE;">${item.nombre_completo}</div>
+                            <div style="font-size: 12px; color: #6c757d;">${formatDate(item.fecha)} - ${item.cuadrilla?.nombre || 'Sin cuadrilla'}</div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Hora Entrada</label>
+                                <input type="time" id="editHoraEntrada" value="${item.hora_entrada || ''}" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Hora Salida</label>
+                                <input type="time" id="editHoraSalida" value="${item.hora_salida || ''}" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Status</label>
+                            <select id="editEstatus" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px;">
+                                <option value="Activo" ${item.estatus === 'Activo' ? 'selected' : ''}>✅ Presente</option>
+                                <option value="Retardo" ${item.estatus === 'Retardo' ? 'selected' : ''}>⏰ Retardo</option>
+                                <option value="Falta" ${item.estatus === 'Falta' ? 'selected' : ''}>❌ Ausente</option>
+                                <option value="Justificado" ${item.estatus === 'Justificado' ? 'selected' : ''}>📋 Justificado</option>
+                                <option value="Pendiente" ${item.estatus === 'Pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+                            </select>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: #495057;">Observaciones</label>
+                            <textarea id="editObservaciones" rows="2" style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; resize: vertical;">${item.observaciones || ''}</textarea>
+                        </div>
+                        
+                        <div style="border-top: 1px solid #dee2e6; padding-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
+                            <button type="button" onclick="cerrarModal('modalVerDetalle')" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                            <button type="submit" style="padding: 8px 15px; background-color: #083CAE; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                <i class="fas fa-save"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                `;
+                
+                document.getElementById('modalContenidoDetalle').innerHTML = contenido;
+                abrirModal('modalVerDetalle');
+                
+                document.getElementById('formEditarAsistencia').addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const id = this.dataset.id;
+                    
+                    try {
+                        const result = await fetchJSON(`${API_BASE}/asistencias/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                hora_entrada: document.getElementById('editHoraEntrada').value,
+                                hora_salida: document.getElementById('editHoraSalida').value,
+                                estatus: document.getElementById('editEstatus').value,
+                                observaciones: document.getElementById('editObservaciones').value
+                            })
+                        });
+                        
+                        if (result.success) {
+                            mostrarNotificacion('Asistencia actualizada correctamente', 'success');
+                            cerrarModal('modalVerDetalle');
+                            cargarAsistencias();
+                        } else {
+                            mostrarNotificacion(result.message || 'Error al actualizar', 'error');
+                        }
+                    } catch (error) {
+                        mostrarNotificacion('Error al actualizar: ' + error.message, 'error');
+                    }
+                });
+            }
+        } catch (error) {
+            mostrarNotificacion('Error al cargar asistencia', 'error');
+        }
     };
 
-    window.verDetalleCuadrilla = function(id) {
-        mostrarNotificacion('Funcionalidad en desarrollo', 'warning');
+    // ============================================
+    // ACCIONES - CUADRILLAS
+    // ============================================
+
+    window.verDetalleCuadrilla = async function(id) {
+        try {
+            mostrarLoading(true);
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/${id}`);
+            
+            if (result.success) {
+                const item = result.data;
+                const especialidadBadge = getEspecialidadBadge(item.especialidad);
+                const estatusBadge = item.estatus === 'activo' ? 'badge-activo' : 'badge-inactivo';
+                
+                let integrantesHtml = '';
+                if (item.integrantes_detalle && item.integrantes_detalle.length > 0) {
+                    integrantesHtml = item.integrantes_detalle.map(emp => `
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-bottom: 1px solid #f0f0f0;">
+                            <div style="width: 32px; height: 32px; background-color: #e8f0fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user" style="color: #083CAE; font-size: 12px;"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 13px; font-weight: 600; color: #212529;">${emp.nombre_completo}</div>
+                                <div style="font-size: 11px; color: #6c757d;">#${emp.numero_empleado} ${emp.puesto ? '· ' + emp.puesto : ''}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    integrantesHtml = `
+                        <div style="text-align: center; padding: 20px; color: #6c757d; font-size: 13px;">
+                            <i class="fas fa-user-slash" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
+                            Esta cuadrilla no tiene integrantes asignados
+                        </div>
+                    `;
+                }
+                
+                const contenido = `
+                    <div style="background: linear-gradient(135deg, #e8f0fe 0%, #f0f4ff 100%); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px; flex-wrap: wrap;">
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d;">Código</div>
+                                <div style="font-size: 20px; font-weight: 700; color: #083CAE;">${item.codigo}</div>
+                                <div style="font-size: 16px; font-weight: 600; color: #212529; margin-top: 4px;">${item.nombre}</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-end;">
+                                <span class="badge ${especialidadBadge}">${item.especialidad_nombre}</span>
+                                <span class="badge ${estatusBadge}">${item.estatus_nombre}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div>
+                            <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Encargado</div>
+                            <div style="font-size: 14px; font-weight: 600;">${item.nombre_encargado || 'Sin encargado'}</div>
+                        </div>
+                        <div>
+                            <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Proyecto</div>
+                            <div style="font-size: 14px; font-weight: 600;">${item.proyecto?.nombre || 'Sin proyecto'}</div>
+                        </div>
+                    </div>
+                    
+                    ${item.descripcion ? `
+                    <div style="margin-bottom: 15px;">
+                        <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Descripción</div>
+                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px; font-size: 13px;">${item.descripcion}</div>
+                    </div>` : ''}
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="color: #083CAE; font-size: 14px; font-weight: 600;">
+                                <i class="fas fa-users"></i> Integrantes (${item.integrantes_detalle?.length || 0})
+                            </div>
+                        </div>
+                        <div style="border: 1px solid #dee2e6; border-radius: 6px; max-height: 250px; overflow-y: auto; background: white;">
+                            ${integrantesHtml}
+                        </div>
+                    </div>
+                    
+                    ${item.observaciones ? `
+                    <div style="margin-bottom: 15px;">
+                        <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Observaciones</div>
+                        <div style="background-color: #fff3cd; border: 1px solid #ffe69c; border-radius: 4px; padding: 10px; font-size: 13px;">${item.observaciones}</div>
+                    </div>` : ''}
+                    
+                    <div style="border-top: 1px solid #dee2e6; padding-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" onclick="cerrarModal('modalVerCuadrilla')" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
+                        <button type="button" onclick="cerrarModal('modalVerCuadrilla'); editarCuadrilla(${item.id});" style="padding: 8px 15px; background-color: #083CAE; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('modalContenidoCuadrilla').innerHTML = contenido;
+                abrirModal('modalVerCuadrilla');
+            } else {
+                mostrarNotificacion(result.message || 'Error al cargar cuadrilla', 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            mostrarNotificacion('Error al cargar el detalle: ' + error.message, 'error');
+        } finally {
+            mostrarLoading(false);
+        }
     };
 
     window.editarCuadrilla = async function(id) {
         try {
-            const response = await fetch(`${API_BASE}/cuadrillas/${id}`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const result = await response.json();
+            mostrarLoading(true);
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/${id}`);
             
             if (result.success) {
                 const item = result.data;
@@ -1482,57 +1713,52 @@
                 document.getElementById('campoDescripcion').value = item.descripcion || '';
                 document.getElementById('campoObservacionesCuadrilla').value = item.observaciones || '';
                 
-                // Seleccionar integrantes
+                // Seleccionar integrantes - convertir a enteros
                 const selectIntegrantes = document.getElementById('campoIntegrantes');
-                const integrantes = item.integrantes || [];
+                const integrantes = (item.integrantes || []).map(i => parseInt(i));
                 for (let option of selectIntegrantes.options) {
                     option.selected = integrantes.includes(parseInt(option.value));
                 }
                 
-                document.getElementById('modalCuadrilla').style.display = 'flex';
-                document.body.style.overflow = 'hidden';
+                abrirModal('modalCuadrilla');
+            } else {
+                mostrarNotificacion(result.message || 'Error al cargar cuadrilla', 'error');
             }
         } catch (error) {
-            mostrarNotificacion('Error al cargar la cuadrilla', 'error');
+            console.error(error);
+            mostrarNotificacion('Error al cargar la cuadrilla: ' + error.message, 'error');
+        } finally {
+            mostrarLoading(false);
         }
     };
 
-    window.eliminarCuadrilla = function(id) {
-        if (!confirm('¿Está seguro de eliminar esta cuadrilla?')) return;
+    window.eliminarCuadrilla = async function(id) {
+        if (!confirm('¿Está seguro de eliminar esta cuadrilla?\n\nLas asistencias asociadas quedarán sin cuadrilla.')) return;
         
-        fetch(`${API_BASE}/cuadrillas/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(result => {
+        try {
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/${id}`, {
+                method: 'DELETE'
+            });
+            
             if (result.success) {
-                mostrarNotificacion(result.message, 'success');
-                cargarCuadrillas();
+                mostrarNotificacion(result.message || 'Cuadrilla eliminada correctamente', 'success');
+                await cargarCuadrillas();
+                await cargarAsignacionesActuales();
             } else {
                 mostrarNotificacion(result.message || 'Error al eliminar', 'error');
             }
-        })
-        .catch(error => {
-            mostrarNotificacion('Error al eliminar la cuadrilla', 'error');
-        });
+        } catch (error) {
+            console.error(error);
+            mostrarNotificacion('Error al eliminar la cuadrilla: ' + error.message, 'error');
+        }
     };
-
-    function cerrarModalDetalle() {
-        document.getElementById('modalVerDetalle').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
 
     async function exportarExcel() {
         try {
             const params = new URLSearchParams();
             params.append('fecha', currentFilters.fecha || '');
             
-            const response = await fetch(`${API_BASE}/asistencias/exportar?${params.toString()}`);
-            const result = await response.json();
+            const result = await fetchJSON(`${API_BASE}/asistencias/exportar?${params.toString()}`);
             
             if (result.success && result.data) {
                 const headers = result.data.headers || [];
@@ -1553,7 +1779,7 @@
                 mostrarNotificacion('Exportación completada', 'success');
             }
         } catch (error) {
-            mostrarNotificacion('Error al exportar', 'error');
+            mostrarNotificacion('Error al exportar: ' + error.message, 'error');
         }
     }
 
@@ -1562,8 +1788,10 @@
     // ============================================
 
     async function cargarPersonalPorCuadrilla(cuadrillaId) {
+        const tbody = document.getElementById('modalTablaPersonal');
+        
         if (!cuadrillaId) {
-            document.getElementById('modalTablaPersonal').innerHTML = `
+            tbody.innerHTML = `
                 <tr>
                     <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
                         Seleccione una cuadrilla para cargar el personal
@@ -1573,23 +1801,27 @@
             return;
         }
         
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
+                    <i class="fas fa-spinner fa-spin"></i> Cargando personal...
+                </td>
+            </tr>
+        `;
+        
         try {
-            const asignacionesResponse = await fetch(`${API_BASE}/cuadrillas/asignaciones`, {
-                headers: { 'Accept': 'application/json' }
-            });
-            const asignacionesResult = await asignacionesResponse.json();
+            const result = await fetchJSON(`${API_BASE}/cuadrillas/${cuadrillaId}/personal`);
             
-            if (asignacionesResult.success) {
-                const asignaciones = asignacionesResult.data;
-                const integrantes = Object.values(asignaciones).filter(a => a.cuadrilla_id == cuadrillaId);
+            if (result.success && result.data) {
+                const integrantes = result.data.integrantes || [];
                 
-                const tbody = document.getElementById('modalTablaPersonal');
                 tbody.innerHTML = '';
                 
                 if (integrantes.length === 0) {
                     tbody.innerHTML = `
                         <tr>
                             <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
+                                <i class="fas fa-user-slash" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
                                 Esta cuadrilla no tiene integrantes asignados
                                 <br>
                                 <small>Asigne empleados desde el botón "Asignar Empleados"</small>
@@ -1602,13 +1834,13 @@
                 integrantes.forEach(emp => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${emp.empleado_id}</td>
-                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${emp.empleado_nombre}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${emp.numero_empleado || emp.id}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${emp.nombre_completo}</td>
                         <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
-                            <input type="time" class="hora-entrada" value="07:00" style="padding: 5px; border: 1px solid #ced4da; border-radius: 4px; width: 100px;">
+                            <input type="time" class="hora-entrada" value="07:00" style="padding: 5px; border: 1px solid #ced4da; border-radius: 4px; width: 110px;">
                         </td>
                         <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
-                            <select class="status-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 4px; width: 110px;">
+                            <select class="status-select" style="padding: 5px; border: 1px solid #ced4da; border-radius: 4px; width: 120px;">
                                 <option value="Activo">✅ Presente</option>
                                 <option value="Retardo">⏰ Retardo</option>
                                 <option value="Falta">❌ Ausente</option>
@@ -1617,21 +1849,34 @@
                             </select>
                         </td>
                         <td style="padding: 10px; border-bottom: 1px solid #dee2e6; text-align: center;">
-                            <input type="checkbox" class="seleccionar-personal" checked>
+                            <input type="checkbox" class="seleccionar-personal" checked data-empleado-id="${emp.id}">
                         </td>
                     `;
                     tbody.appendChild(row);
                 });
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 20px; color: #dc3545;">
+                            <i class="fas fa-exclamation-circle"></i> ${result.message || 'Error al cargar el personal'}
+                        </td>
+                    </tr>
+                `;
             }
         } catch (error) {
             console.error('Error al cargar personal:', error);
-            mostrarNotificacion('Error al cargar el personal de la cuadrilla', 'error');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px; color: #dc3545;">
+                        <i class="fas fa-exclamation-circle"></i> Error al cargar: ${error.message}
+                    </td>
+                </tr>
+            `;
         }
     }
 
     function abrirModalAsistencia() {
-        document.getElementById('modalTomarAsistencia').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        abrirModal('modalTomarAsistencia');
         
         const hoy = new Date();
         document.getElementById('modalFechaAsistencia').value = hoy.toISOString().split('T')[0];
@@ -1639,15 +1884,15 @@
         const selectCuadrilla = document.getElementById('modalCuadrillaAsistencia');
         if (selectCuadrilla.value) {
             cargarPersonalPorCuadrilla(selectCuadrilla.value);
-        } else if (selectCuadrilla.options.length > 1) {
-            selectCuadrilla.selectedIndex = 1;
-            cargarPersonalPorCuadrilla(selectCuadrilla.value);
+        } else {
+            document.getElementById('modalTablaPersonal').innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
+                        Seleccione una cuadrilla para cargar el personal
+                    </td>
+                </tr>
+            `;
         }
-    }
-
-    function cerrarModalAsistencia() {
-        document.getElementById('modalTomarAsistencia').style.display = 'none';
-        document.body.style.overflow = 'auto';
     }
 
     // ============================================
@@ -1666,13 +1911,7 @@
             option.selected = false;
         }
         
-        document.getElementById('modalCuadrilla').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function cerrarModalCuadrilla() {
-        document.getElementById('modalCuadrilla').style.display = 'none';
-        document.body.style.overflow = 'auto';
+        abrirModal('modalCuadrilla');
     }
 
     // ============================================
@@ -1686,17 +1925,54 @@
         document.getElementById('fechaAsistencia').value = hoy.toISOString().split('T')[0];
         currentFilters.fecha = document.getElementById('fechaAsistencia').value;
         
-        // Eventos de botones
-        document.getElementById('btnAsignarEmpleados')?.addEventListener('click', abrirModalAsignar);
-        document.getElementById('btnCerrarAsignar')?.addEventListener('click', cerrarModalAsignar);
-        document.getElementById('btnCancelarAsignar')?.addEventListener('click', cerrarModalAsignar);
-        document.getElementById('btnGuardarAsignacion')?.addEventListener('click', guardarAsignacion);
+        // ============================================
+        // CIERRE CENTRALIZADO DE MODALES
+        // ============================================
         
-        cargarCatalogos();
-        cargarAsistencias();
-        cargarCuadrillas();
-        cargarReporteMensual();
-        cargarAsignacionesActuales();
+        // Botones con clase .btn-cerrar-modal (usando delegación de eventos)
+        document.addEventListener('click', function(e) {
+            // Si el click fue en un botón de cerrar modal o en el backdrop
+            const btnCerrar = e.target.closest('.btn-cerrar-modal');
+            if (btnCerrar) {
+                e.preventDefault();
+                e.stopPropagation();
+                const modalId = btnCerrar.dataset.modal;
+                if (modalId) {
+                    cerrarModal(modalId);
+                }
+                return;
+            }
+            
+            // Si el click fue directamente en el backdrop del modal
+            if (e.target.classList.contains('modal-custom')) {
+                const modalId = e.target.id;
+                cerrarModal(modalId);
+            }
+        });
+        
+        // Cerrar modales con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-custom').forEach(modal => {
+                    if (modal.style.display === 'flex') {
+                        cerrarModal(modal.id);
+                    }
+                });
+            }
+        });
+        
+        // Cargar datos iniciales
+        (async () => {
+            await cargarCatalogos();
+            await cargarAsistencias();
+            await cargarCuadrillas();
+            await cargarReporteMensual();
+            await cargarAsignacionesActuales();
+        })();
+        
+        // Eventos de botones principales
+        document.getElementById('btnAsignarEmpleados')?.addEventListener('click', abrirModalAsignar);
+        document.getElementById('btnGuardarAsignacion')?.addEventListener('click', guardarAsignacion);
         
         // Eventos del dropdown de proyectos
         document.getElementById('btnFiltroProyectos')?.addEventListener('click', function(e) {
@@ -1791,10 +2067,15 @@
             cargarAsistencias();
         });
         
+        let buscadorTimeout;
         document.getElementById('buscador')?.addEventListener('input', function() {
-            currentFilters.busqueda = this.value;
-            currentFilters.page = 1;
-            cargarAsistencias();
+            clearTimeout(buscadorTimeout);
+            const value = this.value;
+            buscadorTimeout = setTimeout(() => {
+                currentFilters.busqueda = value;
+                currentFilters.page = 1;
+                cargarAsistencias();
+            }, 300);
         });
         
         // Botones principales
@@ -1817,10 +2098,7 @@
             if (currentPage < totalPages) { currentFilters.page = totalPages; cargarAsistencias(); }
         });
         
-        // Modal Asistencia
-        document.getElementById('btnCerrarModalAsistencia')?.addEventListener('click', cerrarModalAsistencia);
-        document.getElementById('btnCancelarAsistencia')?.addEventListener('click', cerrarModalAsistencia);
-        
+        // Modal Asistencia - cambio de cuadrilla
         document.getElementById('modalCuadrillaAsistencia')?.addEventListener('change', function() {
             cargarPersonalPorCuadrilla(this.value);
         });
@@ -1842,15 +2120,17 @@
             filas.forEach(fila => {
                 const checkbox = fila.querySelector('.seleccionar-personal');
                 if (checkbox && checkbox.checked) {
-                    const celdas = fila.querySelectorAll('td');
+                    const empleadoId = checkbox.dataset.empleadoId;
                     const hora = fila.querySelector('.hora-entrada')?.value || '07:00';
                     const status = fila.querySelector('.status-select')?.value || 'Activo';
                     
-                    empleados.push({
-                        id: celdas[0]?.textContent || '',
-                        hora_entrada: hora,
-                        status: status
-                    });
+                    if (empleadoId) {
+                        empleados.push({
+                            id: empleadoId,
+                            hora_entrada: hora,
+                            status: status
+                        });
+                    }
                 }
             });
             
@@ -1859,45 +2139,44 @@
                 return;
             }
             
+            const cuadrillaId = document.getElementById('modalCuadrillaAsistencia').value;
+            if (!cuadrillaId) {
+                mostrarNotificacion('Debe seleccionar una cuadrilla', 'warning');
+                return;
+            }
+            
             const data = {
                 fecha: document.getElementById('modalFechaAsistencia').value,
-                cuadrilla_id: document.getElementById('modalCuadrillaAsistencia').value,
+                cuadrilla_id: cuadrillaId,
                 empleados: empleados
             };
             
             try {
-                const response = await fetch(`${API_BASE}/asistencias/tomar`, {
+                const result = await fetchJSON(`${API_BASE}/asistencias/tomar`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                const result = await response.json();
                 
                 if (result.success) {
                     mostrarNotificacion(result.message, 'success');
-                    cerrarModalAsistencia();
+                    cerrarModal('modalTomarAsistencia');
                     cargarAsistencias();
                 } else {
                     mostrarNotificacion(result.message || 'Error al guardar', 'error');
                 }
             } catch (error) {
-                mostrarNotificacion('Error al guardar la asistencia', 'error');
+                mostrarNotificacion('Error al guardar la asistencia: ' + error.message, 'error');
             }
         });
         
-        // Modal Cuadrilla
-        document.getElementById('btnCerrarModalCuadrilla')?.addEventListener('click', cerrarModalCuadrilla);
-        document.getElementById('btnCancelarCuadrilla')?.addEventListener('click', cerrarModalCuadrilla);
-        
+        // Form Cuadrilla
         document.getElementById('formCuadrilla')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const id = document.getElementById('editCuadrillaId').value;
-            const formData = new FormData(this);
+            
+            // Recoger integrantes como array de enteros
             const integrantesSelect = document.getElementById('campoIntegrantes');
             const integrantes = [];
             for (let option of integrantesSelect.options) {
@@ -1905,46 +2184,42 @@
                     integrantes.push(parseInt(option.value));
                 }
             }
-            formData.append('integrantes', JSON.stringify(integrantes));
             
-            const url = id ? `${API_BASE}/cuadrillas/${id}` : API_BASE + '/cuadrillas';
+            const payload = {
+                codigo: document.getElementById('campoCodigo').value || null,
+                nombre: document.getElementById('campoNombre').value,
+                especialidad: document.getElementById('campoEspecialidad').value,
+                proyecto_id: document.getElementById('campoProyecto').value || null,
+                encargado_id: document.getElementById('campoEncargado').value || null,
+                estatus: document.getElementById('campoEstatus').value,
+                descripcion: document.getElementById('campoDescripcion').value,
+                observaciones: document.getElementById('campoObservacionesCuadrilla').value,
+                integrantes: integrantes
+            };
+            
+            const url = id ? `${API_BASE}/cuadrillas/${id}` : `${API_BASE}/cuadrillas`;
             const method = id ? 'PUT' : 'POST';
             
             try {
-                const response = await fetch(url, {
+                const result = await fetchJSON(url, {
                     method: method,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(Object.fromEntries(formData))
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
                 });
-                const result = await response.json();
                 
                 if (result.success) {
                     mostrarNotificacion(result.message, 'success');
-                    cerrarModalCuadrilla();
-                    cargarCuadrillas();
+                    cerrarModal('modalCuadrilla');
+                    await cargarCuadrillas();
+                    await cargarCatalogos();
+                    await cargarAsignacionesActuales();
                 } else {
                     mostrarNotificacion(result.message || 'Error al guardar', 'error');
                 }
             } catch (error) {
-                mostrarNotificacion('Error al guardar la cuadrilla', 'error');
+                console.error(error);
+                mostrarNotificacion('Error al guardar la cuadrilla: ' + error.message, 'error');
             }
-        });
-        
-        // Cerrar modales al hacer clic fuera
-        window.addEventListener('click', function(e) {
-            const modalAsistencia = document.getElementById('modalTomarAsistencia');
-            const modalCuadrilla = document.getElementById('modalCuadrilla');
-            const modalAsignar = document.getElementById('modalAsignarEmpleados');
-            const modalDetalle = document.getElementById('modalVerDetalle');
-            
-            if (e.target === modalAsistencia) cerrarModalAsistencia();
-            if (e.target === modalCuadrilla) cerrarModalCuadrilla();
-            if (e.target === modalAsignar) cerrarModalAsignar();
-            if (e.target === modalDetalle) cerrarModalDetalle();
         });
     });
 </script>

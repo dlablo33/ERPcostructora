@@ -20,11 +20,16 @@
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <div><input type="date" id="fechaInicio" class="form-control" style="width: 140px;" placeholder="Fecha inicio"></div>
-                        <div><input type="date" id="fechaFin" class="form-control" style="width: 140px;" placeholder="Fecha fin"></div>
+                        <div>
+                            <input type="date" id="fechaInicio" class="form-control" style="width: 140px;" 
+                                value="{{ $fechaInicioDefault ?? date('Y-m-01') }}" placeholder="Fecha inicio">
+                        </div>
+                        <div>
+                            <input type="date" id="fechaFin" class="form-control" style="width: 140px;" 
+                                value="{{ $fechaFinDefault ?? date('Y-m-t') }}" placeholder="Fecha fin">
+                        </div>
                         <div><button id="btnAgregar" class="btn" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; width: 36px; height: 36px;"><i class="fas fa-plus" style="color: #2378e1;"></i></button></div>
                         <div><button id="btnExcel" class="btn" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px;"><i class="fas fa-file-excel" style="color: #2378e1;"></i> Excel</button></div>
-                        <div><button id="btnColumnas" class="btn" style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px;"><i class="fas fa-columns" style="color: #2378e1;"></i> Columnas</button></div>
                         <div style="position: relative;">
                             <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #2378e1;"></i>
                             <input type="text" id="buscador" placeholder="Buscar..." class="form-control" style="padding: 8px 8px 8px 35px; border: 1px solid #2378e1; border-radius: 4px; width: 200px;">
@@ -32,11 +37,64 @@
                     </div>
                 </div>
 
-                <!-- Contadores -->
-                <div style="display: flex; gap: 20px; margin-bottom: 15px; padding: 10px; background: #e9ecef; border-radius: 8px;">
-                    <div><strong>Total Traspasos:</strong> <span id="totalRegistros">0</span></div>
-                    <div><strong>Completados:</strong> <span id="totalCompletados">0</span></div>
-                    <div><strong>Pendientes:</strong> <span id="totalPendientes">0</span></div>
+                <!-- Vista resumen estandarizada con tarjetas -->
+                <div class="row mb-3" id="resumenTraspasos" style="row-gap: 15px;">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width:50px;height:50px;background:#e8f0fe;flex-shrink:0;">
+                                    <i class="fas fa-exchange-alt" style="color:#2378e1;font-size:20px;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:12px;color:#6c757d;">Total Traspasos</div>
+                                    <div style="font-size:20px;font-weight:bold;color:#083CAE;" id="totalRegistros">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width:50px;height:50px;background:#d4edda;flex-shrink:0;">
+                                    <i class="fas fa-check-circle" style="color:#28a745;font-size:20px;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:12px;color:#6c757d;">Completados</div>
+                                    <div style="font-size:20px;font-weight:bold;color:#28a745;" id="totalCompletados">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width:50px;height:50px;background:#fff3cd;flex-shrink:0;">
+                                    <i class="fas fa-clock" style="color:#fd7e14;font-size:20px;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:12px;color:#6c757d;">Pendientes</div>
+                                    <div style="font-size:20px;font-weight:bold;color:#fd7e14;" id="totalPendientes">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width:50px;height:50px;background:#f8d7da;flex-shrink:0;">
+                                    <i class="fas fa-times-circle" style="color:#dc3545;font-size:20px;"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:12px;color:#6c757d;">Cancelados</div>
+                                    <div style="font-size:20px;font-weight:bold;color:#dc3545;" id="totalCancelados">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tabla de Traspasos -->
@@ -86,12 +144,12 @@
     </section>
 </div>
 
-<!-- Modal para Traspaso -->
+<!-- ===================== MODAL CREAR/EDITAR TRASPASO ===================== -->
 <div class="modal fade" id="modalTraspaso" tabindex="-1" style="z-index: 99999 !important;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #083CAE; color: white;">
-                <h5 class="modal-title"><i class="fas fa-exchange-alt"></i> Nuevo Traspaso</h5>
+                <h5 class="modal-title"><i class="fas fa-exchange-alt"></i> <span id="tituloModalTraspaso">Nuevo Traspaso</span></h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -186,7 +244,7 @@
                         <label>Observaciones</label>
                         <textarea id="observaciones" class="form-control" rows="2" placeholder="Observaciones adicionales"></textarea>
                     </div>
-                    <div class="form-check mb-3">
+                    <div class="form-check mb-3" id="wrapperAplicarAhora">
                         <input type="checkbox" id="aplicar_ahora" class="form-check-input" checked>
                         <label class="form-check-label">Aplicar traspaso inmediatamente (actualizar saldos)</label>
                     </div>
@@ -195,6 +253,27 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="guardarTraspaso()" style="background-color: #083CAE;">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MODAL DETALLE DE TRASPASO ===================== -->
+<div class="modal fade" id="modalDetalleTraspaso" tabindex="-1" style="z-index: 99999 !important;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #083CAE; color: white;">
+                <h5 class="modal-title"><i class="fas fa-info-circle"></i> Detalle del Traspaso</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="detalleTraspasoBody">
+                <div class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" style="background-color: #083CAE;" onclick="imprimirDesdeDetalle()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
             </div>
         </div>
     </div>
@@ -245,6 +324,17 @@
     .modal { z-index: 99999 !important; }
     .modal-backdrop { z-index: 99990 !important; }
     .btn:active { transform: scale(0.98); }
+    #resumenTraspasos .card { border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+    #resumenTraspasos .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; }
+    /* Sección de detalle en el modal */
+    .detalle-section-title {
+        background: #e8f0fe; color: #083CAE; font-weight: bold;
+        padding: 6px 10px; margin: 10px 0 8px 0; border-left: 4px solid #083CAE;
+        font-size: 13px;
+    }
+    .detalle-label { color: #6c757d; font-size: 11px; display: block; margin-bottom: 2px; }
+    .detalle-value { font-size: 13px; }
+    .detalle-value.fw-bold-color { font-weight: bold; color: #083CAE; }
 </style>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -258,12 +348,12 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribut
 
 // Variables globales
 let datosOriginales = [];
+let datosFiltrados = [];
 let currentPage = 1;
 let rowsPerPage = 8;
-let columnasAgrupadas = [];
-let expandedGroups = new Set();
+let traspasoActualDetalle = null;
 
-// Funciones de utilidad
+// ===================== UTILIDADES =====================
 function formatCurrency(amount) {
     if (isNaN(amount) || amount === null) amount = 0;
     return '$' + Number(amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -272,7 +362,9 @@ function formatCurrency(amount) {
 function formatDate(dateString) {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-MX');
+    // Ajustar para evitar desfase de zona horaria
+    const fecha = dateString.substring(0, 10).split('-');
+    return `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
 }
 
 function getBadgeClass(estatus) {
@@ -296,7 +388,7 @@ function getEstatusTexto(estatus) {
 }
 
 function escapeHtml(text) {
-    if (!text) return '';
+    if (text === null || text === undefined) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
@@ -312,50 +404,60 @@ function mostrarNotificacion(mensaje, tipo) {
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     `;
     document.body.appendChild(alertDiv);
-    setTimeout(() => alertDiv.remove(), 3000);
+    setTimeout(() => alertDiv.remove(), 4000);
 }
 
-// Funciones del formulario
+// ===================== FORMULARIO =====================
 function mostrarMonedas() {
     const origenSelect = document.getElementById('cuenta_origen_id');
     const destinoSelect = document.getElementById('cuenta_destino_id');
     
-    if (origenSelect && origenSelect.selectedOptions[0]) {
-        const monedaSimbolo = origenSelect.selectedOptions[0].dataset.monedaSimbolo || '$';
-        document.getElementById('moneda_origen_text').value = monedaSimbolo;
+    if (origenSelect && origenSelect.selectedOptions[0]?.value) {
+        document.getElementById('moneda_origen_text').value = 
+            origenSelect.selectedOptions[0].dataset.monedaSimbolo || '$';
+    } else {
+        document.getElementById('moneda_origen_text').value = '';
     }
     
-    if (destinoSelect && destinoSelect.selectedOptions[0]) {
-        const monedaSimbolo = destinoSelect.selectedOptions[0].dataset.monedaSimbolo || '$';
-        document.getElementById('moneda_destino_text').value = monedaSimbolo;
+    if (destinoSelect && destinoSelect.selectedOptions[0]?.value) {
+        document.getElementById('moneda_destino_text').value = 
+            destinoSelect.selectedOptions[0].dataset.monedaSimbolo || '$';
+    } else {
+        document.getElementById('moneda_destino_text').value = '';
     }
 }
 
 function mostrarSaldoOrigen() {
     const origenSelect = document.getElementById('cuenta_origen_id');
-    if (origenSelect && origenSelect.selectedOptions[0]) {
+    const info = document.getElementById('saldoOrigenInfo');
+    if (origenSelect && origenSelect.selectedOptions[0]?.value) {
         const saldo = parseFloat(origenSelect.selectedOptions[0].dataset.saldo);
         if (!isNaN(saldo)) {
-            const saldoInfo = document.getElementById('saldoOrigenInfo');
-            saldoInfo.innerHTML = `Saldo disponible: ${formatCurrency(saldo)}`;
-            saldoInfo.style.color = saldo >= 0 ? '#28a745' : '#dc3545';
+            info.innerHTML = `Saldo disponible: ${formatCurrency(saldo)}`;
+            info.style.color = saldo >= 0 ? '#28a745' : '#dc3545';
+            return;
         }
-    } else {
-        document.getElementById('saldoOrigenInfo').innerHTML = '';
     }
+    info.innerHTML = '';
 }
 
 function obtenerTipoCambio() {
     const origenSelect = document.getElementById('cuenta_origen_id');
     const destinoSelect = document.getElementById('cuenta_destino_id');
     
-    if (!origenSelect?.selectedOptions[0] || !destinoSelect?.selectedOptions[0]) return;
+    if (!origenSelect?.selectedOptions[0]?.value || !destinoSelect?.selectedOptions[0]?.value) return;
     
     const monedaOrigenId = origenSelect.selectedOptions[0].dataset.monedaId;
     const monedaDestinoId = destinoSelect.selectedOptions[0].dataset.monedaId;
     const fecha = document.getElementById('fecha').value;
     
     if (!monedaOrigenId || !monedaDestinoId) return;
+    
+    if (monedaOrigenId === monedaDestinoId) {
+        document.getElementById('tipo_cambio').value = 1;
+        calcularMontoDestino();
+        return;
+    }
     
     fetch(`/admin/api/tipo-cambio?moneda_origen_id=${monedaOrigenId}&moneda_destino_id=${monedaDestinoId}&fecha=${fecha}`, {
         headers: { 'Accept': 'application/json' },
@@ -366,7 +468,11 @@ function obtenerTipoCambio() {
         document.getElementById('tipo_cambio').value = data.tipo_cambio || 1;
         calcularMontoDestino();
     })
-    .catch(error => console.error('Error al obtener tipo de cambio:', error));
+    .catch(error => {
+        console.error('Error al obtener tipo de cambio:', error);
+        document.getElementById('tipo_cambio').value = 1;
+        calcularMontoDestino();
+    });
 }
 
 function calcularMontoDestino() {
@@ -377,6 +483,7 @@ function calcularMontoDestino() {
 }
 
 function abrirModalTraspaso() {
+    document.getElementById('tituloModalTraspaso').textContent = 'Nuevo Traspaso';
     document.getElementById('traspaso_id').value = '';
     document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
     document.getElementById('cuenta_origen_id').value = '';
@@ -390,6 +497,7 @@ function abrirModalTraspaso() {
     document.getElementById('concepto').value = '';
     document.getElementById('observaciones').value = '';
     document.getElementById('aplicar_ahora').checked = true;
+    document.getElementById('wrapperAplicarAhora').style.display = 'block';
     document.getElementById('moneda_origen_text').value = '';
     document.getElementById('moneda_destino_text').value = '';
     document.getElementById('saldoOrigenInfo').innerHTML = '';
@@ -398,10 +506,29 @@ function abrirModalTraspaso() {
 
 function guardarTraspaso() {
     const id = document.getElementById('traspaso_id').value;
+    const origenSelect = document.getElementById('cuenta_origen_id');
+    const destinoSelect = document.getElementById('cuenta_destino_id');
+    
+    // Validaciones previas en cliente
+    if (!origenSelect.value || !destinoSelect.value) {
+        mostrarNotificacion('Debe seleccionar cuenta origen y destino', 'warning');
+        return;
+    }
+    if (origenSelect.value === destinoSelect.value) {
+        mostrarNotificacion('La cuenta origen y destino no pueden ser la misma', 'warning');
+        return;
+    }
+    if (!document.getElementById('monto').value || parseFloat(document.getElementById('monto').value) <= 0) {
+        mostrarNotificacion('Debe ingresar un monto válido mayor a 0', 'warning');
+        return;
+    }
+    
     const data = {
         fecha: document.getElementById('fecha').value,
-        cuenta_origen_id: document.getElementById('cuenta_origen_id').value,
-        cuenta_destino_id: document.getElementById('cuenta_destino_id').value,
+        cuenta_origen_id: origenSelect.value,
+        cuenta_destino_id: destinoSelect.value,
+        moneda_origen_id: origenSelect.selectedOptions[0]?.dataset.monedaId || null,
+        moneda_destino_id: destinoSelect.selectedOptions[0]?.dataset.monedaId || null,
         proyecto_id: document.getElementById('proyecto_id').value || null,
         monto: document.getElementById('monto').value,
         tipo_cambio: document.getElementById('tipo_cambio').value,
@@ -432,7 +559,12 @@ function guardarTraspaso() {
             bootstrap.Modal.getInstance(document.getElementById('modalTraspaso')).hide();
             cargarTraspasos();
         } else {
-            mostrarNotificacion(result.message || 'Error al guardar', 'danger');
+            let mensaje = result.message || 'Error al guardar';
+            if (result.errors) {
+                const errores = Object.values(result.errors).flat().join('<br>');
+                mensaje += '<br><small>' + errores + '</small>';
+            }
+            mostrarNotificacion(mensaje, 'danger');
         }
     })
     .catch(error => {
@@ -448,8 +580,9 @@ function editarTraspaso(id) {
     })
     .then(response => response.json())
     .then(traspaso => {
+        document.getElementById('tituloModalTraspaso').textContent = 'Editar Traspaso';
         document.getElementById('traspaso_id').value = traspaso.id;
-        document.getElementById('fecha').value = traspaso.fecha;
+        document.getElementById('fecha').value = traspaso.fecha?.substring(0, 10);
         document.getElementById('cuenta_origen_id').value = traspaso.cuenta_origen_id;
         document.getElementById('cuenta_destino_id').value = traspaso.cuenta_destino_id;
         document.getElementById('proyecto_id').value = traspaso.proyecto_id || '';
@@ -461,6 +594,8 @@ function editarTraspaso(id) {
         document.getElementById('concepto').value = traspaso.concepto || '';
         document.getElementById('observaciones').value = traspaso.observaciones || '';
         document.getElementById('aplicar_ahora').checked = false;
+        // En modo edición no se permite aplicar directamente
+        document.getElementById('wrapperAplicarAhora').style.display = 'none';
         mostrarMonedas();
         mostrarSaldoOrigen();
         new bootstrap.Modal(document.getElementById('modalTraspaso')).show();
@@ -517,48 +652,127 @@ function aplicarTraspaso(id) {
     }
 }
 
+// ===================== MODAL DETALLE =====================
 function verDetalle(id) {
+    const modalEl = document.getElementById('modalDetalleTraspaso');
+    const modal = new bootstrap.Modal(modalEl);
+    const body = document.getElementById('detalleTraspasoBody');
+    
+    body.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+    modal.show();
+    
     fetch(`/admin/api/traspasos/${id}`, {
         headers: { 'Accept': 'application/json' },
         credentials: 'same-origin'
     })
     .then(response => response.json())
-    .then(traspaso => {
-        let mensaje = `📋 DETALLES DEL TRASPASO\n`;
-        mensaje += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-        mensaje += `Folio: ${traspaso.folio}\n`;
-        mensaje += `Fecha: ${formatDate(traspaso.fecha)}\n`;
-        mensaje += `Cuenta Origen: ${traspaso.cuenta_origen?.banco?.nombre} - ${traspaso.cuenta_origen?.numero_cuenta}\n`;
-        mensaje += `Cuenta Destino: ${traspaso.cuenta_destino?.banco?.nombre} - ${traspaso.cuenta_destino?.numero_cuenta}\n`;
-        mensaje += `Monto: ${formatCurrency(traspaso.monto)}\n`;
-        mensaje += `Tipo Cambio: ${traspaso.tipo_cambio}\n`;
-        mensaje += `Monto Destino: ${formatCurrency(traspaso.monto_destino)}\n`;
-        mensaje += `Estatus: ${getEstatusTexto(traspaso.estatus)}\n`;
-        mensaje += `Concepto: ${traspaso.concepto || 'N/A'}\n`;
-        mensaje += `Referencia: ${traspaso.referencia || 'N/A'}\n`;
-        mensaje += `Referencia Bancaria: ${traspaso.referencia_bancaria || 'N/A'}`;
-        alert(mensaje);
+    .then(t => {
+        traspasoActualDetalle = t;
+        
+        const badgeClass = getBadgeClass(t.estatus);
+        const estatusTexto = getEstatusTexto(t.estatus);
+        
+        body.innerHTML = `
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="detalle-label">Folio</label>
+                    <div class="detalle-value fw-bold-color">${escapeHtml(t.folio || '-')}</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="detalle-label">Fecha</label>
+                    <div class="detalle-value">${formatDate(t.fecha)}</div>
+                </div>
+            </div>
+            
+            <div class="detalle-section-title"><i class="fas fa-arrow-up"></i> Cuenta Origen</div>
+            <div class="row">
+                <div class="col-md-4 mb-2"><label class="detalle-label">Banco</label><div class="detalle-value">${escapeHtml(t.cuenta_origen?.banco?.nombre || '-')}</div></div>
+                <div class="col-md-4 mb-2"><label class="detalle-label">Cuenta</label><div class="detalle-value">${escapeHtml(t.cuenta_origen?.numero_cuenta || '-')}</div></div>
+                <div class="col-md-4 mb-2"><label class="detalle-label">Moneda</label><div class="detalle-value">${escapeHtml(t.cuenta_origen?.moneda?.nombre || t.moneda_origen?.nombre || '-')}</div></div>
+            </div>
+            
+            <div class="detalle-section-title"><i class="fas fa-arrow-down"></i> Cuenta Destino</div>
+            <div class="row">
+                <div class="col-md-4 mb-2"><label class="detalle-label">Banco</label><div class="detalle-value">${escapeHtml(t.cuenta_destino?.banco?.nombre || '-')}</div></div>
+                <div class="col-md-4 mb-2"><label class="detalle-label">Cuenta</label><div class="detalle-value">${escapeHtml(t.cuenta_destino?.numero_cuenta || '-')}</div></div>
+                <div class="col-md-4 mb-2"><label class="detalle-label">Moneda</label><div class="detalle-value">${escapeHtml(t.cuenta_destino?.moneda?.nombre || t.moneda_destino?.nombre || '-')}</div></div>
+            </div>
+            
+            <div class="detalle-section-title"><i class="fas fa-list-alt"></i> Detalle del Traspaso</div>
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <label class="detalle-label">Monto Origen</label>
+                    <div class="detalle-value fw-bold-color">${formatCurrency(t.monto)} ${escapeHtml(t.moneda_origen?.simbolo || '')}</div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="detalle-label">Tipo de Cambio</label>
+                    <div class="detalle-value">${parseFloat(t.tipo_cambio || 1).toFixed(4)}</div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="detalle-label">Monto Destino</label>
+                    <div class="detalle-value fw-bold-color">${formatCurrency(t.monto_destino)} ${escapeHtml(t.moneda_destino?.simbolo || '')}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <label class="detalle-label">Estatus</label>
+                    <div><span class="badge ${badgeClass}">${estatusTexto}</span></div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="detalle-label">Proyecto</label>
+                    <div class="detalle-value">${escapeHtml(t.proyecto?.nombre || 'N/A')}</div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <label class="detalle-label">Referencia</label>
+                    <div class="detalle-value">${escapeHtml(t.referencia || 'N/A')}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <label class="detalle-label">Referencia Bancaria</label>
+                    <div class="detalle-value">${escapeHtml(t.referencia_bancaria || 'N/A')}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <label class="detalle-label">Concepto</label>
+                    <div class="detalle-value">${escapeHtml(t.concepto || 'N/A')}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 mb-2">
+                    <label class="detalle-label">Observaciones</label>
+                    <div class="detalle-value">${escapeHtml(t.observaciones || 'N/A')}</div>
+                </div>
+            </div>
+        `;
     })
     .catch(error => {
         console.error('Error:', error);
-        mostrarNotificacion('Error al cargar detalles', 'danger');
+        body.innerHTML = '<div class="alert alert-danger">Error al cargar los detalles del traspaso</div>';
     });
 }
 
+function imprimirDesdeDetalle() {
+    if (!traspasoActualDetalle) return;
+    window.open(`/admin/traspasos/${traspasoActualDetalle.id}/print`, '_blank');
+}
+
+// ===================== IMPRIMIR =====================
 function imprimirTraspaso(id) {
-    mostrarNotificacion('Preparando impresión...', 'info');
-    // Implementar impresión
     window.open(`/admin/traspasos/${id}/print`, '_blank');
 }
 
+// ===================== EXPORTAR =====================
 function exportarExcel() {
-    if (!datosOriginales || datosOriginales.length === 0) {
+    const datos = datosFiltrados.length > 0 ? datosFiltrados : datosOriginales;
+    if (!datos || datos.length === 0) {
         mostrarNotificacion('No hay datos para exportar', 'warning');
         return;
     }
     
     let csv = "\uFEFFFolio,Fecha,Cuenta Origen,Cuenta Destino,Monto,Moneda,Tipo Cambio,Monto Destino,Estatus\n";
-    datosOriginales.forEach(item => {
+    datos.forEach(item => {
         csv += `"${item.folio}","${formatDate(item.fecha)}","${item.banco_origen} - ${item.cuenta_origen}","${item.banco_destino} - ${item.cuenta_destino}",${item.monto},"${item.moneda_origen}",${item.tipo_cambio},${item.monto_destino},"${getEstatusTexto(item.estatus)}"\n`;
     });
     
@@ -574,8 +788,15 @@ function exportarExcel() {
     mostrarNotificacion('Exportación completada', 'success');
 }
 
+// ===================== CARGA DE DATOS =====================
 function cargarTraspasos() {
-    fetch('/admin/api/traspasos', {
+    const fechaInicio = document.getElementById('fechaInicio')?.value || '';
+    const fechaFin = document.getElementById('fechaFin')?.value || '';
+    const params = new URLSearchParams();
+    if (fechaInicio) params.append('fecha_inicio', fechaInicio);
+    if (fechaFin) params.append('fecha_fin', fechaFin);
+    
+    fetch(`/admin/api/traspasos?${params.toString()}`, {
         headers: { 'Accept': 'application/json' },
         credentials: 'same-origin'
     })
@@ -584,8 +805,6 @@ function cargarTraspasos() {
         return response.json();
     })
     .then(data => {
-        console.log('Datos recibidos:', data);
-        
         if (!Array.isArray(data)) {
             console.error('Los datos no son un array:', data);
             document.getElementById('tablaBody').innerHTML = '<tr><td colspan="10" class="text-center text-danger">Error: Formato de datos incorrecto</td></tr>';
@@ -607,16 +826,10 @@ function cargarTraspasos() {
             estatus: d.estatus || 'pendiente'
         }));
         
-        cargarTabla(datosOriginales);
-        
-        // Actualizar contadores
-        const total = datosOriginales.length;
-        const completados = datosOriginales.filter(d => d.estatus === 'completado').length;
-        const pendientes = datosOriginales.filter(d => d.estatus === 'pendiente').length;
-        
-        document.getElementById('totalRegistros').textContent = total;
-        document.getElementById('totalCompletados').textContent = completados;
-        document.getElementById('totalPendientes').textContent = pendientes;
+        datosFiltrados = [...datosOriginales];
+        currentPage = 1;
+        cargarTabla(datosFiltrados);
+        actualizarResumen(datosOriginales);
     })
     .catch(error => {
         console.error('Error:', error);
@@ -624,12 +837,25 @@ function cargarTraspasos() {
     });
 }
 
+function actualizarResumen(datos) {
+    const total = datos.length;
+    const completados = datos.filter(d => d.estatus === 'completado').length;
+    const pendientes = datos.filter(d => d.estatus === 'pendiente').length;
+    const cancelados = datos.filter(d => d.estatus === 'cancelado').length;
+    
+    document.getElementById('totalRegistros').textContent = total;
+    document.getElementById('totalCompletados').textContent = completados;
+    document.getElementById('totalPendientes').textContent = pendientes;
+    document.getElementById('totalCancelados').textContent = cancelados;
+}
+
 function cargarTabla(datos) {
     const tablaBody = document.getElementById('tablaBody');
     
     if (!datos || datos.length === 0) {
-        tablaBody.innerHTML = '<tr><td colspan="10" class="text-center">No hay registros</td></tr>';
+        tablaBody.innerHTML = '<tr><td colspan="10" class="text-center">No hay registros en el rango seleccionado</td></tr>';
         document.getElementById('sumMonto').textContent = formatCurrency(0);
+        actualizarPaginacion(0);
         return;
     }
     
@@ -639,6 +865,16 @@ function cargarTabla(datos) {
     
     tablaBody.innerHTML = pageData.map(item => {
         totalMonto += item.monto;
+        
+        // Solo mostrar acciones de editar/eliminar/aplicar cuando el estatus es EXACTAMENTE 'pendiente'
+        const esPendiente = item.estatus === 'pendiente';
+        
+        const acciones = esPendiente
+            ? `<i class="fas fa-edit" onclick="editarTraspaso(${item.id})" title="Editar" style="cursor:pointer;"></i>
+               <i class="fas fa-trash-alt" onclick="eliminarTraspaso(${item.id})" title="Eliminar" style="cursor:pointer;"></i>
+               <i class="fas fa-check-circle" style="color:#28a745;cursor:pointer;" onclick="aplicarTraspaso(${item.id})" title="Aplicar traspaso"></i>`
+            : `<i class="fas fa-lock" style="color:#adb5bd;" title="Registro ${getEstatusTexto(item.estatus)} - no editable"></i>`;
+        
         return `
             <tr>
                 <td>${escapeHtml(item.folio)}</td>
@@ -651,13 +887,8 @@ function cargarTabla(datos) {
                 <td><span class="badge ${getBadgeClass(item.estatus)}">${getEstatusTexto(item.estatus)}</span></td>
                 <td style="position: sticky; right: 0; background: white; z-index: 1;">
                     <div class="action-icons text-nowrap">
-                        <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver" style="cursor:pointer;"></i>
-                        ${item.estatus === 'pendiente' ? 
-                            `<i class="fas fa-edit" onclick="editarTraspaso(${item.id})" title="Editar" style="cursor:pointer;"></i>
-                             <i class="fas fa-trash-alt" onclick="eliminarTraspaso(${item.id})" title="Eliminar" style="cursor:pointer;"></i>
-                             <i class="fas fa-check-circle" onclick="aplicarTraspaso(${item.id})" title="Aplicar" style="cursor:pointer;"></i>` : 
-                            `<i class="fas fa-check-circle" style="color:#28a745" title="Completado"></i>`
-                        }
+                        <i class="fas fa-eye" onclick="verDetalle(${item.id})" title="Ver detalle" style="cursor:pointer;"></i>
+                        ${acciones}
                         <i class="fas fa-print" onclick="imprimirTraspaso(${item.id})" title="Imprimir" style="cursor:pointer;"></i>
                     </div>
                 </td>
@@ -670,52 +901,48 @@ function cargarTabla(datos) {
 }
 
 function actualizarPaginacion(total) {
-    const totalPages = Math.ceil(total / rowsPerPage);
     document.getElementById('paginaActual').textContent = currentPage;
-    const start = (currentPage - 1) * rowsPerPage + 1;
+    const start = total === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
     const end = Math.min(currentPage * rowsPerPage, total);
     document.getElementById('paginacionInfo').textContent = `Mostrando ${start}-${end} de ${total} registros`;
 }
 
 function filtrarPorFecha() {
-    const fechaInicio = document.getElementById('fechaInicio').value;
-    const fechaFin = document.getElementById('fechaFin').value;
-    
-    let filtrados = datosOriginales;
-    
-    if (fechaInicio) {
-        filtrados = filtrados.filter(item => item.fecha >= fechaInicio);
-    }
-    if (fechaFin) {
-        filtrados = filtrados.filter(item => item.fecha <= fechaFin);
-    }
-    
     currentPage = 1;
-    cargarTabla(filtrados);
+    cargarTraspasos();
 }
 
-// Event listeners
+function aplicarFiltroBusqueda() {
+    const busqueda = (document.getElementById('buscador')?.value || '').toLowerCase().trim();
+    if (!busqueda) {
+        datosFiltrados = [...datosOriginales];
+    } else {
+        datosFiltrados = datosOriginales.filter(item => 
+            (item.folio || '').toLowerCase().includes(busqueda) ||
+            (item.cuenta_origen || '').toLowerCase().includes(busqueda) ||
+            (item.cuenta_destino || '').toLowerCase().includes(busqueda) ||
+            (item.banco_origen || '').toLowerCase().includes(busqueda) ||
+            (item.banco_destino || '').toLowerCase().includes(busqueda)
+        );
+    }
+    currentPage = 1;
+    cargarTabla(datosFiltrados);
+    actualizarResumen(datosFiltrados);
+}
+
+// ===================== EVENT LISTENERS =====================
 document.addEventListener('DOMContentLoaded', () => {
     cargarTraspasos();
     
     document.getElementById('btnAgregar')?.addEventListener('click', abrirModalTraspaso);
     document.getElementById('btnExcel')?.addEventListener('click', exportarExcel);
-    document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarTabla(datosOriginales); });
-    document.getElementById('btnAnterior')?.addEventListener('click', () => { if(currentPage > 1) { currentPage--; cargarTabla(datosOriginales); } });
-    document.getElementById('btnSiguiente')?.addEventListener('click', () => { const total = Math.ceil(datosOriginales.length / rowsPerPage); if(currentPage < total) { currentPage++; cargarTabla(datosOriginales); } });
-    document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = Math.ceil(datosOriginales.length / rowsPerPage); cargarTabla(datosOriginales); });
-    document.getElementById('buscador')?.addEventListener('input', e => {
-        const busqueda = e.target.value.toLowerCase();
-        const filtrados = datosOriginales.filter(item => 
-            item.folio?.toLowerCase().includes(busqueda) ||
-            item.cuenta_origen?.toLowerCase().includes(busqueda) ||
-            item.cuenta_destino?.toLowerCase().includes(busqueda) ||
-            item.banco_origen?.toLowerCase().includes(busqueda) ||
-            item.banco_destino?.toLowerCase().includes(busqueda)
-        );
-        currentPage = 1;
-        cargarTabla(filtrados);
-    });
+    document.getElementById('btnPrimera')?.addEventListener('click', () => { currentPage = 1; cargarTabla(datosFiltrados); });
+    document.getElementById('btnAnterior')?.addEventListener('click', () => { if(currentPage > 1) { currentPage--; cargarTabla(datosFiltrados); } });
+    document.getElementById('btnSiguiente')?.addEventListener('click', () => { const total = Math.ceil(datosFiltrados.length / rowsPerPage); if(currentPage < total) { currentPage++; cargarTabla(datosFiltrados); } });
+    document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = Math.ceil(datosFiltrados.length / rowsPerPage) || 1; cargarTabla(datosFiltrados); });
+    
+    document.getElementById('buscador')?.addEventListener('input', aplicarFiltroBusqueda);
+    
     document.getElementById('fechaInicio')?.addEventListener('change', filtrarPorFecha);
     document.getElementById('fechaFin')?.addEventListener('change', filtrarPorFecha);
     

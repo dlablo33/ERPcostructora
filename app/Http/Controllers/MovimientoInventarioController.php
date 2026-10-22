@@ -30,16 +30,25 @@ class MovimientoInventarioController extends Controller
     
     /**
      * Get movimientos for DataTable with pagination.
+     * SOPORTA: tipo, fecha_inicio, fecha_fin, proyecto_id, articulo_id, almacen_id, search
      */
     public function getMovimientos(Request $request)
     {
         try {
-            $query = MovimientoInventario::with(['inventarioProyecto.proyecto', 'inventarioProyecto.articulo', 'almacenOrigen', 'almacenDestino', 'creador']);
+            $query = MovimientoInventario::with([
+                'inventarioProyecto.proyecto', 
+                'inventarioProyecto.articulo', 
+                'almacenOrigen', 
+                'almacenDestino', 
+                'creador'
+            ]);
             
+            // Filtro por tipo de movimiento
             if ($request->filled('tipo')) {
                 $query->where('tipo_movimiento', $request->tipo);
             }
             
+            // Filtro por rango de fechas
             if ($request->filled('fecha_inicio')) {
                 $query->whereDate('fecha_movimiento', '>=', $request->fecha_inicio);
             }
@@ -48,18 +57,21 @@ class MovimientoInventarioController extends Controller
                 $query->whereDate('fecha_movimiento', '<=', $request->fecha_fin);
             }
             
+            // Filtro por proyecto
             if ($request->filled('proyecto_id')) {
                 $query->whereHas('inventarioProyecto', function($q) use ($request) {
                     $q->where('proyecto_id', $request->proyecto_id);
                 });
             }
             
+            // Filtro por artículo
             if ($request->filled('articulo_id')) {
                 $query->whereHas('inventarioProyecto', function($q) use ($request) {
                     $q->where('articulo_id', $request->articulo_id);
                 });
             }
             
+            // Filtro por almacén (origen o destino)
             if ($request->filled('almacen_id')) {
                 $query->where(function($q) use ($request) {
                     $q->where('almacen_origen_id', $request->almacen_id)
@@ -67,12 +79,28 @@ class MovimientoInventarioController extends Controller
                 });
             }
             
+            // BÚSQUEDA GLOBAL (folio, observaciones, solicitante, artículo, proyecto, almacén)
             if ($request->filled('search')) {
-                $search = $request->search;
+                $search = trim($request->search);
                 $query->where(function($q) use ($search) {
-                    $q->where('referencia_folio', 'LIKE', "%{$search}%")
-                      ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                      ->orWhere('solicitante', 'LIKE', "%{$search}%");
+                    $q->where('referencia_folio', 'ILIKE', "%{$search}%")
+                      ->orWhere('observaciones', 'ILIKE', "%{$search}%")
+                      ->orWhere('solicitante', 'ILIKE', "%{$search}%")
+                      ->orWhere('motivo', 'ILIKE', "%{$search}%")
+                      ->orWhereHas('inventarioProyecto.articulo', function($subQ) use ($search) {
+                          $subQ->where('codigo', 'ILIKE', "%{$search}%")
+                               ->orWhere('descripcion', 'ILIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('inventarioProyecto.proyecto', function($subQ) use ($search) {
+                          $subQ->where('nombre', 'ILIKE', "%{$search}%")
+                               ->orWhere('codigo', 'ILIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('almacenOrigen', function($subQ) use ($search) {
+                          $subQ->where('nombre', 'ILIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('almacenDestino', function($subQ) use ($search) {
+                          $subQ->where('nombre', 'ILIKE', "%{$search}%");
+                      });
                 });
             }
             
@@ -140,7 +168,7 @@ class MovimientoInventarioController extends Controller
     }
     
     /**
-     * Registrar una entrada de material (MODIFICADO para aceptar costo y origen)
+     * Registrar una entrada de material
      */
     public function registrarEntrada(Request $request)
     {
@@ -259,6 +287,8 @@ class MovimientoInventarioController extends Controller
     
     /**
      * Registrar una salida de material.
+     * CORREGIDO: Valida directamente contra InventarioAlmacenProyecto (la ubicación específica)
+     * en lugar de confiar en $inventario->disponible que puede estar desactualizado.
      */
     public function registrarSalida(Request $request)
     {
@@ -276,47 +306,60 @@ class MovimientoInventarioController extends Controller
             
             DB::beginTransaction();
             
+            // 1. Buscar el inventario del proyecto
             $inventario = InventarioProyecto::where('proyecto_id', $request->proyecto_id)
                 ->where('articulo_id', $request->articulo_id)
                 ->first();
             
             if (!$inventario) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'No hay inventario registrado para este artículo en el proyecto seleccionado'
                 ], 400);
             }
             
-            if ($inventario->disponible < $request->cantidad) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Stock insuficiente. Disponible: {$inventario->disponible} {$inventario->unidad_medida}"
-                ], 400);
-            }
-            
+            // 2. Buscar la ubicación específica en el almacén (FUENTE DE VERDAD DEL STOCK)
             $ubicacion = InventarioAlmacenProyecto::where('inventario_proyecto_id', $inventario->id)
                 ->where('almacen_id', $request->almacen_id)
                 ->first();
             
-            if (!$ubicacion || $ubicacion->cantidad < $request->cantidad) {
-                $disponible = $ubicacion ? $ubicacion->cantidad : 0;
+            $cantidadDisponibleAlmacen = $ubicacion ? (float) $ubicacion->cantidad : 0;
+            
+            // 3. Validar stock contra la ubicación real del almacén
+            if ($cantidadDisponibleAlmacen < $request->cantidad) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
-                    'message' => "Stock insuficiente en el almacén. Disponible: {$disponible} {$inventario->unidad_medida}"
+                    'message' => "Stock insuficiente en el almacén. Disponible: {$cantidadDisponibleAlmacen} {$inventario->unidad_medida}"
                 ], 400);
             }
             
-            $cantidadAnterior = $inventario->cantidad_actual;
+            // 4. Validar stock global del proyecto
+            if ((float) $inventario->cantidad_actual < $request->cantidad) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => "Stock insuficiente en el proyecto. Disponible: {$inventario->cantidad_actual} {$inventario->unidad_medida}"
+                ], 400);
+            }
             
-            $inventario->cantidad_actual -= $request->cantidad;
+            // 5. Capturar cantidad anterior ANTES de modificar
+            $cantidadAnterior = (float) $inventario->cantidad_actual;
+            
+            // 6. Actualizar inventario del proyecto
+            $inventario->cantidad_actual = $cantidadAnterior - $request->cantidad;
             $inventario->ultima_salida = $request->fecha_movimiento;
             $inventario->save();
             
-            $ubicacion->cantidad -= $request->cantidad;
+            // 7. Actualizar ubicación en almacén
+            $ubicacion->cantidad = $cantidadDisponibleAlmacen - $request->cantidad;
             $ubicacion->save();
             
+            // 8. Calcular costo de salida (promedio o último costo)
             $costoSalida = $inventario->costo_promedio ?? $inventario->ultimo_costo ?? 0;
             
+            // 9. Registrar el movimiento
             $movimiento = MovimientoInventario::create([
                 'inventario_proyecto_id' => $inventario->id,
                 'almacen_origen_id' => $request->almacen_id,
@@ -324,7 +367,7 @@ class MovimientoInventarioController extends Controller
                 'cantidad' => $request->cantidad,
                 'costo_unitario' => $costoSalida,
                 'cantidad_antes' => $cantidadAnterior,
-                'cantidad_despues' => $inventario->cantidad_actual,
+                'cantidad_despues' => (float) $inventario->cantidad_actual,
                 'referencia_tipo' => 'Consumo',
                 'referencia_folio' => $request->referencia_folio,
                 'solicitante' => $request->solicitante,
@@ -344,6 +387,7 @@ class MovimientoInventarioController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al registrar salida: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             
             return response()->json([
                 'success' => false,
@@ -375,6 +419,7 @@ class MovimientoInventarioController extends Controller
                 ->first();
             
             if (!$inventario) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'No hay inventario registrado para este artículo en el proyecto'
@@ -387,13 +432,14 @@ class MovimientoInventarioController extends Controller
             
             if (!$ubicacionOrigen || $ubicacionOrigen->cantidad < $request->cantidad) {
                 $disponible = $ubicacionOrigen ? $ubicacionOrigen->cantidad : 0;
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => "Stock insuficiente en almacén origen. Disponible: {$disponible} {$inventario->unidad_medida}"
                 ], 400);
             }
             
-            $cantidadAnterior = $inventario->cantidad_actual;
+            $cantidadAnterior = (float) $inventario->cantidad_actual;
             
             $ubicacionOrigen->cantidad -= $request->cantidad;
             $ubicacionOrigen->save();
@@ -413,6 +459,8 @@ class MovimientoInventarioController extends Controller
                 ]);
             }
             
+            // Nota: La cantidad_actual del proyecto NO cambia en una transferencia (solo cambia de almacén)
+            
             $movimiento = MovimientoInventario::create([
                 'inventario_proyecto_id' => $inventario->id,
                 'almacen_origen_id' => $request->almacen_origen_id,
@@ -421,7 +469,7 @@ class MovimientoInventarioController extends Controller
                 'cantidad' => $request->cantidad,
                 'costo_unitario' => $inventario->costo_promedio ?? $inventario->ultimo_costo ?? 0,
                 'cantidad_antes' => $cantidadAnterior,
-                'cantidad_despues' => $inventario->cantidad_actual,
+                'cantidad_despues' => $cantidadAnterior,
                 'referencia_tipo' => 'Transferencia',
                 'observaciones' => $request->observaciones,
                 'fecha_movimiento' => $request->fecha_movimiento,
@@ -470,6 +518,7 @@ class MovimientoInventarioController extends Controller
                 ->first();
             
             if (!$inventario) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'No hay inventario registrado para este artículo en el proyecto'
@@ -481,23 +530,25 @@ class MovimientoInventarioController extends Controller
                 ->first();
             
             if (!$ubicacion) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'No hay inventario en el almacén seleccionado'
                 ], 400);
             }
             
-            $cantidadAnterior = $inventario->cantidad_actual;
-            $diferencia = $request->cantidad_nueva - $ubicacion->cantidad;
+            $cantidadAnterior = (float) $inventario->cantidad_actual;
+            $diferencia = $request->cantidad_nueva - (float) $ubicacion->cantidad;
             
             if ($diferencia == 0) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'La cantidad nueva es igual a la actual, no se requiere ajuste'
                 ], 400);
             }
             
-            $inventario->cantidad_actual += $diferencia;
+            $inventario->cantidad_actual = $cantidadAnterior + $diferencia;
             $inventario->save();
             
             $ubicacion->cantidad = $request->cantidad_nueva;
@@ -511,7 +562,7 @@ class MovimientoInventarioController extends Controller
                 'cantidad' => abs($diferencia),
                 'costo_unitario' => $inventario->costo_promedio ?? $inventario->ultimo_costo ?? 0,
                 'cantidad_antes' => $cantidadAnterior,
-                'cantidad_despues' => $inventario->cantidad_actual,
+                'cantidad_despues' => (float) $inventario->cantidad_actual,
                 'referencia_tipo' => 'AjusteInventario',
                 'motivo' => $request->motivo,
                 'observaciones' => $request->observaciones,
@@ -580,6 +631,9 @@ class MovimientoInventarioController extends Controller
                     'unidad_medida' => $movimiento->inventarioProyecto?->unidad_medida,
                     'almacen_origen_nombre' => $movimiento->almacenOrigen?->nombre,
                     'almacen_destino_nombre' => $movimiento->almacenDestino?->nombre,
+                    'almacen_nombre' => $movimiento->tipo_movimiento === 'Entrada' 
+                        ? ($movimiento->almacenDestino?->nombre) 
+                        : ($movimiento->almacenOrigen?->nombre),
                     'referencia_folio' => $movimiento->referencia_folio,
                     'solicitante' => $movimiento->solicitante,
                     'observaciones' => $movimiento->observaciones,
@@ -606,7 +660,7 @@ class MovimientoInventarioController extends Controller
             $proyectoId = $request->get('proyecto_id');
             $articuloId = $request->get('articulo_id');
             $almacenId = $request->get('almacen_id');
-            $cantidadSolicitada = $request->get('cantidad', 0);
+            $cantidadSolicitada = (float) $request->get('cantidad', 0);
             
             if (!$proyectoId || !$articuloId || !$almacenId) {
                 return response()->json([
@@ -636,13 +690,13 @@ class MovimientoInventarioController extends Controller
                 ->where('almacen_id', $almacenId)
                 ->first();
             
-            $cantidadEnAlmacen = $ubicacion ? floatval($ubicacion->cantidad) : 0;
+            $cantidadEnAlmacen = $ubicacion ? (float) $ubicacion->cantidad : 0;
             
             return response()->json([
                 'success' => true,
                 'data' => [
                     'disponible' => $cantidadEnAlmacen,
-                    'stock_actual' => floatval($inventarioProyecto->cantidad_actual),
+                    'stock_actual' => (float) $inventarioProyecto->cantidad_actual,
                     'unidad_medida' => $inventarioProyecto->unidad_medida ?? 'Pieza',
                     'stock_suficiente' => $cantidadEnAlmacen >= $cantidadSolicitada
                 ]
@@ -799,7 +853,7 @@ class MovimientoInventarioController extends Controller
     }
 
     /**
-     * Recepción múltiple de artículos de una orden de compra (CORREGIDO PARA POSTGRESQL)
+     * Recepción múltiple de artículos de una orden de compra
      */
     public function recepcionMultiple(Request $request)
     {
@@ -828,7 +882,6 @@ class MovimientoInventarioController extends Controller
                 try {
                     Log::info('Procesando artículo:', $item);
                     
-                    // Buscar la cotización
                     $cotizacion = CotizacionArticulo::with(['requisicionArticulo'])
                         ->find($request->compra_id);
                     
@@ -836,13 +889,11 @@ class MovimientoInventarioController extends Controller
                         throw new \Exception('Cotización o requisición no encontrada');
                     }
                     
-                    // Obtener el código del artículo
                     $articulo = Articulo::find($item['articulo_id']);
                     if (!$articulo) {
                         throw new \Exception('Artículo no encontrado con ID: ' . $item['articulo_id']);
                     }
                     
-                    // Buscar por código en lugar de articulo_id (PostgreSQL no tiene columna articulo_id)
                     $requisicionArticulo = RequisicionArticulo::where('requisicion_id', $cotizacion->requisicionArticulo->requisicion_id)
                         ->where('codigo', $articulo->codigo)
                         ->first();
@@ -852,14 +903,6 @@ class MovimientoInventarioController extends Controller
                         throw new \Exception('No se encontró el artículo en la requisición: ' . $articulo->codigo);
                     }
                     
-                    Log::info('Requisicion articulo encontrado:', [
-                        'id' => $requisicionArticulo->id,
-                        'codigo' => $requisicionArticulo->codigo,
-                        'cantidad_actual' => $requisicionArticulo->cantidad,
-                        'surtida_actual' => $requisicionArticulo->cantidad_surtida ?? 0
-                    ]);
-                    
-                    // Buscar inventario
                     $inventario = InventarioProyecto::where('proyecto_id', $request->proyecto_id)
                         ->where('articulo_id', $item['articulo_id'])
                         ->first();
@@ -880,13 +923,11 @@ class MovimientoInventarioController extends Controller
                         ]);
                     }
                     
-                    $cantidadAnterior = $inventario->cantidad_actual;
+                    $cantidadAnterior = (float) $inventario->cantidad_actual;
                     
-                    // Actualizar stock
-                    $inventario->cantidad_actual += $item['cantidad'];
+                    $inventario->cantidad_actual = $cantidadAnterior + $item['cantidad'];
                     $inventario->ultima_entrada = $request->fecha_movimiento;
                     
-                    // Actualizar costos
                     if ($item['costo_unitario'] > 0) {
                         $inventario->ultimo_costo = $item['costo_unitario'];
                         if ($cantidadAnterior > 0 && $inventario->costo_promedio && $inventario->costo_promedio > 0) {
@@ -900,7 +941,6 @@ class MovimientoInventarioController extends Controller
                     
                     $inventario->save();
                     
-                    // Actualizar ubicación en almacén
                     $ubicacion = InventarioAlmacenProyecto::where('inventario_proyecto_id', $inventario->id)
                         ->where('almacen_id', $request->almacen_id)
                         ->first();
@@ -916,7 +956,6 @@ class MovimientoInventarioController extends Controller
                         ]);
                     }
                     
-                    // Registrar movimiento
                     MovimientoInventario::create([
                         'inventario_proyecto_id' => $inventario->id,
                         'almacen_destino_id' => $request->almacen_id,
@@ -924,7 +963,7 @@ class MovimientoInventarioController extends Controller
                         'cantidad' => $item['cantidad'],
                         'costo_unitario' => $item['costo_unitario'],
                         'cantidad_antes' => $cantidadAnterior,
-                        'cantidad_despues' => $inventario->cantidad_actual,
+                        'cantidad_despues' => (float) $inventario->cantidad_actual,
                         'referencia_tipo' => 'Compra',
                         'referencia_id' => $request->compra_id,
                         'referencia_folio' => "COMPRA-{$request->compra_id}",
@@ -933,17 +972,9 @@ class MovimientoInventarioController extends Controller
                         'creado_por' => auth()->id()
                     ]);
                     
-                    // ACTUALIZAR cantidad_surtida en requisicion_articulos
                     $nuevaSurtida = ($requisicionArticulo->cantidad_surtida ?? 0) + $item['cantidad'];
                     $requisicionArticulo->cantidad_surtida = $nuevaSurtida;
                     $requisicionArticulo->save();
-                    
-                    Log::info('Requisicion articulo actualizado:', [
-                        'id' => $requisicionArticulo->id,
-                        'nueva_surtida' => $nuevaSurtida,
-                        'cantidad_total' => $requisicionArticulo->cantidad,
-                        'pendiente' => $requisicionArticulo->cantidad - $nuevaSurtida
-                    ]);
                     
                     $registrados++;
                     

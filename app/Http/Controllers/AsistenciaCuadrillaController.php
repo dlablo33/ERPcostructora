@@ -9,6 +9,7 @@ use App\Models\Proyecto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class AsistenciaCuadrillaController extends Controller
@@ -36,26 +37,22 @@ class AsistenciaCuadrillaController extends Controller
         Log::info('Filtros recibidos:', $request->all());
         
         try {
-            $query = Asistencia::with(['empleado', 'cuadrilla', 'user']);
+            $query = Asistencia::with(['empleado', 'cuadrilla.proyecto', 'user']);
 
-            // Aplicar filtro de búsqueda
             if ($request->filled('busqueda')) {
                 $query->buscar($request->busqueda);
             }
 
-            // Aplicar filtro por fecha
             if ($request->filled('fecha')) {
                 $query->byFecha($request->fecha);
             } else {
                 $query->byFecha(now()->format('Y-m-d'));
             }
 
-            // Aplicar filtro por rango de fechas
             if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
                 $query->byRangoFechas($request->fecha_inicio, $request->fecha_fin);
             }
 
-            // Aplicar filtro por proyecto (a través de cuadrilla)
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
                 if (is_array($proyectos) && count($proyectos) > 0) {
@@ -72,21 +69,22 @@ class AsistenciaCuadrillaController extends Controller
                 }
             }
 
-            // Aplicar filtro por cuadrilla
             if ($request->filled('cuadrilla_id')) {
                 $query->byCuadrilla($request->cuadrilla_id);
             }
 
-            // Aplicar filtro por estatus
             if ($request->filled('estatus')) {
                 $query->byEstatus($request->estatus);
             }
 
-            // Ordenar y paginar
             $perPage = $request->get('per_page', 10);
             $asistencias = $query->orderBy('fecha', 'desc')->orderBy('hora_entrada', 'desc')->paginate($perPage);
 
-            // Calcular estadísticas para los 4 cuadros
+            // Normalizar datos para el frontend
+            $asistencias->getCollection()->transform(function ($item) {
+                return $this->formatearAsistencia($item);
+            });
+
             $estadisticas = $this->calcularEstadisticas($request);
 
             return response()->json([
@@ -123,22 +121,23 @@ class AsistenciaCuadrillaController extends Controller
         try {
             $query = Cuadrilla::with(['proyecto', 'encargado', 'creador']);
 
-            // Aplicar filtro de búsqueda
             if ($request->filled('busqueda')) {
                 $query->buscar($request->busqueda);
             }
 
-            // Aplicar filtro por proyecto
             if ($request->filled('proyecto_id')) {
-                $query->byProyecto($request->proyecto_id);
+                $proyectos = $request->input('proyecto_id');
+                if (is_array($proyectos) && count($proyectos) > 0) {
+                    $query->whereIn('proyecto_id', $proyectos);
+                } elseif (!is_array($proyectos) && $proyectos !== '') {
+                    $query->byProyecto($proyectos);
+                }
             }
 
-            // Aplicar filtro por especialidad
             if ($request->filled('especialidad')) {
                 $query->byEspecialidad($request->especialidad);
             }
 
-            // Aplicar filtro por estatus
             if ($request->filled('estatus')) {
                 if ($request->estatus === 'activo') {
                     $query->activas();
@@ -149,26 +148,31 @@ class AsistenciaCuadrillaController extends Controller
 
             $cuadrillas = $query->orderBy('codigo')->get();
 
-            // Calcular resumen
+            // Normalizar datos
+            $cuadrillasTransformadas = $cuadrillas->map(function ($c) {
+                return $this->formatearCuadrilla($c);
+            });
+
             $resumen = [
                 'total' => $cuadrillas->count(),
                 'activas' => $cuadrillas->where('estatus', 'activo')->count(),
                 'inactivas' => $cuadrillas->where('estatus', 'inactivo')->count(),
                 'total_integrantes' => $cuadrillas->sum(function($c) {
-                    $integrantes = $c->integrantes ?? [];
+                    $integrantes = is_array($c->integrantes) ? $c->integrantes : (json_decode($c->integrantes, true) ?? []);
                     return count($integrantes);
                 })
             ];
 
             return response()->json([
                 'success' => true,
-                'data' => $cuadrillas,
+                'data' => $cuadrillasTransformadas,
                 'resumen' => $resumen,
                 'message' => 'Cuadrillas obtenidas correctamente'
             ]);
 
         } catch (\Exception $e) {
             Log::error('ERROR en index Cuadrillas: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener cuadrillas: ' . $e->getMessage()
@@ -182,12 +186,12 @@ class AsistenciaCuadrillaController extends Controller
     public function showAsistencia($id)
     {
         try {
-            $asistencia = Asistencia::with(['empleado', 'cuadrilla', 'user', 'registrador'])
+            $asistencia = Asistencia::with(['empleado', 'cuadrilla.proyecto', 'user', 'registrador'])
                 ->findOrFail($id);
             
             return response()->json([
                 'success' => true,
-                'data' => $asistencia,
+                'data' => $this->formatearAsistencia($asistencia),
                 'message' => 'Asistencia obtenida correctamente'
             ]);
 
@@ -200,7 +204,7 @@ class AsistenciaCuadrillaController extends Controller
     }
 
     /**
-     * Obtiene una cuadrilla específica
+     * Obtiene una cuadrilla específica CON DETALLE DE INTEGRANTES
      */
     public function showCuadrilla($id)
     {
@@ -208,16 +212,40 @@ class AsistenciaCuadrillaController extends Controller
             $cuadrilla = Cuadrilla::with(['proyecto', 'encargado', 'creador'])
                 ->findOrFail($id);
             
+            // Obtener detalle de integrantes
+            $integrantesIds = is_array($cuadrilla->integrantes) 
+                ? $cuadrilla->integrantes 
+                : (json_decode($cuadrilla->integrantes, true) ?? []);
+            
+            $integrantesDetalle = [];
+            if (!empty($integrantesIds)) {
+                $integrantesDetalle = Plantilla::whereIn('plantilla_id', $integrantesIds)
+                    ->get()
+                    ->map(function ($p) {
+                        return [
+                            'id' => $p->plantilla_id,
+                            'numero_empleado' => $p->numero_empleado_interno ?? $p->plantilla_id,
+                            'nombre_completo' => trim(($p->nombre ?? '') . ' ' . ($p->apellido_paterno ?? '') . ' ' . ($p->apellido_materno ?? '')),
+                            'puesto' => $p->puesto ?? null,
+                        ];
+                    })->toArray();
+            }
+            
+            $data = $this->formatearCuadrilla($cuadrilla);
+            $data['integrantes'] = $integrantesIds;
+            $data['integrantes_detalle'] = $integrantesDetalle;
+            
             return response()->json([
                 'success' => true,
-                'data' => $cuadrilla,
+                'data' => $data,
                 'message' => 'Cuadrilla obtenida correctamente'
             ]);
 
         } catch (\Exception $e) {
+            Log::error('ERROR showCuadrilla: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Cuadrilla no encontrada'
+                'message' => 'Cuadrilla no encontrada: ' . $e->getMessage()
             ], 404);
         }
     }
@@ -235,7 +263,7 @@ class AsistenciaCuadrillaController extends Controller
             
             $fecha = $request->fecha ?? now()->format('Y-m-d');
             $cuadrillaId = $request->cuadrilla_id;
-            $empleados = $request->empleados; // Array de {id, hora_entrada, status}
+            $empleados = $request->empleados;
             
             if (empty($empleados)) {
                 return response()->json([
@@ -249,13 +277,11 @@ class AsistenciaCuadrillaController extends Controller
 
             foreach ($empleados as $data) {
                 try {
-                    // Verificar si ya existe registro para este empleado y fecha
                     $asistencia = Asistencia::where('plantilla_id', $data['id'])
                         ->whereDate('fecha', $fecha)
                         ->first();
 
                     if ($asistencia) {
-                        // Actualizar existente
                         $asistencia->update([
                             'hora_entrada' => $data['hora_entrada'] ?? $asistencia->hora_entrada,
                             'hora_salida' => $data['hora_salida'] ?? $asistencia->hora_salida,
@@ -266,7 +292,6 @@ class AsistenciaCuadrillaController extends Controller
                         ]);
                         $registros[] = $asistencia;
                     } else {
-                        // Crear nuevo
                         $asistencia = Asistencia::create([
                             'plantilla_id' => $data['id'],
                             'cuadrilla_id' => $cuadrillaId,
@@ -383,7 +408,7 @@ class AsistenciaCuadrillaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $asistencia,
+                'data' => $this->formatearAsistencia($asistencia->fresh(['empleado', 'cuadrilla.proyecto'])),
                 'message' => 'Asistencia actualizada correctamente'
             ]);
 
@@ -398,30 +423,56 @@ class AsistenciaCuadrillaController extends Controller
 
     /**
      * Crea una nueva cuadrilla
+     * CORREGIDO: Maneja integrantes como array o JSON string
      */
     public function storeCuadrilla(Request $request)
     {
         Log::info('=== CUADRILLAS: Creando nueva ===');
+        Log::info('Datos recibidos:', $request->all());
         
         try {
-            $request->validate([
+            // Normalizar integrantes (puede llegar como string JSON desde FormData)
+            $this->sincronizarSecuenciaCuadrillas();
+            $integrantes = $this->normalizarIntegrantes($request->input('integrantes'));
+            
+            // Crear request modificado para validar
+            $request->merge(['integrantes' => $integrantes]);
+            
+            $validator = Validator::make($request->all(), [
                 'nombre' => 'required|string|max:100',
                 'especialidad' => 'required|in:cimentacion,estructura,acabados,instalaciones,obra_negra,albanileria,herreria,electricidad,plomeria,pintura',
                 'proyecto_id' => 'nullable|exists:proyectos,id',
                 'encargado_id' => 'nullable|exists:plantillas,plantilla_id',
-                'integrantes' => 'nullable|array'
+                'integrantes' => 'nullable|array',
+                'estatus' => 'nullable|in:activo,inactivo',
             ]);
+
+            if ($validator->fails()) {
+                Log::error('Validación fallida:', $validator->errors()->toArray());
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error de validación: ' . $validator->errors()->first(),
+                    'errors' => $validator->errors()
+                ], 422);
+            }
 
             DB::beginTransaction();
 
+            // Generar código si no viene
+            $codigo = $request->codigo;
+            if (empty($codigo)) {
+                $ultimoId = Cuadrilla::max('id') ?? 0;
+                $codigo = 'CUA-' . str_pad($ultimoId + 1, 3, '0', STR_PAD_LEFT);
+            }
+
             $cuadrilla = Cuadrilla::create([
-                'codigo' => $request->codigo ?? null,
+                'codigo' => $codigo,
                 'nombre' => $request->nombre,
                 'descripcion' => $request->descripcion,
                 'especialidad' => $request->especialidad,
-                'proyecto_id' => $request->proyecto_id,
-                'encargado_id' => $request->encargado_id,
-                'integrantes' => $request->integrantes ?? [],
+                'proyecto_id' => $request->proyecto_id ?: null,
+                'encargado_id' => $request->encargado_id ?: null,
+                'integrantes' => $integrantes,
                 'estatus' => $request->estatus ?? 'activo',
                 'observaciones' => $request->observaciones,
                 'created_by' => auth()->id()
@@ -431,13 +482,14 @@ class AsistenciaCuadrillaController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $cuadrilla,
+                'data' => $this->formatearCuadrilla($cuadrilla->fresh(['proyecto', 'encargado'])),
                 'message' => 'Cuadrilla creada correctamente'
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al crear cuadrilla: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear cuadrilla: ' . $e->getMessage()
@@ -447,33 +499,61 @@ class AsistenciaCuadrillaController extends Controller
 
     /**
      * Actualiza una cuadrilla
+     * CORREGIDO: Maneja integrantes como array o JSON string
      */
     public function updateCuadrilla(Request $request, $id)
     {
         Log::info('=== CUADRILLAS: Actualizando ID: ' . $id);
+        Log::info('Datos recibidos:', $request->all());
         
         try {
             $cuadrilla = Cuadrilla::findOrFail($id);
             
+            // Normalizar integrantes
+            $integrantes = $request->has('integrantes') 
+                ? $this->normalizarIntegrantes($request->input('integrantes'))
+                : $cuadrilla->integrantes;
+            
+            $request->merge(['integrantes' => $integrantes]);
+            
+            $validator = Validator::make($request->all(), [
+                'nombre' => 'sometimes|required|string|max:100',
+                'especialidad' => 'sometimes|required|in:cimentacion,estructura,acabados,instalaciones,obra_negra,albanileria,herreria,electricidad,plomeria,pintura',
+                'proyecto_id' => 'nullable|exists:proyectos,id',
+                'encargado_id' => 'nullable|exists:plantillas,plantilla_id',
+                'integrantes' => 'nullable|array',
+                'estatus' => 'nullable|in:activo,inactivo',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error de validación: ' . $validator->errors()->first(),
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+            
             $cuadrilla->update([
+                'codigo' => $request->codigo ?? $cuadrilla->codigo,
                 'nombre' => $request->nombre ?? $cuadrilla->nombre,
                 'descripcion' => $request->descripcion ?? $cuadrilla->descripcion,
                 'especialidad' => $request->especialidad ?? $cuadrilla->especialidad,
-                'proyecto_id' => $request->proyecto_id ?? $cuadrilla->proyecto_id,
-                'encargado_id' => $request->encargado_id ?? $cuadrilla->encargado_id,
-                'integrantes' => $request->integrantes ?? $cuadrilla->integrantes,
+                'proyecto_id' => $request->has('proyecto_id') ? ($request->proyecto_id ?: null) : $cuadrilla->proyecto_id,
+                'encargado_id' => $request->has('encargado_id') ? ($request->encargado_id ?: null) : $cuadrilla->encargado_id,
+                'integrantes' => $integrantes,
                 'estatus' => $request->estatus ?? $cuadrilla->estatus,
                 'observaciones' => $request->observaciones ?? $cuadrilla->observaciones
             ]);
 
             return response()->json([
                 'success' => true,
-                'data' => $cuadrilla,
+                'data' => $this->formatearCuadrilla($cuadrilla->fresh(['proyecto', 'encargado'])),
                 'message' => 'Cuadrilla actualizada correctamente'
             ]);
 
         } catch (\Exception $e) {
             Log::error('ERROR al actualizar cuadrilla: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar cuadrilla: ' . $e->getMessage()
@@ -482,15 +562,29 @@ class AsistenciaCuadrillaController extends Controller
     }
 
     /**
-     * Elimina una cuadrilla (soft delete)
+     * Elimina una cuadrilla
+     * CORREGIDO: Verifica relaciones antes de eliminar y maneja errores
      */
     public function destroyCuadrilla($id)
     {
         Log::info('=== CUADRILLAS: Eliminando ID: ' . $id);
         
         try {
+            DB::beginTransaction();
+            
             $cuadrilla = Cuadrilla::findOrFail($id);
+            
+            // Verificar si tiene asistencias asociadas
+            $tieneAsistencias = Asistencia::where('cuadrilla_id', $id)->exists();
+            if ($tieneAsistencias) {
+                // Opción: desvincular asistencias en lugar de bloquear
+                Asistencia::where('cuadrilla_id', $id)->update(['cuadrilla_id' => null]);
+                Log::info('Asistencias desvinculadas de la cuadrilla ID: ' . $id);
+            }
+            
             $cuadrilla->delete();
+            
+            DB::commit();
 
             return response()->json([
                 'success' => true,
@@ -498,10 +592,12 @@ class AsistenciaCuadrillaController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('ERROR al eliminar cuadrilla: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar cuadrilla'
+                'message' => 'Error al eliminar cuadrilla: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -540,12 +636,10 @@ class AsistenciaCuadrillaController extends Controller
             $fechaInicio = Carbon::create($anio, $mes, 1)->startOfMonth();
             $fechaFin = Carbon::create($anio, $mes, 1)->endOfMonth();
             
-            // Asistencias del mes
-            $asistencias = Asistencia::with(['empleado', 'cuadrilla'])
+            $asistencias = Asistencia::with(['empleado', 'cuadrilla.proyecto'])
                 ->whereBetween('fecha', [$fechaInicio, $fechaFin])
                 ->get();
             
-            // Resumen por proyecto
             $cuadrillas = Cuadrilla::with(['proyecto'])->get();
             $resumenProyectos = [];
             
@@ -560,7 +654,8 @@ class AsistenciaCuadrillaController extends Controller
                         'total_horas' => 0,
                         'presentes' => 0,
                         'ausentes' => 0,
-                        'retardos' => 0
+                        'retardos' => 0,
+                        'porcentaje_asistencia' => 0
                     ];
                 }
                 
@@ -579,11 +674,23 @@ class AsistenciaCuadrillaController extends Controller
                 }
             }
             
+            // Calcular porcentajes
+            foreach ($resumenProyectos as $proyectoId => &$data) {
+                $total = $data['total_asistencias'];
+                $data['porcentaje_asistencia'] = $total > 0 
+                    ? round(($data['presentes'] / $total) * 100) 
+                    : 0;
+            }
+            unset($data);
+            
             // Datos para gráfico
             $dias = [];
             $fechaActual = clone $fechaInicio;
             while ($fechaActual <= $fechaFin) {
-                $asistenciasDia = $asistencias->where('fecha', $fechaActual->format('Y-m-d'));
+                $fechaStr = $fechaActual->format('Y-m-d');
+                $asistenciasDia = $asistencias->filter(function ($a) use ($fechaStr) {
+                    return Carbon::parse($a->fecha)->format('Y-m-d') === $fechaStr;
+                });
                 $total = $asistenciasDia->count();
                 $presentes = $asistenciasDia->where('estatus', 'Activo')->count();
                 
@@ -631,7 +738,7 @@ class AsistenciaCuadrillaController extends Controller
             if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
                 $query->byRangoFechas($request->fecha_inicio, $request->fecha_fin);
             } else {
-                $query->byFecha(now()->format('Y-m-d'));
+                $query->byFecha($request->fecha ?? now()->format('Y-m-d'));
             }
             
             $asistencias = $query->orderBy('fecha', 'desc')->get();
@@ -640,13 +747,13 @@ class AsistenciaCuadrillaController extends Controller
             $rows = $asistencias->map(function($item) {
                 return [
                     $item->folio,
-                    $item->nombre_completo,
-                    $item->fecha?->format('d/m/Y'),
+                    trim(($item->empleado->nombre ?? '') . ' ' . ($item->empleado->apellido_paterno ?? '') . ' ' . ($item->empleado->apellido_materno ?? '')),
+                    $item->fecha ? Carbon::parse($item->fecha)->format('d/m/Y') : '-',
                     $item->hora_entrada,
                     $item->hora_salida ?? '-',
-                    number_format($item->horas_trabajadas, 1),
+                    number_format($item->horas_trabajadas ?? 0, 1),
                     $item->cuadrilla?->nombre ?? '-',
-                    $item->estatus_nombre
+                    $item->estatus_nombre ?? $item->estatus
                 ];
             });
             
@@ -683,12 +790,11 @@ class AsistenciaCuadrillaController extends Controller
                     return [
                         'id' => $item->id,
                         'nombre' => $item->codigo . ' - ' . $item->nombre,
-                        'especialidad' => $item->especialidad_nombre
+                        'especialidad' => $item->especialidad_nombre ?? $item->especialidad
                     ];
                 });
             
-            $proyectos = Proyecto::where('status', 'activo')
-                ->orWhere('status', 'en_curso')
+            $proyectos = Proyecto::whereIn('status', ['activo', 'en_curso'])
                 ->select('id', 'codigo', 'nombre')
                 ->orderBy('nombre')
                 ->get()
@@ -722,44 +828,60 @@ class AsistenciaCuadrillaController extends Controller
             Log::error('ERROR al obtener catálogos: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'data' => [],
-                'message' => 'Error al obtener catálogos'
+                'data' => [
+                    'cuadrillas' => [],
+                    'proyectos' => [],
+                    'empleados' => []
+                ],
+                'message' => 'Error al obtener catálogos: ' . $e->getMessage()
             ]);
         }
     }
 
     /**
      * Obtiene personal de una cuadrilla para tomar asistencia
+     * CORREGIDO: Maneja integrantes como array o JSON
      */
     public function personalPorCuadrilla($cuadrillaId)
     {
         try {
-            $cuadrilla = Cuadrilla::with(['encargado'])->findOrFail($cuadrillaId);
+            $cuadrilla = Cuadrilla::with(['encargado', 'proyecto'])->findOrFail($cuadrillaId);
+            
+            $integrantesIds = is_array($cuadrilla->integrantes) 
+                ? $cuadrilla->integrantes 
+                : (json_decode($cuadrilla->integrantes, true) ?? []);
+            
+            // Asegurar que son enteros
+            $integrantesIds = array_map('intval', $integrantesIds);
             
             $integrantes = [];
             
-            // Obtener integrantes de la cuadrilla
-            if ($cuadrilla->integrantes && is_array($cuadrilla->integrantes)) {
-                $integrantes = Plantilla::whereIn('plantilla_id', $cuadrilla->integrantes)
-                    ->select('plantilla_id as id', 'nombre', 'apellido_paterno', 'apellido_materno')
+            if (!empty($integrantesIds)) {
+                $integrantes = Plantilla::whereIn('plantilla_id', $integrantesIds)
+                    ->select('plantilla_id as id', 'numero_empleado_interno', 'nombre', 'apellido_paterno', 'apellido_materno', 'puesto')
                     ->get()
                     ->map(function($item) {
                         return [
                             'id' => $item->id,
-                            'nombre_completo' => trim($item->nombre . ' ' . ($item->apellido_paterno ?? '') . ' ' . ($item->apellido_materno ?? ''))
+                            'numero_empleado' => $item->numero_empleado_interno ?? $item->id,
+                            'nombre_completo' => trim($item->nombre . ' ' . ($item->apellido_paterno ?? '') . ' ' . ($item->apellido_materno ?? '')),
+                            'puesto' => $item->puesto
                         ];
-                    });
+                    })
+                    ->toArray();
             }
             
             // Agregar encargado si no está en la lista
             if ($cuadrilla->encargado_id) {
-                $existe = $integrantes->contains('id', $cuadrilla->encargado_id);
-                if (!$existe) {
+                $idsArray = array_column($integrantes, 'id');
+                if (!in_array($cuadrilla->encargado_id, $idsArray)) {
                     $encargado = Plantilla::find($cuadrilla->encargado_id);
                     if ($encargado) {
-                        $integrantes->push([
+                        array_unshift($integrantes, [
                             'id' => $encargado->plantilla_id,
-                            'nombre_completo' => trim($encargado->nombre . ' ' . ($encargado->apellido_paterno ?? '') . ' ' . ($encargado->apellido_materno ?? ''))
+                            'numero_empleado' => $encargado->numero_empleado_interno ?? $encargado->plantilla_id,
+                            'nombre_completo' => trim($encargado->nombre . ' ' . ($encargado->apellido_paterno ?? '') . ' ' . ($encargado->apellido_materno ?? '')) . ' (Encargado)',
+                            'puesto' => $encargado->puesto ?? 'Encargado'
                         ]);
                     }
                 }
@@ -768,16 +890,21 @@ class AsistenciaCuadrillaController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'cuadrilla' => $cuadrilla,
+                    'cuadrilla' => $this->formatearCuadrilla($cuadrilla),
                     'integrantes' => $integrantes
                 ]
             ]);
 
         } catch (\Exception $e) {
             Log::error('ERROR al obtener personal de cuadrilla: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener personal de la cuadrilla'
+                'message' => 'Error al obtener personal de la cuadrilla: ' . $e->getMessage(),
+                'data' => [
+                    'cuadrilla' => null,
+                    'integrantes' => []
+                ]
             ], 500);
         }
     }
@@ -796,27 +923,45 @@ class AsistenciaCuadrillaController extends Controller
                 'cuadrilla_id' => 'required|exists:cuadrillas,id'
             ]);
             
-            // Verificar si el empleado ya está asignado a otra cuadrilla
-            $cuadrillaActual = Cuadrilla::whereJsonContains('integrantes', $request->empleado_id)->first();
-            if ($cuadrillaActual) {
-                // Remover de la cuadrilla actual
-                $integrantes = $cuadrillaActual->integrantes ?? [];
-                $key = array_search($request->empleado_id, $integrantes);
-                if ($key !== false) {
-                    unset($integrantes[$key]);
-                    $cuadrillaActual->integrantes = array_values($integrantes);
-                    $cuadrillaActual->save();
+            DB::beginTransaction();
+            
+            $empleadoId = (int) $request->empleado_id;
+            $cuadrillaId = (int) $request->cuadrilla_id;
+            
+            // Remover de cualquier cuadrilla actual
+            $cuadrillas = Cuadrilla::all();
+            foreach ($cuadrillas as $c) {
+                $integrantes = is_array($c->integrantes) 
+                    ? $c->integrantes 
+                    : (json_decode($c->integrantes, true) ?? []);
+                
+                $integrantes = array_map('intval', $integrantes);
+                
+                if (in_array($empleadoId, $integrantes)) {
+                    $integrantes = array_values(array_filter($integrantes, function($id) use ($empleadoId) {
+                        return $id !== $empleadoId;
+                    }));
+                    $c->integrantes = $integrantes;
+                    $c->save();
                 }
             }
             
             // Asignar a la nueva cuadrilla
-            $cuadrillaDestino = Cuadrilla::find($request->cuadrilla_id);
-            $integrantes = $cuadrillaDestino->integrantes ?? [];
-            if (!in_array($request->empleado_id, $integrantes)) {
-                $integrantes[] = $request->empleado_id;
-                $cuadrillaDestino->integrantes = $integrantes;
-                $cuadrillaDestino->save();
+            $cuadrillaDestino = Cuadrilla::find($cuadrillaId);
+            $integrantes = is_array($cuadrillaDestino->integrantes) 
+                ? $cuadrillaDestino->integrantes 
+                : (json_decode($cuadrillaDestino->integrantes, true) ?? []);
+            
+            $integrantes = array_map('intval', $integrantes);
+            
+            if (!in_array($empleadoId, $integrantes)) {
+                $integrantes[] = $empleadoId;
             }
+            
+            $cuadrillaDestino->integrantes = array_values($integrantes);
+            $cuadrillaDestino->save();
+            
+            DB::commit();
             
             return response()->json([
                 'success' => true,
@@ -824,7 +969,9 @@ class AsistenciaCuadrillaController extends Controller
             ]);
             
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('ERROR al asignar empleado: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Error al asignar empleado: ' . $e->getMessage()
@@ -838,11 +985,14 @@ class AsistenciaCuadrillaController extends Controller
     public function getAsignaciones()
     {
         try {
-            $cuadrillas = Cuadrilla::with(['encargado'])->get();
+            $cuadrillas = Cuadrilla::all();
             $asignaciones = [];
             
             foreach ($cuadrillas as $cuadrilla) {
-                $integrantes = $cuadrilla->integrantes ?? [];
+                $integrantes = is_array($cuadrilla->integrantes) 
+                    ? $cuadrilla->integrantes 
+                    : (json_decode($cuadrilla->integrantes, true) ?? []);
+                
                 foreach ($integrantes as $empleadoId) {
                     $empleado = Plantilla::find($empleadoId);
                     if ($empleado) {
@@ -865,7 +1015,8 @@ class AsistenciaCuadrillaController extends Controller
             Log::error('ERROR al obtener asignaciones: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener asignaciones'
+                'data' => [],
+                'message' => 'Error al obtener asignaciones: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -878,16 +1029,28 @@ class AsistenciaCuadrillaController extends Controller
         Log::info('=== REMOVER ASIGNACIÓN: Empleado ID: ' . $empleadoId);
         
         try {
-            $cuadrilla = Cuadrilla::whereJsonContains('integrantes', $empleadoId)->first();
-            if ($cuadrilla) {
-                $integrantes = $cuadrilla->integrantes ?? [];
-                $key = array_search($empleadoId, $integrantes);
-                if ($key !== false) {
-                    unset($integrantes[$key]);
-                    $cuadrilla->integrantes = array_values($integrantes);
+            DB::beginTransaction();
+            
+            $empleadoId = (int) $empleadoId;
+            
+            $cuadrillas = Cuadrilla::all();
+            foreach ($cuadrillas as $cuadrilla) {
+                $integrantes = is_array($cuadrilla->integrantes) 
+                    ? $cuadrilla->integrantes 
+                    : (json_decode($cuadrilla->integrantes, true) ?? []);
+                
+                $integrantes = array_map('intval', $integrantes);
+                
+                if (in_array($empleadoId, $integrantes)) {
+                    $integrantes = array_values(array_filter($integrantes, function($id) use ($empleadoId) {
+                        return $id !== $empleadoId;
+                    }));
+                    $cuadrilla->integrantes = $integrantes;
                     $cuadrilla->save();
                 }
             }
+            
+            DB::commit();
             
             return response()->json([
                 'success' => true,
@@ -895,15 +1058,163 @@ class AsistenciaCuadrillaController extends Controller
             ]);
             
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('ERROR al remover asignación: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Error al remover asignación'
+                'message' => 'Error al remover asignación: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Endpoint para obtener empleados disponibles
+     */
+    public function empleadosDisponibles()
+    {
+        try {
+            $empleados = Plantilla::where('estatus', 'Activo')
+                ->select('plantilla_id as id', 'nombre', 'apellido_paterno', 'apellido_materno')
+                ->get()
+                ->map(function($item) {
+                    return [
+                        'id' => $item->id,
+                        'nombre_completo' => trim($item->nombre . ' ' . ($item->apellido_paterno ?? '') . ' ' . ($item->apellido_materno ?? ''))
+                    ];
+                });
+            
+            return response()->json([
+                'success' => true,
+                'data' => $empleados
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('ERROR empleadosDisponibles: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Error al obtener empleados'
             ], 500);
         }
     }
 
     // ==================== MÉTODOS PRIVADOS ====================
+
+    /**
+     * Normaliza integrantes a array de enteros
+     */
+    private function normalizarIntegrantes($integrantes): array
+    {
+        if (empty($integrantes)) {
+            return [];
+        }
+        
+        // Si es string JSON
+        if (is_string($integrantes)) {
+            $decoded = json_decode($integrantes, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $integrantes = $decoded;
+            } else {
+                // Puede ser "1,2,3"
+                $integrantes = array_filter(explode(',', $integrantes));
+            }
+        }
+        
+        if (!is_array($integrantes)) {
+            return [];
+        }
+        
+        // Convertir a enteros y filtrar vacíos
+        return array_values(array_filter(array_map('intval', $integrantes)));
+    }
+
+    /**
+     * Formatea una asistencia para el frontend
+     */
+    private function formatearAsistencia($item): array
+    {
+        return [
+            'id' => $item->id,
+            'folio' => $item->folio ?? null,
+            'plantilla_id' => $item->plantilla_id,
+            'nombre_completo' => trim(
+                ($item->empleado->nombre ?? '') . ' ' . 
+                ($item->empleado->apellido_paterno ?? '') . ' ' . 
+                ($item->empleado->apellido_materno ?? '')
+            ) ?: ($item->nombre_completo ?? '-'),
+            'fecha' => $item->fecha,
+            'hora_entrada' => $item->hora_entrada,
+            'hora_salida' => $item->hora_salida,
+            'horas_trabajadas' => (float) ($item->horas_trabajadas ?? 0),
+            'estatus' => $item->estatus,
+            'estatus_nombre' => $item->estatus_nombre ?? $item->estatus,
+            'observaciones' => $item->observaciones,
+            'cuadrilla' => $item->cuadrilla ? [
+                'id' => $item->cuadrilla->id,
+                'codigo' => $item->cuadrilla->codigo,
+                'nombre' => $item->cuadrilla->nombre,
+                'proyecto' => $item->cuadrilla->proyecto ? [
+                    'id' => $item->cuadrilla->proyecto->id,
+                    'nombre' => $item->cuadrilla->proyecto->nombre,
+                ] : null,
+            ] : null,
+            'empleado' => $item->empleado ? [
+                'plantilla_id' => $item->empleado->plantilla_id,
+                'numero_empleado_interno' => $item->empleado->numero_empleado_interno,
+            ] : null,
+            'registrador' => $item->registrador ? [
+                'name' => $item->registrador->name
+            ] : null,
+        ];
+    }
+
+    /**
+     * Formatea una cuadrilla para el frontend
+     */
+    private function formatearCuadrilla($c): array
+    {
+        $integrantes = is_array($c->integrantes) 
+            ? $c->integrantes 
+            : (json_decode($c->integrantes, true) ?? []);
+        
+        $especialidades = [
+            'cimentacion' => '🏗️ Cimentación',
+            'estructura' => '🏢 Estructura',
+            'acabados' => '🎨 Acabados',
+            'instalaciones' => '🔌 Instalaciones',
+            'obra_negra' => '🧱 Obra Negra',
+            'albanileria' => '🔨 Albañilería',
+            'herreria' => '⚙️ Herrería',
+            'electricidad' => '⚡ Electricidad',
+            'plomeria' => '💧 Plomería',
+            'pintura' => '🖌️ Pintura',
+        ];
+        
+        return [
+            'id' => $c->id,
+            'codigo' => $c->codigo,
+            'nombre' => $c->nombre,
+            'descripcion' => $c->descripcion,
+            'especialidad' => $c->especialidad,
+            'especialidad_nombre' => $especialidades[$c->especialidad] ?? $c->especialidad,
+            'proyecto_id' => $c->proyecto_id,
+            'proyecto' => $c->proyecto ? [
+                'id' => $c->proyecto->id,
+                'nombre' => $c->proyecto->nombre,
+                'codigo' => $c->proyecto->codigo,
+            ] : null,
+            'encargado_id' => $c->encargado_id,
+            'nombre_encargado' => $c->encargado 
+                ? trim(($c->encargado->nombre ?? '') . ' ' . ($c->encargado->apellido_paterno ?? '') . ' ' . ($c->encargado->apellido_materno ?? ''))
+                : null,
+            'integrantes' => array_map('intval', $integrantes),
+            'total_integrantes' => count($integrantes),
+            'estatus' => $c->estatus,
+            'estatus_nombre' => $c->estatus === 'activo' ? 'Activo' : 'Inactivo',
+            'observaciones' => $c->observaciones,
+            'created_at' => $c->created_at,
+        ];
+    }
 
     /**
      * Calcula las estadísticas para los 4 cuadros
@@ -913,11 +1224,9 @@ class AsistenciaCuadrillaController extends Controller
         try {
             $query = Asistencia::query();
             
-            // Aplicar fecha
             $fecha = $request->fecha ?? now()->format('Y-m-d');
             $query->byFecha($fecha);
             
-            // Aplicar filtro por proyecto
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
                 if (is_array($proyectos) && count($proyectos) > 0) {
@@ -947,7 +1256,7 @@ class AsistenciaCuadrillaController extends Controller
             $porcentaje = $total > 0 ? round(($presentes / $total) * 100) : 0;
 
             return [
-                'total_personal' => $total + $ausentes,
+                'total_personal' => $total,
                 'presentes' => $presentes,
                 'ausentes' => $ausentes,
                 'retardos' => $retardos,
@@ -971,4 +1280,26 @@ class AsistenciaCuadrillaController extends Controller
             ];
         }
     }
+
+    /**
+ * Sincroniza la secuencia de la tabla cuadrillas (para PostgreSQL)
+ */
+private function sincronizarSecuenciaCuadrillas()
+{
+    try {
+        // Solo para PostgreSQL
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("
+                SELECT setval(
+                    pg_get_serial_sequence('cuadrillas', 'id'),
+                    COALESCE((SELECT MAX(id) FROM cuadrillas), 0) + 1,
+                    false
+                )
+            ");
+            Log::info('Secuencia de cuadrillas sincronizada');
+        }
+    } catch (\Exception $e) {
+        Log::warning('No se pudo sincronizar la secuencia: ' . $e->getMessage());
+    }
+}
 }

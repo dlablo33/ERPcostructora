@@ -17,8 +17,8 @@
                         <label style="display: block; font-size: 11px; font-weight: 600; color: #6c757d;">Tipo</label>
                         <select id="filtroTipo" style="width: 100%; padding: 6px; border: 1px solid #ced4da; border-radius: 4px;">
                             <option value="">Todos</option>
-                            <option value="herramienta"> Herramienta</option>
-                            <option value="maquinaria"> Maquinaria</option>
+                            <option value="herramienta">Herramienta</option>
+                            <option value="maquinaria">Maquinaria</option>
                             <option value="vehiculo">Vehículo</option>
                         </select>
                     </div>
@@ -53,9 +53,6 @@
                     <button id="btnNuevoActivo" onclick="abrirModalActivo()" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 20px; cursor: pointer; color: var(--color-primary);">
                         <i class="fas fa-plus"></i> Nuevo Activo
                     </button>
-                    <button id="btnExportar" style="background-color: white; border: 1px solid var(--color-primary); border-radius: 4px; padding: 8px 20px; cursor: pointer; color: var(--color-primary);">
-                        <i class="fas fa-file-excel"></i> Exportar
-                    </button>
                 </div>
 
                 <!-- Tabla -->
@@ -77,7 +74,7 @@
                             </tr>
                         </thead>
                         <tbody id="tablaBody">
-                            <td><td colspan="11" style="text-align: center;">Cargando...<\/td></tr>
+                            <tr><td colspan="11" style="text-align: center;">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -116,14 +113,14 @@
                     <label style="font-size: 13px; font-weight: 600;">Tipo <span style="color: red;">*</span></label>
                     <select id="activoTipo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" onchange="mostrarCamposPorTipo()">
                         <option value="">Seleccionar</option>
-                        <option value="herramienta"> Herramienta</option>
-                        <option value="maquinaria"> Maquinaria</option>
+                        <option value="herramienta">Herramienta</option>
+                        <option value="maquinaria">Maquinaria</option>
                         <option value="vehiculo">Vehículo</option>
                     </select>
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Código</label>
-                    <input type="text" id="activoCodigo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" readonly placeholder="Autogenerado">
+                    <input type="text" id="activoCodigo" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px; background-color: #e9ecef;" readonly placeholder="Autogenerado">
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Nombre <span style="color: red;">*</span></label>
@@ -187,7 +184,14 @@
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Cuenta Contable</label>
-                    <input type="text" id="activoCuentaContable" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" placeholder="1150-03-001">
+                    <select id="activoCuentaContable" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;">
+                        <option value="">Seleccionar cuenta contable</option>
+                        @isset($cuentasContables)
+                            @foreach($cuentasContables as $codigoCuenta => $nombreCuenta)
+                                <option value="{{ $codigoCuenta }}">{{ $nombreCuenta }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
                 </div>
                 <div>
                     <label style="font-size: 13px; font-weight: 600;">Proveedor</label>
@@ -275,7 +279,7 @@
 
             <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
                 <button onclick="cerrarModalActivo()" style="padding: 8px 20px; border: 1px solid #ced4da; border-radius: 4px; background: white; cursor: pointer;">Cancelar</button>
-                <button onclick="guardarActivo()" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
+                <button onclick="guardarActivo()" id="btnGuardarActivo" style="padding: 8px 20px; border: none; border-radius: 4px; background: var(--color-primary); color: white; cursor: pointer;">Guardar</button>
             </div>
         </div>
     </div>
@@ -349,7 +353,7 @@ function cargarActivos() {
 function renderizarTabla(data) {
     const tbody = document.getElementById('tablaBody');
     if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align: center;">No hay activos registrados<\/td><\/tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align: center;">No hay activos registrados</td></tr>';
         return;
     }
     
@@ -403,7 +407,6 @@ function configurarEventos() {
     document.getElementById('btnSiguiente')?.addEventListener('click', () => { currentPage++; cargarActivos(); });
     document.getElementById('btnUltima')?.addEventListener('click', () => { currentPage = totalPages; cargarActivos(); });
     document.getElementById('porPagina')?.addEventListener('change', (e) => { perPage = parseInt(e.target.value); currentPage = 1; cargarActivos(); });
-    document.getElementById('btnExportar')?.addEventListener('click', () => alert('Exportación en desarrollo'));
 }
 
 function mostrarCamposPorTipo() {
@@ -421,6 +424,19 @@ function mostrarCamposPorTipo() {
 function generarCodigo(prefijo) {
     const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     return `${prefijo}-${random}`;
+}
+
+// Helper: agrega una opción al select si el valor no existe (para valores históricos)
+function setCuentaContableSelect(valor) {
+    const sel = document.getElementById('activoCuentaContable');
+    const valorStr = (valor || '').toString();
+    if (valorStr && !Array.from(sel.options).some(o => o.value === valorStr)) {
+        const opt = document.createElement('option');
+        opt.value = valorStr;
+        opt.textContent = valorStr + ' (histórico)';
+        sel.appendChild(opt);
+    }
+    sel.value = valorStr;
 }
 
 function abrirModalActivo() {
@@ -479,7 +495,7 @@ function editarActivo(id) {
                 document.getElementById('activoEstadoGeneral').value = a.estado_general || 'Bueno';
                 document.getElementById('activoEstatus').value = a.estatus || 'Disponible';
                 document.getElementById('activoProyecto').value = a.proyecto_asignado_id || '';
-                document.getElementById('activoCuentaContable').value = a.cuenta_contable || '';
+                setCuentaContableSelect(a.cuenta_contable);
                 document.getElementById('activoProveedor').value = a.proveedor_id || '';
                 document.getElementById('activoFactura').value = a.factura || '';
                 document.getElementById('activoFechaAdquisicion').value = a.fecha_adquisicion || '';
@@ -528,7 +544,8 @@ function editarActivo(id) {
                 document.getElementById('modalActivo').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             }
-        });
+        })
+        .catch(error => console.error('Error al cargar activo:', error));
 }
 
 function guardarActivo() {
@@ -539,6 +556,11 @@ function guardarActivo() {
         alert('Complete tipo y nombre');
         return;
     }
+    
+    const btnGuardar = document.getElementById('btnGuardarActivo');
+    const textoOriginal = btnGuardar.textContent;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
     
     const data = {
         nombre: nombre,
@@ -563,7 +585,6 @@ function guardarActivo() {
         observaciones: document.getElementById('activoObservaciones').value
     };
     
-    // Herramienta
     if (tipo === 'herramienta') {
         data.tipo_herramienta = document.getElementById('herramientaTipo').value;
         data.voltaje = document.getElementById('herramientaVoltaje').value;
@@ -572,7 +593,6 @@ function guardarActivo() {
         data.numero_inventario = document.getElementById('herramientaNumInventario').value;
     }
     
-    // Maquinaria
     if (tipo === 'maquinaria') {
         data.horometro_actual = document.getElementById('maquinariaHorometro').value;
         data.horometro_compra = document.getElementById('maquinariaHorometroCompra').value;
@@ -584,7 +604,6 @@ function guardarActivo() {
         data.licencia_requerida = document.getElementById('maquinariaLicencia').value;
     }
     
-    // Vehículo
     if (tipo === 'vehiculo') {
         data.placas = document.getElementById('vehiculoPlacas').value;
         data.numero_economico = document.getElementById('vehiculoNumEconomico').value;
@@ -610,19 +629,32 @@ function guardarActivo() {
         method: method,
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
         },
         body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(res => {
-        if (res.success) {
-            alert('✅ ' + res.message);
+    .then(res => res.json().then(json => ({ status: res.status, body: json })))
+    .then(({ status, body }) => {
+        if (body.success) {
+            alert('✅ ' + body.message);
             cerrarModalActivo();
             cargarActivos();
         } else {
-            alert('❌ Error: ' + res.message);
+            let mensaje = body.message || 'Error desconocido';
+            if (body.errors) {
+                mensaje = Object.values(body.errors).flat().join('\n');
+            }
+            alert('❌ Error: ' + mensaje);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar el activo');
+    })
+    .finally(() => {
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
     });
 }
 
@@ -660,7 +692,10 @@ function eliminarActivo(id, codigo) {
     if (confirm(`¿Eliminar ${codigo}?`)) {
         fetch(`/almacen/api/activos/${id}`, {
             method: 'DELETE',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+            headers: { 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {
@@ -670,6 +705,10 @@ function eliminarActivo(id, codigo) {
             } else {
                 alert('❌ Error: ' + res.message);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el activo');
         });
     }
 }
@@ -685,7 +724,7 @@ function cerrarModalDetalle() {
 }
 
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { cerrarModalActivo(); cerrarModalDetalle(); } });
-document.getElementById('modalActivo')?.addEventListener('click', (e) => { if (e.target === this) cerrarModalActivo(); });
-document.getElementById('modalDetalle')?.addEventListener('click', (e) => { if (e.target === this) cerrarModalDetalle(); });
+document.getElementById('modalActivo')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) cerrarModalActivo(); });
+document.getElementById('modalDetalle')?.addEventListener('click', (e) => { if (e.target === e.currentTarget) cerrarModalDetalle(); });
 </script>
 @endsection

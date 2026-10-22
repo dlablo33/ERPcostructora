@@ -22,7 +22,7 @@
                             <!-- Aquí se mostrarán las columnas agrupadas -->
                         </div>
                     </div>
-                    
+
                     <!-- Grupo de botones derecho -->
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <!-- Date Inicio -->
@@ -44,7 +44,7 @@
 
                         <!-- Botón Exportar Excel -->
                         <div>
-                            <button id="btnExcel" 
+                            <button id="btnExcel"
                                     style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Exportar todo">
                                 <i class="fas fa-file-excel" style="color: #2378e1;"></i>
@@ -53,7 +53,7 @@
 
                         <!-- Botón Seleccionar Columnas -->
                         <div>
-                            <button id="btnColumnas" 
+                            <button id="btnColumnas"
                                     style="background-color: white; border: 1px solid #2378e1; border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; color: #2378e1;"
                                     title="Seleccionar columnas">
                                 <i class="fas fa-columns" style="color: #2378e1;"></i>
@@ -131,7 +131,7 @@
                         </tfoot>
                     </table>
                 </div>
-                
+
                 <!-- Paginación y botón Crear filtro -->
                 <div id="paginacionContainer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; gap: 5px; background: transparent !important; background-color: transparent !important; border: none !important; box-shadow: none !important;">
                     <!-- Botón Crear filtro (izquierda) - SIN FONDO -->
@@ -139,7 +139,7 @@
                         <i class="fas fa-filter" style="font-size: 16px; color: #2378e1;"></i>
                         <span style="color: #2378e1;">Crear filtro</span>
                     </button>
-                    
+
                     <!-- Controles de paginación (derecha) - AZUL Y SIN FONDO -->
                     <div style="display: flex; align-items: center; gap: 5px; background: transparent; background-color: transparent;">
                         <button style="padding: 5px 10px; border: none; background: none; border-radius: 4px; cursor: pointer; color: #2378e1; font-size: 14px;" title="Primera página" id="btnPrimera">
@@ -165,16 +165,116 @@
     </section>
 </div>
 
+<!-- ============================================================ -->
+<!-- MODAL: CREAR / EDITAR PRESUPUESTO                             -->
+<!-- ============================================================ -->
+<div id="modalFormulario" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 8px; width: 100%; max-width: 500px; margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <div style="background: #2378e1; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 18px;" id="modalFormTitulo">Agregar Presupuesto</h3>
+            <button type="button" id="btnCerrarModalForm" style="background: transparent; border: none; color: white; font-size: 22px; cursor: pointer;">&times;</button>
+        </div>
+        <form id="formPresupuesto" style="padding: 20px;">
+            <input type="hidden" id="presupuestoId" value="">
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600; font-size: 14px;">Mes <span style="color: red;">*</span></label>
+                <select id="formMes" required style="width: 100%; padding: 8px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                    <option value="">Seleccione un mes</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600; font-size: 14px;">Año <span style="color: red;">*</span></label>
+                <input type="number" id="formAnio" required min="2000" max="2100" style="width: 100%; padding: 8px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600; font-size: 14px;">Monto <span style="color: red;">*</span></label>
+                <input type="number" id="formMonto" required min="0" step="0.01" style="width: 100%; padding: 8px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #333; font-weight: 600; font-size: 14px;">Observaciones</label>
+                <textarea id="formObservaciones" rows="3" maxlength="500" style="width: 100%; padding: 8px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; resize: vertical;"></textarea>
+            </div>
+
+            <div id="formError" style="display: none; background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 13px;"></div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" id="btnCancelarForm" style="padding: 8px 18px; border: 1px solid #ced4da; background: white; border-radius: 4px; cursor: pointer; color: #333;">Cancelar</button>
+                <button type="submit" id="btnGuardarForm" style="padding: 8px 18px; border: none; background: #2378e1; color: white; border-radius: 4px; cursor: pointer;">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: VER DETALLE                                            -->
+<!-- ============================================================ -->
+<div id="modalVer" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 8px; width: 100%; max-width: 500px; margin: 20px;">
+        <div style="background: #2378e1; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 18px;">Detalle del Presupuesto</h3>
+            <button type="button" id="btnCerrarModalVer" style="background: transparent; border: none; color: white; font-size: 22px; cursor: pointer;">&times;</button>
+        </div>
+        <div style="padding: 20px; font-size: 14px;">
+            <div style="margin-bottom: 12px;"><strong style="color: #2378e1;">Folio:</strong> <span id="verId"></span></div>
+            <div style="margin-bottom: 12px;"><strong style="color: #2378e1;">Mes:</strong> <span id="verMes"></span></div>
+            <div style="margin-bottom: 12px;"><strong style="color: #2378e1;">Año:</strong> <span id="verAnio"></span></div>
+            <div style="margin-bottom: 12px;"><strong style="color: #2378e1;">Monto:</strong> <span id="verMonto"></span></div>
+            <div style="margin-bottom: 12px;"><strong style="color: #2378e1;">Observaciones:</strong> <span id="verObservaciones"></span></div>
+        </div>
+        <div style="padding: 0 20px 20px; text-align: right;">
+            <button type="button" id="btnCerrarModalVer2" style="padding: 8px 18px; border: none; background: #2378e1; color: white; border-radius: 4px; cursor: pointer;">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: COLUMNAS                                               -->
+<!-- ============================================================ -->
+<div id="modalColumnas" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 8px; width: 100%; max-width: 400px; margin: 20px;">
+        <div style="background: #2378e1; color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 18px;">Seleccionar Columnas</h3>
+            <button type="button" id="btnCerrarModalColumnas" style="background: transparent; border: none; color: white; font-size: 22px; cursor: pointer;">&times;</button>
+        </div>
+        <div style="padding: 20px;" id="listaColumnas">
+            <label style="display: block; margin-bottom: 10px; cursor: pointer;"><input type="checkbox" class="chk-columna" data-columna="folio" checked> Folio</label>
+            <label style="display: block; margin-bottom: 10px; cursor: pointer;"><input type="checkbox" class="chk-columna" data-columna="mes" checked> Mes</label>
+            <label style="display: block; margin-bottom: 10px; cursor: pointer;"><input type="checkbox" class="chk-columna" data-columna="anio" checked> Año</label>
+            <label style="display: block; margin-bottom: 10px; cursor: pointer;"><input type="checkbox" class="chk-columna" data-columna="monto" checked> Monto</label>
+            <label style="display: block; margin-bottom: 10px; cursor: pointer;"><input type="checkbox" class="chk-columna" data-columna="observaciones" checked> Observaciones</label>
+        </div>
+        <div style="padding: 0 20px 20px; text-align: right;">
+            <button type="button" id="btnAplicarColumnas" style="padding: 8px 18px; border: none; background: #2378e1; color: white; border-radius: 4px; cursor: pointer;">Aplicar</button>
+        </div>
+    </div>
+</div>
+
 <style>
     .semaforo .card-header {
         background-color: #f4f6f9;
         border-bottom: 2px solid #2378e1;
     }
-    
+
     .semaforo .card-header h2 {
         color: #2378e1 !important;
     }
-    
+
     /* Estilos de tabla */
     .table th {
         white-space: nowrap;
@@ -184,27 +284,27 @@
         font-weight: 600;
         padding: 10px 4px;
     }
-    
+
     .table td {
         white-space: nowrap;
         font-size: 12px;
         padding: 10px 4px;
         color: #000000 !important;
     }
-    
+
     /* Estilo para las filas alternadas */
     #tablaBody tr:nth-child(odd) {
         background-color: #ffffff;
     }
-    
+
     #tablaBody tr:nth-child(even) {
         background-color: #f2f2f2;
     }
-    
+
     #tablaBody tr:hover {
         background-color: #e0e0e0;
     }
-    
+
     /* Estilo para los iconos de acción */
     #tablaBody td i {
         transition: transform 0.2s;
@@ -212,22 +312,22 @@
         color: #083CAE;
         cursor: pointer;
     }
-    
+
     #tablaBody td i:hover {
         transform: scale(1.2);
     }
-    
+
     /* Estilo para el filtro en encabezados */
     .table th i {
         opacity: 0.7;
         transition: opacity 0.2s;
         color: white;
     }
-    
+
     .table th i:hover {
         opacity: 1;
     }
-    
+
     /* Columna de acciones fija */
     #tablaBody td:last-child {
         background-color: white;
@@ -236,7 +336,7 @@
         box-shadow: -2px 0 5px rgba(0,0,0,0.1);
         z-index: 15;
     }
-    
+
     /* Estilo para el pie de tabla (totales) */
     tfoot td {
         font-weight: bold;
@@ -244,26 +344,26 @@
         border-top: 2px solid #2378e1;
         color: #000000 !important;
     }
-    
+
     /* Estilos para agrupación de columnas */
     [draggable="true"] {
         cursor: grab;
     }
-    
+
     [draggable="true"]:active {
         cursor: grabbing;
         opacity: 0.7;
     }
-    
+
     #grupoAgrupacion {
         position: relative;
     }
-    
+
     #grupoColumnas {
         display: inline-flex;
         align-items: center;
     }
-    
+
     .columna-agrupada {
         display: inline-flex;
         align-items: center;
@@ -275,7 +375,7 @@
         margin: 2px;
         border: 1px solid #2378e1;
     }
-    
+
     .columna-agrupada .remover {
         margin-left: 6px;
         cursor: pointer;
@@ -283,49 +383,49 @@
         font-weight: bold;
         color: #2378e1;
     }
-    
+
     .columna-agrupada .remover:hover {
         opacity: 0.7;
     }
-    
+
     /* Estilo para filas de grupo */
     .fila-grupo {
         background-color: #f0f7ff !important;
         font-weight: 500;
         cursor: pointer;
     }
-    
+
     .fila-grupo:hover {
         background-color: #e1f0ff !important;
     }
-    
+
     .fila-grupo td:first-child i {
         transition: transform 0.2s;
         margin-right: 8px;
     }
-    
+
     .fila-grupo:not(.expandido) td:first-child i {
         transform: rotate(-90deg);
     }
-    
+
     .fila-detalle {
         background-color: #ffffff;
     }
-    
+
     .fila-detalle td {
         border-top: none !important;
     }
-    
+
     .fila-detalle td:first-child {
         padding-left: 30px !important;
     }
-    
+
     /* Estilo cuando se está arrastrando sobre el área de grupo */
     .drag-over #grupoColumnas {
         background-color: rgba(35, 120, 225, 0.1);
         border-radius: 4px;
     }
-    
+
     /* ESTILOS CORREGIDOS PARA PAGINACIÓN */
     #paginacionContainer {
         background: transparent !important;
@@ -333,35 +433,36 @@
         border: none !important;
         box-shadow: none !important;
     }
-    
-    /* Todos los elementos dentro del contenedor también sin fondo */
+
     #paginacionContainer * {
         background: transparent !important;
         background-color: transparent !important;
     }
-    
-    /* Excepción para los spans que deben tener fondo azul */
+
     #paginacionContainer span[style*="background-color"] {
         background-color: #2378e1 !important;
     }
-    
-    /* Estilos para los botones de paginación */
+
     #paginacionContainer button {
         background: transparent !important;
         border: none !important;
         color: #2378e1 !important;
         cursor: pointer;
     }
-    
+
     #paginacionContainer button:hover {
         opacity: 0.7;
     }
-    
+
+    #paginacionContainer button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
     #paginacionContainer button i {
         color: #2378e1 !important;
     }
-    
-    /* Estilo específico para btnCrearFiltro */
+
     #btnCrearFiltro,
     #btnCrearFiltro:hover,
     #btnCrearFiltro:focus,
@@ -372,38 +473,43 @@
         box-shadow: none !important;
         outline: none !important;
     }
-    
+
     #btnCrearFiltro i,
     #btnCrearFiltro span {
         color: #2378e1 !important;
     }
-    
+
     #paginacionInfo {
         color: #2378e1 !important;
     }
-    
+
+    /* Columnas ocultas */
+    .col-oculta {
+        display: none !important;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
         div[style*="justify-content: flex-end"] {
             justify-content: center !important;
         }
-        
+
         input[type="date"], select {
             width: 100% !important;
         }
-        
+
         button {
             width: 100%;
         }
-        
+
         div[style*="position: relative"] {
             width: 100%;
         }
-        
+
         input#buscador {
             width: 100% !important;
         }
-        
+
         #paginacionContainer {
             flex-direction: column;
             align-items: flex-start;
@@ -414,589 +520,533 @@
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('DOM completamente cargado - Presupuesto Mensual');
-        
-        // Variables para agrupación
-        let columnasAgrupadas = [];
-        let expandedGroups = new Set();
-        let datosOriginales = [];
-        let paginaActual = 1;
-        const registrosPorPagina = 8;
-        
-        // Datos de ejemplo para Presupuesto Mensual (12 meses)
-        const datosPresupuestoMensual = [
-            {
-                presupuesto_mensual_id: 1,
-                meses: 'Enero',
-                anio: 2026,
-                monto: 250000.00,
-                observaciones: 'Presupuesto inicial del año'
-            },
-            {
-                presupuesto_mensual_id: 2,
-                meses: 'Febrero',
-                anio: 2026,
-                monto: 245000.00,
-                observaciones: 'Ajuste por estacionalidad'
-            },
-            {
-                presupuesto_mensual_id: 3,
-                meses: 'Marzo',
-                anio: 2026,
-                monto: 260000.00,
-                observaciones: 'Incremento por campaña'
-            },
-            {
-                presupuesto_mensual_id: 4,
-                meses: 'Abril',
-                anio: 2026,
-                monto: 255000.00,
-                observaciones: 'Presupuesto regular'
-            },
-            {
-                presupuesto_mensual_id: 5,
-                meses: 'Mayo',
-                anio: 2026,
-                monto: 270000.00,
-                observaciones: 'Gastos de mantenimiento'
-            },
-            {
-                presupuesto_mensual_id: 6,
-                meses: 'Junio',
-                anio: 2026,
-                monto: 265000.00,
-                observaciones: 'Presupuesto semestral'
-            },
-            {
-                presupuesto_mensual_id: 7,
-                meses: 'Julio',
-                anio: 2026,
-                monto: 280000.00,
-                observaciones: 'Temporada alta'
-            },
-            {
-                presupuesto_mensual_id: 8,
-                meses: 'Agosto',
-                anio: 2026,
-                monto: 275000.00,
-                observaciones: 'Mantenimiento programado'
-            },
-            {
-                presupuesto_mensual_id: 9,
-                meses: 'Septiembre',
-                anio: 2026,
-                monto: 260000.00,
-                observaciones: 'Regreso a clases'
-            },
-            {
-                presupuesto_mensual_id: 10,
-                meses: 'Octubre',
-                anio: 2026,
-                monto: 255000.00,
-                observaciones: 'Preparación fin de año'
-            },
-            {
-                presupuesto_mensual_id: 11,
-                meses: 'Noviembre',
-                anio: 2026,
-                monto: 265000.00,
-                observaciones: 'Campaña de ventas'
-            },
-            {
-                presupuesto_mensual_id: 12,
-                meses: 'Diciembre',
-                anio: 2026,
-                monto: 290000.00,
-                observaciones: 'Cierre de año'
-            }
-        ];
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
-        datosOriginales = [...datosPresupuestoMensual];
-        let datosFiltrados = [...datosPresupuestoMensual];
-        
-        // Elementos del DOM
-        const fechaInicio = document.getElementById('fechaInicio');
-        const fechaFin = document.getElementById('fechaFin');
-        const btnCrearFiltro = document.getElementById('btnCrearFiltro');
-        const btnAgregar = document.getElementById('btnAgregar');
-        const btnExcel = document.getElementById('btnExcel');
-        const btnColumnas = document.getElementById('btnColumnas');
-        const buscador = document.getElementById('buscador');
-        const tablaBody = document.getElementById('tablaBody');
-        const sinDatosMensaje = document.getElementById('sinDatosMensaje');
-        const tablaContainer = document.getElementById('tablaContainer');
-        const tablaFoot = document.getElementById('tablaFoot');
-        const totalRegistros = document.getElementById('totalRegistros');
-        const sumMonto = document.getElementById('sumMonto');
-        const paginacionInfo = document.getElementById('paginacionInfo');
-        const textoAgrupar = document.getElementById('textoAgrupar');
-        
-        // Elementos de paginación
-        const btnPrimera = document.getElementById('btnPrimera');
-        const btnAnterior = document.getElementById('btnAnterior');
-        const btnSiguiente = document.getElementById('btnSiguiente');
-        const btnUltima = document.getElementById('btnUltima');
-        const paginaActualSpan = document.getElementById('paginaActual');
-        
-        // Función para formatear moneda
-        function formatCurrency(amount) {
-            return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
+
+    console.log('Presupuesto Mensual - inicializado');
+
+    // ================= CONFIG =================
+    const RUTAS = {
+        listar: "{{ url('presupuesto-mensual/listar') }}",
+        base:   "{{ url('presupuesto-mensual') }}",
+        excel:  "{{ url('presupuesto-mensual/exportar/excel') }}",
+    };
+    const CSRF = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const MESES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+    // ================= ESTADO =================
+    const state = {
+        page: 1,
+        perPage: 8,
+        buscar: '',
+        fechaInicio: document.getElementById('fechaInicio').value,
+        fechaFin: document.getElementById('fechaFin').value,
+        columnasAgrupadas: [],
+        expandedGroups: new Set(),
+        columnasVisibles: ['folio','mes','anio','monto','observaciones'],
+        datos: [],
+        total: 0,
+        lastPage: 1,
+        sumaMonto: 0,
+    };
+
+    // ================= HELPERS =================
+    const $ = (id) => document.getElementById(id);
+    const money = (n) => '$' + Number(n || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+    function toggleModal(id, show) {
+        const el = $(id);
+        if (el) el.style.display = show ? 'flex' : 'none';
+    }
+
+    async function apiFetch(url, options = {}) {
+        const opts = {
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': CSRF,
+                ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+                ...(options.headers || {}),
+            },
+            ...options,
+        };
+        const res = await fetch(url, opts);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.message || ('Error HTTP ' + res.status));
+        return data;
+    }
+
+    // ================= LISTAR =================
+    async function cargarDatos() {
+        try {
+            const params = new URLSearchParams({
+                page: state.page,
+                por_pagina: state.perPage,
+                fecha_inicio: state.fechaInicio,
+                fecha_fin: state.fechaFin,
+            });
+            if (state.buscar) params.append('buscar', state.buscar);
+
+            const resp = await apiFetch(RUTAS.listar + '?' + params.toString());
+            state.datos = resp.data || [];
+            state.total = resp.total || 0;
+            state.lastPage = resp.last_page || 1;
+            state.sumaMonto = resp.suma_monto || 0;
+
+            renderTabla();
+            renderPaginacion(resp);
+        } catch (e) {
+            console.error('Error cargando datos:', e);
+            state.datos = [];
+            renderTabla();
+            alert('No se pudieron cargar los datos: ' + e.message);
         }
-        
-        // Función para generar un ID único para el grupo
-        function generarGrupoId(item, columnas) {
-            return columnas.map(col => {
-                switch(col) {
-                    case 'folio': return item.presupuesto_mensual_id ? item.presupuesto_mensual_id.toString() : 'Sin folio';
-                    case 'mes': return item.meses || 'Sin mes';
-                    case 'anio': return item.anio ? item.anio.toString() : 'Sin año';
-                    case 'monto': return item.monto ? item.monto.toString() : '0';
-                    case 'observaciones': return item.observaciones || 'Sin observaciones';
+    }
+
+    // ================= RENDER TABLA =================
+    function renderTabla() {
+        const tbody = $('tablaBody');
+        tbody.innerHTML = '';
+
+        if (!state.datos.length) {
+            $('sinDatosMensaje').style.display = 'block';
+            $('tablaContainer').style.display = 'none';
+            $('tablaFoot').style.display = 'none';
+            $('totalRegistros').textContent = '0';
+            $('sumMonto').textContent = money(0);
+            return;
+        }
+        $('sinDatosMensaje').style.display = 'none';
+        $('tablaContainer').style.display = 'block';
+
+        if (state.columnasAgrupadas.length > 0) {
+            renderAgrupado(tbody);
+            $('tablaFoot').style.display = 'none';
+        } else {
+            renderPlano(tbody);
+            $('tablaFoot').style.display = 'table-footer-group';
+            $('totalRegistros').textContent = state.total;
+            $('sumMonto').textContent = money(state.sumaMonto);
+        }
+        aplicarColumnasVisibles();
+    }
+
+    function renderPlano(tbody) {
+        state.datos.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-col="folio" style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.presupuesto_mensual_id ?? '-'}</td>
+                <td data-col="mes" style="border: 1px solid #dee2e6; padding: 10px 4px;">${MESES[item.mes] || '-'}</td>
+                <td data-col="anio" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align:center;">${item.anio ?? '-'}</td>
+                <td data-col="monto" style="border: 1px solid #dee2e6; padding: 10px 4px; text-align:right;">${money(item.monto)}</td>
+                <td data-col="observaciones" style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.observaciones ?? '-'}</td>
+                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <i class="fas fa-edit" data-action="edit" data-id="${item.presupuesto_mensual_id}" title="Editar"></i>
+                        <i class="fas fa-trash-alt" data-action="delete" data-id="${item.presupuesto_mensual_id}" title="Eliminar"></i>
+                        <i class="fas fa-eye" data-action="view" data-id="${item.presupuesto_mensual_id}" title="Ver detalles"></i>
+                        <i class="fas fa-file-pdf" data-action="pdf" data-id="${item.presupuesto_mensual_id}" title="PDF"></i>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderAgrupado(tbody) {
+        const grupos = new Map();
+        state.datos.forEach(item => {
+            const key = state.columnasAgrupadas.map(c => {
+                switch (c) {
+                    case 'folio': return item.presupuesto_mensual_id;
+                    case 'mes': return MESES[item.mes];
+                    case 'anio': return item.anio;
+                    case 'monto': return item.monto;
+                    case 'observaciones': return item.observaciones || '';
                     default: return '';
                 }
             }).join('||');
-        }
-        
-        // Función para agrupar datos por columnas seleccionadas
-        function agruparDatos(datos, columnas) {
-            if (columnas.length === 0) return { grupos: [], items: datos };
-            
-            const gruposMap = new Map();
-            
-            datos.forEach(item => {
-                const grupoId = generarGrupoId(item, columnas);
-                
-                if (!gruposMap.has(grupoId)) {
-                    // Crear un nuevo grupo
-                    const valorGrupo = columnas.map(col => {
-                        switch(col) {
-                            case 'folio': return item.presupuesto_mensual_id || 'Sin folio';
-                            case 'mes': return item.meses || 'Sin mes';
-                            case 'anio': return item.anio || 'Sin año';
-                            case 'monto': return item.monto || 0;
-                            case 'observaciones': return item.observaciones || 'Sin observaciones';
-                            default: return '';
-                        }
-                    }).join(' - ');
-                    
-                    gruposMap.set(grupoId, {
-                        id: grupoId,
-                        valor: valorGrupo,
-                        items: [item],
-                        totalMonto: item.monto || 0
-                    });
-                } else {
-                    const grupo = gruposMap.get(grupoId);
-                    grupo.items.push(item);
-                    grupo.totalMonto += item.monto || 0;
-                }
-            });
-            
-            return {
-                grupos: Array.from(gruposMap.values()),
-                items: []
-            };
-        }
-        
-        // Función para obtener datos de la página actual
-        function getCurrentPageData(datos) {
-            const start = (paginaActual - 1) * registrosPorPagina;
-            const end = start + registrosPorPagina;
-            return datos.slice(start, end);
-        }
-        
-        // Función para actualizar la paginación
-        function actualizarPaginacion(total) {
-            const totalPaginas = Math.ceil(total / registrosPorPagina);
-            paginaActualSpan.textContent = paginaActual;
-            
-            // Mostrar/ocultar botones de página según sea necesario
-            document.querySelectorAll('.pagina-btn').forEach(btn => {
-                const pagina = parseInt(btn.dataset.pagina);
-                if (pagina <= totalPaginas) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-            
-            const inicio = total > 0 ? (paginaActual - 1) * registrosPorPagina + 1 : 0;
-            const fin = Math.min(paginaActual * registrosPorPagina, total);
-            paginacionInfo.textContent = `Mostrando ${inicio}-${fin} de ${total} registros`;
-        }
-        
-        // Función para calcular totales
-        function calcularTotales(datos) {
-            let sumaMonto = 0;
-            
-            datos.forEach(item => {
-                sumaMonto += item.monto || 0;
-            });
-            
-            totalRegistros.textContent = datos.length;
-            sumMonto.textContent = formatCurrency(sumaMonto);
-        }
-        
-        // Función para cargar datos en la tabla
-        function cargarTabla(datos) {
-            if (!tablaBody) return;
-            
-            // Ocultar texto de agrupar si hay columnas agrupadas
-            if (textoAgrupar) {
-                textoAgrupar.style.display = columnasAgrupadas.length > 0 ? 'none' : 'inline';
-            }
-            
-            // Aplicar agrupación si hay columnas seleccionadas
-            const { grupos } = agruparDatos(datos, columnasAgrupadas);
-            const hayGrupos = grupos.length > 0 && columnasAgrupadas.length > 0;
-            
-            // Limpiar tabla
-            tablaBody.innerHTML = '';
-            
-            if (datos.length === 0) {
-                sinDatosMensaje.style.display = 'block';
-                tablaContainer.style.display = 'none';
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                totalRegistros.textContent = '0';
-                sumMonto.textContent = formatCurrency(0);
-                
-                paginacionInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                return;
-            }
-            
-            sinDatosMensaje.style.display = 'none';
-            tablaContainer.style.display = 'block';
-            
-            if (hayGrupos) {
-                // Ocultar pie de tabla cuando hay grupos
-                if (tablaFoot) tablaFoot.style.display = 'none';
-                
-                // Mostrar grupos
-                grupos.forEach(grupo => {
-                    const grupoRow = document.createElement('tr');
-                    grupoRow.className = 'fila-grupo';
-                    grupoRow.dataset.grupoId = grupo.id;
-                    
-                    if (expandedGroups.has(grupo.id)) {
-                        grupoRow.classList.add('expandido');
+
+            if (!grupos.has(key)) {
+                const valor = state.columnasAgrupadas.map(c => {
+                    switch (c) {
+                        case 'folio': return item.presupuesto_mensual_id;
+                        case 'mes': return MESES[item.mes];
+                        case 'anio': return item.anio;
+                        case 'monto': return money(item.monto);
+                        case 'observaciones': return item.observaciones || 'Sin observaciones';
+                        default: return '';
                     }
-                    
-                    // Determinar el mes predominante en el grupo (para el badge)
-                    const mesCounts = {};
-                    grupo.items.forEach(item => {
-                        mesCounts[item.meses] = (mesCounts[item.meses] || 0) + 1;
-                    });
-                    
-                    let mesPredominante = 'Enero';
-                    let maxCount = 0;
-                    for (const [mes, count] of Object.entries(mesCounts)) {
-                        if (count > maxCount) {
-                            maxCount = count;
-                            mesPredominante = mes;
-                        }
-                    }
-                    
-                    grupoRow.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;" colspan="6">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div>
-                                    <i class="fas fa-caret-right" style="margin-right: 8px; color: #2378e1;"></i>
-                                    <strong style="color: #2378e1;">${grupo.valor}</strong>
-                                    <span style="color: #6c757d; font-size: 11px; margin-left: 10px;">
-                                        (${grupo.items.length} registros - Total: ${formatCurrency(grupo.totalMonto)})
-                                    </span>
-                                </div>
-                                <span class="badge" style="background-color: #2378e1; color: white; margin-right: 10px;">${mesPredominante}</span>
+                }).join(' - ');
+                grupos.set(key, { id: key, valor, items: [], total: 0 });
+            }
+            const g = grupos.get(key);
+            g.items.push(item);
+            g.total += Number(item.monto) || 0;
+        });
+
+        grupos.forEach(g => {
+            const expandido = state.expandedGroups.has(g.id);
+            const tr = document.createElement('tr');
+            tr.className = 'fila-grupo' + (expandido ? ' expandido' : '');
+            tr.dataset.grupoId = g.id;
+            tr.innerHTML = `
+                <td colspan="6" style="border: 1px solid #dee2e6; padding: 10px 4px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <div>
+                            <i class="fas fa-caret-right" style="color:#2378e1;margin-right:8px;"></i>
+                            <strong style="color:#2378e1;">${g.valor}</strong>
+                            <span style="color:#6c757d;font-size:11px;margin-left:10px;">
+                                (${g.items.length} registros - Total: ${money(g.total)})
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+
+            if (expandido) {
+                g.items.forEach(item => {
+                    const dtr = document.createElement('tr');
+                    dtr.className = 'fila-detalle';
+                    dtr.innerHTML = `
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; padding-left:30px;">${item.presupuesto_mensual_id ?? '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${MESES[item.mes] || '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align:center;">${item.anio ?? '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align:right;">${money(item.monto)}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px;">${item.observaciones ?? '-'}</td>
+                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background:white;position:sticky;right:0;box-shadow:-2px 0 5px rgba(0,0,0,0.1);">
+                            <div style="display:flex;gap:8px;justify-content:center;">
+                                <i class="fas fa-edit" data-action="edit" data-id="${item.presupuesto_mensual_id}"></i>
+                                <i class="fas fa-trash-alt" data-action="delete" data-id="${item.presupuesto_mensual_id}"></i>
+                                <i class="fas fa-eye" data-action="view" data-id="${item.presupuesto_mensual_id}"></i>
+                                <i class="fas fa-file-pdf" data-action="pdf" data-id="${item.presupuesto_mensual_id}"></i>
                             </div>
                         </td>
                     `;
-                    
-                    tablaBody.appendChild(grupoRow);
-                    
-                    // Mostrar items del grupo si está expandido
-                    if (expandedGroups.has(grupo.id)) {
-                        grupo.items.forEach(item => {
-                            const detalleRow = document.createElement('tr');
-                            detalleRow.className = 'fila-detalle';
-                            
-                            detalleRow.innerHTML = `
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000; padding-left: 30px;">${item.presupuesto_mensual_id || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.meses || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.anio || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.observaciones || '-'}</td>
-                                <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                                    <div style="display: flex; gap: 8px; justify-content: center;">
-                                        <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.presupuesto_mensual_id}"></i>
-                                        <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.presupuesto_mensual_id}"></i>
-                                        <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.presupuesto_mensual_id}"></i>
-                                        <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.presupuesto_mensual_id}"></i>
-                                    </div>
-                                </td>
-                            `;
-                            
-                            tablaBody.appendChild(detalleRow);
-                        });
-                    }
-                });
-                
-                if (paginacionInfo) {
-                    const totalRegistros = datos.length;
-                    const mostrando = grupos.length;
-                    paginacionInfo.textContent = `Mostrando ${mostrando} grupos de ${totalRegistros} registros`;
-                }
-            } else {
-                // Mostrar todos los items sin agrupar (con paginación)
-                const pageData = getCurrentPageData(datos);
-                
-                pageData.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    
-                    row.innerHTML = `
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.presupuesto_mensual_id || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.meses || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: center; color: #000000;">${item.anio || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; text-align: right; color: #000000;">${item.monto ? formatCurrency(item.monto) : '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; color: #000000;">${item.observaciones || '-'}</td>
-                        <td style="border: 1px solid #dee2e6; padding: 10px 4px; background-color: white; position: sticky; right: 0; box-shadow: -2px 0 5px rgba(0,0,0,0.1);">
-                            <div style="display: flex; gap: 8px; justify-content: center;">
-                                <i class="fas fa-edit" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Editar" data-id="${item.presupuesto_mensual_id}"></i>
-                                <i class="fas fa-trash-alt" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Eliminar" data-id="${item.presupuesto_mensual_id}"></i>
-                                <i class="fas fa-eye" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="Ver detalles" data-id="${item.presupuesto_mensual_id}"></i>
-                                <i class="fas fa-file-pdf" style="color: #083CAE; cursor: pointer; font-size: 14px;" title="PDF" data-id="${item.presupuesto_mensual_id}"></i>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tablaBody.appendChild(row);
-                });
-                
-                // Mostrar pie de tabla con totales
-                if (tablaFoot) tablaFoot.style.display = 'table-footer-group';
-                calcularTotales(datos);
-                
-                actualizarPaginacion(datos.length);
-            }
-        }
-        
-        // Función para actualizar la visualización de columnas agrupadas
-        function actualizarGrupoColumnas() {
-            const grupoContainer = document.getElementById('grupoColumnas');
-            const textoAgrupar = document.getElementById('textoAgrupar');
-            
-            if (!grupoContainer) return;
-            
-            grupoContainer.innerHTML = '';
-            
-            if (columnasAgrupadas.length === 0) {
-                if (textoAgrupar) textoAgrupar.style.display = 'inline';
-            } else {
-                if (textoAgrupar) textoAgrupar.style.display = 'none';
-                
-                columnasAgrupadas.forEach(col => {
-                    const nombreColumna = {
-                        'folio': 'Folio',
-                        'mes': 'Mes',
-                        'anio': 'Año',
-                        'monto': 'Monto',
-                        'observaciones': 'Observaciones'
-                    }[col] || col;
-                    
-                    const chip = document.createElement('span');
-                    chip.className = 'columna-agrupada';
-                    chip.innerHTML = `
-                        ${nombreColumna}
-                        <span class="remover" data-columna="${col}">&times;</span>
-                    `;
-                    grupoContainer.appendChild(chip);
+                    tbody.appendChild(dtr);
                 });
             }
-            
-            // Limpiar grupos expandidos al cambiar agrupación
-            expandedGroups.clear();
-            
-            // Recargar tabla con nueva agrupación
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Configurar drag and drop
-        function setupDragAndDrop() {
-            const encabezados = document.querySelectorAll('th[draggable="true"]');
-            const grupoAgrupacion = document.getElementById('grupoAgrupacion');
-            
-            encabezados.forEach(th => {
-                th.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', th.dataset.columna);
-                    e.dataTransfer.effectAllowed = 'copy';
-                    th.style.opacity = '0.5';
-                });
-                
-                th.addEventListener('dragend', (e) => {
-                    th.style.opacity = '1';
-                });
-            });
-            
-            grupoAgrupacion.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'copy';
-                grupoAgrupacion.classList.add('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('dragleave', () => {
-                grupoAgrupacion.classList.remove('drag-over');
-            });
-            
-            grupoAgrupacion.addEventListener('drop', (e) => {
-                e.preventDefault();
-                grupoAgrupacion.classList.remove('drag-over');
-                
-                const columna = e.dataTransfer.getData('text/plain');
-                
-                if (columna && !columnasAgrupadas.includes(columna)) {
-                    columnasAgrupadas.push(columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-            
-            // Event listener para remover columnas (usando delegación)
-            document.addEventListener('click', (e) => {
-                if (e.target.classList.contains('remover')) {
-                    const columna = e.target.dataset.columna;
-                    columnasAgrupadas = columnasAgrupadas.filter(c => c !== columna);
-                    actualizarGrupoColumnas();
-                }
-            });
-        }
-        
-        // Event listener para expandir/colapsar grupos
-        document.addEventListener('click', function(e) {
-            const filaGrupo = e.target.closest('.fila-grupo');
-            if (filaGrupo) {
-                const grupoId = filaGrupo.dataset.grupoId;
-                const icono = filaGrupo.querySelector('i');
-                
-                if (expandedGroups.has(grupoId)) {
-                    expandedGroups.delete(grupoId);
-                    filaGrupo.classList.remove('expandido');
-                    if (icono) icono.className = 'fas fa-caret-right';
-                } else {
-                    expandedGroups.add(grupoId);
-                    filaGrupo.classList.add('expandido');
-                    if (icono) icono.className = 'fas fa-caret-down';
-                }
-                
-                // Recargar tabla para mostrar/ocultar detalles
-                cargarTabla(datosFiltrados);
-            }
         });
-        
-        // Función para filtrar por búsqueda
-        function filtrarPorBusqueda() {
-            const termino = buscador.value.toLowerCase().trim();
-            
-            if (termino === '') {
-                datosFiltrados = [...datosOriginales];
-            } else {
-                datosFiltrados = datosOriginales.filter(item => 
-                    item.meses?.toLowerCase().includes(termino) ||
-                    item.observaciones?.toLowerCase().includes(termino) ||
-                    item.presupuesto_mensual_id?.toString().includes(termino)
-                );
-            }
-            
-            paginaActual = 1;
-            cargarTabla(datosFiltrados);
-        }
-        
-        // Función para cambiar de página
-        function cambiarPagina(nuevaPagina) {
-            const totalPaginas = Math.ceil(datosFiltrados.length / registrosPorPagina);
-            if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
-                paginaActual = nuevaPagina;
-                cargarTabla(datosFiltrados);
-            }
-        }
-        
-        // Cargar datos iniciales
-        cargarTabla(datosOriginales);
-        
-        // Configurar drag and drop
-        setupDragAndDrop();
-        
-        // Event Listeners
-        btnCrearFiltro.addEventListener('click', function() {
-            alert('Crear filtro - Funcionalidad en desarrollo');
+    }
+
+    function aplicarColumnasVisibles() {
+        document.querySelectorAll('#tablaPresupuestoMensual thead th[data-columna]').forEach(th => {
+            th.classList.toggle('col-oculta', !state.columnasVisibles.includes(th.dataset.columna));
         });
-        
-        btnAgregar.addEventListener('click', function() {
-            alert('Agregar Presupuesto Mensual - Funcionalidad en desarrollo');
+        document.querySelectorAll('#tablaBody td[data-col]').forEach(td => {
+            td.classList.toggle('col-oculta', !state.columnasVisibles.includes(td.dataset.col));
         });
-        
-        btnExcel.addEventListener('click', function() {
-            exportTableToExcel('tablaPresupuestoMensual', 'PresupuestoMensual');
-        });
-        
-        btnColumnas.addEventListener('click', function() {
-            alert('Selector de Columnas - Funcionalidad en desarrollo');
-        });
-        
-        buscador.addEventListener('input', filtrarPorBusqueda);
-        
-        // Eventos de paginación
+    }
+
+    // ================= PAGINACIÓN =================
+    function renderPaginacion(resp) {
+        $('paginaActual').textContent = resp.current_page || 1;
+        $('paginacionInfo').textContent = `Mostrando ${resp.from || 0}-${resp.to || 0} de ${resp.total || 0} registros`;
+        $('btnPrimera').disabled = state.page <= 1;
+        $('btnAnterior').disabled = state.page <= 1;
+        $('btnSiguiente').disabled = state.page >= state.lastPage;
+        $('btnUltima').disabled = state.page >= state.lastPage;
+
+        // Los botones 2 y 3 hardcodeados en el diseño: mostrar/ocultar según total de páginas
         document.querySelectorAll('.pagina-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                cambiarPagina(parseInt(this.dataset.pagina));
-            });
+            const p = parseInt(btn.dataset.pagina, 10);
+            btn.style.display = p <= state.lastPage ? 'inline-block' : 'none';
         });
-        
-        btnPrimera.addEventListener('click', () => cambiarPagina(1));
-        btnAnterior.addEventListener('click', () => cambiarPagina(paginaActual - 1));
-        btnSiguiente.addEventListener('click', () => cambiarPagina(paginaActual + 1));
-        btnUltima.addEventListener('click', () => cambiarPagina(Math.ceil(datosFiltrados.length / registrosPorPagina)));
-        
-        // Iconos de filtro en encabezados
-        document.querySelectorAll('.table th i.fa-filter').forEach(icon => {
-            icon.addEventListener('click', function() {
-                alert('Filtro de columna - Funcionalidad en desarrollo');
-            });
+    }
+
+    function cambiarPagina(p) {
+        if (p < 1 || p > state.lastPage) return;
+        state.page = p;
+        cargarDatos();
+    }
+
+    // ================= MODAL FORM (crear/editar) =================
+    function abrirModalForm(data = null) {
+        $('formError').style.display = 'none';
+        $('formError').textContent = '';
+        if (data) {
+            $('modalFormTitulo').textContent = 'Editar Presupuesto';
+            $('presupuestoId').value = data.presupuesto_mensual_id;
+            $('formMes').value = data.mes;
+            $('formAnio').value = data.anio;
+            $('formMonto').value = data.monto;
+            $('formObservaciones').value = data.observaciones || '';
+        } else {
+            $('modalFormTitulo').textContent = 'Agregar Presupuesto';
+            $('presupuestoId').value = '';
+            $('formMes').value = '';
+            $('formAnio').value = new Date().getFullYear();
+            $('formMonto').value = '';
+            $('formObservaciones').value = '';
+        }
+        toggleModal('modalFormulario', true);
+    }
+
+    async function guardarForm(e) {
+        e.preventDefault();
+        const id = $('presupuestoId').value;
+        const body = {
+            mes: parseInt($('formMes').value, 10),
+            anio: parseInt($('formAnio').value, 10),
+            monto: parseFloat($('formMonto').value),
+            observaciones: $('formObservaciones').value || null,
+        };
+        if (!body.mes || !body.anio || isNaN(body.monto)) {
+            $('formError').textContent = 'Complete todos los campos obligatorios.';
+            $('formError').style.display = 'block';
+            return;
+        }
+
+        $('btnGuardarForm').disabled = true;
+        $('btnGuardarForm').textContent = 'Guardando...';
+        try {
+            const url = id ? `${RUTAS.base}/${id}` : RUTAS.base;
+            const method = id ? 'PUT' : 'POST';
+            const resp = await apiFetch(url, { method, body: JSON.stringify(body) });
+            if (!resp.success) throw new Error(resp.message || 'Error al guardar');
+            toggleModal('modalFormulario', false);
+            cargarDatos();
+        } catch (err) {
+            $('formError').textContent = err.message;
+            $('formError').style.display = 'block';
+        } finally {
+            $('btnGuardarForm').disabled = false;
+            $('btnGuardarForm').textContent = 'Guardar';
+        }
+    }
+
+    // ================= VER =================
+    async function verPresupuesto(id) {
+        try {
+            const resp = await apiFetch(`${RUTAS.base}/${id}`);
+            if (!resp.success) throw new Error(resp.message);
+            const d = resp.data;
+            $('verId').textContent = d.presupuesto_mensual_id;
+            $('verMes').textContent = MESES[d.mes] || d.mes;
+            $('verAnio').textContent = d.anio;
+            $('verMonto').textContent = money(d.monto);
+            $('verObservaciones').textContent = d.observaciones || '-';
+            toggleModal('modalVer', true);
+        } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    // ================= EDITAR =================
+    async function editarPresupuesto(id) {
+        try {
+            const resp = await apiFetch(`${RUTAS.base}/${id}`);
+            if (!resp.success) throw new Error(resp.message);
+            abrirModalForm(resp.data);
+        } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    // ================= ELIMINAR =================
+    async function eliminarPresupuesto(id) {
+        if (!confirm(`¿Eliminar el presupuesto con folio ${id}?`)) return;
+        try {
+            const resp = await apiFetch(`${RUTAS.base}/${id}`, { method: 'DELETE' });
+            if (!resp.success) throw new Error(resp.message);
+            if (state.datos.length === 1 && state.page > 1) state.page--;
+            cargarDatos();
+        } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    // ================= PDF =================
+    function descargarPDF(id) {
+        window.open(`${RUTAS.base}/${id}/pdf`, '_blank');
+    }
+
+    // ================= EXCEL =================
+    function exportarExcel() {
+        const params = new URLSearchParams({
+            fecha_inicio: state.fechaInicio,
+            fecha_fin: state.fechaFin,
         });
-        
-        // Acciones de los iconos (delegación de eventos)
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fa-edit')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Editar Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-trash-alt')) {
-                const id = e.target.getAttribute('data-id');
-                if (confirm(`¿Está seguro de eliminar el presupuesto ID: ${id}?`)) {
-                    alert(`Eliminar Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
-                }
-            } else if (e.target.classList.contains('fa-eye')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Ver detalles de Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
-            } else if (e.target.classList.contains('fa-file-pdf')) {
-                const id = e.target.getAttribute('data-id');
-                alert(`Descargar PDF - Presupuesto ID: ${id} - Funcionalidad en desarrollo`);
-            }
-        });
-        
-        // Función para exportar a Excel
-        function exportTableToExcel(tableId, filename = '') {
-            var table = document.getElementById(tableId);
-            if (!table) return;
-            
-            var html = table.outerHTML;
-            var url = 'data:application/vnd.ms-excel,' + encodeURIComponent(html);
-            
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = filename + '.xls';
-            link.click();
+        if (state.buscar) params.append('buscar', state.buscar);
+        window.location.href = `${RUTAS.excel}?${params.toString()}`;
+    }
+
+    // ================= DELEGACIÓN DE EVENTOS EN TABLA =================
+    $('tablaBody').addEventListener('click', function (e) {
+        const icon = e.target.closest('i[data-action]');
+        if (icon) {
+            const id = icon.dataset.id;
+            const action = icon.dataset.action;
+            if (action === 'edit') editarPresupuesto(id);
+            else if (action === 'delete') eliminarPresupuesto(id);
+            else if (action === 'view') verPresupuesto(id);
+            else if (action === 'pdf') descargarPDF(id);
+            return;
+        }
+        // Expansión de grupo
+        const grupoRow = e.target.closest('.fila-grupo');
+        if (grupoRow) {
+            const gid = grupoRow.dataset.grupoId;
+            if (state.expandedGroups.has(gid)) state.expandedGroups.delete(gid);
+            else state.expandedGroups.add(gid);
+            renderTabla();
         }
     });
+
+    // ================= AGRUPACIÓN =================
+    function actualizarChips() {
+        const cont = $('grupoColumnas');
+        cont.innerHTML = '';
+        if (!state.columnasAgrupadas.length) {
+            $('textoAgrupar').style.display = 'inline';
+            return;
+        }
+        $('textoAgrupar').style.display = 'none';
+        const nombres = { folio:'Folio', mes:'Mes', anio:'Año', monto:'Monto', observaciones:'Observaciones' };
+        state.columnasAgrupadas.forEach(col => {
+            const chip = document.createElement('span');
+            chip.className = 'columna-agrupada';
+            chip.innerHTML = `${nombres[col] || col} <span class="remover" data-col="${col}">&times;</span>`;
+            cont.appendChild(chip);
+        });
+    }
+
+    document.querySelectorAll('th[draggable="true"]').forEach(th => {
+        th.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', th.dataset.columna);
+            th.style.opacity = '0.5';
+        });
+        th.addEventListener('dragend', () => th.style.opacity = '1');
+    });
+
+    const grupoAgrupacion = $('grupoAgrupacion');
+    grupoAgrupacion.addEventListener('dragover', e => {
+        e.preventDefault();
+        grupoAgrupacion.classList.add('drag-over');
+    });
+    grupoAgrupacion.addEventListener('dragleave', () => grupoAgrupacion.classList.remove('drag-over'));
+    grupoAgrupacion.addEventListener('drop', e => {
+        e.preventDefault();
+        grupoAgrupacion.classList.remove('drag-over');
+        const col = e.dataTransfer.getData('text/plain');
+        if (col && !state.columnasAgrupadas.includes(col)) {
+            state.columnasAgrupadas.push(col);
+            state.expandedGroups.clear();
+            actualizarChips();
+            renderTabla();
+        }
+    });
+
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('remover')) {
+            const col = e.target.dataset.col;
+            state.columnasAgrupadas = state.columnasAgrupadas.filter(c => c !== col);
+            state.expandedGroups.clear();
+            actualizarChips();
+            renderTabla();
+        }
+    });
+
+    // ================= FILTROS =================
+    let debounceTimer = null;
+    $('buscador').addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            state.buscar = this.value.trim();
+            state.page = 1;
+            cargarDatos();
+        }, 350);
+    });
+
+    $('fechaInicio').addEventListener('change', function () {
+        state.fechaInicio = this.value;
+        state.page = 1;
+        cargarDatos();
+    });
+    $('fechaFin').addEventListener('change', function () {
+        state.fechaFin = this.value;
+        state.page = 1;
+        cargarDatos();
+    });
+
+    $('btnCrearFiltro').addEventListener('click', function () {
+        state.buscar = '';
+        state.fechaInicio = "{{ date('Y-m-01') }}";
+        state.fechaFin = "{{ date('Y-m-d') }}";
+        state.page = 1;
+        $('buscador').value = '';
+        $('fechaInicio').value = state.fechaInicio;
+        $('fechaFin').value = state.fechaFin;
+        cargarDatos();
+    });
+
+    // ================= BOTONES BARRA =================
+    $('btnAgregar').addEventListener('click', () => abrirModalForm());
+    $('btnExcel').addEventListener('click', exportarExcel);
+
+    // ================= MODAL COLUMNAS =================
+    $('btnColumnas').addEventListener('click', () => toggleModal('modalColumnas', true));
+    $('btnCerrarModalColumnas').addEventListener('click', () => toggleModal('modalColumnas', false));
+    $('btnAplicarColumnas').addEventListener('click', () => {
+        const cols = [];
+        document.querySelectorAll('.chk-columna').forEach(chk => {
+            if (chk.checked) cols.push(chk.dataset.columna);
+        });
+        if (!cols.length) { alert('Debes seleccionar al menos una columna.'); return; }
+        state.columnasVisibles = cols;
+        toggleModal('modalColumnas', false);
+        aplicarColumnasVisibles();
+    });
+
+    // ================= MODALES: CERRAR =================
+    $('btnCerrarModalForm').addEventListener('click', () => toggleModal('modalFormulario', false));
+    $('btnCancelarForm').addEventListener('click', () => toggleModal('modalFormulario', false));
+    $('formPresupuesto').addEventListener('submit', guardarForm);
+
+    $('btnCerrarModalVer').addEventListener('click', () => toggleModal('modalVer', false));
+    $('btnCerrarModalVer2').addEventListener('click', () => toggleModal('modalVer', false));
+
+    ['modalFormulario','modalVer','modalColumnas'].forEach(id => {
+        $(id).addEventListener('click', function (e) {
+            if (e.target === this) toggleModal(id, false);
+        });
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            toggleModal('modalFormulario', false);
+            toggleModal('modalVer', false);
+            toggleModal('modalColumnas', false);
+        }
+    });
+
+    // ================= PAGINACIÓN BOTONES =================
+    $('btnPrimera').addEventListener('click', () => cambiarPagina(1));
+    $('btnAnterior').addEventListener('click', () => cambiarPagina(state.page - 1));
+    $('btnSiguiente').addEventListener('click', () => cambiarPagina(state.page + 1));
+    $('btnUltima').addEventListener('click', () => cambiarPagina(state.lastPage));
+    document.querySelectorAll('.pagina-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            cambiarPagina(parseInt(this.dataset.pagina, 10));
+        });
+    });
+
+    // ================= ICONOS FILTRO EN TH =================
+    document.querySelectorAll('th .fa-filter').forEach(icon => {
+        icon.addEventListener('click', e => {
+            e.stopPropagation();
+            const col = icon.closest('th').dataset.columna;
+            const nombres = { folio:'Folio', mes:'Mes', anio:'Año', monto:'Monto', observaciones:'Observaciones' };
+            const val = prompt(`Filtrar por ${nombres[col] || col}:`);
+            if (val !== null && val.trim() !== '') {
+                $('buscador').value = val.trim();
+                state.buscar = val.trim();
+                state.page = 1;
+                cargarDatos();
+            }
+        });
+    });
+
+    // ================= INIT =================
+    actualizarChips();
+    cargarDatos();
+});
 </script>
 @endsection

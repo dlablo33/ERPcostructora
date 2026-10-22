@@ -47,8 +47,6 @@
                 <!-- Barra de herramientas -->
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 8px;" id="grupoAgrupacion">
-                        <i class="fas fa-layer-group" style="color: #2378e1; font-size: 14px; cursor: pointer;" title="Arrastrar columnas para agrupar" id="iconoAgrupar"></i>
-                        <span style="color: #6c757d; font-size: 12px; font-style: italic;" id="textoAgrupar">arrastra una columna para agrupar</span>
                         <div id="grupoColumnas" style="display: flex; gap: 5px; flex-wrap: wrap; min-height: 30px;"></div>
                     </div>
                     
@@ -1340,6 +1338,35 @@
         // FUNCIONES DE MODALES
         // ════════════════════════════════════════════════════════════════
 
+        /**
+         * Limpia todos los campos del modal "Nueva Prueba" para evitar
+         * que se pre-cargue información del último registro guardado.
+         */
+        function limpiarModalNuevaPrueba() {
+            // Campos select → volver a la primera opción (placeholder)
+            document.getElementById('modalProyecto').value = '';
+            document.getElementById('modalTipoPrueba').value = '';
+            document.getElementById('modalResponsable').value = '';
+            
+            // Resultado → valor por defecto
+            document.getElementById('modalResultado').value = 'Aprobada';
+            
+            // Campos de texto → vacíos
+            document.getElementById('modalElemento').value = '';
+            document.getElementById('modalLaboratorio').value = '';
+            document.getElementById('modalValor').value = '';
+            document.getElementById('modalEspecificacion').value = '';
+            document.getElementById('modalNorma').value = '';
+            document.getElementById('modalObservaciones').value = '';
+            
+            // Fecha → hoy
+            document.getElementById('modalFecha').value = new Date().toISOString().split('T')[0];
+            
+            // Quitar cualquier resaltado de error previo (si lo hubiera)
+            document.querySelectorAll('#modalNuevaPrueba input, #modalNuevaPrueba select, #modalNuevaPrueba textarea')
+                .forEach(el => el.style.borderColor = '#ced4da');
+        }
+
         window.verDetallePrueba = async function(noPrueba) {
             try {
                 const response = await fetch(`/proyectos/calidad-api/prueba/${noPrueba}`);
@@ -1537,6 +1564,7 @@
 
         // Botones
         document.getElementById('btnNuevaPrueba')?.addEventListener('click', function() {
+            limpiarModalNuevaPrueba();  // ← Limpia el formulario antes de mostrar
             document.getElementById('modalNuevaPrueba').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
@@ -1566,11 +1594,13 @@
         // Modal Nueva Prueba
         const modalNuevaPrueba = document.getElementById('modalNuevaPrueba');
         document.getElementById('btnCerrarModal')?.addEventListener('click', function() {
+            limpiarModalNuevaPrueba();
             modalNuevaPrueba.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
         
         document.getElementById('btnCancelar')?.addEventListener('click', function() {
+            limpiarModalNuevaPrueba();
             modalNuevaPrueba.style.display = 'none';
             document.body.style.overflow = 'auto';
         });
@@ -1609,6 +1639,7 @@
                 
                 if (result.success) {
                     alert('Prueba guardada correctamente');
+                    limpiarModalNuevaPrueba();  // ← Limpia después de guardar
                     modalNuevaPrueba.style.display = 'none';
                     document.body.style.overflow = 'auto';
                     cargarTodosLosDatos();
@@ -1624,6 +1655,7 @@
         // Cerrar modales con click fuera
         window.addEventListener('click', function(event) {
             if (event.target === document.getElementById('modalNuevaPrueba')) {
+                limpiarModalNuevaPrueba();
                 document.getElementById('modalNuevaPrueba').style.display = 'none';
                 document.body.style.overflow = 'auto';
             }

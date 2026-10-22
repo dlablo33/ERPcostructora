@@ -40,7 +40,7 @@ class MaquinariaController extends Controller
     {
         Log::info('=== MAQUINARIA INDEX ===');
         Log::info('Filtros recibidos:', $request->all());
-        
+
         try {
             $query = Activo::with(['maquinaria', 'vehiculo', 'herramienta', 'proyectoAsignado', 'responsableAsignado']);
 
@@ -83,7 +83,7 @@ class MaquinariaController extends Controller
         } catch (\Exception $e) {
             Log::error('ERROR en index Maquinaria: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener activos: ' . $e->getMessage()
@@ -97,13 +97,13 @@ class MaquinariaController extends Controller
     public function show($id)
     {
         Log::info('=== MAQUINARIA: Mostrando detalle ID: ' . $id);
-        
+
         try {
             $activo = Activo::with([
-                'maquinaria', 
-                'vehiculo', 
-                'herramienta', 
-                'proyectoAsignado', 
+                'maquinaria',
+                'vehiculo',
+                'herramienta',
+                'proyectoAsignado',
                 'responsableAsignado',
                 'proveedor',
                 'creador',
@@ -117,7 +117,7 @@ class MaquinariaController extends Controller
                     $q->orderBy('fecha', 'desc')->limit(10);
                 }
             ])->findOrFail($id);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $activo,
@@ -140,7 +140,7 @@ class MaquinariaController extends Controller
     {
         Log::info('=== MAQUINARIA: Creando nuevo activo ===');
         Log::info('Datos recibidos:', $request->all());
-        
+
         try {
             $request->validate([
                 'nombre' => 'required|string|max:255',
@@ -170,7 +170,7 @@ class MaquinariaController extends Controller
                 'color' => $request->color,
                 'ubicacion_fisica' => $request->ubicacion_fisica,
                 'estado_general' => $request->estado_general ?? 'bueno',
-                'estatus' => 'activo',
+                'estatus' => 'Disponible',
                 'fecha_adquisicion' => $request->fecha_adquisicion,
                 'costo_adquisicion' => $request->costo_adquisicion ?? 0,
                 'costo_operacion_hora' => $request->costo_operacion_hora ?? 0,
@@ -214,7 +214,7 @@ class MaquinariaController extends Controller
             DB::rollBack();
             Log::error('ERROR al crear activo: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el activo: ' . $e->getMessage()
@@ -229,12 +229,12 @@ class MaquinariaController extends Controller
     {
         Log::info('=== MAQUINARIA: Actualizando ID: ' . $id);
         Log::info('Datos:', $request->all());
-        
+
         try {
             DB::beginTransaction();
 
             $activo = Activo::findOrFail($id);
-            
+
             $activo->update([
                 'nombre' => $request->nombre ?? $activo->nombre,
                 'categoria' => $request->categoria ?? $activo->categoria,
@@ -274,7 +274,7 @@ class MaquinariaController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al actualizar activo: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar el activo: ' . $e->getMessage()
@@ -288,11 +288,11 @@ class MaquinariaController extends Controller
     public function destroy($id)
     {
         Log::info('=== MAQUINARIA: Eliminando ID: ' . $id);
-        
+
         try {
             $activo = Activo::findOrFail($id);
             $activo->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Activo eliminado correctamente'
@@ -307,6 +307,10 @@ class MaquinariaController extends Controller
         }
     }
 
+    // ============================================================
+    // ============== ASIGNACIONES =================================
+    // ============================================================
+
     /**
      * Asigna un activo a un proyecto
      */
@@ -314,17 +318,18 @@ class MaquinariaController extends Controller
     {
         Log::info('=== MAQUINARIA: Asignando activo a proyecto ===');
         Log::info('Datos:', $request->all());
-        
+
         try {
             $request->validate([
                 'activo_id' => 'required|exists:activos,id',
                 'proyecto_id' => 'required|exists:proyectos,id',
                 'responsable_asignado' => 'nullable|string|max:255',
+                'responsable_asignado_id' => 'nullable|integer|exists:plantillas,plantilla_id',
                 'fecha_salida' => 'required|date',
                 'fecha_estimada_devolucion' => 'nullable|date|after_or_equal:fecha_salida',
                 'horometro_salida' => 'nullable|numeric|min:0',
                 'kilometraje_salida' => 'nullable|numeric|min:0',
-                'condicion_salida' => 'nullable|in:excelente,bueno,regular,malo,danado'
+                'condicion_salida' => 'nullable|string|max:50'
             ]);
 
             DB::beginTransaction();
@@ -332,29 +337,76 @@ class MaquinariaController extends Controller
             $activo = Activo::findOrFail($request->activo_id);
 
             if (!$activo->esta_disponible) {
+                Log::warning('Intento de asignar activo no disponible', [
+                    'activo_id' => $activo->id,
+                    'codigo' => $activo->codigo,
+                    'estatus' => $activo->estatus,
+                    'proyecto_asignado_id' => $activo->proyecto_asignado_id,
+                ]);
+
+                $msg = "El activo {$activo->codigo} no está disponible.";
+                if ($activo->proyecto_asignado_id) {
+                    $msg .= " Ya está asignado al proyecto ID {$activo->proyecto_asignado_id}.";
+                } else {
+                    $msg .= " Estatus actual: {$activo->estatus}.";
+                }
+
                 return response()->json([
                     'success' => false,
-                    'message' => 'El activo no está disponible para asignación'
+                    'message' => $msg
                 ], 422);
+            }
+
+            // ✅ Resolver nombre del responsable
+            $responsableNombre = 'Sin asignar';
+            if ($request->filled('responsable_asignado')) {
+                $responsableNombre = $request->responsable_asignado;
+            } elseif ($request->filled('responsable_asignado_id')) {
+                $plantilla = Plantilla::where('plantilla_id', $request->responsable_asignado_id)->first();
+                if ($plantilla) {
+                    $nombreCompleto = trim(
+                        ($plantilla->nombre ?? '') . ' ' .
+                        ($plantilla->apellido_paterno ?? '') . ' ' .
+                        ($plantilla->apellido_materno ?? '')
+                    );
+                    if ($nombreCompleto !== '') {
+                        $responsableNombre = $nombreCompleto;
+                    }
+                }
+            }
+
+            // ✅ Normalizar condicion_salida
+            $condicionSalida = 'Bueno';
+            if ($request->filled('condicion_salida')) {
+                $mapa = [
+                    'excelente' => 'Excelente',
+                    'bueno' => 'Bueno',
+                    'regular' => 'Regular',
+                    'malo' => 'Malo',
+                    'danado' => 'Malo',
+                    'dañado' => 'Malo',
+                ];
+                $key = strtolower(trim($request->condicion_salida));
+                $condicionSalida = $mapa[$key] ?? 'Bueno';
             }
 
             $asignacion = AsignacionActivo::create([
                 'activo_id' => $request->activo_id,
                 'proyecto_id' => $request->proyecto_id,
-                'responsable_asignado' => $request->responsable_asignado,
+                'responsable_asignado' => $responsableNombre,
                 'fecha_salida' => $request->fecha_salida,
                 'fecha_estimada_devolucion' => $request->fecha_estimada_devolucion,
                 'horometro_salida' => $request->horometro_salida,
                 'kilometraje_salida' => $request->kilometraje_salida,
-                'condicion_salida' => $request->condicion_salida ?? 'bueno',
+                'condicion_salida' => $condicionSalida,
                 'observaciones_salida' => $request->observaciones,
-                'estatus' => 'activa'
+                'estatus' => 'Activa'
             ]);
 
             $activo->proyecto_asignado_id = $request->proyecto_id;
             $activo->fecha_asignacion = $request->fecha_salida;
             $activo->responsable_asignado_id = $request->responsable_asignado_id;
-            $activo->estatus = 'activo';
+            $activo->estatus = 'Asignado';
             $activo->save();
 
             if ($activo->maquinaria && $request->horometro_salida) {
@@ -377,11 +429,19 @@ class MaquinariaController extends Controller
                 'message' => 'Activo asignado correctamente'
             ], 201);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            Log::error('Error de validación al asignar: ' . json_encode($e->errors()));
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al asignar activo: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al asignar el activo: ' . $e->getMessage()
@@ -390,69 +450,244 @@ class MaquinariaController extends Controller
     }
 
     /**
-     * Devuelve un activo de un proyecto
+     * ✅ Obtiene una asignación específica para editar
+     */
+    public function showAsignacion($id)
+    {
+        Log::info('=== MAQUINARIA: Mostrando asignación ID: ' . $id);
+
+        try {
+            $asignacion = AsignacionActivo::with(['activo', 'proyecto'])
+                ->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $asignacion,
+                'message' => 'Asignación obtenida correctamente'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('ERROR al mostrar asignación: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Asignación no encontrada'
+            ], 404);
+        }
+    }
+
+    /**
+     * ✅ Actualiza una asignación existente
+     */
+    public function updateAsignacion(Request $request, $id)
+    {
+        Log::info('=== MAQUINARIA: Actualizando asignación ID: ' . $id);
+        Log::info('Datos:', $request->all());
+
+        try {
+            $request->validate([
+                'proyecto_id' => 'nullable|exists:proyectos,id',
+                'responsable_asignado' => 'nullable|string|max:255',
+                'responsable_asignado_id' => 'nullable|integer|exists:plantillas,plantilla_id',
+                'fecha_salida' => 'nullable|date',
+                'fecha_estimada_devolucion' => 'nullable|date',
+                'horometro_salida' => 'nullable|numeric|min:0',
+                'kilometraje_salida' => 'nullable|numeric|min:0',
+                'condicion_salida' => 'nullable|string|max:50',
+                'observaciones_salida' => 'nullable|string'
+            ]);
+
+            DB::beginTransaction();
+
+            $asignacion = AsignacionActivo::findOrFail($id);
+
+            // ✅ Resolver nombre del responsable
+            $responsableNombre = $asignacion->responsable_asignado;
+            if ($request->filled('responsable_asignado')) {
+                $responsableNombre = $request->responsable_asignado;
+            } elseif ($request->filled('responsable_asignado_id')) {
+                $plantilla = Plantilla::where('plantilla_id', $request->responsable_asignado_id)->first();
+                if ($plantilla) {
+                    $nombreCompleto = trim(
+                        ($plantilla->nombre ?? '') . ' ' .
+                        ($plantilla->apellido_paterno ?? '') . ' ' .
+                        ($plantilla->apellido_materno ?? '')
+                    );
+                    if ($nombreCompleto !== '') {
+                        $responsableNombre = $nombreCompleto;
+                    }
+                }
+            }
+
+            // ✅ Normalizar condicion_salida
+            $condicionSalida = $asignacion->condicion_salida;
+            if ($request->filled('condicion_salida')) {
+                $mapa = [
+                    'excelente' => 'Excelente',
+                    'bueno' => 'Bueno',
+                    'regular' => 'Regular',
+                    'malo' => 'Malo',
+                    'danado' => 'Malo',
+                    'dañado' => 'Malo',
+                ];
+                $key = strtolower(trim($request->condicion_salida));
+                $condicionSalida = $mapa[$key] ?? 'Bueno';
+            }
+
+            $asignacion->update([
+                'proyecto_id' => $request->proyecto_id ?? $asignacion->proyecto_id,
+                'responsable_asignado' => $responsableNombre,
+                'fecha_salida' => $request->fecha_salida ?? $asignacion->fecha_salida,
+                'fecha_estimada_devolucion' => $request->fecha_estimada_devolucion ?? $asignacion->fecha_estimada_devolucion,
+                'horometro_salida' => $request->horometro_salida ?? $asignacion->horometro_salida,
+                'kilometraje_salida' => $request->kilometraje_salida ?? $asignacion->kilometraje_salida,
+                'condicion_salida' => $condicionSalida,
+                'observaciones_salida' => $request->observaciones_salida ?? $asignacion->observaciones_salida,
+            ]);
+
+            // Actualizar el activo si cambió proyecto o responsable
+            if ($request->filled('proyecto_id') || $request->filled('responsable_asignado_id')) {
+                $activo = Activo::find($asignacion->activo_id);
+                if ($activo) {
+                    if ($request->filled('proyecto_id')) {
+                        $activo->proyecto_asignado_id = $request->proyecto_id;
+                    }
+                    if ($request->filled('responsable_asignado_id')) {
+                        $activo->responsable_asignado_id = $request->responsable_asignado_id;
+                    }
+                    $activo->save();
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'data' => $asignacion->load(['activo', 'proyecto']),
+                'message' => 'Asignación actualizada correctamente'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('ERROR al actualizar asignación: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar la asignación: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * ✅ Devuelve un activo de un proyecto (versión mejorada)
      */
     public function devolver(Request $request, $id)
     {
         Log::info('=== MAQUINARIA: Devolviendo activo ID: ' . $id);
-        
+        Log::info('Datos:', $request->all());
+
         try {
             DB::beginTransaction();
 
             $asignacion = AsignacionActivo::with(['activo'])->findOrFail($id);
-            
-            if ($asignacion->estatus !== 'activa' && $asignacion->estatus !== 'asignado') {
+
+            // El constraint de la BD acepta 'Activa', 'Devuelta', 'Parcial'
+            if (!in_array(strtolower($asignacion->estatus ?? ''), ['activa', 'parcial'])) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Esta asignación ya fue finalizada'
                 ], 422);
             }
 
+            // ✅ Normalizar condición de devolución
+            $condicionDevolucion = 'Bueno';
+            if ($request->filled('condicion_devolucion')) {
+                $mapa = [
+                    'excelente' => 'Excelente',
+                    'bueno' => 'Bueno',
+                    'regular' => 'Regular',
+                    'malo' => 'Malo',
+                    'danado' => 'Malo',
+                    'dañado' => 'Malo',
+                ];
+                $key = strtolower(trim($request->condicion_devolucion));
+                $condicionDevolucion = $mapa[$key] ?? 'Bueno';
+            }
+
             $data = [
                 'fecha_devolucion_real' => $request->fecha_devolucion_real ?? now(),
                 'horometro_devolucion' => $request->horometro_devolucion,
                 'kilometraje_devolucion' => $request->kilometraje_devolucion,
-                'condicion_devolucion' => $request->condicion_devolucion ?? 'bueno',
+                'condicion_devolucion' => $condicionDevolucion,
                 'observaciones_devolucion' => $request->observaciones,
-                'estatus' => 'devuelto'
+                'estatus' => 'Devuelta'
             ];
 
-            if ($request->reporte_danos) {
+            if ($request->filled('reporte_danos')) {
                 $data['reporte_danos'] = $request->reporte_danos;
             }
 
-            if ($request->costo_reparacion) {
+            if ($request->filled('costo_reparacion')) {
                 $data['costo_reparacion'] = $request->costo_reparacion;
             }
 
-            $asignacion->devolver($data);
+            $asignacion->update($data);
 
             $activo = $asignacion->activo;
-            $activo->proyecto_asignado_id = null;
-            $activo->fecha_asignacion = null;
-            $activo->responsable_asignado_id = null;
-            
-            if ($asignacion->condicion_devolucion === 'danado') {
-                $activo->estatus = 'mantenimiento';
-            } else {
-                $activo->estatus = 'activo';
-            }
-            $activo->save();
+            if ($activo) {
+                $activo->proyecto_asignado_id = null;
+                $activo->fecha_asignacion = null;
+                $activo->responsable_asignado_id = null;
 
-            Log::info('Activo devuelto ID: ' . $activo->id);
+                // ✅ Si está dañado o malo → mantenimiento; si no → disponible
+                $condLower = strtolower($asignacion->condicion_devolucion ?? '');
+                if (in_array($condLower, ['danado', 'dañado', 'malo'])) {
+                    $activo->estatus = 'En mantenimiento';
+                } else {
+                    $activo->estatus = 'Disponible';
+                }
+                $activo->save();
+
+                // Actualizar horómetro / kilometraje si vinieron
+                if ($request->filled('horometro_devolucion') && $activo->maquinaria) {
+                    $activo->maquinaria->horometro_actual = $request->horometro_devolucion;
+                    $activo->maquinaria->save();
+                }
+                if ($request->filled('kilometraje_devolucion') && $activo->vehiculo) {
+                    $activo->vehiculo->kilometraje_actual = $request->kilometraje_devolucion;
+                    $activo->vehiculo->save();
+                }
+            }
+
+            Log::info('Activo devuelto ID: ' . ($activo->id ?? 'N/A'));
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'data' => $asignacion,
+                'data' => $asignacion->load(['activo', 'proyecto']),
                 'message' => 'Activo devuelto correctamente'
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al devolver activo: ' . $e->getMessage());
-            
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al devolver el activo: ' . $e->getMessage()
@@ -466,8 +701,9 @@ class MaquinariaController extends Controller
     public function asignacionesActivas(Request $request)
     {
         try {
+            // El constraint de la BD acepta: 'Activa', 'Devuelta', 'Parcial'
             $query = AsignacionActivo::with(['activo', 'proyecto'])
-                ->whereIn('estatus', ['activa', 'asignado']);
+                ->whereIn('estatus', ['Activa', 'Parcial']);
 
             if ($request->filled('proyecto_id')) {
                 $query->byProyecto($request->proyecto_id);
@@ -491,13 +727,13 @@ class MaquinariaController extends Controller
     }
 
     /**
-     * Obtiene estadísticas para el dashboard
+     * Obtiene estadísticas para el dashboard general
      */
     public function estadisticas(Request $request)
     {
         try {
             $estadisticas = $this->calcularEstadisticas($request);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $estadisticas
@@ -518,7 +754,7 @@ class MaquinariaController extends Controller
     public function exportar(Request $request)
     {
         Log::info('=== MAQUINARIA: Exportando datos ===');
-        
+
         try {
             $query = Activo::with(['maquinaria', 'vehiculo', 'proyectoAsignado']);
 
@@ -535,7 +771,7 @@ class MaquinariaController extends Controller
             }
 
             $activos = $query->orderBy('created_at', 'desc')->get();
-            
+
             $headers = ['Código', 'Nombre', 'Tipo', 'Marca', 'Modelo', 'Año', 'Serie', 'Estado', 'Proyecto', 'Costo Adq.', 'Costo Op./Hora'];
             $rows = $activos->map(function($item) {
                 return [
@@ -546,13 +782,13 @@ class MaquinariaController extends Controller
                     $item->modelo ?? '-',
                     $item->anio ?? '-',
                     $item->serie ?? '-',
-                    $item->estado_general_nombre,
+                    $item->estado_general_nombre ?? '-',
                     $item->proyectoAsignado?->nombre ?? 'Disponible',
                     '$' . number_format($item->costo_adquisicion, 2),
                     '$' . number_format($item->costo_operacion_hora, 2)
                 ];
             });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -578,22 +814,16 @@ class MaquinariaController extends Controller
     public function catalogos()
     {
         try {
-            $equipos = Activo::whereIn('estatus', ['activo', 'disponible'])
+            $equipos = Activo::disponibles()
                 ->select('id', 'codigo', 'nombre', 'tipo_activo', 'estatus')
                 ->orderBy('codigo')
                 ->get()
                 ->map(function($item) {
-                    $tipoNombres = [
-                        'maquinaria' => 'Maquinaria',
-                        'vehiculo' => 'Vehículo',
-                        'herramienta' => 'Herramienta',
-                        'equipo' => 'Equipo'
-                    ];
                     return [
                         'id' => $item->id,
                         'codigo' => $item->codigo,
                         'nombre' => $item->nombre,
-                        'tipo' => $tipoNombres[$item->tipo_activo] ?? $item->tipo_activo,
+                        'tipo' => $item->tipo_nombre,
                         'estatus' => $item->estatus,
                         'label' => $item->codigo . ' - ' . $item->nombre
                     ];
@@ -603,17 +833,11 @@ class MaquinariaController extends Controller
                 ->orderBy('codigo')
                 ->get()
                 ->map(function($item) {
-                    $tipoNombres = [
-                        'maquinaria' => 'Maquinaria',
-                        'vehiculo' => 'Vehículo',
-                        'herramienta' => 'Herramienta',
-                        'equipo' => 'Equipo'
-                    ];
                     return [
                         'id' => $item->id,
                         'codigo' => $item->codigo,
                         'nombre' => $item->nombre,
-                        'tipo' => $tipoNombres[$item->tipo_activo] ?? $item->tipo_activo,
+                        'tipo' => $item->tipo_nombre,
                         'estatus' => $item->estatus,
                         'label' => $item->codigo . ' - ' . $item->nombre
                     ];
@@ -674,9 +898,9 @@ class MaquinariaController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('ERROR al obtener catálogos: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+            Log::error('ERROR al obtener catálogos: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener catálogos: ' . $e->getMessage()
@@ -684,20 +908,21 @@ class MaquinariaController extends Controller
         }
     }
 
-    // ==================== MÉTODOS DE MANTENIMIENTO ====================
+    // ============================================================
+    // ============== MÉTODOS DE MANTENIMIENTO ====================
+    // ============================================================
 
-    /**
-     * Obtiene estadísticas para el dashboard de mantenimiento
-     */
     public function getEstadisticasMantenimiento(Request $request)
     {
         try {
             Log::info('=== getEstadisticasMantenimiento ===');
-            
+
             $query = MantenimientoActivo::query();
 
             if ($request->filled('proyecto_id')) {
-                $query->where('proyecto_id', $request->proyecto_id);
+                $query->whereHas('activo', function($q) use ($request) {
+                    $q->where('proyecto_asignado_id', $request->proyecto_id);
+                });
             }
 
             $enMantenimiento = (clone $query)
@@ -715,9 +940,10 @@ class MaquinariaController extends Controller
                 ->whereYear('fecha_fin', Carbon::now()->year)
                 ->count();
 
-            $costoMensual = (clone $query)
-                ->whereMonth('fecha_inicio', Carbon::now()->month)
-                ->whereYear('fecha_inicio', Carbon::now()->year)
+            $costoMensual = (float) (clone $query)
+                ->where('estatus', 'completado')
+                ->whereMonth('fecha_fin', Carbon::now()->month)
+                ->whereYear('fecha_fin', Carbon::now()->year)
                 ->sum('costo');
 
             return response()->json([
@@ -726,14 +952,12 @@ class MaquinariaController extends Controller
                     'en_mantenimiento' => $enMantenimiento,
                     'programados' => $programados,
                     'completados' => $completados,
-                    'costo_mensual' => number_format($costoMensual, 2)
+                    'costo_mensual' => $costoMensual
                 ]
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error en getEstadisticasMantenimiento: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener estadísticas: ' . $e->getMessage()
@@ -741,20 +965,18 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene mantenimientos activos (en proceso + pendientes)
-     */
     public function getMantenimientosActivos(Request $request)
     {
         try {
             Log::info('=== getMantenimientosActivos ===');
-            
-            $query = MantenimientoActivo::with(['activo', 'proyecto', 'responsable'])
-                ->whereIn('estatus', ['en_proceso', 'pendiente'])
-                ->orderBy('fecha_inicio', 'desc');
+
+            $query = MantenimientoActivo::with(['activo', 'activo.proyectoAsignado', 'activo.maquinaria', 'proyecto', 'responsable'])
+                ->whereIn('estatus', ['en_proceso', 'pendiente']);
 
             if ($request->filled('proyecto_id')) {
-                $query->where('proyecto_id', $request->proyecto_id);
+                $query->whereHas('activo', function($q) use ($request) {
+                    $q->where('proyecto_asignado_id', $request->proyecto_id);
+                });
             }
 
             if ($request->filled('tipo')) {
@@ -765,9 +987,21 @@ class MaquinariaController extends Controller
                 $query->where('estatus', $request->estatus);
             }
 
-            $mantenimientos = $query->get();
+            if ($request->filled('busqueda')) {
+                $busqueda = $request->busqueda;
+                $query->where(function($q) use ($busqueda) {
+                    $q->whereHas('activo', function($sub) use ($busqueda) {
+                        $sub->where('codigo', 'ILIKE', "%{$busqueda}%")
+                            ->orWhere('nombre', 'ILIKE', "%{$busqueda}%")
+                            ->orWhere('marca', 'ILIKE', "%{$busqueda}%")
+                            ->orWhere('modelo', 'ILIKE', "%{$busqueda}%");
+                    })
+                    ->orWhere('descripcion', 'ILIKE', "%{$busqueda}%");
+                });
+            }
 
-            // Calcular avance para cada uno
+            $mantenimientos = $query->orderBy('fecha_inicio', 'desc')->get();
+
             foreach ($mantenimientos as $item) {
                 $item->avance = $this->calcularAvanceMantenimiento($item);
             }
@@ -779,8 +1013,6 @@ class MaquinariaController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error en getMantenimientosActivos: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener mantenimientos activos: ' . $e->getMessage()
@@ -788,31 +1020,31 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene mantenimientos programados
-     */
     public function getMantenimientosProgramados(Request $request)
     {
         try {
             Log::info('=== getMantenimientosProgramados ===');
-            
-            $query = MantenimientoActivo::with(['activo', 'proyecto', 'responsable'])
-                ->where('estatus', 'pendiente')
-                ->whereDate('fecha_inicio', '>=', Carbon::now()->startOfDay())
-                ->orderBy('fecha_inicio', 'asc');
+
+            $baseQuery = MantenimientoActivo::with(['activo', 'activo.proyectoAsignado', 'proyecto', 'responsable'])
+                ->where('estatus', 'pendiente');
 
             if ($request->filled('proyecto_id')) {
-                $query->where('proyecto_id', $request->proyecto_id);
+                $baseQuery->whereHas('activo', function($q) use ($request) {
+                    $q->where('proyecto_asignado_id', $request->proyecto_id);
+                });
             }
 
-            $programados = $query->get();
-
-            $proximos7Dias = (clone $query)
-                ->whereDate('fecha_inicio', '<=', Carbon::now()->addDays(7))
+            $programados = (clone $baseQuery)
+                ->orderBy('fecha_inicio', 'asc')
                 ->get();
 
-            $porTipo = MantenimientoActivo::where('estatus', 'pendiente')
-                ->whereDate('fecha_inicio', '>=', Carbon::now()->startOfDay())
+            $proximos7Dias = (clone $baseQuery)
+                ->where('fecha_inicio', '>=', \Carbon\Carbon::today())
+                ->where('fecha_inicio', '<=', \Carbon\Carbon::today()->addDays(7))
+                ->orderBy('fecha_inicio', 'asc')
+                ->get();
+
+            $porTipo = (clone $baseQuery)
                 ->select('tipo_mantenimiento', DB::raw('count(*) as total'))
                 ->groupBy('tipo_mantenimiento')
                 ->get();
@@ -828,8 +1060,6 @@ class MaquinariaController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error en getMantenimientosProgramados: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener mantenimientos programados: ' . $e->getMessage()
@@ -837,15 +1067,12 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene historial de mantenimientos
-     */
     public function getHistorialMantenimientos(Request $request)
     {
         try {
             Log::info('=== getHistorialMantenimientos ===');
-            
-            $query = MantenimientoActivo::with(['activo', 'proyecto', 'responsable'])
+
+            $query = MantenimientoActivo::with(['activo', 'activo.proyectoAsignado', 'proyecto', 'responsable'])
                 ->where('estatus', 'completado')
                 ->orderBy('fecha_fin', 'desc');
 
@@ -858,7 +1085,7 @@ class MaquinariaController extends Controller
                 $query->where('tipo_mantenimiento', $request->tipo);
             }
 
-            $perPage = $request->get('per_page', 10);
+            $perPage = $request->get('per_page', 15);
             $historial = $query->paginate($perPage);
 
             return response()->json([
@@ -868,8 +1095,6 @@ class MaquinariaController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error en getHistorialMantenimientos: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener historial: ' . $e->getMessage()
@@ -877,33 +1102,42 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene costos de mantenimiento
-     */
     public function getCostosMantenimiento(Request $request)
     {
         try {
             Log::info('=== getCostosMantenimiento ===');
-            
+
+            $desde = Carbon::now()->subMonths(11)->startOfMonth();
+            $hasta = Carbon::now()->endOfMonth();
+
+            $driver = DB::connection()->getDriverName();
+
             $costosMensuales = MantenimientoActivo::where('estatus', 'completado')
-                ->whereYear('fecha_fin', Carbon::now()->year)
+                ->whereNotNull('fecha_fin')
+                ->whereBetween('fecha_fin', [$desde, $hasta])
                 ->select(
-                    DB::raw('EXTRACT(MONTH FROM fecha_fin) as mes'),
+                    DB::raw($driver === 'pgsql'
+                        ? 'EXTRACT(YEAR FROM fecha_fin) as anio, EXTRACT(MONTH FROM fecha_fin) as mes'
+                        : 'YEAR(fecha_fin) as anio, MONTH(fecha_fin) as mes'
+                    ),
                     DB::raw('SUM(costo) as total')
                 )
-                ->groupBy('mes')
+                ->groupBy('anio', 'mes')
+                ->orderBy('anio')
                 ->orderBy('mes')
                 ->get();
 
             $distribucion = MantenimientoActivo::where('estatus', 'completado')
-                ->whereYear('fecha_fin', Carbon::now()->year)
+                ->whereNotNull('fecha_fin')
+                ->whereBetween('fecha_fin', [$desde, $hasta])
                 ->select('tipo_mantenimiento', DB::raw('SUM(costo) as total'))
                 ->groupBy('tipo_mantenimiento')
                 ->get();
 
             $costosPorEquipo = MantenimientoActivo::with('activo')
                 ->where('estatus', 'completado')
-                ->whereYear('fecha_fin', Carbon::now()->year)
+                ->whereNotNull('fecha_fin')
+                ->whereBetween('fecha_fin', [$desde, $hasta])
                 ->select(
                     'activo_id',
                     DB::raw('COUNT(*) as total_manttos'),
@@ -919,14 +1153,16 @@ class MaquinariaController extends Controller
                 'data' => [
                     'costos_mensuales' => $costosMensuales,
                     'distribucion' => $distribucion,
-                    'costos_por_equipo' => $costosPorEquipo
+                    'costos_por_equipo' => $costosPorEquipo,
+                    'rango' => [
+                        'desde' => $desde->format('Y-m-d'),
+                        'hasta' => $hasta->format('Y-m-d'),
+                    ]
                 ]
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error en getCostosMantenimiento: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener costos: ' . $e->getMessage()
@@ -934,14 +1170,11 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene alertas de mantenimiento
-     */
     public function getAlertasMantenimiento(Request $request)
     {
         try {
             Log::info('=== getAlertasMantenimiento ===');
-            
+
             $criticas = MantenimientoActivo::with(['activo', 'proyecto'])
                 ->where('estatus', 'pendiente')
                 ->whereDate('fecha_inicio', '<', Carbon::now()->startOfDay())
@@ -957,7 +1190,7 @@ class MaquinariaController extends Controller
 
             $informacion = Activo::with(['maquinaria'])
                 ->whereHas('maquinaria')
-                ->where('estatus', 'activo')
+                ->where('estatus', 'Disponible')
                 ->get()
                 ->filter(function($activo) {
                     if ($activo->maquinaria && $activo->maquinaria->horometro_actual) {
@@ -981,8 +1214,6 @@ class MaquinariaController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error en getAlertasMantenimiento: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener alertas: ' . $e->getMessage()
@@ -990,19 +1221,19 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Listado de mantenimientos con filtros
-     */
     public function getListadoMantenimientos(Request $request)
     {
         try {
             Log::info('=== getListadoMantenimientos ===');
-            
+            Log::info('Filtros:', $request->all());
+
             $query = MantenimientoActivo::with(['activo', 'proyecto', 'responsable'])
                 ->orderBy('created_at', 'desc');
 
             if ($request->filled('proyecto_id')) {
-                $query->where('proyecto_id', $request->proyecto_id);
+                $query->whereHas('activo', function($q) use ($request) {
+                    $q->where('proyecto_asignado_id', $request->proyecto_id);
+                });
             }
 
             if ($request->filled('tipo')) {
@@ -1015,24 +1246,41 @@ class MaquinariaController extends Controller
 
             if ($request->filled('busqueda')) {
                 $busqueda = $request->busqueda;
-                $query->whereHas('activo', function($sub) use ($busqueda) {
-                    $sub->where('codigo', 'ILIKE', "%{$busqueda}%")
-                        ->orWhere('nombre', 'ILIKE', "%{$busqueda}%");
+                $query->where(function($q) use ($busqueda) {
+                    $q->whereHas('activo', function($sub) use ($busqueda) {
+                        $sub->where('codigo', 'ILIKE', "%{$busqueda}%")
+                            ->orWhere('nombre', 'ILIKE', "%{$busqueda}%");
+                    })
+                    ->orWhere('descripcion', 'ILIKE', "%{$busqueda}%")
+                    ->orWhere('responsable_asignado', 'ILIKE', "%{$busqueda}%");
                 });
             }
 
-            $perPage = $request->get('per_page', 10);
+            $perPage = $request->get('per_page', 50);
             $mantenimientos = $query->paginate($perPage);
+
+            $estadisticas = [
+                'en_proceso' => MantenimientoActivo::whereIn('estatus', ['en_proceso', 'pendiente'])->count(),
+                'proximos' => MantenimientoActivo::where('estatus', 'pendiente')
+                    ->whereBetween('fecha_inicio', [now(), now()->addDays(7)])
+                    ->count(),
+                'completados' => MantenimientoActivo::where('estatus', 'completado')->count()
+            ];
 
             return response()->json([
                 'success' => true,
-                'data' => $mantenimientos
+                'data' => $mantenimientos->items(),
+                'pagination' => [
+                    'current_page' => $mantenimientos->currentPage(),
+                    'last_page' => $mantenimientos->lastPage(),
+                    'per_page' => $mantenimientos->perPage(),
+                    'total' => $mantenimientos->total(),
+                ],
+                'estadisticas' => $estadisticas
             ]);
 
         } catch (\Exception $e) {
             Log::error('Error en getListadoMantenimientos: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener mantenimientos: ' . $e->getMessage()
@@ -1040,15 +1288,12 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Registra un nuevo mantenimiento
-     */
     public function storeMantenimiento(Request $request)
     {
         try {
             Log::info('=== storeMantenimiento ===');
             Log::info('Datos:', $request->all());
-            
+
             $request->validate([
                 'activo_id' => 'required|exists:activos,id',
                 'tipo_mantenimiento' => 'required|in:preventivo,correctivo,predictivo',
@@ -1058,10 +1303,14 @@ class MaquinariaController extends Controller
                 'responsable_asignado' => 'nullable|string|max:255',
                 'costo' => 'nullable|numeric|min:0',
                 'prioridad' => 'nullable|in:alta,media,baja',
-                'proyecto_id' => 'nullable|exists:proyectos,id'
+                'proyecto_id' => 'nullable|exists:proyectos,id',
+                'modo' => 'nullable|in:registrar,programar'
             ]);
 
             DB::beginTransaction();
+
+            $modo = $request->modo ?? 'registrar';
+            $estatus = $modo === 'programar' ? 'pendiente' : 'en_proceso';
 
             $mantenimiento = MantenimientoActivo::create([
                 'activo_id' => $request->activo_id,
@@ -1073,21 +1322,30 @@ class MaquinariaController extends Controller
                 'responsable_asignado' => $request->responsable_asignado,
                 'costo' => $request->costo ?? 0,
                 'prioridad' => $request->prioridad ?? 'media',
-                'estatus' => 'pendiente',
+                'estatus' => $estatus,
                 'created_by' => auth()->id()
             ]);
 
-            DB::commit();
+            if ($modo === 'registrar') {
+                $activo = Activo::find($request->activo_id);
+                if ($activo) {
+                    $activo->estatus = 'En mantenimiento';
+                    $activo->save();
+                }
+            }
 
-            Log::info('Mantenimiento creado ID: ' . $mantenimiento->id);
+            DB::commit();
 
             return response()->json([
                 'success' => true,
-                'data' => $mantenimiento,
-                'message' => 'Mantenimiento registrado correctamente'
+                'data' => $mantenimiento->load(['activo', 'proyecto']),
+                'message' => $modo === 'programar'
+                    ? 'Mantenimiento programado correctamente'
+                    : 'Mantenimiento registrado correctamente'
             ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'Error de validación',
@@ -1096,8 +1354,6 @@ class MaquinariaController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error en storeMantenimiento: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al registrar mantenimiento: ' . $e->getMessage()
@@ -1105,18 +1361,22 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene detalle de un mantenimiento
-     */
+    public function registrarMantenimiento(Request $request)
+    {
+        Log::info('=== registrarMantenimiento (alias) ===');
+        return $this->storeMantenimiento($request);
+    }
+
     public function getDetalleMantenimiento($id)
     {
         try {
             Log::info('=== getDetalleMantenimiento ID: ' . $id);
-            
+
             $mantenimiento = MantenimientoActivo::with([
                 'activo',
                 'activo.maquinaria',
                 'activo.vehiculo',
+                'activo.proyectoAsignado',
                 'proyecto',
                 'responsable',
                 'proveedor',
@@ -1137,18 +1397,78 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Inicia un mantenimiento
-     */
+    public function updateMantenimiento(Request $request, $id)
+    {
+        try {
+            Log::info('=== updateMantenimiento ID: ' . $id);
+            Log::info('Datos:', $request->all());
+
+            $request->validate([
+                'activo_id' => 'nullable|exists:activos,id',
+                'tipo_mantenimiento' => 'nullable|in:preventivo,correctivo,predictivo',
+                'prioridad' => 'nullable|in:alta,media,baja',
+                'descripcion' => 'nullable|string',
+                'fecha_inicio' => 'nullable|date',
+                'fecha_fin_estimada' => 'nullable|date',
+                'responsable_asignado' => 'nullable|string|max:255',
+                'costo' => 'nullable|numeric|min:0'
+            ]);
+
+            DB::beginTransaction();
+
+            $mantenimiento = MantenimientoActivo::findOrFail($id);
+
+            $mantenimiento->fill([
+                'activo_id' => $request->activo_id ?? $mantenimiento->activo_id,
+                'tipo_mantenimiento' => $request->tipo_mantenimiento ?? $mantenimiento->tipo_mantenimiento,
+                'prioridad' => $request->prioridad ?? $mantenimiento->prioridad,
+                'descripcion' => $request->descripcion ?? $mantenimiento->descripcion,
+                'fecha_inicio' => $request->fecha_inicio ?? $mantenimiento->fecha_inicio,
+                'fecha_fin_estimada' => $request->fecha_fin_estimada ?? $mantenimiento->fecha_fin_estimada,
+                'responsable_asignado' => $request->responsable_asignado ?? $mantenimiento->responsable_asignado,
+                'costo' => $request->costo ?? $mantenimiento->costo,
+            ]);
+
+            $mantenimiento->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'data' => $mantenimiento->load(['activo', 'proyecto']),
+                'message' => 'Mantenimiento actualizado correctamente'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error en updateMantenimiento: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar mantenimiento: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function iniciarMantenimiento($id, Request $request)
     {
         try {
             Log::info('=== iniciarMantenimiento ID: ' . $id);
-            
+
+            DB::beginTransaction();
+
             $mantenimiento = MantenimientoActivo::findOrFail($id);
-            
+
             $mantenimiento->estatus = 'en_proceso';
-            $mantenimiento->fecha_inicio_real = Carbon::now();
+            if (!$mantenimiento->fecha_inicio) {
+                $mantenimiento->fecha_inicio = Carbon::now();
+            }
             $mantenimiento->save();
 
             $activo = Activo::find($mantenimiento->activo_id);
@@ -1157,12 +1477,15 @@ class MaquinariaController extends Controller
                 $activo->save();
             }
 
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Mantenimiento iniciado correctamente'
             ]);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('Error en iniciarMantenimiento: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
@@ -1171,26 +1494,26 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Completa un mantenimiento
-     */
-    public function completarMantenimiento($id, Request $request)
+    public function cerrarMantenimiento(Request $request, $id)
     {
         try {
-            Log::info('=== completarMantenimiento ID: ' . $id);
-            
+            Log::info('=== cerrarMantenimiento ID: ' . $id);
+            Log::info('Datos:', $request->all());
+
             $request->validate([
-                'fecha_fin' => 'nullable|date',
+                'fecha_fin' => 'required|date',
                 'costo_real' => 'nullable|numeric|min:0',
                 'observaciones' => 'nullable|string'
             ]);
 
+            DB::beginTransaction();
+
             $mantenimiento = MantenimientoActivo::findOrFail($id);
-            
+
             $mantenimiento->estatus = 'completado';
-            $mantenimiento->fecha_fin = $request->fecha_fin ?? Carbon::now();
+            $mantenimiento->fecha_fin = $request->fecha_fin;
             $mantenimiento->costo = $request->costo_real ?? $mantenimiento->costo;
-            $mantenimiento->observaciones = $request->observaciones;
+            $mantenimiento->observaciones = $request->observaciones ?? $mantenimiento->observaciones;
             $mantenimiento->save();
 
             $activo = Activo::find($mantenimiento->activo_id);
@@ -1207,89 +1530,39 @@ class MaquinariaController extends Controller
                 }
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Mantenimiento completado correctamente'
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Error en completarMantenimiento: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al completar mantenimiento: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Registra un mantenimiento para un activo (desde la vista de maquinaria)
-     */
-    public function registrarMantenimiento(Request $request)
-    {
-        Log::info('=== MAQUINARIA: Registrando mantenimiento ===');
-        Log::info('Datos:', $request->all());
-        
-        try {
-            $request->validate([
-                'activo_id' => 'required|exists:activos,id',
-                'tipo_mantenimiento' => 'required|in:preventivo,correctivo,predictivo',
-                'descripcion' => 'required|string',
-                'fecha_inicio' => 'required|date',
-                'costo' => 'nullable|numeric|min:0',
-                'horometro_actual' => 'nullable|numeric|min:0',
-                'horometro_proximo' => 'nullable|numeric|min:0',
-                'dias_proximo' => 'nullable|integer|min:1',
-                'proveedor_id' => 'nullable|exists:proveedores,id',
-                'responsable_id' => 'nullable|exists:plantillas,plantilla_id'
-            ]);
-
-            DB::beginTransaction();
-
-            $mantenimiento = MantenimientoActivo::create([
-                'activo_id' => $request->activo_id,
-                'proveedor_id' => $request->proveedor_id,
-                'responsable_id' => $request->responsable_id,
-                'created_by' => auth()->id(),
-                'tipo_mantenimiento' => $request->tipo_mantenimiento,
-                'descripcion' => $request->descripcion,
-                'fecha_inicio' => $request->fecha_inicio,
-                'costo' => $request->costo ?? 0,
-                'horometro_actual' => $request->horometro_actual,
-                'horometro_proximo' => $request->horometro_proximo,
-                'dias_proximo' => $request->dias_proximo,
-                'estatus' => $request->estatus ?? 'pendiente',
-                'observaciones' => $request->observaciones
-            ]);
-
-            $activo = Activo::find($request->activo_id);
-            $activo->estatus = 'En mantenimiento';
-            $activo->save();
-
-            Log::info('Mantenimiento registrado ID: ' . $mantenimiento->id . ' para activo ID: ' . $request->activo_id);
-
             DB::commit();
 
+            Log::info('Mantenimiento cerrado ID: ' . $mantenimiento->id);
+
             return response()->json([
                 'success' => true,
-                'data' => $mantenimiento->load(['activo', 'proveedor', 'responsable']),
-                'message' => 'Mantenimiento registrado correctamente'
-            ], 201);
+                'data' => $mantenimiento,
+                'message' => 'Mantenimiento cerrado correctamente'
+            ]);
 
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            Log::error('ERROR al registrar mantenimiento: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
-                'message' => 'Error al registrar mantenimiento: ' . $e->getMessage()
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error en cerrarMantenimiento: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al cerrar mantenimiento: ' . $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Obtiene el historial de mantenimientos de un activo
-     */
+    public function completarMantenimiento($id, Request $request)
+    {
+        Log::info('=== completarMantenimiento (alias de cerrarMantenimiento) ===');
+        return $this->cerrarMantenimiento($request, $id);
+    }
+
     public function mantenimientos($activoId)
     {
         try {
@@ -1313,14 +1586,11 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Exporta mantenimientos a Excel
-     */
     public function exportarMantenimientosExcel(Request $request)
     {
         try {
             Log::info('=== exportarMantenimientosExcel ===');
-            
+
             $query = MantenimientoActivo::with(['activo', 'proyecto', 'responsable'])
                 ->orderBy('created_at', 'desc');
 
@@ -1335,7 +1605,7 @@ class MaquinariaController extends Controller
             $mantenimientos = $query->get();
 
             $headers = [
-                'ID', 'Folio', 'Equipo', 'Tipo', 'Descripción', 'Fecha Inicio', 
+                'ID', 'Folio', 'Equipo', 'Tipo', 'Descripción', 'Fecha Inicio',
                 'Fecha Fin', 'Responsable', 'Costo', 'Estado', 'Prioridad'
             ];
 
@@ -1343,13 +1613,13 @@ class MaquinariaController extends Controller
                 return [
                     $item->id,
                     $item->folio ?? '-',
-                    $item->activo->codigo . ' - ' . $item->activo->nombre,
+                    ($item->activo->codigo ?? '-') . ' - ' . ($item->activo->nombre ?? '-'),
                     ucfirst($item->tipo_mantenimiento),
                     $item->descripcion,
-                    $item->fecha_inicio->format('d/m/Y'),
-                    $item->fecha_fin ? $item->fecha_fin->format('d/m/Y') : '-',
+                    $item->fecha_inicio ? Carbon::parse($item->fecha_inicio)->format('d/m/Y') : '-',
+                    $item->fecha_fin ? Carbon::parse($item->fecha_fin)->format('d/m/Y') : '-',
                     $item->responsable_asignado ?? '-',
-                    '$' . number_format($item->costo, 2),
+                    '$' . number_format((float) $item->costo, 2),
                     ucfirst($item->estatus),
                     ucfirst($item->prioridad ?? 'Media')
                 ];
@@ -1373,14 +1643,16 @@ class MaquinariaController extends Controller
         }
     }
 
-    // ==================== MÉTODOS DE COMBUSTIBLE ====================
+    // ============================================================
+    // ============== MÉTODOS DE COMBUSTIBLE ======================
+    // ============================================================
 
-    /**
-     * Obtiene historial de combustible
-     */
     public function historialCombustible(Request $request)
     {
         try {
+            Log::info('=== historialCombustible ===');
+            Log::info('Filtros:', $request->all());
+
             $query = CombustibleActivo::with(['activo', 'proyecto', 'operador'])
                 ->orderBy('fecha', 'desc');
 
@@ -1388,17 +1660,46 @@ class MaquinariaController extends Controller
                 $query->where('activo_id', $request->activo_id);
             }
 
-            if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
-                $query->whereBetween('fecha', [$request->fecha_inicio, $request->fecha_fin]);
+            if ($request->filled('proyecto_id')) {
+                $query->where('proyecto_id', $request->proyecto_id);
             }
 
-            $perPage = $request->get('per_page', 15);
+            $fechaDesde = $request->input('fecha_desde') ?? $request->input('fecha_inicio');
+            $fechaHasta = $request->input('fecha_hasta') ?? $request->input('fecha_fin');
+
+            if ($fechaDesde) {
+                $query->whereDate('fecha', '>=', $fechaDesde);
+            }
+
+            if ($fechaHasta) {
+                $query->whereDate('fecha', '<=', $fechaHasta);
+            }
+
+            if ($request->filled('busqueda')) {
+                $busqueda = $request->busqueda;
+                $query->where(function($q) use ($busqueda) {
+                    $q->whereHas('activo', function($sub) use ($busqueda) {
+                        $sub->where('codigo', 'ILIKE', "%{$busqueda}%")
+                            ->orWhere('nombre', 'ILIKE', "%{$busqueda}%");
+                    })
+                    ->orWhere('factura', 'ILIKE', "%{$busqueda}%")
+                    ->orWhere('proveedor', 'ILIKE', "%{$busqueda}%");
+                });
+            }
+
+            $perPage = $request->get('per_page', 100);
             $historial = $query->paginate($perPage);
 
+            $totalesQuery = CombustibleActivo::query();
+            if ($request->filled('activo_id')) $totalesQuery->where('activo_id', $request->activo_id);
+            if ($request->filled('proyecto_id')) $totalesQuery->where('proyecto_id', $request->proyecto_id);
+            if ($fechaDesde) $totalesQuery->whereDate('fecha', '>=', $fechaDesde);
+            if ($fechaHasta) $totalesQuery->whereDate('fecha', '<=', $fechaHasta);
+
             $totales = [
-                'total_litros' => CombustibleActivo::sum('litros'),
-                'total_costo' => CombustibleActivo::sum('costo'),
-                'total_registros' => CombustibleActivo::count()
+                'total_litros' => (float) $totalesQuery->sum('litros'),
+                'total_costo' => (float) $totalesQuery->sum('costo'),
+                'total_registros' => $totalesQuery->count()
             ];
 
             return response()->json([
@@ -1417,31 +1718,32 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Registra el consumo de combustible
-     */
     public function registrarConsumo(Request $request)
     {
         Log::info('=== MAQUINARIA: Registrando consumo de combustible ===');
         Log::info('Datos:', $request->all());
-        
+
         try {
             $request->validate([
                 'activo_id' => 'required|exists:activos,id',
                 'fecha' => 'required|date',
                 'litros' => 'required|numeric|min:0.01',
                 'costo' => 'required|numeric|min:0',
+                'precio_litro' => 'nullable|numeric|min:0',
                 'horometro' => 'nullable|numeric|min:0',
+                'kilometraje' => 'nullable|numeric|min:0',
                 'proyecto_id' => 'nullable|exists:proyectos,id',
                 'operador_id' => 'nullable|exists:plantillas,plantilla_id',
                 'factura' => 'nullable|string|max:100',
+                'proveedor_id' => 'nullable|exists:proveedores,id',
                 'proveedor' => 'nullable|string|max:255',
                 'observaciones' => 'nullable|string'
             ]);
 
             DB::beginTransaction();
 
-            $precio_litro = $request->litros > 0 ? $request->costo / $request->litros : 0;
+            $precio_litro = $request->precio_litro
+                ?? ($request->litros > 0 ? $request->costo / $request->litros : 0);
 
             $consumo = CombustibleActivo::create([
                 'activo_id' => $request->activo_id,
@@ -1453,7 +1755,9 @@ class MaquinariaController extends Controller
                 'costo' => $request->costo,
                 'precio_litro' => $precio_litro,
                 'horometro' => $request->horometro,
+                'kilometraje' => $request->kilometraje,
                 'factura' => $request->factura,
+                'proveedor_id' => $request->proveedor_id,
                 'proveedor' => $request->proveedor,
                 'observaciones' => $request->observaciones
             ]);
@@ -1466,8 +1770,6 @@ class MaquinariaController extends Controller
                 }
             }
 
-            Log::info('Consumo de combustible registrado ID: ' . $consumo->id);
-
             DB::commit();
 
             return response()->json([
@@ -1476,11 +1778,16 @@ class MaquinariaController extends Controller
                 'message' => 'Consumo de combustible registrado correctamente'
             ], 201);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al registrar consumo de combustible: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al registrar consumo de combustible: ' . $e->getMessage()
@@ -1488,9 +1795,90 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene el historial de combustible de un activo
-     */
+    public function showCombustible($id)
+{
+    \Log::info('===== showCombustible =====', [
+        'id_recibido' => $id,
+        'tipo' => gettype($id),
+        'existe_plain' => \App\Models\CombustibleActivo::where('id', $id)->exists(),
+        'existe_with_trashed' => \App\Models\CombustibleActivo::withTrashed()->where('id', $id)->exists(),
+        'total' => \App\Models\CombustibleActivo::count(),
+        'ids_reales' => \App\Models\CombustibleActivo::pluck('id')->toArray(),
+    ]);
+
+    try {
+        $consumo = CombustibleActivo::with(['activo', 'proyecto', 'operador', 'proveedor'])
+            ->findOrFail($id);
+        return response()->json(['success' => true, 'data' => $consumo]);
+    } catch (\Exception $e) {
+        \Log::error('ERROR showCombustible: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Registro de combustible no encontrado'
+        ], 404);
+    }
+}
+    public function updateCombustible(Request $request, $id)
+    {
+        try {
+            Log::info('=== updateCombustible ID: ' . $id);
+
+            $request->validate([
+                'activo_id' => 'nullable|exists:activos,id',
+                'fecha' => 'nullable|date',
+                'litros' => 'nullable|numeric|min:0.01',
+                'costo' => 'nullable|numeric|min:0',
+                'horometro' => 'nullable|numeric|min:0',
+                'kilometraje' => 'nullable|numeric|min:0',
+                'proveedor_id' => 'nullable|exists:proveedores,id',
+                'proveedor' => 'nullable|string|max:255',
+                'factura' => 'nullable|string|max:100',
+                'observaciones' => 'nullable|string'
+            ]);
+
+            DB::beginTransaction();
+
+            $consumo = CombustibleActivo::findOrFail($id);
+
+            $consumo->fill($request->only([
+                'activo_id', 'fecha', 'litros', 'costo',
+                'horometro', 'kilometraje', 'proveedor_id',
+                'proveedor', 'factura', 'observaciones'
+            ]));
+
+            if ($request->filled('litros') && $request->filled('costo')) {
+                $consumo->precio_litro = $consumo->litros > 0
+                    ? $consumo->costo / $consumo->litros
+                    : 0;
+            }
+
+            $consumo->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'data' => $consumo,
+                'message' => 'Registro de combustible actualizado'
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('ERROR updateCombustible: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar registro: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function combustible($activoId)
     {
         try {
@@ -1500,9 +1888,9 @@ class MaquinariaController extends Controller
                 ->get();
 
             $totales = [
-                'total_litros' => $combustibles->sum('litros'),
-                'total_costo' => $combustibles->sum('costo'),
-                'promedio_precio' => $combustibles->avg('precio_litro')
+                'total_litros' => (float) $combustibles->sum('litros'),
+                'total_costo' => (float) $combustibles->sum('costo'),
+                'promedio_precio' => (float) $combustibles->avg('precio_litro')
             ];
 
             return response()->json([
@@ -1523,12 +1911,12 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Obtiene el historial de mantenimientos con filtros
-     */
     public function getMantenimientos(Request $request)
     {
         try {
+            Log::info('=== getMantenimientos ===');
+            Log::info('Filtros:', $request->all());
+
             $query = MantenimientoActivo::with(['activo', 'proveedor', 'responsable'])
                 ->orderBy('fecha_inicio', 'desc');
 
@@ -1540,6 +1928,22 @@ class MaquinariaController extends Controller
                 $query->where('estatus', $request->estatus);
             }
 
+            if ($request->filled('tipo')) {
+                $query->where('tipo_mantenimiento', $request->tipo);
+            }
+
+            if ($request->filled('busqueda')) {
+                $busqueda = $request->busqueda;
+                $query->where(function($q) use ($busqueda) {
+                    $q->whereHas('activo', function($sub) use ($busqueda) {
+                        $sub->where('codigo', 'ILIKE', "%{$busqueda}%")
+                            ->orWhere('nombre', 'ILIKE', "%{$busqueda}%");
+                    })
+                    ->orWhere('descripcion', 'ILIKE', "%{$busqueda}%")
+                    ->orWhere('responsable_asignado', 'ILIKE', "%{$busqueda}%");
+                });
+            }
+
             if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
                 $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
             }
@@ -1547,7 +1951,7 @@ class MaquinariaController extends Controller
             $mantenimientos = $query->get();
 
             $estadisticas = [
-                'en_proceso' => MantenimientoActivo::where('estatus', 'en_proceso')->count(),
+                'en_proceso' => MantenimientoActivo::whereIn('estatus', ['en_proceso', 'pendiente'])->count(),
                 'proximos' => MantenimientoActivo::where('estatus', 'pendiente')
                     ->whereBetween('fecha_inicio', [now(), now()->addDays(7)])
                     ->count(),
@@ -1570,24 +1974,34 @@ class MaquinariaController extends Controller
         }
     }
 
-    // ==================== MÉTODOS PRIVADOS ====================
+    // ============================================================
+    // ================= MÉTODOS PRIVADOS =========================
+    // ============================================================
 
-    /**
-     * Calcula las estadísticas para los 4 cuadros
-     */
     private function calcularEstadisticas(Request $request): array
     {
         try {
             $query = Activo::query();
-            
+
             if ($request->filled('tipo')) {
                 $query->byTipo($request->tipo);
             }
 
             $total = (clone $query)->count();
-            $enOperacion = (clone $query)->where('estatus', 'activo')->whereNotNull('proyecto_asignado_id')->count();
-            $enMantenimiento = (clone $query)->where('estatus', 'mantenimiento')->count();
-            $disponibles = (clone $query)->where('estatus', 'activo')->whereNull('proyecto_asignado_id')->count();
+
+            $enOperacion = (clone $query)
+                ->where('estatus', 'Asignado')
+                ->whereNotNull('proyecto_asignado_id')
+                ->count();
+
+            $enMantenimiento = (clone $query)
+                ->where('estatus', 'En mantenimiento')
+                ->count();
+
+            $disponibles = (clone $query)
+                ->where('estatus', 'Disponible')
+                ->whereNull('proyecto_asignado_id')
+                ->count();
 
             return [
                 'total_equipos' => $total,
@@ -1599,7 +2013,7 @@ class MaquinariaController extends Controller
                 'total_herramientas' => (clone $query)->where('tipo_activo', 'herramienta')->count(),
                 'total_equipos_categoria' => (clone $query)->where('tipo_activo', 'equipo')->count()
             ];
-            
+
         } catch (\Exception $e) {
             Log::error('ERROR calcularEstadisticas: ' . $e->getMessage());
             return [
@@ -1615,9 +2029,6 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Calcula el avance de un mantenimiento
-     */
     private function calcularAvanceMantenimiento($mantenimiento)
     {
         if (!$mantenimiento->fecha_inicio || !$mantenimiento->fecha_fin_estimada) {
@@ -1638,18 +2049,15 @@ class MaquinariaController extends Controller
 
             $total = $fin->diffInDays($inicio);
             $transcurrido = $ahora->diffInDays($inicio);
-            
+
             if ($total == 0) return 100;
-            
+
             return round(($transcurrido / $total) * 100);
         } catch (\Exception $e) {
             return 0;
         }
     }
 
-    /**
-     * Crea los datos de maquinaria para un activo
-     */
     private function crearMaquinaria(Request $request, int $activoId): void
     {
         ActivoMaquinaria::create([
@@ -1673,9 +2081,6 @@ class MaquinariaController extends Controller
         ]);
     }
 
-    /**
-     * Crea los datos de vehículo para un activo
-     */
     private function crearVehiculo(Request $request, int $activoId): void
     {
         ActivoVehiculo::create([
@@ -1705,9 +2110,6 @@ class MaquinariaController extends Controller
         ]);
     }
 
-    /**
-     * Crea los datos de herramienta para un activo
-     */
     private function crearHerramienta(Request $request, int $activoId): void
     {
         ActivoHerramienta::create([
@@ -1724,9 +2126,6 @@ class MaquinariaController extends Controller
         ]);
     }
 
-    /**
-     * Actualiza los datos de maquinaria para un activo
-     */
     private function actualizarMaquinaria(Request $request, int $activoId): void
     {
         $maquinaria = ActivoMaquinaria::where('activo_id', $activoId)->first();
@@ -1745,9 +2144,6 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Actualiza los datos de vehículo para un activo
-     */
     private function actualizarVehiculo(Request $request, int $activoId): void
     {
         $vehiculo = ActivoVehiculo::where('activo_id', $activoId)->first();
@@ -1767,9 +2163,6 @@ class MaquinariaController extends Controller
         }
     }
 
-    /**
-     * Actualiza los datos de herramienta para un activo
-     */
     private function actualizarHerramienta(Request $request, int $activoId): void
     {
         $herramienta = ActivoHerramienta::where('activo_id', $activoId)->first();

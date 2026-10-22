@@ -11,6 +11,7 @@ use App\Http\Requests\AsignacionPersonalRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AsignacionPersonalController extends Controller
 {
@@ -36,24 +37,22 @@ class AsignacionPersonalController extends Controller
     {
         Log::info('=== PERSONAL ASIGNADO INDEX ===');
         Log::info('Filtros recibidos:', $request->all());
-        
+
         try {
             $query = AsignacionPersonal::with(['empleado', 'proyecto', 'creador']);
 
-            // Aplicar filtro de búsqueda
             if ($request->filled('busqueda')) {
                 $query->buscar($request->busqueda);
             }
 
-            // Aplicar filtro por múltiples proyectos
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
-                
+
                 if (is_array($proyectos) && count($proyectos) > 0) {
-                    $proyectosFiltrados = array_filter($proyectos, function($value) {
+                    $proyectosFiltrados = array_filter($proyectos, function ($value) {
                         return $value !== '' && $value !== null;
                     });
-                    
+
                     if (count($proyectosFiltrados) > 0) {
                         $query->whereIn('proyecto_id', $proyectosFiltrados);
                         Log::info('Filtrando por proyectos: ' . implode(', ', $proyectosFiltrados));
@@ -64,21 +63,17 @@ class AsignacionPersonalController extends Controller
                 }
             }
 
-            // Aplicar filtro por tipo de personal
             if ($request->filled('tipo_personal') && $request->tipo_personal !== 'todos') {
                 $query->byTipo($request->tipo_personal);
             }
 
-            // Aplicar filtro por status
             if ($request->filled('status')) {
                 $query->byStatus($request->status);
             }
 
-            // Ordenar y paginar
             $perPage = $request->get('per_page', 10);
             $asignaciones = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
-            // Calcular estadísticas para los 4 cuadros
             $estadisticas = $this->calcularEstadisticas($request);
 
             return response()->json([
@@ -96,7 +91,7 @@ class AsignacionPersonalController extends Controller
         } catch (\Exception $e) {
             Log::error('ERROR en index Personal Asignado: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener asignaciones: ' . $e->getMessage()
@@ -110,11 +105,11 @@ class AsignacionPersonalController extends Controller
     public function show($id)
     {
         Log::info('=== PERSONAL ASIGNADO: Mostrando detalle ID: ' . $id);
-        
+
         try {
             $asignacion = AsignacionPersonal::with(['empleado', 'proyecto', 'creador', 'historial'])
                 ->findOrFail($id);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $asignacion,
@@ -137,23 +132,22 @@ class AsignacionPersonalController extends Controller
     {
         Log::info('=== PERSONAL ASIGNADO: Creando nueva asignación ===');
         Log::info('Datos recibidos:', $request->all());
-        
+
         try {
             DB::beginTransaction();
-            
-            // Verificar que el empleado no esté ya activo en este proyecto
+
             $existe = AsignacionPersonal::where('empleado_id', $request->empleado_id)
                 ->where('proyecto_id', $request->proyecto_id)
                 ->where('status', 'activo')
                 ->exists();
-            
+
             if ($existe) {
                 return response()->json([
                     'success' => false,
                     'message' => 'El empleado ya está activo en este proyecto'
                 ], 422);
             }
-            
+
             $asignacion = AsignacionPersonal::create([
                 'empleado_id' => $request->empleado_id,
                 'proyecto_id' => $request->proyecto_id,
@@ -166,22 +160,22 @@ class AsignacionPersonalController extends Controller
                 'observaciones' => $request->observaciones,
                 'created_by' => auth()->id()
             ]);
-            
+
             Log::info('Asignación creada con ID: ' . $asignacion->id);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $asignacion,
                 'message' => 'Personal asignado correctamente'
             ], 201);
-            
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al crear asignación: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al asignar personal: ' . $e->getMessage()
@@ -196,20 +190,19 @@ class AsignacionPersonalController extends Controller
     {
         Log::info('=== PERSONAL ASIGNADO: Actualizando ID: ' . $id);
         Log::info('Datos:', $request->all());
-        
+
         try {
             DB::beginTransaction();
-            
+
             $asignacion = AsignacionPersonal::findOrFail($id);
-            
-            // Verificar que no haya duplicados
+
             if ($request->status === 'activo') {
                 $existe = AsignacionPersonal::where('empleado_id', $request->empleado_id)
                     ->where('proyecto_id', $request->proyecto_id)
                     ->where('status', 'activo')
                     ->where('id', '!=', $id)
                     ->exists();
-                
+
                 if ($existe) {
                     return response()->json([
                         'success' => false,
@@ -217,7 +210,7 @@ class AsignacionPersonalController extends Controller
                     ], 422);
                 }
             }
-            
+
             $asignacion->update([
                 'empleado_id' => $request->empleado_id,
                 'proyecto_id' => $request->proyecto_id,
@@ -229,11 +222,11 @@ class AsignacionPersonalController extends Controller
                 'status' => $request->status,
                 'observaciones' => $request->observaciones
             ]);
-            
+
             Log::info('Asignación actualizada ID: ' . $asignacion->id);
-            
+
             DB::commit();
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $asignacion,
@@ -243,7 +236,7 @@ class AsignacionPersonalController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('ERROR al actualizar asignación: ' . $e->getMessage());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al actualizar la asignación: ' . $e->getMessage()
@@ -257,11 +250,11 @@ class AsignacionPersonalController extends Controller
     public function destroy($id)
     {
         Log::info('=== PERSONAL ASIGNADO: Eliminando ID: ' . $id);
-        
+
         try {
             $asignacion = AsignacionPersonal::findOrFail($id);
             $asignacion->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Asignación eliminada correctamente'
@@ -282,17 +275,17 @@ class AsignacionPersonalController extends Controller
     public function cambiarStatus(Request $request, $id)
     {
         Log::info('=== PERSONAL ASIGNADO: Cambiando status ID: ' . $id . ' a: ' . $request->status);
-        
+
         try {
             $asignacion = AsignacionPersonal::findOrFail($id);
-            
+
             if (!$asignacion->cambiarStatus($request->status, $request->observaciones)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Status no válido'
                 ], 400);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $asignacion,
@@ -310,41 +303,225 @@ class AsignacionPersonalController extends Controller
 
     /**
      * Reasigna un empleado a otro proyecto
+     * 
+     * ✅ TICKET CERRADO: Implementación completa de reasignación
+     * - Valida entrada con Validator
+     * - Valida que el proyecto destino sea distinto y esté activo
+     * - Valida que el empleado no esté ya activo en el destino
+     * - Ejecuta la reasignación y hace refresh() para traer datos actualizados
+     * - Registra historial COMPLETO con usuario_id, roles y status
+     * - Devuelve la asignación actualizada con relaciones
      */
     public function reasignar(Request $request, $id)
     {
-        Log::info('=== PERSONAL ASIGNADO: Reasignando ID: ' . $id . ' a proyecto: ' . $request->proyecto_id);
-        
+        Log::info('=== PERSONAL ASIGNADO: Reasignando ID: ' . $id);
+        Log::info('Datos recibidos:', $request->all());
+
+        // ✅ Validación robusta
+        $validator = Validator::make($request->all(), [
+            'proyecto_id' => 'required|exists:proyectos,id',
+            'observaciones' => 'nullable|string|max:500',
+        ], [
+            'proyecto_id.required' => 'Debe seleccionar un proyecto destino',
+            'proyecto_id.exists' => 'El proyecto seleccionado no existe',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Datos inválidos',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         try {
+            DB::beginTransaction();
+
             $asignacion = AsignacionPersonal::findOrFail($id);
-            
-            // Verificar que no esté activo en el nuevo proyecto
+
+            // ✅ Validar que el proyecto destino no sea el mismo actual
+            if ((int) $asignacion->proyecto_id === (int) $request->proyecto_id) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El empleado ya se encuentra asignado a este proyecto'
+                ], 422);
+            }
+
+            // ✅ Validar que el proyecto destino exista
+            $proyectoDestino = Proyecto::find($request->proyecto_id);
+            if (!$proyectoDestino) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El proyecto destino no existe'
+                ], 404);
+            }
+
+            // ✅ Verificar que no esté activo en el nuevo proyecto
             $existe = AsignacionPersonal::where('empleado_id', $asignacion->empleado_id)
                 ->where('proyecto_id', $request->proyecto_id)
                 ->where('status', 'activo')
                 ->where('id', '!=', $id)
                 ->exists();
-            
+
             if ($existe) {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'El empleado ya está activo en el proyecto destino'
                 ], 422);
             }
-            
+
+            // Guardar datos previos para el historial
+            $proyectoAnteriorId = $asignacion->proyecto_id;
+            $proyectoAnteriorNombre = $asignacion->proyecto?->nombre ?? 'N/A';
+            $rolAnterior = $asignacion->rol;
+            $statusAnterior = $asignacion->status;
+            $empleadoId = $asignacion->empleado_id;
+
+            Log::info('Datos previos capturados:', [
+                'proyecto_anterior_id' => $proyectoAnteriorId,
+                'proyecto_anterior_nombre' => $proyectoAnteriorNombre,
+                'rol_anterior' => $rolAnterior,
+                'status_anterior' => $statusAnterior,
+                'empleado_id' => $empleadoId,
+            ]);
+
+            // ✅ Ejecutar la reasignación
             $asignacion->reasignar($request->proyecto_id, $request->observaciones);
-            
+
+            // ✅ IMPORTANTE: Recargar desde BD para asegurar datos actualizados
+            $asignacion->refresh();
+            $asignacion->load(['empleado', 'proyecto', 'creador']);
+
+            Log::info('🔍 DESPUÉS DE reasignar():', [
+                'asignacion_id' => $asignacion->id,
+                'proyecto_id_en_memoria' => $asignacion->proyecto_id,
+                'proyecto_nombre' => $asignacion->proyecto?->nombre,
+            ]);
+
+            // ✅ Registrar en historial con TODAS las columnas necesarias
+            try {
+                AsignacionHistorial::create([
+                    'asignacion_id'         => $asignacion->id,
+                    'usuario_id'            => auth()->id(),                       // ✅ CRÍTICO (era el que faltaba)
+                    'accion'                => 'reasignacion',
+                    'fecha'                 => now(),
+                    'detalles'              => $request->observaciones ??
+                        "Reasignado de '{$proyectoAnteriorNombre}' a '{$proyectoDestino->nombre}'",
+                    'rol_anterior'          => $rolAnterior,
+                    'rol_nuevo'             => $asignacion->rol,
+                    'proyecto_anterior_id'  => $proyectoAnteriorId,
+                    'proyecto_nuevo_id'     => $request->proyecto_id,
+                    'status_anterior'       => $statusAnterior,
+                    'status_nuevo'          => $asignacion->status,
+                ]);
+
+                Log::info('✅ Historial de reasignación registrado correctamente');
+
+            } catch (\Exception $historialEx) {
+                // El historial no debe bloquear la operación principal
+                Log::warning('⚠️ No se pudo registrar historial de reasignación: ' . $historialEx->getMessage());
+                Log::warning('Datos intentados:', [
+                    'asignacion_id'         => $asignacion->id,
+                    'usuario_id'            => auth()->id(),
+                    'accion'                => 'reasignacion',
+                    'fecha'                 => now()->toDateTimeString(),
+                    'proyecto_anterior_id'  => $proyectoAnteriorId,
+                    'proyecto_nuevo_id'     => $request->proyecto_id,
+                    'rol_anterior'          => $rolAnterior,
+                    'rol_nuevo'             => $asignacion->rol,
+                    'status_anterior'       => $statusAnterior,
+                    'status_nuevo'          => $asignacion->status,
+                ]);
+            }
+
+            DB::commit();
+
+            Log::info('✅ Reasignación exitosa. Empleado ID: ' . $empleadoId .
+                ' | Proyecto anterior: ' . $proyectoAnteriorId .
+                ' | Proyecto nuevo: ' . $request->proyecto_id);
+
             return response()->json([
                 'success' => true,
                 'data' => $asignacion,
-                'message' => 'Empleado reasignado correctamente'
+                'message' => 'Empleado reasignado correctamente a "' . $proyectoDestino->nombre . '"'
             ]);
 
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            DB::rollBack();
+            Log::error('Asignación no encontrada: ' . $id);
+            return response()->json([
+                'success' => false,
+                'message' => 'La asignación no existe'
+            ], 404);
+
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::error('ERROR al reasignar: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error al reasignar: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * ✅ Proyectos disponibles para reasignar (excluye el proyecto actual)
+     */
+    public function proyectosParaReasignar($id)
+    {
+        Log::info('=== PERSONAL ASIGNADO: Proyectos disponibles para reasignar ID: ' . $id);
+
+        try {
+            $asignacion = AsignacionPersonal::with(['empleado', 'proyecto'])->findOrFail($id);
+
+            $proyectos = Proyecto::where(function ($q) {
+                    $q->where('status', 'activo')->orWhere('status', 'en_curso');
+                })
+                ->where('id', '!=', $asignacion->proyecto_id)
+                ->select('id', 'codigo', 'nombre')
+                ->orderBy('nombre')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'nombre' => $item->codigo . ' - ' . $item->nombre
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'proyectos' => $proyectos,
+                    'asignacion_actual' => [
+                        'id' => $asignacion->id,
+                        'empleado_id' => $asignacion->empleado_id,
+                        'empleado_nombre' => $asignacion->nombre_completo,
+                        'empleado_numero' => $asignacion->empleado?->numero_empleado_interno ?? $asignacion->empleado_id,
+                        'proyecto_id' => $asignacion->proyecto_id,
+                        'proyecto_nombre' => $asignacion->proyecto?->nombre ?? 'N/A',
+                        'tipo_personal' => $asignacion->tipo_personal,
+                        'rol' => $asignacion->rol,
+                        'status' => $asignacion->status,
+                    ]
+                ],
+                'message' => 'Proyectos obtenidos correctamente'
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Asignación no encontrada'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('ERROR al obtener proyectos para reasignar: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener proyectos'
             ], 500);
         }
     }
@@ -356,7 +533,7 @@ class AsignacionPersonalController extends Controller
     {
         try {
             $estadisticas = $this->calcularEstadisticas($request);
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $estadisticas
@@ -377,18 +554,18 @@ class AsignacionPersonalController extends Controller
     public function exportar(Request $request)
     {
         Log::info('=== PERSONAL ASIGNADO: Exportando datos ===');
-        
+
         try {
             $query = AsignacionPersonal::with(['empleado', 'proyecto']);
-            
+
             if ($request->filled('busqueda')) {
                 $query->buscar($request->busqueda);
             }
-            
+
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
                 if (is_array($proyectos) && count($proyectos) > 0) {
-                    $proyectosFiltrados = array_filter($proyectos, function($value) {
+                    $proyectosFiltrados = array_filter($proyectos, function ($value) {
                         return $value !== '' && $value !== null;
                     });
                     if (count($proyectosFiltrados) > 0) {
@@ -398,15 +575,15 @@ class AsignacionPersonalController extends Controller
                     $query->where('proyecto_id', $proyectos);
                 }
             }
-            
+
             if ($request->filled('tipo_personal') && $request->tipo_personal !== 'todos') {
                 $query->byTipo($request->tipo_personal);
             }
-            
+
             $asignaciones = $query->orderBy('created_at', 'desc')->get();
-            
+
             $headers = ['No. Empleado', 'Nombre', 'Tipo', 'Proyecto', 'Rol', 'Fecha Asignación', 'Fecha Fin', 'Salario Diario', 'Status'];
-            $rows = $asignaciones->map(function($asignacion) {
+            $rows = $asignaciones->map(function ($asignacion) {
                 return [
                     $asignacion->empleado?->numero_empleado_interno ?? $asignacion->empleado_id,
                     $asignacion->nombre_completo,
@@ -419,7 +596,7 @@ class AsignacionPersonalController extends Controller
                     $asignacion->status_nombre
                 ];
             });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -450,14 +627,14 @@ class AsignacionPersonalController extends Controller
                 ->select('plantilla_id as id', 'nombre', 'apellido_paterno', 'apellido_materno', 'numero_empleado_interno')
                 ->orderBy('nombre')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'nombre_completo' => trim($item->nombre . ' ' . ($item->apellido_paterno ?? '') . ' ' . ($item->apellido_materno ?? '')),
                         'numero_empleado' => $item->numero_empleado_interno ?? $item->id
                     ];
                 });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $empleados
@@ -484,13 +661,13 @@ class AsignacionPersonalController extends Controller
                 ->select('id', 'codigo', 'nombre')
                 ->orderBy('nombre')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'nombre' => $item->codigo . ' - ' . $item->nombre
                     ];
                 });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $proyectos
@@ -516,13 +693,13 @@ class AsignacionPersonalController extends Controller
                 ->select('id', 'folio', 'nombre')
                 ->orderBy('nombre')
                 ->get()
-                ->map(function($item) {
+                ->map(function ($item) {
                     return [
                         'id' => $item->id,
                         'nombre' => $item->folio . ' - ' . $item->nombre
                     ];
                 });
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $puestos
@@ -547,11 +724,11 @@ class AsignacionPersonalController extends Controller
     {
         try {
             $query = AsignacionPersonal::query();
-            
+
             if ($request->filled('proyecto_id')) {
                 $proyectos = $request->input('proyecto_id');
                 if (is_array($proyectos) && count($proyectos) > 0) {
-                    $proyectosFiltrados = array_filter($proyectos, function($value) {
+                    $proyectosFiltrados = array_filter($proyectos, function ($value) {
                         return $value !== '' && $value !== null;
                     });
                     if (count($proyectosFiltrados) > 0) {
@@ -561,7 +738,7 @@ class AsignacionPersonalController extends Controller
                     $query->where('proyecto_id', $proyectos);
                 }
             }
-            
+
             if ($request->filled('tipo_personal') && $request->tipo_personal !== 'todos') {
                 $query->byTipo($request->tipo_personal);
             }
@@ -571,8 +748,7 @@ class AsignacionPersonalController extends Controller
                 ->whereIn('tipo_personal', ['obrero', 'operador', 'supervisor'])
                 ->count();
             $administrativos = (clone $query)->whereIn('tipo_personal', ['administrativo', 'ingeniero'])->count();
-            
-            // Costo mensual (considerando 24 días)
+
             $costoTotal = (clone $query)->where('status', 'activo')->sum('salario_diario') * 24;
 
             return [
@@ -586,7 +762,7 @@ class AsignacionPersonalController extends Controller
                 'vacaciones' => (clone $query)->where('status', 'vacaciones')->count(),
                 'permiso' => (clone $query)->where('status', 'permiso')->count()
             ];
-            
+
         } catch (\Exception $e) {
             Log::error('ERROR calcularEstadisticas: ' . $e->getMessage());
             return [

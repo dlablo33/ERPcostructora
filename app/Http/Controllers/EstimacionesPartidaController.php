@@ -105,7 +105,7 @@ class EstimacionesPartidaController extends Controller
                 });
             }
             
-            $estimaciones = $query->orderBy('fecha', 'desc')->get();
+                        $estimaciones = $query->orderBy('fecha', 'desc')->get();
             
             $data = [];
             foreach ($estimaciones as $est) {
@@ -118,6 +118,21 @@ class EstimacionesPartidaController extends Controller
                 $avancePeriodo = $est->avance_porcentaje - $avanceAnterior;
                 $montoDevengado = ($avancePeriodo / 100) * $est->partida->importe;
                 
+                // ✅ FACTURADO REAL: sumar los conceptos de facturas timbradas
+                //    ligados a esta estimación (quitando el IVA)
+                $facturadoConIva = DB::table('facturas_conceptos as fc')
+                    ->join('facturas as f', 'fc.factura_id', '=', 'f.factura_id')
+                    ->where('fc.estimacion_id', $est->id)
+                    ->where('f.estatus', 19)   // solo timbradas
+                    ->whereNull('f.deleted_at')
+                    ->sum('fc.importe');
+                
+                $montoFacturado = $facturadoConIva / 1.16;
+                $porCobrar      = max(0, $montoDevengado - $montoFacturado);
+                $pctCobro       = $montoDevengado > 0
+                    ? round(($montoFacturado / $montoDevengado) * 100, 2)
+                    : 0;
+                
                 $data[] = [
                     'id' => $est->id,
                     'proyecto' => $est->proyecto ? $est->proyecto->nombre : 'N/A',
@@ -128,10 +143,10 @@ class EstimacionesPartidaController extends Controller
                     'avance_periodo' => round($avancePeriodo, 2),
                     'cantidad_ejecutada' => $est->cantidad_ejecutada,
                     'unidad' => $est->partida ? $est->partida->unidad : '',
-                    'monto_devengado' => $montoDevengado,
-                    'monto_facturado' => 0,
-                    'cuenta_por_cobrar' => $montoDevengado,
-                    'porcentaje_cobro' => 0,
+                    'monto_devengado' => round($montoDevengado, 2),
+                    'monto_facturado' => round($montoFacturado, 2),   // ✅ REAL
+                    'cuenta_por_cobrar' => round($porCobrar, 2),      // ✅ REAL
+                    'porcentaje_cobro' => $pctCobro,                  // ✅ REAL
                 ];
             }
             
@@ -199,83 +214,76 @@ class EstimacionesPartidaController extends Controller
     /**
      * Crear una nueva estimación
      */
-    /**
- * Crear una nueva estimación
- */
-public function store(Request $request)
-{
-    try {
-        $validated = $request->validate([
-            'proyecto_id' => 'required|exists:proyectos,id',
-            'partida_id' => 'required|exists:proyecto_partidas,id',
-            'fecha' => 'required|date',
-            'periodo_inicio' => 'nullable|date',
-            'periodo_fin' => 'nullable|date|after_or_equal:periodo_inicio',
-            'avance_porcentaje' => 'required|numeric|min:0|max:100',
-            'cantidad_ejecutada' => 'nullable|numeric|min:0',
-            'observaciones' => 'nullable|string',
-        ]);
-        
-        DB::beginTransaction();
-        
-        // Obtener la última estimación de esta partida
-        $anterior = EstimacionesPartida::where('partida_id', $validated['partida_id'])
-            ->orderBy('fecha', 'desc')
-            ->first();
-        
-        // Si existe una estimación anterior, validar que el avance sea mayor
-        if ($anterior) {
-            if ($validated['avance_porcentaje'] < $anterior->avance_porcentaje) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "El avance no puede ser menor al anterior ({$anterior->avance_porcentaje}%). Si desea corregir, elimine la estimación anterior primero."
-                ], 422);
+    public function store(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'proyecto_id' => 'required|exists:proyectos,id',
+                'partida_id' => 'required|exists:proyecto_partidas,id',
+                'fecha' => 'required|date',
+                'periodo_inicio' => 'nullable|date',
+                'periodo_fin' => 'nullable|date|after_or_equal:periodo_inicio',
+                'avance_porcentaje' => 'required|numeric|min:0|max:100',
+                'cantidad_ejecutada' => 'nullable|numeric|min:0',
+                'observaciones' => 'nullable|string',
+            ]);
+            
+            DB::beginTransaction();
+            
+            $anterior = EstimacionesPartida::where('partida_id', $validated['partida_id'])
+                ->orderBy('fecha', 'desc')
+                ->first();
+            
+            if ($anterior) {
+                if ($validated['avance_porcentaje'] < $anterior->avance_porcentaje) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "El avance no puede ser menor al anterior ({$anterior->avance_porcentaje}%). Si desea corregir, elimine la estimación anterior primero."
+                    ], 422);
+                }
+                
+                if ($validated['avance_porcentaje'] == $anterior->avance_porcentaje) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "El avance es igual al anterior ({$anterior->avance_porcentaje}%). Registre un avance mayor o elimine la anterior."
+                    ], 422);
+                }
             }
             
-            // Si es igual al anterior, también es un error (no tiene sentido)
-            if ($validated['avance_porcentaje'] == $anterior->avance_porcentaje) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "El avance es igual al anterior ({$anterior->avance_porcentaje}%). Registre un avance mayor o elimine la anterior."
-                ], 422);
+            $partida = ProyectoPartida::find($validated['partida_id']);
+            if (!isset($validated['cantidad_ejecutada']) || $validated['cantidad_ejecutada'] === null) {
+                $avanceAnterior = $anterior ? $anterior->avance_porcentaje : 0;
+                $avancePeriodo = $validated['avance_porcentaje'] - $avanceAnterior;
+                $validated['cantidad_ejecutada'] = ($avancePeriodo / 100) * $partida->cantidad;
             }
+            
+            $validated['created_by'] = auth()->id();
+            
+            $estimacion = EstimacionesPartida::create($validated);
+            
+            DB::commit();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Estimación registrada exitosamente',
+                'data' => $estimacion
+            ]);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al crear estimación: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear la estimación: ' . $e->getMessage()
+            ], 500);
         }
-        
-        // Si no se envió cantidad ejecutada, calcularla proporcionalmente
-        $partida = ProyectoPartida::find($validated['partida_id']);
-        if (!isset($validated['cantidad_ejecutada']) || $validated['cantidad_ejecutada'] === null) {
-            $avanceAnterior = $anterior ? $anterior->avance_porcentaje : 0;
-            $avancePeriodo = $validated['avance_porcentaje'] - $avanceAnterior;
-            $validated['cantidad_ejecutada'] = ($avancePeriodo / 100) * $partida->cantidad;
-        }
-        
-        $validated['created_by'] = auth()->id();
-        
-        $estimacion = EstimacionesPartida::create($validated);
-        
-        DB::commit();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Estimación registrada exitosamente',
-            'data' => $estimacion
-        ]);
-        
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error de validación',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Error al crear estimación: ' . $e->getMessage());
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al crear la estimación: ' . $e->getMessage()
-        ], 500);
     }
-}
     
     /**
      * Actualizar una estimación existente
@@ -501,6 +509,99 @@ public function store(Request $request)
         } catch (\Exception $e) {
             Log::error('Error al exportar: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Obtener estimaciones pendientes de facturar de un proyecto.
+     * Se usa desde el modal de "Nueva Factura" para elegir partidas/estimaciones.
+     *
+     * GET /estimaciones/api/pendientes-facturar/{proyectoId}
+     */
+    public function getPendientesFacturar($proyectoId)
+    {
+        try {
+            $partidas = ProyectoPartida::where('proyecto_id', $proyectoId)
+                ->where('activa', true)
+                ->orderBy('codigo')
+                ->get();
+
+            $resultado = [];
+
+            foreach ($partidas as $partida) {
+                $estimaciones = EstimacionesPartida::where('partida_id', $partida->id)
+                    ->orderBy('fecha', 'asc')
+                    ->get();
+
+                if ($estimaciones->isEmpty()) {
+                    continue;
+                }
+
+                $avanceAnterior      = 0;
+                $acumuladoEstimado   = 0;
+                $acumuladoFacturado  = 0;
+                $detalleEstimaciones = [];
+
+                foreach ($estimaciones as $est) {
+                    $avancePeriodo = $est->avance_porcentaje - $avanceAnterior;
+                    $montoPeriodo  = ($avancePeriodo / 100) * $partida->importe;
+                    $acumuladoEstimado += $montoPeriodo;
+
+                    $facturadoConIva = DB::table('facturas_conceptos as fc')
+                        ->join('facturas as f', 'fc.factura_id', '=', 'f.factura_id')
+                        ->where('fc.estimacion_id', $est->id)
+                        ->where('f.estatus', 19)
+                        ->whereNull('f.deleted_at')
+                        ->sum('fc.importe');
+
+                    $facturadoSinIva = $facturadoConIva / 1.16;
+                    $acumuladoFacturado += $facturadoSinIva;
+
+                    $pendienteEsta = max(0, $montoPeriodo - $facturadoSinIva);
+
+                    $detalleEstimaciones[] = [
+                        'estimacion_id'     => $est->id,
+                        'fecha'             => $est->fecha ? $est->fecha->format('Y-m-d') : null,
+                        'avance_porcentaje' => (float) $est->avance_porcentaje,
+                        'avance_periodo'    => round($avancePeriodo, 2),
+                        'monto_devengado'   => round($montoPeriodo, 2),
+                        'monto_facturado'   => round($facturadoSinIva, 2),
+                        'monto_pendiente'   => round($pendienteEsta, 2),
+                    ];
+
+                    $avanceAnterior = $est->avance_porcentaje;
+                }
+
+                $pendienteTotal = $acumuladoEstimado - $acumuladoFacturado;
+
+                if ($pendienteTotal > 0.01) {
+                    $resultado[] = [
+                        'partida_id'             => $partida->id,
+                        'partida_codigo'         => $partida->codigo,
+                        'partida_nombre'         => $partida->nombre,
+                        'unidad'                 => $partida->unidad,
+                        'importe_partida'        => (float) $partida->importe,
+                        'avance_actual'          => (float) $avanceAnterior,
+                        'monto_devengado_total'  => round($acumuladoEstimado, 2),
+                        'monto_facturado_total'  => round($acumuladoFacturado, 2),
+                        'monto_pendiente'        => round($pendienteTotal, 2),
+                        'estimaciones'           => $detalleEstimaciones,
+                    ];
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'data'    => $resultado,
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error en getPendientesFacturar: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener pendientes: ' . $e->getMessage(),
+                'data'    => [],
+            ], 500);
         }
     }
 }

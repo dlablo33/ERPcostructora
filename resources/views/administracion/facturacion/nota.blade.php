@@ -150,9 +150,7 @@
             <button id="cerrarModal" style="background: none; border: none; color: white; font-size: 32px; cursor: pointer;">&times;</button>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- FEEDBACK DEL MODAL: aquí se muestran TODOS los errores/éxitos -->
-        <!-- ============================================================ -->
+        <!-- FEEDBACK DEL MODAL -->
         <div id="modal-feedback" style="display: none; margin: 15px 25px 0 25px; padding: 14px 18px; border-radius: 8px; font-size: 14px; line-height: 1.5; border-left: 5px solid;">
             <div style="display: flex; align-items: flex-start; gap: 10px;">
                 <i id="modal-feedback-icon" class="fas fa-exclamation-circle" style="font-size: 18px; margin-top: 2px;"></i>
@@ -274,7 +272,7 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL MONTO A CREDITAR (ahora con su propio feedback)        -->
+<!-- MODAL MONTO A CREDITAR                                       -->
 <!-- ============================================================ -->
 <div id="modalMonto" style="display: none; position: fixed; z-index: 10003; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7);">
     <div style="background-color: white; margin: 15% auto; width: 90%; max-width: 450px; border-radius: 12px;">
@@ -305,7 +303,7 @@
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL VER DETALLE (feedback propio)                          -->
+<!-- MODAL VER DETALLE                                            -->
 <!-- ============================================================ -->
 <div id="modalVerDetalle" style="display: none; position: fixed; z-index: 10002; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center;">
     <div style="background: white; border-radius: 12px; max-width: 520px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
@@ -361,7 +359,6 @@
 
     .btn-credito:hover { background-color: #0a4bc9; }
 
-    /* Feedback visual: borde del input con error */
     .input-error {
         border-color: #dc3545 !important;
         background-color: #fff5f5 !important;
@@ -379,7 +376,6 @@
 // SISTEMA DE FEEDBACK EN EL PROPIO MODAL
 // ============================================================
 const ModalFeedback = {
-    // Feedback dentro del modal de nota de crédito
     mostrar(mensaje, tipo = 'error', titulo = null) {
         const cont = document.getElementById('modal-feedback');
         const icono = document.getElementById('modal-feedback-icon');
@@ -401,14 +397,12 @@ const ModalFeedback = {
         texto.innerHTML = (titulo ? `<strong>${titulo}:</strong> ` : '') + mensaje;
         cont.style.display = 'block';
 
-        // Auto-scroll al inicio del modal para ver el mensaje
         const modal = document.getElementById('modalNuevaNota');
         if (modal) {
             const scroller = modal.querySelector('div[style*="max-height"]');
             if (scroller) scroller.scrollTop = 0;
         }
 
-        // Auto-ocultar en éxito
         if (tipo === 'success') {
             setTimeout(() => this.ocultar(), 4000);
         }
@@ -419,7 +413,6 @@ const ModalFeedback = {
         if (cont) cont.style.display = 'none';
     },
 
-    // Feedback dentro del modal de monto
     mostrarMonto(mensaje, tipo = 'error') {
         const cont = document.getElementById('modalMonto-feedback');
         const icono = document.getElementById('modalMonto-feedback-icon');
@@ -451,7 +444,6 @@ const ModalFeedback = {
     }
 };
 
-// Alias para compatibilidad con código existente
 function showError(msg)   { ModalFeedback.mostrar(msg, 'error'); }
 function showSuccess(msg) { ModalFeedback.mostrar(msg, 'success'); }
 function showWarning(msg) { ModalFeedback.mostrar(msg, 'warning'); }
@@ -467,6 +459,7 @@ let facturaSeleccionada = null;
 let saldoDisponible = 0;
 let totalFactura = 0;
 let totalNotasAplicadas = 0;
+let timeoutBusqueda = null;
 
 // ============================================================
 // UTILIDADES
@@ -484,7 +477,7 @@ function formatDate(dateString) {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return dateString;
         return date.toLocaleDateString('es-MX');
-    } catch(e) { return dateString; }
+    } catch (e) { return dateString; }
 }
 
 function getBadgeClass(estatus) {
@@ -502,12 +495,10 @@ function showLoading(show) {
     if (overlay) overlay.style.display = show ? 'flex' : 'none';
 }
 
-// Marca visualmente los campos con error
 function marcarCamposConError(errors) {
     document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
     if (!errors) return;
     Object.keys(errors).forEach(campo => {
-        // Mapear nombres del backend a IDs del HTML
         const mapa = {
             contacto_id: 'contacto_id',
             factura_relacionada_id: 'factura_relacionada_id',
@@ -525,7 +516,7 @@ function marcarCamposConError(errors) {
 }
 
 // ============================================================
-// CARGA DE DATOS
+// CARGA DE DATOS (desde servidor, con filtros de fecha y búsqueda)
 // ============================================================
 function cargarDatos() {
     showLoading(true);
@@ -680,9 +671,14 @@ function verNota(id) {
                 `;
                 document.getElementById('modalVerDetalle').style.display = 'flex';
                 document.body.style.overflow = 'hidden';
+            } else {
+                alert(data.message || 'No se pudo cargar el detalle');
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al cargar el detalle de la nota');
+        });
 }
 
 function cerrarModalVerDetalle() {
@@ -690,9 +686,15 @@ function cerrarModalVerDetalle() {
     document.body.style.overflow = 'auto';
 }
 
+// ============================================================
+// ELIMINAR NOTA DE CRÉDITO
+// ============================================================
 function eliminarNota(id) {
     if (!confirm('¿Está seguro de eliminar esta nota de crédito?')) return;
-    fetch(`/api/notas-credito/${id}`, {
+
+    showLoading(true);
+
+    fetch(`/notas-credito/${id}`, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': document.getElementById('csrf_token').value,
@@ -700,16 +702,24 @@ function eliminarNota(id) {
         },
         credentials: 'same-origin'
     })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
+        .then(async r => {
+            const body = await r.json().catch(() => ({}));
+            return { status: r.status, body };
+        })
+        .then(({ status, body }) => {
+            showLoading(false);
+            if (body.success) {
                 alert('Nota de crédito eliminada correctamente');
                 cargarDatos();
             } else {
-                alert(data.message || 'Error al eliminar');
+                alert('Error (' + status + '): ' + (body.message || 'Error desconocido'));
             }
         })
-        .catch(error => alert('Error al eliminar'));
+        .catch(error => {
+            showLoading(false);
+            console.error('Error:', error);
+            alert('Error de red al eliminar la nota de crédito');
+        });
 }
 
 // ============================================================
@@ -820,7 +830,7 @@ function cargarCombos() {
                 data.forEach(c => {
                     select.innerHTML += `<option value="${c.contacto_id}">${c.razon_social} ${c.rfc ? '- ' + c.rfc : ''}</option>`;
                 });
-                select.onchange = function() { cargarFacturasRelacionadas(this.value); };
+                select.onchange = function () { cargarFacturasRelacionadas(this.value); };
             }
         }).catch(e => console.error('Error clientes:', e));
 
@@ -863,7 +873,7 @@ function cargarFacturasRelacionadas(clienteId) {
                             Saldo: $${parseFloat(saldoMostrar).toFixed(2)}
                         </option>`;
                     });
-                    selectFactura.onchange = function() {
+                    selectFactura.onchange = function () {
                         const option = this.options[this.selectedIndex];
                         if (this.value) {
                             const total = parseFloat(option.dataset.total);
@@ -963,7 +973,6 @@ function cargarDetalleFactura(facturaId, total, saldo, cliente) {
 }
 
 function guardarNota(timbrar = false) {
-    // Limpiar estados previos
     document.getElementById('modalMonto').style.display = 'none';
     showLoading(false);
     ModalFeedback.ocultar();
@@ -987,24 +996,23 @@ function guardarNota(timbrar = false) {
     const montoTexto = resumenTotal_elem.textContent;
     const monto = parseFloat(montoTexto.replace(/[^0-9.-]+/g, ''));
 
-    // Validaciones locales — todas se muestran DENTRO del modal
     if (!contacto_id) {
-        document.getElementById('contacto_id').classList.add('input-error');
+        contacto_id_elem.classList.add('input-error');
         ModalFeedback.mostrar('Seleccione un cliente');
         return;
     }
     if (!factura_relacionada_id) {
-        document.getElementById('factura_relacionada_id').classList.add('input-error');
+        factura_relacionada_id_elem.classList.add('input-error');
         ModalFeedback.mostrar('Seleccione una factura relacionada');
         return;
     }
     if (!cat_serie_id) {
-        document.getElementById('cat_serie_id').classList.add('input-error');
+        cat_serie_id_elem.classList.add('input-error');
         ModalFeedback.mostrar('Seleccione una serie');
         return;
     }
     if (!motivo) {
-        document.getElementById('motivo').classList.add('input-error');
+        motivo_elem.classList.add('input-error');
         ModalFeedback.mostrar('Escriba el motivo de la nota de crédito');
         return;
     }
@@ -1054,41 +1062,39 @@ function guardarNota(timbrar = false) {
         credentials: 'same-origin',
         body: JSON.stringify(data)
     })
-    .then(async r => {
-        const body = await r.json().catch(() => ({}));
-        return { status: r.status, body };
-    })
-    .then(({ status, body }) => {
-        showLoading(false);
+        .then(async r => {
+            const body = await r.json().catch(() => ({}));
+            return { status: r.status, body };
+        })
+        .then(({ status, body }) => {
+            showLoading(false);
 
-        if (body.success) {
-            const mensaje = timbrar
-                ? '✅ Nota de crédito timbrada correctamente'
-                : '✅ Nota de crédito guardada correctamente';
-            ModalFeedback.mostrar(mensaje, 'success', null);
-            setTimeout(() => {
-                cerrarModalNota();
-                cargarDatos();
-            }, 1200);
-            return;
-        }
+            if (body.success) {
+                const mensaje = timbrar
+                    ? '✅ Nota de crédito timbrada correctamente'
+                    : '✅ Nota de crédito guardada correctamente';
+                ModalFeedback.mostrar(mensaje, 'success', null);
+                setTimeout(() => {
+                    cerrarModalNota();
+                    cargarDatos();
+                }, 1200);
+                return;
+            }
 
-        // Errores de validación Laravel (422)
-        if (status === 422 && body.errors) {
-            marcarCamposConError(body.errors);
-            const lista = Object.values(body.errors).flat().join(' • ');
-            ModalFeedback.mostrar(lista, 'error', 'Errores de validación');
-            return;
-        }
+            if (status === 422 && body.errors) {
+                marcarCamposConError(body.errors);
+                const lista = Object.values(body.errors).flat().join(' • ');
+                ModalFeedback.mostrar(lista, 'error', 'Errores de validación');
+                return;
+            }
 
-        // Otro error del backend
-        ModalFeedback.mostrar(body.message || 'Error al guardar la nota de crédito');
-    })
-    .catch(err => {
-        showLoading(false);
-        console.error('Error:', err);
-        ModalFeedback.mostrar('Error al guardar: ' + (err.message || 'Error desconocido'));
-    });
+            ModalFeedback.mostrar(body.message || 'Error al guardar la nota de crédito');
+        })
+        .catch(err => {
+            showLoading(false);
+            console.error('Error:', err);
+            ModalFeedback.mostrar('Error al guardar: ' + (err.message || 'Error desconocido'));
+        });
 }
 
 function exportToExcel() {
@@ -1120,21 +1126,39 @@ function exportToExcel() {
     URL.revokeObjectURL(link.href);
 }
 
+// ============================================================
+// FILTROS (búsqueda local robusta)
+// ============================================================
 function aplicarFiltros() {
     const fi = document.getElementById('fechaInicio').value;
     const ff = document.getElementById('fechaFin').value;
-    const busq = document.getElementById('buscador').value.toLowerCase();
+    const busq = (document.getElementById('buscador').value || '').trim().toLowerCase();
+
     let filtrados = [...datosNotas];
-    if (fi) filtrados = filtrados.filter(f => f.fecha >= fi);
-    if (ff) filtrados = filtrados.filter(f => f.fecha <= ff);
+
+    if (fi) {
+        filtrados = filtrados.filter(f => {
+            const fecha = String(f.fecha || '').substring(0, 10);
+            return fecha >= fi;
+        });
+    }
+    if (ff) {
+        filtrados = filtrados.filter(f => {
+            const fecha = String(f.fecha || '').substring(0, 10);
+            return fecha <= ff;
+        });
+    }
     if (busq) {
         filtrados = filtrados.filter(f =>
-            (f.cliente_nombre || '').toLowerCase().includes(busq) ||
-            (f.cliente_rfc || '').toLowerCase().includes(busq) ||
-            (f.folio || '').toString().includes(busq) ||
-            (f.motivo_nota_credito || '').toLowerCase().includes(busq)
+            String(f.cliente_nombre || '').toLowerCase().includes(busq) ||
+            String(f.cliente_rfc || '').toLowerCase().includes(busq) ||
+            String(f.folio || '').toLowerCase().includes(busq) ||
+            String(f.serie || '').toLowerCase().includes(busq) ||
+            String(f.motivo_nota_credito || '').toLowerCase().includes(busq) ||
+            String(f.uuid || '').toLowerCase().includes(busq)
         );
     }
+
     datosFiltrados = filtrados;
     currentPage = 1;
     cargarTabla();
@@ -1143,32 +1167,57 @@ function aplicarFiltros() {
 // ============================================================
 // INICIALIZACIÓN
 // ============================================================
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('Inicializando módulo de notas de crédito');
-
-    cargarDatos();
 
     const hoy = new Date();
     const hace30 = new Date();
     hace30.setDate(hoy.getDate() - 30);
-    const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     document.getElementById('fechaInicio').value = fmt(hace30);
     document.getElementById('fechaFin').value = fmt(hoy);
 
+    // Carga inicial desde el servidor (respeta rango de fechas)
+    cargarDatos();
+
+    // Botones principales
     document.getElementById('btnAgregar').addEventListener('click', abrirModalNuevaNota);
     document.getElementById('btnExcel').addEventListener('click', exportToExcel);
     document.getElementById('btnCrearFiltro').addEventListener('click', () => alert('Filtros avanzados en desarrollo'));
     document.getElementById('btnColumnas').addEventListener('click', () => alert('Selector de columnas en desarrollo'));
 
-    document.getElementById('fechaInicio').addEventListener('change', aplicarFiltros);
-    document.getElementById('fechaFin').addEventListener('change', aplicarFiltros);
-    document.getElementById('buscador').addEventListener('input', aplicarFiltros);
+    // Filtros de fecha: recargan desde servidor
+    document.getElementById('fechaInicio').addEventListener('change', () => {
+        currentPage = 1;
+        cargarDatos();
+    });
+    document.getElementById('fechaFin').addEventListener('change', () => {
+        currentPage = 1;
+        cargarDatos();
+    });
 
+    // Buscador: filtro local con debounce (rápido y sin parpadeos)
+    const buscador = document.getElementById('buscador');
+    buscador.addEventListener('input', function () {
+        clearTimeout(timeoutBusqueda);
+        timeoutBusqueda = setTimeout(() => {
+            aplicarFiltros();
+        }, 200);
+    });
+
+    // Paginación
     document.getElementById('btnPrimeraPagina').addEventListener('click', () => { currentPage = 1; cargarTabla(); });
     document.getElementById('btnAnteriorPagina').addEventListener('click', () => { if (currentPage > 1) { currentPage--; cargarTabla(); } });
-    document.getElementById('btnSiguientePagina').addEventListener('click', () => { const max = Math.ceil(datosFiltrados.length / rowsPerPage); if (currentPage < max) { currentPage++; cargarTabla(); } });
-    document.getElementById('btnUltimaPagina').addEventListener('click', () => { currentPage = Math.ceil(datosFiltrados.length / rowsPerPage); cargarTabla(); });
+    document.getElementById('btnSiguientePagina').addEventListener('click', () => {
+        const max = Math.ceil(datosFiltrados.length / rowsPerPage);
+        if (currentPage < max) { currentPage++; cargarTabla(); }
+    });
+    document.getElementById('btnUltimaPagina').addEventListener('click', () => {
+        currentPage = Math.ceil(datosFiltrados.length / rowsPerPage) || 1;
+        cargarTabla();
+    });
 
+    // Modales
     document.getElementById('cerrarModal').addEventListener('click', cerrarModalNota);
     document.getElementById('btnCancelar').addEventListener('click', cerrarModalNota);
     document.getElementById('btnGuardarNota').addEventListener('click', () => guardarNota(false));
@@ -1179,7 +1228,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnCerrarVerDetalle').addEventListener('click', cerrarModalVerDetalle);
     document.getElementById('btnCerrarVerDetalle2').addEventListener('click', cerrarModalVerDetalle);
 
-    // Cerrar feedback manualmente
     const closeBtn = document.getElementById('modal-feedback-close');
     if (closeBtn) closeBtn.addEventListener('click', () => ModalFeedback.ocultar());
 

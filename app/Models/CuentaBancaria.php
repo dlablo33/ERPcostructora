@@ -114,4 +114,9 @@ class CuentaBancaria extends Model
         }
         return $this->clabe;
     }
+
+    public function anticipos()
+{
+    return $this->hasMany(Anticipo::class, 'cuenta_bancaria_id');
+}
 }

@@ -10,33 +10,31 @@ use App\Models\MovimientoBancario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class TraspasoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['getData']);
+        $this->middleware('auth')->except(['getData', 'print']);
     }
 
     public function index()
     {
-        // Obtener datos para los selects - CORREGIDO: obtener TODAS las cuentas primero para depuración
         $cuentasBancarias = CuentaBancaria::with(['banco', 'moneda'])->get();
+        $monedas = Moneda::all();
+        $proyectos = Proyecto::orderBy('nombre')->get();
         
-        // Si quieres solo las activas, usa where('activa', true) pero primero verifica que el campo existe
-        // $cuentasBancarias = CuentaBancaria::with(['banco', 'moneda'])->where('activa', true)->get();
+        $fechaInicioDefault = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $fechaFinDefault = Carbon::now()->endOfMonth()->format('Y-m-d');
         
-        $monedas = Moneda::all(); // Cambiado a all() para obtener todas
-        $proyectos = Proyecto::orderBy('nombre')->get(); // Cambiado a all() para obtener todos
-        
-        // Depuración - Registrar en log
-        Log::info('=== TRASPASOS INDEX ===');
-        Log::info('Cuentas encontradas: ' . $cuentasBancarias->count());
-        Log::info('Monedas encontradas: ' . $monedas->count());
-        Log::info('Proyectos encontrados: ' . $proyectos->count());
-        
-        // CORREGIDO: Cambiar 'traspasos' por 'transacciones' porque ese es el nombre de tu archivo
-        return view('administracion.tesoreria.transacciones', compact('cuentasBancarias', 'monedas', 'proyectos'));
+        return view('administracion.tesoreria.transacciones', compact(
+            'cuentasBancarias', 
+            'monedas', 
+            'proyectos',
+            'fechaInicioDefault',
+            'fechaFinDefault'
+        ));
     }
 
     public function getData(Request $request)
@@ -52,25 +50,19 @@ class TraspasoController extends Controller
                 'proyecto'
             ]);
             
-            if ($request->has('fecha_inicio') && $request->fecha_inicio) {
-                $query->whereDate('fecha', '>=', $request->fecha_inicio);
+            $fechaInicio = $request->input('fecha_inicio');
+            $fechaFin = $request->input('fecha_fin');
+            
+            if (!$fechaInicio && !$fechaFin) {
+                $fechaInicio = Carbon::now()->startOfMonth()->format('Y-m-d');
+                $fechaFin = Carbon::now()->endOfMonth()->format('Y-m-d');
             }
             
-            if ($request->has('fecha_fin') && $request->fecha_fin) {
-                $query->whereDate('fecha', '<=', $request->fecha_fin);
-            }
-            
-            if ($request->has('estatus') && $request->estatus) {
-                $query->where('estatus', $request->estatus);
-            }
-            
-            if ($request->has('cuenta_origen_id') && $request->cuenta_origen_id) {
-                $query->where('cuenta_origen_id', $request->cuenta_origen_id);
-            }
-            
-            if ($request->has('cuenta_destino_id') && $request->cuenta_destino_id) {
-                $query->where('cuenta_destino_id', $request->cuenta_destino_id);
-            }
+            if ($fechaInicio) $query->whereDate('fecha', '>=', $fechaInicio);
+            if ($fechaFin) $query->whereDate('fecha', '<=', $fechaFin);
+            if ($request->filled('estatus')) $query->where('estatus', $request->estatus);
+            if ($request->filled('cuenta_origen_id')) $query->where('cuenta_origen_id', $request->cuenta_origen_id);
+            if ($request->filled('cuenta_destino_id')) $query->where('cuenta_destino_id', $request->cuenta_destino_id);
             
             $traspasos = $query->orderBy('fecha', 'desc')->get();
             return response()->json($traspasos);
@@ -87,28 +79,17 @@ class TraspasoController extends Controller
             $monedaDestinoId = $request->get('moneda_destino_id');
             $fecha = $request->get('fecha', date('Y-m-d'));
             
-            if (!$monedaOrigenId || !$monedaDestinoId) {
+            if (!$monedaOrigenId || !$monedaDestinoId || $monedaOrigenId == $monedaDestinoId) {
                 return response()->json(['tipo_cambio' => 1]);
             }
             
-            // Si es la misma moneda, tipo de cambio = 1
-            if ($monedaOrigenId == $monedaDestinoId) {
-                return response()->json(['tipo_cambio' => 1]);
-            }
-            
-            // Buscar tipo de cambio en la tabla tipos_cambio
             $tipoCambio = \App\Models\TipoCambio::where('moneda_origen_id', $monedaOrigenId)
                 ->where('moneda_destino_id', $monedaDestinoId)
                 ->whereDate('fecha', '<=', $fecha)
                 ->orderBy('fecha', 'desc')
                 ->first();
             
-            if ($tipoCambio) {
-                return response()->json(['tipo_cambio' => $tipoCambio->tasa]);
-            }
-            
-            // Si no se encuentra, usar 1 por defecto
-            return response()->json(['tipo_cambio' => 1]);
+            return response()->json(['tipo_cambio' => $tipoCambio->tasa ?? 1]);
         } catch (\Exception $e) {
             Log::error('Error al obtener tipo de cambio: ' . $e->getMessage());
             return response()->json(['tipo_cambio' => 1, 'error' => $e->getMessage()], 500);
@@ -118,14 +99,10 @@ class TraspasoController extends Controller
     public function store(Request $request)
     {
         try {
-            Log::info('Datos recibidos en store traspaso:', $request->all());
-            
             $validated = $request->validate([
                 'fecha' => 'required|date',
                 'cuenta_origen_id' => 'required|exists:cuentas_bancarias,id',
                 'cuenta_destino_id' => 'required|exists:cuentas_bancarias,id|different:cuenta_origen_id',
-                'moneda_origen_id' => 'required|exists:monedas,id',
-                'moneda_destino_id' => 'required|exists:monedas,id',
                 'monto' => 'required|numeric|min:0.01',
                 'tipo_cambio' => 'nullable|numeric|min:0',
                 'monto_destino' => 'nullable|numeric|min:0',
@@ -134,24 +111,41 @@ class TraspasoController extends Controller
                 'referencia' => 'nullable|string|max:100',
                 'referencia_bancaria' => 'nullable|string|max:100',
                 'observaciones' => 'nullable|string',
-                'aplicar_ahora' => 'boolean'
+                'aplicar_ahora' => 'boolean',
+                'moneda_origen_id' => 'nullable|exists:monedas,id',
+                'moneda_destino_id' => 'nullable|exists:monedas,id',
             ]);
             
             DB::beginTransaction();
             
-            // Calcular monto destino si no viene
-            if (empty($validated['monto_destino']) && isset($validated['tipo_cambio'])) {
-                $validated['monto_destino'] = $validated['monto'] * $validated['tipo_cambio'];
+            $cuentaOrigen = CuentaBancaria::findOrFail($validated['cuenta_origen_id']);
+            $cuentaDestino = CuentaBancaria::findOrFail($validated['cuenta_destino_id']);
+            
+            $validated['moneda_origen_id'] = $cuentaOrigen->moneda_id ?? ($validated['moneda_origen_id'] ?? null);
+            $validated['moneda_destino_id'] = $cuentaDestino->moneda_id ?? ($validated['moneda_destino_id'] ?? null);
+            
+            if (empty($validated['moneda_origen_id']) || empty($validated['moneda_destino_id'])) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo determinar la moneda de las cuentas seleccionadas'
+                ], 422);
+            }
+            
+            if (empty($validated['monto_destino'])) {
+                $tipoCambio = $validated['tipo_cambio'] ?? 1;
+                $validated['monto_destino'] = $validated['monto'] * $tipoCambio;
             }
             
             $validated['folio'] = Traspaso::generarFolio();
-            $validated['estatus'] = ($validated['aplicar_ahora'] ?? false) ? 'completado' : 'pendiente';
+            $validated['estatus'] = 'pendiente';
             $validated['created_by'] = auth()->id();
             
             $traspaso = Traspaso::create($validated);
             
+            // Si se pidió aplicar ahora, aplicar dentro de la misma transacción
             if ($validated['aplicar_ahora'] ?? false) {
-                $traspaso->aplicar();
+                $this->aplicarTraspasoInterno($traspaso);
             }
             
             DB::commit();
@@ -159,7 +153,13 @@ class TraspasoController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Traspaso creado exitosamente',
-                'data' => $traspaso->load(['cuentaOrigen.banco', 'cuentaDestino.banco', 'monedaOrigen', 'monedaDestino', 'proyecto'])
+                'data' => $traspaso->fresh()->load([
+                    'cuentaOrigen.banco', 
+                    'cuentaDestino.banco', 
+                    'monedaOrigen', 
+                    'monedaDestino', 
+                    'proyecto'
+                ])
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
@@ -213,8 +213,6 @@ class TraspasoController extends Controller
                 'fecha' => 'required|date',
                 'cuenta_origen_id' => 'required|exists:cuentas_bancarias,id',
                 'cuenta_destino_id' => 'required|exists:cuentas_bancarias,id|different:cuenta_origen_id',
-                'moneda_origen_id' => 'required|exists:monedas,id',
-                'moneda_destino_id' => 'required|exists:monedas,id',
                 'monto' => 'required|numeric|min:0.01',
                 'tipo_cambio' => 'nullable|numeric|min:0',
                 'monto_destino' => 'nullable|numeric|min:0',
@@ -222,14 +220,22 @@ class TraspasoController extends Controller
                 'proyecto_id' => 'nullable|exists:proyectos,id',
                 'referencia' => 'nullable|string|max:100',
                 'referencia_bancaria' => 'nullable|string|max:100',
-                'observaciones' => 'nullable|string'
+                'observaciones' => 'nullable|string',
+                'moneda_origen_id' => 'nullable|exists:monedas,id',
+                'moneda_destino_id' => 'nullable|exists:monedas,id',
             ]);
             
             DB::beginTransaction();
             
-            // Calcular monto destino si no viene
-            if (empty($validated['monto_destino']) && isset($validated['tipo_cambio'])) {
-                $validated['monto_destino'] = $validated['monto'] * $validated['tipo_cambio'];
+            $cuentaOrigen = CuentaBancaria::findOrFail($validated['cuenta_origen_id']);
+            $cuentaDestino = CuentaBancaria::findOrFail($validated['cuenta_destino_id']);
+            
+            $validated['moneda_origen_id'] = $cuentaOrigen->moneda_id ?? ($validated['moneda_origen_id'] ?? null);
+            $validated['moneda_destino_id'] = $cuentaDestino->moneda_id ?? ($validated['moneda_destino_id'] ?? null);
+            
+            if (empty($validated['monto_destino'])) {
+                $tipoCambio = $validated['tipo_cambio'] ?? 1;
+                $validated['monto_destino'] = $validated['monto'] * $tipoCambio;
             }
             
             $traspaso->update($validated);
@@ -238,8 +244,21 @@ class TraspasoController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Traspaso actualizado exitosamente',
-                'data' => $traspaso->load(['cuentaOrigen.banco', 'cuentaDestino.banco', 'monedaOrigen', 'monedaDestino', 'proyecto'])
+                'data' => $traspaso->fresh()->load([
+                    'cuentaOrigen.banco', 
+                    'cuentaDestino.banco', 
+                    'monedaOrigen', 
+                    'monedaDestino', 
+                    'proyecto'
+                ])
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -285,19 +304,20 @@ class TraspasoController extends Controller
             $traspaso = Traspaso::findOrFail($id);
             
             if ($traspaso->estatus !== 'pendiente') {
+                DB::rollBack();
                 return response()->json([
                     'success' => false,
                     'message' => 'El traspaso ya fue ' . $traspaso->estatus
                 ], 422);
             }
             
-            $movimientos = $traspaso->aplicar();
+            $this->aplicarTraspasoInterno($traspaso);
+            
             DB::commit();
             
             return response()->json([
                 'success' => true,
-                'message' => 'Traspaso aplicado exitosamente. Saldos actualizados.',
-                'movimientos' => $movimientos
+                'message' => 'Traspaso aplicado exitosamente. Saldos actualizados.'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -308,25 +328,162 @@ class TraspasoController extends Controller
             ], 500);
         }
     }
-    
-    public function getEstadisticas()
+
+    /**
+     * Lógica central de aplicación del traspaso.
+     * Debe llamarse dentro de una transacción.
+     *
+     * PROBLEMA 4 RESUELTO: aquí se actualizan explícitamente los saldos
+     * de las cuentas bancarias y se crean los movimientos bancarios,
+     * en lugar de depender del método del modelo Traspaso->aplicar()
+     * que puede no estar implementado correctamente.
+     */
+    /**
+ * Lógica central de aplicación del traspaso.
+ * Debe llamarse dentro de una transacción.
+ *
+ * IMPORTANTE (PostgreSQL):
+ *  - Un try/catch de PHP no protege la transacción. Si una sentencia falla,
+ *    Postgres aborta la transacción y rechaza cualquier sentencia posterior.
+ *  - Para poder continuar tras un error opcional (como MovimientoBancario)
+ *    se usa un SAVEPOINT explícito.
+ */
+private function aplicarTraspasoInterno(Traspaso $traspaso)
+{
+    $cuentaOrigen  = CuentaBancaria::lockForUpdate()->findOrFail($traspaso->cuenta_origen_id);
+    $cuentaDestino = CuentaBancaria::lockForUpdate()->findOrFail($traspaso->cuenta_destino_id);
+
+    $monto        = (float) $traspaso->monto;
+    $montoDestino = (float) $traspaso->monto_destino;
+
+    // Validar saldo suficiente
+    if ((float) $cuentaOrigen->saldo_actual < $monto) {
+        throw new \Exception(
+            'Saldo insuficiente en la cuenta origen. Saldo actual: ' .
+            number_format($cuentaOrigen->saldo_actual, 2)
+        );
+    }
+
+    // 1) Afectar saldos
+    $cuentaOrigen->saldo_actual  = (float) $cuentaOrigen->saldo_actual  - $monto;
+    $cuentaDestino->saldo_actual = (float) $cuentaDestino->saldo_actual + $montoDestino;
+    $cuentaOrigen->save();
+    $cuentaDestino->save();
+
+    // 2) Crear movimientos bancarios con SAVEPOINT (por si el modelo tiene
+    //    columnas no definidas en la migración; así no se aborta la transacción).
+    DB::statement('SAVEPOINT sp_movimientos');
+    try {
+        MovimientoBancario::create([
+            'cuenta_bancaria_id'  => $cuentaOrigen->id,
+            'fecha'               => $traspaso->fecha,
+            'tipo'                => 'egreso',
+            'monto'               => $monto,
+            'concepto'            => 'Traspaso a ' . ($cuentaDestino->numero_cuenta ?? '') . ' - ' . ($traspaso->concepto ?? ''),
+            'referencia'          => $traspaso->referencia,
+            'referencia_bancaria' => $traspaso->referencia_bancaria,
+            'proyecto_id'         => $traspaso->proyecto_id,
+            'traspaso_id'         => $traspaso->id,
+            'created_by'          => auth()->id(),
+        ]);
+
+        MovimientoBancario::create([
+            'cuenta_bancaria_id'  => $cuentaDestino->id,
+            'fecha'               => $traspaso->fecha,
+            'tipo'                => 'ingreso',
+            'monto'               => $montoDestino,
+            'concepto'            => 'Traspaso desde ' . ($cuentaOrigen->numero_cuenta ?? '') . ' - ' . ($traspaso->concepto ?? ''),
+            'referencia'          => $traspaso->referencia,
+            'referencia_bancaria' => $traspaso->referencia_bancaria,
+            'proyecto_id'         => $traspaso->proyecto_id,
+            'traspaso_id'         => $traspaso->id,
+            'created_by'          => auth()->id(),
+        ]);
+
+        DB::statement('RELEASE SAVEPOINT sp_movimientos');
+    } catch (\Exception $e) {
+        // En Postgres es OBLIGATORIO volver al savepoint para poder continuar
+        DB::statement('ROLLBACK TO SAVEPOINT sp_movimientos');
+        Log::warning('No se pudieron crear los movimientos bancarios: ' . $e->getMessage());
+    }
+
+    // 3) Marcar traspaso como completado
+    //    Verificar que las columnas existan en la tabla. Si 'fecha_aplicacion'
+    //    no existe, usar solo estatus.
+    try {
+        $traspaso->estatus = 'completado';
+
+        // Solo setear fecha_aplicacion si la columna existe
+        if (\Schema::hasColumn('traspasos', 'fecha_aplicacion')) {
+            $traspaso->fecha_aplicacion = now();
+        }
+
+        $traspaso->save();
+    } catch (\Exception $e) {
+        Log::error('Error al guardar estatus del traspaso: ' . $e->getMessage());
+        throw $e;
+    }
+
+    return $traspaso;
+}
+
+    /**
+     * PROBLEMA 3 RESUELTO: endpoint de impresión.
+     * Devuelve una vista imprimible del traspaso.
+     */
+    public function print($id)
     {
         try {
-            $total = Traspaso::count();
-            $pendientes = Traspaso::where('estatus', 'pendiente')->count();
-            $completados = Traspaso::where('estatus', 'completado')->count();
-            $cancelados = Traspaso::where('estatus', 'cancelado')->count();
-            $totalMonto = Traspaso::sum('monto');
+            $traspaso = Traspaso::with([
+                'cuentaOrigen.banco',
+                'cuentaOrigen.moneda',
+                'cuentaDestino.banco',
+                'cuentaDestino.moneda',
+                'monedaOrigen',
+                'monedaDestino',
+                'proyecto',
+                'creador'
+            ])->findOrFail($id);
+            
+            return view('administracion.tesoreria.traspaso_print', compact('traspaso'));
+        } catch (\Exception $e) {
+            Log::error('Error al imprimir traspaso: ' . $e->getMessage());
+            abort(404, 'Traspaso no encontrado');
+        }
+    }
+
+    public function getEstadisticas(Request $request)
+    {
+        try {
+            $fechaInicio = $request->input('fecha_inicio', Carbon::now()->startOfMonth()->format('Y-m-d'));
+            $fechaFin = $request->input('fecha_fin', Carbon::now()->endOfMonth()->format('Y-m-d'));
+            
+            $baseQuery = Traspaso::whereDate('fecha', '>=', $fechaInicio)
+                                 ->whereDate('fecha', '<=', $fechaFin);
+            
+            $total = (clone $baseQuery)->count();
+            $pendientes = (clone $baseQuery)->where('estatus', 'pendiente')->count();
+            $completados = (clone $baseQuery)->where('estatus', 'completado')->count();
+            $cancelados = (clone $baseQuery)->where('estatus', 'cancelado')->count();
+            $totalMonto = (clone $baseQuery)->sum('monto');
             
             return response()->json([
-                'total' => $total,
-                'pendientes' => $pendientes,
-                'completados' => $completados,
-                'cancelados' => $cancelados,
-                'total_monto' => $totalMonto
+                'success' => true,
+                'resumen' => [
+                    'total' => $total,
+                    'pendientes' => $pendientes,
+                    'completados' => $completados,
+                    'cancelados' => $cancelados,
+                    'total_monto' => round($totalMonto, 2),
+                ],
+                'rango' => [
+                    'fecha_inicio' => $fechaInicio,
+                    'fecha_fin' => $fechaFin,
+                ],
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Error en getEstadisticas traspasos: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
 }

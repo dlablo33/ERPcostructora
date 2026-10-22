@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $query->where('estatus', 'Inactivo');
     }
+
+        public function almacenesResponsable()
+    {
+        return $this->hasMany(Almacen::class, 'responsable_id');
+    }
 }

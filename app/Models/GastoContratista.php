@@ -56,12 +56,16 @@ class GastoContratista extends Model
         'parcial' => 'Parcial'
     ];
 
+    // ============================================
+    // RELACIONES
+    // ============================================
+
     /**
-     * Relación con asignación
+     * ⚠️ CORREGIDO: Forzar foreign key 'asignacion_id'
      */
     public function asignacion(): BelongsTo
     {
-        return $this->belongsTo(AsignacionContratista::class);
+        return $this->belongsTo(AsignacionContratista::class, 'asignacion_id', 'id');
     }
 
     /**
@@ -69,7 +73,7 @@ class GastoContratista extends Model
      */
     public function contratista(): BelongsTo
     {
-        return $this->belongsTo(Contratista::class);
+        return $this->belongsTo(Contratista::class, 'contratista_id', 'id');
     }
 
     /**
@@ -77,7 +81,7 @@ class GastoContratista extends Model
      */
     public function proyecto(): BelongsTo
     {
-        return $this->belongsTo(Proyecto::class);
+        return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
     }
 
     /**
@@ -87,6 +91,18 @@ class GastoContratista extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    /**
+     * Relación con pagos
+     */
+    public function pagos()
+    {
+        return $this->hasMany(PagoContratista::class, 'gasto_id', 'id');
+    }
+
+    // ============================================
+    // SCOPES
+    // ============================================
 
     /**
      * Scope por status de pago
@@ -111,6 +127,10 @@ class GastoContratista extends Model
     {
         return $query->whereBetween('fecha_gasto', [$inicio, $fin]);
     }
+
+    // ============================================
+    // ACCESSORS
+    // ============================================
 
     /**
      * Accessor para tipo de gasto formateado
@@ -142,6 +162,18 @@ class GastoContratista extends Model
     }
 
     /**
+     * Accessor para monto formateado
+     */
+    public function getMontoFormateadoAttribute(): string
+    {
+        return '$' . number_format($this->monto, 2);
+    }
+
+    // ============================================
+    // MÉTODOS
+    // ============================================
+
+    /**
      * Método para marcar como pagado
      */
     public function marcarComoPagado($fechaPago = null): void
@@ -157,13 +189,5 @@ class GastoContratista extends Model
     public function isPagado(): bool
     {
         return $this->status_pago === 'pagado';
-    }
-
-    /**
-     * Método para obtener el monto formateado
-     */
-    public function getMontoFormateadoAttribute(): string
-    {
-        return '$' . number_format($this->monto, 2);
     }
 }

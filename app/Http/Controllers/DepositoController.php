@@ -25,18 +25,15 @@ class DepositoController extends Controller
      */
     public function index()
     {
-        // Obtener datos para los selects
         $cuentasBancarias = CuentaBancaria::with(['banco', 'moneda'])->where('activa', true)->get();
         $proyectos = Proyecto::where('status', 'activo')->orderBy('nombre')->get();
         $tiposIngreso = TipoIngreso::where('activo', true)->get();
         
-        // Obtener clientes para el select
         $clientes = Contacto::where('tipo', 'cliente')
             ->where('estatus', true)
             ->orderBy('razon_social')
             ->get(['contacto_id as id', 'razon_social as nombre', 'rfc']);
         
-        // Códigos SAT para ingresos (tipo I = Ingreso)
         $codigosSatIngresos = CodigoSat::whereIn('tipo', ['I'])
             ->orderBy('codigo_agrupador')
             ->get();
@@ -79,6 +76,14 @@ class DepositoController extends Controller
             }
             
             $depositos = $query->orderBy('fecha', 'desc')->get();
+            
+            // Asegurar que el monto sea numérico
+            $depositos->transform(function($deposito) {
+                $deposito->monto = (float) ($deposito->monto ?? 0);
+                $deposito->monto_aplicado = (float) ($deposito->monto_aplicado ?? 0);
+                return $deposito;
+            });
+            
             return response()->json($depositos);
         } catch (\Exception $e) {
             Log::error('Error en getData depositos: ' . $e->getMessage());
@@ -100,11 +105,10 @@ class DepositoController extends Controller
                 ], 422);
             }
             
-            // Obtener facturas del cliente con saldo pendiente
             $facturas = DB::table('facturas')
                 ->select('factura_id as id', 'folio', 'fecha', 'fecha_vencimiento', 'total', 'saldo_disponible')
                 ->where('contacto_id', $clienteId)
-                ->where('estatus', 1) // Estatus 1 = Emitida/Pendiente
+                ->where('estatus', 1)
                 ->where('saldo_disponible', '>', 0)
                 ->whereNull('deleted_at')
                 ->orderBy('fecha_vencimiento', 'asc')
@@ -115,8 +119,8 @@ class DepositoController extends Controller
                         'folio' => $factura->folio,
                         'fecha' => $factura->fecha,
                         'fecha_vencimiento' => $factura->fecha_vencimiento,
-                        'total' => $factura->total,
-                        'saldo_disponible' => $factura->saldo_disponible
+                        'total' => (float) $factura->total,
+                        'saldo_disponible' => (float) $factura->saldo_disponible
                     ];
                 });
             
@@ -175,7 +179,6 @@ class DepositoController extends Controller
             
             DB::beginTransaction();
             
-            // Procesar facturas aplicadas
             $facturasAplicadas = [];
             $totalAplicado = 0;
             
@@ -186,7 +189,6 @@ class DepositoController extends Controller
                 }
             }
             
-            // Validar que el monto aplicado no exceda el total
             if ($totalAplicado > $validated['monto']) {
                 throw new \Exception('El monto aplicado a facturas no puede exceder el monto total del depósito');
             }
@@ -200,7 +202,6 @@ class DepositoController extends Controller
             
             $deposito = Deposito::create($validated);
             
-            // Si hay facturas aplicadas, actualizar sus saldos
             if (!empty($facturasAplicadas)) {
                 $this->actualizarSaldosFacturas($facturasAplicadas);
             }
@@ -250,7 +251,6 @@ class DepositoController extends Controller
                 'contacto'
             ])->findOrFail($id);
             
-            // Cargar facturas aplicadas
             if ($deposito->facturas_aplicadas) {
                 $ids = array_keys($deposito->facturas_aplicadas);
                 $facturas = DB::table('facturas')
@@ -263,10 +263,191 @@ class DepositoController extends Controller
                 $deposito->facturas_detalle = $facturas;
             }
             
+            // Asegurar que los montos sean numéricos
+            $deposito->monto = (float) $deposito->monto;
+            $deposito->monto_aplicado = (float) ($deposito->monto_aplicado ?? 0);
+            
             return response()->json($deposito);
         } catch (\Exception $e) {
             Log::error('Error en show deposito: ' . $e->getMessage());
             return response()->json(['error' => 'Depósito no encontrado'], 404);
+        }
+    }
+
+    /**
+     * NUEVO: Obtener detalle completo del depósito para vista de solo lectura
+     */
+    public function detalle($id)
+    {
+        try {
+            $deposito = Deposito::with([
+                'cuentaBancaria.banco', 
+                'cuentaBancaria.moneda', 
+                'proyecto', 
+                'tipoIngreso', 
+                'creador',
+                'codigoSat',
+                'contacto'
+            ])->findOrFail($id);
+            
+            $facturasDetalle = [];
+            if ($deposito->facturas_aplicadas) {
+                $ids = array_keys($deposito->facturas_aplicadas);
+                $facturasDetalle = DB::table('facturas')
+                    ->whereIn('factura_id', $ids)
+                    ->get()
+                    ->map(function($factura) use ($deposito) {
+                        return [
+                            'factura_id' => $factura->factura_id,
+                            'folio' => $factura->folio,
+                            'fecha' => $factura->fecha,
+                            'fecha_vencimiento' => $factura->fecha_vencimiento,
+                            'total' => (float) $factura->total,
+                            'saldo_disponible' => (float) $factura->saldo_disponible,
+                            'monto_aplicado' => (float) ($deposito->facturas_aplicadas[$factura->factura_id] ?? 0)
+                        ];
+                    });
+            }
+            
+            // Buscar movimiento bancario asociado si está aplicado
+            $movimientoBancario = null;
+            if ($deposito->estatus === 'aplicado') {
+                $movimientoBancario = MovimientoBancario::where('cuenta_bancaria_id', $deposito->cuenta_bancaria_id)
+                    ->where('monto', $deposito->monto)
+                    ->where('fecha', $deposito->fecha)
+                    ->where('tipo', 'ingreso')
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'deposito' => [
+                        'id' => $deposito->id,
+                        'folio' => $deposito->folio,
+                        'fecha' => $deposito->fecha,
+                        'monto' => (float) $deposito->monto,
+                        'monto_aplicado' => (float) ($deposito->monto_aplicado ?? 0),
+                        'referencia' => $deposito->referencia,
+                        'concepto' => $deposito->concepto,
+                        'observaciones' => $deposito->observaciones,
+                        'estatus' => $deposito->estatus,
+                        'created_at' => $deposito->created_at,
+                        'cuenta_bancaria' => [
+                            'id' => $deposito->cuentaBancaria->id ?? null,
+                            'numero_cuenta' => $deposito->cuentaBancaria->numero_cuenta ?? null,
+                            'banco' => $deposito->cuentaBancaria->banco->nombre ?? null,
+                            'moneda' => $deposito->cuentaBancaria->moneda->simbolo ?? null,
+                        ],
+                        'proyecto' => $deposito->proyecto ? [
+                            'id' => $deposito->proyecto->id,
+                            'codigo' => $deposito->proyecto->codigo,
+                            'nombre' => $deposito->proyecto->nombre,
+                        ] : null,
+                        'tipo_ingreso' => $deposito->tipoIngreso ? [
+                            'id' => $deposito->tipoIngreso->id,
+                            'nombre' => $deposito->tipoIngreso->nombre,
+                        ] : null,
+                        'codigo_sat' => $deposito->codigoSat ? [
+                            'id' => $deposito->codigoSat->id,
+                            'codigo_agrupador' => $deposito->codigoSat->codigo_agrupador,
+                            'nombre_cuenta' => $deposito->codigoSat->nombre_cuenta,
+                        ] : null,
+                        'contacto' => $deposito->contacto ? [
+                            'id' => $deposito->contacto->contacto_id,
+                            'razon_social' => $deposito->contacto->razon_social,
+                            'rfc' => $deposito->contacto->rfc,
+                        ] : null,
+                        'creador' => $deposito->creador ? [
+                            'id' => $deposito->creador->id,
+                            'name' => $deposito->creador->name,
+                        ] : null,
+                    ],
+                    'facturas' => $facturasDetalle,
+                    'movimiento_bancario' => $movimientoBancario ? [
+                        'id' => $movimientoBancario->id,
+                        'concepto' => $movimientoBancario->concepto,
+                        'fecha' => $movimientoBancario->fecha,
+                        'monto' => (float) $movimientoBancario->monto,
+                    ] : null,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error en detalle deposito: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Depósito no encontrado: ' . $e->getMessage()
+            ], 404);
+        }
+    }
+
+    /**
+     * NUEVO: Generar datos para PDF del depósito
+     */
+    public function getDatosPDF($id)
+    {
+        try {
+            $deposito = Deposito::with([
+                'cuentaBancaria.banco', 
+                'cuentaBancaria.moneda', 
+                'proyecto', 
+                'tipoIngreso', 
+                'creador',
+                'codigoSat',
+                'contacto'
+            ])->findOrFail($id);
+            
+            $facturasDetalle = [];
+            if ($deposito->facturas_aplicadas) {
+                $ids = array_keys($deposito->facturas_aplicadas);
+                $facturasDetalle = DB::table('facturas')
+                    ->whereIn('factura_id', $ids)
+                    ->get()
+                    ->map(function($factura) use ($deposito) {
+                        return [
+                            'factura_id' => $factura->factura_id,
+                            'folio' => $factura->folio,
+                            'fecha' => $factura->fecha,
+                            'fecha_vencimiento' => $factura->fecha_vencimiento,
+                            'total' => (float) $factura->total,
+                            'saldo_disponible' => (float) $factura->saldo_disponible,
+                            'monto_aplicado' => (float) ($deposito->facturas_aplicadas[$factura->factura_id] ?? 0)
+                        ];
+                    });
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'folio' => $deposito->folio,
+                    'fecha' => $deposito->fecha,
+                    'monto' => (float) $deposito->monto,
+                    'monto_aplicado' => (float) ($deposito->monto_aplicado ?? 0),
+                    'referencia' => $deposito->referencia,
+                    'concepto' => $deposito->concepto,
+                    'observaciones' => $deposito->observaciones,
+                    'estatus' => $deposito->estatus,
+                    'banco' => $deposito->cuentaBancaria->banco->nombre ?? 'N/A',
+                    'numero_cuenta' => $deposito->cuentaBancaria->numero_cuenta ?? 'N/A',
+                    'moneda' => $deposito->cuentaBancaria->moneda->simbolo ?? 'MXN',
+                    'proyecto' => $deposito->proyecto ? $deposito->proyecto->nombre : 'N/A',
+                    'tipo_ingreso' => $deposito->tipoIngreso->nombre ?? 'N/A',
+                    'codigo_sat' => $deposito->codigoSat ? 
+                        $deposito->codigoSat->codigo_agrupador . ' - ' . $deposito->codigoSat->nombre_cuenta : 'N/A',
+                    'cliente' => $deposito->contacto ? $deposito->contacto->razon_social : 'N/A',
+                    'rfc' => $deposito->contacto ? $deposito->contacto->rfc : 'N/A',
+                    'creado_por' => $deposito->creador->name ?? 'Sistema',
+                    'fecha_creacion' => $deposito->created_at,
+                    'facturas' => $facturasDetalle,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error en getDatosPDF deposito: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener datos: ' . $e->getMessage()
+            ], 404);
         }
     }
 
@@ -337,14 +518,12 @@ class DepositoController extends Controller
             
             DB::beginTransaction();
             
-            // Revertir saldos de facturas si las hay
             if ($deposito->facturas_aplicadas) {
                 foreach ($deposito->facturas_aplicadas as $facturaId => $montoAplicado) {
                     DB::table('facturas')
                         ->where('factura_id', $facturaId)
                         ->increment('saldo_disponible', $montoAplicado);
                     
-                    // Si estaba pagada, restaurar a emitida
                     $factura = DB::table('facturas')->where('factura_id', $facturaId)->first();
                     if ($factura && $factura->saldo_disponible > 0 && $factura->estatus == 10) {
                         DB::table('facturas')
@@ -387,7 +566,6 @@ class DepositoController extends Controller
                 ], 422);
             }
             
-            // Validar que tenga código SAT
             if (!$deposito->codigo_sat_id) {
                 return response()->json([
                     'success' => false,
@@ -420,12 +598,10 @@ class DepositoController extends Controller
      */
     private function aplicarDeposito($deposito)
     {
-        // Validar que tenga código SAT
         if (!$deposito->codigo_sat_id) {
             throw new \Exception('El depósito no tiene un código SAT asignado.');
         }
         
-        // Actualizar saldo de la cuenta bancaria (INGRESO - se suma)
         $cuenta = CuentaBancaria::find($deposito->cuenta_bancaria_id);
         if ($cuenta) {
             $cuenta->saldo_actual = $cuenta->saldo_actual + $deposito->monto;
@@ -434,7 +610,6 @@ class DepositoController extends Controller
             Log::info('Saldo actualizado. Nuevo saldo cuenta ' . $cuenta->id . ': ' . $cuenta->saldo_actual);
         }
         
-        // Crear movimiento bancario con código SAT
         $movimiento = MovimientoBancario::create([
             'cuenta_bancaria_id' => $deposito->cuenta_bancaria_id,
             'proyecto_id' => $deposito->proyecto_id,
@@ -473,9 +648,8 @@ class DepositoController extends Controller
                 
                 $updateData = ['saldo_disponible' => $nuevoSaldo];
                 
-                // Si el saldo queda en 0, cambiar estatus a pagada (10)
                 if ($nuevoSaldo <= 0) {
-                    $updateData['estatus'] = 10; // Estatus 10 = Pagada
+                    $updateData['estatus'] = 10;
                 }
                 
                 DB::table('facturas')
@@ -510,7 +684,7 @@ class DepositoController extends Controller
                 'aplicados' => $aplicados,
                 'pendientes' => $pendientes,
                 'proceso' => $proceso,
-                'total_monto' => $totalMonto
+                'total_monto' => (float) $totalMonto
             ]);
         } catch (\Exception $e) {
             Log::error('Error en getEstadisticas: ' . $e->getMessage());

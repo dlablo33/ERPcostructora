@@ -44,12 +44,16 @@ class OrdenTrabajoContratista extends Model
         'finalizada' => 'Finalizada'
     ];
 
+    // ============================================
+    // RELACIONES
+    // ============================================
+
     /**
-     * Relación con asignación
+     * ⚠️ CORREGIDO: Forzar foreign key 'asignacion_id'
      */
     public function asignacion(): BelongsTo
     {
-        return $this->belongsTo(AsignacionContratista::class);
+        return $this->belongsTo(AsignacionContratista::class, 'asignacion_id', 'id');
     }
 
     /**
@@ -57,7 +61,7 @@ class OrdenTrabajoContratista extends Model
      */
     public function aceptadaPor(): BelongsTo
     {
-        return $this->belongsTo(Contratista::class, 'aceptada_por');
+        return $this->belongsTo(Contratista::class, 'aceptada_por', 'id');
     }
 
     /**
@@ -67,6 +71,10 @@ class OrdenTrabajoContratista extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    // ============================================
+    // SCOPES
+    // ============================================
 
     /**
      * Scope por status
@@ -83,6 +91,10 @@ class OrdenTrabajoContratista extends Model
     {
         return $query->whereBetween('fecha_emision', [$inicio, $fin]);
     }
+
+    // ============================================
+    // ACCESSORS
+    // ============================================
 
     /**
      * Accessor para status formateado
@@ -105,6 +117,10 @@ class OrdenTrabajoContratista extends Model
         ];
         return $badges[$this->status] ?? 'secondary';
     }
+
+    // ============================================
+    // MÉTODOS
+    // ============================================
 
     /**
      * Método para aceptar la orden
